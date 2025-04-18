@@ -1,10 +1,11 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
+    import {onMount, onDestroy, afterUpdate} from 'svelte';
     import Swiper from 'swiper';
     import {FreeMode, Mousewheel, Navigation, Scrollbar, Thumbs, Zoom} from 'swiper/modules';
 
     import ActionButton from "./header/buttons/ActionButton.svelte";
     import ActionParams from "./header/interfaces/ActionParams";
+    import Preloader from "../icons/loading/Preloader.svelte";
 
     import {Language} from "../../utils/Language";
 
@@ -30,6 +31,8 @@
 
     export let mediaList: GalleryMedia[] = [];
     export let currentMediaId: string | null = null;
+    export let canLoadMore: boolean = false;
+    export let onLoadMore: () => void = () => {};
 
     const downloadActionParams: ActionParams = {
         style: 'default',
@@ -43,6 +46,7 @@
         action: 'zoom'
     } as ActionParams;
 
+    let isLoadingMore: boolean = false;
     let isZoomActive: boolean = false;
     $: zoomActionParams.html = isZoomActive ? `${ZoomOutIcon}<span>${Language.translate('zoomOut')}</span>` : `${ZoomInIcon}<span>${Language.translate('zoomIn')}</span>`;
 
@@ -58,6 +62,34 @@
     let thumbsScrollEl: HTMLDivElement;
     let swiperNextBtn: HTMLDivElement;
     let swiperPrevBtn: HTMLDivElement;
+
+    const thumbsOptions: Record<string, any> = {
+        direction: 'vertical',
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        freeMode: {
+            enabled: true,
+            sticky: true,
+        },
+        watchSlidesProgress: true,
+        mousewheel: {
+            enabled: true,
+            forceToAxis: true,
+        },
+        scrollbar: {
+            enabled: true,
+            el: getScrollEl(),
+            draggable: true,
+            snapOnRelease: true,
+        },
+        modules: [FreeMode, Mousewheel, Scrollbar],
+    };
+
+    window.addEventListener('gallery:load-more:success', (e: CustomEvent<{mediaList: GalleryMedia[], canLoadMore: boolean}>) => {
+        isLoadingMore = false;
+        mediaList = e.detail.mediaList;
+        canLoadMore = e.detail.canLoadMore;
+    });
 
     onMount(() => {
         const initialSlide: number = currentMediaId !== null ? mediaList.findIndex(media => media.id === currentMediaId) : 0;
@@ -90,34 +122,51 @@
         };
 
         if (thumbsSwiperEl) {
-            thumbsSwiper = new Swiper(thumbsSwiperEl, {
-                direction: 'vertical',
-                slidesPerView: 'auto',
-                spaceBetween: 10,
-                freeMode: {
-                    enabled: true,
-                    sticky: true,
-                },
-                watchSlidesProgress: true,
-                mousewheel: {
-                    enabled: true,
-                    forceToAxis: true,
-                },
-                scrollbar: {
-                    enabled: true,
-                    el: thumbsScrollEl,
-                    draggable: true,
-                    snapOnRelease: true,
-                },
-                modules: [FreeMode, Mousewheel, Scrollbar],
-            });
-
+            thumbsSwiper = new Swiper(thumbsSwiperEl, thumbsOptions);
             swiperOptions.thumbs = {swiper: thumbsSwiper};
             swiperOptions.modules = [...swiperOptions.modules, Thumbs];
         }
 
         mainSwiper = new Swiper(mainSwiperEl, swiperOptions);
     });
+
+    onDestroy(() => {
+        mainSwiper?.destroy(true, true);
+        thumbsSwiper?.destroy(true, true);
+    });
+
+    let prevMediaList: GalleryMedia[] = [];
+    afterUpdate(() => {
+        const needsThumbs = mediaList.length > 1;
+
+        if (!needsThumbs && thumbsSwiper) {
+            thumbsSwiper.destroy(true, true);
+            thumbsSwiper = null;
+        }
+
+        if (needsThumbs && thumbsSwiperEl && !thumbsSwiper) {
+            thumbsSwiper = new Swiper(thumbsSwiperEl, thumbsOptions);
+
+            mainSwiper?.params && (mainSwiper.params.thumbs = { swiper: thumbsSwiper });
+            mainSwiper?.update();
+        }
+
+        if (mediaList !== prevMediaList) {
+            prevMediaList = mediaList;
+
+            mainSwiper?.update();
+            thumbsSwiper?.update();
+
+            const newIndex = currentMediaId !== null ? mediaList.findIndex(media => media.id === currentMediaId) : 0;
+            if (currentIndex !== newIndex) {
+                mainSwiper?.slideTo(newIndex);
+            }
+        }
+    });
+
+    function getScrollEl(): HTMLDivElement {
+        return thumbsScrollEl;
+    }
 
     function onDownloadMedia(): void {
         const link = document.createElement('a');
@@ -130,6 +179,12 @@
 
     function onToggleZoom(): void {
         mainSwiper.zoom.toggle();
+    }
+
+    function handleLoadMoreClick() {
+        if (isLoadingMore) return;
+        isLoadingMore = true;
+        onLoadMore();
     }
 </script>
 
@@ -146,7 +201,7 @@
 </div>
 
 <div class="gallery-wrapper">
-    {#if mediaList.length > 1}
+    {#if mediaList.length > 1 || canLoadMore}
         <div class="thumbs-wrapper">
             <div class="swiper thumbs-swiper" bind:this={thumbsSwiperEl}>
                 <div class="swiper-wrapper">
@@ -155,6 +210,18 @@
                             <img src={media.smallThumbnail} alt={media.name} />
                         </div>
                     {/each}
+
+                    {#if canLoadMore}
+                        {#if isLoadingMore}
+                            <div class="swiper-slide thumb load-more-thumb no-border">
+                                <Preloader heightPx={12} />
+                            </div>
+                        {:else}
+                            <div class="swiper-slide thumb load-more-thumb" on:click={handleLoadMoreClick}>
+                                <span>Load more</span>
+                            </div>
+                        {/if}
+                    {/if}
                 </div>
                 <div class="thumbs-scrollbar swiper-scrollbar" bind:this={thumbsScrollEl}></div>
             </div>
@@ -329,6 +396,34 @@
         transition: transform 0.3s;
         user-select: none;
         object-fit: scale-down;
+    }
+
+    .load-more-thumb {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--primary-font-color);
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+        padding: 5px;
+    }
+
+    .load-more-thumb:hover {
+        background-color: #eaeaea;
+    }
+
+    .load-more-thumb.no-border {
+        border: none !important;
+    }
+
+    .load-more-thumb:global(.swiper-slide-thumb-active) {
+        border-color: var(--primary-border-color);
+    }
+
+    .load-more-thumb:global(.swiper-slide-thumb-active) > span {
+        opacity: 0.8;
     }
 
     @media screen and (max-width: 768px) {

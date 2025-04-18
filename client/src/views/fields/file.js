@@ -56,23 +56,45 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
 
-                let items = [];
+                let items;
+                let canLoadMore = false;
+                let modalContainer = this;
                 if (this.model.collection && this.model.collection.models && this.model.collection.name === 'File') {
                     items = this.model.collection.models
                         .filter(item => this.hasPreview(item.get(this.nameName)))
                         .map(item => this.prepareMediaFromModel(item));
 
+                    if (this.model.collection.length < this.model.collection.total) {
+                        canLoadMore = true;
+                        modalContainer = this.getParentView().getParentView();
+                    }
 
                 } else {
                     items = [this.prepareMediaFromModel(this.model)];
                 }
 
-                this.createView('preview', 'views/modals/gallery', {
+                modalContainer.createView('gallery', 'views/modals/gallery', {
                     id: this.model.get(this.idName),
                     model: this.model,
                     mediaList: items,
-                }, function (view) {
+                    canLoadMore: canLoadMore
+                }, view => {
                     view.render();
+
+                    this.listenTo(view, 'gallery:load-more', () => {
+                        this.model.collection.fetch({
+                            more: true,
+                            remove: false,
+                            success: function () {
+                                view.trigger('gallery:load-more:success', {
+                                    mediaList: this.model.collection.models
+                                        .filter(item => this.hasPreview(item.get(this.nameName)))
+                                        .map(item => this.prepareMediaFromModel(item)),
+                                    canLoadMore: this.model.collection.length < this.model.collection.total,
+                                });
+                            }.bind(this)
+                        });
+                    });
                 });
             },
 

@@ -26,26 +26,43 @@ Espo.define('views/modals/gallery', 'views/modal', function (Dep) {
 
         fullHeight: true,
 
+        galleryComponent: null,
+
         events: {
             'click [data-action="close-modal"]': function () {
                 this.actionClose();
             },
         },
 
-        getImageUrl: function () {
-            return this.options.thumbnailUrl ?? this.model.get('largeThumbnailUrl');
-        },
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        getOriginalImageUrl: function () {
-            return this.options.downloadUrl ?? this.model.get('downloadUrl');
+            if (this.options.canLoadMore) {
+                this.listenTo(this, 'gallery:load-more:success', (data) => {
+                    this.options.mediaList = data.mediaList;
+                    this.options.canLoadMore = data.canLoadMore;
+
+                    window.dispatchEvent(new CustomEvent('gallery:load-more:success', {
+                        detail: {
+                            mediaList: data.mediaList,
+                            canLoadMore: data.canLoadMore
+                        }
+                    }));
+                });
+            }
         },
 
         afterRender: function () {
-            new Svelte.Gallery({
+            if (this.galleryComponent) return;
+            this.galleryComponent = new Svelte.Gallery({
                 target: document.querySelector('.modal .gallery-container'),
                 props: {
                     mediaList: this.options.mediaList ?? [],
-                    currentMediaId: this.options.id ?? null
+                    currentMediaId: this.options.id ?? null,
+                    canLoadMore: this.options.canLoadMore ?? false,
+                    onLoadMore: () => {
+                        this.trigger('gallery:load-more');
+                    }
                 }
             });
         },
