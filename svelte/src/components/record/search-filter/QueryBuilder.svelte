@@ -423,6 +423,7 @@
 
     function unsetAll() {
         searchManager.reset();
+        resetFilter();
         advancedFilterChecked = false;
         selectedFilterList = [];
         selectedSaveSearches = [];
