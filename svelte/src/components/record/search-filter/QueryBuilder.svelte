@@ -700,7 +700,7 @@
     <div class="advanced-filters">
         <h5>
             <input type="checkbox" bind:checked={advancedFilterChecked} on:change={handleAdvancedFilterChecked}>
-            <span>{Language.translate('Advanced Filter')}</span></h5>
+            <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" on:click={resetFilter}>
                 <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
