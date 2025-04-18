@@ -58,7 +58,7 @@ class AttributeFieldConverter
         $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
         $alias = $mapper->getQueryConverter()::TABLE_ALIAS;
         foreach ($attributes as $attribute) {
-            $attributeAlias = "a_{$attribute['id']}";
+            $attributeAlias = Util::generateId();
             $qb->leftJoin(
                 $alias,
                 "{$tableName}_attribute_value",

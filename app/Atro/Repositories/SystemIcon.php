@@ -20,19 +20,21 @@ class SystemIcon extends ReferenceData
 {
     public function insertEntity(Entity $entity): bool
     {
-        if (!empty($image = $entity->get('image'))) {
-            $entity->set('path', $image->getFilePath());
-        }
-
-        return parent::insertEntity($entity);
+        return false;
     }
 
     public function updateEntity(Entity $entity): bool
     {
-        if (!empty($image = $entity->get('image'))) {
-            $entity->set('path', $image->getFilePath());
-        }
+        return false;
+    }
 
-        return parent::updateEntity($entity);
+    public function deleteEntity(Entity $entity): bool
+    {
+        return false;
+    }
+
+    protected function getAllItems(array $params = []): array
+    {
+        return $this->getMetadata()->get(['app', 'systemIcons'], []);
     }
 }

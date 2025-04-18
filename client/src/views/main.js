@@ -328,22 +328,14 @@ Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchMana
         setupRightSideView: function() {
             if(this.shouldSetupRightSideView()) {
                 let recordView = this.getMainRecord();
-                let searchManager = null;
-
-                if(this.shouldShowFilter()) {
-                     searchManager = new SearchManager(this.collection, 'listFilter', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
-                     searchManager.scope = this.scope;
-                     searchManager.loadStored();
-                }
-
-                new Svelte.RightSideView({
+                window.SvelteRightSideView =  new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),
                     props: {
                         scope: this.scope,
                         model: this.model,
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
-                        searchManager: searchManager,
+                        searchManager: this.searchManager,
                         showFilter: this.shouldShowFilter(),
                         createView: this.createView.bind(this),
                         loadSummary: () => {

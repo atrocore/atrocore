@@ -594,16 +594,20 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         deleteLinkSubQuery: function () {
             this.deleteLinkSubQueryHtml();
             this.searchData.subQuery = [];
+            this.trigger('clear-subquery');
         },
 
         deleteLinkSubQueryHtml: function () {
             this.$el.find('.link-one-of-container .link-subquery').remove();
         },
 
-        addLinkSubQuery: function (data) {
+        addLinkSubQuery: function (data, silent = false) {
             let subQuery = data.where ?? [];
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
+            if(!silent){
+                this.trigger('add-subquery', subQuery);
+            }
         },
 
         addLinkOneOf: function (id, name) {
@@ -823,19 +827,52 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
-                        mode: 'edit',
+                        mode: 'search',
                         foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
+                        if(rule.data && rule.data['subQuery']) {
+                            view.searchData = {}
+                            view.searchData = {subQuery: rule.data['subQuery']};
+                        }
+
                         this.listenTo(view, 'after:render', () => {
-                            view.$el.find('[data-action="createLink"]').hide()
-                        })
-                        this.listenTo(view, 'change', () => {
-                            this.filterValue = model.get('valueIds');
+                            view.$el.find('[data-action="createLink"]').hide();
+                            view.$el.find('.search-type').hide();
+                        });
+
+
+                        this.listenTo(view, 'add-subquery', subQuery => {
+                            this.filterValue = rule.value ?? [];
+                            if(!rule.data) {
+                                rule.data = {}
+                            }
+                            rule.data['subQuery'] = subQuery;
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
+
+                        this.listenTo(view, 'clear-subquery', () => {
+                            this.filterValue = rule.value;
+                            if(rule.value !== null && rule.value.length === 0)  {
+                                this.filterValue = null;
+                            }
+                            delete rule.data['subQuery'];
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+
+                        this.listenTo(view, 'change', () => {
+                            this.filterValue = view.ids ?? model.get('valueIds');
+                            if(!rule.data) {
+                                rule.data = {};
+                            }
+                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+
+
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                        model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
                     });
                 }
@@ -862,13 +899,23 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                     this.createFilterView(rule, inputName);
                     this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                        delete rule.data['subQuery'];
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
                     });
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(!Array.isArray(value) || value === null) {
+                            return 'bad float';
+                        }
+
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 

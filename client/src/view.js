@@ -375,13 +375,13 @@ Espo.define('view', [], function () {
             let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null;
 
             if (iconClass) {
-                const referenceData = this.getConfig().get('referenceData');
+                const systemIcons = this.getMetadata().get(['app', 'systemIcons']) || [];
 
-                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
-                    const path = referenceData['SystemIcon'][iconClass].path || null;
+                if (systemIcons && iconClass in systemIcons) {
+                    const path = systemIcons[iconClass].path || null;
 
                     if (path) {
-                        return referenceData['SystemIcon'][iconClass].path;
+                        return systemIcons[iconClass].path;
                     }
                 }
             }
@@ -390,10 +390,15 @@ Espo.define('view', [], function () {
         },
 
         getDefaultTabIcon(scope) {
-            let firstLetter = scope.match(/\p{L}/u)?.[0] || null;
+            let firstSymbol = scope.match(/\p{L}/u)?.[0] || null,
+                key = null;
 
-            if (firstLetter) {
-                let key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
+            if (firstSymbol) {
+                if (Number.isInteger(firstSymbol)) {
+                    key = firstSymbol + '-numbers-icon.svg';
+                } else {
+                    key = firstSymbol.toLowerCase() + '-alphabet-icon.svg';
+                }
 
                 return 'client/img/icons/default/' + key;
             }
