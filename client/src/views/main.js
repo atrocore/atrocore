@@ -321,7 +321,7 @@ Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchMana
             return this.mode ?? this.viewMode;
         },
 
-        canShowFilter: function() {
+        shouldShowFilter: function() {
           return false;
         },
 
@@ -330,7 +330,7 @@ Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchMana
                 let recordView = this.getMainRecord();
                 let searchManager = null;
 
-                if(this.canShowFilter()) {
+                if(this.shouldShowFilter()) {
                      searchManager = new SearchManager(this.collection, 'listFilter', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
                      searchManager.scope = this.scope;
                      searchManager.loadStored();
@@ -344,7 +344,7 @@ Espo.define('views/main', ['view',  'search-manager'], function (Dep, SearchMana
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
                         searchManager: searchManager,
-                        showFilter: this.canShowFilter(),
+                        showFilter: this.shouldShowFilter(),
                         createView: this.createView.bind(this),
                         loadSummary: () => {
                             this.createView('rightSideView', this.rightSideView, {

@@ -746,11 +746,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
         },
 
         shouldSetupRightSideView() {
-
-            return this.canShowFilter() || this.canLoadActivities();
+            return this.shouldShowFilter() || this.canLoadActivities();
         },
 
-        canShowFilter() {
+        shouldShowFilter() {
             if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
                 return false;
             }
