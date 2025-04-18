@@ -403,6 +403,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'date',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'equal',
                     'not_equal',

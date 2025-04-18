@@ -12,13 +12,26 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Container;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class TextType extends AbstractFieldType
 {
     protected string $type = 'text';
     protected string $column = 'text_value';
+
+    protected Connection $conn;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->conn = $container->get('connection');
+    }
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
@@ -54,8 +67,6 @@ class TextType extends AbstractFieldType
             $entity->entityDefs['fields'][$name]['countBytesInsteadOfCharacters'] = $attributeData['countBytesInsteadOfCharacters'];
         }
 
-        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
-
         $languages = [];
         if (!empty($this->config->get('isMultilangActive'))) {
             foreach ($this->config->get('inputLanguageList', []) as $code) {
@@ -87,6 +98,59 @@ class TextType extends AbstractFieldType
 
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
             }
+        }
+
+        if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
+            $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+            $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
+
+            $entity->fields[$name . 'UnitId'] = [
+                'type'        => 'varchar',
+                'name'        => $name,
+                'attributeId' => $id,
+                'column'      => 'reference_value',
+                'required'    => !empty($row['is_required'])
+            ];
+            $entity->fields[$name . 'UnitName'] = [
+                'type'        => 'varchar',
+                'notStorable' => true
+            ];
+            $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+
+            $entity->entityDefs['fields'][$name . 'Unit'] = [
+                "type"                 => "measure",
+                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                "view"                 => "views/fields/unit-link",
+                "measureId"            => $row['measure_id'],
+                "entity"               => 'Unit',
+                "unitIdField"          => true,
+                "mainField"            => $name,
+                'required'             => !empty($row['is_required']),
+                'layoutDetailDisabled' => true
+            ];
+            $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
+        }
+        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+    }
+
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    {
+        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+
+        $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
+
+        if (!empty($this->config->get('isMultilangActive')) && !empty($row['is_multilang'])) {
+            foreach ($this->config->get('inputLanguageList', []) as $code) {
+                $lName = $name . ucfirst(Util::toCamelCase(strtolower($code)));
+                $qb->addSelect("{$alias}.{$this->column}_" . strtolower($code) . " as " . $mapper->getQueryConverter()->fieldToAlias($lName));
+            }
+        }
+
+        if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
+            $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
+
+            $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
+            $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
         }
     }
 }

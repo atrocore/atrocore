@@ -4,17 +4,17 @@
 
     interface ViewTypeButton {
         name: string;
-        iconClass: string;
+        icon: string;
         link?: string;
     }
 
     const dispatch = createEventDispatcher();
 
     const viewIcons = {
-        list: 'fa fa-th-list',
-        plate: 'fa fa-th',
-        kanban: 'fa fa-grip-horizontal',
-        tree: 'fa fa-stream'
+        list: '<svg class="icon"><use href="client/img/icons/icons.svg#th-list"></use></svg>',
+        plate: '<svg class="icon"><use href="client/img/icons/icons.svg#plate"></use></svg>',
+        kanban: '<svg class="icon"><use href="client/img/icons/icons.svg#kanban"></use></svg>',
+        tree: '<svg class="icon"><use href="client/img/icons/icons.svg#stream"></use></svg>'
     };
 
     export let modes: string[] | null = null;
@@ -34,7 +34,7 @@
                 return {
                     name: mode,
                     link: `#${scope}/${mode}`,
-                    iconClass: viewIcons[mode],
+                    icon: viewIcons[mode],
                 } as ViewTypeButton;
             });
     }
@@ -70,7 +70,7 @@
         {#each viewTypes as view}
             <a role="button" href={view.link} class="btn action" class:btn-default={view.name !== mode}
                class:btn-primary={view.name === mode} data-name={view.name} data-action="List" on:click={changeView}>
-                <span class={view.iconClass}></span>
+                {@html view.icon}
             </a>
         {/each}
     </div>

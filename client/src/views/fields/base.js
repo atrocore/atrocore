@@ -84,6 +84,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         defaultFilterValue: null,
 
+
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -427,11 +428,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.initStatusContainer();
 
             const statusIcons = this.getStatusIconsContainer();
-            let $sign = statusIcons.find('span.required-sign');
+            let $sign = statusIcons.find('.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<span class="fas fa-sm fa-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></span>`);
-                $sign = statusIcons.find('span.required-sign');
+                statusIcons.prepend(`<svg class="icon icon-small required-sign pressable-icon" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
+                $sign = statusIcons.find('.required-sign');
                 $sign.click(() => {
                     this.model.trigger('toggle-required-fields-highlight');
                 });
@@ -441,7 +442,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         hideRequiredSign: function () {
-            this.getStatusIconsContainer().find('span.required-sign').hide();
+            this.getStatusIconsContainer().find('.required-sign').hide();
         },
 
         getSearchParamsData: function () {
@@ -465,7 +466,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getInheritedIconHtml: function () {
-            return `<span data-name="${this.name}" class="fas fa-link fa-sm info-field-icon inherited" title="${this.translate('inherited')}"></span>`;
+            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon inherited" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`;
         },
 
         getNonInheritedIconEl: function () {
@@ -473,7 +474,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getNonInheritedIconHtml: function () {
-            return `<span data-name="${this.name}" class="fas fa-unlink fa-sm info-field-icon not-inherited" title="${this.translate('notInherited')}"></span>`;
+            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon not-inherited" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`;
         },
 
         getInheritActionEl: function () {
@@ -550,7 +551,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.getNonInheritedIconEl().length === 0 && !this.isInheritedField()) {
                 this.getStatusIconsContainer().append(this.getNonInheritedIconHtml());
-                this.getInlineActionsContainer().append(`<a href="javascript:" data-name="${this.name}" data-action="setAsInherited" class="action lock-link hidden" title="${this.translate('setAsInherited')}"><span class="fas fa-link fa-sm"></span></a>`);
+                this.getInlineActionsContainer().append(`<svg class="icon icon-small action lock-link hidden" data-name="${this.name}" data-action="setAsInherited" title="${this.translate('setAsInherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
             }
 
             $cell.on('mouseenter', function (e) {
@@ -573,9 +574,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
 
-            $cell.find('.fa-pencil-alt').parent().remove();
+            $cell.find('.inline-edit').parent().remove();
 
-            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><span class="fas fa-pencil-alt fa-sm"></span></a>`);
+            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><svg class="icon icon-small inline-edit"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg></a>`);
 
             if (inlineActions.size()) {
                 inlineActions.prepend($editLink);
@@ -820,8 +821,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         addInlineEditLinks: function () {
             const fieldActions = this.getInlineActionsContainer();
             const $cell = this.getCellElement();
-            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><span class="fa fa-check"></span></a>`);
-            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><span class="fa fa-times"></span></a>`);
+            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><svg class="icon"><use href="client/img/icons/icons.svg#check"></use></svg></a>`);
+            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></a>`);
 
             if (fieldActions.size()) {
                 fieldActions.append($saveLink);

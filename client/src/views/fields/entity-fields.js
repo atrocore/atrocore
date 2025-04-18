@@ -34,7 +34,11 @@ Espo.define('views/fields/entity-fields', ['views/fields/multi-enum', 'views/fie
 
     return Dep.extend({
 
+        entityField: 'entityType',
+
         setup() {
+            this.entityField = this.model.getFieldParam(this.name, 'entityField') || this.entityField;
+
             this.prepareEnumOptions();
             Dep.prototype.setup.call(this);
 

@@ -149,6 +149,7 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'boolean',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'equal',
                     'not_equal',

@@ -302,7 +302,7 @@ Espo.define('view', [], function () {
                 return;
             }
 
-            let button = $(`<a href='javascript:' style="text-decoration:none" data-action='showTour'> <span class='fas fa-question-circle'></span> </a>`);
+            let button = $(`<a href='javascript:' style="text-decoration:none; margin-left: 5px" data-action='showTour'><svg class="icon" style="margin-top: -2px"><use href="client/img/icons/icons.svg#question-circle"></use></svg></a>`);
             button.on('click', () => this.showTour(type))
             this.$el.parent().find('.page-header .header-title').append(button)
         },
@@ -369,6 +369,36 @@ Espo.define('view', [], function () {
                 hash = (hash * 33) ^ str.charCodeAt(i);
             }
             return hash >>> 0; // Ensure it's a 32-bit unsigned integer
+        },
+
+        getTabIcon(scope) {
+            let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null;
+
+            if (iconClass) {
+                const referenceData = this.getConfig().get('referenceData');
+
+                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
+                    const path = referenceData['SystemIcon'][iconClass].path || null;
+
+                    if (path) {
+                        return referenceData['SystemIcon'][iconClass].path;
+                    }
+                }
+            }
+
+            return null;
+        },
+
+        getDefaultTabIcon(scope) {
+            let firstLetter = scope.match(/\p{L}/u)?.[0] || null;
+
+            if (firstLetter) {
+                let key = firstLetter.toLowerCase() + '-alphabet-icon.svg';
+
+                return 'client/img/icons/default/' + key;
+            }
+
+            return null;
         },
 
         getAdminBreadcrumbsItem: function() {

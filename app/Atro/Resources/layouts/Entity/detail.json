@@ -36,9 +36,7 @@
         {
           "name": "iconClass"
         },
-        {
-          "name": "color"
-        }
+        false
       ],
       [
         {

@@ -354,6 +354,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
+                optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'contains',
                     'not_contains',

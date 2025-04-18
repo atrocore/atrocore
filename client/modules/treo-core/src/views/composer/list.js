@@ -420,5 +420,9 @@ Espo.define('treo-core:views/composer/list', 'views/list',
             }
         },
 
+        shouldSetupRightSideView: function() {
+            return false;
+        }
+
     })
 );

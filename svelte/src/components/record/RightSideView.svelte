@@ -4,6 +4,7 @@
     import {Language} from "../../utils/Language";
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
+    import QueryBuilder from "./search-filter/QueryBuilder.svelte";
 
     export let scope: string;
     export let mode: string;
@@ -11,14 +12,15 @@
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
-
     export let loadActivities: Function;
-
     export let isCollapsed: boolean = false;
-
     export let hasStream: boolean = false;
+    export let searchManager;
+    export let createView;
+    export let showFilter;
 
     $: scopeKey = scope + mode;
+
 
     let isPin = true;
     let streamView: Object;
@@ -97,6 +99,16 @@
             loadSummary();
         }
 
+        if (showFilter) {
+            items = [
+                ...items,
+                {
+                    name: "filter",
+                    label: Language.translate('filter')
+                }
+            ]
+        }
+
         if (hasStream) {
             items = [
                 ...items,
@@ -112,7 +124,7 @@
             setActiveItem(items.find(i => i.name === itemName));
         }
 
-        if(!activeItem) {
+        if (!activeItem) {
             setActiveItem(items[0]);
         }
     });
@@ -139,6 +151,11 @@
             <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
         </div>
 
+        {#if showFilter}
+            <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
+            </div>
+        {/if}
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
             <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">

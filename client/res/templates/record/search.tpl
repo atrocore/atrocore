@@ -56,10 +56,10 @@
             {{#unless textFilterDisabled}}<input type="text" class="form-control text-filter" placeholder="{{translate 'typeAndPressEnter'}}" name="textFilter" value="{{textFilter}}" tabindex="1">{{/unless}}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default reset filter-btn" data-action="reset" title="{{translate 'Reset'}}">
-                    <span class="fas fa-times"></span>
+                    <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
                 </button>
                 <button type="button" class="btn btn-primary search btn-icon btn-icon-x-wide filter-btn" data-action="search" title="{{translate 'Search'}}">
-                    <span class="fas fa-search"></span>
+                   <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
                 </button>
             </div>
         </div>
@@ -76,12 +76,7 @@
 </div>
 
 <div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
-{{#if queryBuilderFilter}}
-{{#if hasAttributeButton}}
-<button class="btn-link btn" data-action="add-attribute-filter"><div>{{translate 'Add Attribute'}}</div></button>
-{{/if}}
-<div class="query-builder"></div>
-{{else}}
+
 <div class="row advanced-filters grid-auto-fill-sm">
     {{#each filterDataList}}
     <div class="filter filter-{{name}} col-sm-4 col-md-3" data-name="{{name}}">
@@ -89,15 +84,8 @@
     </div>
     {{/each}}
 </div>
-{{/if}}
-{{#if queryBuilderFilterAvailable}}
-<div class="row new-filter-container">
-    <div class="cell form-group">
-        <label class="control-label">{{translate 'Query Builder Filter'}}</label>
-        <div class="field">{{{hasQueryBuilderFilter}}}</div>
-    </div>
-</div>
-{{/if}}
+
+
 
 <div class="row filter-actions">
     <button class="btn-link btn" data-action="search"><div>{{translate 'Apply filter'}}</div></button>

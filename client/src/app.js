@@ -122,7 +122,10 @@ Espo.define(
 
             Promise.all([
                 new Promise(function (resolve) {
-                    this.settings.load(function () {
+                    this.settings.load(function (model) {
+                        if (model.get('frontendTimeout')) {
+                            $.ajaxSetup({'timeout': model.get('frontendTimeout') * 1000})
+                        }
                         resolve();
                     });
                 }.bind(this)),
