@@ -12,15 +12,12 @@
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
-
     export let loadActivities: Function;
-
     export let isCollapsed: boolean = false;
-
     export let hasStream: boolean = false;
-
-    export let collection;
+    export let searchManager;
     export let createView;
+    export let showFilter;
 
     $: scopeKey = scope + mode;
 
@@ -83,6 +80,11 @@
         }
     }
 
+    export function openFilter() {
+        setActiveItem(items.find(item => item.name === 'filter'));
+        isCollapsed = false;
+    }
+
     onMount(() => {
         const savedWidth = Storage.get('rightSideView', scopeKey);
         if (savedWidth) {
@@ -102,7 +104,7 @@
             loadSummary();
         }
 
-        if (['list','plate', 'kanban'].includes(mode)) {
+        if (showFilter) {
             items = [
                 ...items,
                 {
@@ -154,10 +156,11 @@
             <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
         </div>
 
-
-        <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-            <QueryBuilder scope={scope} collection={collection} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
-        </div>
+        {#if showFilter}
+            <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
+            </div>
+        {/if}
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
             <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">

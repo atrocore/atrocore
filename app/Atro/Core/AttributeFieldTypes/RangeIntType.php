@@ -12,13 +12,24 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Container;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
 
 class RangeIntType extends AbstractFieldType
 {
     protected string $type = 'int';
+
+    protected Connection $conn;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+
+        $this->conn = $container->get('connection');
+    }
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
@@ -125,8 +136,11 @@ class RangeIntType extends AbstractFieldType
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
+        $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
+
         $qb->addSelect("{$alias}.{$this->type}_value as " . $mapper->getQueryConverter()->fieldToAlias($name . 'From'));
         $qb->addSelect("{$alias}.{$this->type}_value1 as " . $mapper->getQueryConverter()->fieldToAlias($name . 'To'));
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
+        $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
     }
 }

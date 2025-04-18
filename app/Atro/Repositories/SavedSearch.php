@@ -43,16 +43,36 @@ class SavedSearch extends Base
     {
         // Clean filter to remove all removed fields
         $data = json_decode(json_encode($entity->get('data')), true);
-        foreach ($data as $filterField => $value) {
-            $name = explode('-', $filterField)[0];
-            if ($name === 'id') {
-                continue;
-            }
-            if (!$this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', $name])) {
-                unset($data[$filterField]);
+        if(array_key_exists('condition', $data)) {
+          $this->cleanQueryBuilderData($data, $entity->get('entityType'));
+        }else{
+            foreach ($data as $filterField => $value) {
+                $name = explode('-', $filterField)[0];
+                if ($name === 'id') {
+                    continue;
+                }
+                if (!$this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', $name])) {
+                    unset($data[$filterField]);
+                }
             }
         }
+
         $entity->set('data', $data);
+    }
+
+    private function cleanQueryBuilderData(array &$data, string $scope): void
+    {
+        if(!empty($data['rules'])) {
+            foreach($data['rules'] as $key => $rule) {
+                if(!empty($rule['field']) && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $rule['field']])){
+                    unset($data['rules'][$key]);
+                }
+
+                if(!empty($rule['rules'])) {
+                    $this->cleanQueryBuilderData($rule, $scope);
+                }
+            }
+        }
     }
 
     protected function beforeSave(Entity $entity, array $options = [])

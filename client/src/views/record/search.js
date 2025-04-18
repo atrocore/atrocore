@@ -91,7 +91,8 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 hasViewModeSwitcher: this.viewModeList && this.viewModeList.length > 1,
                 additionalFilters: this.additionalFilters,
                 hasAttributeButton: this.model.urlRoot === 'Product',
-                filtersDisabled: this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData'
+                filtersDisabled: this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData',
+                openQueryBuilder: this.options.openQueryBuilder
             };
 
             data.boolFilterListLength = 0;
@@ -412,6 +413,14 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 a.next('ul').toggle();
                 e.stopPropagation();
                 e.preventDefault();
+            },
+            'click .filters-button': function(e) {
+                if(this.options.openQueryBuilder) {
+                    this.notify('Use the Right Side View for filtering', 'warning', 2000);
+                    if( window.SvelteRightSideView) {
+                        window.SvelteRightSideView.openFilter();
+                    }
+                }
             }
         },
 
@@ -908,6 +917,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
             this.listenTo(this.collection, 'sync', function () {
                 this.notify(false);
             }.bind(this));
+
             let where = this.searchManager.getWhere();
             where.forEach(item => {
                 if (item.type === 'bool') {

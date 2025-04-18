@@ -308,6 +308,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
                 viewMode: this.viewMode,
                 viewModeList: this.viewModeList,
                 hiddenBoolFilterList: hiddenBoolFilterList,
+                openQueryBuilder: true
             }, function (view) {
                 view.render();
                 this.listenTo(view, 'reset', function () {
@@ -379,6 +380,18 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
             searchManager.scope = this.scope;
 
             searchManager.loadStored();
+            let savedFilters = searchManager.getSavedFilters();
+            debugger
+            if(savedFilters.length) {
+                this.ajaxGetRequest('SavedSearch', {
+                    collectionOnly: true,
+                    scope: this.scope
+                }, {async: false}).then((result) => {
+                    debugger
+                   savedFilters = savedFilters.map(i => result.list.find(item => item.id === i.id)).filter(i => i);
+                    searchManager.set(_.extend(searchManager.get(), {savedFilters: savedFilters}));
+                });
+            }
             collection.where = searchManager.getWhere();
             this.searchManager = searchManager;
         },
@@ -746,7 +759,16 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Qu
         },
 
         shouldSetupRightSideView() {
-            return true;
+            return this.shouldShowFilter() || this.canLoadActivities();
+        },
+
+        shouldShowFilter() {
+            if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+                return false;
+            }
+
+            return ['list', 'kanban', 'plate'].includes(this.getMode()) && this.collection;
+
         }
     });
 });

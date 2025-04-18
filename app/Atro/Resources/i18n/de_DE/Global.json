@@ -363,9 +363,10 @@
     "General Filters": "Allgemeine Filter",
     "Attributes": "Attribute",
     "Fields": "Felder",
-    "Advanced Filters": "Erweiterte Filter",
+    "Advanced Filter": "Erweiterte Filter",
     "Unset": "Nicht eingestellt",
-    "Unset All": "Alle zurücksetzen"
+    "Unset All": "Alle zurücksetzen",
+    "Cancel Edit": "Bearbeiten abbrechen"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
@@ -464,7 +465,9 @@
     "dontHaveAccessInInstance": "Sie haben keinen Zugriff auf diesen Datensatz auf der Instanz",
     "selectNoMoreThan": "Nicht mehr als {count} Datensätze auswählen",
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
-    "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits."
+    "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
+    "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
+    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
   },
   "unit Length": {
     "mm": "mm",
