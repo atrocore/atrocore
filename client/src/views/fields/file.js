@@ -59,12 +59,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 let items;
                 let canLoadMore = false;
                 let modalContainer = this;
+                let collection = null;
                 if (this.model.collection && this.model.collection.models && this.model.collection.name === 'File') {
-                    items = this.model.collection.models
+                    collection = this.model.collection;
+                    items = collection.models
                         .filter(item => this.hasPreview(item.get(this.nameName)))
                         .map(item => this.prepareMediaFromModel(item));
 
-                    if (this.model.collection.length < this.model.collection.total) {
+                    if (collection.length < collection.total) {
                         canLoadMore = true;
                         modalContainer = this.getParentView().getParentView();
                     }
@@ -81,18 +83,18 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 }, view => {
                     view.render();
 
-                    this.listenTo(view, 'gallery:load-more', () => {
-                        this.model.collection.fetch({
+                    view.on('gallery:load-more', () => {
+                        collection.fetch({
                             more: true,
                             remove: false,
-                            success: function () {
+                            success: () => {
                                 view.trigger('gallery:load-more:success', {
-                                    mediaList: this.model.collection.models
+                                    mediaList: collection.models
                                         .filter(item => this.hasPreview(item.get(this.nameName)))
                                         .map(item => this.prepareMediaFromModel(item)),
-                                    canLoadMore: this.model.collection.length < this.model.collection.total,
+                                    canLoadMore: collection.length < collection.total,
                                 });
-                            }.bind(this)
+                            }
                         });
                     });
                 });

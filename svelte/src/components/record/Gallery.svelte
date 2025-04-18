@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onMount, onDestroy, afterUpdate} from 'svelte';
+    import {onMount, onDestroy, tick} from 'svelte';
     import Swiper from 'swiper';
     import {FreeMode, Mousewheel, Navigation, Scrollbar, Thumbs, Zoom} from 'swiper/modules';
 
@@ -63,32 +63,16 @@
     let swiperNextBtn: HTMLDivElement;
     let swiperPrevBtn: HTMLDivElement;
 
-    const thumbsOptions: Record<string, any> = {
-        direction: 'vertical',
-        slidesPerView: 'auto',
-        spaceBetween: 10,
-        freeMode: {
-            enabled: true,
-            sticky: true,
-        },
-        watchSlidesProgress: true,
-        mousewheel: {
-            enabled: true,
-            forceToAxis: true,
-        },
-        scrollbar: {
-            enabled: true,
-            el: getScrollEl(),
-            draggable: true,
-            snapOnRelease: true,
-        },
-        modules: [FreeMode, Mousewheel, Scrollbar],
-    };
-
+    let prevMediaList: GalleryMedia[] = [];
     window.addEventListener('gallery:load-more:success', (e: CustomEvent<{mediaList: GalleryMedia[], canLoadMore: boolean}>) => {
         isLoadingMore = false;
+        prevMediaList = mediaList;
         mediaList = e.detail.mediaList;
         canLoadMore = e.detail.canLoadMore;
+
+        if (JSON.stringify(prevMediaList) !== JSON.stringify(mediaList)) {
+            tick().then(() => reloadSwiper());
+        }
     });
 
     onMount(() => {
@@ -104,10 +88,8 @@
             },
             modules: [Navigation, Zoom],
             on: {
-                init: (swiper: Swiper) => {
-                    if (thumbsSwiper) {
-                        thumbsSwiper.slideTo(initialSlide);
-                    }
+                init: () => {
+                    thumbsSwiper?.slideTo(initialSlide);
                 },
                 slideChange: (swiper: Swiper) => {
                     currentIndex = swiper.activeIndex;
@@ -122,7 +104,27 @@
         };
 
         if (thumbsSwiperEl) {
-            thumbsSwiper = new Swiper(thumbsSwiperEl, thumbsOptions);
+            thumbsSwiper = new Swiper(thumbsSwiperEl, {
+                direction: 'vertical',
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                freeMode: {
+                    enabled: true,
+                    sticky: true,
+                },
+                watchSlidesProgress: true,
+                mousewheel: {
+                    enabled: true,
+                    forceToAxis: true,
+                },
+                scrollbar: {
+                    enabled: true,
+                    el: thumbsScrollEl,
+                    draggable: true,
+                    snapOnRelease: true,
+                },
+                modules: [FreeMode, Mousewheel, Scrollbar],
+            });
             swiperOptions.thumbs = {swiper: thumbsSwiper};
             swiperOptions.modules = [...swiperOptions.modules, Thumbs];
         }
@@ -135,9 +137,8 @@
         thumbsSwiper?.destroy(true, true);
     });
 
-    let prevMediaList: GalleryMedia[] = [];
-    afterUpdate(() => {
-        const needsThumbs = mediaList.length > 1;
+    function reloadSwiper(): void {
+        const needsThumbs = mediaList.length > 1 || canLoadMore;
 
         if (!needsThumbs && thumbsSwiper) {
             thumbsSwiper.destroy(true, true);
@@ -145,27 +146,37 @@
         }
 
         if (needsThumbs && thumbsSwiperEl && !thumbsSwiper) {
-            thumbsSwiper = new Swiper(thumbsSwiperEl, thumbsOptions);
+            thumbsSwiper = new Swiper(thumbsSwiperEl, {
+                direction: 'vertical',
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                freeMode: {
+                    enabled: true,
+                    sticky: true,
+                },
+                watchSlidesProgress: true,
+                mousewheel: {
+                    enabled: true,
+                    forceToAxis: true,
+                },
+                scrollbar: {
+                    enabled: true,
+                    el: thumbsScrollEl,
+                    draggable: true,
+                    snapOnRelease: true,
+                },
+                modules: [FreeMode, Mousewheel, Scrollbar],
+            });
 
-            mainSwiper?.params && (mainSwiper.params.thumbs = { swiper: thumbsSwiper });
-            mainSwiper?.update();
-        }
-
-        if (mediaList !== prevMediaList) {
-            prevMediaList = mediaList;
-
-            mainSwiper?.update();
-            thumbsSwiper?.update();
-
-            const newIndex = currentMediaId !== null ? mediaList.findIndex(media => media.id === currentMediaId) : 0;
-            if (currentIndex !== newIndex) {
-                mainSwiper?.slideTo(newIndex);
+            if (mainSwiper) {
+                mainSwiper.params.modules = mainSwiper.params.modules?.concat([Thumbs]);
+                mainSwiper.params.thumbs = { swiper: thumbsSwiper };
             }
         }
-    });
 
-    function getScrollEl(): HTMLDivElement {
-        return thumbsScrollEl;
+        // mainSwiper.updateSlides();
+        mainSwiper.update();
+        // mainSwiper.navigation.update();
     }
 
     function onDownloadMedia(): void {
@@ -212,15 +223,13 @@
                     {/each}
 
                     {#if canLoadMore}
-                        {#if isLoadingMore}
-                            <div class="swiper-slide thumb load-more-thumb no-border">
-                                <Preloader heightPx={12} />
-                            </div>
-                        {:else}
-                            <div class="swiper-slide thumb load-more-thumb" on:click={handleLoadMoreClick}>
-                                <span>Load more</span>
-                            </div>
-                        {/if}
+                        <div class="swiper-slide thumb load-more-thumb" class:no-border={isLoadingMore}>
+                            {#if isLoadingMore}
+                                <Preloader />
+                            {:else}
+                                <span on:click|stopPropagation={handleLoadMoreClick}>Load more</span>
+                            {/if}
+                        </div>
                     {/if}
                 </div>
                 <div class="thumbs-scrollbar swiper-scrollbar" bind:this={thumbsScrollEl}></div>
@@ -402,12 +411,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
-        color: var(--primary-font-color);
-        cursor: pointer;
-        user-select: none;
-        text-align: center;
-        padding: 5px;
+        padding: 0;
+        min-height: 30px;
     }
 
     .load-more-thumb:hover {
@@ -416,6 +421,15 @@
 
     .load-more-thumb.no-border {
         border: none !important;
+    }
+
+    .load-more-thumb > span {
+        font-size: 12px;
+        color: var(--primary-font-color);
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+        padding: 5px;
     }
 
     .load-more-thumb:global(.swiper-slide-thumb-active) {
