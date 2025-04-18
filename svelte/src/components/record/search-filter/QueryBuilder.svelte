@@ -329,7 +329,7 @@
         updateSearchManager({
             queryBuilder: []
         });
-        window.$(queryBuilderElement).queryBuilder('reset')
+        window.$(queryBuilderElement).queryBuilder('setRules', [])
     }
 
     function updateCollection() {
