@@ -312,13 +312,13 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             };
 
             if (iconClass) {
-                const referenceData = this.getConfig().get('referenceData');
+                const systemIcons = this.getMetadata().get(['app', 'systemIcons']) || [];
 
-                if (referenceData && referenceData['SystemIcon'] && iconClass in referenceData['SystemIcon']) {
-                    const path = referenceData['SystemIcon'][iconClass].path || null;
+                if (systemIcons && iconClass in systemIcons) {
+                    const path = systemIcons[iconClass].path || null;
 
                     if (path) {
-                        result.iconSrc = referenceData['SystemIcon'][iconClass].path;
+                        result.iconSrc = systemIcons[iconClass].path;
                     }
                 }
             }

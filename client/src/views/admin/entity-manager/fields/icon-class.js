@@ -51,10 +51,10 @@ Espo.define('views/admin/entity-manager/fields/icon-class', 'views/fields/base',
                 value = this.model.get(this.name);
 
             if (value) {
-                const referenceData = this.getConfig().get('referenceData');
+                const systemIcons = this.getMetadata().get(['app', 'systemIcons']) || [];
 
-                if (referenceData && referenceData['SystemIcon'] && value in referenceData['SystemIcon']) {
-                    data.value = referenceData['SystemIcon'][value].path;
+                if (systemIcons && value in systemIcons) {
+                    data.value = systemIcons[value].path;
                 }
             }
 
