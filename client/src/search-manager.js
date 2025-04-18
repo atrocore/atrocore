@@ -190,7 +190,7 @@ Espo.define('search-manager', [], function () {
         },
 
         loadStored: function () {
-            this.data = this.storage.get(this.type + 'Search', this.scope) || Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
+            this.data = this.storage.get(this.type + 'QueryBuilder', this.scope) || Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
             this.sanitizeData();
             return this;
         },
@@ -238,14 +238,14 @@ Espo.define('search-manager', [], function () {
         set: function (data) {
             this.data = data;
             if (this.storage) {
-                this.storage.set(this.type + 'Search', this.scope, data);
+                this.storage.set(this.type + 'QueryBuilder', this.scope, data);
             }
         },
 
         empty: function () {
             this.data = Espo.Utils.clone(this.emptyData);
             if (this.storage) {
-                this.storage.clear(this.type + 'Search', this.scope);
+                this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
         },
 
@@ -256,7 +256,7 @@ Espo.define('search-manager', [], function () {
             }
             this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
             if (this.storage) {
-                this.storage.clear(this.type + 'Search', this.scope);
+                this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
         },
 

@@ -42,6 +42,8 @@
 
     let selectedSaveSearches: Array<any> = [];
 
+    let showUnsetAll: boolean = false;
+
     $: {
         updateStyle(parentWidth);
     }
@@ -113,6 +115,7 @@
     function initQueryBuilderFilter() {
         const $queryBuilder = window.$(queryBuilderElement)
         const rules = searchManager.getQueryBuilder() || [];
+
         const emptyAttribute = 'emptyAttributeRule';
 
         let filterPerGroups = {};
@@ -196,6 +199,7 @@
         updateStyle(parentWidth);
         $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
             advancedFilterChecked = false;
+
             setTimeout(() => {
                 updateStyle(parentWidth);
             }, 250)
@@ -205,7 +209,8 @@
                 if (rules) {
                     updateSearchManager({
                         queryBuilder: rules
-                    })
+                    });
+                    handleAdvancedFilterChecked(false);
                 }
             } catch (err) {
             }
@@ -412,16 +417,21 @@
         let bool = searchManager.getBool();
         bool[filter] = isChecked;
         updateSearchManager({bool})
-        updateCollection()
+        updateCollection();
+        refreshShowUnsetAll();
     }
 
     function unsetAll() {
         searchManager.reset();
         resetFilter();
-        tick();
+        advancedFilterChecked = false;
+        selectedFilterList = [];
+        selectedSaveSearches = [];
+        refreshShowUnsetAll();
+        updateCollection();
     }
 
-    function handleAdvancedFilterChecked() {
+    function handleAdvancedFilterChecked(refresh = true) {
         if (advancedFilterChecked) {
             let validation = window.$(queryBuilderElement).queryBuilder('validate');
             if (!validation) {
@@ -435,7 +445,11 @@
             queryBuilderApplied: advancedFilterChecked ? 'apply' : false
         });
 
-        updateCollection();
+        if(refresh) {
+            updateCollection();
+        }
+
+        refreshShowUnsetAll()
     }
 
     async function saveSaveSearch(data, id = null): Promise<void> {
@@ -504,6 +518,7 @@
             savedFilters: savedSearchList.filter(v => e.detail.selectedSavedSearchIds.includes(v.id))
         })
         updateCollection();
+        refreshShowUnsetAll();
     }
 
     function renameSaveSearch(item) {
@@ -563,7 +578,8 @@
                 $queryBuilder.queryBuilder('setRules', item.data)
                 editingSavedSearch = item;
             } catch (e) {
-                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt'), 'error')
+                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
+                $queryBuilder.queryBuilder('setRules', searchManager.getQueryBuilder());
             }
         });
     }
@@ -573,6 +589,17 @@
         $queryBuilder.queryBuilder('setRules', oldAdvancedFilter ?? []);
         oldAdvancedFilter = null;
         editingSavedSearch = null;
+    }
+
+    function refreshShowUnsetAll() {
+        showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
+        let bool = searchManager.getBool();
+        for (const boolKey in bool) {
+            if(bool[boolKey] && boolFilterList.includes(boolKey)){
+                showUnsetAll = true;
+                break;
+            }
+        }
     }
 
     onMount(() => {
@@ -598,8 +625,6 @@
         boolFilterList = boolFilterList.filter(function (item) {
             return !hiddenBoolFilterList.includes(item)
         });
-
-
 
         // load where params
         const urlParams = new URLSearchParams(window.location.search);
@@ -646,12 +671,20 @@
             collection.data.scope = scope;
             collection.fetch().then((data) => {
                 savedSearchList = data.list;
+                selectedSaveSearches = (searchManager.getSavedFilters() || []).map(item => {
+                    return  savedSearchList.find(el => el.id === item.id);
+                });
+                selectedSaveSearches = selectedSaveSearches.filter(v => v);
+                updateSearchManager({
+                    savedFilters: selectedSaveSearches
+                })
                 loadingSavedSearch = false;
             })
         });
 
-        // load select saved search
-        selectedSaveSearches = searchManager.getSavedFilters() || [];
+        // show unset all
+       refreshShowUnsetAll();
+
 
         prepareFilters(() => {
             initQueryBuilderFilter();
@@ -661,10 +694,12 @@
 
 <div class="query-builder-container">
     <div>
+        {#if showUnsetAll}
         <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
             <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
             {Language.translate('Unset All')}
         </button>
+        {/if}
     </div>
     <div class="checkboxes-filter">
         {#if boolFilterList?.length > 0}
@@ -757,5 +792,9 @@
     .advanced-filters h5 input[type="checkbox"] {
         margin-top: 0;
         margin-right: 10px;
+    }
+    :global(.query-builder .input-group-btn .btn) {
+        height: 33px;
+        padding: 0;
     }
 </style>

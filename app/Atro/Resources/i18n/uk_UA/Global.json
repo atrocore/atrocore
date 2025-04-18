@@ -472,7 +472,7 @@
     "fillEmptyFieldBeforeMerging": "Деякі поля є обов'язковими для заповнення, будь ласка, заповніть їх перед злиттям.",
     "unableToDuplicateRecord": "Неможливо продублювати. Запис зі значенням унікального поля вже існує.",
     "youHaveErrorsInFilter": "У фільтрі є деякі помилки.",
-    "theSavedFilterMightBeCorrupt": "Збережений фільтр може бути пошкоджений."
+    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
   },
   "boolFilters": {
     "onlyActive": "Активні",

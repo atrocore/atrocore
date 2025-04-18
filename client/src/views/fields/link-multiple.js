@@ -486,6 +486,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         deleteLinkSubQuery: function () {
             this.deleteLinkSubQueryHtml();
             this.searchData.subQuery = [];
+            this.trigger('clear-subquery');
         },
 
         deleteLink: function (id) {
@@ -501,13 +502,16 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.trigger('change');
         },
 
-        addLinkSubQuery: function (data) {
+        addLinkSubQuery: function (data, silent = false) {
             if (!this.searchData) {
                 return;
             }
             let subQuery = data.where ?? [];
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
+            if(!silent) {
+                this.trigger('add-subquery', subQuery);
+            }
         },
 
         addLink: function (id, name) {
@@ -707,18 +711,45 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
-                        mode: 'edit',
+                        mode: 'search',
                         foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                     }, view => {
+
+                        if(rule.data && rule.data['subQuery']) {
+                            view.searchData = {}
+                            let data = {where: rule.data['subQuery']};
+                            view.addLinkSubQuery(data, true);
+                        }
+
                         this.listenTo(view, 'after:render', () => {
                             view.$el.find('[data-action="createLink"]').hide()
-                        })
+                            view.$el.find('.search-type').hide()
+                        });
+
+                        this.listenTo(view, 'add-subquery', subQuery => {
+                            this.filterValue = rule.value ?? [];
+                            if(!rule.data) {
+                                rule.data = {}
+                            }
+                            rule.data['subQuery'] = subQuery;
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+
+                        this.listenTo(view, 'clear-subquery', () => {
+                            this.filterValue = rule.value;
+                            if(rule.value !== null && rule.length === 0)  {
+                                this.filterValue = null;
+                            }
+                            delete rule.data['subQuery'];
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = model.get('valueIds');
-                            rule.data = {
-                                nameHash: model.get('valueNames')
+                            this.filterValue =  view.ids;
+                            if(!rule.data) {
+                                rule.data = {};
                             }
+                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
@@ -752,6 +783,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.createFilterView(rule, inputName);
                     this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                        delete rule.data['subQuery']
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
                     });
