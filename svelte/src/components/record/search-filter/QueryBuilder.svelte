@@ -690,7 +690,12 @@
         CollectionFactory.create('SavedSearch', (collection) => {
             savedSearchCollection = collection;
             collection.url = `SavedSearch`;
-            collection.data.scope = scope;
+            collection.where = [{
+                type: 'equals',
+                attribute: 'entityType',
+                value: scope
+            }];
+
             collection.fetch().then((data) => {
                 savedSearchList = data.list;
                 selectedSaveSearches = (searchManager.getSavedFilters() || []).map(item => {

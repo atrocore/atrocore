@@ -125,9 +125,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 this.disableSavePreset = this.options.disableSavePreset;
             }
 
-            if (!this.getAcl().check('SavedSearch', 'create')) {
-                this.disableSavePreset = true;
-            }
 
             this.viewMode = this.options.viewMode;
             this.viewModeList = this.options.viewModeList;
@@ -172,23 +169,6 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 }
                 return true;
             }, this);
-
-            if (this.getAcl().check('SavedSearch', 'read') && this.scope) {
-                this.ajaxGetRequest('SavedSearch', {
-                    collectionOnly: true,
-                    scope: this.scope
-                }, {async: false}).then((result) => {
-                    result.list.forEach(item => {
-                        this.presetFilterList.push({
-                            id: item.id,
-                            name: item.id,
-                            label: item.name,
-                            data: item.data,
-                            primary: item.primary
-                        });
-                    });
-                });
-            }
 
             if (this.presetFiltersDisabled) {
                 this.presetFilterList = [];
@@ -590,52 +570,10 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
                 primary: this.primary
             };
 
-            this.ajaxPostRequest('SavedSearch', {
-                entityType: this.scope,
-                name: data.label,
-                data: data.data,
-                primary: data.primary,
-                isPublic: params.isPublic
-            }).success(res => {
-                data.id = res.id;
-                data.name = res.id;
-                this.presetFilterList.push(data);
-                this.presetName = res.id;
-                this.render();
-                this.updateSearch()
-            });
         },
 
         removePreset: function (id) {
-            this.notify('Loading...')
-            $.ajax({
-                type: 'DELETE',
-                url: `SavedSearch/${id}?silent=true`,
-                contentType: "application/json",
-                success: () => {
-                    this.notify(false)
-                    let list = this.presetFilterList;
-                    list.forEach(function (item, i) {
-                        if (item.id == id) {
-                            list.splice(i, 1);
-                            return;
-                        }
-                    }, this);
 
-
-                    this.presetName = this.primary;
-                    this.advanced = {};
-
-                    this.removeFilters();
-
-                    this.render();
-                    this.updateSearch();
-                    this.updateCollection();
-                },
-                error: (e) => {
-                    this.notify((e.responseText !== null && e.responseText !== '') ? e.responseText : e.statusText, 'danger')
-                }
-            });
         },
 
         updateAddFilterButton: function () {
