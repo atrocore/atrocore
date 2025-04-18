@@ -80,6 +80,11 @@
         }
     }
 
+    export function openFilter() {
+        setActiveItem(items.find(item => item.name === 'filter'));
+        isCollapsed = false;
+    }
+
     onMount(() => {
         const savedWidth = Storage.get('rightSideView', scopeKey);
         if (savedWidth) {
