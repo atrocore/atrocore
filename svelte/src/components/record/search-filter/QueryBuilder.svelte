@@ -112,9 +112,29 @@
         return ids;
     }
 
+    function getRulesWithBadRuleRemoved(rules: Rule[]): Rule[] {
+            let newRules: Rule[] = rules;
+            rules.forEach((rule, key) => {
+                if (rule.rules) {
+                    rules[key].rules  = getRulesWithBadRuleRemoved(rules[key].rules)
+                } else if (rule.id ) {
+                    if (!filters.find(f => f.id === rule.id)) {
+                        newRules = rules.filter(r => r.id !== rule.id)
+                    }
+                }
+            });
+        return newRules;
+    }
+
     function initQueryBuilderFilter() {
+
         const $queryBuilder = window.$(queryBuilderElement)
         const rules = searchManager.getQueryBuilder() || [];
+        if(rules['rules']) {
+            rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
+        }
+
+        console.log("filters", filters, 'rules', rules)
 
         const emptyAttribute = 'emptyAttributeRule';
 
@@ -300,9 +320,8 @@
                             'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
                         },
                     }).then(response => {
-
                         return response.json().then(attrs => {
-                            if (attrs.list) {
+                            if (attrs.list.length) {
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
                                         resolve();
@@ -422,6 +441,9 @@
     }
 
     function unsetAll() {
+        if(!showUnsetAll) {
+            return;
+        }
         searchManager.reset();
         resetFilter();
         advancedFilterChecked = false;
@@ -694,12 +716,11 @@
 
 <div class="query-builder-container">
     <div>
-        {#if showUnsetAll}
-        <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
+
+        <button class="filter-item" data-action="filter"  class:disabled={!showUnsetAll} on:click={unsetAll}>
             <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
             {Language.translate('Unset All')}
         </button>
-        {/if}
     </div>
     <div class="checkboxes-filter">
         {#if boolFilterList?.length > 0}
@@ -796,5 +817,11 @@
     :global(.query-builder .input-group-btn .btn) {
         height: 33px;
         padding: 0;
+    }
+
+    button.disabled,  button.disabled:hover{
+        background-color: #eee;
+        border-color: #eee;
+        cursor: not-allowed;
     }
 </style>
