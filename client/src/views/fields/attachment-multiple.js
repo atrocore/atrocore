@@ -64,6 +64,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/jpeg',
             'image/png',
             'image/gif',
+            'image/webp',
         ],
 
         validations: ['ready', 'required'],
