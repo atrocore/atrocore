@@ -45,7 +45,7 @@
     }
 
     function onLanguageChange() {
-        console.log(inputLanguages)
+
     }
 </script>
 
