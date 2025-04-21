@@ -54,6 +54,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
+                hasLocaleSwitcher: this.hasLocaleSwitcher()
             }, Dep.prototype.data.call(this));
         },
 
@@ -158,7 +159,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                         this.$el.find('ul.tabs .keep-open').removeClass('keep-open');
                         moreGroup.addClass('keep-open');
                     } else {
-                        if(!moreGroup.hasClass('open')) {
+                        if (!moreGroup.hasClass('open')) {
                             moreGroup.addClass('open');
                         }
                         this.$el.find('ul.tabs .keep-open').removeClass('keep-open');
@@ -182,7 +183,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 var $moreDropdown = $tabs.find('li.more').last();
                 var $more = $tabs.find('li.more > ul').last();
 
-                $window.on('resize.navbar', function() {
+                $window.on('resize.navbar', function () {
                     updateWidth();
                 });
 
@@ -312,7 +313,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
                 }.bind(this);
 
-                $(window).on('resize.navbar', function() {
+                $(window).on('resize.navbar', function () {
                     updateSizeForVertical();
                 });
                 updateSizeForVertical();
@@ -324,6 +325,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
             this.listenToOnce(this, 'after:render', () => {
                 this.initProgressBadge();
+                this.initLocaleSwitcher()
             });
         },
 
@@ -382,6 +384,21 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             }
         },
 
+        hasLocaleSwitcher() {
+            return Object.keys(this.getConfig().get('locales') || {}).length > 0 || (this.getConfig().get('inputLanguageList') || []).length > 0
+        },
+
+        initLocaleSwitcher() {
+            if (this.hasLocaleSwitcher()) {
+                new Svelte.LocaleSwitcher({
+                    target: this.$el.find('.navbar-body .locale-switcher-container').get(0),
+                    props: {
+
+                    }
+                });
+            }
+        },
+
         getMenuDataList: function () {
             let menuDefs = Dep.prototype.getMenuDataList.call(this) || [];
 
@@ -398,7 +415,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             });
         },
 
-        setupBookmark: function() {
+        setupBookmark: function () {
             this.createView('bookmarkBadge', 'views/bookmark/badge', {
                 el: this.options.el + ' .bookmark-badge-container'
             });

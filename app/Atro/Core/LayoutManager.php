@@ -588,7 +588,7 @@ class LayoutManager
     }
 
     /**
-     * Disable fields from layout if this fields not exist in metadata
+     * Disable fields from layout if this fields are multilang or not exist in metadata
      *
      * @param string $scope
      * @param string $name
@@ -604,12 +604,13 @@ class LayoutManager
         // check if entityDefs exists
         if (!empty($entityDefs)) {
             // get fields for entity
-            $fields = array_keys($entityDefs['fields']);
+            $fields = array_keys(array_filter($entityDefs['fields'], fn($defs) => empty($defs['multilangField'])));
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
                 $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
                     $relationScope = ucfirst($linkData['relationName']);
-                    $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                    $relationFields = $this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? [];
+                    $relationFields = array_keys(array_filter($relationFields, fn($defs) => empty($defs['multilangField'])));
                     $relationFields[] = 'id';
                     $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
                     $fields = array_merge($fields, $relationFields);
