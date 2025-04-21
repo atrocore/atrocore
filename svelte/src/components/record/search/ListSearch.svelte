@@ -236,7 +236,7 @@
     .filter-switcher {
         max-width: 220px;
         width: auto;
-        padding-right: 15px;
+        padding-right: 20px;
         padding-left: 15px;
         text-overflow: ellipsis;
         overflow: hidden;
