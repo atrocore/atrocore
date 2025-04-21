@@ -15,7 +15,7 @@
 
     initBoolFilter();
 
-    generalFilterStore.selectBoolFilters.subscribe((value) => {
+   const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
         if(value.length === selectedBoolFilters.length) {
             return;
         }
@@ -76,7 +76,9 @@
     }
 
     onMount(() => {
-        // load boolFilters
+        return () => {
+            boolFilterSub();
+        }
 
     });
 </script>
