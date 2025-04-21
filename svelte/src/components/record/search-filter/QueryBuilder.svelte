@@ -129,7 +129,10 @@
     function initQueryBuilderFilter() {
 
         const $queryBuilder = window.$(queryBuilderElement)
-        const rules = searchManager.getQueryBuilder() || [];
+        let rules = searchManager.getQueryBuilder() || [];
+        if(typeof rules === 'object' && !rules.condition) {
+            rules = [];
+        }
         if(rules['rules']) {
             rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
         }
