@@ -9,9 +9,22 @@
         return res
     }, {})
 
-    let locale = Config.get('locale')
+    let locale = UserData.get()?.user?.localeId || Config.get('locale')
     let inputLanguages = []
     let languagesLabel
+
+    if (locale !== Config.get('locale')) {
+        // remove language for selected locale if exists
+        if (languages[locales[locale].code]) {
+            delete languages[locales[locale].code]
+            // add main locale language
+            const mainLanguageCode = locales['main'].code
+            const mainLanguage = Config.get('referenceData').Language[mainLanguageCode]
+            if (mainLanguage) {
+                languages[mainLanguageCode] = mainLanguage
+            }
+        }
+    }
 
     function unsetLanguages(event) {
         inputLanguages = []
@@ -25,17 +38,20 @@
         }
     }
 
-    async function onLanguageChange() {
+    async function onLocaleChange() {
         const userData = UserData.get()
-        const response = await Utils.patchRequest('/UserProfile/' + userData.user.id, {localeId: locale})
+        await Utils.patchRequest('/UserProfile/' + userData.user.id, {localeId: locale})
         window.location.reload()
     }
 
+    function onLanguageChange() {
+        console.log(inputLanguages)
+    }
 </script>
 
 <div class="btn-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     <select class="form-control locale-switcher" style="max-width: 100px; flex: 1;" bind:value={locale}
-            on:change={onLanguageChange}>
+            on:change={onLocaleChange}>
         {#each Object.entries(locales) as [id, locale] }
             <option value="{id}">
                 {locale.name}
@@ -52,10 +68,11 @@
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
                 <h5>Additional Languages</h5>
                 <ul style="padding: 0" on:mousedown={event => event.stopPropagation()}>
-                    {#each Object.entries(languages) as [code, language] }
+                    {#each Object.entries(languages).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [code, language] }
                         <li class="checkbox">
                             <label>
-                                <input type="checkbox" bind:group={inputLanguages} value="{code}">
+                                <input type="checkbox" bind:group={inputLanguages} value="{code}"
+                                       on:change={onLanguageChange}>
                                 {language.name}
                             </label>
                         </li>
