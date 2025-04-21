@@ -19,8 +19,7 @@
     let filterNames: string = "";
     let advancedFilterChecked: bool = searchManager.isQueryBuilderApplied();
     let searchValue = searchManager.geTextFilter();
-
-    $: hasSearchValue = searchValue.trim().length > 0;
+    let hasSearchValue = false;
 
     generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
@@ -40,10 +39,15 @@
         updateSelectedFilterNames();
     })
 
+    function refreshHasSearchValue() {
+        hasSearchValue = searchValue.trim().length > 0;
+    }
     function search() {
         searchManager.update({
             textFilter: searchValue.trim()
         });
+
+        refreshHasSearchValue();
 
         updateCollection();
     }
@@ -127,7 +131,7 @@
             <input
                 type="text"
                 class="form-control text-filter"
-                placeholder={Language.translate("Type and press the enter key or click on the search icon to search...", "messages")}
+                placeholder={Language.translate("searchBarPlaceholder", "messages")}
                 name="textFilter"
                 bind:value={searchValue}
                 on:keypress={(e) => {e.key === 'Enter' ? search() : e}}
@@ -172,13 +176,13 @@
             >
                 <svg class="icon" ><use href="client/img/icons/icons.svg#filter"></use></svg>
             </button>
-            <div class="dropdown">
+            <div class="dropdown" class:has-content={filterNames !== ""}>
                 <button
                     data-toggle="dropdown"
                     class="btn btn-default filter-switcher"
                     on:mousedown={event => event.preventDefault()}>
-                    <span  class:has-content={filterNames !== ""}> {filterNames}</span>
-                    <span class=" chevron fas fa-chevron-down" class:has-content={filterNames !== ""}></span>
+                    <span class="filter-names" > {filterNames}</span>
+                    <span class=" chevron fas fa-chevron-down"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <GeneralFilter scope={scope} searchManager={searchManager} />
@@ -236,7 +240,7 @@
     .filter-switcher {
         max-width: 220px;
         width: auto;
-        padding-right: 20px;
+        padding-right: 15px;
         padding-left: 15px;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -245,19 +249,23 @@
         border-right: 1px solid #eee;
     }
 
+    .has-content  .filter-switcher{
+        padding-right: 20px;
+    }
+
     .dropdown .dropdown-menu {
         min-width: 180px;
         max-width: 260px;
         padding: 10px;
     }
 
-    .dropdown button .chevron.has-content {
+    .has-content span.chevron{
         position: absolute;
-        right: 0;
+        right: 10px;
         top: 10px;
     }
 
-    .dropdown button span.has-content {
+    .has-content span.filter-names {
         margin-right: 8px;
     }
 
@@ -271,7 +279,7 @@
         padding: 0;
     }
 
-    .filter-group .filter.has-content {
+    .filter-group .filter.has-content{
         color: #06c;
     }
 
