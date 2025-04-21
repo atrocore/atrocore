@@ -295,7 +295,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
 
         setupSearchPanel: function () {
             window.addEventListener('filter:unset-all', (e) => {
-                console.log('iici')
                 this.resetSorting();
             });
 
@@ -303,7 +302,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 target: document.querySelector('#main .page-header .search-container'),
                 props: {
                     scope: this.scope,
-                    searchManager: this.searchManager
+                    searchManager: this.searchManager,
+                    canShowFilter: this.shouldShowFilter(),
+                    openFilter: () => {
+                        if(window.SvelteRightSideView) {
+                            window.SvelteRightSideView.openFilter();
+                        }
+                    }
                 }
             });
         },

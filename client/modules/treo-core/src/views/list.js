@@ -39,11 +39,12 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                     where: [{
                         type: 'equals',
                         attribute: 'entityType',
-                        value: scope
+                        value: this.scope
                     }]
                 }, {async: false}).then((result) => {
+                    searchManager.savedSearchList = result.list;
                     savedFilters = savedFilters.map(i => result.list.find(item => item.id === i.id)).filter(i => i);
-                    searchManager.set(_.extend(searchManager.get(), {savedFilters: savedFilters}));
+                    searchManager.update({savedFilters});
                 });
             }
 
