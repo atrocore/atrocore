@@ -214,7 +214,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
             var nameHtml = '<div class="link-item-name">' + this.getHelper().stripTags(name) + '&nbsp;' + '</div>';
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
+            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><i class="ph ph-x"></i></a>';
 
             var columnFormElementJQList = [];
             var columnMenuItemJQList = [];

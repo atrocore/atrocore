@@ -188,7 +188,7 @@
             filters: filters,
             plugins: {
                 sortable: {
-                    icon: 'fas fa-sort'
+                    icon: 'ph ph-arrows-out-cardinal'
                 }
             },
 
@@ -696,7 +696,7 @@
     <div>
         {#if showUnsetAll}
         <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
-            <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+            <i class="ph ph-x"></i>
             {Language.translate('Unset All')}
         </button>
         {/if}
@@ -738,12 +738,12 @@
             <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" on:click={resetFilter}>
-                <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+                <i class="ph ph-x"></i>
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
                 <button class="filter-item save" on:click={saveFilter}>
-                    <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
+                    <i class="ph ph-floppy-disk-back"></i>
                     {Language.translate('Save')}
                 </button>
             {/if}

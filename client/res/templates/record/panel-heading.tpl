@@ -6,7 +6,7 @@
     {{/if}}
     {{#if actionList}}
     <button type="button" class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
+        <i class="ph ph-list-plus"></i>
     </button>
     <ul class="dropdown-menu">
         {{#each actionList}}
@@ -20,13 +20,13 @@
     {{/if}}
     {{#if canClose }}
         <button type="button" class="btn btn-default btn-sm" data-action="closePanel" data-panel="{{name}}">
-            <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+            <i class="ph ph-x"></i>
         </button>
     {{/if}}
 </div>
 <h4 class="panel-title">
     <span class="collapser" data-action="collapsePanel" data-panel="{{name}}">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M480-80 240-320l44-44 196 196 196-196 44 44L480-80ZM284-596l-44-44 240-240 240 240-44 44-196-196-196 196Z"></path></svg>
+        <i class="ph ph-caret-up-down"></i>
     </span>
     {{#unless notRefreshable}}
     <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">

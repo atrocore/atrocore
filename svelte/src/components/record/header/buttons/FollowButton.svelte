@@ -22,7 +22,7 @@
         params = {
             name: 'following',
             action: isFollowed ? 'unfollow' : 'follow',
-            html: '<svg class="icon bell"><use href="client/img/icons/icons.svg#bell"></use></svg>',
+            html: '<i class="ph ph-bell"></i>',
             style: style,
             disabled: loading,
             tooltip: Language.translate(isFollowed ? 'actionUnfollow' : 'actionFollow'),

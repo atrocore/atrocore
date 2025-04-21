@@ -27,7 +27,7 @@ Espo.define('views/user-interface/record/panels/backgrounds', 'views/record/pane
             this.buttonList.push({
                 title: 'Create',
                 action: 'createBackground',
-                html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>'
+                html: '<i class="ph ph-plus"></i>'
             });
         },
 

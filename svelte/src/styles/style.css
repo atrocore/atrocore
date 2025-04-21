@@ -1,10 +1,12 @@
+@import "phosphor-regular.css";
+
 button > svg {
     width: 100%;
     height: 100%;
     fill: currentColor;
 }
 
-button > *, .btn > * {
+button > *:not(.ph), .btn > *:not(.ph) {
     font-size: inherit;
 }
 

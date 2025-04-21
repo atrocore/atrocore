@@ -779,7 +779,7 @@ Espo.define('views/record/search', ['view', 'lib!Interact', 'lib!QueryBuilder'],
 
             var barContentHtml = '<' + tag + ' href="javascript:" style="cursor: ' + cursor + ';" class="label label-' + style + '" data-action="' + action + '">' + label + '</' + tag + '>';
             if (id) {
-                barContentHtml += ' <a href="javascript:" title="' + this.translate('Remove') + '" class="small" data-action="removePreset" data-id="' + id + '"><span class="fas fa-times"></span></a>';
+                barContentHtml += ' <a href="javascript:" title="' + this.translate('Remove') + '" class="small" data-action="removePreset" data-id="' + id + '"><i class="ph ph-x"></i></a>';
             }
             barContentHtml = '<span style="margin-right: 10px;">' + barContentHtml + '</span>'
 

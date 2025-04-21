@@ -1,6 +1,6 @@
 
 <div class="group-head" data-level="{{level}}">
-    <a class="pull-right" href="javascript:" data-action="remove"><span class="fas fa-times"></span></a>
+    <a class="pull-right" href="javascript:" data-action="remove"><i class="ph ph-x"></i></a>
     <div>{{translate 'not' category='logicalOperators' scope='Admin'}} (</div>
 </div>
 

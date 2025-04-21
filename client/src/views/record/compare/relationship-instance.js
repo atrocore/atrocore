@@ -189,7 +189,7 @@ Espo.define('views/record/compare/relationship-instance', 'views/record/compare/
 
                             this.$el.find(`[data-key="${viewKey}"]`).append(`<div class="file-link">
 <a href="${baseUrl}?entryPoint=download&id=${linkEntity.id}" download="" title="Download">
- <span class="glyphicon glyphicon-download-alt small"></span>
+ <i class="ph ph-download-simple"></i>
  </a> 
  <a href="${baseUrl}/#File/view/${linkEntity.id}" title="${linkEntity.name}" target="_blank" class="link" data-id="${linkEntity.id}">${linkEntity.name}</a>
  </div>`);

@@ -2,6 +2,7 @@
     import {createEventDispatcher, onMount} from "svelte";
     import {Language} from "../../../utils/Language";
     import {Acl} from "../../../utils/Acl";
+    import Preloader from "../../icons/loading/Preloader.svelte";
 
     export let scope: string;
     export let savedSearchList: Array<any> = [];
@@ -32,7 +33,9 @@
 
 <div class="checkboxes-filter">
     {#if loading }
-        <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
+        <div style="margin-top: 5px;">
+            <Preloader heightPx={12} />
+        </div>
     {:else if savedSearchList.length > 0}
         <h5>{Language.translate('Saved Filters')}</h5>
         <ul>
@@ -41,15 +44,19 @@
                     <label class:active={selectedSavedSearchIds.includes(item.id)}>
                         <input type="checkbox" checked={selectedSavedSearchIds.includes(item.id)} on:change={(e) => handleSavedSearchChecked(e, item)} name="{item.id}">
                         {item.name}
-                        <svg class="icon visibility"><use href={item.isPublic ? 'client/img/icons/icons.svg#group': 'client/img/icons/icons.svg#shield'}></use></svg>
+                        {#if item.isPublic}
+                            <i class="ph ph-users-three visibility"></i>
+                        {:else}
+                            <i class="ph ph-shield visibility"></i>
+                        {/if}
                     </label>
                     {#if Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')}
                         <div class="list-row-buttons btn-group">
                             {#if editingItem?.id === item.id}
-                                <span style="position:absolute; right: 15px"><svg class="icon"><use href="client/img/icons/icons.svg#edit"></use></svg></span>
+                                <span style="position:absolute; right: 20px"><i class="ph ph-pencil-simple-line"></i></span>
                             {/if}
-                            <a  style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">
-                                <svg class="icon"><use href="client/img/icons/icons.svg#dots"></use></svg>
+                            <a style="cursor: pointer" href="javascript:" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="ph ph-dots-three-vertical"></i>
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 {#if Acl.check('SavedSearch', 'edit')}
@@ -73,18 +80,8 @@
 </div>
 
 <style>
-    .preloader {
-        height: 12px;
-        margin-top: 5px;
-    }
-
     .visibility {
-        position: absolute;
-        top: -5px;
-        width: 15px;
-        height: 15px;
-        margin-left: 5px;
+        margin-left: 3px;
     }
-
 </style>
 

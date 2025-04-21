@@ -622,7 +622,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             const $el = this.$el.find('.link-one-of-container .link-' + id);
             if ($el) {
                 $el.html(name + '&nbsp');
-                $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="fas fa-times"></a>');
+                $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><i class="ph ph-x"></i></a>');
             }
             this.searchData.oneOfNameHash[id] = name;
         },
@@ -635,7 +635,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             var $container = this.$el.find('.link-one-of-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="fas fa-times"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><i class="ph ph-x"></i></a>');
             $container.append($el);
 
             return $el;
@@ -651,7 +651,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             var $container = this.$el.find('.link-one-of-container');
             var $el = $('<div />').addClass('link-subquery').addClass('list-group-item');
             $el.html('(Subquery) &nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><span class="fas fa-times"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><i class="ph ph-x"></i></a>');
             $container.append($el);
 
             return $el;

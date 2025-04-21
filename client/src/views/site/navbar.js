@@ -374,7 +374,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
 
                 list.push({
                     action: 'composerUpdate',
-                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <svg id="composer-update" class="icon"><use href="client/img/icons/icons.svg#arrow-alt-circle-down"></use></svg>'
+                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <i id="composer-update" class="ph ph-box-arrow-down"></i>'
                 });
             }
 

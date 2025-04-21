@@ -17,5 +17,5 @@
             </li>
         {{/each}}
     </ul>
-    {{#if hasArrow}}<a class="favorite favorite-arrow" type="button" href="javascript:" data-action="openFavoritesDropdown" style="padding: 5px;" >&#10230;</a>{{/if}}
+    {{#if hasArrow}}<a class="favorite favorite-arrow" type="button" href="javascript:" data-action="openFavoritesDropdown" style="padding: 5px;" ><i class="ph ph-arrow-right"></i></a>{{/if}}
 {{else}}{{#if showEmptyPlaceholder}}{{translate 'noData'}}{{/if}}{{/if}}

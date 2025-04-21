@@ -1,7 +1,7 @@
 
 <div class="group-head" data-level="{{level}}">
     {{#ifNotEqual level 0}}
-    <a class="pull-right" href="javascript:" data-action="remove"><span class="fas fa-times"></span></a>
+    <a class="pull-right" href="javascript:" data-action="remove"><i class="ph ph-x"></i></a>
     {{/ifNotEqual}}
     {{#ifNotEqual level 0}}
     <div>(</div>

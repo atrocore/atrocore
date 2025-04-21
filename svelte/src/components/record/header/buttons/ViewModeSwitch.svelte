@@ -10,11 +10,11 @@
 
     const dispatch = createEventDispatcher();
 
-    const viewIcons = {
-        list: '<svg class="icon"><use href="client/img/icons/icons.svg#th-list"></use></svg>',
-        plate: '<svg class="icon"><use href="client/img/icons/icons.svg#plate"></use></svg>',
-        kanban: '<svg class="icon"><use href="client/img/icons/icons.svg#kanban"></use></svg>',
-        tree: '<svg class="icon"><use href="client/img/icons/icons.svg#stream"></use></svg>'
+    const viewIcons: Record<string, string> = {
+        list: '<i class="ph ph-table"></i>',
+        plate: '<i class="ph ph-squares-four"></i>',
+        kanban: '<i class="ph ph-kanban"></i>',
+        tree: '<i class="ph ph-tree-view"></i>'
     };
 
     export let modes: string[] | null = null;

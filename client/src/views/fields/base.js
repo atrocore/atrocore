@@ -431,7 +431,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<svg class="icon icon-small required-sign pressable-icon" title="${this.translate('Required')}"><use href="client/img/icons/icons.svg#asterisk"></use></svg>`);
+                statusIcons.prepend(`<i class="ph ph-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
                 $sign = statusIcons.find('.required-sign');
                 $sign.click(() => {
                     this.model.trigger('toggle-required-fields-highlight');
@@ -466,7 +466,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getInheritedIconHtml: function () {
-            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon inherited" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`;
+            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal info-field-icon inherited" title="${this.translate('inherited')}"></i>`;
         },
 
         getNonInheritedIconEl: function () {
@@ -474,7 +474,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getNonInheritedIconHtml: function () {
-            return `<svg data-name="${this.name}" class="icon icon-small info-field-icon not-inherited" title="${this.translate('notInherited')}"><use href="client/img/icons/icons.svg#unlink"></use></svg>`;
+            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal-break info-field-icon not-inherited" title="${this.translate('notInherited')}"></i>`;
         },
 
         getInheritActionEl: function () {
@@ -551,7 +551,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (this.getNonInheritedIconEl().length === 0 && !this.isInheritedField()) {
                 this.getStatusIconsContainer().append(this.getNonInheritedIconHtml());
-                this.getInlineActionsContainer().append(`<svg class="icon icon-small action lock-link hidden" data-name="${this.name}" data-action="setAsInherited" title="${this.translate('setAsInherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
+                this.getInlineActionsContainer().append(`<a class="action lock-link hidden" href="javascript:" data-name="${this.name}" data-action="setAsInherited" title="${this.translate('setAsInherited')}"><i class="ph ph-link-simple-horizontal"></i></a>`);
             }
 
             $cell.on('mouseenter', function (e) {
@@ -576,7 +576,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             $cell.find('.inline-edit').parent().remove();
 
-            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><svg class="icon icon-small inline-edit"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg></a>`);
+            const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><i class="ph ph-pencil-simple-line inline-edit"></i></a>`);
 
             if (inlineActions.size()) {
                 inlineActions.prepend($editLink);
@@ -821,8 +821,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         addInlineEditLinks: function () {
             const fieldActions = this.getInlineActionsContainer();
             const $cell = this.getCellElement();
-            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><svg class="icon"><use href="client/img/icons/icons.svg#check"></use></svg></a>`);
-            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></a>`);
+            const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
+            const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
             if (fieldActions.size()) {
                 fieldActions.append($saveLink);

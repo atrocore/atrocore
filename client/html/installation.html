@@ -3,6 +3,7 @@
     <head>
         <title>{{applicationName}}</title>
         <link rel="stylesheet" href="{{basePath}}client/modules/treo-core/css/treo/treo-classic-theme.css">
+        <link rel="stylesheet" href="{{basePath}}client/css/style.css">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon.ico" sizes="16x16" type="image/x-icon">
         <link rel="icon" href="{{basePath}}client/modules/treo-core/img/favicon_32.png" sizes="32x32" type="image/png">
@@ -205,9 +206,9 @@
                         <td><span><%= item.validValue %></span></td>
                         <td><span><%= item.value %></span></td>
                         <td><% if (item.isValid) { %>
-                            <span class="fas fa-check" style="color: green;"></span>
+                            <i class="ph ph-check-circle" style="color: green;"></i>
                             <% } else { %>
-                            <span class="fas fa-times" style="color: red;"></span>
+                            <i class="ph ph-x-circle" style="color: red;"></i>
                             <% } %>
                         </td>
                     </tr>

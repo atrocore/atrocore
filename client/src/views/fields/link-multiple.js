@@ -546,7 +546,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-subquery').addClass('list-group-item');
             $el.html('(Subquery) &nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><span class="fas fa-times"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><i class="ph ph-x"></i></a>');
             $container.append($el);
 
             return $el;
@@ -556,7 +556,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(Handlebars.Utils.escapeExpression(name || id) + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><i class="ph ph-x"></i></a>');
             $container.append($el);
 
             return $el;

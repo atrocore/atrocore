@@ -14,7 +14,7 @@
         style = active ? 'primary outline' : 'default';
         params = {
             action: "favorite",
-            html: `<svg class="icon"><use href="client/img/icons/icons.svg#star"></use></svg>`,
+            html: `<i class="ph ph-star"></i>`,
             style: style
         } as ActionParams;
     }

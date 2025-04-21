@@ -10,7 +10,7 @@
         {{#unless createDisabled}}
         <button data-action="createLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></button>
         {{/unless}}
-        <button data-action="clearLink" class="btn btn-default btn-icon" type="button" tabindex="-1"><i class="fas fa-times"></i></button>
+        <button data-action="clearLink" class="btn btn-default btn-icon" type="button" tabindex="-1"><i class="ph ph-x"></i></button>
     </span>
 </div>
 <input type="hidden" name="{{idName}}" value="{{idValue}}">

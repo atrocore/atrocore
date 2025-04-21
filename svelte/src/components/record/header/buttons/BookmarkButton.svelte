@@ -18,7 +18,7 @@
         params = {
             name: 'bookmarking',
             action: bookmarkId ? 'unbookmark' : 'bookmark',
-            html: '<svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>',
+            html: '<i class="ph ph-bookmark-simple"></i>',
             style: style,
             disabled: loading,
             tooltip: Language.translate(bookmarkId ? 'actionUnbookmark' : 'actionBookmark'),

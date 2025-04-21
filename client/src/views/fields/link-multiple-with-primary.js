@@ -135,7 +135,7 @@ Espo.define('views/fields/link-multiple-with-primary', 'views/fields/link-multip
             var $el = $('<div class="form-inline list-group-item link-with-role clearfix link-group-item-with-primary">').addClass('link-' + id).attr('data-id', id);
 
             var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
+            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><i class="ph ph-x"></i></a>';
 
             $left = $('<div>');
             $left.append(nameHtml);

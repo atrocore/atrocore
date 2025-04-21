@@ -3,7 +3,7 @@
 	<div class="list-group-item" data-index="{{@index}}">
 		<span class="pull-left flaticon flaticon-move-arrows"></span>
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
-			<i class="fas fa-times"></i>
+            <i class="ph ph-x"></i>
 		</a>
 		<div class="option-group">
 			{{#each options}}

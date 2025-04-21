@@ -575,12 +575,12 @@
                                     <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
                                     <a href="#" data-action="edit-panel-label" class="edit-panel-label"
                                        on:click|preventDefault={() => editPanelLabel(panel)}>
-                                        <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
+                                        <i class="ph ph-pencil-simple"></i>
                                     </a>
                                     <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
                                        data-number={panel.number}
                                        on:click|preventDefault={() => removePanel(panel.number)}>
-                                        <i class="fas fa-times"></i>
+                                        <i class="ph ph-x"></i>
                                     </a>
                                 </header>
                                 <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
@@ -589,7 +589,7 @@
                                             <div>
                                                 <a href="#" data-action="removeRow" class="remove-row pull-right"
                                                    on:click|preventDefault={() => removeRow(panel.number, row.number)}>
-                                                    <i class="fas fa-times"></i>
+                                                    <i class="ph ph-x"></i>
                                                 </a>
                                             </div>
                                             <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
@@ -605,7 +605,7 @@
                                                             {cell.label}
                                                             <a href="#" data-action="removeField" class="remove-field"
                                                                on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
-                                                                <i class="fas fa-times"></i>
+                                                                <i class="ph ph-x"></i>
                                                             </a>
                                                         </li>
                                                     {:else}
@@ -614,7 +614,7 @@
                                                             on:drop={e => handleDrop(e,panel.number,row.number,cellIndex)}>
                                                             <a href="#" data-action="minusCell" class="remove-field"
                                                                on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
-                                                                <i class="fas fa-minus"></i>
+                                                                <i class="ph ph-minus"></i>
                                                             </a>
                                                         </li>
                                                     {/if}
@@ -626,7 +626,7 @@
                                 <div>
                                     <a href="#" data-action="addRow"
                                        on:click|preventDefault={() => addRow(panel.number)}>
-                                        <i class="fas fa-plus"></i>
+                                        <i class="ph ph-plus"></i>
                                     </a>
                                 </div>
                             </li>
@@ -697,7 +697,7 @@
 
     #layout ul.cells {
         min-height: 30px;
-        margin-top: 12px;
+        margin-top: 18px;
     }
 
     #layout ul.panels ul.cells > li {
@@ -752,6 +752,13 @@
 
     #layout header {
         font-weight: bold;
+    }
+
+    #layout .panel-layout header label {
+        display: inline-block !important;
+        margin-bottom: 0;
+        min-height: 20px;
+        vertical-align: top;
     }
 
     #layout ul.panels > li label {

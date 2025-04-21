@@ -31,7 +31,7 @@ Espo.define('views/user-profile/fields/dashboard-tab-list', 'views/fields/array'
                     '<input name="translatedValue" data-value="' + value + '" class="role form-control input-sm" value="'+translatedValue+'">' +
                 '</div>' +
                 '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
-                    '<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><span class="fas fa-times"></a>' +
+                    '<a href="javascript:" class="pull-right" data-value="' + value + '" data-action="removeValue"><i class="ph ph-x"></i></a>' +
                 '</div><br style="clear: both;" />' +
             '</div>';
 

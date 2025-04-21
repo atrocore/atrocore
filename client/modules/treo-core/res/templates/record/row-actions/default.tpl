@@ -1,7 +1,7 @@
 {{#if actionList.length}}
 <div class="list-row-buttons btn-group pull-right">
     <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-        <svg class="icon"><use href="client/img/icons/icons.svg#dots"></use></svg>
+        <span class="ph ph-dots-three-vertical"></span>
     </button>
     <ul class="dropdown-menu pull-right">
     {{#each actionList}}

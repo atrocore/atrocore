@@ -224,10 +224,10 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
 
         addFileBox: function (file) {
             let $attachments = this.$attachments;
-            let removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
+            let removeLink = '<a href="javascript:" class="remove-attachment pull-right"><i class="ph ph-x"></i></a>';
             let $att = $(`<div class="uploaded-file gray-box" data-unique="${file.uniqueId}">`)
                 .append(removeLink)
-                .append($('<span class="preview">' + file.name + '</span>').css('width', 'cacl(100% - 30px)'));
+                .append($('<span class="preview">' + file.name + '</span>').css('width', 'calc(100% - 30px)'));
 
             let $container = $('<div>').append($att);
             $attachments.append($container);
