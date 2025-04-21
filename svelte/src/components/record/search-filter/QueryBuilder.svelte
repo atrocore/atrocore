@@ -134,8 +134,6 @@
             rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
         }
 
-        console.log("filters", filters, 'rules', rules)
-
         const emptyAttribute = 'emptyAttributeRule';
 
         let filterPerGroups = {};
