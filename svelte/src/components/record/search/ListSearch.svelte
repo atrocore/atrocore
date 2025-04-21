@@ -237,6 +237,12 @@
         display: flex;
     }
 
+    @media(max-width: 767px) {
+        .filter-switcher .filter-names {
+           display: none;
+        }
+    }
+
     .filter-switcher {
         max-width: 220px;
         width: auto;
@@ -259,10 +265,12 @@
         padding: 10px;
     }
 
-    .has-content span.chevron{
-        position: absolute;
-        right: 10px;
-        top: 10px;
+    @media(min-width: 767px) {
+        .has-content span.chevron{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
     }
 
     .has-content span.filter-names {
