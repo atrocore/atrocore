@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!QueryBuilder'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Interact', 'lib!QueryBuilder'], function (Dep, SearchManager) {
 
     return Dep.extend({
 

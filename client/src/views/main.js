@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/main', ['view',  'search-manager', 'lib!Interact', 'lib!QueryBuilder'], function (Dep, SearchManager) {
+Espo.define('views/main', 'view', function (Dep) {
 
     return Dep.extend({
 
