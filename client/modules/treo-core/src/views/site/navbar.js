@@ -385,16 +385,13 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         hasLocaleSwitcher() {
-            return Object.keys(this.getConfig().get('locales') || {}).length > 0 || (this.getConfig().get('inputLanguageList') || []).length > 0
+            return Object.keys(this.getConfig().get('locales') || {}).length > 1 || (this.getConfig().get('inputLanguageList') || []).length > 0
         },
 
         initLocaleSwitcher() {
             if (this.hasLocaleSwitcher()) {
                 new Svelte.LocaleSwitcher({
                     target: this.$el.find('.navbar-body .locale-switcher-container').get(0),
-                    props: {
-
-                    }
                 });
             }
         },
