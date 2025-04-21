@@ -836,7 +836,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }
 
                         this.listenTo(view, 'after:render', () => {
-
                             view.$el.find('[data-action="createLink"]').hide();
                             view.$el.find('.search-type').hide();
                         });
@@ -882,7 +881,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createQueryBuilderFilter() {
             let name = this.name;
-            if(!name.includes('attr')) {
+            if(!name.includes('attr_')) {
                 name = this.name + 'Id'
             }
             return {
