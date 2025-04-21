@@ -449,6 +449,7 @@
         selectedSaveSearches = [];
         refreshShowUnsetAll();
         updateCollection();
+        window.dispatchEvent(new CustomEvent('filter:unset-all'));
     }
 
     function handleAdvancedFilterChecked(refresh = true) {
