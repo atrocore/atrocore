@@ -1,31 +1,69 @@
 <script lang="ts">
     import {createEventDispatcher, onMount} from "svelte";
     import {Language} from "../../../utils/Language";
+    import {Notifier} from "../../../utils/Notifier";
     import {Acl} from "../../../utils/Acl";
+    import {savedSearchStore} from "./stores/SavedSearch.ts";
+    import SavedSearch from "./interfaces/SavedSearch.ts"
+    import {get} from "svelte/store"
+
 
     export let scope: string;
-    export let savedSearchList: Array<any> = [];
+    export let savedSearchList: Array<SavedSearch> = [];
     export let loading: boolean = true;
-
+    export let searchManager: any;
+    export let hideRowAction;
     export let editingItem: any = null;
+    export let edit: Function;
+    export let rename: Function;
+    export let remove: Function;
+    export let cancel: Function;
 
-    export let edit = (item) => {};
-    export let rename = (item) => {};
-    export let remove = (item) => {};
-    export let cancel = () => {}
-
-    export let selectedSavedSearchIds: Array<any> = [];
+    export let selectedSavedSearchIds: Array<string> = [];
 
     let dispatch = createEventDispatcher();
+
+    const savedSearchSubscribe =  savedSearchStore.savedSearchItems.subscribe(value => {
+        savedSearchList = value;
+     });
+
+    savedSearchStore.savedSearchItems.set(searchManager.savedSearchList || []);
+
+    savedSearchStore.selectedSavedItemIds.set(searchManager.getSavedFilters().map(v => v.id));
+
+   const selectedSavedItemIdsSub =  savedSearchStore.selectedSavedItemIds.subscribe(value => {
+        selectedSavedSearchIds = value;
+    });
+
+    const loadingSubscribe = savedSearchStore.loading.subscribe(value => {
+        loading = value;
+    });
     function handleSavedSearchChecked(e, item) {
-        let isChecked = e.target.checked;
-        if(isChecked) {
-            selectedSavedSearchIds = [...selectedSavedSearchIds, item.id]
-        }else{
-            selectedSavedSearchIds = [...selectedSavedSearchIds.filter(v => v !== item.id)];
-        }
-        dispatch('change', {selectedSavedSearchIds: selectedSavedSearchIds});
+        savedSearchStore.toggleSavedItemSelection(item.id);
+        let checked = get(savedSearchStore.selectedSavedItemIds);
+        searchManager.update({
+            savedFilters: get(savedSearchStore.savedSearchItems).filter(item => checked.includes(item.id))
+        });
+        updateCollection();
     }
+
+    function updateCollection() {
+        searchManager.collection.reset();
+        Notifier.notify(Language.translate('loading', 'messages'));
+
+        searchManager.collection.where = searchManager.getWhere();
+        searchManager.collection.abortLastFetch();
+        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+    }
+
+    onMount(() => {
+        savedSearchStore.fetchSavedSearch(scope);
+
+        return () => {
+            savedSearchSubscribe();
+            selectedSavedItemIdsSub();
+        }
+    })
 
 </script>
 
@@ -35,7 +73,7 @@
         <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
     {:else if savedSearchList.length > 0}
         <h5>{Language.translate('Saved Filters')}</h5>
-        <ul>
+        <ul style="padding: 0">
             {#each savedSearchList as item}
                 <li class="checkbox">
                     <label class:active={selectedSavedSearchIds.includes(item.id)}>
@@ -43,7 +81,7 @@
                         {item.name}
                         <svg class="icon visibility"><use href={item.isPublic ? 'client/img/icons/icons.svg#group': 'client/img/icons/icons.svg#shield'}></use></svg>
                     </label>
-                    {#if Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')}
+                    {#if (Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')) && !hideRowAction}
                         <div class="list-row-buttons btn-group">
                             {#if editingItem?.id === item.id}
                                 <span style="position:absolute; right: 15px"><svg class="icon"><use href="client/img/icons/icons.svg#edit"></use></svg></span>
