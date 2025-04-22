@@ -208,6 +208,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         scope: this.scope,
                         searchManager: this.searchManager,
                         showSearchPanel: this.searchPanel,
+                        showFilter: this.shouldShowFilter(),
                         afterOnMount: () => {
                             this.setupTourButton();
                             observer = this.initHeaderObserver();
