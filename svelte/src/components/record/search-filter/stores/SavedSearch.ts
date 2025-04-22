@@ -11,22 +11,6 @@ function createStore(): any {
     const collection = writable<Collection | null>(null);
     const loading = writable(false);
 
-    async function initCollection(scope: string): Promise<Collection> {
-        return new Promise((resolve) => {
-            debugger
-            if (get(collection) !== null) {
-                return resolve(get(collection));
-            }
-            CollectionFactory.create('SavedSearch', (newCollection) => {
-                debugger
-                newCollection.url = `SavedSearch`;
-
-                collection.set(newCollection);
-                resolve(newCollection);
-            })
-        })
-    }
-
     async function fetchSavedSearch(scope: string) {
         const userData = UserData.get();
         if (!userData) {
