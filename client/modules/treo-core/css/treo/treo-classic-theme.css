@@ -17367,7 +17367,6 @@ pre > code {
 
     .navbar-form.global-search-container > .input-group {
         width: 100%;
-        padding-left: 14px;
         padding-right: 34px;
     }
 
@@ -21989,7 +21988,11 @@ select {
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow-x: visible !important;
         overflow-y: auto;
-        padding: 0;
+        padding: 10px;
+        position: absolute;
+        top: 44px;
+        left: 0;
+        right: 0;
     }
 }
 
