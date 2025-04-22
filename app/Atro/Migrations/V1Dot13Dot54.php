@@ -23,7 +23,6 @@ class V1Dot13Dot54 extends Base
     }
     public function up(): void
     {
-        rename('upload', 'public/upload');
         rename('client', 'public/client');
         rename('apidocs', 'public/apidocs');
 

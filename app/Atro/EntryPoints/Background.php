@@ -83,7 +83,7 @@ class Background extends AbstractEntryPoint
             }
         }
 
-        $imagesPath = 'client/img/background';
+        $imagesPath = 'public/client/img/background';
         if (!file_exists($imagesPath)) {
             header("HTTP/1.0 404 Not Found");
             exit;

@@ -39,13 +39,11 @@ class Thumbnail
         if (!empty($file->get('thumbnailsPath'))) {
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
         }
-        if($this->isSvg($file)) {
-            if($this->getEntityManager()->getRepository('File')->getStorage($file) instanceof LocalFileStorageInterface) {
-                return $this->getImageFilePath($file);
-            }
 
+        if ($this->isSvg($file)) {
             return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
         }
+
         $thumbnailPath .= DIRECTORY_SEPARATOR . trim($size);
 
         $name = explode('.', $file->get('name'));
@@ -59,7 +57,7 @@ class Thumbnail
 
     public function hasThumbnail(FileEntity $file, string $size): bool
     {
-        return file_exists($this->preparePath($file, $size));
+        return file_exists('public' . DIRECTORY_SEPARATOR . $this->preparePath($file, $size));
     }
 
     public function getPath(FileEntity $file, string $size, string $originFilePath = null): ?string
@@ -94,6 +92,7 @@ class Thumbnail
 
     public function create(string $originFilePath, string $size, string $thumbnailPath): bool
     {
+        $thumbnailPath = 'public' . DIRECTORY_SEPARATOR . $thumbnailPath;
         if (file_exists($thumbnailPath)) {
             return false;
         }
