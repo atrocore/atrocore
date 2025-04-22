@@ -40,8 +40,12 @@
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} >
         <svelte:fragment slot="filter-search">
             {#if params.showSearchPanel}
-                <SearchBar searchManager={params.searchManager} scope={params.scope}/>
                 <FilterSearch searchManager={params.searchManager} scope={params.scope}/>
+            {/if}
+        </svelte:fragment>
+        <svelte:fragment slot="search-bar">
+            {#if params.showSearchPanel}
+                <SearchBar searchManager={params.searchManager} scope={params.scope}/>
             {/if}
         </svelte:fragment>
     </EntityActionsGroup>

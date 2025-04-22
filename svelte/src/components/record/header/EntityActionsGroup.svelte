@@ -73,6 +73,7 @@
 <div class="buttons-container">
     <div class="action-group-container">
         <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true} dropdownPosition="right"/>
+        <slot name="search-bar"></slot>
         <slot name="filter-search"></slot>
     </div>
     <div class="right-group">
