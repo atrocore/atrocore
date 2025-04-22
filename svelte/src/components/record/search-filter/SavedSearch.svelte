@@ -11,13 +11,13 @@
     export let scope: string;
     export let savedSearchList: Array<SavedSearch> = [];
     export let loading: boolean = true;
-    export let searchManager;
+    export let searchManager: any;
     export let hideRowAction;
     export let editingItem: any = null;
-    export let edit = (item) => {};
-    export let rename = (item) => {};
-    export let remove = (item) => {};
-    export let cancel = () => {}
+    export let edit: Function;
+    export let rename: Function;
+    export let remove: Function;
+    export let cancel: Function;
 
     export let selectedSavedSearchIds: Array<string> = [];
 
@@ -44,9 +44,6 @@
         searchManager.update({
             savedFilters: get(savedSearchStore.savedSearchItems).filter(item => checked.includes(item.id))
         });
-
-
-
         updateCollection();
     }
 

@@ -5,13 +5,13 @@
     import {Metadata} from  '../../../utils/Metadata'
     import {Notifier} from  '../../../utils/Notifier'
     import {generalFilterStore} from './stores/GeneralFilter'
-    export let searchManager;
+    export let searchManager: any;
 
     export let scope: string;
 
     let boolFilterList: string[] = [];
 
-    let selectedBoolFilters = [];
+    let selectedBoolFilters: [] = [];
 
     initBoolFilter();
 
@@ -31,7 +31,7 @@
         searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
 
-    function toggleBoolFilter(filter){
+    function toggleBoolFilter(filter: string){
         generalFilterStore.toggleBoolFilters(filter);
 
         let value = get(generalFilterStore.selectBoolFilters);

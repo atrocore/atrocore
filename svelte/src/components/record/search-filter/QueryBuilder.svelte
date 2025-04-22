@@ -9,8 +9,8 @@
     import {UserData} from "../../../utils/UserData";
     import SavedSearch from "./SavedSearch.svelte";
     import GeneralFilter from "./GeneralFilter.svelte";
-    import {savedSearchStore} from "./stores/SavedSearch.ts";
-    import {generalFilterStore} from "./stores/GeneralFilter.ts";
+    import {savedSearchStore} from "./stores/SavedSearch";
+    import {generalFilterStore} from "./stores/GeneralFilter";
 
     export let scope: string;
     export let searchManager: any;
