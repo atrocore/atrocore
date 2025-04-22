@@ -11,37 +11,37 @@ function createStore(): any {
     const collection = writable<Collection | null>(null);
     const loading = writable(false);
 
-    async function initCollection(scope: string): Promise<Collection> {
-        return new Promise((resolve) => {
-            if (get(collection) !== null) {
-                return resolve(get(collection));
-            }
-            CollectionFactory.create('SavedSearch', (newCollection: Collection) => {
-                newCollection.url = `SavedSearch`;
-
-                collection.set(newCollection);
-                resolve(newCollection);
-            })
-        })
-    }
-
     async function fetchSavedSearch(scope: string) {
+        const userData = UserData.get();
+        if (!userData) {
+            return;
+        }
+
         if (get(loading) || get(savedSearchItems).length > 0) {
             return;
         }
+
         loading.set(true);
-        return initCollection().then(collection => {
-            collection.where = [{
-                type: 'equals',
-                attribute: 'entityType',
-                value: scope
-            }];
-            collection.fetch().then((data) => {
-                savedSearchItems.set(data.list);
-                loading.set(false);
-                return data.list;
-            })
+
+        let where = [{
+            type: 'equals',
+            attribute: 'entityType',
+            value: scope
+        }];
+        const response = await fetch('/api/v1/SavedSearch?'+ window.$.param({where}), {
+            'method': 'GET',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
+            }
         })
+
+        if (response.ok) {
+            let data = await response.json();
+            savedSearchItems.set(data.list);
+            loading.set(false);
+            return  data.list;
+        }
     }
 
     async function saveSavedSearch(item: SavedSearch, id: string | null = null): Promise<void> {
@@ -62,6 +62,9 @@ function createStore(): any {
         if (response.ok) {
             const data = await response.json();
             savedSearchItems.update((list) => {
+                if(id !== null) {
+                    return list.map(item => item.id === id ? data : item);
+                }
                 return [data, ...list];
             })
             return data;
