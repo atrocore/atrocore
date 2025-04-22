@@ -28,7 +28,7 @@ function createStore(): any {
             attribute: 'entityType',
             value: scope
         }];
-        const response = await fetch('/api/v1/SavedSearch?'+ window.$.param({where}), {
+        const response = await fetch('/api/v1/SavedSearch?'+ window.$.param({collectionOnly:true, where}), {
             'method': 'GET',
             'headers': {
                 'Content-Type': 'application/json',

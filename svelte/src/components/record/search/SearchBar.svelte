@@ -113,4 +113,8 @@
         display: flex;
     }
 
+    .search-row .search input {
+        background: transparent;
+    }
+
 </style>
