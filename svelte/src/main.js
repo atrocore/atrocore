@@ -23,7 +23,7 @@ import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
-import Script from "./components/fields/Script.svelte";
+// import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
@@ -31,7 +31,7 @@ import RightSideView from "./components/record/RightSideView.svelte";
 import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
-import ListSearch from "./components/record/search/ListSearch.svelte";
+import SearchBar from "./components/record/search/SearchBar.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -47,7 +47,7 @@ window.driver = driver;
 window.tippy = tippy;
 
 export {
-    Script,
+    // Script,
     UpdatePanel,
     JobManagerIcon,
     LayoutComponent,
@@ -59,5 +59,5 @@ export {
     BaseHeader,
     ListHeader,
     DetailHeader,
-    ListSearch
+    SearchBar
 };

@@ -15,6 +15,8 @@ export default interface Params {
     mode: string;
     scope: string;
     id: string;
+    searchManager: object,
+    showSearchPanel: boolean,
     breadcrumbs: BreadcrumbsItem[],
     currentIsHeading: boolean;
     afterOnMount?: Function,

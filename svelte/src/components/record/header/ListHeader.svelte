@@ -7,6 +7,8 @@
     import EntityActionButtons from "./interfaces/EntityActionsButtons";
     import EntityHistory from "./navigation/EntityHistory.svelte";
     import EntityCallbacks from "./interfaces/EntityCallbacks";
+    import SearchBar from "../search/SearchBar.svelte";
+    import FilterSearch from "../search/FilterSearch.svelte";
 
     export let params: Params;
     export let entityActions: EntityActionButtons;
@@ -35,8 +37,16 @@
 
 <EntityHistory scope={params.scope} />
 <BaseHeader>
-    <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
-    <div class="search-container"></div>
+    <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} >
+        <svelte:fragment slot="filter-search">
+            {#if params.showSearchPanel}
+                <SearchBar searchManager={params.searchManager} scope={params.scope}/>
+                <FilterSearch searchManager={params.searchManager} scope={params.scope}/>
+            {/if}
+        </svelte:fragment>
+    </EntityActionsGroup>
+
+
 </BaseHeader>
 
 <style>

@@ -71,7 +71,10 @@
 </script>
 
 <div class="buttons-container">
-    <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true} dropdownPosition="right"/>
+    <div class="action-group-container">
+        <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true} dropdownPosition="right"/>
+        <slot name="filter-search"></slot>
+    </div>
     <div class="right-group">
         {#if hasFavoriteButton}
             <div class="entity-buttons">
@@ -93,6 +96,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        justify-content: space-between;
     }
 
     .buttons-container :global(.entity-actions) {
@@ -119,5 +123,12 @@
 
     .buttons-container .right-group .entity-buttons:not(:last-child) {
         margin-right: 20px;
+    }
+
+    .action-group-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
     }
 </style>

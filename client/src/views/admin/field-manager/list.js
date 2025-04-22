@@ -77,7 +77,6 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                         type: 'DELETE',
                         success: function () {
                             this.notify('Removed', 'success');
-                            this.clearFilters(field)
                             var data = this.getMetadata().data;
                             delete data['entityDefs'][this.scope]['fields'][field];
                             this.getMetadata().storeToCache();
@@ -127,25 +126,6 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 this.wait(false);
             }.bind(this));
 
-        },
-
-        clearFilters(field) {
-            let filters = this.getStorage().get('listSearch', this.scope);
-            if (filters && filters.advanced) {
-                for (let filter in filters.advanced) {
-                    let name = filter.split('-')[0];
-
-                    if (name === field) {
-                        delete filters.advanced[filter]
-                    }
-                }
-
-                if (filters.presetName && !presetFilters[this.scope].includes(filters.presetName)) {
-                    filters.presetName = null
-                }
-
-                this.getStorage().set('listSearch', this.scope, filters);
-            }
         }
     });
 
