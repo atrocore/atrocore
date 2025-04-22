@@ -1,9 +1,6 @@
 {
   "controller": "controllers/record",
   "iconClass": "local_library",
-  "views": {
-    "list": "views/locale/list"
-  },
   "recordViews": {
     "detail": "views/locale/record/detail"
   },

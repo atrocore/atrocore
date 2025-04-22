@@ -23,9 +23,13 @@
                 border: 1px solid #c0c0c0;
                 margin-top: 20px;
                 margin-bottom: 50px;
+                max-height: calc(100% - 20px - 40px);
+                display: flex;
+                flex-direction: column;
             }
             #general-container header#header {
                 width: 100%;
+                flex-shrink: 0;
             }
             #general-container div#navbar div.navbar {
                 position: relative;
@@ -44,7 +48,6 @@
                 margin: 10px 0 !important;
             }
             #general-container .main-template {
-                min-height: 700px;
                 padding: 0;
             }
             #general-container #main-template .msg-box {
@@ -55,7 +58,7 @@
                 margin-bottom: 0;
             }
             #general-container .main-template .modal-body {
-                min-height: 620px;
+                min-height: 500px;
             }
 
             #general-container .main-template .modal-body.db-config .form-group,
@@ -108,7 +111,7 @@
                         </div>
                     </div>
                 </header>
-                <div class="panel-body body" style="padding: 0">
+                <div class="panel-body body" style="padding: 0; flex: 1; overflow-y: auto;">
                     <div id="main-template">
                         <div class="msg-box alert hidden"></div>
                     </div>
