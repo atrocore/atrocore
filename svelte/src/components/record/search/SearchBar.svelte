@@ -99,9 +99,10 @@
         width: 250px;
     }
 
-    .search-container .search .input {
+    .search-container .search input {
         width: 150px;
     }
+
     .search-row .input-group {
         border: 1px solid #eee;
         border-radius: 5px;
