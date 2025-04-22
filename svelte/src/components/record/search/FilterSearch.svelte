@@ -21,6 +21,7 @@
 
     const selectSavedSub = savedSearchStore.selectedSavedItemIds.subscribe(_ => {
         refreshShowUnsetAll();
+        updateSelectedFilterNames();
     });
 
     const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
