@@ -36,7 +36,6 @@
         updateSelectedFilterNames();
     })
 
-
     function refreshShowUnsetAll() {
         setTimeout(() => {
             showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
@@ -49,7 +48,6 @@
             }
         }, 100)
     }
-
 
     function updateCollection() {
         searchManager.collection.reset();
@@ -119,7 +117,7 @@
                         aria-expanded="false"
                         data-tippy="true"
                         on:click={openFilter}
-                        class:has-content={filterNames !== ""}
+                        class:active={showUnsetAll}
                 >
                     <svg class="icon" ><use href="client/img/icons/icons.svg#filter"></use></svg>
                 </button>
@@ -225,7 +223,7 @@
         padding: 0;
     }
 
-    .filter-group .filter.has-content{
+    .filter-group .filter.active{
         color: #06c;
     }
 
