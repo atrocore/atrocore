@@ -388,7 +388,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         isAllowedSelectAllResult() {
-            if (this.options.allowSelectAllResult === false){
+            if (this.options.allowSelectAllResult === false) {
                 return false;
             }
 
@@ -1220,6 +1220,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         afterRender: function () {
+            this.listenTo(window.Backbone, 'change:additional-languages', () => {
+                this.refreshLayout()
+            })
 
             this.createLayoutConfigurator()
 

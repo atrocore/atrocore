@@ -1226,6 +1226,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.refreshLayout();
                     }
                 });
+
+                this.listenTo(window.Backbone, 'change:additional-languages', (value) => {
+                    this.getUser().set('additionalLanguages', value)
+                    this.refreshLayout()
+                })
             }
         },
 
@@ -1945,28 +1950,75 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
+        getUserLanguages() {
+            const user = this.getUser()
+            let languages = user.get('additionalLanguages') || []
+            let userLocale = this.getConfig().get('locales')[user.get('localeId')]
+            if (!userLocale) {
+                userLocale = this.getConfig().get('locales')[this.getConfig().get('locale')]
+            }
+            if (userLocale) {
+                languages.unshift(userLocale.code)
+            }
+
+            const systemLanguages = this.getConfig().get('inputLanguageList')
+            const mainLocale = this.getConfig().get('locales').main
+            systemLanguages.push(mainLocale.code)
+
+            // remove duplicates
+            languages = languages.filter((item, index) => languages.indexOf(item) === index)
+            const result = []
+            languages.forEach(code => {
+                if (systemLanguages.includes(code)) {
+                    if (code === mainLocale.code) {
+                        result.push('')
+                    } else {
+                        result.push(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''))
+                    }
+                }
+            })
+            console.log(result);
+            return result
+        },
+
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let layoutRows = [];
                 let layoutRow = [];
 
+                const pushItem = (name, defs) => {
+                    let item = {
+                        name: name,
+                        customLabel: defs.detailViewLabel || defs.label,
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                    }
+                    if (defs.layoutDetailView) {
+                        item.view = defs.layoutDetailView;
+                    }
+
+                    layoutRow.push(item);
+                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                        layoutRows.push(layoutRow);
+                        layoutRow = [];
+                    }
+                }
+
                 if (!this.model.isNew()) {
                     $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
                         this.model.defs['fields'][name] = defs;
                         if (!defs.layoutDetailDisabled) {
-                            let item = {
-                                name: name,
-                                customLabel: defs.detailViewLabel || defs.label,
-                                fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                            if (defs.multilangField) {
+                                return
                             }
-                            if (defs.layoutDetailView) {
-                                item.view = defs.layoutDetailView;
+
+                            if (defs.isMultilang) {
+                                this.getUserLanguages().forEach(code => {
+                                    pushItem(name + code, this.model.get('attributesDefs')[name + code])
+                                })
+                                return;
                             }
-                            layoutRow.push(item);
-                            if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                                layoutRows.push(layoutRow);
-                                layoutRow = [];
-                            }
+
+                            pushItem(name, defs)
                         }
                     });
                 }
@@ -1989,6 +2041,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         rows: layoutRows
                     });
                 }
+
+                console.log(data.layout)
             }
         },
 

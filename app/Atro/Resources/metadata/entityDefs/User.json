@@ -179,6 +179,15 @@
       "type": "link",
       "entity": "Locale"
     },
+    "additionalLanguages": {
+      "type": "jsonArray",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true
+    },
     "style": {
       "type": "link",
       "entity": "Style",
