@@ -48,7 +48,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                 });
             }
 
-            collection.where = searchManager.getWhere();
+            this.collection.where = searchManager.getWhere();
             this.searchManager = searchManager;
         },
 

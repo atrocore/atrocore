@@ -7,6 +7,8 @@
     import GeneralFilter from "../search-filter/GeneralFilter.svelte";
     import {generalFilterStore} from "../search-filter/stores/GeneralFilter"
     import {savedSearchStore} from "../search-filter/stores/SavedSearch"
+    import Rule from "../search-filter/interfaces/Rule";
+    import {Metadata} from "../../../utils/Metadata";
 
 
     export let scope: string;
@@ -15,25 +17,34 @@
 
     let showUnsetAll: boolean = false;
     let filterNames: string = "";
+    let advancedFilterDisabled: boolean = false;
     let advancedFilterChecked: boolean = searchManager.isQueryBuilderApplied();
+    let dropdownButton: HTMLElement;
+    let dropdownDiv: HTMLElement;
 
     generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
     const selectSavedSub = savedSearchStore.selectedSavedItemIds.subscribe(_ => {
         refreshShowUnsetAll();
         updateSelectedFilterNames();
+        closeDropdown();
     });
 
     const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
         refreshShowUnsetAll();
         updateSelectedFilterNames();
-
+        closeDropdown();
     });
 
     const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
         advancedFilterChecked = value;
         refreshShowUnsetAll();
         updateSelectedFilterNames();
+    });
+
+    const advancedFilterDisabledSub = generalFilterStore.advancedFilterDisabled.subscribe((value) => {
+        advancedFilterDisabled = value;
+        closeDropdown();
     })
 
     function refreshShowUnsetAll() {
@@ -54,6 +65,7 @@
         Notifier.notify(Language.translate('loading', 'messages'));
 
         searchManager.collection.where = searchManager.getWhere();
+        searchManager.collection.abortLastFetch();
 
         searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
@@ -92,19 +104,79 @@
         filterNames =  boolFilters.concat(selectedSavedSearchNames).reverse().join(', ').trim();
     }
 
+    function refreshAdvancedFilterDisabled() {
+        let rules = searchManager.getQueryBuilder() ;
+        if(typeof rules === 'object' && rules.condition) {
+            generalFilterStore.advancedFilterDisabled.set(isRuleEmpty(rules));
+        }else{
+            generalFilterStore.advancedFilterDisabled.set(false);
+        }
+    }
+
+    function isRuleEmpty(rule: Rule): boolean {
+        if(rule.operator) {
+            return  false;
+        }
+
+        if(!rule.rules) {
+            return true;
+        }
+
+        return rule.rules.length === 0;
+    }
+
     function openFilter() {
         window.dispatchEvent(new CustomEvent('right-side-view:toggle-filter'));
     }
 
+    function cleanUpSavedRule( exists: Function): boolean{
+        // we clean up to remove deleted fields
+        let hasChanged = false;
+        let  cleanUpRule = (rule: Rule) => {
+            if(rule.rules) {
+                for (const rulesKey in rule.rules) {
+                    if(rule.rules[rulesKey].id) {
+                        if(!exists(rule)){
+                            hasChanged = true;
+                            rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
+                        }
+                    }
+
+                    if(rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
+                        cleanUpRule(rule.rules[rulesKey]);
+                    }
+                }
+            }
+        }
+
+        let rule = searchManager.getQueryBuilder();
+        cleanUpRule(rule);
+        if(hasChanged) {
+            searchManager.update({queryBuilder: rule})
+        }
+
+        return hasChanged
+    }
+
+    function closeDropdown() {
+        window.$(dropdownDiv).removeClass('open');
+        window.$(dropdownButton).attr('aria-expanded', false);
+    }
+
     onMount(() => {
         refreshShowUnsetAll();
+        refreshAdvancedFilterDisabled();
+        cleanUpSavedRule((field) => {
+            return !!Metadata.get(['entityDefs', scope, 'fields', field]);
+        });
 
         return () => {
             advancedFilterCheckedSub();
             selectSavedSub();
             selectBoolSub();
+            advancedFilterDisabledSub();
         }
-    })
+    });
 </script>
 
 <div class="row search-row" style="padding-bottom: 0">
@@ -121,8 +193,9 @@
                 >
                     <svg class="icon" ><use href="client/img/icons/icons.svg#filter"></use></svg>
                 </button>
-                <div class="dropdown" class:has-content={filterNames !== ""}>
+                <div bind:this={dropdownDiv} class="dropdown" class:has-content={filterNames !== ""}>
                     <button
+                            bind:this={dropdownButton}
                             data-toggle="dropdown"
                             class="btn btn-default filter-switcher"
                             on:mousedown={event => event.preventDefault()}>
@@ -135,7 +208,7 @@
                         <ul class="advanced-checkbox">
                             <li class="checkbox">
                                 <label>
-                                    <input type="checkbox" bind:checked={advancedFilterChecked} on:change={() => handleAdvancedFilterChecked()}>
+                                    <input type="checkbox"  disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked} on:change={() => handleAdvancedFilterChecked()}>
                                     {Language.translate('Advanced Filter')}
                                 </label>
                             </li>
@@ -145,7 +218,7 @@
                 {#if showUnsetAll}
                     <button
                             type="button"
-                            class="btn btn-default "
+                            class="btn btn-default reset"
                             data-original-title="Reset Filter"
                             aria-expanded="false"
                             data-tippy="true"
@@ -162,7 +235,7 @@
 <style>
     .search-row .input-group {
         border: 1px solid #eee;
-        border-radius: 5px;
+        border-radius: 3px;
     }
 
     .search-row .input-group-btn button {
@@ -180,9 +253,8 @@
         display: flex;
     }
 
-
     .filter-switcher {
-        max-width: 220px;
+        max-width: 400px;
         width: auto;
         padding-right: 15px;
         padding-left: 15px;
@@ -202,6 +274,14 @@
         max-width: 260px;
         padding: 10px;
     }
+
+    .has-content .filter-switcher {
+        padding-left: 10px;
+    }
+
+     .has-content .filter-switcher span{
+        text-align: left;
+     }
 
     .has-content span.chevron{
         position: absolute;
@@ -225,6 +305,10 @@
 
     .filter-group .filter.active{
         color: #06c;
+    }
+
+    button.reset {
+        height: 35px;
     }
 
 </style>

@@ -201,7 +201,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getQueryBuilder: function () {
-            return this.data.queryBuilder;
+            return Espo.Utils.clone(this.data.queryBuilder)
         },
 
         isQueryBuilderApplied: function () {
@@ -213,7 +213,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getSavedFilters: function () {
-            return this.data.savedFilters;
+            return Espo.Utils.clone( this.data.savedFilters);
         },
 
         geTextFilter: function () {
@@ -324,7 +324,7 @@ Espo.define('search-manager', [], function () {
             }
 
             return where;
-        },
+        }
     });
 
     return SearchManager;

@@ -31,6 +31,8 @@
 
     let showUnsetAll: boolean = false;
 
+    let advancedFilterDisabled: boolean;
+
     $: {
         updateStyle(parentWidth);
     }
@@ -48,8 +50,7 @@
    const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
        advancedFilterChecked = value;
        refreshShowUnsetAll();
-   })
-
+   });
 
     function updateStyle(parentWidth: number) {
         let rules = [
@@ -322,6 +323,15 @@
                         },
                     }).then(response => {
                         return response.json().then(attrs => {
+                            // we clean up the rules to remove attribute rule if attribute does not exists anymore
+                            cleanUpSavedRule((fieldId) => {
+                                let parts = fieldId.split('_');
+                                if (parts.length === 2 && parts[0] === 'attr') {
+                                   return !!attrs.list.find(v => v.id ===  parts[1]);
+                                }else{
+                                    return true;
+                                }
+                            });
                             if (attrs.list.length) {
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
@@ -434,15 +444,6 @@
 
             });
         });
-    }
-
-    function handleGeneralFilterChecked(e, filter) {
-        let isChecked = e.target.checked;
-        let bool = searchManager.getBool();
-        bool[filter] = isChecked;
-        updateSearchManager({bool})
-        updateCollection();
-        refreshShowUnsetAll();
     }
 
     function unsetAll() {
@@ -573,7 +574,47 @@
         editingSavedSearch = null;
     }
 
+    function refreshAdvancedFilterDisabled() {
+        let rules = searchManager.getQueryBuilder();
+        if(typeof rules === 'object' && rules.condition) {
+            advancedFilterDisabled = isRuleEmpty(rules);
+        }else{
+            advancedFilterDisabled = false;
+        }
+        generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
+    }
+
+    // return true the filter have been updates
+    function cleanUpSavedRule( exists: Function): boolean{
+        // we clean up to remove deleted fields
+        let hasChanged = false;
+       let  cleanUpRule = (rule: Rule) => {
+           if(rule.rules) {
+               for (const rulesKey in rule.rules) {
+                   if(rule.rules[rulesKey].id) {
+                       if(!exists(rule)){
+                           hasChanged = true;
+                           rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
+                       }
+                   }
+
+                   if(rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
+                      cleanUpRule(rule.rules[rulesKey]);
+                   }
+               }
+           }
+        }
+
+        let rule = searchManager.getQueryBuilder();
+       cleanUpRule(rule);
+       if(hasChanged) {
+           searchManager.update({queryBuilder: rule})
+       }
+
+       return hasChanged
+    }
     function refreshShowUnsetAll() {
+      refreshAdvancedFilterDisabled();
        setTimeout(() => {
            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
            let bool = searchManager.getBool();
@@ -584,6 +625,18 @@
                }
            }
        }, 100)
+    }
+
+    function isRuleEmpty(rule: Rule): boolean {
+        if(rule.operator) {
+            return  false;
+        }
+
+        if(!rule.rules) {
+            return true;
+        }
+
+        return rule.rules.length === 0;
     }
 
     onMount(() => {
@@ -663,7 +716,7 @@
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
+            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
             <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" on:click={resetFilter}>

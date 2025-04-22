@@ -62,10 +62,11 @@ Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager'
             }
 
             if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
-                where.push(this.data.queryBuilder);
+                where.push(Espo.Utils.clone(this.data.queryBuilder));
             } else if (this.data.advanced) {
                 where = where.concat(this.getAdvancedWhere(this.data.advanced))
             }
+
             return where;
         },
 

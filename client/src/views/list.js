@@ -466,6 +466,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
+                        this.collection.where = this.searchManager.getWhere();
                         this.collection.fetch({
                             headers: {
                                 'Entity-History': 'true'
