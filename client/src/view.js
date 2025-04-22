@@ -302,7 +302,7 @@ Espo.define('view', [], function () {
                 return;
             }
 
-            let button = $(`<a href='javascript:' style="text-decoration:none; margin-left: 5px" data-action='showTour'><i style="font-size: 22px; margin-left: 2px;" class="ph ph-question"></i></a>`);
+            let button = $(`<a href='javascript:' style="text-decoration:none; margin-left: 5px" data-action='showTour'><i style="font-size: 22px; margin-left: 2px;" class="ph-fill ph-question"></i></a>`);
             button.on('click', () => this.showTour(type))
             this.$el.parent().find('.page-header .header-title').append(button)
         },

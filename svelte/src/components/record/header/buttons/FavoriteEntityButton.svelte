@@ -9,12 +9,14 @@
 
     let params: ActionParams;
     let style: string = 'default';
+    let iconStyle: string;
 
     $: {
         style = active ? 'primary outline' : 'default';
+        iconStyle = active ? 'ph-fill' : 'ph';
         params = {
             action: "favorite",
-            html: `<i class="ph ph-star"></i>`,
+            html: `<i class="${iconStyle} ph-star"></i>`,
             style: style
         } as ActionParams;
     }

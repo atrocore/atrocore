@@ -292,13 +292,14 @@ td, th {
     }
 }
 
-.ph {
+.ph, .ph-fill {
     font-size: 18px;
     vertical-align: text-bottom;
+    color: inherit;
 }
 
 .ph-spin {
-    animation: ph-spin 2s infinite linear
+    animation: ph-spin 2s infinite linear;
 }
 
 @keyframes ph-spin {
@@ -2824,7 +2825,12 @@ th {
 }
 
 .group-records-list .context-menu > .btn-group {
-    margin-right: 7px;
+    margin-right: 1px;
+}
+
+.group-records-list .context-menu > .btn-group .ph {
+    font-size: 16px;
+    color: var(--label-color);
 }
 
 .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > th, .table > caption + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > td, .table > thead:first-child > tr:first-child > td {
@@ -3809,7 +3815,9 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-link:has(> .ph:only-child),
-a:has(> .ph:only-child) {
+.btn-link:has(> .ph-fill:only-child),
+a:has(> .ph:only-child),
+a:has(> .ph-fill:only-child) {
     text-decoration: none;
     line-height: 1;
 }
@@ -11880,6 +11888,10 @@ h4.panel-title span.color-icon {
     padding-left: 37px
 }
 
+.panel-stream [data-action=expandDetails] i {
+    color: #bbb;
+}
+
 .stream-head-container code,
 .stream-details-container code {
     font-size: 80%;
@@ -11913,7 +11925,7 @@ img.avatar.avatar-link {
     margin-right: 7px;
 }
 
-stream-head-text-container .span {
+.stream-head-text-container .span {
     overflow-wrap: break-word;
     word-wrap: break-word
 }
@@ -12621,7 +12633,8 @@ a.field-info > span.fa-info-circle {
     padding-right: 0
 }
 
-.btn-icon .ph {
+.btn .ph,
+.btn .ph-fill {
     position: relative;
     font-size: 18px;
     text-align: center
@@ -12631,7 +12644,8 @@ a.field-info > span.fa-info-circle {
     width: 34px
 }
 
-.btn-icon.btn-sm .ph {
+.btn.btn-sm .ph,
+.btn.btn-sm .ph-fill {
     font-size: 16px;
 }
 
@@ -14528,7 +14542,12 @@ input#sn-checkbox-open-in-new-window {
 
 .navbar-nav.navbar-right > li > a {
     line-height: 38px;
-    font-size: 16px
+    font-size: 16px;
+}
+
+.navbar-nav.navbar-right > li .ph,
+.navbar-nav.navbar-right > li .ph-fill {
+    font-size: 20px;
 }
 
 .record .stick-sub.button-container {
@@ -19270,6 +19289,7 @@ span[data-img-src]::after {
 
 .favorites-dropdown .header .configure-btn {
     cursor: pointer;
+    font-size: 18px !important;
 }
 
 .anchor-nav-container .cursor-pointer {

@@ -38,7 +38,11 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
 
         getToolbarItems() {
             const items = [
-                'undo', 'redo', '|',
+                {
+                    name: 'undo',
+                    className: "ph ph-arrow-counter-clockwise",
+                    action: EasyMDE.undo
+                }, 'redo', '|',
                 'heading-1', 'heading-2', 'heading-3', '|',
                 'bold', 'italic', 'strikethrough', '|',
                 'unordered-list', 'ordered-list', 'code', 'quote', 'link', 'horizontal-rule', '|',

@@ -12,7 +12,7 @@
             <span class="text-muted"><span class="{{emailIconClassName}} action icon"></span>
                 {{{message}}}
             </span>
-            <a href="javascript:" data-action="expandDetails"><span class="fas fa-angle-down"></span></a>
+            <a href="javascript:" data-action="expandDetails"><i class="ph ph-caret-down"></i></a>
         </div>
     </div>
 

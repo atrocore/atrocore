@@ -94,13 +94,11 @@
             </section>
             <section class="logs-section">
                 <div class="buttons">
-                    <button class="btn btn-default" disabled={!fullLogs} on:click={showLogsButtonHandler}><i
-                            class="fa fa-list"></i>{showLogs ? 'Hide' : 'Show'} logs
+                    <button class="btn btn-default" disabled={!fullLogs} on:click={showLogsButtonHandler}><i class="ph ph-list"></i>{showLogs ? 'Hide' : 'Show'} logs
                     </button>
                     {#if restoreLink}
                         <a href={restoreLink} target="_blank" class="btn btn-default" role="button"
-                           style="float: right;"><i
-                                class="fa fa-history"></i>Recovery Instructions</a>
+                           style="float: right;"><i class="ph ph-clock-counter-clockwise"></i>Recovery Instructions</a>
                     {/if}
                 </div>
                 {#if showLogs && fullLogs}

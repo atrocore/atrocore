@@ -61,8 +61,8 @@ Espo.define('views/record/search', ['view'], function (Dep) {
         textFilterDisabled: false,
 
         viewModeIconClassMap: {
-            list: 'fas fa-align-justify',
-            kanban: 'fas fa-grip-horizontal'
+            list: 'ph ph-list',
+            kanban: 'ph ph-kanban'
         },
 
         typesWithOneFilter: ['array', 'bool', 'enum', 'multiEnum'],
@@ -792,7 +792,7 @@ Espo.define('views/record/search', ['view'], function (Dep) {
 
             presetName = presetName || '';
 
-            this.$el.find('ul.filter-menu a.preset[data-name="' + presetName + '"]').prepend('<span class="fas fa-check pull-right"></span>');
+            this.$el.find('ul.filter-menu a.preset[data-name="' + presetName + '"]').prepend('<span class="ph ph-check pull-right"></span>');
         },
 
         manageBoolFilters() {

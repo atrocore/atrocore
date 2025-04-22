@@ -554,8 +554,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 selectable: true,
                 dragAndDrop: false,
                 useContextMenu: false,
-                closedIcon: $('<i class="fa fa-angle-right"></i>'),
-                openedIcon: $('<i class="fa fa-angle-down"></i>'),
+                closedIcon: $('<i class="ph ph-caret-right"></i>'),
+                openedIcon: $('<i class="ph ph-caret-down"></i>'),
                 onCreateLi: function (node, $li, isSelected) {
                     if (node.disabled) {
                         $li.addClass('disabled');

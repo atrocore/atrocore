@@ -3,11 +3,11 @@
         <button type="button" class="navbar-toggle">
             <i class="ph ph-list"></i>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
             <button type="button" class="search-toggle pull-left visible-xs">
-                <span class="fa fa-search"></span>
+                <i class="ph ph-magnifying-glass"></i>
             </button>
             {{/if}}
             <ul class="visible-xs header-right pull-left">
@@ -22,7 +22,7 @@
                 {{#if hasJM}}<li class="dropdown queue-badge-container"></li>{{/if}}
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user-circle"></i></a></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -124,7 +124,7 @@
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">
             <li class="dropdown menu-container hidden-xs">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user-circle"></i></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}

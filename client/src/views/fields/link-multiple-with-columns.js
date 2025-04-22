@@ -242,7 +242,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
                     var label = this.translate(field, 'fields', scope);
                     var $menuItem = $('<li>').append(
                         $('<a href="javascript:" data-action="toggleBoolColumn">').attr('data-column', column).attr('data-id', id).append(
-                            $('<span class="check-icon fas fa-check fa-sm pull-right">').addClass(!value ? 'hidden' : '')
+                            $('<span class="check-icon ph ph-check pull-right">').addClass(!value ? 'hidden' : '')
                         ).append(
                             $('<div>').text(label)
                         )

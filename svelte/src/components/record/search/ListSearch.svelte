@@ -148,7 +148,7 @@
                         data-tippy="true"
                         on:click={reset}
                     >
-                        <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+                        <i class="ph ph-x"></i>
                     </button>
                 {/if}
                 <button
@@ -159,7 +159,7 @@
                     data-tippy="true"
                     on:click={search}
                 >
-                    <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                    <i class="ph ph-magnifying-glass"></i>
                 </button>
             </div>
         </div>
@@ -174,15 +174,16 @@
                     on:click={openFilter}
                     class:has-content={filterNames !== ""}
             >
-                <svg class="icon" ><use href="client/img/icons/icons.svg#filter"></use></svg>
+                <i class="ph ph-funnel"></i>
             </button>
             <div class="dropdown" class:has-content={filterNames !== ""}>
                 <button
                     data-toggle="dropdown"
                     class="btn btn-default filter-switcher"
-                    on:mousedown={event => event.preventDefault()}>
-                    <span class="filter-names" > {filterNames}</span>
-                    <span class=" chevron fas fa-chevron-down"></span>
+                    on:mousedown={event => event.preventDefault()}
+                >
+                    <span class="filter-names"><span>{filterNames}</span></span>
+                    <i class="chevron ph ph-caret-down"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <GeneralFilter scope={scope} searchManager={searchManager} />
@@ -206,7 +207,7 @@
                         data-tippy="true"
                         on:click={unsetAll}
                 >
-                    <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+                    <i class="ph ph-x"></i>
                 </button>
             {/if}
         </div>
@@ -246,17 +247,16 @@
     .filter-switcher {
         max-width: 220px;
         width: auto;
-        padding-right: 15px;
-        padding-left: 15px;
-        text-overflow: ellipsis;
-        overflow: hidden;
         height: 100%;
         border-left: 1px solid #eee;
         border-right: 1px solid #eee;
+        display: flex;
+        align-items: center;
     }
 
-    .has-content  .filter-switcher{
-        padding-right: 20px;
+    .filter-switcher .filter-names {
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .dropdown .dropdown-menu {
@@ -266,14 +266,12 @@
     }
 
     @media(min-width: 767px) {
-        .has-content span.chevron{
-            position: absolute;
-            right: 10px;
-            top: 10px;
+        .has-content .chevron {
+            flex-shrink: 0;
         }
     }
 
-    .has-content span.filter-names {
+    .has-content .filter-names {
         margin-right: 8px;
     }
 

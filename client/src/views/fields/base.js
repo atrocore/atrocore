@@ -431,7 +431,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<i class="ph ph-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
+                statusIcons.prepend(`<i class="ph ph-warning required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
                 $sign = statusIcons.find('.required-sign');
                 $sign.click(() => {
                     this.model.trigger('toggle-required-fields-highlight');
@@ -668,9 +668,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
 
-            $cell.find('.fa-trash-alt').parent().remove();
+            $cell.find('.ph-trash-simple').parent().remove();
 
-            const $removeLink = $(`<a href="javascript:" class="remove-attribute-value hidden" title="${this.translate('Delete')}"><span class="fas fa-trash-alt fa-sm"></span></a>`);
+            const $removeLink = $(`<a href="javascript:" class="remove-attribute-value hidden" title="${this.translate('Delete')}"><i class="ph ph-trash-simple"></i></a>`);
 
             if (inlineActions.size()) {
                 inlineActions.prepend($removeLink);

@@ -30,7 +30,7 @@
 <a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}} title={Language.translate('jobManager')}>
     <i class="ph ph-list-checks"></i>
     {#if qmPaused}
-        <i class="ph ph-pause-circle pause-icon"></i>
+        <i class="ph-fill ph-pause-circle pause-icon"></i>
     {/if}
 </a>
 <QueuePanelContainer icon={icon} isOpen={isPanelOpen} close={closePanel}/>

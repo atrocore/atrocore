@@ -146,7 +146,7 @@ Espo.define('views/fields/link-multiple-with-primary', 'views/fields/link-multip
             $el.append($right);
 
             var isPrimary = (id == this.primaryId);
-            var iconHtml = '<span class="fas fa-star fa-sm ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
+            var iconHtml = '<span class="ph ph-star ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
             var title = this.translate('Primary');
             var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
             $primary.insertBefore($el.children().first().children().first());

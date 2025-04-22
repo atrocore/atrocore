@@ -11,7 +11,7 @@
     const dispatch = createEventDispatcher();
 
     const viewIcons: Record<string, string> = {
-        list: '<i class="ph ph-table"></i>',
+        list: '<i class="ph ph-list"></i>',
         plate: '<i class="ph ph-squares-four"></i>',
         kanban: '<i class="ph ph-kanban"></i>',
         tree: '<i class="ph ph-tree-view"></i>'
@@ -68,7 +68,7 @@
 {#if viewTypes.length > 1}
     <div class="btn-group view-mode-switch">
         {#each viewTypes as view}
-            <a role="button" href={view.link} class="btn action" class:btn-default={view.name !== mode}
+            <a role="button" href={view.link} class="btn outline action" class:btn-default={view.name !== mode}
                class:btn-primary={view.name === mode} data-name={view.name} data-action="List" on:click={changeView}>
                 {@html view.icon}
             </a>
@@ -85,5 +85,9 @@
     .btn:last-child {
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+    }
+
+    .btn.btn-primary {
+        z-index: 1;
     }
 </style>
