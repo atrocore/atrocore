@@ -486,21 +486,6 @@ class LayoutManager
         $result = [];
 
         if ($viewType === 'detail') {
-            $exists = [];
-            foreach ($data as $k => $panel) {
-                // skip if no rows
-                if (empty($panel['rows'])) {
-                    continue 1;
-                }
-                foreach ($panel['rows'] as $row) {
-                    foreach ($row as $field) {
-                        if (!empty($field['name'])) {
-                            $exists[] = $field['name'];
-                        }
-                    }
-                }
-            }
-
             foreach ($data as $k => $panel) {
                 $result[$k] = $panel;
 
@@ -615,14 +600,18 @@ class LayoutManager
         if (empty($userLocale)) {
             $userLocale = $this->getEntityManager()->getEntity('Locale', $this->getConfig()->get('locale'));
         }
-        if (!empty($userLocale)) {
-            array_unshift($locales, $userLocale->get('code'));
-        }
+
 
         $systemLocales = $this->getConfig()->get('inputLanguageList', []);
         $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
         $mainLocaleCode = $mainLocale->get('code');
         $systemLocales[] = $mainLocaleCode;
+
+        if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
+            array_unshift($locales, $userLocale->get('code'));
+        } else {
+            array_unshift($locales, $mainLocaleCode);
+        }
 
         foreach (array_unique($locales) as $locale) {
             if (in_array($locale, $systemLocales)) {

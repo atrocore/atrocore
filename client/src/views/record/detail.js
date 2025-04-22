@@ -1957,13 +1957,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (!userLocale) {
                 userLocale = this.getConfig().get('locales')[this.getConfig().get('locale')]
             }
-            if (userLocale) {
-                languages.unshift(userLocale.code)
-            }
 
             const systemLanguages = this.getConfig().get('inputLanguageList')
             const mainLocale = this.getConfig().get('locales').main
             systemLanguages.push(mainLocale.code)
+
+            if (userLocale && systemLanguages.includes(userLocale.code)) {
+                languages.unshift(userLocale.code)
+            } else {
+                languages.unshift(mainLocale.code)
+            }
 
             // remove duplicates
             languages = languages.filter((item, index) => languages.indexOf(item) === index)
@@ -1977,6 +1980,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             })
+
+            if (result.length === 0) {
+                result.push('')
+            }
+
             return result
         },
 
