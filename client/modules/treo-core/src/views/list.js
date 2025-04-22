@@ -36,7 +36,11 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             if(savedFilters.length) {
                 this.ajaxGetRequest('SavedSearch', {
                     collectionOnly: true,
-                    scope: this.scope
+                    where: [{
+                        type: 'equals',
+                        attribute: 'entityType',
+                        value: this.scope
+                    }]
                 }, {async: false}).then((result) => {
                     savedFilters = savedFilters.map(i => result.list.find(item => item.id === i.id)).filter(i => i);
                     searchManager.set(_.extend(searchManager.get(), {savedFilters: savedFilters}));

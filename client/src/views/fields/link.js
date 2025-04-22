@@ -880,8 +880,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter() {
+            let name = this.name;
+            if(!name.includes('attr_')) {
+                name = this.name + 'Id'
+            }
             return {
-                id: this.name + 'Id',
+                id: name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),

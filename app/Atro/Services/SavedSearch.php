@@ -29,6 +29,12 @@ class SavedSearch extends Base
 
     public function findEntities($params)
     {
+        foreach ($params['where'] as $where) {
+            if(!empty($where['attribute']) && $where['attribute'] === 'entityType' && !empty($where['value'])) {
+                $scope = $where['value'];
+            }
+        }
+
         if (!$this->getDataManager()->isUseCache(\Atro\Repositories\SavedSearch::CACHE_NAME)) {
             $params['where'][] = [
                 "type" => "or",
@@ -48,13 +54,20 @@ class SavedSearch extends Base
         } else {
             $cachedData = $this->getRepository()->getEntitiesFromCache();
             if ($this->getAcl()->checkReadOnlyOwn($this->entityType)) {
-                $entities = array_filter($cachedData, function ($item) use ($params) {
-                    return $item['userId'] === $this->getUser()->id && $item['entityType'] === $params['_scope'];
+                $entities = array_filter($cachedData, function ($item) use ($scope) {
+                    $bool = $item['userId'] === $this->getUser()->id;
+                    if(!empty($scope)) {
+                        $bool = $bool && $item['entityType'] === $scope;
+                    }
+                    return  $bool;
                 });
             } else {
-                $entities = array_filter($cachedData, function ($item) use ($params) {
-                    return $item['entityType'] === $params['_scope']
-                        && ($item['userId'] === $this->getUser()->id || $item['isPublic'] === true);
+                $entities = array_filter($cachedData, function ($item) use ($scope) {
+                    $bool = $item['userId'] === $this->getUser()->id || $item['isPublic'] === true;
+                    if(!empty($scope)) {
+                        $bool = $bool && $item['entityType'] === $scope;
+                    }
+                    return  $bool;
                 });
             }
 
