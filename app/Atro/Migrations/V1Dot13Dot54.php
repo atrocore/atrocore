@@ -32,6 +32,22 @@ class V1Dot13Dot54 extends Base
 
         copy('vendor/atrocore/core/copy/console.php', 'console.php');
 
-        file_put_contents('index.php', "<?php echo 'Webserver configuration has been deprecated. Please, reconfigure your webserver to use public/index.php as document root. How to configure virtual host you can find <a href=\"https://help.atrocore.com/installation-and-maintenance/installation/apache-web-server#5-creating-a-virtual-host-for-your-application\">here</a>.';exit;");
+        $content = <<<'EOD'
+<?php
+if (substr(php_sapi_name(), 0, 3) != 'cli') {
+    echo 'Webserver configuration has been deprecated. Please reconfigure your webserver to use public/index.php as document root. How to configure virtual host you can find <a href="https://help.atrocore.com/installation-and-maintenance/installation/apache-web-server#5-creating-a-virtual-host-for-your-application">here</a>.';
+    exit;
+}
+
+chdir(dirname(__FILE__));
+set_include_path(dirname(__FILE__));
+
+require_once 'vendor/autoload.php';
+
+$app = new \Atro\Core\Application();
+$app->runConsole($argv);
+EOD;
+
+        file_put_contents('index.php', $content);
     }
 }
