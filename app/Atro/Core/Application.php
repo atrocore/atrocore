@@ -26,7 +26,7 @@ use Atro\Services\Composer;
 
 class Application
 {
-    public const COMPOSER_LOG_FILE = 'data/composer.log';
+    public const COMPOSER_LOG_FILE = 'public/data/composer.log';
 
     protected static ?array $urls = null;
 
