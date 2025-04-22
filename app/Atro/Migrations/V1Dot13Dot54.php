@@ -33,7 +33,5 @@ class V1Dot13Dot54 extends Base
         copy('vendor/atrocore/core/copy/console.php', 'console.php');
 
         file_put_contents('index.php', "<?php echo 'Webserver configuration has been deprecated. Please, reconfigure your webserver to use public/index.php as document root. How to configure virtual host you can find <a href=\"https://help.atrocore.com/installation-and-maintenance/installation/apache-web-server#5-creating-a-virtual-host-for-your-application\">here</a>.';exit;");
-
-        @unlink('.htaccess');
     }
 }
