@@ -150,7 +150,7 @@ class Daemon extends AbstractConsole
             }
 
             if (PseudoTransactionManager::hasJobs()) {
-                exec($this->getPhpBin() . " index.php pt --run");
+                exec($this->getPhpBin() . " console.php pt --run");
             }
 
             sleep(1);
@@ -173,9 +173,9 @@ class Daemon extends AbstractConsole
                     $workersCount = 50;
                 }
 
-                exec('ps ax | grep index.php', $processes);
+                exec('ps ax | grep console.php', $processes);
                 $processes = implode(' | ', $processes);
-                $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " index.php job {$id}_");
+                $numberOfWorkers = substr_count($processes, $this->getPhpBin() . " console.php job {$id}_");
 
                 if ($numberOfWorkers < $workersCount) {
                     $jobs = $this->getConnection()->createQueryBuilder()
@@ -200,7 +200,7 @@ class Daemon extends AbstractConsole
                         }
                     } else {
                         foreach ($jobs as $job) {
-                            exec($this->getPhpBin() . " index.php job {$id}_{$job['id']} --run >/dev/null 2>&1 &");
+                            exec($this->getPhpBin() . " console.php job {$id}_{$job['id']} --run >/dev/null 2>&1 &");
                         }
                     }
                 }

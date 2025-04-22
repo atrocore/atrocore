@@ -15,7 +15,6 @@ namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
 use Atro\Core\FileStorage\FileStorageInterface;
-use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
