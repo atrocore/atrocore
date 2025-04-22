@@ -1,0 +1,3 @@
+<FilesMatch "(.*)\.sql$">
+  Allow from all
+</FilesMatch>

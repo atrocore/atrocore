@@ -6,10 +6,6 @@ RewriteCond %{REQUEST_FILENAME} /client/
 RewriteRule ^ /client/ [R=404]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} /public/
-RewriteRule ^ /public/ [R=404]
-
-RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} /apidocs/
 RewriteRule ^ apidocs/index.html [QSA,L]
 
@@ -18,7 +14,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 
-<FilesMatch "((.*)\.sql|composer\.json)$">
+<FilesMatch "(.*)\.sql$">
   Deny from all
 </FilesMatch>
 
@@ -26,15 +22,7 @@ RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 	Deny from all
 </Files>
 
-<Files installed.json>
-    Deny from all
-</Files>
-
 <Files index.php>
-	Allow from all
-</Files>
-
-<Files composer.log>
 	Allow from all
 </Files>
 
