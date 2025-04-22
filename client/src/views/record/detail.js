@@ -1977,7 +1977,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             })
-            console.log(result);
             return result
         },
 
@@ -2041,8 +2040,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         rows: layoutRows
                     });
                 }
-
-                console.log(data.layout)
             }
         },
 
