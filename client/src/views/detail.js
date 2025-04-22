@@ -246,10 +246,13 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         afterRender() {
-            $('.page-header').addClass('detail-page-header');
+            const main = $('#main main');
+            const header = $('.page-header');
+
+            header.addClass('detail-page-header');
             Dep.prototype.afterRender.call(this);
 
-            $('#main main').attr('data-mode', this.mode);
+            main.attr('data-mode', this.mode);
 
             this.setupHeader();
 
@@ -301,16 +304,26 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             this.setupRightSideView();
 
-            let isScrolledMore = false;
-            $('#main main').on('scroll', (e) => {
-                const newScrolledState = e.target.scrollTop > 0;
+            let isScrolled = false;
 
-                if (newScrolledState !== isScrolledMore) {
-                    isScrolledMore = newScrolledState;
-
-                    requestAnimationFrame(() => {
-                        window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolledMore }));
-                    });
+            main.off('scroll.breadcrumbs');
+            main.on('scroll.breadcrumbs', (e) => {
+                if (e.currentTarget.scrollTop > 0) {
+                    if (!isScrolled) {
+                        isScrolled = true;
+                        setTimeout(() => requestAnimationFrame(() => {
+                            main.css('padding-bottom', header.find('.header-breadcrumbs').outerHeight() || 0);
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolled }));
+                        }), 100);
+                    }
+                } else {
+                    if (isScrolled) {
+                        isScrolled = false;
+                        setTimeout(() => requestAnimationFrame(() => {
+                            main.css('padding-bottom', '');
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolled }));
+                        }), 100);
+                    }
                 }
             });
         },
