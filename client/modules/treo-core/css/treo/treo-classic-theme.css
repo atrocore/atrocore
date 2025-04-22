@@ -18645,10 +18645,11 @@ span.CodeMirror-selectedtext {
 }
 
 .editor-toolbar button {
-    font-weight: 700;
+    font-weight: 400;
     min-width: 30px;
     padding: 0 5px;
-    white-space: nowrap
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .editor-toolbar button .fa {
@@ -18676,18 +18677,6 @@ span.CodeMirror-selectedtext {
     vertical-align: text-bottom;
     position: relative;
     top: 2px
-}
-
-.editor-toolbar button.heading-1:after {
-    content: "1"
-}
-
-.editor-toolbar button.heading-2:after {
-    content: "2"
-}
-
-.editor-toolbar button.heading-3:after {
-    content: "3"
 }
 
 .editor-toolbar button.heading-bigger:after {

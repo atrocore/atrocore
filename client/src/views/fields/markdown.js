@@ -40,12 +40,91 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             const items = [
                 {
                     name: 'undo',
-                    className: "ph ph-arrow-counter-clockwise",
-                    action: EasyMDE.undo
-                }, 'redo', '|',
-                'heading-1', 'heading-2', 'heading-3', '|',
-                'bold', 'italic', 'strikethrough', '|',
-                'unordered-list', 'ordered-list', 'code', 'quote', 'link', 'horizontal-rule', '|',
+                    className: 'ph ph-arrow-counter-clockwise',
+                    action: EasyMDE.undo,
+                    title: 'Undo',
+                },
+                {
+                    name: 'redo',
+                    className: 'ph ph-arrow-clockwise',
+                    action: EasyMDE.redo,
+                    title: 'Redo',
+                }, '|',
+                {
+                    name: 'heading-1',
+                    className: 'ph ph-text-h-one',
+                    action: EasyMDE.toggleHeading1,
+                    title: 'Big Heading'
+                },
+                {
+                    name: 'heading-2',
+                    className: 'ph ph-text-h-two',
+                    action: EasyMDE.toggleHeading2,
+                    title: 'Medium Heading'
+                },
+                {
+                    name: 'heading-3',
+                    className: 'ph ph-text-h-three',
+                    action: EasyMDE.toggleHeading3,
+                    title: 'Small Heading'
+                },
+                '|',
+                {
+                    name: 'bold',
+                    className: 'ph ph-text-b',
+                    action: EasyMDE.toggleBold,
+                    title: 'Bold'
+                },
+                {
+                    name: 'italic',
+                    className: 'ph ph-text-italic',
+                    action: EasyMDE.toggleItalic,
+                    title: 'Italic'
+                },
+                {
+                    name: 'strikethrough',
+                    className: 'ph ph-text-strikethrough',
+                    action: EasyMDE.toggleStrikethrough,
+                    title: 'Strikethrough'
+                },
+                '|',
+                {
+                    name: 'unordered-list',
+                    className: 'ph ph-list-bullets',
+                    action: EasyMDE.toggleUnorderedList,
+                    title: 'Generic List'
+                },
+                {
+                    name: 'ordered-list',
+                    className: 'ph ph-list-numbers',
+                    action: EasyMDE.toggleOrderedList,
+                    title: 'Numbered List'
+                },
+                {
+                    name: 'code',
+                    className: 'ph ph-code',
+                    action: EasyMDE.toggleCodeBlock,
+                    title: 'Code'
+                },
+                {
+                    name: 'quote',
+                    className: 'ph ph-quotes',
+                    action: EasyMDE.toggleBlockquote,
+                    title: 'Quote'
+                },
+                {
+                    name: 'link',
+                    className: 'ph ph-link',
+                    action: EasyMDE.drawLink,
+                    title: 'Create Link'
+                },
+                {
+                    name: 'horizontal-rule',
+                    className: 'ph ph-minus',
+                    action: EasyMDE.drawHorizontalRule,
+                    title: 'Insert Horizontal Line'
+                },
+                '|',
             ];
 
             if (this.getAcl().check('File', 'read')) {
@@ -88,7 +167,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                             });
                         });
                     },
-                    className: "fa fa-file-image",
+                    className: "ph ph-file-image",
                     title: this.translate('Select Image')
                 });
             }
@@ -117,7 +196,7 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                             });
                         });
                     },
-                    className: "fa fa-download",
+                    className: "ph ph-download",
                     title: this.translate('Upload Image')
                 });
             }
@@ -133,9 +212,16 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                     this.trigger('editor:previewToggled', editor)
                 },
                 title: "Toggle Preview",
-                className: "fa fa-eye",
+                className: "ph ph-eye",
                 noDisable: true
-            }, 'guide');
+            });
+
+            items.push({
+                name: 'guide',
+                action: 'https://www.markdownguide.org/basic-syntax/',
+                title: "Markdown Guide",
+                className: "ph ph-question",
+            });
 
             return items;
         },
