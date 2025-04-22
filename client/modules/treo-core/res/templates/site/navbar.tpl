@@ -22,7 +22,7 @@
                 {{#if hasJM}}<li class="dropdown queue-badge-container"></li>{{/if}}
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}

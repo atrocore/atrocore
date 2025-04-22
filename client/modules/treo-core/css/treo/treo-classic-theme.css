@@ -3042,7 +3042,7 @@ output {
 .form-control, .query-builder .form-select {
     display: block;
     width: 100%;
-    height: 33px;
+    height: 32px;
     padding: 6px 10px;
     font-size: 14px;
     line-height: 1.36;
@@ -3518,7 +3518,7 @@ textarea.input-lg, select[multiple].input-lg {
     background-image: none;
     border: 1px solid transparent;
     white-space: nowrap;
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-size: 14px;
     line-height: 1.36;
     border-radius: 0;
@@ -3814,11 +3814,15 @@ a.btn.disabled, fieldset[disabled] a.btn {
     text-decoration: none
 }
 
-.btn-link:has(> .ph:only-child),
-.btn-link:has(> .ph-fill:only-child),
-a:has(> .ph:only-child),
-a:has(> .ph-fill:only-child) {
+.btn-link:has(> .ph:only-of-type),
+.btn-link:has(> .ph-fill:only-of-type),
+a:has(> .ph:only-of-type),
+a:has(> .ph-fill:only-of-type) {
     text-decoration: none;
+}
+
+button:has(> .ph:only-of-type),
+button:has(> .ph-fill:only-of-type) {
     line-height: 1;
 }
 
@@ -10744,6 +10748,10 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .field .input-group {
     margin-bottom: 3px
+}
+
+.field .input-group .btn {
+    height: 100%;
 }
 
 .field .link-container {
@@ -18999,14 +19007,14 @@ span[data-img-src]::after {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create .fa-sm {
-    top: 0;
-}
-
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more):hover .quick-create {
     display: flex;
     flex-direction: column;
     cursor: pointer;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create .ph {
+    font-size: 12px;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) {

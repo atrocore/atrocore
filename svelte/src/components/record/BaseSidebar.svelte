@@ -1,9 +1,4 @@
 <script lang="ts">
-    import ChevronLeftIcon from '$assets/icons/chevron_left.svg?raw';
-    import ChevronRightIcon from '$assets/icons/chevron_right.svg?raw';
-    import PinIcon from '$assets/icons/keep.svg?raw';
-    import UnpinIcon from '$assets/icons/keep_off.svg?raw';
-
     import {fade} from 'svelte/transition';
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
     import {Language} from "../../utils/Language";
@@ -171,7 +166,7 @@
     <div class="collapse-strip" on:click|self="{toggleCollapse}">
         {#if !isMobile}
             <button class="pin-button" type="button" on:click={togglePin} title={Language.translate(isPinned ? 'sidebarUnpin' : 'sidebarPin')}>
-                {@html isPinned ? UnpinIcon : PinIcon}
+                <i class="ph" class:ph-push-pin-simple={!isPinned} class:ph-push-pin-simple-slash={isPinned}></i>
             </button>
         {/if}
         {#if isPinned && !isMobile}
@@ -179,9 +174,9 @@
         {/if}
         <button class="collapse-button" type="button" on:click={toggleCollapse}>
             {#if position === 'left'}
-                {@html isCollapsed ? ChevronRightIcon : ChevronLeftIcon}
+                <i class="ph" class:ph-caret-left={!isCollapsed} class:ph-caret-right={isCollapsed}></i>
             {:else}
-                {@html isCollapsed ? ChevronLeftIcon : ChevronRightIcon}
+                <i class="ph" class:ph-caret-left={isCollapsed} class:ph-caret-right={!isCollapsed}></i>
             {/if}
         </button>
     </div>
@@ -272,8 +267,11 @@
         outline: 0;
         border: 0;
         line-height: 0;
-        width: 18px;
         color: var(--sidebar-icon-color, #999);
+    }
+
+    .sidebar > .collapse-strip > button i {
+        font-size: 16px;
     }
 
     .sidebar > .collapse-strip > .pin-button {
@@ -281,7 +279,6 @@
         top: 5px;
         left: 50%;
         transform: translateX(-50%);
-        width: 15px;
     }
 
     .sidebar > .collapse-strip > .pin-button:hover {
