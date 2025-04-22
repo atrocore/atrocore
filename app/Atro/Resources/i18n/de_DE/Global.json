@@ -467,7 +467,8 @@
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
     "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
-    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
+    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
+    "searchBarPlaceholder": "eben Sie ein und drücken Sie die Eingabetaste oder klicken Sie auf das Suchsymbol, um zu suchen..."
   },
   "unit Length": {
     "mm": "mm",

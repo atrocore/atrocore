@@ -13,25 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Controllers\Base;
 
 class SavedSearch extends Base
 {
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
-    {
-        if(empty($request->get('scope'))) {
-            throw new BadRequest();
-        }
-
-        $params['where'][] = [
-            "type" => "equals",
-            "attribute" => "entityType",
-            "value" => $request->get('scope')
-        ];
-
-        $params['_scope'] = $request->get('scope');
-
-        parent::fetchListParamsFromRequest($params, $request, $data);
-    }
 }
