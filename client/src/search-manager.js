@@ -41,6 +41,7 @@ Espo.define('search-manager', [], function () {
         this.type = type || 'list';
         this.dateTime = dateTime;
         this.emptyOnReset = emptyOnReset;
+        this.savedSearchList = [];
 
         this.emptyData = {
             textFilter: '',
@@ -215,6 +216,10 @@ Espo.define('search-manager', [], function () {
             return this.data.savedFilters;
         },
 
+        geTextFilter: function () {
+            return this.data.textFilter;
+        },
+
         setAdvanced: function (advanced) {
             this.data = Espo.Utils.clone(this.data);
             this.data.advanced = advanced;
@@ -258,6 +263,10 @@ Espo.define('search-manager', [], function () {
             if (this.storage) {
                 this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
+        },
+
+        update: function(newData) {
+            this.set({...this.data, ...newData});
         },
 
         getDateTimeWhere: function (type, field, value) {

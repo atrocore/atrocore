@@ -40,8 +40,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
 
         name: 'List',
 
-        searchView: 'views/record/search',
-
         recordView: 'views/record/list',
 
         recordKanbanView: 'views/record/kanban',
@@ -105,7 +103,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             this.entityType = this.collection.name;
 
             this.recordView = this.options.recordView || this.recordView;
-            this.searchView = this.options.searchView || this.searchView;
 
             if (this.searchPanel) {
                 this.setupSearchManager();
@@ -200,19 +197,19 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
 
         setupHeader: function () {
             let observer = null;
-
+            window.addEventListener('filter:unset-all', (e) => {
+                this.resetSorting();
+            });
             new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems(),
                         scope: this.scope,
+                        searchManager: this.searchManager,
+                        showSearchPanel: this.searchPanel,
                         afterOnMount: () => {
                             this.setupTourButton();
-                            if (this.searchPanel) {
-                                this.setupSearchPanel();
-                            }
-
                             observer = this.initHeaderObserver();
                             if (observer) {
                                 observer.observe(document.querySelector('.page-header'), {
@@ -297,28 +294,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         },
 
         setupSearchPanel: function () {
-            let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
-            let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
 
-            this.createView('search', searchView, {
-                collection: this.collection,
-                el: '#main .page-header .search-container',
-                searchManager: this.searchManager,
-                scope: this.scope,
-                viewMode: this.viewMode,
-                viewModeList: this.viewModeList,
-                hiddenBoolFilterList: hiddenBoolFilterList,
-                openQueryBuilder: true
-            }, function (view) {
-                view.render();
-                this.listenTo(view, 'reset', function () {
-                    this.resetSorting();
-                }, this);
-
-                if (this.viewModeList.length > 1) {
-                    this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
-                }
-            }.bind(this));
         },
 
         switchViewMode: function (mode) {
@@ -755,7 +731,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 return false;
             }
 
-            return ['list', 'kanban', 'plate'].includes(this.getMode()) && this.collection;
+            return ['list', 'kanban', 'plate'].includes(this.getMode()) && this.collection && this.searchPanel;
 
         }
     });

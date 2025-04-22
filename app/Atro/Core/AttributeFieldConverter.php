@@ -174,9 +174,12 @@ class AttributeFieldConverter
 
     public function getFieldType(string $type): AttributeFieldTypeInterface
     {
-        $className = "\\Atro\\Core\\AttributeFieldTypes\\" . ucfirst($type) . "Type";
+        $className = $this->metadata->get("app.attributeFieldConverter.{$type}");
         if (!class_exists($className)) {
-            $className = "\\Atro\\Core\\AttributeFieldTypes\\VarcharType";
+            $className = "\\Atro\\Core\\AttributeFieldTypes\\" . ucfirst($type) . "Type";
+            if (!class_exists($className)) {
+                $className = "\\Atro\\Core\\AttributeFieldTypes\\VarcharType";
+            }
         }
 
         if (!is_a($className, AttributeFieldTypeInterface::class, true)) {

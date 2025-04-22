@@ -21,6 +21,11 @@
 
     $: scopeKey = scope + mode;
 
+    window.addEventListener('right-side-view:toggle-filter', () => {
+        isCollapsed = !isCollapsed;
+        setActiveItem(items.find(item => item.name === 'filter'));
+        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : 'expanded');
+    });
 
     let isPin = true;
     let streamView: Object;
@@ -78,11 +83,6 @@
         if (activeItem.name === 'activities') {
             refreshActivities();
         }
-    }
-
-    export function openFilter() {
-        setActiveItem(items.find(item => item.name === 'filter'));
-        isCollapsed = false;
     }
 
     onMount(() => {

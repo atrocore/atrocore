@@ -17174,14 +17174,6 @@ h5 {
     z-index: 3
 }
 
-.search-container .input-group > .input-group-btn.left-dropdown > .btn:first-child {
-    padding-left: 0;
-}
-
-.search-container .input-group > .input-group-btn:last-child > .btn:last-child {
-    padding-right: 0;
-}
-
 .list-group-panel {
     background-color: #fff
 }
@@ -17375,7 +17367,6 @@ pre > code {
 
     .navbar-form.global-search-container > .input-group {
         width: 100%;
-        padding-left: 14px;
         padding-right: 34px;
     }
 
@@ -19629,23 +19620,12 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .search-row .text-filter + .input-group-btn .search {
-    background: #fff;
-    color: #333;
-    border: 0;
-    margin-left: -2px;
-}
-
-.search-row .text-filter + .input-group-btn .search {
     width: auto;
     padding: 6px 10px;
 }
 
 .search-row .text-filter + .input-group-btn .search .fas {
     font-size: 14px;
-}
-
-.search-row .text-filter + .input-group-btn .reset {
-    padding-right: 4px;
 }
 
 .search-row .text-filter + .input-group-btn .search::after:first-letter {
@@ -20716,8 +20696,6 @@ button.category:focus {
         width: 38px;
     }
 
-    .search-row .text-filter + .input-group-btn .search .fa,
-    .search-row .text-filter + .input-group-btn .reset .fa,
     .search-row > div .search-right-buttons-group button .fa {
         font-size: 14px;
     }
@@ -21196,15 +21174,6 @@ tr.list-row.main-category > .cell:first-child {
     border-left: solid 4px red;
 }
 
-@media screen and (min-width: 768px) {
-    .search-row .input-group {
-        margin-left: 14px;
-    }
-
-    .panel .search-row .input-group {
-        margin-left: 0;
-    }
-}
 
 .search-row .filters-button {
     overflow: hidden;
@@ -21226,6 +21195,7 @@ tr.list-row.main-category > .cell:first-child {
 
 .search-row .btn-default {
     border: 0;
+    background-color: transparent;
 }
 
 .search-row .filters-button:hover,
@@ -22009,7 +21979,11 @@ select {
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow-x: visible !important;
         overflow-y: auto;
-        padding: 0;
+        padding: 10px;
+        position: absolute;
+        top: 44px;
+        left: 0;
+        right: 0;
     }
 }
 
@@ -22812,6 +22786,9 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder-container .checkboxes-filter li label {
     color: var(--primary-font-color);
+}
+
+.query-builder-container .checkboxes-filter ul {
     padding-left: 0;
 }
 
