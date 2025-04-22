@@ -36,11 +36,9 @@
 
         searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
-
-
-
-
 </script>
+
+
 <div class="search-container">
     <div class="row search-row">
         <div class="form-group ">
