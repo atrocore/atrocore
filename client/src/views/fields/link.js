@@ -893,8 +893,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     'in',
                     'not_in',
                     'is_null',
-                    'is_not_null',
-                    'query_in'
+                    'is_not_null'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
@@ -903,7 +902,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                     this.createFilterView(rule, inputName);
                     this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
-                        delete rule.data['subQuery'];
+                        if(rule.data) {
+                            delete rule.data['subQuery'];
+                        }
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
                     });
