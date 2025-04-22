@@ -8,21 +8,16 @@
     import {Notifier} from "../../../utils/Notifier";
     import {UserData} from "../../../utils/UserData";
     import SavedSearch from "./SavedSearch.svelte";
-    import {CollectionFactory} from "../../../utils/CollectionFactory";
+    import GeneralFilter from "./GeneralFilter.svelte";
+    import {savedSearchStore} from "./stores/SavedSearch";
+    import {generalFilterStore} from "./stores/GeneralFilter";
 
     export let scope: string;
     export let searchManager: any;
     export let createView: Function;
-
-    export let mandatoryBoolFilter: string[] = [];
-
     export let parentWidth: number;
 
     let filters: Array<any> = [];
-
-    let boolFilterList: [];
-
-    let selectedFilterList: Array<any> = [];
 
     let queryBuilderElement: HTMLElement
 
@@ -30,23 +25,31 @@
 
     let advancedFilterChecked = false;
 
-    let savedSearchList: Array<any> = [];
-
-    let loadingSavedSearch: boolean = true;
-
-    let savedSearchCollection: any = null;
-
     let editingSavedSearch: any = null;
 
     let oldAdvancedFilter: any = null;
-
-    let selectedSaveSearches: Array<any> = [];
 
     let showUnsetAll: boolean = false;
 
     $: {
         updateStyle(parentWidth);
     }
+
+    generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
+
+    const selectSavedSub = savedSearchStore.selectedSavedItemIds.subscribe(_ => {
+        refreshShowUnsetAll();
+    });
+
+   const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
+        refreshShowUnsetAll();
+    });
+
+   const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
+       advancedFilterChecked = value;
+       refreshShowUnsetAll();
+   })
+
 
     function updateStyle(parentWidth: number) {
         let rules = [
@@ -112,9 +115,30 @@
         return ids;
     }
 
+    function getRulesWithBadRuleRemoved(rules: Rule[]): Rule[] {
+            let newRules: Rule[] = rules;
+            rules.forEach((rule, key) => {
+                if (rule.rules) {
+                    rules[key].rules  = getRulesWithBadRuleRemoved(rules[key].rules)
+                } else if (rule.id ) {
+                    if (!filters.find(f => f.id === rule.id)) {
+                        newRules = rules.filter(r => r.id !== rule.id)
+                    }
+                }
+            });
+        return newRules;
+    }
+
     function initQueryBuilderFilter() {
+
         const $queryBuilder = window.$(queryBuilderElement)
-        const rules = searchManager.getQueryBuilder() || [];
+        let rules = searchManager.getQueryBuilder() || [];
+        if(typeof rules === 'object' && !rules.condition) {
+            rules = [];
+        }
+        if(rules['rules']) {
+            rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
+        }
 
         const emptyAttribute = 'emptyAttributeRule';
 
@@ -199,7 +223,6 @@
         updateStyle(parentWidth);
         $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
             advancedFilterChecked = false;
-
             setTimeout(() => {
                 updateStyle(parentWidth);
             }, 250)
@@ -300,9 +323,8 @@
                             'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
                         },
                     }).then(response => {
-
                         return response.json().then(attrs => {
-                            if (attrs.list) {
+                            if (attrs.list.length) {
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
                                         resolve();
@@ -333,11 +355,11 @@
     }
 
     function updateCollection() {
+        Notifier.notify(Language.translate('loading', 'messages'));
         searchManager.collection.reset();
-        Notifier.notify(Language.translate('pleaseWait', 'messages'));
 
         searchManager.collection.where = searchManager.getWhere();
-
+        searchManager.collection.abortLastFetch();
         searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
 
@@ -422,13 +444,17 @@
     }
 
     function unsetAll() {
+        if(!showUnsetAll) {
+            return;
+        }
         searchManager.reset();
-        resetFilter();
         advancedFilterChecked = false;
-        selectedFilterList = [];
-        selectedSaveSearches = [];
+        handleAdvancedFilterChecked(false);
+        savedSearchStore.selectedSavedItemIds.set([]);
+        generalFilterStore.selectBoolFilters.set([]);
         refreshShowUnsetAll();
         updateCollection();
+        window.dispatchEvent(new CustomEvent('filter:unset-all'));
     }
 
     function handleAdvancedFilterChecked(refresh = true) {
@@ -440,6 +466,8 @@
                 return;
             }
         }
+
+        generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
         updateSearchManager({
             queryBuilderApplied: advancedFilterChecked ? 'apply' : false
@@ -453,34 +481,13 @@
     }
 
     async function saveSaveSearch(data, id = null): Promise<void> {
-        const userData = UserData.get();
-        if (!userData) {
-            return;
-        }
-
-
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
-
-        try {
-            const response = await fetch(id ? `/api/v1/SavedSearch/${id}` : '/api/v1/SavedSearch', {
-                'method': id ? 'PUT' : 'POST',
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
-                },
-                'body': JSON.stringify(data),
-            })
-
-            if (response.ok) {
-                Notifier.notify(Language.translate('Done'), 'success');
-                const data = await response.json();
-                return data;
-            }
-        } catch (e) {
+        savedSearchStore.saveSavedSearch(data, id).then( data =>{
+            Notifier.notify(Language.translate('Done'), 'success');
+        }).catch(e => {
             console.error('Error on saving saveSearch', e);
-        } finally {
             Notifier.notify(false)
-        }
+        })
     }
 
     function saveFilter() {
@@ -505,20 +512,10 @@
                     name: params.name,
                     data: searchManager.getQueryBuilder(),
                     isPublic: params.isPublic
-                }).then(data => {
-                    savedSearchList = [...savedSearchList, data];
-                })
+                });
                 view.close();
             });
         });
-    }
-
-    function handleSelectedSaveSearch(e) {
-        updateSearchManager({
-            savedFilters: savedSearchList.filter(v => e.detail.selectedSavedSearchIds.includes(v.id))
-        })
-        updateCollection();
-        refreshShowUnsetAll();
     }
 
     function renameSaveSearch(item) {
@@ -531,11 +528,7 @@
                 saveSaveSearch({
                     name: params.name,
                     isPublic: params.isPublic
-                }, item.id).then(data => {
-                    savedSearchList = savedSearchList.map(item => {
-                        return item.id === data.id ? data : item;
-                    });
-                });
+                }, item.id)
                 view.close();
             });
         });
@@ -546,27 +539,13 @@
         if (!userData) {
             return;
         }
-
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
-
-        try {
-            const response = await fetch(`/api/v1/SavedSearch/${item.id}`, {
-                'method': 'DELETE',
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Authorization-Token': btoa(userData.user.userName + ':' + userData.token)
-                },
-            })
-
-            if (response.ok) {
-                Notifier.notify(Language.translate('Done'), 'success');
-                savedSearchList = savedSearchList.filter(i => i.id !== item.id);
-            }
-        } catch (e) {
+        savedSearchStore.removeSavedSearch(item.id).then(_ => {
+            Notifier.notify(Language.translate('Done'), 'success');
+        }).catch(e => {
             console.error('Error on deleting saveSearch', e);
-        } finally {
             Notifier.notify(false)
-        }
+        });
     }
 
     function editSaveSearchQuery(item) {
@@ -592,40 +571,19 @@
     }
 
     function refreshShowUnsetAll() {
-        showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
-        let bool = searchManager.getBool();
-        for (const boolKey in bool) {
-            if(bool[boolKey] && boolFilterList.includes(boolKey)){
-                showUnsetAll = true;
-                break;
-            }
-        }
+       setTimeout(() => {
+           showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
+           let bool = searchManager.getBool();
+           for (const boolKey in bool) {
+               if(bool[boolKey]){
+                   showUnsetAll = true;
+                   break;
+               }
+           }
+       }, 100)
     }
 
     onMount(() => {
-
-        // load boolFilters
-        boolFilterList = (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
-            if (typeof item === 'string') return true;
-            item = item || {};
-            if (item.accessDataList) {
-                if (!window.Espo.Utils.checkAccessDataList(item.accessDataList, Acl, Acl.getUser())) {
-                    return false;
-                }
-            }
-            return true;
-        }).map(function (item) {
-            if (typeof item === 'string') return item;
-            item = item || {};
-            return item.name;
-        });
-
-        let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
-
-        boolFilterList = boolFilterList.filter(function (item) {
-            return !hiddenBoolFilterList.includes(item)
-        });
-
         // load where params
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('where')) {
@@ -664,77 +622,45 @@
 
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
-        // load Saved Search
-        CollectionFactory.create('SavedSearch', (collection) => {
-            savedSearchCollection = collection;
-            collection.url = `SavedSearch`;
-            collection.data.scope = scope;
-            collection.fetch().then((data) => {
-                savedSearchList = data.list;
-                selectedSaveSearches = (searchManager.getSavedFilters() || []).map(item => {
-                    return  savedSearchList.find(el => el.id === item.id);
-                });
-                selectedSaveSearches = selectedSaveSearches.filter(v => v);
-                updateSearchManager({
-                    savedFilters: selectedSaveSearches
-                })
-                loadingSavedSearch = false;
-            })
-        });
-
         // show unset all
        refreshShowUnsetAll();
-
 
         prepareFilters(() => {
             initQueryBuilderFilter();
         });
+
+        return () => {
+            selectBoolSub();
+            selectSavedSub();
+            advancedFilterCheckedSub();
+        }
     })
 </script>
 
 <div class="query-builder-container">
     <div>
-        {#if showUnsetAll}
-        <button class="filter-item" data-action="filter" data-name="posts" on:click={unsetAll}>
+
+        <button class="filter-item" data-action="filter"  class:disabled={!showUnsetAll} on:click={unsetAll}>
             <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
             {Language.translate('Unset All')}
         </button>
-        {/if}
     </div>
-    <div class="checkboxes-filter">
-        {#if boolFilterList?.length > 0}
-            <h5>{Language.translate('General Filters')}</h5>
-            <ul>
-                {#each boolFilterList as filter}
-                    <li class="checkbox">
-                        <label class:active={searchManager.getBool()[filter]}>
-                            <input type="checkbox" checked={searchManager.getBool()[filter]}
-                                   on:change={(e) => handleGeneralFilterChecked(e, filter)} name="{filter}">
-                            {Language.translate(filter, 'boolFilters', scope)}
-                        </label>
-                    </li>
-                {/each}
-            </ul>
-        {/if}
-    </div>
+    <GeneralFilter scope={scope} searchManager={searchManager} />
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
-                savedSearchList={savedSearchList}
-                loading={loadingSavedSearch}
+                searchManager={searchManager}
                 editingItem={editingSavedSearch}
-                selectedSavedSearchIds={selectedSaveSearches.map(i => i.id)}
                 rename={renameSaveSearch}
                 remove={removeSaveSearch}
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
-                on:change={handleSelectedSaveSearch}
         />
     {/if}
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={handleAdvancedFilterChecked}>
+            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
             <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" on:click={resetFilter}>
@@ -796,5 +722,11 @@
     :global(.query-builder .input-group-btn .btn) {
         height: 33px;
         padding: 0;
+    }
+
+    button.disabled,  button.disabled:hover{
+        background-color: #eee;
+        border-color: #eee;
+        cursor: not-allowed;
     }
 </style>

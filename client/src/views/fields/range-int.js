@@ -44,6 +44,10 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         validations: ['required', 'int', 'range', 'order'],
 
+        thousandSeparator: ',',
+
+        decimalMark: '.',
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.name = this.name;
