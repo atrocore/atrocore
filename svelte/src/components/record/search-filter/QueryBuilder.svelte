@@ -263,7 +263,7 @@
 
     function prepareFilters(callback: Function) {
 
-        filters = filters.filter(item => item.id.includes('attr'));
+        filters = filters.filter(item => item.id.startsWith('attr_'));
 
         let promiseList: Promise[] = [];
 
@@ -342,6 +342,7 @@
         }
 
         Promise.all(promiseList).then(() => {
+
             callback();
         });
     }
@@ -557,6 +558,7 @@
                 $queryBuilder.queryBuilder('setRules', item.data)
                 editingSavedSearch = item;
             } catch (e) {
+                console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
                 $queryBuilder.queryBuilder('setRules', searchManager.getQueryBuilder());
             }
