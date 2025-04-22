@@ -208,7 +208,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getBool: function () {
-            return this.data.bool;
+            return  Espo.Utils.clone(this.data.bool);
         },
 
         getSavedFilters: function () {
