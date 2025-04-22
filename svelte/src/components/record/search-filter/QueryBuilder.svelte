@@ -323,8 +323,8 @@
                         },
                     }).then(response => {
                         return response.json().then(attrs => {
-                            // we clean up the rules to remove attribute rule if attribute does not exists anymore
-                            cleanUpSavedRule((fieldId) => {
+                            // we clean up the rules to remove attribute rule if attribute does not exist anymore
+                           let hasChanged = cleanUpSavedRule((fieldId) => {
                                 let parts = fieldId.split('_');
                                 if (parts.length === 2 && parts[0] === 'attr') {
                                    return !!attrs.list.find(v => v.id ===  parts[1]);
@@ -332,6 +332,10 @@
                                     return true;
                                 }
                             });
+
+                           if(hasChanged) {
+                               updateCollection();
+                           }
                             if (attrs.list.length) {
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
@@ -586,7 +590,7 @@
 
     // return true the filter have been updates
     function cleanUpSavedRule( exists: Function): boolean{
-        // we clean up to remove deleted fields
+        // we clean up to remove  fields that do not exist anymore
         let hasChanged = false;
        let  cleanUpRule = (rule: Rule) => {
            if(rule.rules) {
