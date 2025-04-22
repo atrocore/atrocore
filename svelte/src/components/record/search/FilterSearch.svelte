@@ -66,7 +66,6 @@
 
         searchManager.collection.where = searchManager.getWhere();
         searchManager.collection.abortLastFetch();
-
         searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
     }
 
