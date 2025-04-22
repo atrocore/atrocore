@@ -55,16 +55,6 @@
           ]
         }
       },
-      "textFilterFields": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      },
       "statusField": {
         "visible": {
           "conditionGroup": [

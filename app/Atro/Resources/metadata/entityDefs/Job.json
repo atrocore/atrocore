@@ -92,10 +92,7 @@
   },
   "collection": {
     "sortBy": "executeTime",
-    "asc": false,
-    "textFilterFields": [
-      "name"
-    ]
+    "asc": false
   },
   "indexes": {
     "executeTime": {

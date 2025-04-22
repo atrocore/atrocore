@@ -162,8 +162,7 @@ class Entity extends ReferenceData
             'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-            'textFilterFields'      => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'textFilterFields']),
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc'
         ]);
     }
 
@@ -312,19 +311,7 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
-            } elseif ($field === 'textFilterFields') {
-                $loadedVal = $loadedData['entityDefs'][$entity->get('code')]['collection']['textFilterFields'] ?? null;
-                if ($loadedVal === $entity->get($field)) {
-                    $this->getMetadata()->delete('entityDefs', $entity->get('code'), ['collection.textFilterFields']);
-                } else {
-                    $this->getMetadata()->set('entityDefs', $entity->get('code'), [
-                        'collection' => [
-                            'textFilterFields' => $entity->get($field)
-                        ]
-                    ]);
-                }
-                $saveMetadata = true;
-            } else {
+            }  else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 
                 if ($loadedVal === $entity->get($field)) {

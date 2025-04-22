@@ -73,8 +73,7 @@
     },
     "collection": {
         "sortBy": "requestTime",
-        "asc": false,
-        "textFilterFields": ["ipAddress", "username"]
+        "asc": false
     },
     "indexes": {
         "ipAddress": {

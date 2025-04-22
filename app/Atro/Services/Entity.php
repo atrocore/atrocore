@@ -29,8 +29,7 @@ class Entity extends ReferenceData
 
         $this->getMetadata()->delete('entityDefs', $scope, [
             'collection.sortBy',
-            'collection.asc',
-            'collection.textFilterFields'
+            'collection.asc'
         ]);
         $this->getMetadata()->save();
 
