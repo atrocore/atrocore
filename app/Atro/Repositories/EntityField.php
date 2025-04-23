@@ -18,7 +18,6 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
-use Espo\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -512,7 +511,7 @@ class EntityField extends ReferenceData
         }
     }
 
-    protected  function prepareVirtualBoolFields(Entity $entity): void
+    protected  function prepareVirtualBoolFields(OrmEntity $entity): void
     {
         $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
         $virtualToEntityFields = [
