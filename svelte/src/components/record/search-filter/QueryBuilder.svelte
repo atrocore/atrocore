@@ -580,12 +580,18 @@
 
     function refreshAdvancedFilterDisabled() {
         let rules = searchManager.getQueryBuilder();
+        advancedFilterDisabled = false;
+
         if(typeof rules === 'object' && rules.condition) {
             advancedFilterDisabled = isRuleEmpty(rules);
-        }else{
-            advancedFilterDisabled = false;
         }
+
         generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
+
+        if(advancedFilterDisabled) {
+            advancedFilterChecked = false;
+            generalFilterStore.advancedFilterChecked.set(false);
+        }
     }
 
     // return true the filter have been updates

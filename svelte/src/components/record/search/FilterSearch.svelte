@@ -104,11 +104,17 @@
     }
 
     function refreshAdvancedFilterDisabled() {
-        let rules = searchManager.getQueryBuilder() ;
+        let rules = searchManager.getQueryBuilder();
+        let value = false;
+
         if(typeof rules === 'object' && rules.condition) {
-            generalFilterStore.advancedFilterDisabled.set(isRuleEmpty(rules));
-        }else{
-            generalFilterStore.advancedFilterDisabled.set(false);
+            value = isRuleEmpty(rules);
+        }
+
+        generalFilterStore.advancedFilterDisabled.set(value);
+
+        if(value) {
+            generalFilterStore.advancedFilterChecked.set(false);
         }
     }
 
