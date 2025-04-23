@@ -48,34 +48,34 @@
             .replace(/^[\-\|\s]+/, '');
     }
 
-    // setInterval(async () => {
-    //     try {
-    //         const response = await fetch(logFilePath, {cache: "no-store"});
-    //         seconds += 1;
-    //
-    //         if (response.ok) {
-    //             fullLogs = (await response.text()).trim();
-    //
-    //             if (fullLogs.search("composer") >= 0) {
-    //                 updateStarted = true;
-    //             }
-    //
-    //             if (seconds > 65 && !updateStarted) {
-    //                 fullLogs = 'Something wrong. Please, reboot the server.';
-    //             }
-    //         } else {
-    //             if (updateStarted) {
-    //                 setTimeout(() => {
-    //                     location.reload();
-    //                 }, 2000);
-    //             } else if (seconds > 65) {
-    //                 fullLogs = 'Something wrong. Please, reboot the server.';
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error: ', error);
-    //     }
-    // }, 1000);
+    setInterval(async () => {
+        try {
+            const response = await fetch(logFilePath, {cache: "no-store"});
+            seconds += 1;
+
+            if (response.ok) {
+                fullLogs = (await response.text()).trim();
+
+                if (fullLogs.search("composer") >= 0) {
+                    updateStarted = true;
+                }
+
+                if (seconds > 65 && !updateStarted) {
+                    fullLogs = 'Something wrong. Please, reboot the server.';
+                }
+            } else {
+                if (updateStarted) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else if (seconds > 65) {
+                    fullLogs = 'Something wrong. Please, reboot the server.';
+                }
+            }
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    }, 1000);
 </script>
 
 <div id="login" class="panel panel-default panel-updating">
