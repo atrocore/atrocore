@@ -9944,7 +9944,7 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header .navbar-right > li > a {
-        color: #424242;
+        color: var(--nav-font-color);
         padding: 5px 10px;
         width: 40px;
         text-align: right;
