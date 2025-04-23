@@ -4,8 +4,8 @@
     import {Notifier} from "../../../utils/Notifier";
     import {Acl} from "../../../utils/Acl";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import {savedSearchStore} from "./stores/SavedSearch.ts";
-    import SavedSearch from "./interfaces/SavedSearch.ts"
+    import {savedSearchStore} from "./stores/SavedSearch";
+    import SavedSearch from "./interfaces/SavedSearch"
     import {get} from "svelte/store"
 
     export let scope: string;

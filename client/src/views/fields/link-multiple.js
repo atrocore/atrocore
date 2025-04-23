@@ -746,7 +746,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
-                        if(this.getView(inputName)) {
+                        if(rule.data && rule.data['subQuery'] && this.getView(inputName)) {
                             let data = {where: rule.data['subQuery']};
                             this.getView(inputName).addLinkSubQuery(data, true);
                         }
