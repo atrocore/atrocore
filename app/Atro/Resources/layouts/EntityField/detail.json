@@ -257,6 +257,20 @@
         {
           "name": "isUninheritableField"
         }
+      ],
+      [
+        {
+          "name": "isDuplicatableRelation"
+        },
+        {
+          "name": "isUninheritableRelation"
+        }
+      ],
+      [
+        {
+          "name": "isModifiedExtended"
+        },
+        false
       ]
     ]
   },
@@ -284,20 +298,6 @@
         {
           "name": "linkMultipleField"
         }
-      ],
-      [
-        {
-          "name": "isDuplicatableRelation"
-        },
-        {
-          "name": "isUninheritableRelation"
-        }
-      ],
-      [
-        {
-          "name": "isModifiedExtended"
-        },
-        false
       ]
     ]
   }
