@@ -242,7 +242,7 @@
                                     {#if item.canEdit}
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editItem(item)}>
-                                            <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
+                                            <i class="ph ph-pencil-simple"></i>
                                         </a>
                                     {/if}
                                     {#if item.canRemove}
@@ -250,7 +250,7 @@
                                         <a href="javascript:" data-action="removeField" class="remove-field"
                                            on:click={()=>removeItem(item)}
                                         >
-                                            <svg class="icon icon-small" style="fill: var(--link-color)"><use href="client/img/icons/icons.svg#close"></use></svg>
+                                            <i class="ph ph-x"></i>
                                         </a>
                                     {/if}
                                 </div>
@@ -360,7 +360,7 @@
         position: relative;
     }
 
-    .group .right a .fa-pencil-alt {
+    .group .right a .ph-pencil-simple {
         position: absolute;
         top: 2px;
         right: 5px;

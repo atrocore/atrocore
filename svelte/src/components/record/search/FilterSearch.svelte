@@ -60,6 +60,7 @@
         }, 100)
     }
 
+
     function updateCollection() {
         searchManager.collection.reset();
         Notifier.notify(Language.translate('loading', 'messages'));
@@ -199,7 +200,7 @@
                         on:click={openFilter}
                         class:active={showUnsetAll}
                 >
-                    <svg class="icon" ><use href="client/img/icons/icons.svg#filter"></use></svg>
+                    <i class="ph ph-funnel"></i>
                 </button>
                 <div bind:this={dropdownDiv} class="dropdown" class:has-content={filterNames !== ""}>
                     <button
@@ -207,8 +208,8 @@
                             data-toggle="dropdown"
                             class="btn btn-default filter-switcher"
                             on:mousedown={event => event.preventDefault()}>
-                        <span class="filter-names" > {filterNames}</span>
-                        <span class=" chevron fas fa-chevron-down"></span>
+                        <span class="filter-names"> {filterNames}</span>
+                        <i class="ph ph-caret-down chevron"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <GeneralFilter scope={scope} searchManager={searchManager} />
@@ -232,7 +233,7 @@
                             data-tippy="true"
                             on:click={unsetAll}
                     >
-                        <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+                        <i class="ph ph-x"></i>
                     </button>
                 {/if}
             </div>
@@ -273,8 +274,10 @@
         border-right: 1px solid #eee;
     }
 
-    .has-content  .filter-switcher{
-        padding-right: 20px;
+    .has-content  .filter-switcher {
+        padding-right: 0;
+        display: inline-flex;
+        align-items: center;
     }
 
     .dropdown .dropdown-menu {
@@ -283,25 +286,21 @@
         padding: 10px;
     }
 
-    .has-content .filter-switcher {
-        padding-left: 10px;
-    }
-
-     .has-content .filter-switcher span{
-        text-align: left;
-     }
-
-    .has-content span.chevron{
-        position: absolute;
-        right: 10px;
-        top: 10px;
+    .has-content .chevron {
+        flex-shrink: 0;
+        margin-right: 10px;
     }
 
     .has-content span.filter-names {
-        margin-right: 8px;
+        margin-right: 5px;
+        vertical-align: baseline;
+        flex: 1;
+        min-width: 0;
+        text-overflow: ellipsis;
+        overflow-x: clip;
     }
 
-    .advanced-checkbox label{
+    .advanced-checkbox label {
         font-weight: bold;
         margin-top: 9px;
         margin-bottom: 9px;

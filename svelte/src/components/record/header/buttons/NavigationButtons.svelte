@@ -15,14 +15,14 @@
             {
                 name: 'navigation',
                 action: 'previous',
-                html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-left"></use></svg>',
+                html: '<i class="ph ph-caret-left"></i>',
                 tooltip: Language.translate('Previous Entry'),
                 disabled: !hasPrevious || navigating
             },
             {
                 name: 'navigation',
                 action: 'next',
-                html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-right"></use></svg>',
+                html: '<i class="ph ph-caret-right"></i>',
                 tooltip: Language.translate('Next Entry'),
                 disabled: !hasNext || navigating
             }

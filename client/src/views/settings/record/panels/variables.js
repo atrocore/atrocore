@@ -47,7 +47,7 @@ Espo.define('views/settings/record/panels/variables', 'views/record/panels/relat
             this.buttonList.push({
                 title: 'Create',
                 action: 'createVariable',
-                html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>'
+                html: '<i class="ph ph-plus"></i>'
             });
         },
 

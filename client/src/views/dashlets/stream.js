@@ -69,13 +69,13 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
             this.actionList.unshift({
                 name: 'viewList',
                 html: this.translate('View List'),
-                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#th-list"></use></svg>',
+                iconHtml: '<i class="ph ph-list"></i>',
                 url: '#Stream'
             });
             this.actionList.unshift({
                 name: 'create',
                 html: this.translate('Create Post', 'labels'),
-                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>'
+                iconHtml: '<i class="ph ph-plus"></i>'
             });
         },
 

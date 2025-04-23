@@ -63,7 +63,7 @@
                                 data-tippy="true"
                                 on:click={reset}
                         >
-                            <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+                            <i class="ph ph-x"></i>
                         </button>
                     {/if}
                     <button
@@ -74,7 +74,7 @@
                             data-tippy="true"
                             on:click={search}
                     >
-                        <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                        <i class="ph ph-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
