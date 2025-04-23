@@ -495,6 +495,9 @@
     async function saveSaveSearch(data, id = null): Promise<void> {
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
         savedSearchStore.saveSavedSearch(data, id).then( data =>{
+            if(id !== null) {
+                cancelEditSearchQuery()
+            }
             Notifier.notify(Language.translate('Done'), 'success');
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
