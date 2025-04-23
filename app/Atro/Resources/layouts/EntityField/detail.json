@@ -252,6 +252,18 @@
       ],
       [
         {
+          "name": "auditableDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "auditableDisabled"
+        },
+        false
+      ],
+      [
+        {
           "name": "isNonComparable"
         },
         {

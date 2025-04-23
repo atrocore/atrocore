@@ -247,6 +247,28 @@
             }
           ]
         }
+      },
+      "auditableRelationDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
+      },
+      "auditableDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notEquals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
       }
     }
   }
