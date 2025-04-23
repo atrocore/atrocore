@@ -49,5 +49,8 @@ $app->runConsole($argv);
 EOD;
 
         file_put_contents('index.php', $content);
+
+        // reload daemons
+        file_put_contents('data/process-kill.txt', '1');
     }
 }
