@@ -754,7 +754,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     type: 'POST',
                     data: JSON.stringify(data)
                 }).done(function (result) {
-                    this.collection.fetch();
+                    this.collection.fetch().then(() => this.notify(this.translate('Restored'), 'success'));
                 }.bind(this));
             }, this);
         },

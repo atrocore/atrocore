@@ -46,7 +46,7 @@
                 <input
                         type="text"
                         class="form-control text-filter"
-                        placeholder={Language.translate("searchBarPlaceholder", "messages")}
+                        placeholder={Language.translate("typeToSearch")}
                         name="textFilter"
                         bind:value={searchValue}
                         on:keypress={(e) => {e.key === 'Enter' ? search() : e}}
@@ -99,7 +99,7 @@
 
     .search-row .input-group {
         border: 1px solid #eee;
-        border-radius: 5px;
+        border-radius: 3px;
     }
 
     .search-row .input-group-btn button {
@@ -111,6 +111,10 @@
 
     .search-row .form-group {
         display: flex;
+    }
+
+    .search-row .search input {
+        background: transparent;
     }
 
 </style>
