@@ -26,7 +26,7 @@ use Atro\Services\Composer;
 
 class Application
 {
-    public const COMPOSER_LOG_FILE = 'data/composer.log';
+    public const COMPOSER_LOG_FILE = 'public/data/composer.log';
 
     protected static ?array $urls = null;
 
@@ -202,7 +202,7 @@ class Application
         }
 
         if (self::isSystemUpdating()) {
-            $this->display('client/html/updating.html', ['year' => date('Y'), 'logFile' => self::COMPOSER_LOG_FILE, 'version' => Composer::getCoreVersion()]);
+            $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => self::COMPOSER_LOG_FILE, 'version' => Composer::getCoreVersion()]);
         }
 
         // for entryPoint
@@ -217,7 +217,7 @@ class Application
             'year'            => date('Y')
         ];
 
-        $this->display('client/html/main.html', $vars);
+        $this->display('public/client/html/main.html', $vars);
     }
 
     /**

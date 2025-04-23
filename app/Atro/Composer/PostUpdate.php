@@ -492,9 +492,9 @@ class PostUpdate
         self::renderLine('Copying frontend files');
 
         self::removeDir('client', ['client/custom']);
-        self::copyDir(dirname(CORE_PATH) . '/client', 'client');
+        self::copyDir(dirname(CORE_PATH) . '/client', 'public/client');
         foreach (self::$container->get('moduleManager')->getModules() as $module) {
-            self::copyDir($module->getClientPath(), 'client');
+            self::copyDir($module->getClientPath(), 'public/client');
         }
     }
 
