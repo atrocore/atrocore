@@ -166,7 +166,11 @@
     <div class="collapse-strip" on:click|self="{toggleCollapse}">
         {#if !isMobile}
             <button class="pin-button" type="button" on:click={togglePin} title={Language.translate(isPinned ? 'sidebarUnpin' : 'sidebarPin')}>
-                <i class="ph" class:ph-push-pin-simple={!isPinned} class:ph-push-pin-simple-slash={isPinned}></i>
+                {#if isPinned}
+                    <i class="ph-fill ph-cards"></i>
+                {:else}
+                    <i class="ph ph-cards"></i>
+                {/if}
             </button>
         {/if}
         {#if isPinned && !isMobile}
@@ -271,7 +275,7 @@
     }
 
     .sidebar > .collapse-strip > button i {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .sidebar > .collapse-strip > .pin-button {
