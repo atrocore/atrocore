@@ -105,7 +105,7 @@
             .filter(item => get(savedSearchStore.selectedSavedItemIds).includes(item.id))
             .map(item => item.name);
 
-        filterNames =  boolFilters.concat(selectedSavedSearchNames).reverse().join(', ').trim();
+        filterNames =  boolFilters.concat(selectedSavedSearchNames).join(', ').trim();
     }
 
     function refreshAdvancedFilterDisabled() {

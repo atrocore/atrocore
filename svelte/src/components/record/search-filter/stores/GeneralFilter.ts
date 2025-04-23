@@ -9,7 +9,7 @@ function createStore(): any  {
             if(selected.includes(filter)) {
                 return selected.filter(v => v!== filter);
             }else{
-                return [filter, ...selected];
+                return [...selected, filter];
             }
         })
     }

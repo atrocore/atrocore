@@ -361,6 +361,9 @@
 
 
     function resetFilter() {
+        if(advancedFilterDisabled) {
+            return;
+        }
        advancedFilterChecked = false;
        handleAdvancedFilterChecked(false)
         updateSearchManager({
@@ -506,6 +509,9 @@
     }
 
     function saveFilter() {
+        if(advancedFilterDisabled) {
+            return;
+        }
         let validation = window.$(queryBuilderElement).queryBuilder('validate');
         if (!validation) {
             Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
@@ -737,12 +743,12 @@
             <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
             <span>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
-            <button class="filter-item" on:click={resetFilter}>
+            <button class="filter-item" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
                 <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
-                <button class="filter-item save" on:click={saveFilter}>
+                <button class="filter-item save" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
                     <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
                     {Language.translate('Save')}
                 </button>
@@ -798,7 +804,7 @@
         padding: 0;
     }
 
-    button.disabled,  button.disabled:hover{
+    .filter-item.save.disabled, button.disabled,  button.disabled:hover{
         background-color: #eee;
         border-color: #eee;
         cursor: not-allowed;
