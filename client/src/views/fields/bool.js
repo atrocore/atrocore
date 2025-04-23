@@ -81,25 +81,25 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             data.notNull = this.notNull
             data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
 
-            if(['edit','search'].includes(this.mode)){
-                data.options = ['','false','true'];
+            if (['edit', 'search'].includes(this.mode)) {
+                data.options = ['', 'false', 'true'];
                 data.translatedOptions = {
-                    '':'NULL',
+                    '': 'NULL',
                     'false': this.translate('No'),
                     'true': this.translate('Yes'),
                 }
-                if(data.isNull){
+                if (data.isNull) {
                     data['value'] = '';
                 }
-                if(!this.notNull && !data.isNull){
+                if (!this.notNull && !data.isNull) {
                     data['value'] = this.model.get(this.name).toString()
                 }
             }
 
-            if(this.mode === 'search'){
+            if (this.mode === 'search') {
                 let value = '';
                 value = data.searchParams?.type === 'isNull' ? '' : data.searchParams?.type === 'isTrue';
-                if(!this.notNull){
+                if (!this.notNull) {
                     value = value.toString();
                 }
                 data['value'] = value
@@ -110,11 +110,11 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             let value = null;
-            if(this.notNull){
+            if (this.notNull) {
                 value = this.$el.find('input[name=' + this.name + ']').is(":checked");
-            }else{
+            } else {
                 let val = this.$el.find('[name="' + this.name + '"]').val();
-                value = val ? val==="true" : null;
+                value = val ? val === "true" : null;
             }
             var data = {};
             data[this.name] = value;
@@ -127,15 +127,15 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
             let value = null;
-            if(this.notNull){
+            if (this.notNull) {
                 value = this.$element.get(0).checked;
-            }else{
+            } else {
                 let val = this.$element.get(0).value;
-                value = val ? val==="true" : null;
+                value = val ? val === "true" : null;
             }
 
             var data = {
-                type: value === null ? 'isNull' : (value ? 'isTrue': 'isFalse')
+                type: value === null ? 'isNull' : (value ? 'isTrue' : 'isFalse')
             };
             return data;
         },
