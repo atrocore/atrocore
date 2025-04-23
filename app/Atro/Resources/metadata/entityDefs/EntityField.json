@@ -308,13 +308,11 @@
       "type": "bool"
     },
     "isNonComparable": {
-      "type": "bool",
-      "noStorable": true
+      "type": "bool"
     },
     "isUninheritableField": {
       "view": "views/admin/field-manager/fields/is-uninherited-field",
       "type": "bool",
-      "noStorable": true,
       "tooltip": true
     },
     "isUninheritableRelation": {
