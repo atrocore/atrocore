@@ -146,7 +146,6 @@
                             rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
                         }
                     }
-
                     if(rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
                         cleanUpRule(rule.rules[rulesKey]);
                     }
