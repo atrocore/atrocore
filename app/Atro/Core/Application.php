@@ -202,7 +202,7 @@ class Application
         }
 
         if (self::isSystemUpdating()) {
-            $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => self::COMPOSER_LOG_FILE, 'version' => Composer::getCoreVersion()]);
+            $this->display('public/client/html/updating.html', ['year' => date('Y'), 'logFile' => 'data/composer.log', 'version' => Composer::getCoreVersion()]);
         }
 
         // for entryPoint
