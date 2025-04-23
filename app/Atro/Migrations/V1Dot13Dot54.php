@@ -26,9 +26,9 @@ class V1Dot13Dot54 extends Base
         rename('client', 'public/client');
         rename('apidocs', 'public/apidocs');
 
-        copy('vendor/atrocore/core/copy/.htaccess', 'public/.htaccess');
-        copy('vendor/atrocore/core/copy/index.php', 'public/index.php');
-        copy('vendor/atrocore/core/copy/robots.txt', 'public/robots.txt');
+        copy('vendor/atrocore/core/copy/public/.htaccess', 'public/.htaccess');
+        copy('vendor/atrocore/core/copy/public/index.php', 'public/index.php');
+        copy('vendor/atrocore/core/copy/public/robots.txt', 'public/robots.txt');
 
         copy('vendor/atrocore/core/copy/console.php', 'console.php');
 
