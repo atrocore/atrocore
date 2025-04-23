@@ -83,7 +83,6 @@
         }
         searchManager.update({
             bool: {},
-            queryBuilder: [],
             savedFilters: [],
             queryBuilderApplied: false
         });
