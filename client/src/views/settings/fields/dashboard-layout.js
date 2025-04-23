@@ -281,7 +281,7 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             if (this.mode == 'edit') {
                 actionsHtml +=
                                 '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
-                                    '<span class="fas fa-times"></span>'+
+                                    '<i class="ph ph-x"></i>'+
                                 '</a>';
                 actions2Html +=
                                 '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+

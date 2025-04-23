@@ -2616,7 +2616,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             const htmlIcons = [];
 
             if (model.get('isInherited')) {
-                htmlIcons.push(`<svg class="icon icon-small" title="${this.translate('inherited')}"><use href="client/img/icons/icons.svg#link"></use></svg>`);
+                htmlIcons.push(`<i class="ph ph-link-simple-horizontal" title="${this.translate('inherited')}"></i>`);
             }
 
             return htmlIcons;

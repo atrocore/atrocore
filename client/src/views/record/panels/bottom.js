@@ -131,7 +131,7 @@ Espo.define('views/record/panels/bottom', ['view', 'view-record-helper'], functi
                     link: this.link,
                     acl: 'read',
                     aclScope: this.scope,
-                    html: '<svg class="icon icon-small"><use href="client/img/icons/icons.svg#sync"></use></svg>'
+                    html: '<i class="ph ph-arrows-clockwise"></i>'
                 });
             }
         },

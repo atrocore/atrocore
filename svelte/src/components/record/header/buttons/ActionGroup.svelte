@@ -31,7 +31,7 @@
 
     {#if hasMoreButton && (dropdownActions.length > 0 || dynamicActionsDropdown.length > 0)}
         <button type="button" class="btn btn-default dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true" >
-            {Language.translate('More')} <svg class="icon more-arrow"><use href="client/img/icons/icons.svg#angle-down"></use></svg>
+            {Language.translate('More')} <i class="ph ph-caret-down"></i>
         </button>
     {:else if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
@@ -77,8 +77,7 @@
         margin-left: -1px;
     }
 
-    .more-button .more-arrow {
-        margin-left: .25em;
-        font-size: 12px;
+    .more-button i {
+        font-size: 14px;
     }
 </style>

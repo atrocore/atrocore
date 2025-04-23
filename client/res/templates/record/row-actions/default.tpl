@@ -1,7 +1,7 @@
 {{#if actionList.length}}
 <div class="list-row-buttons btn-group pull-right">
     <button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
+        <i class="ph ph-caret-down"></i>
     </button>
     <ul class="dropdown-menu pull-right">
     {{#each actionList}}

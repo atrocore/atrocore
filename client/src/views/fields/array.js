@@ -381,7 +381,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
 
             var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
-            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
+            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><i class="ph ph-x"></i></a>' +
             '</div>';
 
             return html;
