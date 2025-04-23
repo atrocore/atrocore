@@ -243,8 +243,8 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
-        $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', (e, rule) => {
-            model.trigger('afterUpdateRuleFilter', rule);
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
+            model.trigger('beforeUpdateRuleFilter', rule);
         });
 
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
@@ -685,6 +685,7 @@
         // override updateRuleFilter
         let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
+            this.trigger('beforeUpdateRuleFilter', rule);
             if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
                 addAttributeFilter((pushed, filter) => {
                     if (pushed) {
@@ -702,6 +703,7 @@
                 originalUpdateRuleFilter.call(this, rule, previousFilter);
             }
         }
+
 
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
