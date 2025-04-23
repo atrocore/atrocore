@@ -589,8 +589,8 @@
         generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
 
         if(advancedFilterDisabled) {
-            advancedFilterChecked = false;
             generalFilterStore.advancedFilterChecked.set(false);
+            advancedFilterChecked = false;
         }
     }
 
