@@ -243,6 +243,10 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
+        $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', (e, rule) => {
+            model.trigger('afterUpdateRuleFilter', rule);
+        });
+
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
             model.trigger('afterInitQueryBuilder');
         });

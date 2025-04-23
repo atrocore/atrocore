@@ -781,7 +781,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     }
 
                     this.createFilterView(rule, inputName);
-                    this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                    this.listenTo(this.model, 'afterUpdateRuleOperator afterUpdateRuleFilter', rule => {
                         if(rule.data) {
                             delete rule.data['subQuery'];
                         }

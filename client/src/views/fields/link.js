@@ -840,7 +840,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             view.$el.find('.search-type').hide();
                         });
 
-
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if(!rule.data) {
@@ -901,7 +900,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
 
                     this.createFilterView(rule, inputName);
-                    this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                    this.listenTo(this.model, 'afterUpdateRuleOperator afterUpdateRuleFilter', rule => {
+                        if(rule.data) {
+                            delete rule.data['subQuery'];
+                        }
+                        this.clearView(inputName);
+                        this.createFilterView(rule, inputName);
+                    });
+
+                    this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
                         if(rule.data) {
                             delete rule.data['subQuery'];
                         }
