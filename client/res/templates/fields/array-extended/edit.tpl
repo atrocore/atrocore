@@ -1,7 +1,7 @@
 <div id="options" class="link-container list-group attribute-type-value {{#if disableMultiLang}}disable-multi-lang{{/if}}" data-name="{{name}}">
     {{#each optionGroups}}
 	<div class="list-group-item" data-index="{{@index}}">
-		<span class="pull-left flaticon flaticon-move-arrows"></span>
+        <i class="ph ph-arrows-out-cardinal pull-left"></i>
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
             <i class="ph ph-x"></i>
 		</a>
@@ -30,7 +30,7 @@
 	#options .form-control.color-input {
 		width: 19%;
 	}
-	.list-group-item .flaticon-move-arrows {
+	.list-group-item .ph-arrows-out-cardinal {
 		position: absolute;
 		margin-top: 7px;
 	}
