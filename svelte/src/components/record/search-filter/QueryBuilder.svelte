@@ -204,9 +204,7 @@
                 {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'query_in', nb_inputs: 1, apply_to: ['string']},
-                {type: 'query_linked_with', nb_inputs: 1, apply_to: ['string']},
+                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']}
             ],
             rules: rules,
             filters: filters,
@@ -263,7 +261,7 @@
 
     function prepareFilters(callback: Function) {
 
-        filters = filters.filter(item => item.id.includes('attr'));
+        filters = filters.filter(item => item.id.startsWith('attr_'));
 
         let promiseList: Promise[] = [];
 
@@ -342,16 +340,20 @@
         }
 
         Promise.all(promiseList).then(() => {
+
             callback();
         });
     }
 
 
     function resetFilter() {
+       advancedFilterChecked = false;
+       handleAdvancedFilterChecked(false)
         updateSearchManager({
             queryBuilder: []
         });
-        window.$(queryBuilderElement).queryBuilder('setRules', [])
+        window.$(queryBuilderElement).queryBuilder('setRules', []);
+        updateCollection();
     }
 
     function updateCollection() {
@@ -557,6 +559,7 @@
                 $queryBuilder.queryBuilder('setRules', item.data)
                 editingSavedSearch = item;
             } catch (e) {
+                console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
                 $queryBuilder.queryBuilder('setRules', searchManager.getQueryBuilder());
             }

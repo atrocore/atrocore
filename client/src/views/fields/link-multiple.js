@@ -773,8 +773,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     'linked_with',
                     'not_linked_with',
                     'is_not_linked',
-                    'is_linked',
-                    'query_linked_with'
+                    'is_linked'
                 ],
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
@@ -783,14 +782,25 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.createFilterView(rule, inputName);
                     this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
-                        delete rule.data['subQuery']
+                        if(rule.data) {
+                            delete rule.data['subQuery'];
+                        }
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
                     });
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(!Array.isArray(value) || value === null) {
+                            return 'bad float';
+                        }
+
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 

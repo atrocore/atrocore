@@ -197,19 +197,19 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
 
         setupHeader: function () {
             let observer = null;
-
+            window.addEventListener('filter:unset-all', (e) => {
+                this.resetSorting();
+            });
             new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems(),
                         scope: this.scope,
+                        searchManager: this.searchManager,
+                        showSearchPanel: this.searchPanel,
                         afterOnMount: () => {
                             this.setupTourButton();
-                            if (this.searchPanel) {
-                                this.setupSearchPanel();
-                            }
-
                             observer = this.initHeaderObserver();
                             if (observer) {
                                 observer.observe(document.querySelector('.page-header'), {
@@ -294,23 +294,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         },
 
         setupSearchPanel: function () {
-            window.addEventListener('filter:unset-all', (e) => {
-                this.resetSorting();
-            });
 
-            new  Svelte.ListSearch({
-                target: document.querySelector('#main .page-header .search-container'),
-                props: {
-                    scope: this.scope,
-                    searchManager: this.searchManager,
-                    canShowFilter: this.shouldShowFilter(),
-                    openFilter: () => {
-                        if(window.SvelteRightSideView) {
-                            window.SvelteRightSideView.openFilter();
-                        }
-                    }
-                }
-            });
         },
 
         switchViewMode: function (mode) {

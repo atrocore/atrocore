@@ -12,16 +12,15 @@
     export let savedSearchList: Array<SavedSearch> = [];
     export let loading: boolean = true;
     export let searchManager: any;
-    export let hideRowAction;
+    export let hideRowAction: boolean = false;
     export let editingItem: any = null;
-    export let edit: Function;
-    export let rename: Function;
-    export let remove: Function;
-    export let cancel: Function;
+    export let edit: Function = () => {};
+    export let rename: Function = () => {};
+    export let remove: Function = () => {};
+    export let cancel: Function = () => {};
 
     export let selectedSavedSearchIds: Array<string> = [];
 
-    let dispatch = createEventDispatcher();
 
     const savedSearchSubscribe =  savedSearchStore.savedSearchItems.subscribe(value => {
         savedSearchList = value;
@@ -62,6 +61,7 @@
         return () => {
             savedSearchSubscribe();
             selectedSavedItemIdsSub();
+            loadingSubscribe();
         }
     })
 

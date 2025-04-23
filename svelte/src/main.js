@@ -31,7 +31,6 @@ import RightSideView from "./components/record/RightSideView.svelte";
 import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
-import ListSearch from "./components/record/search/ListSearch.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -58,6 +57,5 @@ export {
     Favorites,
     BaseHeader,
     ListHeader,
-    DetailHeader,
-    ListSearch
+    DetailHeader
 };
