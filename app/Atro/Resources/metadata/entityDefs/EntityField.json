@@ -302,6 +302,30 @@
     },
     "showUser": {
       "type": "bool"
+    },
+    "isDuplicatableRelation": {
+      "view": "views/admin/field-manager/fields/is-duplicatable-relation",
+      "type": "bool"
+    },
+    "isNonComparable": {
+      "type": "bool",
+      "noStorable": true
+    },
+    "isUninheritableField": {
+      "view": "views/admin/field-manager/fields/is-uninherited-field",
+      "type": "bool",
+      "noStorable": true,
+      "tooltip": true
+    },
+    "isUninheritableRelation": {
+      "view": "views/admin/field-manager/fields/is-uninheritable-relation",
+      "type": "bool",
+      "tooltip": true
+    },
+    "isModifiedExtended": {
+      "view": "views/admin/field-manager/fields/is-modified-extendable",
+      "type": "bool",
+      "tooltip": true
     }
   },
   "links": {

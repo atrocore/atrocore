@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
+use Espo\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -35,6 +36,7 @@ class EntityField extends ReferenceData
         if (!empty($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
+            $this->prepareVirtualBoolFields($entity);
             $entity->setAsFetched();
 
             return $entity;
@@ -187,6 +189,12 @@ class EntityField extends ReferenceData
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
             }
         }
+    }
+
+    protected function afterSave(OrmEntity $entity, array $options = [])
+    {
+        $this->updateEntityFromVirtualFields($entity);
+        parent::afterSave($entity, $options);
     }
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])
@@ -470,6 +478,56 @@ class EntityField extends ReferenceData
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
     }
 
+    protected function updateEntityFromVirtualFields(OrmEntity $entity): void
+    {
+        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $virtualToEntityFields = [
+            "isNonComparable" => "nonComparableFields",
+            "isDuplicatableRelation" => "duplicatableRelations",
+            "isUninheritableField" => "unInheritedFields",
+            "isUninheritableRelation" => "unInheritedRelations",
+            "isModifiedExtended" => "modifiedExtendedRelations"
+        ];
+
+        foreach ($virtualToEntityFields as $field => $entityField) {
+            if ($entity->isAttributeChanged($field)) {
+                $values = $entityEntity->get($entityField) ?? [];
+                if (!empty($entity->get($field))) {
+                    if (!in_array($entity->get('code'), $values)) {
+                        $values[] = $entity->get('code');
+                    }
+                } else {
+                    $oldValues = $values;
+                    $values = [];
+                    foreach ($oldValues as $value) {
+                        if ($value === $entity->get('code')) {
+                            continue;
+                        }
+                        $values[] = $value;
+                    }
+                }
+                $entityEntity->set($entityField, $values);
+                $this->getEntityManager()->getRepository('Entity')->save($entityEntity);
+            }
+        }
+    }
+
+    protected  function prepareVirtualBoolFields(Entity $entity): void
+    {
+        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $virtualToEntityFields = [
+            "isNonComparable" => "nonComparableFields",
+            "isDuplicatableRelation" => "duplicatableRelations",
+            "isUninheritableField" => "unInheritedFields",
+            "isUninheritableRelation" => "unInheritedRelations",
+            "isModifiedExtended" => "modifiedExtendedRelations"
+        ];
+
+        foreach ($virtualToEntityFields as $field => $entityField) {
+            $entity->set($field, in_array($entity->get('code'), $entityEntity->get($entityField) ?? []));
+        }
+    }
+    
     protected function init()
     {
         parent::init();
