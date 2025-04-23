@@ -704,7 +704,6 @@
             }
         }
 
-
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
         // show unset all
