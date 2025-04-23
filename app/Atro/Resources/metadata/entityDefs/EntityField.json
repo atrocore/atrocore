@@ -326,6 +326,12 @@
       "view": "views/admin/field-manager/fields/is-modified-extendable",
       "type": "bool",
       "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool"
+    },
+    "auditableRelationDisabled": {
+      "type": "bool"
     }
   },
   "links": {

@@ -97,7 +97,8 @@
       "tooltip": true
     },
     "disableActionHistory": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "multiParents": {
       "type": "bool"
@@ -144,7 +145,8 @@
       "type": "bool"
     },
     "streamDisabled": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "isCustom": {
       "type": "bool",

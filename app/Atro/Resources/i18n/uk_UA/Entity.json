@@ -1,0 +1,76 @@
+{
+  "fields": {
+    "name": "Ім'я в однині",
+    "namePlural": "Ім'я множина",
+    "disabled": "Відключено",
+    "customizable": "Налаштовується",
+    "hasArchive": "Архівується",
+    "hasActive": "Активується",
+    "hideFieldTypeFilters": "Приховати фільтри типів полів",
+    "streamDisabled": "Вимкнути потоки",
+    "iconClass": "Іконка",
+    "sortBy": "Поле порядку за замовчуванням",
+    "sortDirection": "Напрямок сортування за замовчуванням",
+    "textFilterFields": "Поля текстового фільтру",
+    "statusField": "Поле статусу",
+    "kanbanViewMode": "Режим перегляду Kanban",
+    "kanbanStatusIgnoreList": "Ігноровані списки в Kanban View",
+    "deleteWithoutConfirmation": "Видаляти без підтвердження",
+    "autoDeleteAfterDays": "Період автоматичного видалення, в днях",
+    "clearDeletedAfterDays": "Період остаточного видалення, днів",
+    "modifiedExtendedRelations": "Зв'язки, що впливають на дату/час модифікації",
+    "duplicatableRelations": "Повторювані зв'язки",
+    "hasAssignedUser": "Увімкнути призначеного користувача",
+    "hasTeam": "Увімкнути команди",
+    "hasOwner": "Увімкнути Власника",
+    "multiParents": "Кілька батьків",
+    "dragAndDrop": "Перетягування",
+    "fieldValueInheritance": "Успадкування значень полів",
+    "unInheritedFields": "Неуспадковані поля",
+    "relationInheritance": "Успадкування відношень",
+    "unInheritedRelations": "Неуспадковані відношення",
+    "disableHierarchy": "Вимкнути ієрархію",
+    "fields": "Поля"
+  },
+  "options": {
+    "type": {
+      "Base": "Base",
+      "Hierarchy": "Ієрархія",
+      "ReferenceData": "Довідкові дані"
+    },
+    "sortDirection": {
+      "asc": "За зростанням",
+      "desc": "За спаданням"
+    }
+  },
+  "labels": {
+    "Create Entity": "Створити сутність",
+    "accessManagement": "Управління доступом",
+    "hierarchyManagement": "Управління ієрархією",
+    "other": "Інше",
+    "resetToDefault": "Скинути до значень за замовчуванням"
+  },
+  "confirmations": {
+    "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до заводських налаштувань?"
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "Записи для цієї сутності остаточно видаляються через XX днів після дати видалення.",
+    "autoDeleteAfterDays": "Записи для цієї сутності видаляються через XX днів після дати останньої зміни.",
+    "disabled": "Перевірте, чи не потрібна ця сутність у вашій системі.",
+    "textFilterFields": "Поля, які використовуються для текстового пошуку.",
+    "statusField": "Оновлення цього поля реєструються в Діяльності.",
+    "deleteWithoutConfirmation": "Якщо позначено, окремий запис видаляється без підтвердження користувача. Видалення кількох записів ще потрібно підтвердити.",
+    "modifiedExtendedRelations": "Зміни в цих відносинах призведуть до оновлення дати та часу \"Змінено в\".",
+    "dragAndDrop": "Цей параметр активує порядок сортування в ієрархії. Це означає, що інше сортування в ієрархічній навігації неможливе.",
+    "unInheritedFields": "Значення для цих полів не будуть успадковані від батьківського елемента.",
+    "unInheritedRelations": "Зв'язки з цими об'єктами не будуть успадковані від батьківського елемента.",
+    "hasAssignedUser": "Увімкнути призначеного користувача для керування доступом.",
+    "hasTeam": "Увімкнути команди для керування доступом.",
+    "hasOwner": "Увімкнути власника для керування доступом.",
+    "streamDisabled": "Якщо відмічено, на сторінці деталей запису не відображатиметься панель Дій. Ви також не зможете додавати нотатки.",
+    "disableActionHistory": "Якщо позначено, жодні дії користувача над записами цієї сутності не будуть реєструватися."
+  },
+  "exceptions": {
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time"
+  }
+}

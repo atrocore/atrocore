@@ -64,6 +64,8 @@
     "unInheritedRelations": "Die Beziehungen zu diesen Entitäten werden nicht vom übergeordneten Element vererbt.",
     "hasAssignedUser": "Zugewiesene Benutzer für die Zugriffsverwaltung aktivieren.",
     "hasTeam": "Teams für die Zugriffsverwaltung aktivieren.",
-    "hasOwner": "Eigentümer für die Zugriffsverwaltung aktivieren."
+    "hasOwner": "Eigentümer für die Zugriffsverwaltung aktivieren.",
+    "streamDisabled": "Wenn diese Option aktiviert ist, wird auf der Seite mit den Datensatzdetails kein Aktivitätenbereich angezeigt. Sie können dann auch keine Notizen hinzufügen.",
+    "disableActionHistory": "Wenn diese Option aktiviert ist, werden keine Benutzeraktionen für die Datensätze dieser Entität protokolliert."
   }
 }
