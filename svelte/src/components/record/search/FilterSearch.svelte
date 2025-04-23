@@ -141,7 +141,7 @@
             if(rule.rules) {
                 for (const rulesKey in rule.rules) {
                     if(rule.rules[rulesKey].id) {
-                        if(!exists(rule)){
+                        if(!exists(rule.rules[rulesKey].id)){
                             hasChanged = true;
                             rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
                         }
@@ -171,7 +171,6 @@
     onMount(() => {
         refreshShowUnsetAll();
         refreshAdvancedFilterDisabled();
-        console.log('disabled ???', advancedFilterDisabled)
         cleanUpSavedRule((field) => {
             return !!Metadata.get(['entityDefs', scope, 'fields', field]);
         });
