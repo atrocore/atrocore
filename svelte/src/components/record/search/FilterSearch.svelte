@@ -81,7 +81,12 @@
         if(!showUnsetAll) {
             return;
         }
-        searchManager.reset();
+        searchManager.update({
+            bool: {},
+            queryBuilder: [],
+            savedFilters: [],
+            queryBuilderApplied: false
+        });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);
         savedSearchStore.selectedSavedItemIds.set([]);
