@@ -105,7 +105,7 @@
 
     function refreshAdvancedFilterDisabled() {
         let rules = searchManager.getQueryBuilder();
-        let value = false;
+        let value = true;
 
         if(typeof rules === 'object' && rules.condition) {
             value = isRuleEmpty(rules);
@@ -171,6 +171,7 @@
     onMount(() => {
         refreshShowUnsetAll();
         refreshAdvancedFilterDisabled();
+        console.log('disabled ???', advancedFilterDisabled)
         cleanUpSavedRule((field) => {
             return !!Metadata.get(['entityDefs', scope, 'fields', field]);
         });

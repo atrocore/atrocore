@@ -580,7 +580,7 @@
 
     function refreshAdvancedFilterDisabled() {
         let rules = searchManager.getQueryBuilder();
-        advancedFilterDisabled = false;
+        advancedFilterDisabled = true;
 
         if(typeof rules === 'object' && rules.condition) {
             advancedFilterDisabled = isRuleEmpty(rules);
