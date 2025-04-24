@@ -21,8 +21,8 @@ Espo.define('views/admin/field-manager/fields/tooltip-text', 'views/fields/text'
         initInlineLabelEdit() {
             let $cell = this.getCellElement();
 
-            this.getInlineActionsContainer().find('.fa-globe').parent().remove();
-            let $link = $('<a href="javascript:" class="pull-right inline-label-edit-link hidden"><span class="fas fa-globe fa-sm"></span></a>');
+            this.getInlineActionsContainer().find('.ph-globe').parent().remove();
+            let $link = $('<a href="javascript:" class="pull-right inline-label-edit-link hidden"><i class="ph ph-globe"></i></a>');
 
             if ($cell.size() === 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineLabelEdit, this);

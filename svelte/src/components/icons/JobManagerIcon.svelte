@@ -28,9 +28,24 @@
 </script>
 
 <a href="/" class="notifications-button" bind:this={icon} on:click={event=>{event.preventDefault();openPanel();}} title={Language.translate('jobManager')}>
-    <svg class="icon"><use href="client/img/icons/icons.svg#tasks"></use></svg>
+    <i class="ph ph-list-checks"></i>
     {#if qmPaused}
-    <span class="fas fa-pause-circle pause-icon"></span>
+        <i class="ph-fill ph-pause-circle pause-icon"></i>
     {/if}
 </a>
 <QueuePanelContainer icon={icon} isOpen={isPanelOpen} close={closePanel}/>
+
+<style>
+    .notifications-button {
+        position: relative;
+    }
+
+    .pause-icon {
+        position: absolute;
+        top: 5%;
+        right: -5%;
+        z-index: 10;
+        color: #ef990e;
+        font-size: 16px;
+    }
+</style>

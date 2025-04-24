@@ -169,7 +169,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     link: this.link,
                     acl: 'create',
                     aclScope: this.scope,
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
+                    html: '<i class="ph ph-plus"></i>',
                     data: {
                         link: this.link,
                     }
@@ -409,7 +409,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                     this.actionList.unshift({
                         action: 'selectFilter',
-                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
+                        html: '<i class="ph ph-check pull-right' + (!selected ? ' hidden' : '') + '"></i>' + this.translate(item, 'presetFilters', this.scope),
                         data: {
                             name: item
                         }

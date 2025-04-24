@@ -302,7 +302,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
         addAttachmentBox: function (name, type, id, link) {
             var $attachments = this.$attachments;
 
-            var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
+            var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><i class="ph ph-x"></i></a>';
 
             var preview = name;
             if (this.showPreviews && id) {
@@ -541,7 +541,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         continue;
                     }
 
-                    var line = '<div class="attachment-block"><span class="glyphicon glyphicon-paperclip small"></span> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
+                    var line = '<div class="attachment-block"><i class="ph ph-paperclip"></i> <a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' + Handlebars.Utils.escapeExpression(name) + '</a></div>';
                     names.push(line);
                 }
                 var string = previews.join('') + names.join('');

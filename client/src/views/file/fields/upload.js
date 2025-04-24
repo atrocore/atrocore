@@ -224,10 +224,10 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
 
         addFileBox: function (file) {
             let $attachments = this.$attachments;
-            let removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
+            let removeLink = '<a href="javascript:" class="remove-attachment pull-right"><i class="ph ph-x"></i></a>';
             let $att = $(`<div class="uploaded-file gray-box" data-unique="${file.uniqueId}">`)
                 .append(removeLink)
-                .append($('<span class="preview">' + file.name + '</span>').css('width', 'cacl(100% - 30px)'));
+                .append($('<span class="preview">' + file.name + '</span>').css('width', 'calc(100% - 30px)'));
 
             let $container = $('<div>').append($att);
             $attachments.append($container);
@@ -490,7 +490,7 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
             if (entity !== null) {
                 file.attachmentBox.attr('data-id', entity.id).addClass('file-uploading-success');
                 if (!this.model.get('reupload')) {
-                    file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<span class="fas fa-trash"></span>');
+                    file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<i class="ph ph-star"></i>');
                 }
                 file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${entity.id}">${entity.name}</a>`);
                 if(entity.extensionCorrected) {

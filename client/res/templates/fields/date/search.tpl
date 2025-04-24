@@ -5,13 +5,13 @@
 <div class="input-group primary">
     <input class="main-element form-control input-sm" type="text" name="{{name}}" value="{{searchData.dateValue}}" autocomplete="off">
     <span class="input-group-btn">
-        <button type="button" class="btn btn-default btn-icon btn-sm date-picker-btn" tabindex="-1"><svg class="icon"><use href="client/img/icons/icons.svg#calendar"></use></svg></button>
+        <button type="button" class="btn btn-default btn-icon btn-sm date-picker-btn" tabindex="-1"><i class="ph ph-calendar-dots"></i></button>
     </span>
 </div>
 <div class="input-group{{#ifNotEqual searchParams.type 'between'}} hidden{{/ifNotEqual}} additional">
     <input class="main-element form-control input-sm" type="text" name="{{name}}-additional" value="{{searchData.dateValueTo}}" autocomplete="off">
     <span class="input-group-btn">
-        <button type="button" class="btn btn-default btn-icon btn-sm date-picker-btn" tabindex="-1"><svg class="icon"><use href="client/img/icons/icons.svg#calendar"></use></svg></button>
+        <button type="button" class="btn btn-default btn-icon btn-sm date-picker-btn" tabindex="-1"><i class="ph ph-calendar-dots"></i></button>
     </span>
 </div>
 <div class="hidden additional-number">

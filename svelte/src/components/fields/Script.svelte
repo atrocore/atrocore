@@ -437,13 +437,13 @@
         link.href = 'javascript:';
         link.className = 'pull-right fullscreen hidden';
         link.title = Language.translate('fullscreen', 'labels');
-        link.innerHTML = '<span class="fas fa-expand fa-sm"></span>';
+        link.innerHTML = '<i class="ph ph-corners-out"></i>';
 
-        let container = cell.querySelector(':scope > .status-container');
+        let container = cell.querySelector(':scope > .inline-actions');
         if (!container) {
             container = cell
         }
-        container.prepend(link)
+        container.prepend(link);
 
         link.addEventListener('click', () => {
             editorComponent.getAction('fullscreen').run()

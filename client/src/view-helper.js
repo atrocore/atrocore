@@ -361,7 +361,7 @@ Espo.define('view-helper', [], function () {
             var html = '';
 
             if (color) {
-                var $span = $('<span class="color-icon fas fa-square-full">');
+                var $span = $('<span class="color-icon ph-fill ph-square">');
                 $span.css('color', color);
                 if (additionalClassName) {
                     $span.addClass(additionalClassName);

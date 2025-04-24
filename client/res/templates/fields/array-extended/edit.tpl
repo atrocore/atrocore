@@ -1,9 +1,9 @@
 <div id="options" class="link-container list-group attribute-type-value {{#if disableMultiLang}}disable-multi-lang{{/if}}" data-name="{{name}}">
     {{#each optionGroups}}
 	<div class="list-group-item" data-index="{{@index}}">
-		<span class="pull-left flaticon flaticon-move-arrows"></span>
+        <i class="ph ph-arrows-out-cardinal pull-left"></i>
 		<a href="javascript:" class="pull-right remove-icon" data-index="{{@index}}" data-action="removeGroup">
-			<i class="fas fa-times"></i>
+            <i class="ph ph-x"></i>
 		</a>
 		<div class="option-group">
 			{{#each options}}
@@ -19,7 +19,7 @@
 	</div>
     {{/each}}
 </div>
-<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><span class="fas fa-plus"></span></a>
+<a class="add-attribute-type-value" href="javascript:" data-action="addNewValue"><i class="ph ph-plus"></i></a>
 <style>
 	.has-error .attribute-type-value .option-group .form-control {
 		border-color: #eaeaea;
@@ -30,7 +30,7 @@
 	#options .form-control.color-input {
 		width: 19%;
 	}
-	.list-group-item .flaticon-move-arrows {
+	.list-group-item .ph-arrows-out-cardinal {
 		position: absolute;
 		margin-top: 7px;
 	}

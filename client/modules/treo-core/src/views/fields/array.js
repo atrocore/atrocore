@@ -45,7 +45,7 @@ Espo.define('treo-core:views/fields/array', 'class-replace!treo-core:views/field
             return `
                 <div class="list-group-item" data-value="${valueInternal}" style="cursor: default;">
                     ${label}&nbsp;
-                    <a href="javascript:" class="pull-right" data-value="${valueInternal}" data-action="removeValue"><span class="fas fa-times"></a>
+                    <a href="javascript:" class="pull-right" data-value="${valueInternal}" data-action="removeValue"><i class="ph ph-x"></i></a>
                 </div>`;
         },
 

@@ -1,5 +1,5 @@
 <a href="javascript:" title="Bookmark" class="notifications-button" data-action="showBookmark">
-    <svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>
+    <i class="ph ph-bookmarks-simple"></i>
 </a>
 <div class="bookmark-panel-container queue-panel-container"></div>
 <style>
