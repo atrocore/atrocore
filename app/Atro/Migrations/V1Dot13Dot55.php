@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot13Dot54 extends Base
+class V1Dot13Dot55 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
