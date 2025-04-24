@@ -852,7 +852,7 @@
     }
 
     :global(.query-builder .input-group-btn .btn) {
-        height: 33px;
+        height: 32px;
         padding: 0;
     }
 
