@@ -128,7 +128,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 placeholder: this.options.placeholder || this.translate('Select'),
                 valueIsSet: this.model.has(this.idsName),
                 createDisabled: this.createDisabled,
-                uploadDisabled: this.uploadDisabled
+                uploadDisabled: this.uploadDisabled,
+                hideSearchType: this.options.hideSearchType
             }, Dep.prototype.data.call(this));
 
             res.isNull = ids === null || ids === undefined;
@@ -211,7 +212,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
-
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
@@ -712,20 +712,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'search',
-                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']),
+                        hideSearchType: true
                     }, view => {
-
-                        if(rule.data && rule.data['subQuery']) {
-                            view.searchData = {}
-                            let data = {where: rule.data['subQuery']};
-                            view.addLinkSubQuery(data, true);
-                        }
-
-                        this.listenTo(view, 'after:render', () => {
-                            view.$el.find('[data-action="createLink"]').hide()
-                            view.$el.find('.search-type').hide()
-                        });
-
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if(!rule.data) {
@@ -753,11 +742,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
-
                     });
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
+                        if(rule.data && rule.data['subQuery'] && this.getView(inputName)) {
+                            let data = {where: rule.data['subQuery']};
+                            this.getView(inputName).addLinkSubQuery(data, true);
+                        }
                     });
                 }
             });
@@ -787,6 +779,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
+                    });
+
+                    this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                        if(rule.data && rule.data['subQuery']) {
+                            delete rule.data['subQuery'];
+                        }
                     });
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;

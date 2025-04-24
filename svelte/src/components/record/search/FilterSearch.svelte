@@ -176,7 +176,11 @@
         refreshShowUnsetAll();
         refreshAdvancedFilterDisabled();
         cleanUpSavedRule((field) => {
-            return !!Metadata.get(['entityDefs', scope, 'fields', field]);
+            let exits =  !!Metadata.get(['entityDefs', scope, 'fields', field]);
+            if(!exits && field ===  (field.slice(0, -2) + 'Id'))  {
+                return !!Metadata.get(['entityDefs', scope, 'fields', field.slice(0, -2)]);
+            }
+            return exits;
         });
 
         return () => {
@@ -265,8 +269,8 @@
     .filter-switcher {
         max-width: 400px;
         width: auto;
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 10px;
+        padding-left: 10px;
         text-overflow: ellipsis;
         overflow: hidden;
         height: 100%;
