@@ -285,7 +285,7 @@ class LayoutManager
     }
 
 
-    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId): array
+    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId, bool $keepIds = true): array
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $defaultLayoutProfileId = $this->getDefaultLayoutProfileId();
@@ -325,13 +325,15 @@ class LayoutManager
             }
             $layout = $layoutRepo->where(array_merge($where, ['layoutProfileId' => $profileId]))->findOne();
             if (!empty($layout)) {
-                $isOriginal = $profileId === $layoutProfileId;
+                if ($keepIds) {
+                    $isOriginal = $profileId === $layoutProfileId;
+                }
                 break;
             }
         }
 
         if (empty($layout) && !empty($relatedEntity)) {
-            return $this->getCustomLayout($scope, $name, null, null, $layoutProfileId);
+            return $this->getCustomLayout($scope, $name, null, null, $layoutProfileId, false);
         }
 
         if (!empty($layout)) {
