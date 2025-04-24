@@ -1381,7 +1381,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
-            const languageFilter = this.getStorage().get('languageFilter', this.scope) || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
                 name = fieldView.name || name
@@ -1416,31 +1415,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
 
-                if (!languageFilter.includes('allLanguages')) {
-                    // for languages
-                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                        let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale');
-
-                        if (!languageFilter.includes(fieldLanguage ?? 'main')) {
-                            hide = true;
-                        }
-
-                        if (!hide && this.isUniLingualField(name, fieldLanguage)) {
-                            hide = true
-                        }
-
-                        if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(name, fieldLanguage)) {
-                            hide = false;
-                        }
-
-                    }
-                }
-
                 this.controlFieldVisibility(fieldView, hide);
             });
-        },
-        isUniLingualField(name, fieldLanguage) {
-            return !(this.getMetadata().get(`entityDefs.${this.scope}.fields.${name}.isMultilang`) || fieldLanguage !== null);
         },
 
         isEmptyValue(value) {
