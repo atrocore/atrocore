@@ -327,6 +327,13 @@ Espo.define('views/main', 'view', function (Dep) {
 
         setupRightSideView: function() {
             if(this.shouldSetupRightSideView()) {
+                if(window.SvelteRightSideView) {
+                    try{
+                        window.SvelteRightSideView.$destroy();
+                    }catch (e) {
+                        
+                    }
+                }
                 let recordView = this.getMainRecord();
                 window.SvelteRightSideView =  new Svelte.RightSideView({
                     target:  $(`${this.options.el} .content-wrapper`).get(0),

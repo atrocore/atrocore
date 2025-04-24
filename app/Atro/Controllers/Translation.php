@@ -20,7 +20,7 @@ class Translation extends ReferenceData
 {
     public function postActionReset(): bool
     {
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php refresh translations >/dev/null");
 
         return true;
     }
