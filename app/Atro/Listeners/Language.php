@@ -57,14 +57,6 @@ class Language extends AbstractListener
                         $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($fieldLabel1)";
                     }
 
-                    // add translate for relation virtual field
-                    if (!isset($data[$locale][$entity]['fields'][$field]) && !empty($relData = Relation::isVirtualRelationField($field))) {
-                        $relFieldDefs = $this->getMetadata()->get(['entityDefs', $relData['relationName'], 'fields', $relData['fieldName']]);
-                        if (empty($relFieldDefs['multilangField'])) {
-                            $data[$locale][$entity]['fields'][$field] = $data[$locale][$relData['relationName']]['fields'][$relData['fieldName']] ?? $relData['fieldName'];
-                        }
-                    }
-
                     switch ($fieldDefs['type']) {
                         case 'link':
                             if (!isset($data[$locale][$entity]['fields'][$field])) {
@@ -110,23 +102,40 @@ class Language extends AbstractListener
         }
 
         $languages = [];
+        $mainLanguageCode = $this->getConfig()->get('mainLanguage');
+        $mainLanguageName = null;
+
         foreach ($this->getConfig()->get('referenceData.Language', []) as $item) {
+            if ($item['code'] === $mainLanguageCode) {
+                $mainLanguageName = $item['name'];
+                continue;
+            }
             $languages[$item['code']] = $item['name'];
-        }
-        if (isset($languages[$this->getConfig()->get('mainLanguage')])) {
-            unset($languages[$this->getConfig()->get('mainLanguage')]);
         }
 
         if (!empty($languages)) {
             foreach ($data as $locale => $rows) {
                 foreach ($rows as $scope => $items) {
+                    // add name translation if field exists
+                    if (empty($items['fields']['name']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name']))) {
+                        $items['fields']['name'] = $data[$locale][$scope]['fields']['name'] = $data[$locale]['Global']['fields']['name'];
+                    }
                     foreach (['fields', 'tooltips'] as $type) {
                         if (isset($items[$type])) {
                             foreach ($items[$type] as $field => $value) {
+                                if ($scope !== 'Global') {
+                                    if (empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $field, 'isMultilang']))) {
+                                        continue;
+                                    }
+                                    if (array_key_exists($locale, $languages) && !empty($mainLanguageName)) {
+                                        $data[$locale][$scope][$type][$field] = $value . ' / ' . $mainLanguageName;
+                                    }
+                                }
+
                                 foreach ($languages as $code => $name) {
                                     $mField = $field . ucfirst(Util::toCamelCase(strtolower($code)));
                                     if (!isset($data[$locale][$scope][$type][$mField])) {
-                                        if ($type == 'fields') {
+                                        if ($type == 'fields' && $code !== $locale) {
                                             $data[$locale][$scope][$type][$mField] = $value . ' / ' . $name;
                                         } else {
                                             $data[$locale][$scope][$type][$mField] = $value;
