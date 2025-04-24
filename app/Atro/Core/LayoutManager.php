@@ -92,6 +92,28 @@ class LayoutManager
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
 
+        $storedProfiles = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->select('lp.id', 'lp.name')
+            ->from('layout', 'l')
+            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
+            ->where("l.entity=:entity and l.view_type=:viewType and "
+                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
+                . ' and '
+                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
+                . " and l.deleted=:false and lp.deleted=:false")
+            ->setParameters([
+                'entity'        => $scope,
+                'viewType'      => $viewType,
+                'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
+            ])->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        if (!empty($selectedProfileId) && !in_array($selectedProfileId, array_column($storedProfiles, 'id'))) {
+            $selectedProfileId = null;
+        }
+
         if (!empty($selectedProfileId) && empty($layoutProfileId)) {
             $layoutProfileId = $selectedProfileId;
         }
@@ -133,24 +155,6 @@ class LayoutManager
 
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
-
-        $storedProfiles = $this->getEntityManager()->getConnection()
-            ->createQueryBuilder()
-            ->select('lp.id', 'lp.name')
-            ->from('layout', 'l')
-            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
-            ->where("l.entity=:entity and l.view_type=:viewType and "
-                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
-                . ' and '
-                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
-                . " and l.deleted=:false and lp.deleted=:false")
-            ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
-                'relatedEntity' => $relatedEntity,
-                'relatedLink'   => $relatedLink,
-            ])->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
 
         return [
             'layout'            => $layout,
