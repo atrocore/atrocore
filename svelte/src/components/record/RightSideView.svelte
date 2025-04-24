@@ -21,11 +21,12 @@
 
     $: scopeKey = scope + mode;
 
-    window.addEventListener('right-side-view:toggle-filter', () => {
+    function toggleFilter() {
         isCollapsed = !isCollapsed;
         setActiveItem(items.find(item => item.name === 'filter'));
-        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : 'expanded');
-    });
+        Storage.set('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
+    }
+    window.addEventListener('right-side-view:toggle-filter', toggleFilter);
 
     let isPin = true;
     let streamView: Object;
@@ -131,6 +132,10 @@
 
         if (!activeItem) {
             setActiveItem(items[0]);
+        }
+
+        return () => {
+            window.removeEventListener('right-side-view:toggle-filter', toggleFilter)
         }
     });
 
