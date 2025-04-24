@@ -11,14 +11,16 @@
     export let loading: boolean = false;
 
     let style: string;
+    let iconStyle: string;
     let params: ActionParams;
 
     $: {
         style = bookmarkId ? 'primary outline' : 'default';
+        iconStyle = bookmarkId ? 'ph-fill' : 'ph';
         params = {
             name: 'bookmarking',
             action: bookmarkId ? 'unbookmark' : 'bookmark',
-            html: '<svg class="icon"><use href="client/img/icons/icons.svg#bookmark"></use></svg>',
+            html: `<i class="${iconStyle} ph-bookmark-simple"></i>`,
             style: style,
             disabled: loading,
             tooltip: Language.translate(bookmarkId ? 'actionUnbookmark' : 'actionBookmark'),

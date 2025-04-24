@@ -23,7 +23,7 @@ Espo.define('views/layout-profile/record/panels/layouts', 'views/record/panels/r
             const $btnGroup = this.$el.parent().find('.panel-heading .btn-group');
             $btnGroup.find('.action.layouts').remove();
 
-            const $button = $('<button type="button" class="btn btn-default btn-sm action layouts" data-action="configureLayouts"><span class="fas fa-cog" style="line-height: 0; font-size: 13px;"></span></button>');
+            const $button = $('<button type="button" class="btn btn-default btn-sm action layouts" data-action="configureLayouts"><span class="ph ph-gear" style="line-height: 0; font-size: 13px;"></span></button>');
             $btnGroup.append($button);
 
             $button.on('click', (e) => {

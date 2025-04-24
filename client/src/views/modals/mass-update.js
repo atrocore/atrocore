@@ -234,9 +234,9 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         initRemoveField(view) {
             const $cell = view.$el.parent();
             const $inlineActions = $cell.find('.inline-actions');
-            $cell.find('.fa fa-times').parent().remove();
+            $cell.find('.ph.ph-x').parent().remove();
 
-            const $link = $(`<a href="javascript:" title="${this.translate('Cancel')}"><span class="fa fa-times fa-sm"></span></a>`);
+            const $link = $(`<a href="javascript:" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
             $inlineActions.prepend($link);
 

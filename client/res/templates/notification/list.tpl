@@ -6,7 +6,7 @@
         <div class="col-sm-5">
             <div class="pull-right btn-group">
                 <button class="btn btn-default" data-action="markAllNotificationsRead" title="{{translate 'Mark all read'}}">{{translate 'Mark all read'}}</button>
-                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotifications' category='messages'}}">&nbsp;&nbsp;<svg class="icon"><use href="client/img/icons/icons.svg#sync"></use></svg>&nbsp;&nbsp;</button>
+                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotifications' category='messages'}}" style="line-height: 1;font-size: 18px;">&nbsp;&nbsp;<i class="ph ph-arrows-clockwise"></i>&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>

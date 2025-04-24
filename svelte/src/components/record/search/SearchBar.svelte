@@ -46,7 +46,7 @@
                 <input
                         type="text"
                         class="form-control text-filter"
-                        placeholder={Language.translate("searchBarPlaceholder", "messages")}
+                        placeholder={Language.translate("typeToSearch")}
                         name="textFilter"
                         bind:value={searchValue}
                         on:keypress={(e) => {e.key === 'Enter' ? search() : e}}
@@ -63,7 +63,7 @@
                                 data-tippy="true"
                                 on:click={reset}
                         >
-                            <svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>
+                            <i class="ph ph-x"></i>
                         </button>
                     {/if}
                     <button
@@ -74,7 +74,7 @@
                             data-tippy="true"
                             on:click={search}
                     >
-                        <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                        <i class="ph ph-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
@@ -99,7 +99,7 @@
 
     .search-row .input-group {
         border: 1px solid #eee;
-        border-radius: 5px;
+        border-radius: 3px;
     }
 
     .search-row .input-group-btn button {
@@ -111,6 +111,10 @@
 
     .search-row .form-group {
         display: flex;
+    }
+
+    .search-row .search input {
+        background: transparent;
     }
 
 </style>

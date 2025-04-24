@@ -54,7 +54,7 @@ class Cron extends AbstractConsole
         }
 
         // get active processes
-        exec('ps ax | grep index.php', $processes);
+        exec('ps ax | grep console.php', $processes);
         $processes = implode(' | ', $processes);
 
         /** @var string $php */
@@ -64,12 +64,12 @@ class Cron extends AbstractConsole
         $id = $this->getConfig()->get('appId');
 
         // open daemon for composer
-        if (empty(strpos($processes, "index.php daemon composer $id"))) {
+        if (empty(strpos($processes, "console.php daemon composer $id"))) {
             if ($this->isComposerDaemonBlocked()) {
                 return;
             }
 
-            exec("$php index.php daemon composer $id >/dev/null 2>&1 &");
+            exec("$php console.php daemon composer $id >/dev/null 2>&1 &");
         }
 
         // exit if system is updating now
@@ -78,13 +78,13 @@ class Cron extends AbstractConsole
         }
 
         // open daemon for pseudo transaction manager
-        if (empty(strpos($processes, "index.php daemon pt $id"))) {
-            exec("$php index.php daemon pt $id >/dev/null 2>&1 &");
+        if (empty(strpos($processes, "console.php daemon pt $id"))) {
+            exec("$php console.php daemon pt $id >/dev/null 2>&1 &");
         }
 
         // open daemon for job manager
-        if (empty(strpos($processes, "index.php daemon job-manager $id"))) {
-            exec("$php index.php daemon job-manager $id >/dev/null 2>&1 &");
+        if (empty(strpos($processes, "console.php daemon job-manager $id"))) {
+            exec("$php console.php daemon job-manager $id >/dev/null 2>&1 &");
         }
 
         // check auth tokens

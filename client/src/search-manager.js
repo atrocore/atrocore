@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -201,7 +200,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getQueryBuilder: function () {
-            return this.data.queryBuilder;
+            return Espo.Utils.clone(this.data.queryBuilder)
         },
 
         isQueryBuilderApplied: function () {
@@ -209,11 +208,11 @@ Espo.define('search-manager', [], function () {
         },
 
         getBool: function () {
-            return this.data.bool;
+            return  Espo.Utils.clone(this.data.bool);
         },
 
         getSavedFilters: function () {
-            return this.data.savedFilters;
+            return Espo.Utils.clone(this.data.savedFilters);
         },
 
         geTextFilter: function () {
@@ -265,7 +264,7 @@ Espo.define('search-manager', [], function () {
             }
         },
 
-        update: function(newData) {
+        update: function (newData) {
             this.set({...this.data, ...newData});
         },
 
@@ -324,7 +323,7 @@ Espo.define('search-manager', [], function () {
             }
 
             return where;
-        },
+        }
     });
 
     return SearchManager;

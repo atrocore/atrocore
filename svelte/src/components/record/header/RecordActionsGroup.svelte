@@ -204,6 +204,10 @@
         gap: 10px;
     }
 
+    .button-row :global(.btn) {
+        height: 33px;
+    }
+
     .button-row :global(.record-actions) {
         gap: 10px;
     }

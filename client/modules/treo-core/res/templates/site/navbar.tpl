@@ -1,13 +1,13 @@
 <div class="navbar navbar-inverse" role="navigation" data-orientation="{{#if navbarIsVertical}}vertical{{else}}horizontal{{/if}}">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle">
-            <svg class="icon"><use href="client/img/icons/icons.svg#bars"></use></svg>
+            <i class="ph ph-list"></i>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon fas fa-home" title="{{translate 'homepage'}}"></span></a>
+        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
             <button type="button" class="search-toggle pull-left visible-xs">
-                <span class="fa fa-search"></span>
+                <i class="ph ph-magnifying-glass"></i>
             </button>
             {{/if}}
             <ul class="visible-xs header-right pull-left">
@@ -22,7 +22,7 @@
                 {{#if hasJM}}<li class="dropdown queue-badge-container"></li>{{/if}}
             </ul>
             <div class="dropdown menu-container visible-xs pull-left">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><svg class="icon"><use href="client/img/icons/icons.svg#user"></use></svg></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -41,7 +41,7 @@
             <li class="header">
                 <span>{{translate "Navigation Menu"}}</span>
                 {{#if canConfigureMenu}}
-                <svg data-action="configureMenu" class="icon cursor-pointer"><use href="client/img/icons/icons.svg#cog"></use></svg>
+                    <i data-action="configureMenu" class="ph ph-gear cursor-pointer"></i>
                 {{/if}}
             </li>
             {{#each tabDefsList}}
@@ -59,7 +59,7 @@
                             {{/if}}
                         {{/if}}
                     </span>
-                    <span class="full-label">{{label}} <svg class="icon" style="margin: 0"><use href="client/img/icons/icons.svg#angle-down"></use></svg></span>
+                    <span class="full-label">{{label}} <i class="ph ph-caret-down"></i></span>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown-{{id}}">
                     {{#each items}}
@@ -79,7 +79,7 @@
                             <span class="full-label">{{label}}</span>
                         </a>
                         <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                            <svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>
+                            <i class="ph ph-plus"></i>
                         </button>
                     </li>
                     {{/each}}
@@ -102,7 +102,7 @@
                     </span>
                 </a>
                 <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                    <svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>
+                    <i class="ph ph-plus"></i>
                 </button>
             </li>
             {{/if}}
@@ -127,7 +127,7 @@
 
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">
             <li class="dropdown menu-container hidden-xs">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><svg class="icon"><use href="client/img/icons/icons.svg#user"></use></svg></a>
+                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
@@ -154,12 +154,12 @@
             {{/if}}
             <li class="dropdown hidden-xs favorites">
                 <a href="javascript:" type="button" class="favorite show-more-button favorites-dropdown-btn dropdown-toggle" data-toggle="dropdown">
-                    <svg class="icon"><use href="client/img/icons/icons.svg#star"></use></svg>
+                    <i class="ph ph-star"></i>
                 </a>
                 <div class="dropdown-menu favorites-dropdown">
                     <div class="header">
                         <span>Favorites</span>
-                        <svg class="icon configure-btn" data-action="configureFavorites"><use href="client/img/icons/icons.svg#cog"></use></svg>
+                        <i class="ph ph-gear configure-btn" data-action="configureFavorites"></i>
                     </div>
                     <div role="separator" class="divider"></div>
                     <div class="wrapper">

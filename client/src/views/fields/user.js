@@ -171,7 +171,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             var $container = this.$el.find('.link-teams-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkTeams"><span class="fas fa-times"></a>');
+            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkTeams"><i class="ph ph-x"></i></a>');
             $container.append($el);
 
             return $el;

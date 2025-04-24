@@ -13,16 +13,18 @@
     let loading: boolean = false;
     let isFollowed: boolean;
     let style: string;
+    let iconStyle: string;
     let params: ActionParams;
 
     $: {
         const userId = UserData.get()?.user.id ?? null;
         isFollowed = userId ? !!followers[userId] : false;
         style = isFollowed ? 'primary outline' : 'default';
+        iconStyle = isFollowed ? 'ph-fill ph-bell-simple-ringing' : 'ph ph-bell-simple';
         params = {
             name: 'following',
             action: isFollowed ? 'unfollow' : 'follow',
-            html: '<svg class="icon bell"><use href="client/img/icons/icons.svg#bell"></use></svg>',
+            html: `<i class="${iconStyle}"></i>`,
             style: style,
             disabled: loading,
             tooltip: Language.translate(isFollowed ? 'actionUnfollow' : 'actionFollow'),

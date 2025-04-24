@@ -24,7 +24,7 @@
                         <div class="panel-heading">
                             <div class="pull-right btn-group">
                                 <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="installed" title="{{translate 'clickToRefresh' category='messages'}}">
-                                    <span class="fas fa-sync"></span>
+                                    <i class="ph ph-arrows-clockwise"></i>
                                 </button>
                             </div>
                             <h4 class="panel-title">
@@ -39,7 +39,7 @@
                         <div class="panel-heading">
                             <div class="pull-right btn-group">
                                 <button type="button" class="btn btn-default btn-sm action" data-action="refresh" data-collection="store" title="{{translate 'clickToRefresh' category='messages'}}">
-                                    <span class="fas fa-sync"></span>
+                                    <i class="ph ph-arrows-clockwise"></i>
                                 </button>
                             </div>
                             <h4 class="panel-title">
@@ -91,9 +91,6 @@
         top: -1px;
         right: 1px;
         position: absolute;
-    }
-    .module-list-container > .panel > .panel-heading .btn-group .btn[data-action="refresh"] .fas.fa-sync {
-        font-size: 12px;
     }
     .log-list-container {
         border-left: 1px solid #dcdcdc;
