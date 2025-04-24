@@ -802,7 +802,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
-        createFilterView(rule, inputName) {
+        createFilterView(rule, inputName, type = null) {
             const scope = this.model.urlRoot;
 
             this.filterValue = null;
@@ -823,14 +823,31 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     });
                 } else if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
+                    let foreignScope = this.defs.params.foreignScope
+                        ?? this.foreignScope
+                        ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
+                        ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
+
+                    if (attribute && attribute.entityType && attribute.entityType.length) {
+                        foreignScope = attribute.entityType;
+                    }
+
                     this.createView(inputName, 'views/fields/link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'search',
-                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']),
-                        hideSearchType: true
+                        foreignScope: foreignScope,
+                        hideSearchType: true,
+                        params: this.defs.params
                     }, view => {
+                        view.selectBoolFilterList = this.selectBoolFilterList;
+                        view.boolFilterData = {};
+                        for (const key in this.boolFilterData) {
+                            if(typeof  this.boolFilterData[key] === 'function') {
+                                view.boolFilterData[key] = this.boolFilterData[key].bind(this);
+                            }
+                        }
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if(!rule.data) {
@@ -864,6 +881,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
+                        if(type === 'extensibleEnum') {
+                            model.set('value', rule.value);
+                        }
                         if(rule.data && rule.data['subQuery'] && this.getView(inputName)) {
                             let data = {where: rule.data['subQuery']};
                             this.getView(inputName).addLinkSubQuery(data, true);
@@ -873,7 +893,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             });
         },
 
-        createQueryBuilderFilter() {
+        createQueryBuilderFilter(type = null) {
             let name = this.name;
             if(!name.includes('attr_')) {
                 name = this.name + 'Id'
@@ -894,13 +914,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         return '';
                     }
 
-                    this.createFilterView(rule, inputName);
+                    if(!this.getView(inputName)) {
+                        this.createFilterView(rule, inputName, type);
+                    }
                     this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
                         if(rule.data) {
                             delete rule.data['subQuery'];
                         }
                         this.clearView(inputName);
-                        this.createFilterView(rule, inputName);
+                        this.createFilterView(rule, inputName, type);
                     });
 
                     this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {

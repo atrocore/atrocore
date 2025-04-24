@@ -42,6 +42,7 @@ Espo.define('treo-core:views/fields/filtered-link-multiple', 'views/fields/link-
                         boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        massRelateEnabled: true,
                         multiple: true
                     }, view => {
                         view.render();
