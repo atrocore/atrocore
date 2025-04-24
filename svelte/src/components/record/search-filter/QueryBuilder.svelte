@@ -159,7 +159,7 @@
         if (hasAttribute()) {
             let attributeButton = {
                 id: emptyAttribute,
-                label: `[${Language.translate('addAttribute')}]`,
+                label: `[ ${Language.translate('addAttribute')} ]`,
                 type: 'boolean',
                 optgroup: Language.translate('Attributes'),
                 operators: ['equal',],
@@ -693,7 +693,7 @@
                         rule.filter = filter;
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
                     } else {
-                        if (rule.filter.id === 'emptyAttributeRule') {
+                        if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
                             rule.filter = previousFilter;
                         }
                         originalUpdateRuleFilter.call(this, rule, previousFilter);
@@ -813,4 +813,9 @@
         border-color: #eee;
         cursor: not-allowed;
     }
+    /*:global(.rule-filter-container select optgroup option[value="emptyAttributeRule"]) {*/
+    /*    padding-left: 20px;*/
+    /*    margin-left: 20px;*/
+    /*    text-indent: 20px;*/
+    /*}*/
 </style>
