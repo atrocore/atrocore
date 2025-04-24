@@ -813,9 +813,4 @@
         border-color: #eee;
         cursor: not-allowed;
     }
-    /*:global(.rule-filter-container select optgroup option[value="emptyAttributeRule"]) {*/
-    /*    padding-left: 20px;*/
-    /*    margin-left: 20px;*/
-    /*    text-indent: 20px;*/
-    /*}*/
 </style>
