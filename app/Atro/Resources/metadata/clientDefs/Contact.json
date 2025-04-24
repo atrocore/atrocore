@@ -1,4 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "contacts"
+  "iconClass": "user-circle"
 }

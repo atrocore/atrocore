@@ -360,12 +360,6 @@
         position: relative;
     }
 
-    .group .right a .ph-pencil-simple {
-        position: absolute;
-        top: 2px;
-        right: 5px;
-    }
-
     .well {
         height: 100%;
         border: 1px solid #ededed;
