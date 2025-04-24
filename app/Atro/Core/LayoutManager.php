@@ -333,7 +333,8 @@ class LayoutManager
         }
 
         if (empty($layout) && !empty($relatedEntity)) {
-            return $this->getCustomLayout($scope, $name, null, null, $layoutProfileId, false);
+            list($layout) = $this->getCustomLayout($scope, $name, null, null, $layoutProfileId, false);
+            return [$layout, null];
         }
 
         if (!empty($layout)) {
