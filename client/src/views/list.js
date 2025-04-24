@@ -200,7 +200,14 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             window.addEventListener('filter:unset-all', (e) => {
                 this.resetSorting();
             });
-            new Svelte.ListHeader({
+            if(window.svelteListHeader) {
+                try{
+                    window.svelteListHeader.$destroy();
+                }catch (e) {
+
+                }
+            }
+            window.svelteListHeader = new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
