@@ -55,7 +55,7 @@
       "avatar"
     ]
   },
-  "iconClass": "person",
+  "iconClass": "user",
   "dynamicLogic": {
     "fields": {
       "password": {

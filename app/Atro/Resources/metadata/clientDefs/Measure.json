@@ -13,7 +13,7 @@
     "notEntity",
     "notLinkedWithLocale"
   ],
-  "iconClass": "square_foot",
+  "iconClass": "ruler",
   "relationshipPanels": {
     "units": {
       "select": false,

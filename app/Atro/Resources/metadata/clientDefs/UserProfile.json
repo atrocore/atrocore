@@ -1,7 +1,7 @@
 {
   "controller": "controllers/user-profile",
   "acl": "acl/user-profile",
-  "iconClass": "manage_accounts",
+  "iconClass": "user-circle",
   "defaultSidePanelFieldLists": {
     "detail": [
       "avatar"
