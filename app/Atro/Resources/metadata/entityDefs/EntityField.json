@@ -328,7 +328,7 @@
     "auditableDisabled": {
       "type": "bool"
     },
-    "auditableRelationDisabled": {
+    "auditableEnabled": {
       "type": "bool"
     }
   },

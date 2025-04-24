@@ -55,7 +55,11 @@
     "isDuplicatableRelation": "Duplicatable",
     "isUninheritableRelation": "Uninherited",
     "isUninheritableField": "Uninherited",
-    "isModifiedExtended": "Affect modification date/time"
+    "isModifiedExtended": "Affect modification date/time",
+    "auditableEnabled": "Log the change as a record activity",
+    "auditableDisabled": "Create no record activity",
+    "recordAsModificationDisabled": "No recording as modification",
+    "recordAsModificationEnabled": "Recording as modification"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

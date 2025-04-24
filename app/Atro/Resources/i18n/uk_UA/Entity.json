@@ -30,7 +30,9 @@
     "relationInheritance": "Успадкування відношень",
     "unInheritedRelations": "Неуспадковані відношення",
     "disableHierarchy": "Вимкнути ієрархію",
-    "fields": "Поля"
+    "fields": "Поля",
+    "auditedDisabledFields": "Не логувати як активність в записі для полів",
+    "auditedEnabledRelations": "Реєстрація активності в записі для зв'язків"
   },
   "options": {
     "type": {

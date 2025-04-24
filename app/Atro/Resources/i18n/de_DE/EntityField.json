@@ -54,7 +54,11 @@
     "isDuplicatableRelation": "Duplizierbar",
     "isUninheritableRelation": "Unvererbbar",
     "isUninheritableField": "Unvererbbar",
-    "isModifiedExtended": "Änderungsdatum/-zeit beeinflussen"
+    "isModifiedExtended": "Änderungsdatum/-zeit beeinflussen",
+    "auditableEnabled": "Die Änderung als Datensatz-Aktivität protokoliere",
+    "auditableDisabled": "Keine Datensatz-Aktivität erstellen",
+    "recordAsModificationDisabled": "Keine Aufzeichnung als Änderung",
+    "recordAsModificationEnabled": "Aufzeichnung als Änderung"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",

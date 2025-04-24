@@ -381,7 +381,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isCustom'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
         if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $typeFields[] = 'optionColors';
@@ -524,6 +524,21 @@ class EntityField extends ReferenceData
 
         foreach ($virtualToEntityFields as $field => $entityField) {
             $entity->set($field, in_array($entity->get('code'), $entityEntity->get($entityField) ?? []));
+        }
+
+        $defaultRelationScopeAudited =  [];
+        foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
+            if(!empty($scopeDefs['defaultRelationAudited'])) {
+                $defaultRelationScopeAudited[] = $scopeKey;
+            }
+        }
+
+        // we set auditableEnabled to true for File, channel and category is nothing was define
+        if(in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
+            if( !isset($fieldDefs['auditableEnabled'])) {
+                $entity->set('auditableEnabled', true);
+            }
         }
     }
     

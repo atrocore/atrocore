@@ -248,9 +248,14 @@
           ]
         }
       },
-      "auditableRelationDisabled": {
+      "auditableEnabled": {
         "visible": {
           "conditionGroup": [
+            {
+              "attribute": "relationType",
+              "type": "equals",
+              "value": "manyToMany"
+            },
             {
               "attribute": "type",
               "type": "equals",
@@ -263,9 +268,9 @@
         "visible": {
           "conditionGroup": [
             {
-              "attribute": "type",
+              "attribute": "relationType",
               "type": "notEquals",
-              "value": "linkMultiple"
+              "value": "manyToMany"
             }
           ]
         }

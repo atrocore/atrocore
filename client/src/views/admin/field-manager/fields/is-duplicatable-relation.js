@@ -12,6 +12,14 @@ Espo.define('views/admin/field-manager/fields/is-duplicatable-relation', 'views/
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
             let shouldHide = true;
