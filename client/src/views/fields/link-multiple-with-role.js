@@ -155,7 +155,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
             var nameHtml = '<div>' + this.getHelper().stripTags(name) + '&nbsp;' + '</div>';
 
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
+            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><i class="ph ph-x"></i></a>';
 
             var $role;
 

@@ -40,7 +40,8 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                         type: 'equals',
                         attribute: 'entityType',
                         value: this.scope
-                    }]
+                    }],
+                    maxSize: 20
                 }, {async: false}).then((result) => {
                     searchManager.savedSearchList = result.list;
                     savedFilters = savedFilters.map(i => result.list.find(item => item.id === i.id)).filter(i => i);
@@ -48,7 +49,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                 });
             }
 
-            collection.where = searchManager.getWhere();
+            this.collection.where = searchManager.getWhere();
             this.searchManager = searchManager;
         },
 

@@ -5,8 +5,8 @@
     </div>
     <div class="col-sm-6">
         <div class="btn-group">
-            <button class="btn btn-default btn-icon" data-action="zoomIn"><span class="fas fa-search-plus"></span></button>
-            <button class="btn btn-default btn-icon" data-action="zoomOut"><span class="fas fa-search-minus"></span></button>
+            <button class="btn btn-default btn-icon" data-action="zoomIn"><span class="ph ph-magnifying-glass-plus"></span></button>
+            <button class="btn btn-default btn-icon" data-action="zoomOut"><span class="ph ph-magnifying-glass-minus"></span></button>
         </div>
     </div>
 </div>

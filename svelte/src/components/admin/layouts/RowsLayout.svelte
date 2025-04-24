@@ -183,7 +183,7 @@
                                     <div class="right">
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editField(item)}>
-                                            <svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>
+                                            <i class="ph ph-pencil-simple"></i>
                                         </a>
                                     </div>
                                 {/if}

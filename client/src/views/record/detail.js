@@ -841,7 +841,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
 
                 if (isAttributeValuePanel) {
-                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><span class="fas fa-plus cursor-pointer" style="font-size: 1em;"></span></a></div>';
+                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><i class="ph ph-plus cursor-pointer" style="font-size: 1em;"></i></a></div>';
                     $el.append(html);
                     $el.find('.add-attribute-value-container').click(() => {
                         this.actionAddAttribute();

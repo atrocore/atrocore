@@ -31,6 +31,8 @@
 
     let showUnsetAll: boolean = false;
 
+    let advancedFilterDisabled: boolean;
+
     $: {
         updateStyle(parentWidth);
     }
@@ -48,8 +50,7 @@
    const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
        advancedFilterChecked = value;
        refreshShowUnsetAll();
-   })
-
+   });
 
     function updateStyle(parentWidth: number) {
         let rules = [
@@ -242,6 +243,10 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
+            model.trigger('beforeUpdateRuleFilter', rule);
+        });
+
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
             model.trigger('afterInitQueryBuilder');
         });
@@ -322,6 +327,19 @@
                         },
                     }).then(response => {
                         return response.json().then(attrs => {
+                            // we clean up the rules to remove attribute rule if attribute does not exist anymore
+                           let hasChanged = cleanUpSavedRule((fieldId) => {
+                                let parts = fieldId.split('_');
+                                if (parts.length === 2 && parts[0] === 'attr') {
+                                   return !!attrs.list.find(v => v.id ===  parts[1]);
+                                }else{
+                                    return true;
+                                }
+                            });
+
+                           if(hasChanged) {
+                               updateCollection();
+                           }
                             if (attrs.list.length) {
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
@@ -347,6 +365,9 @@
 
 
     function resetFilter() {
+        if(advancedFilterDisabled) {
+            return;
+        }
        advancedFilterChecked = false;
        handleAdvancedFilterChecked(false)
         updateSearchManager({
@@ -436,20 +457,15 @@
         });
     }
 
-    function handleGeneralFilterChecked(e, filter) {
-        let isChecked = e.target.checked;
-        let bool = searchManager.getBool();
-        bool[filter] = isChecked;
-        updateSearchManager({bool})
-        updateCollection();
-        refreshShowUnsetAll();
-    }
-
     function unsetAll() {
         if(!showUnsetAll) {
             return;
         }
-        searchManager.reset();
+        searchManager.update({
+            bool: {},
+            savedFilters: [],
+            queryBuilderApplied: false
+        });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);
         savedSearchStore.selectedSavedItemIds.set([]);
@@ -485,6 +501,9 @@
     async function saveSaveSearch(data, id = null): Promise<void> {
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
         savedSearchStore.saveSavedSearch(data, id).then( data =>{
+            if(id !== null) {
+                cancelEditSearchQuery()
+            }
             Notifier.notify(Language.translate('Done'), 'success');
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
@@ -493,6 +512,9 @@
     }
 
     function saveFilter() {
+        if(advancedFilterDisabled) {
+            return;
+        }
         let validation = window.$(queryBuilderElement).queryBuilder('validate');
         if (!validation) {
             Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
@@ -573,7 +595,53 @@
         editingSavedSearch = null;
     }
 
+    function refreshAdvancedFilterDisabled() {
+        let rules = searchManager.getQueryBuilder();
+        advancedFilterDisabled = true;
+
+        if(typeof rules === 'object' && rules.condition) {
+            advancedFilterDisabled = isRuleEmpty(rules);
+        }
+
+        generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
+
+        if(advancedFilterDisabled) {
+            generalFilterStore.advancedFilterChecked.set(false);
+            advancedFilterChecked = false;
+        }
+    }
+
+    // return true the filter have been updates
+    function cleanUpSavedRule( exists: Function): boolean{
+        // we clean up to remove  fields that do not exist anymore
+        let hasChanged = false;
+       let  cleanUpRule = (rule: Rule) => {
+           if(rule.rules) {
+               for (const rulesKey in rule.rules) {
+                   if(rule.rules[rulesKey].id) {
+                       if(!exists(rule)){
+                           hasChanged = true;
+                           rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
+                       }
+                   }
+
+                   if(rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
+                      cleanUpRule(rule.rules[rulesKey]);
+                   }
+               }
+           }
+        }
+
+        let rule = searchManager.getQueryBuilder();
+       cleanUpRule(rule);
+       if(hasChanged) {
+           searchManager.update({queryBuilder: rule})
+       }
+
+       return hasChanged
+    }
     function refreshShowUnsetAll() {
+      refreshAdvancedFilterDisabled();
        setTimeout(() => {
            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
            let bool = searchManager.getBool();
@@ -584,6 +652,18 @@
                }
            }
        }, 100)
+    }
+
+    function isRuleEmpty(rule: Rule): boolean {
+        if(rule.operator) {
+            return  false;
+        }
+
+        if(!rule.rules) {
+            return true;
+        }
+
+        return rule.rules.length === 0;
     }
 
     onMount(() => {
@@ -605,6 +685,7 @@
         // override updateRuleFilter
         let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
+            this.trigger('beforeUpdateRuleFilter', rule);
             if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
                 addAttributeFilter((pushed, filter) => {
                     if (pushed) {
@@ -644,7 +725,7 @@
     <div>
 
         <button class="filter-item" data-action="filter"  class:disabled={!showUnsetAll} on:click={unsetAll}>
-            <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+            <i class="ph ph-x"></i>
             {Language.translate('Unset All')}
         </button>
     </div>
@@ -663,16 +744,16 @@
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
-            <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
+            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
+            <span>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
-            <button class="filter-item" on:click={resetFilter}>
-                <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+            <button class="filter-item" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
+                <i class="ph ph-x"></i>
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
-                <button class="filter-item save" on:click={saveFilter}>
-                    <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
+                <button class="filter-item save" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
+                    <i class="ph ph-floppy-disk-back"></i>
                     {Language.translate('Save')}
                 </button>
             {/if}
@@ -727,7 +808,7 @@
         padding: 0;
     }
 
-    button.disabled,  button.disabled:hover{
+    .filter-item.save.disabled, button.disabled,  button.disabled:hover{
         background-color: #eee;
         border-color: #eee;
         cursor: not-allowed;
