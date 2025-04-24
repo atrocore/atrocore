@@ -686,25 +686,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
         },
 
-        createFilterView(rule, inputName, type) {
+        createFilterView(rule, inputName, type, delay = true) {
             const scope = this.model.urlRoot;
             this.filterValue = null;
-            this.getModelFactory().create(null, model => {
-                let operator = rule.$el.find('.rule-operator-container select').val();
-                if (operator === 'query_linked_with') {
-                    this.createView(inputName, 'views/fields/text', {
-                        name: 'value',
-                        el: `#${rule.id} .field-container`,
-                        model: model,
-                        mode: 'edit'
-                    }, view => {
-                        this.listenTo(view, 'change', () => {
-                            this.filterValue = model.get('value');
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        });
-                        this.renderAfterEl(view, `#${rule.id} .field-container`);
-                    });
-                } else if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
+            let createViewField = () => this.getModelFactory().create(null, model => {
+                let operator =  rule.operator.type;
+                if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
                     let foreignScope = this.defs.params.foreignScope
                         ?? this.foreignScope
@@ -714,7 +701,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope = attribute.entityType;
                     }
 
-                    this.createView(inputName, 'views/fields/link-multiple', {
+                    let view = 'views/fields/link-multiple';
+                    if(type === 'extensibleMultiEnum') {
+                        view = 'views/fields/extensible-multi-enum'
+                    }
+
+                    this.createView(inputName, view, {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
@@ -766,12 +758,25 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         let view =  this.getView(inputName);
                         if(rule.data && rule.data['subQuery'] && view) {
                             let data = {where: rule.data['subQuery']};
-                           view.addLinkSubQuery(data, true);
+                            view.addLinkSubQuery(data, true);
                         }
 
                     });
                 }
             });
+            if(delay) {
+                this.setTimeoutFunction = setTimeout(() => {
+                    createViewField();
+                    clearTimeout(this.setTimeoutFunction);
+                    this.setTimeoutFunction = null;
+                },50)
+            }else{
+                if(this.setTimeoutFunction) {
+                    clearTimeout(this.setTimeoutFunction);
+                    this.setTimeoutFunction = null;
+                }
+                createViewField();
+            }
         },
 
         createQueryBuilderFilter(type = null) {
@@ -801,10 +806,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         return '';
                     }
 
-                    if(!this.getView(inputName)) {
-                        this.createFilterView(rule, inputName, type);
-                    }
-                    this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                    this.createFilterView(rule, inputName, type, true);
+                    this.stopListening(this.model, 'afterUpdateRuleOperator');
+                    this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
+                        if(rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
+                            return;
+                        }
                         if(rule.data) {
                             delete rule.data['subQuery'];
                         }
@@ -812,8 +819,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         this.createFilterView(rule, inputName, type);
                     });
 
-                    this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                    this.listenToOnce(this.model, 'beforeUpdateRuleFilter', rule => {
                         if(rule.data && rule.data['subQuery']) {
+
                             delete rule.data['subQuery'];
                         }
                     });
