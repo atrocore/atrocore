@@ -103,7 +103,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 foreignScope: this.foreignScope,
                 valueIsSet: this.model.has(this.idName),
                 iconHtml: iconHtml,
-                createDisabled: this.createDisabled
+                createDisabled: this.createDisabled,
             }, Dep.prototype.data.call(this));
         },
 
@@ -828,19 +828,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'search',
-                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']),
+                        hideSearchType: true
                     }, view => {
-                        if(rule.data && rule.data['subQuery']) {
-                            view.searchData = {}
-                            view.searchData = {subQuery: rule.data['subQuery']};
-                        }
-
-                        this.listenTo(view, 'after:render', () => {
-                            view.$el.find('[data-action="createLink"]').hide();
-                            view.$el.find('.search-type').hide();
-                        });
-
-
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if(!rule.data) {
@@ -868,12 +858,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
-
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
+
                     this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
+                        if(rule.data && rule.data['subQuery'] && this.getView(inputName)) {
+                            let data = {where: rule.data['subQuery']};
+                            this.getView(inputName).addLinkSubQuery(data, true);
+                        }
                     });
                 }
             });
@@ -907,6 +901,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName);
+                    });
+
+                    this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                        if(rule.data && rule.data['subQuery']) {
+                            delete rule.data['subQuery'];
+                        }
                     });
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
