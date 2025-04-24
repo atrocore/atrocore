@@ -1,6 +1,6 @@
 {
   "createDisabled": true,
-  "iconClass": "task",
+  "iconClass": "check-square-offset",
   "controller": "controllers/record",
   "boolFilterList": [
     "onlyMy",

@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "local_library",
+  "iconClass": "globe-hemisphere-west",
   "recordViews": {
     "detail": "views/locale/record/detail"
   },

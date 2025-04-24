@@ -1,4 +1,4 @@
 {
    "controller": "controllers/stream",
-   "iconClass": "receipt_long"
+   "iconClass": "pulse"
 }

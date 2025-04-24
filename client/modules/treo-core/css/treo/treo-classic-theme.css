@@ -9835,8 +9835,8 @@ body > #header .navbar-brand span.home-icon {
 }
 
 .default-icon, .icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     display: inline;
     vertical-align: middle;
 }
@@ -17733,8 +17733,17 @@ span[data-img-src]::after {
 }
 
 /* Vertical */
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a .icon {
+    margin-left: 0;
+    margin-top: 0;
+}
+
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label {
     position: static;
+    margin-left: 6px;
+}
+
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label i {
     margin-left: 8px;
 }
 
@@ -17833,7 +17842,7 @@ span[data-img-src]::after {
     text-overflow: ellipsis;
     overflow: hidden;
     display: block;
-    margin-left: 28px;
+    margin-left: 32px;
     position: absolute;
 }
 
