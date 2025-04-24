@@ -11,6 +11,7 @@
     import GeneralFilter from "./GeneralFilter.svelte";
     import {savedSearchStore} from "./stores/SavedSearch";
     import {generalFilterStore} from "./stores/GeneralFilter";
+    import {Config} from "../../../utils/Config";
 
     export let scope: string;
     export let searchManager: any;
@@ -101,6 +102,20 @@
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
+    function hyphenToCamelCase(str: string): string {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    }
+
+    function underscoreToCamelCase(str: string) {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase());
+    }
+
     function getRulesIds(rules: Rule[]) {
         let ids: string[] = [];
         rules.forEach(rule => {
@@ -117,7 +132,6 @@
     }
 
     function initQueryBuilderFilter() {
-
         const $queryBuilder = window.$(queryBuilderElement)
         let rules = searchManager.getQueryBuilder() || [];
         if (typeof rules === 'object' && !rules.condition) {
@@ -200,7 +214,6 @@
 
         });
 
-
         model.trigger('afterInitQueryBuilder');
         updateStyle(parentWidth);
         $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
@@ -230,6 +243,10 @@
             model.trigger('beforeUpdateRuleFilter', rule);
         });
 
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
+            model.trigger('beforeUpdateRuleFilter', rule);
+        });
+
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
             model.trigger('afterInitQueryBuilder');
         });
@@ -250,7 +267,7 @@
     function getFieldOrAttributeId(field: string) {
         let id = field;
         let parts = field.split('_')
-        if (parts.length === 2 && parts[0] === 'attr') {
+        if (parts.length >= 2 && parts[0] === 'attr') {
             id = parts[1];
             const endings = ["From", "To", "UnitId"];
             for (const ending of endings) {
@@ -339,7 +356,7 @@
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
                                         resolved.push(attribute.id);
-                                        if(resolved.length === attrs.list.length) {
+                                        if (resolved.length === attrs.list.length) {
                                             resolve();
                                         }
                                     })
@@ -386,44 +403,46 @@
     function pushAttributeFilter(attribute: any, callback: Function) {
         let promises: Promise[] = []
         let filterChanged = false;
-        const fieldType = window.Espo.Utils.camelCaseToHyphen(attribute.type);
+        const fieldType = camelCaseToHyphen(attribute.type);
         const name = `attr_${attribute.id}`;
         const label = attribute.name;
         const params: any = {
             attribute
         }
 
-        if(['extensibleEnum','extensibleMultiEnum'].includes(attribute.type)) {
+        if (['extensibleEnum', 'extensibleMultiEnum'].includes(attribute.type)) {
             params['extensibleEnumId'] = attribute.extensibleEnumId;
         }
 
         let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
             return new Promise((resolve) => {
                 const view = Metadata.get(['fields', fieldType, 'view']) ?? `views/fields/${fieldType}`;
-                createView(name, view, {
-                    name: name,
-                    model: model,
-                    defs: {
+                let exitingFilter = filters.find(f => f.id === name);
+                if(exitingFilter) {
+                    resolve(exitingFilter);
+                }else{
+                    createView(name, view, {
                         name: name,
-                        params: params
-                    },
-                }, view => {
-                    let filter = view.createQueryBuilderFilter(attribute.type);
-                    if (filter) {
-                        filter.label = label;
-                        filter.optgroup = Language.translate('Attributes');
-                        filter.order = order;
-                        let ids = filters.map(item => {
-                            return item.id
-                        });
-                        if (!ids.includes(name)) {
-                            filters.push(filter);
-                            filterChanged = true;
-                            resolve(filter)
+                        model: model,
+                        defs: {
+                            name: name,
+                            params: params
+                        },
+                    }, view => {
+                        let filter = view.createQueryBuilderFilter(attribute.type);
+                        if (filter) {
+                            filter.label = label;
+                            filter.optgroup = Language.translate('Attributes');
+                            filter.order = order;
+                            if (!filters.find(f => f.id === name)) {
+                                filters.push(filter);
+                                filterChanged = true;
+                                resolve(filter)
+                            }
                         }
-                    }
-                });
-            })
+                    });
+                }
+            });
         };
 
         if (['rangeInt', 'rangeFloat'].includes(attribute.type)) {
@@ -431,6 +450,20 @@
             ['From', 'To'].forEach((v, key) => {
                 promises.push(createFieldView(name + v, type, label + ' ' + Language.translate(v), params, key));
             })
+        } else if (attribute.isMultilang) {
+            let languages: string[] = Config.get('inputLanguageList') ?? [];
+            languages = ['main', ...languages];
+            let i = 0;
+            for (const language of languages) {
+                let currentLabel = label;
+                let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
+                if (language !== 'main') {
+                    currentLabel = currentLabel + ' / ' + language
+                }
+                promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
+                i++;
+            }
+
         } else {
             promises.push(createFieldView(name, fieldType, label, params));
         }
@@ -446,6 +479,7 @@
 
         Promise.all(promises).then(newFilters => {
             newFilters.sort((a, b) => a.order - b.order);
+            window.currentFilters = filters;
             callback(filterChanged, newFilters);
         })
 
@@ -661,7 +695,7 @@
                         cleanUpRule(rule.rules[rulesKey]);
                     }
                 }
-                if(newRules.length !== rule.rules.length) {
+                if (newRules.length !== rule.rules.length) {
                     rule.rules = newRules;
                 }
             }
