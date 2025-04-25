@@ -62,7 +62,7 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                 };
 
                 if(type === 'bool') {
-                    params.notNull = this.model.get('notNull');
+                    params.notNull = this.model.get('notNull') ?? false;
                 }
 
                 let options = {
