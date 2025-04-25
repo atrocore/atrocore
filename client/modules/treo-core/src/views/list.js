@@ -29,7 +29,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                 searchManager.update({
                     queryBuilder: this.options.params.queryBuilder,
                     queryBuilderApplied: 'apply'
-                })
+                });
             }
 
             searchManager.loadStored();
