@@ -913,7 +913,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createQueryBuilderFilter(type = null) {
             let name = this.name;
-            if (!name.includes('attr_')) {
+            if (!name.includes('attr_') && type !== 'extensibleEnum') {
                 name = this.name + 'Id'
             }
             return {

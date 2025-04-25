@@ -1180,7 +1180,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                 this.getModelFactory().create(null, model => {
                     setTimeout(() => {
-                        this.createView(viewKey, `views/fields/${this.type}`, {
+                        let view =  `views/fields/${this.type}`
+                        if( this.type === 'wysiwyg' || this.type === 'markdown') {
+                            view = 'views/fields/varchar';
+                        }
+                        this.createView(viewKey, view, {
                             name: 'value',
                             el: `#${rule.id} .field-container.${inputName}`,
                             model: model,
