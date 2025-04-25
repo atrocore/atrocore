@@ -56,7 +56,7 @@ class Image extends AbstractEntryPoint
             if (!method_exists($file, $method)) {
                 throw new NotFound();
             }
-            $contents = file_get_contents($file->$method());
+            $contents = file_get_contents('public' . DIRECTORY_SEPARATOR . $file->$method());
         } else {
             $contents = $file->getContents();
         }
