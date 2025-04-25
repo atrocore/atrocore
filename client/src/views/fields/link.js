@@ -868,6 +868,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     });
                 }
             };
+
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
@@ -904,8 +905,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
 
             })
-
-
         },
 
         createQueryBuilderFilter(type = null) {

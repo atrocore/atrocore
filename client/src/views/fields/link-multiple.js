@@ -756,8 +756,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                 }
             };
-            this.getModelFactory().create(null, model => {
 
+            this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
                         model.set('valueNames', rule.data?.nameHash);
@@ -789,7 +789,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     createViewField(model);
                 }
             });
-
         },
 
         createQueryBuilderFilter(type = null) {
