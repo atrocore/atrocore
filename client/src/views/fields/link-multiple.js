@@ -770,6 +770,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             let data = {where: rule.data['subQuery']};
                             view.addLinkSubQuery(data, true);
                         }
+                        if(view) {
+                            view.reRender();
+                        }
                     }, 200);
                 });
                 if (delay) {
@@ -818,9 +821,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
-                        if (rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
-                            return;
+                        if (rule.data && rule.data['subQuery']) {
+                            delete rule.data['subQuery'];
+                            if(this.getView(inputName)){
+                                this.getView(inputName).deleteLinkSubQuery()
+                            }
                         }
+
                         if (type === 'extensibleMultiEnum') {
                             if (!rule.data) {
                                 rule.data = {};
@@ -833,8 +840,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 rule.data['operatorType'] = 'arrayIsNotEmpty'
                             }
                         }
-                    };
-                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback)
+                    }.bind(this);
+                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback);
                     this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
                         if (rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
                             return;

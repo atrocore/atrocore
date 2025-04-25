@@ -882,6 +882,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             let data = {where: rule.data['subQuery']};
                             view.addLinkSubQuery(data, true);
                         }
+                        if(view) {
+                            view.reRender();
+                        }
                     }, 200)
                 });
                 // I am using a delay because after initialisation, the operator is loaded after some delay
@@ -927,6 +930,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
 
                     this.createFilterView(rule, inputName, type, true);
+                    const callback = function (e) {
+                        if (rule.data && rule.data['subQuery']) {
+                            delete rule.data['subQuery'];
+                            if(this.getView(inputName)){
+                                this.getView(inputName).deleteLinkSubQuery()
+                            }
+                        }
+                    }.bind(this);
+                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback);
                     this.stopListening(this.model, 'afterUpdateRuleOperator');
                     this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
                         if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
