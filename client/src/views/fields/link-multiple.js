@@ -68,7 +68,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
-        selectBoolFilterList:  [],
+        selectBoolFilterList: [],
 
         boolFilterData: {},
 
@@ -137,7 +137,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return res;
         },
 
-        getSelectFilters: function () {},
+        getSelectFilters: function () {
+        },
 
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
@@ -147,7 +148,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+        },
 
         setup: function () {
             if (this.nameHashName === null) {
@@ -212,7 +214,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
@@ -231,7 +233,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         self.notify(false);
 
                         this.listenTo(dialog, 'select', function (models) {
-                            if (this.foreignScope !== 'File'){
+                            if (this.foreignScope !== 'File') {
                                 this.clearView('dialog');
                             }
                             if (models.massRelate) {
@@ -424,7 +426,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function(item) {
+                            response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
                                     name: item.name,
@@ -509,7 +511,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             let subQuery = data.where ?? [];
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
-            if(!silent) {
+            if (!silent) {
                 this.trigger('add-subquery', subQuery);
             }
         },
@@ -524,9 +526,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.trigger('change');
         },
 
-        afterDeleteLink: function (id) {},
+        afterDeleteLink: function (id) {
+        },
 
-        afterAddLink: function (id) {},
+        afterAddLink: function (id) {
+        },
 
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
@@ -537,7 +541,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         addLinkSubQueryHtml: function (subQuery) {
-            if (!subQuery || subQuery.length === 0){
+            if (!subQuery || subQuery.length === 0) {
                 return;
             }
 
@@ -618,7 +622,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         fetchFromDom: function () {
             this.ids = [];
-            this.$el.find('.link-container').children().each(function(i, li) {
+            this.$el.find('.link-container').children().each(function (i, li) {
                 var id = $(li).attr('data-id');
                 if (!id) return;
                 this.ids.push(id);
@@ -686,38 +690,44 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
         },
 
-        createFilterView(rule, inputName) {
+        createFilterView(rule, inputName, type, delay = true) {
             const scope = this.model.urlRoot;
-
             this.filterValue = null;
-            this.getModelFactory().create(null, model => {
-                let operator = rule.$el.find('.rule-operator-container select').val();
-                if (operator === 'query_linked_with') {
-                    this.createView(inputName, 'views/fields/text', {
-                        name: 'value',
-                        el: `#${rule.id} .field-container`,
-                        model: model,
-                        mode: 'edit'
-                    }, view => {
-                        this.listenTo(view, 'change', () => {
-                            this.filterValue = model.get('value');
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                        });
-                        this.renderAfterEl(view, `#${rule.id} .field-container`);
-                    });
-                } else if (['linked_with', 'not_linked_with'].includes(operator)) {
+            let createViewField = (model) => {
+                let operator = rule.operator.type;
+                if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
-                    this.createView(inputName, 'views/fields/link-multiple', {
+                    let foreignScope = this.defs.params.foreignScope
+                        ?? this.foreignScope
+                        ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
+                        ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
+                    if (attribute && attribute.entityType && attribute.entityType.length) {
+                        foreignScope = attribute.entityType;
+                    }
+
+                    let view = 'views/fields/link-multiple';
+                    if (type === 'extensibleMultiEnum') {
+                        view = 'views/fields/extensible-multi-enum'
+                    }
+
+                    this.createView(inputName, view, {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
                         mode: 'search',
-                        foreignScope: attribute ? attribute.entityType : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']) || this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']),
+                        foreignScope: foreignScope,
                         hideSearchType: true
                     }, view => {
+                        view.selectBoolFilterList = this.selectBoolFilterList;
+                        view.boolFilterData = {};
+                        for (const key in this.boolFilterData) {
+                            if (typeof this.boolFilterData[key] === 'function') {
+                                view.boolFilterData[key] = this.boolFilterData[key].bind(this);
+                            }
+                        }
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
-                            if(!rule.data) {
+                            if (!rule.data) {
                                 rule.data = {}
                             }
                             rule.data['subQuery'] = subQuery;
@@ -726,7 +736,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         this.listenTo(view, 'clear-subquery', () => {
                             this.filterValue = rule.value;
-                            if(rule.value !== null && rule.length === 0)  {
+                            if (rule.value !== null && rule.length === 0) {
                                 this.filterValue = null;
                             }
                             delete rule.data['subQuery'];
@@ -734,8 +744,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue =  view.ids;
-                            if(!rule.data) {
+                            this.filterValue = view.ids;
+                            if (!rule.data) {
                                 rule.data = {};
                             }
                             rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
@@ -743,46 +753,110 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
-                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+
+                }
+            };
+
+            this.getModelFactory().create(null, model => {
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    setTimeout(() => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
-                        if(rule.data && rule.data['subQuery'] && this.getView(inputName)) {
-                            let data = {where: rule.data['subQuery']};
-                            this.getView(inputName).addLinkSubQuery(data, true);
+                        if (type === 'extensibleMultiEnum') {
+                            model.set('value', rule.value);
                         }
-                    });
+                        let view = this.getView(inputName);
+                        if (rule.data && rule.data['subQuery'] && view) {
+                            let data = {where: rule.data['subQuery']};
+                            view.addLinkSubQuery(data, true);
+                        }
+                        if(view) {
+                            view.reRender();
+                        }
+                    }, 200);
+                });
+                if (delay) {
+                    this.setTimeoutFunction = setTimeout(() => {
+                        createViewField(model);
+                        clearTimeout(this.setTimeoutFunction);
+                        this.setTimeoutFunction = null;
+                    }, 50)
+                } else {
+                    if (this.setTimeoutFunction) {
+                        clearTimeout(this.setTimeoutFunction);
+                        this.setTimeoutFunction = null;
+                    }
+                    createViewField(model);
                 }
             });
         },
 
-        createQueryBuilderFilter() {
+        createQueryBuilderFilter(type = null) {
+            let operators = [
+                'linked_with',
+                'not_linked_with',
+                'is_not_linked',
+                'is_linked'
+            ];
+
+            if (type === 'extensibleMultiEnum') {
+                operators = [
+                    'array_any_of',
+                    'array_none_of',
+                    'is_null',
+                    'is_not_null'
+                ];
+            }
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: [
-                    'linked_with',
-                    'not_linked_with',
-                    'is_not_linked',
-                    'is_linked'
-                ],
+                operators: operators,
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
                         return '';
                     }
 
-                    this.createFilterView(rule, inputName);
-                    this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
-                        if(rule.data) {
+                    this.createFilterView(rule, inputName, type, true);
+                    const callback = function (e) {
+                        if (rule.data && rule.data['subQuery']) {
+                            delete rule.data['subQuery'];
+                            if(this.getView(inputName)){
+                                this.getView(inputName).deleteLinkSubQuery()
+                            }
+                        }
+
+                        if (type === 'extensibleMultiEnum') {
+                            if (!rule.data) {
+                                rule.data = {};
+                            }
+                            if (e.target.value === 'is_null') {
+                                rule.data['operatorType'] = 'arrayIsEmpty'
+                            }
+
+                            if (e.target.value === 'is_not_null') {
+                                rule.data['operatorType'] = 'arrayIsNotEmpty'
+                            }
+                        }
+                    }.bind(this);
+                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback);
+                    this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
+                        if (rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
+                            return;
+                        }
+
+                        if (rule.data) {
                             delete rule.data['subQuery'];
                         }
+
                         this.clearView(inputName);
-                        this.createFilterView(rule, inputName);
+                        this.createFilterView(rule, inputName, type);
                     });
 
-                    this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
-                        if(rule.data && rule.data['subQuery']) {
+                    this.listenToOnce(this.model, 'beforeUpdateRuleFilter', rule => {
+                        if (rule.data && rule.data['subQuery']) {
+
                             delete rule.data['subQuery'];
                         }
                     });
@@ -792,7 +866,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if(!Array.isArray(value) || value === null) {
+                        if (!Array.isArray(value) || value === null) {
                             return 'bad float';
                         }
 
