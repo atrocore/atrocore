@@ -26,7 +26,10 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             searchManager.scope = this.scope;
 
             if (this.options.params.showFullListFilter) {
-                searchManager.set(_.extend(searchManager.get(), {advanced: Espo.Utils.cloneDeep(this.options.params.advanced)}));
+                searchManager.update({
+                    queryBuilder: this.options.params.queryBuilder,
+                    queryBuilderApplied: 'apply'
+                })
             }
 
             searchManager.loadStored();
