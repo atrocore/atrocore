@@ -807,14 +807,33 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     }
 
                     this.createFilterView(rule, inputName, type, true);
-                    this.stopListening(this.model, 'afterUpdateRuleOperator');
+                    const callback =  function(e) {
+                        if(rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
+                            return;
+                        }
+                        if(type === 'extensibleMultiEnum') {
+                            if(!rule.data) {
+                                rule.data = {};
+                            }
+                            if(e.target.value === 'is_null') {
+                                rule.data['operatorType'] = 'arrayIsEmpty'
+                            }
+
+                            if(e.target.value === 'is_not_null') {
+                                rule.data['operatorType'] = 'arrayIsNotEmpty'
+                            }
+                        }
+                    };
+                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change',callback)
                     this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
                         if(rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
                             return;
                         }
+
                         if(rule.data) {
                             delete rule.data['subQuery'];
                         }
+
                         this.clearView(inputName);
                         this.createFilterView(rule, inputName, type);
                     });
