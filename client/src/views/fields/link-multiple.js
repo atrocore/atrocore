@@ -859,6 +859,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                              if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                                  return;
                              }
+
+                             if(this.name !== rule.filter.id) {
+                                 return;
+                             }
+
                              if(rule.operator.type === this.initialOperatorType[inputName]) {
                                  this.initialOperatorType[inputName] = null;
                                  return;

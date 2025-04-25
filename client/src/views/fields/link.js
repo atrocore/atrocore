@@ -967,6 +967,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 return;
                             }
 
+                            if(this.getFilterName(type) !== rule.filter.id) {
+                                return;
+                            }
+
                             if (rule.data) {
                                 delete rule.data['subQuery'];
                             }

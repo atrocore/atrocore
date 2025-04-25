@@ -659,6 +659,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                                 }
                             },
                         }, view => {
+                            view.translatedOptions = this.translatedOptions;
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');
