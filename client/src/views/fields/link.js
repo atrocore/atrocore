@@ -856,6 +856,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         });
 
                         this.listenTo(view, 'change', () => {
+                            console.log('input ')
                             this.filterValue = view.ids ?? model.get('valueIds');
                             if (!rule.data) {
                                 rule.data = {};
@@ -870,6 +871,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             };
 
             this.getModelFactory().create(null, model => {
+                if(!this.setTimeoutFunction) {
+                    this.setTimeoutFunction = {}
+                }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
                         model.set('valueNames', rule.data?.nameHash);
@@ -891,14 +895,14 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 // I am using a delay because after initialisation, the operator is loaded after some delay
                 // without the delay you will have the default operator
                 if (delay) {
-                    this.setTimeoutFunction = setTimeout(() => {
+                    this.setTimeoutFunction[inputName] = setTimeout(() => {
                         createViewField(model);
                         clearTimeout(this.setTimeoutFunction);
-                        this.setTimeoutFunction = null;
+                        this.setTimeoutFunction[inputName] = null;
                     }, 50)
                 } else {
-                    if (this.setTimeoutFunction) {
-                        clearTimeout(this.setTimeoutFunction);
+                    if (this.setTimeoutFunction[inputName]) {
+                        clearTimeout(this.setTimeoutFunction[inputName]);
                         this.setTimeoutFunction = null;
                     }
                     createViewField(model);
@@ -909,7 +913,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createQueryBuilderFilter(type = null) {
             let name = this.name;
-            if (!name.includes('attr_')) {
+            if (!name.includes('attr_') && type !== 'extensibleEnum') {
                 name = this.name + 'Id'
             }
             return {
@@ -928,34 +932,64 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         return '';
                     }
 
+                    if(!this.isNotListeningToOperatorChange) {
+                        this.isNotListeningToOperatorChange = {}
+                    }
+
+                    if(!this.initialOperatorType) {
+                        this.initialOperatorType = {}
+                    }
+                    this.initialOperatorType[inputName] = rule.operator.type;
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
+                        rule.value = null;
+                        if(rule.data?.nameHash) {
+                            rule.data.nameHash = {}
+                        }
+                        let view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery']) {
                             delete rule.data['subQuery'];
-                            if(this.getView(inputName)){
-                                this.getView(inputName).deleteLinkSubQuery()
+                            if(view){
+                                view.deleteLinkSubQuery()
                             }
                         }
+                        if(view){
+                            view.model.set('valueNames', rule.data?.nameHash);
+                            view.model.set('valueIds', rule.value);
+                            // view.reRender()
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
+                        }
                     }.bind(this);
-                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback);
-                    this.stopListening(this.model, 'afterUpdateRuleOperator');
-                    this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
-                        if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
-                            return;
-                        }
-                        if (rule.data) {
-                            delete rule.data['subQuery'];
-                        }
 
-                        this.clearView(inputName);
-                        this.createFilterView(rule, inputName, type);
-                    });
+                    if(!this.isNotListeningToOperatorChange[inputName]){
+                        rule.$el.find('.rule-operator-container select').on('change', callback);
 
-                    this.listenToOnce(this.model, 'beforeUpdateRuleFilter', rule => {
-                        if (rule.data && rule.data['subQuery']) {
-                            delete rule.data['subQuery'];
-                        }
-                    });
+                        this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                            if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                                return;
+                            }
+
+                            if (rule.data) {
+                                delete rule.data['subQuery'];
+                            }
+
+                            if(rule.operator.type === this.initialOperatorType[inputName]) {
+                                this.initialOperatorType[inputName] = null;
+                                return;
+                            }
+
+                            this.clearView(inputName);
+                            this.createFilterView(rule, inputName, type);
+                        });
+
+                        this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                            if (rule.data && rule.data['subQuery']) {
+                                delete rule.data['subQuery'];
+                            }
+                        });
+
+                        this.isNotListeningToOperatorChange[inputName] = true;
+                    }
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },

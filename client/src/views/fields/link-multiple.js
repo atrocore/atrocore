@@ -693,6 +693,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         createFilterView(rule, inputName, type, delay = true) {
             const scope = this.model.urlRoot;
             this.filterValue = null;
+            if(!this.setTimeoutFunction) {
+                this.setTimeoutFunction = {}
+            }
             let createViewField = (model) => {
                 let operator = rule.operator.type;
                 if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
@@ -718,12 +721,17 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope: foreignScope,
                         hideSearchType: true
                     }, view => {
+                        view.render();
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
+                        }
+                        if (rule.data && rule.data['subQuery']) {
+                            let data = {where: rule.data['subQuery']};
+                            view.addLinkSubQuery(data, true);
                         }
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
@@ -776,15 +784,15 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     }, 200);
                 });
                 if (delay) {
-                    this.setTimeoutFunction = setTimeout(() => {
+                    this.setTimeoutFunction[inputName] = setTimeout(() => {
                         createViewField(model);
                         clearTimeout(this.setTimeoutFunction);
-                        this.setTimeoutFunction = null;
+                        this.setTimeoutFunction[inputName] = null;
                     }, 50)
                 } else {
-                    if (this.setTimeoutFunction) {
-                        clearTimeout(this.setTimeoutFunction);
-                        this.setTimeoutFunction = null;
+                    if (this.setTimeoutFunction[inputName]) {
+                        clearTimeout(this.setTimeoutFunction[inputName]);
+                        this.setTimeoutFunction[inputName] = null;
                     }
                     createViewField(model);
                 }
@@ -818,15 +826,16 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         return '';
                     }
 
+                    if(!this.isNotListeningToOperatorChange) {
+                        this.isNotListeningToOperatorChange = {}
+                    }
+
+                    if(!this.initialOperatorType) {
+                        this.initialOperatorType = {}
+                    }
+                    this.initialOperatorType[inputName] = rule.operator.type;
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
-                        if (rule.data && rule.data['subQuery']) {
-                            delete rule.data['subQuery'];
-                            if(this.getView(inputName)){
-                                this.getView(inputName).deleteLinkSubQuery()
-                            }
-                        }
-
                         if (type === 'extensibleMultiEnum') {
                             if (!rule.data) {
                                 rule.data = {};
@@ -840,26 +849,27 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                         }
                     }.bind(this);
-                    rule.$el.find('.rule-operator-container select').off('change', callback).on('change', callback);
-                    this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
-                        if (rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
-                            return;
-                        }
+                     if(!this.isNotListeningToOperatorChange[inputName]) {
+                        rule.$el.find('.rule-operator-container select').on('change', callback);
+                         this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                             if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                                 return;
+                             }
+                             if(rule.operator.type === this.initialOperatorType[inputName]) {
+                                 this.initialOperatorType[inputName] = null;
+                                 return;
+                             }
 
-                        if (rule.data) {
-                            delete rule.data['subQuery'];
-                        }
-
-                        this.clearView(inputName);
-                        this.createFilterView(rule, inputName, type);
-                    });
-
-                    this.listenToOnce(this.model, 'beforeUpdateRuleFilter', rule => {
-                        if (rule.data && rule.data['subQuery']) {
-
-                            delete rule.data['subQuery'];
-                        }
-                    });
+                             this.clearView(inputName);
+                             this.createFilterView(rule, inputName, type);
+                         });
+                         this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                             if (rule.data && rule.data['subQuery']) {
+                                 delete rule.data['subQuery'];
+                             }
+                         });
+                         this.isNotListeningToOperatorChange[inputName] = true;
+                     }
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },

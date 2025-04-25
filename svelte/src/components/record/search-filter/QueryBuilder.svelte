@@ -486,7 +486,7 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
+        return Acl.check('Attribute', 'read') && scope === 'Product';
     }
 
     function addAttributeFilter(callback) {

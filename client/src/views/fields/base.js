@@ -1146,34 +1146,74 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         filterInput(rule, inputName) {
+            const viewKey = inputName + this.type;
             if (!rule || !inputName) {
                 return '';
             }
+            if(!this.isNotListeningToOperatorChange) {
+                this.isNotListeningToOperatorChange = {};
+            }
+
+            if(!this.isNotListeningToOperatorChange[inputName]) {
+                this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
+                    if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                        return;
+                    }
+                    rule.rightValue = null;
+                    rule.leftValue = null;
+                    let view = this.getView(viewKey);
+                    if(rule.operator.type !== 'between'){
+                       this.filterValue = view.model.get('value');
+                        rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                    }
+                    this.isNotListeningToOperatorChange[inputName] = true;
+                })
+            }
             this.filterValue = this.defaultFilterValue;
-            this.getModelFactory().create(null, model => {
-            setTimeout(() => {
 
-                    this.createView(inputName, `views/fields/${this.type}`, {
-                        name: 'value',
-                        el: `#${rule.id} .field-container`,
-                        model: model,
-                        mode: 'edit'
-                    }, view => {
-                        view.render();
+                this.getModelFactory().create(null, model => {
+                    setTimeout(() => {
+                        let view =  `views/fields/${this.type}`
+                        if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
+                            view = 'views/fields/varchar';
+                        }
+                        this.createView(viewKey, view, {
+                            name: 'value',
+                            el: `#${rule.id} .field-container.${inputName}`,
+                            model: model,
+                            mode: 'edit',
+                        }, view => {
+                            view.render();
 
-                        this.listenTo(model, 'change', () => {
-                            this.filterValue = model.get('value');
-                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            this.listenTo(model, 'change', () => {
+                                if(rule.operator.type === 'between') {
+                                    if(inputName.endsWith('value_1')){
+                                        rule.rightValue = model.get('value')
+                                    }else{
+                                        rule.leftValue = model.get('value')
+                                    }
+
+                                    if(rule.rightValue && rule.leftValue) {
+                                        this.filterValue = [rule.leftValue, rule.rightValue];
+                                    }
+                                }else{
+                                    this.filterValue = model.get('value')
+                                }
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            });
+                            this.renderAfterEl(view, `#${rule.id} .field-container`);
                         });
-                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    }, 50);
+                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                            if(rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
+                                model.set('value',inputName.endsWith('value_1') ? rule.value[1]: rule.value[0]);
+                            }else{
+                                model.set('value', rule.value);
+                            }
                     });
-                }, 50);
-                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
-                    model.set('value', rule.value);
                 });
-            });
 
-            return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
+            return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
         },
 
         filterValueGetter(rule) {
