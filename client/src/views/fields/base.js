@@ -1154,12 +1154,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if(!this.isNotListeningToOperatorChange) {
                 this.isNotListeningToOperatorChange = {};
             }
-            if(!this.alreadyCreated) {
-                this.alreadyCreated = {}
-            }
-            if(!this.alreadyCreated[inputName]) {
-                this.alreadyCreated[inputName] = {}
-            }
 
             if(!this.isNotListeningToOperatorChange[inputName]) {
                 this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
