@@ -808,7 +808,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             let createViewField = () => this.getModelFactory().create(null, model => {
                 let operator =  rule.operator.type;
-                console.log("operator", rule.operator.type)
                 if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
                     let foreignScope = this.defs.params.foreignScope
