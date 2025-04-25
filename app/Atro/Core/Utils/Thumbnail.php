@@ -73,7 +73,10 @@ class Thumbnail
             }
 
             if($this->isSvg($file)) {
-                $this->getFileManager()->putContents($thumbnailPath, $file->getContents());
+                $this
+                    ->getFileManager()
+                    ->putContents('public' . DIRECTORY_SEPARATOR . $thumbnailPath, $file->getContents());
+                return $thumbnailPath;
             }
 
             if ($this->isPdf($originFilePath)) {
