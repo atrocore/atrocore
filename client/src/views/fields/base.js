@@ -1174,7 +1174,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.getModelFactory().create(null, model => {
                     setTimeout(() => {
                         let view =  `views/fields/${this.type}`
-                        if( this.type === 'wysiwyg' || this.type === 'markdown') {
+                        if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
                             view = 'views/fields/varchar';
                         }
                         this.createView(viewKey, view, {
