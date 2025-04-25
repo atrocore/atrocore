@@ -139,7 +139,7 @@ abstract class AbstractRecordController extends AbstractController
         }
 
         return array(
-            'total' => $result['total'],
+            'total' => $result['total'] ?? null,
             'list'  => $list
         );
     }

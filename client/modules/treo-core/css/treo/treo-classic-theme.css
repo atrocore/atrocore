@@ -8014,7 +8014,7 @@ button.close {
     top: 0;
     left: 0;
     width: 100% !important;
-    z-index: 1050
+    z-index: 5000
 }
 
 .note-editor.note-frame.fullscreen .note-editable {

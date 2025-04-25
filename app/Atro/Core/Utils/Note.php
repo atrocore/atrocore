@@ -232,13 +232,13 @@ class Note
             $this->createRelatedData[$entity->getEntityType()] = [];
 
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
-                if ($defs['type'] === 'file') {
+                if (!empty($defs['type']) && $defs['type'] === 'file') {
                     $this->createRelatedData[$entity->getEntityType()][$field . 'Id'] = ['File', null];
                 }
             }
 
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
-                if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
+                if (!empty($defs['type']) && $defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
                     if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation' &&
                         !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $link, 'relationField']))
                     ) {
