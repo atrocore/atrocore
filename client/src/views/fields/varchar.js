@@ -349,7 +349,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             return null;
         },
 
-        createQueryBuilderFilter() {
+        createQueryBuilderFilter(type, model) {
+            this.filterModel = model;
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),

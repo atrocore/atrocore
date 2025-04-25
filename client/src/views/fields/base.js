@@ -1150,8 +1150,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return '';
             }
             this.filterValue = this.defaultFilterValue;
+            this.getModelFactory().create(null, model => {
             setTimeout(() => {
-                this.getModelFactory().create(null, model => {
+
                     this.createView(inputName, `views/fields/${this.type}`, {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
@@ -1159,17 +1160,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         mode: 'edit'
                     }, view => {
                         view.render();
+
                         this.listenTo(model, 'change', () => {
                             this.filterValue = model.get('value');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
-                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
-                        model.set('value', rule.value);
-                    });
+                }, 50);
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    model.set('value', rule.value);
                 });
-            }, 100)
+            });
+
             return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
         },
 

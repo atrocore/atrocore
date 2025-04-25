@@ -806,8 +806,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             const scope = this.model.urlRoot;
             this.filterValue = null;
 
-            let createViewField = () => this.getModelFactory().create(null, model => {
-                let operator =  rule.operator.type;
+            let createViewField = (model) => {
+                let operator = rule.operator.type;
                 if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
                     let foreignScope = this.defs.params.foreignScope
@@ -828,6 +828,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
+
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
                         for (const key in this.boolFilterData) {
@@ -835,6 +836,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
                         }
+
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if (!rule.data) {
@@ -864,35 +866,43 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
-
-                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                }
+            };
+            this.getModelFactory().create(null, model => {
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    setTimeout(() => {
                         model.set('valueNames', rule.data?.nameHash);
                         model.set('valueIds', rule.value);
+
                         if (type === 'extensibleEnum') {
                             model.set('value', rule.value);
                         }
-                        if (rule.data && rule.data['subQuery'] && this.getView(inputName)) {
+                        view = this.getView(inputName);
+                        if (rule.data && rule.data['subQuery'] && view) {
                             let data = {where: rule.data['subQuery']};
-                            this.getView(inputName).addLinkSubQuery(data, true);
+                            view.addLinkSubQuery(data, true);
                         }
-                    });
+                    }, 200)
+                });
+                // I am using a delay because after initialisation, the operator is loaded after some delay
+                // without the delay you will have the default operator
+                if (delay) {
+                    this.setTimeoutFunction = setTimeout(() => {
+                        createViewField(model);
+                        clearTimeout(this.setTimeoutFunction);
+                        this.setTimeoutFunction = null;
+                    }, 50)
+                } else {
+                    if (this.setTimeoutFunction) {
+                        clearTimeout(this.setTimeoutFunction);
+                        this.setTimeoutFunction = null;
+                    }
+                    createViewField(model);
                 }
-            });
-            // I am using a delay because after initialisation, the operator is loaded after some delay
-            // without the delay you will have the default operator
-            if(delay) {
-               this.setTimeoutFunction = setTimeout(() => {
-                   createViewField();
-                   clearTimeout(this.setTimeoutFunction);
-                   this.setTimeoutFunction = null;
-               },50)
-            }else{
-                if(this.setTimeoutFunction) {
-                    clearTimeout(this.setTimeoutFunction);
-                    this.setTimeoutFunction = null;
-                }
-                createViewField();
-            }
+
+            })
+
+
         },
 
         createQueryBuilderFilter(type = null) {
@@ -919,7 +929,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createFilterView(rule, inputName, type, true);
                     this.stopListening(this.model, 'afterUpdateRuleOperator');
                     this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
-                        if(rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                        if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                             return;
                         }
                         if (rule.data) {
