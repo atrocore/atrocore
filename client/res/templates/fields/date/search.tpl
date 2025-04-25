@@ -1,5 +1,5 @@
 
-<select class="form-control search-type input-sm" name="{{name}}-type">
+<select class="form-control search-type input-sm {{#if hideSearchType}} hidden {{/if}}"   name="{{name}}-type">
     {{options searchTypeList searchType field='dateSearchRanges'}}
 </select>
 <div class="input-group primary">

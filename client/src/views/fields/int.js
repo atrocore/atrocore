@@ -50,7 +50,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         decimalMark: '.',
 
-        searchTypeList: ['isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
+        searchTypeList: ['equals', 'isNotEmpty', 'isEmpty',  'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -318,6 +318,12 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
+                        if(rule.operator.type ==='between') {
+                            if((!Array.isArray(value) || value.length !== 2)) {
+                                return 'bad between';
+                            }
+                            return  true;
+                        }
                         if(isNaN(value) || value === null) {
                             return 'bad int';
                         }
