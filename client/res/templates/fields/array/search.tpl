@@ -1,5 +1,5 @@
 
-<select class="form-control search-type {{#if hideSearchType}} hidden {{/if}}  input-sm" name="{{name}}-type">
+<select class="form-control search-type input-sm" name="{{name}}-type">
     {{options searchTypeList searchType field='searchRanges'}}
 </select>
 <div class="input-container">

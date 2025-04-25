@@ -201,8 +201,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 defs: this.defs,
                 params: this.params,
                 value: this.getValueForDisplay(),
-                isNull: this.model.get(this.name) === null || this.model.get(this.name) === undefined,
-                hideSearchType: this.options.hideSearchType
+                isNull: this.model.get(this.name) === null || this.model.get(this.name) === undefined
             };
             if (this.mode === 'search') {
                 data.searchParams = this.searchParams;
@@ -1183,7 +1182,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             el: `#${rule.id} .field-container.${inputName}`,
                             model: model,
                             mode: 'edit',
-                            hideSearchType: true,
                         }, view => {
                             view.render();
 
