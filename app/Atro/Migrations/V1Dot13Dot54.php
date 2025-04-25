@@ -23,6 +23,12 @@ class V1Dot13Dot54 extends Base
     }
     public function up(): void
     {
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE action_history_record ALTER target_id TYPE VARCHAR(61)");
+        } else {
+            $this->exec("ALTER TABLE action_history_record CHANGE target_id target_id VARCHAR(61) DEFAULT NULL");
+        }
+
         rename('client', 'public/client');
         rename('apidocs', 'public/apidocs');
 
@@ -55,5 +61,13 @@ EOD;
 
         // reload daemons
         file_put_contents('data/process-kill.txt', '1');
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+        }
     }
 }
