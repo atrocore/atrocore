@@ -476,7 +476,11 @@
         Promise.all(promises).then(newFilters => {
             newFilters.sort((a, b) => a.order - b.order);
             window.currentFilters = filters;
-            callback(filterChanged, newFilters);
+            if(attribute.isMultilang) {
+                callback(filterChanged, [newFilters[0]]);
+            }else{
+                callback(filterChanged, newFilters);
+            }
         })
 
     }

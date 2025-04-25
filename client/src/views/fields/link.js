@@ -919,7 +919,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createFilterView(rule, inputName, type, true);
                     this.stopListening(this.model, 'afterUpdateRuleOperator');
                     this.listenToOnce(this.model, 'afterUpdateRuleOperator', rule => {
-                        if(rule.$el.find('.rule-value-container input').attr('name') !== inputName) {
+                        if(rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                             return;
                         }
                         if (rule.data) {

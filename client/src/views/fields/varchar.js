@@ -364,7 +364,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                // validation: {
+                //     callback: function (value, rule) {
+                //        console.log('value', value)
+                //     }.bind(this),
+                // }
             };
         },
 
