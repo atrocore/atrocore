@@ -11,7 +11,9 @@
     },
     "language": {
       "type": "language",
-      "required": false
+      "required": false,
+      "view": "views/account/fields/language",
+      "prohibitedEmptyValue": true
     },
     "type": {
       "type": "enum",
