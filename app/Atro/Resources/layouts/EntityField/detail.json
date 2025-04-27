@@ -272,6 +272,12 @@
       ],
       [
         {
+          "name": "modifiedExtendedDisabled"
+        },
+        false
+      ],
+      [
+        {
           "name": "isDuplicatableRelation"
         },
         {
@@ -280,7 +286,7 @@
       ],
       [
         {
-          "name": "isModifiedExtended"
+          "name": "modifiedExtendedEnabled"
         },
         false
       ]

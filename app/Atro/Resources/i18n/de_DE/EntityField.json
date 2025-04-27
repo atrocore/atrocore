@@ -54,11 +54,10 @@
     "isDuplicatableRelation": "Duplizierbar",
     "isUninheritableRelation": "Unvererbbar",
     "isUninheritableField": "Unvererbbar",
-    "isModifiedExtended": "Änderungsdatum/-zeit beeinflussen",
     "auditableEnabled": "Die Änderung als Datensatz-Aktivität protokoliere",
     "auditableDisabled": "Keine Datensatz-Aktivität erstellen",
-    "recordAsModificationDisabled": "Keine Aufzeichnung als Änderung",
-    "recordAsModificationEnabled": "Aufzeichnung als Änderung"
+    "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
+    "modifiedExtendedEnabled": "Aufzeichnung als Änderung"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
@@ -78,7 +77,7 @@
     "seeMoreDisabled": "Ist diese Option nicht aktiviert, werden lange Texte, die angezeigt werden sollen, gekürzt.",
     "lengthOfCut": "Überzählige Zeichen werden im Ansichtsmodus ausgeblendet.",
     "linkMultipleField": "Das Feld Mehrfach verknüpfen bietet eine praktische Möglichkeit, Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Bezugsdatensätzen haben können.",
-    "isModifiedExtended": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
+    "modifiedExtendedEnabled": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
     "isUninheritableField": "Die Werte für dieses Feld werden nicht vom übergeordneten Element geerbt.",
     "isUninheritableRelation": "Die Beziehungen zu dieser Entität werden nicht vom übergeordneten Element geerbt."
   },

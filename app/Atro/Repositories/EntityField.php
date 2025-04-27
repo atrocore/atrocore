@@ -381,7 +381,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
         if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $typeFields[] = 'optionColors';
@@ -485,7 +485,7 @@ class EntityField extends ReferenceData
             "isDuplicatableRelation" => "duplicatableRelations",
             "isUninheritableField" => "unInheritedFields",
             "isUninheritableRelation" => "unInheritedRelations",
-            "isModifiedExtended" => "modifiedExtendedRelations"
+            "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 
         foreach ($virtualToEntityFields as $field => $entityField) {
@@ -519,7 +519,7 @@ class EntityField extends ReferenceData
             "isDuplicatableRelation" => "duplicatableRelations",
             "isUninheritableField" => "unInheritedFields",
             "isUninheritableRelation" => "unInheritedRelations",
-            "isModifiedExtended" => "modifiedExtendedRelations"
+            "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 
         foreach ($virtualToEntityFields as $field => $entityField) {

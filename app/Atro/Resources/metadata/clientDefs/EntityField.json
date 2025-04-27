@@ -274,6 +274,17 @@
             }
           ]
         }
+      },
+      "modifiedExtendedDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notEquals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
       }
     }
   }
