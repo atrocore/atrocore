@@ -308,7 +308,7 @@ class Application
             'version'         => Composer::getCoreVersion()
         ];
 
-        $this->display('client/html/installation.html', $vars);
+        $this->display('public/client/html/installation.html', $vars);
     }
 
     /**

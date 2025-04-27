@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "tv_options_edit_channels",
+  "iconClass": "list",
   "boolFilterList": [
     "defaultOption",
     "onlyForExtensibleEnum",

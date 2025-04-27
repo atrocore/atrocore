@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "conversion_path",
+  "iconClass": "plug",
   "boolFilterList": [
     "notEntity",
     "connectionType",

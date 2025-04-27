@@ -85,7 +85,8 @@
         searchManager.update({
             bool: {},
             savedFilters: [],
-            queryBuilderApplied: false
+            queryBuilderApplied: false,
+            advanced: []
         });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);
@@ -175,7 +176,11 @@
     onMount(() => {
         refreshShowUnsetAll();
         refreshAdvancedFilterDisabled();
-        cleanUpSavedRule((field) => {
+        cleanUpSavedRule((field: string) => {
+            // we do not clean up attribute here
+            if(field.startsWith('attr_')) {
+                return true;
+            }
             let exits =  !!Metadata.get(['entityDefs', scope, 'fields', field]);
             if(!exits && field ===  (field.slice(0, -2) + 'Id'))  {
                 return !!Metadata.get(['entityDefs', scope, 'fields', field.slice(0, -2)]);

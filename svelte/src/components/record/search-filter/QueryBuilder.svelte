@@ -11,6 +11,7 @@
     import GeneralFilter from "./GeneralFilter.svelte";
     import {savedSearchStore} from "./stores/SavedSearch";
     import {generalFilterStore} from "./stores/GeneralFilter";
+    import {Config} from "../../../utils/Config";
 
     export let scope: string;
     export let searchManager: any;
@@ -43,14 +44,14 @@
         refreshShowUnsetAll();
     });
 
-   const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
+    const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
         refreshShowUnsetAll();
     });
 
-   const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
-       advancedFilterChecked = value;
-       refreshShowUnsetAll();
-   });
+    const advancedFilterCheckedSub = generalFilterStore.advancedFilterChecked.subscribe((value) => {
+        advancedFilterChecked = value;
+        refreshShowUnsetAll();
+    });
 
     function updateStyle(parentWidth: number) {
         let rules = [
@@ -101,6 +102,20 @@
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
+    function hyphenToCamelCase(str: string): string {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    }
+
+    function underscoreToCamelCase(str: string) {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase());
+    }
+
     function getRulesIds(rules: Rule[]) {
         let ids: string[] = [];
         rules.forEach(rule => {
@@ -116,29 +131,11 @@
         return ids;
     }
 
-    function getRulesWithBadRuleRemoved(rules: Rule[]): Rule[] {
-            let newRules: Rule[] = rules;
-            rules.forEach((rule, key) => {
-                if (rule.rules) {
-                    rules[key].rules  = getRulesWithBadRuleRemoved(rules[key].rules)
-                } else if (rule.id ) {
-                    if (!filters.find(f => f.id === rule.id)) {
-                        newRules = rules.filter(r => r.id !== rule.id)
-                    }
-                }
-            });
-        return newRules;
-    }
-
     function initQueryBuilderFilter() {
-
         const $queryBuilder = window.$(queryBuilderElement)
         let rules = searchManager.getQueryBuilder() || [];
-        if(typeof rules === 'object' && !rules.condition) {
+        if (typeof rules === 'object' && !rules.condition) {
             rules = [];
-        }
-        if(rules['rules']) {
-            rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
         }
 
         const emptyAttribute = 'emptyAttributeRule';
@@ -159,7 +156,7 @@
         if (hasAttribute()) {
             let attributeButton = {
                 id: emptyAttribute,
-                label: `[${Language.translate('addAttribute')}]`,
+                label: `[ ${Language.translate('addAttribute')} ]`,
                 type: 'boolean',
                 optgroup: Language.translate('Attributes'),
                 operators: ['equal',],
@@ -217,7 +214,6 @@
 
         });
 
-
         model.trigger('afterInitQueryBuilder');
         updateStyle(parentWidth);
         $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
@@ -264,6 +260,22 @@
         });
     }
 
+    function getFieldOrAttributeId(field: string) {
+        let id = field;
+        let parts = field.split('_')
+        if (parts.length >= 2 && parts[0] === 'attr') {
+            id = parts[1];
+            const endings = ["From", "To", "UnitId"];
+            for (const ending of endings) {
+                if (id.endsWith(ending)) {
+                    id = id.slice(0, -ending.length);
+                    break;
+                }
+            }
+        }
+        return id;
+    }
+
     function prepareFilters(callback: Function) {
 
         filters = filters.filter(item => item.id.startsWith('attr_'));
@@ -276,9 +288,7 @@
             }
 
             const fieldType = camelCaseToHyphen(fieldDefs.type);
-            const view = Metadata.get(['fields', fieldType, 'view']) || `views/fields/${fieldType}`;
-
-
+            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view'])  || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
                 createView(field, view, {
                     name: field,
@@ -290,7 +300,7 @@
                         }
                     },
                 }, view => {
-                    let filter = view.createQueryBuilderFilter();
+                    let filter = view.createQueryBuilderFilter(fieldDefs.type);
                     if (filter) {
                         filters.push(filter);
                     }
@@ -308,13 +318,12 @@
          */
         if (rules.rules) {
             promiseList.push(new Promise(resolve => {
-                let attributesIds = [];
+                let attributesIds: string[] = [];
                 getRulesIds(rules.rules).forEach(id => {
-                    let parts = id.split('_');
-                    if (parts.length === 2 && parts[0] === 'attr') {
-                        attributesIds.push(parts[1]);
+                    if (id.startsWith('attr_')) {
+                        attributesIds.push(getFieldOrAttributeId(id));
                     }
-                })
+                });
 
                 if (attributesIds.length > 0) {
                     const where = [{attribute: 'id', type: 'in', value: attributesIds}];
@@ -328,22 +337,22 @@
                     }).then(response => {
                         return response.json().then(attrs => {
                             // we clean up the rules to remove attribute rule if attribute does not exist anymore
-                           let hasChanged = cleanUpSavedRule((fieldId) => {
-                                let parts = fieldId.split('_');
-                                if (parts.length === 2 && parts[0] === 'attr') {
-                                   return !!attrs.list.find(v => v.id ===  parts[1]);
-                                }else{
+                            cleanUpSavedRule((fieldId: string) => {
+                                if (fieldId.startsWith('attr_')) {
+                                    return attrs.list.find(v => v.id === getFieldOrAttributeId(fieldId))
+                                } else {
                                     return true;
                                 }
                             });
 
-                           if(hasChanged) {
-                               updateCollection();
-                           }
                             if (attrs.list.length) {
+                                let resolved = []
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
-                                        resolve();
+                                        resolved.push(attribute.id);
+                                        if (resolved.length === attrs.list.length) {
+                                            resolve();
+                                        }
                                     })
                                 });
                             } else {
@@ -358,18 +367,17 @@
         }
 
         Promise.all(promiseList).then(() => {
-
             callback();
         });
     }
 
 
     function resetFilter() {
-        if(advancedFilterDisabled) {
+        if (advancedFilterDisabled) {
             return;
         }
-       advancedFilterChecked = false;
-       handleAdvancedFilterChecked(false)
+        advancedFilterChecked = false;
+        handleAdvancedFilterChecked(false)
         updateSearchManager({
             queryBuilder: []
         });
@@ -387,40 +395,96 @@
     }
 
     function pushAttributeFilter(attribute: any, callback: Function) {
-        const fieldType = window.Espo.Utils.camelCaseToHyphen(attribute.type);
-        const view = Metadata.get(['fields', fieldType, 'view']) ?? `views/fields/${fieldType}`;
-
+        let promises: Promise[] = []
+        let filterChanged = false;
+        const fieldType = camelCaseToHyphen(attribute.type);
         const name = `attr_${attribute.id}`;
+        const label = attribute.name;
+        const params: any = {
+            attribute
+        }
 
-        createView(name, view, {
-            name: name,
-            model: model,
-            defs: {
-                name: name,
-                params: {
-                    attribute: attribute
+        if (['extensibleEnum', 'extensibleMultiEnum'].includes(attribute.type)) {
+            params['extensibleEnumId'] = attribute.extensibleEnumId;
+        }
+
+        let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
+            return new Promise((resolve) => {
+                const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
+                let exitingFilter = filters.find(f => f.id === name);
+                if(exitingFilter) {
+                    resolve(exitingFilter);
+                }else{
+                    createView(name, view, {
+                        name: name,
+                        model: model,
+                        defs: {
+                            name: name,
+                            params: params
+                        },
+                    }, view => {
+                        let filter = view.createQueryBuilderFilter(attribute.type);
+                        if (filter) {
+                            filter.label = label;
+                            filter.optgroup = Language.translate('Attributes');
+                            filter.order = order;
+                            if (!filters.find(f => f.id === name)) {
+                                filters.push(filter);
+                                filterChanged = true;
+                                resolve(filter)
+                            }
+                        }
+                    });
                 }
-            },
-        }, view => {
-            let filter = view.createQueryBuilderFilter();
-            if (filter) {
-                filter.label = attribute.name;
-                filter.optgroup = Language.translate('Attributes');
-                let ids = filters.map(item => {
-                    return item.id
-                });
-                if (!ids.includes(name)) {
-                    filters.push(filter);
-                    callback(true, filter);
-                } else {
-                    callback(false, filter);
+            });
+        };
+
+        if (['rangeInt', 'rangeFloat'].includes(attribute.type)) {
+            let type = attribute.type === 'rangeInt' ? 'int' : 'float';
+            ['From', 'To'].forEach((v, key) => {
+                promises.push(createFieldView(name + v, type, label + ' ' + Language.translate(v), params, key));
+            })
+        } else if (attribute.isMultilang) {
+            let languages: string[] = Config.get('inputLanguageList') ?? [];
+            languages = ['main', ...languages];
+            let i = 0;
+            for (const language of languages) {
+                let currentLabel = label;
+                let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
+                if (language !== 'main') {
+                    currentLabel = currentLabel + ' / ' + language
                 }
+                promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
+                i++;
             }
-        });
+
+        } else {
+            promises.push(createFieldView(name, fieldType, label, params));
+        }
+
+        if (attribute.measureId) {
+
+            promises.push(createFieldView(name + 'UnitId', 'unit-link', label + ' ' + Language.translate('Unit'), {
+                ...params,
+                type: 'unit',
+                measureId: attribute.measureId
+            }, 2));
+        }
+
+        Promise.all(promises).then(newFilters => {
+            newFilters.sort((a, b) => a.order - b.order);
+            window.currentFilters = filters;
+            if(attribute.isMultilang) {
+                callback(filterChanged, [newFilters[0]]);
+            }else{
+                callback(filterChanged, newFilters);
+            }
+        })
+
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
+        return Acl.check('Attribute', 'read') && scope === 'Product';
     }
 
     function addAttributeFilter(callback) {
@@ -458,13 +522,14 @@
     }
 
     function unsetAll() {
-        if(!showUnsetAll) {
+        if (!showUnsetAll) {
             return;
         }
         searchManager.update({
             bool: {},
             savedFilters: [],
-            queryBuilderApplied: false
+            queryBuilderApplied: false,
+            advanced: []
         });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);
@@ -491,7 +556,7 @@
             queryBuilderApplied: advancedFilterChecked ? 'apply' : false
         });
 
-        if(refresh) {
+        if (refresh) {
             updateCollection();
         }
 
@@ -500,8 +565,8 @@
 
     async function saveSaveSearch(data, id = null): Promise<void> {
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
-        savedSearchStore.saveSavedSearch(data, id).then( data =>{
-            if(id !== null) {
+        savedSearchStore.saveSavedSearch(data, id).then(data => {
+            if (id !== null) {
                 cancelEditSearchQuery()
             }
             Notifier.notify(Language.translate('Done'), 'success');
@@ -512,7 +577,7 @@
     }
 
     function saveFilter() {
-        if(advancedFilterDisabled) {
+        if (advancedFilterDisabled) {
             return;
         }
         let validation = window.$(queryBuilderElement).queryBuilder('validate');
@@ -599,67 +664,71 @@
         let rules = searchManager.getQueryBuilder();
         advancedFilterDisabled = true;
 
-        if(typeof rules === 'object' && rules.condition) {
+        if (typeof rules === 'object' && rules.condition) {
             advancedFilterDisabled = isRuleEmpty(rules);
         }
 
         generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
 
-        if(advancedFilterDisabled) {
+        if (advancedFilterDisabled) {
             generalFilterStore.advancedFilterChecked.set(false);
             advancedFilterChecked = false;
         }
     }
 
     // return true the filter have been updates
-    function cleanUpSavedRule( exists: Function): boolean{
+    function cleanUpSavedRule(exists: Function): boolean {
         // we clean up to remove  fields that do not exist anymore
         let hasChanged = false;
-       let  cleanUpRule = (rule: Rule) => {
-           if(rule.rules) {
-               for (const rulesKey in rule.rules) {
-                   if(rule.rules[rulesKey].id) {
-                       if(!exists(rule)){
-                           hasChanged = true;
-                           rule.rules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
-                       }
-                   }
-
-                   if(rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
-                      cleanUpRule(rule.rules[rulesKey]);
-                   }
-               }
-           }
+        let cleanUpRule = (rule: Rule) => {
+            if (rule.rules) {
+                let newRules: Rule[] = [];
+                for (const rulesKey in rule.rules) {
+                    if (rule.rules[rulesKey].id) {
+                        if (!exists(rule.rules[rulesKey].id)) {
+                            hasChanged = true;
+                            newRules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
+                        }
+                    }
+                    if (rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
+                        cleanUpRule(rule.rules[rulesKey]);
+                    }
+                }
+                if (newRules.length !== rule.rules.length) {
+                    rule.rules = newRules;
+                }
+            }
         }
 
         let rule = searchManager.getQueryBuilder();
-       cleanUpRule(rule);
-       if(hasChanged) {
-           searchManager.update({queryBuilder: rule})
-       }
+        cleanUpRule(rule);
+        if (hasChanged) {
+            searchManager.update({queryBuilder: rule})
+        }
 
-       return hasChanged
+        return hasChanged
     }
+
     function refreshShowUnsetAll() {
-      refreshAdvancedFilterDisabled();
-       setTimeout(() => {
-           showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
-           let bool = searchManager.getBool();
-           for (const boolKey in bool) {
-               if(bool[boolKey]){
-                   showUnsetAll = true;
-                   break;
-               }
-           }
-       }, 100)
+        refreshAdvancedFilterDisabled();
+        setTimeout(() => {
+            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
+            let bool = searchManager.getBool();
+            for (const boolKey in bool) {
+                if (bool[boolKey]) {
+                    showUnsetAll = true;
+                    break;
+                }
+            }
+        }, 100)
     }
 
     function isRuleEmpty(rule: Rule): boolean {
-        if(rule.operator) {
-            return  false;
+        if (rule.operator) {
+            return false;
         }
 
-        if(!rule.rules) {
+        if (!rule.rules) {
             return true;
         }
 
@@ -687,17 +756,27 @@
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
             this.trigger('beforeUpdateRuleFilter', rule);
             if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
-                addAttributeFilter((pushed, filter) => {
+                addAttributeFilter((pushed, newFilters) => {
                     if (pushed) {
-                        this.setFilters(filters)
-                        rule.filter = filter;
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    } else {
-                        if (rule.filter.id === 'emptyAttributeRule') {
-                            rule.filter = previousFilter;
-                        }
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
+                        this.setFilters(filters);
                     }
+                    if (newFilters) {
+                        rule.filter = newFilters[0];
+                        if (newFilters.length > 1) {
+                            for (const newFilter of newFilters) {
+                                if (newFilter.id === rule.filter.id) {
+                                    continue;
+                                }
+
+                                let r = this.addRule(rule.parent);
+                                r.filter = newFilter;
+                            }
+                        }
+                    }
+                    if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
+                        rule.filter = previousFilter;
+                    }
+                    originalUpdateRuleFilter.call(this, rule, previousFilter);
                 })
             } else {
                 originalUpdateRuleFilter.call(this, rule, previousFilter);
@@ -707,7 +786,7 @@
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
         // show unset all
-       refreshShowUnsetAll();
+        refreshShowUnsetAll();
 
         prepareFilters(() => {
             initQueryBuilderFilter();
@@ -724,12 +803,12 @@
 <div class="query-builder-container">
     <div>
 
-        <button class="filter-item" data-action="filter"  class:disabled={!showUnsetAll} on:click={unsetAll}>
+        <button class="filter-item" data-action="filter" class:disabled={!showUnsetAll} on:click={unsetAll}>
             <i class="ph ph-x"></i>
             {Language.translate('Unset All')}
         </button>
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager} />
+    <GeneralFilter scope={scope} searchManager={searchManager}/>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -744,7 +823,8 @@
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
+            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked}
+                   on:change={(e) => handleAdvancedFilterChecked()}>
             <span>{Language.translate('Advanced Filter')}</span></h5>
         <div class="row filter-action">
             <button class="filter-item" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
@@ -803,12 +883,13 @@
         margin-top: 0;
         margin-right: 10px;
     }
+
     :global(.query-builder .input-group-btn .btn) {
-        height: 33px;
+        height: 32px;
         padding: 0;
     }
 
-    .filter-item.save.disabled, button.disabled,  button.disabled:hover{
+    .filter-item.save.disabled, button.disabled, button.disabled:hover {
         background-color: #eee;
         border-color: #eee;
         cursor: not-allowed;
