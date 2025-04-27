@@ -28,7 +28,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             if (this.options.params.showFullListFilter) {
                 searchManager.update({
                     queryBuilder: this.options.params.queryBuilder,
-                    queryBuilderApplied: 'apply'
+                    queryBuilderApplied: true
                 });
             }
 
