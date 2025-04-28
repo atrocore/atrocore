@@ -233,6 +233,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         self.notify(false);
 
                         this.listenTo(dialog, 'select', function (models) {
+
                             if (this.foreignScope !== 'File') {
                                 this.clearView('dialog');
                             }
@@ -710,7 +711,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope = attribute.entityType;
                     }
 
-                    let view = 'treo-core:views/fields/filtered-link-multiple';
+                    let view = 'views/fields/link-multiple';
                     if (type === 'extensibleMultiEnum') {
                         view = 'views/fields/extensible-multi-enum'
                     }
@@ -727,6 +728,20 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
                         view.getSelectFilters  = this.getSelectFilters.bind(this);
+                        view.getAutocompleteAdditionalWhereConditions = () => {
+                            let boolData = this.getBoolFilterData();
+                            // add boolFilter data
+                            if (boolData) {
+                                return [
+                                    {
+                                        'type': 'bool',
+                                        'data': boolData
+                                    }
+                                ];
+                            }
+
+                            return [];
+                        }
 
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
@@ -889,7 +904,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || value.length === 0) {
+                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
                             return 'bad float';
                         }
 
