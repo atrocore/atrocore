@@ -336,7 +336,6 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         return '';
                     }
 
-                    debugger
                     let addRealType = (type) => {
                         if (!rule.data) {
                             rule.data = {};
