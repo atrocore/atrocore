@@ -233,21 +233,20 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         self.notify(false);
 
                         this.listenTo(dialog, 'select', function (models) {
-
                             if (this.foreignScope !== 'File') {
                                 this.clearView('dialog');
                             }
-
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
                                     models.where = [{asc: true}]
                                 }
-                                this.addLinkSubQuery(models);
-                                let ids = this.ids;
                                 this.model.set(this.idsName, null);
                                 this.model.set(this.nameHashName, null);
-                                ids.forEach(id => this.deleteLink(id));
+                                this.ids = [];
+                                this.nameHash = [];
+                                this.reRender();
+                                this.addLinkSubQuery(models);
                                 this.trigger('change')
                                 return;
                             }
