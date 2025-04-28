@@ -226,7 +226,8 @@
                 const rules = $queryBuilder.queryBuilder('getRules');
                 if (rules) {
                     updateSearchManager({
-                        queryBuilder: rules
+                        queryBuilder: rules,
+                        advanced: []
                     });
                     handleAdvancedFilterChecked(false);
                 }
@@ -379,7 +380,8 @@
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false)
         updateSearchManager({
-            queryBuilder: []
+            queryBuilder: [],
+            advanced: []
         });
         window.$(queryBuilderElement).queryBuilder('setRules', []);
         updateCollection();

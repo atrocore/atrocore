@@ -807,6 +807,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.filterValue = null;
 
             let createViewField = (model) => {
+                this.clearView(inputName);
                 let operator = rule.operator.type;
                 if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
@@ -819,7 +820,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         foreignScope = attribute.entityType;
                     }
 
-                    this.createView(inputName, 'views/fields/link-multiple', {
+                    this.createView(inputName, 'treo-core:views/fields/filtered-link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
@@ -938,6 +939,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
+
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         rule.value = null;
@@ -970,6 +972,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if(this.getFilterName(type) !== rule.filter.id) {
                                 return;
                             }
+                            debugger
 
                             if (rule.data) {
                                 delete rule.data['subQuery'];

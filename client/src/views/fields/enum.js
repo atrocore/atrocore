@@ -645,7 +645,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     }
                     this.filterValue = null;
                     this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/multi-enum', {
+
+                        this.createView(inputName, 'views/fields/colored-multi-enum', {
                             name: 'value',
                             el: `#${rule.id} .field-container`,
                             model: model,
@@ -654,12 +655,13 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                                 name: 'value',
                                 params: {
                                     required: true,
-                                    optionsIds: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'optionsIds']) || [],
-                                    options: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'options']) || []
                                 }
                             },
                         }, view => {
+                            view.params.options = this.params.options ?? this.model.getFieldParam(this.name, 'options')
+                            view.params.optionColors = this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
                             view.translatedOptions = this.translatedOptions;
+
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');
