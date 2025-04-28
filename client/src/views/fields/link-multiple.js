@@ -905,7 +905,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 validation: {
                     callback: function (value, rule) {
                         if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
-                            return 'bad float';
+                            return 'bad list';
                         }
 
                         return true;

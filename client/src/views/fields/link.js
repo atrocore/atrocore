@@ -1015,7 +1015,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 validation: {
                     callback: function (value, rule) {
                         if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
-                            return 'bad float';
+                            return 'bad list';
                         }
 
                         return true;
