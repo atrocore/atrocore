@@ -14264,7 +14264,7 @@ button.category:focus {
     }
 
     .search-row .form-group {
-        margin-bottom: 10px;
+        margin-bottom: 0;
     }
 
     .search-row .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
@@ -18252,3 +18252,26 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .admin-page .row {
     margin-right: 0;
 }
+
+.modal-dialog .main-content {
+    display: flex;
+}
+
+.modal-dialog .main-content .middle-content {
+    flex-grow: 1;
+}
+
+.modal-dialog .main-content .middle-content .list > table {
+    table-layout: auto;
+}
+
+.modal-footer .btn-group .btn {
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+.modal-dialog .main-content .modal-footer {
+    align-items: center;
+}
+
+

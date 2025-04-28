@@ -237,12 +237,18 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (this.foreignScope !== 'File') {
                                 this.clearView('dialog');
                             }
+
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
                                     models.where = [{asc: true}]
                                 }
                                 this.addLinkSubQuery(models);
+                                let ids = this.ids;
+                                this.model.set(this.idsName, null);
+                                this.model.set(this.nameHashName, null);
+                                ids.forEach(id => this.deleteLink(id));
+                                this.trigger('change')
                                 return;
                             }
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
@@ -258,6 +264,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                     self.addLink(model.id, model.id);
                                 }
                             });
+
+                            this.deleteLinkSubQuery();
                         });
 
                         this.listenTo(dialog, 'unselect', id => {
@@ -727,7 +735,30 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         view.render();
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
-                        view.getSelectFilters  = this.getSelectFilters.bind(this);
+                        view.getSelectFilters  =  () => {
+                            let bool = {};
+                            let queryBuilder =  {
+                                condition: "AND",
+                                rules: [],
+                                valid: true
+                            }
+                            let subQuery = rule.data?.subQuery || [];
+                            subQuery.forEach(item => {
+                                if(item.type === 'bool') {
+                                    item.value.forEach(v => bool[v] = true);
+                                }
+
+                                if(item.condition) {
+                                    queryBuilder.rules.push(item);
+                                }
+                            });
+
+                            if(queryBuilder.rules.length === 1) {
+                                queryBuilder = queryBuilder.rules[0];
+                            }
+
+                            return {bool, queryBuilder}
+                        }
                         view.getAutocompleteAdditionalWhereConditions = () => {
                             let boolData = this.getBoolFilterData();
                             // add boolFilter data
@@ -773,11 +804,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids;
+                            this.filterValue = view.ids ?? model.get('valueIds');
                             if (!rule.data) {
                                 rule.data = {};
                             }
-                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
+                            rule.data['nameHash'] = view.nameHash ?? model.get('valueNameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);

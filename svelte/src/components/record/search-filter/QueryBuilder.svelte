@@ -9,14 +9,19 @@
     import {UserData} from "../../../utils/UserData";
     import SavedSearch from "./SavedSearch.svelte";
     import GeneralFilter from "./GeneralFilter.svelte";
-    import {savedSearchStore} from "./stores/SavedSearch";
-    import {generalFilterStore} from "./stores/GeneralFilter";
+    import {getSavedSearchStore} from "./stores/SavedSearch";
+    import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Config} from "../../../utils/Config";
 
     export let scope: string;
+
     export let searchManager: any;
+
     export let createView: Function;
+
     export let parentWidth: number;
+
+    export let uniqueKey: string = 'default';
 
     let filters: Array<any> = [];
 
@@ -37,6 +42,9 @@
     $: {
         updateStyle(parentWidth);
     }
+
+    let generalFilterStore = getGeneralFilterStore(uniqueKey);
+    let savedSearchStore = getSavedSearchStore(uniqueKey);
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
 
@@ -389,11 +397,7 @@
 
     function updateCollection() {
         Notifier.notify(Language.translate('loading', 'messages'));
-        searchManager.collection.reset();
-
-        searchManager.collection.where = searchManager.getWhere();
-        searchManager.collection.abortLastFetch();
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 
     function pushAttributeFilter(attribute: any, callback: Function) {
@@ -717,6 +721,9 @@
             showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
             let bool = searchManager.getBool();
             for (const boolKey in bool) {
+                if(searchManager.mandatoryBoolFilterList && searchManager.mandatoryBoolFilterList.includes(boolKey)){
+                    continue;
+                }
                 if (bool[boolKey]) {
                     showUnsetAll = true;
                     break;
@@ -810,7 +817,7 @@
             {Language.translate('Unset All')}
         </button>
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager}/>
+    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -820,6 +827,7 @@
                 remove={removeSaveSearch}
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
+                uniqueKey={uniqueKey}
         />
     {/if}
 

@@ -4,16 +4,22 @@
     import {Language} from  '../../../utils/Language'
     import {Metadata} from  '../../../utils/Metadata'
     import {Notifier} from  '../../../utils/Notifier'
-    import {generalFilterStore} from './stores/GeneralFilter'
+    import {getGeneralFilterStore} from './stores/GeneralFilter'
+   import {Acl} from "../../../utils/Acl";
     export let searchManager: any;
 
     export let scope: string;
+
+    export let uniqueKey: string = "default";
 
     let boolFilterList: string[] = [];
 
     let selectedBoolFilters: [] = [];
 
+    let generalFilterStore = getGeneralFilterStore(uniqueKey);
+
     initBoolFilter();
+
 
    const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
         if(value.length === selectedBoolFilters.length) {
@@ -24,11 +30,7 @@
 
     function updateCollection() {
         Notifier.notify(Language.translate('loading', 'messages'));
-        searchManager.collection.reset();
-
-        searchManager.collection.where = searchManager.getWhere();
-        searchManager.collection.abortLastFetch();
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 
     function toggleBoolFilter(filter: string){

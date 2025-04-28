@@ -1,19 +1,21 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onMount, tick} from "svelte";
     import {get} from "svelte/store";
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
     import SavedSearch from "../search-filter/SavedSearch.svelte"
     import GeneralFilter from "../search-filter/GeneralFilter.svelte";
-    import {generalFilterStore} from "../search-filter/stores/GeneralFilter"
-    import {savedSearchStore} from "../search-filter/stores/SavedSearch"
+    import {getGeneralFilterStore} from "../search-filter/stores/GeneralFilter"
+    import {getSavedSearchStore} from "../search-filter/stores/SavedSearch"
     import Rule from "../search-filter/interfaces/Rule";
     import {Metadata} from "../../../utils/Metadata";
 
 
     export let scope: string;
     export let searchManager: any;
-    export let hiddenBoolFilter: string[] = [];
+    export let mandatoryBoolFilter: string[] = [];
+    export let uniqueKey: string = 'default';
+    export let boolFilterData: any = {}
 
     let showUnsetAll: boolean = false;
     let filterNames: string = "";
@@ -21,6 +23,9 @@
     let advancedFilterChecked: boolean = searchManager.isQueryBuilderApplied();
     let dropdownButton: HTMLElement;
     let dropdownDiv: HTMLElement;
+
+    let generalFilterStore = getGeneralFilterStore(uniqueKey);
+    let savedSearchStore = getSavedSearchStore(uniqueKey);
 
     generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
@@ -52,6 +57,9 @@
             showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
             let bool = searchManager.getBool();
             for (const boolKey in bool) {
+                if(searchManager.mandatoryBoolFilterList && searchManager.mandatoryBoolFilterList.includes(boolKey)){
+                    continue;
+                }
                 if(bool[boolKey]){
                     showUnsetAll = true;
                     break;
@@ -62,23 +70,19 @@
 
 
     function updateCollection() {
-        searchManager.collection.reset();
         Notifier.notify(Language.translate('loading', 'messages'));
-
-        searchManager.collection.where = searchManager.getWhere();
-        searchManager.collection.abortLastFetch();
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 
     function  handleAdvancedFilterChecked(refresh = true) {
         generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
-        searchManager.update({queryBuilderApplied: advancedFilterChecked ? 'apply' : false});
+        searchManager.update({queryBuilderApplied: advancedFilterChecked});
         if(refresh) {
             updateCollection();
         }
     }
 
-    function unsetAll() {
+    export function unsetAll() {
         if(!showUnsetAll) {
             return;
         }
@@ -97,6 +101,7 @@
         window.dispatchEvent(new CustomEvent('filter:unset-all'));
     }
 
+
     function updateSelectedFilterNames() {
         let boolFilters = get(generalFilterStore.selectBoolFilters).map((filter) => {
             return Language.translate(filter, 'boolFilters', scope);
@@ -107,6 +112,7 @@
             .map(item => item.name);
 
         filterNames =  boolFilters.concat(selectedSavedSearchNames).join(', ').trim();
+        tick();
     }
 
     function refreshAdvancedFilterDisabled() {
@@ -221,8 +227,8 @@
                         <i class="ph ph-caret-down chevron"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <GeneralFilter scope={scope} searchManager={searchManager} />
-                        <SavedSearch scope={scope} searchManager={searchManager} hideRowAction={true}/>
+                        <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
+                        <SavedSearch scope={scope} searchManager={searchManager} hideRowAction={true} uniqueKey={uniqueKey}/>
                         <ul class="advanced-checkbox">
                             <li class="checkbox">
                                 <label>

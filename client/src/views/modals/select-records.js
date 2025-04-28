@@ -50,7 +50,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         noCreateScopeList: ['User', 'Team', 'Role'],
 
-        className: 'dialog dialog-record dialog-select-record',
+        className: 'dialog dialog-record dialog-select-record full-page-modal',
 
         boolFilterData: {},
 
@@ -75,6 +75,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
         maxSize: null,
 
         fullHeight: true,
+
+        hasRightSideView: true,
 
         data: function () {
             return {
@@ -179,9 +181,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.header = iconHtml + this.header;
 
             this.waitForView('list');
-            if (this.searchPanel) {
-                this.waitForView('search');
-            }
+
+
 
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
@@ -190,7 +191,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 this.defaultSortBy = collection.sortBy;
                 this.defaultAsc = collection.asc;
 
-                this.loadSearch();
+                this.setupSearch();
                 this.wait(true);
                 this.loadList();
             }, this);
@@ -230,16 +231,17 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.toggleViewType();
         },
 
-        loadSearch: function () {
+        setupSearch: function () {
             var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
             searchManager.emptyOnReset = true;
             if (this.filters) {
-                searchManager.setAdvanced(this.filters);
+                searchManager.update(this.filters);
             }
+
 
             var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
             if (boolFilterList) {
-                var d = {};
+                var d = searchManager.getBool();
                 boolFilterList.forEach(function (item) {
                     d[item] = true;
                 });
@@ -266,39 +268,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
             this.collection.whereAdditional = this.options.whereAdditional || [];
 
-            if (this.searchPanel) {
-                let hiddenBoolFilterList = this.getMetadata().get(`clientDefs.${this.scope}.hiddenBoolFilterList`) || [];
-                let searchView = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.search`) || this.searchView;
-
-                this.createView('search', searchView, {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .search-container',
-                    searchManager: searchManager,
-                    disableSavePreset: this.disableSavePreset,
-                    hiddenBoolFilterList: hiddenBoolFilterList,
-                    boolFilterData: this.boolFilterData,
-                    selectRecordsView: this,
-                }, function (view) {
-                    view.render();
-                    this.listenTo(view, 'reset', function () {
-                        this.collection.sortBy = this.defaultSortBy;
-                        this.collection.asc = this.defaultAsc;
-                    }, this);
-
-                    this.listenTo(this, 'change-view', e => {
-                        view.resetFilters();
-                        this.changeView(e);
-                    });
-
-                    this.listenTo(view, 'after:render', e => {
-                        view.toggleSearchFilters(this.getSelectedViewType());
-                    });
-
-                    this.listenTo(this, 'after:toggleViewType', viewType => {
-                        view.toggleSearchFilters(viewType);
-                    });
-                });
-            }
+            this.listenTo(this, 'change-view', e => {
+                if(window['SvelteFilterSearchBar'+this.dialog.id]) {
+                    window['SvelteFilterSearchBar'+this.dialog.id].reset();
+                }
+                this.changeView(e);
+            });
         },
 
         loadList: function () {
@@ -423,6 +398,42 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     </div>`
                 );
             }
+
+            this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
+            this.searchManager.boolFilterData = this.boolFilterData;
+
+            if(window['SvelteFilterSearchBar'+this.dialog.id]) {
+                try{
+                    window['SvelteFilterSearchBar'+this.dialog.id].$destroy();
+                }catch (e) {
+                }
+            }
+
+            window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
+                target: document.querySelector('.modal-dialog .modal-footer .extra-content'),
+                props: {
+                    showFilter: this.searchPanel && this.getMetadata(['scopes', this.scope, 'type']) !== 'ReferenceData',
+                    showSearchPanel: this.searchPanel,
+                    scope: this.scope,
+                    searchManager: this.searchManager,
+                    uniqueKey: this.dialog.id
+                }
+            });
+
+            new Svelte.RightSideView({
+                target: document.querySelector('.modal-dialog .main-content .right-content'),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'list',
+                    isCollapsed: false,
+                    useStorage: false,
+                    searchManager: this.searchManager,
+                    createView: this.createView.bind(this),
+                    showFilter: true,
+                    uniqueKey: this.dialog.id
+                }
+            });
 
         },
 
