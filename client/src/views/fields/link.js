@@ -828,14 +828,17 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
-
+                        view.getSelectFilters  = this.getSelectFilters.bind(this);
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
+
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
                         }
+
+                        view.linkMultiple = this.chooseMultipleOnSearch();
 
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
@@ -856,7 +859,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         });
 
                         this.listenTo(view, 'change', () => {
-                            console.log('input ')
                             this.filterValue = view.ids ?? model.get('valueIds');
                             if (!rule.data) {
                                 rule.data = {};
@@ -912,12 +914,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter(type = null) {
-            let name = this.name;
-            if (!name.includes('attr_') && type !== 'extensibleEnum') {
-                name = this.name + 'Id'
-            }
             return {
-                id: name,
+                id: this.getFilterName(type),
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
@@ -969,6 +967,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 return;
                             }
 
+                            if(this.getFilterName(type) !== rule.filter.id) {
+                                return;
+                            }
+
                             if (rule.data) {
                                 delete rule.data['subQuery'];
                             }
@@ -1005,6 +1007,18 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             };
         },
+
+        chooseMultipleOnSearch: function () {
+            return true;
+        },
+
+        getFilterName(type = null) {
+            let name = this.name;
+            if (!name.includes('attr_') && type !== 'extensibleEnum') {
+                name = this.name + 'Id'
+            }
+            return name;
+        }
 
     });
 });

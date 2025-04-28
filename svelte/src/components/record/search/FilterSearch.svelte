@@ -85,7 +85,8 @@
         searchManager.update({
             bool: {},
             savedFilters: [],
-            queryBuilderApplied: false
+            queryBuilderApplied: false,
+            advanced: []
         });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);

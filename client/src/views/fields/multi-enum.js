@@ -336,6 +336,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         return '';
                     }
 
+                    debugger
                     let addRealType = (type) => {
                         if (!rule.data) {
                             rule.data = {};
@@ -387,6 +388,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                                 }
                             },
                         }, view => {
+                            view.translatedOptions = this.translatedOptions;
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');

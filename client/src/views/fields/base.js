@@ -1174,6 +1174,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.getModelFactory().create(null, model => {
                     setTimeout(() => {
                         let view =  `views/fields/${this.type}`
+
                         if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
                             view = 'views/fields/varchar';
                         }
@@ -1182,6 +1183,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             el: `#${rule.id} .field-container.${inputName}`,
                             model: model,
                             mode: 'edit',
+                            params: {
+                                notNull: true
+                            }
                         }, view => {
                             view.render();
 

@@ -288,9 +288,7 @@
             }
 
             const fieldType = camelCaseToHyphen(fieldDefs.type);
-            const view = Metadata.get(['fields', fieldType, 'view']) || `views/fields/${fieldType}`;
-
-
+            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view'])  || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
                 createView(field, view, {
                     name: field,
@@ -412,7 +410,7 @@
 
         let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
             return new Promise((resolve) => {
-                const view = Metadata.get(['fields', fieldType, 'view']) ?? `views/fields/${fieldType}`;
+                const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
                 let exitingFilter = filters.find(f => f.id === name);
                 if(exitingFilter) {
                     resolve(exitingFilter);
@@ -530,7 +528,8 @@
         searchManager.update({
             bool: {},
             savedFilters: [],
-            queryBuilderApplied: false
+            queryBuilderApplied: false,
+            advanced: []
         });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);

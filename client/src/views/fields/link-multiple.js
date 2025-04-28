@@ -724,15 +724,19 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         view.render();
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
+                        view.getSelectFilters  = this.getSelectFilters.bind(this);
+
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
                         }
+
                         if (rule.data && rule.data['subQuery']) {
                             let data = {where: rule.data['subQuery']};
                             view.addLinkSubQuery(data, true);
                         }
+
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if (!rule.data) {
@@ -855,6 +859,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                              if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                                  return;
                              }
+
+                             if(this.name !== rule.filter.id) {
+                                 return;
+                             }
+
                              if(rule.operator.type === this.initialOperatorType[inputName]) {
                                  this.initialOperatorType[inputName] = null;
                                  return;
