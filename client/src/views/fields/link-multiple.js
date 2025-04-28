@@ -361,6 +361,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 boolList = this.getSelectBoolFilterList(),
                 where = [];
 
+
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
@@ -697,6 +698,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.setTimeoutFunction = {}
             }
             let createViewField = (model) => {
+                this.clearView(inputName);
                 let operator = rule.operator.type;
                 if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
@@ -708,7 +710,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope = attribute.entityType;
                     }
 
-                    let view = 'views/fields/link-multiple';
+                    let view = 'treo-core:views/fields/filtered-link-multiple';
                     if (type === 'extensibleMultiEnum') {
                         view = 'views/fields/extensible-multi-enum'
                     }
@@ -838,6 +840,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
+
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         if (type === 'extensibleMultiEnum') {
@@ -853,6 +856,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                         }
                     }.bind(this);
+
                      if(!this.isNotListeningToOperatorChange[inputName]) {
                         rule.$el.find('.rule-operator-container select').on('change', callback);
                          this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
@@ -885,7 +889,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || value === null) {
+                        if (!Array.isArray(value) || value.length === 0) {
                             return 'bad float';
                         }
 
