@@ -402,7 +402,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
-
             if(window['SvelteFilterSearchBar' + this.dialog.id]) {
                 try{
                     window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
