@@ -1,7 +1,7 @@
 {
   "controller": "controllers/file",
   "createDisabled": true,
-  "iconClass": "file_present",
+  "iconClass": "file",
   "plateViewMode": true,
   "boolFilterList": [
     "onlyMy",

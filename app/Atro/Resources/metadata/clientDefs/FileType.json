@@ -1,6 +1,6 @@
 {
   "controller": "controllers/record",
-  "iconClass": "flowsheet",
+  "iconClass": "files",
   "boolFilterList": [
     "onlyMy"
   ],

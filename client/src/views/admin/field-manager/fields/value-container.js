@@ -29,6 +29,13 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     this.reRender();
                 }
             });
+
+            this.listenTo(this.model, 'change:notNull', () => {
+                if (this.mode === 'edit' && this.model.get('type') === 'bool') {
+                    this.model.set('value', null);
+                    this.reRender();
+                }
+            });
         },
 
         afterRender() {
@@ -53,6 +60,10 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     required: false,
                     readOnly: false
                 };
+
+                if(type === 'bool') {
+                    params.notNull = this.model.get('notNull') ?? false;
+                }
 
                 let options = {
                     el: `${this.options.el} > .field[data-name="valueField"]`,

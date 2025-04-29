@@ -1,4 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "tile_small"
+  "iconClass": "layout"
 }

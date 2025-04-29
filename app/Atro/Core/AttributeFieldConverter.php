@@ -123,18 +123,19 @@ class AttributeFieldConverter
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
             foreach ($entity->_originalInput as $field => $value) {
-                if (preg_match('/^attr_(.*)_attr/', $field, $matches)) {
-                    if (in_array($matches[1], array_column($res, 'id'))) {
+                $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityType()}.fields.{$field}.attributeId");
+                if ($attributeId) {
+                    if (in_array($attributeId, array_column($res, 'id'))) {
                         continue;
                     }
                     $attr = $this->conn->createQueryBuilder()
                         ->select('*')
                         ->from($this->conn->quoteIdentifier('attribute'))
                         ->where('id=:id')
-                        ->setParameter('id', $matches[1])
+                        ->setParameter('id', $attributeId)
                         ->fetchAssociative();
                     if (!empty($attr)) {
-                        $res[] = array_merge($attr, ['entity_id' => $matches[2]]);
+                        $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
                     }
                 }
             }

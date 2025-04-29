@@ -416,7 +416,22 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function(value, rule) {
+                        if(rule.operator.type ==='between') {
+                            if((!Array.isArray(value) || value.length !== 2)) {
+                                return 'bad between';
+                            }
+                            return  true;
+                        }
+
+                        if(value === null) {
+                            return 'bad int';
+                        }
+                        return true;
+                    }
+                }
             };
         },
 

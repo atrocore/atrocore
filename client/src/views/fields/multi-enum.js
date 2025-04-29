@@ -335,9 +335,45 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     if (!rule || !inputName) {
                         return '';
                     }
+
+                    let addRealType = (type) => {
+                        if (!rule.data) {
+                            rule.data = {};
+                        }
+                        switch (type) {
+                            case 'in': rule.data['operatorType'] = 'arrayAnyOf'; break;
+                            case 'not_in': rule.data['operatorType'] = 'arrayNoneOf'; break;
+                            case 'is_null': rule.data['operatorType'] = 'arrayIsEmpty'; break;
+                            case 'is_not_null': rule.data['operatorType'] = 'arrayIsNotEmpty'; break;
+                        }
+                    }
+
+                    if(!this.isNotListeningToOperatorChange) {
+                        this.isNotListeningToOperatorChange = {}
+                    }
+
+                    addRealType(rule.operator.type);
+                    if(!this.isNotListeningToOperatorChange[inputName]) {
+                        const callback = function (e) {
+                            addRealType(e.target.value);
+                        }.bind(this);
+                        rule.$el.find('.rule-operator-container select').on('change', callback);
+                        this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                            if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                                return;
+                            }
+                            let view = this.getView(inputName);
+                            if(['in', 'not_in'].includes(rule.operator.type)){
+                                this.filterValue = view.model.get('value');
+                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                            }
+                        });
+                        this.isNotListeningToOperatorChange[inputName] = true;
+                    }
+
                     this.filterValue = null;
                     this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/multi-enum', {
+                        this.createView(inputName, 'views/fields/colored-multi-enum', {
                             name: 'value',
                             el: `#${rule.id} .field-container`,
                             model: model,
@@ -345,12 +381,13 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             defs: {
                                 name: 'value',
                                 params: {
-                                    required: true,
-                                    optionsIds: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'optionsIds']) || [],
-                                    options: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'options']) || []
+                                    required: true
                                 }
                             },
                         }, view => {
+                            view.params.options = this.params.options ?? this.model.getFieldParam(this.name, 'options')
+                            view.params.optionColors = this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
+                            view.translatedOptions = this.translatedOptions;
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');
@@ -363,7 +400,15 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     });
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(!Array.isArray(value) || value.length === 0) {
+                            return 'bad array';
+                        }
+                        return true;
+                    }
+                }
             };
         },
 

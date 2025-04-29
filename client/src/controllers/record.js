@@ -65,12 +65,45 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
             let icon = View.prototype.getTabIcon.call(this, this.name),
                 defaultIcon = View.prototype.getDefaultTabIcon.call(this, this.name);
 
-            if (icon) {
-                return icon;
-            }
+            let result = icon || defaultIcon;
+            if (result && result.endsWith('.svg')) {
+                const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+                let encodedResult = null;
 
-            if (defaultIcon) {
-                return defaultIcon;
+                try {
+                    const xhr = new XMLHttpRequest();
+
+                    xhr.open('GET', result, false);
+                    xhr.setRequestHeader('Cache-Control', 'no-cache');
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            const parser = new DOMParser();
+                            const svgDoc = parser.parseFromString(xhr.responseText, 'image/svg+xml');
+                            const svgEl = svgDoc.documentElement;
+
+                            if (darkThemeMq.matches) {
+                                svgEl.setAttribute('fill', '#ffffff');
+                                svgEl.style.color = '#ffffff';
+                            } else {
+                                svgEl.setAttribute('fill', '#000000');
+                                svgEl.style.color = '#000000';
+                            }
+
+                            const serializer = new XMLSerializer();
+                            const svgStr = serializer.serializeToString(svgEl);
+                            const svgBlob = new Blob([svgStr], {type: 'image/svg+xml'});
+
+                            encodedResult = URL.createObjectURL(svgBlob);
+                        }
+                    };
+                    xhr.send();
+
+                    return encodedResult || result;
+                } catch (e) {
+                    return result;
+                }
+            } else if (result) {
+                return result;
             }
 
             return Dep.prototype.getTabIcon.call(this);

@@ -1,4 +1,4 @@
 {
-  "iconClass": "share",
+  "iconClass": "share-network",
   "controller": "controllers/record"
 }

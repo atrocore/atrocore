@@ -249,6 +249,46 @@
         {
           "name": "tooltipLink"
         }
+      ],
+      [
+        {
+          "name": "auditableEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "auditableDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isNonComparable"
+        },
+        {
+          "name": "isUninheritableField"
+        }
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isDuplicatableRelation"
+        },
+        {
+          "name": "isUninheritableRelation"
+        }
+      ],
+      [
+        {
+          "name": "modifiedExtendedEnabled"
+        },
+        false
       ]
     ]
   },
