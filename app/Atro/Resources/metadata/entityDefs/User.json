@@ -313,10 +313,6 @@
   },
   "collection": {
     "sortBy": "userName",
-    "asc": true,
-    "textFilterFields": [
-      "name",
-      "userName"
-    ]
+    "asc": true
   }
 }

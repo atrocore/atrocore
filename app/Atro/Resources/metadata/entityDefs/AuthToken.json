@@ -72,11 +72,7 @@
   },
   "collection": {
     "sortBy": "lastAccess",
-    "asc": false,
-    "textFilterFields": [
-      "ipAddress",
-      "userName"
-    ]
+    "asc": false
   },
   "indexes": {
     "token": {
