@@ -1226,6 +1226,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.refreshLayout();
                     }
                 });
+
+                this.listenTo(window.Backbone, 'change:additional-languages', (value) => {
+                    this.getUser().set('additionalLanguages', value)
+                    this.refreshLayout()
+                })
             }
         },
 
@@ -1376,7 +1381,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             const fieldFilter = this.getStorage().get('fieldFilter', this.scope) || ['allValues'];
-            const languageFilter = this.getStorage().get('languageFilter', this.scope) || ['allLanguages'];
 
             $.each(this.getFieldViews(), (name, fieldView) => {
                 name = fieldView.name || name
@@ -1411,31 +1415,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
 
-                if (!languageFilter.includes('allLanguages')) {
-                    // for languages
-                    if (!hide && this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                        let fieldLanguage = fieldView.model.getFieldParam(name, 'multilangLocale');
-
-                        if (!languageFilter.includes(fieldLanguage ?? 'main')) {
-                            hide = true;
-                        }
-
-                        if (!hide && this.isUniLingualField(name, fieldLanguage)) {
-                            hide = true
-                        }
-
-                        if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(name, fieldLanguage)) {
-                            hide = false;
-                        }
-
-                    }
-                }
-
                 this.controlFieldVisibility(fieldView, hide);
             });
-        },
-        isUniLingualField(name, fieldLanguage) {
-            return !(this.getMetadata().get(`entityDefs.${this.scope}.fields.${name}.isMultilang`) || fieldLanguage !== null);
         },
 
         isEmptyValue(value) {
@@ -1945,28 +1926,82 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }.bind(this));
         },
 
+        getUserLanguages() {
+            const user = this.getUser()
+            let languages = user.get('additionalLanguages') || []
+            let userLocale = this.getConfig().get('locales')[user.get('localeId')]
+            if (!userLocale) {
+                userLocale = this.getConfig().get('locales')[this.getConfig().get('locale')]
+            }
+
+            const systemLanguages = this.getConfig().get('inputLanguageList')
+            const mainLocale = this.getConfig().get('locales').main
+            systemLanguages.push(mainLocale.code)
+
+            if (userLocale && systemLanguages.includes(userLocale.code)) {
+                languages.unshift(userLocale.code)
+            } else {
+                languages.unshift(mainLocale.code)
+            }
+
+            // remove duplicates
+            languages = languages.filter((item, index) => languages.indexOf(item) === index)
+            const result = []
+            languages.forEach(code => {
+                if (systemLanguages.includes(code)) {
+                    if (code === mainLocale.code) {
+                        result.push('')
+                    } else {
+                        result.push(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''))
+                    }
+                }
+            })
+
+            if (result.length === 0) {
+                result.push('')
+            }
+
+            return result
+        },
+
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let layoutRows = [];
                 let layoutRow = [];
 
+                const pushItem = (name, defs) => {
+                    let item = {
+                        name: name,
+                        customLabel: defs.detailViewLabel || defs.label,
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                    }
+                    if (defs.layoutDetailView) {
+                        item.view = defs.layoutDetailView;
+                    }
+
+                    layoutRow.push(item);
+                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
+                        layoutRows.push(layoutRow);
+                        layoutRow = [];
+                    }
+                }
+
                 if (!this.model.isNew()) {
                     $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
                         this.model.defs['fields'][name] = defs;
                         if (!defs.layoutDetailDisabled) {
-                            let item = {
-                                name: name,
-                                customLabel: defs.detailViewLabel || defs.label,
-                                fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                            if (defs.multilangField) {
+                                return
                             }
-                            if (defs.layoutDetailView) {
-                                item.view = defs.layoutDetailView;
+
+                            if (defs.isMultilang) {
+                                this.getUserLanguages().forEach(code => {
+                                    pushItem(name + code, this.model.get('attributesDefs')[name + code])
+                                })
+                                return;
                             }
-                            layoutRow.push(item);
-                            if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                                layoutRows.push(layoutRow);
-                                layoutRow = [];
-                            }
+
+                            pushItem(name, defs)
                         }
                     });
                 }

@@ -16,10 +16,13 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
+use Atro\Entities\User;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
 
@@ -132,6 +135,10 @@ class LayoutManager
         // remove fields from layout if this fields not exist in metadata
         $layout = $this->disableNotExistingFields($scope, $relatedEntity, $relatedLink, $viewType, $layout);
 
+        if (empty($isAdminPage) && in_array($viewType, ['list', 'detail'])) {
+            $layout = $this->injectMultiLanguageFields($layout, $viewType, $scope, $relatedEntity, $relatedLink);
+        }
+
         if ($viewType === 'list') {
             foreach ($layout as $k => $row) {
                 if (!empty($row['name']) && empty($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
@@ -163,6 +170,19 @@ class LayoutManager
             'selectedProfileId' => empty($selectedProfileId) ? null : $selectedProfileId,
             'canEdit'           => empty($layoutProfile) ? false : $this->getAcl()->check($layoutProfile, 'edit')
         ];
+    }
+
+    public function getRelationScope(string $scope, ?string $relatedScope, ?string $relatedLink): ?string
+    {
+        $relationScope = null;
+        if (!empty($relatedLink)) {
+            $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
+            if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
+                $relationScope = ucfirst($linkData['relationName']);
+            }
+        }
+
+        return $relationScope;
     }
 
 
@@ -393,10 +413,6 @@ class LayoutManager
             }
         }
 
-        if ($name === 'detail') {
-            $data = $this->injectMultiLanguageFields($data, $scope);
-        }
-
         return [$data, null];
     }
 
@@ -465,96 +481,95 @@ class LayoutManager
         return $data;
     }
 
-    protected function injectMultiLanguageFields(array $data, string $scope): array
+    protected function injectMultiLanguageFields(array $data, string $viewType, string $scope, ?string $relatedEntity, ?string $relatedLink): array
     {
-        if (empty($multiLangFields = $this->getMultiLangFields($scope))) {
+        $multiLangFields = $this->getMultiLangFields($scope);
+        $relationScope = $this->getRelationScope($scope, $relatedEntity, $relatedLink);
+        if (!empty($relationScope)) {
+            $multiLangFields = array_merge($multiLangFields, $this->getMultiLangFields($relationScope));
+        }
+
+        if (empty($multiLangFields)) {
             return $data;
         }
 
-        $exists = [];
-        foreach ($data as $k => $panel) {
-            // skip if no rows
-            if (empty($panel['rows'])) {
-                continue 1;
-            }
-            foreach ($panel['rows'] as $row) {
-                foreach ($row as $field) {
-                    if (!empty($field['name'])) {
-                        $exists[] = $field['name'];
-                    }
-                }
-            }
-        }
-
         $result = [];
-        foreach ($data as $k => $panel) {
-            $result[$k] = $panel;
 
-            if (isset($panel['rows']) || !empty($panel['rows'])) {
-                $rows = [];
-                $skip = false;
+        if ($viewType === 'detail') {
+            foreach ($data as $k => $panel) {
+                $result[$k] = $panel;
 
-                foreach ($panel['rows'] as $key => $row) {
-                    if ($skip) {
-                        $skip = false;
-                        continue;
-                    }
+                if (isset($panel['rows']) || !empty($panel['rows'])) {
+                    $rows = [];
+                    $skip = false;
 
-                    $newRow = [];
-                    $fullWidthRow = count($row) == 1;
+                    foreach ($panel['rows'] as $key => $row) {
+                        if ($skip) {
+                            $skip = false;
+                            continue;
+                        }
 
-                    foreach ($row as $field) {
-                        $newRow[] = $field;
+                        $newRow = [];
+                        $fullWidthRow = count($row) == 1;
 
-                        if (is_array($field) && in_array($field['name'], $multiLangFields)) {
-                            $localeFields = $this->getMultiLangLocalesFields($field['name']);
+                        foreach ($row as $field) {
+                            $newRow[] = $field;
 
-                            if (!empty($needToAdd = array_diff($localeFields, $exists))) {
-                                $nextRow = $key != count($panel['rows']) - 1 ? $panel['rows'][$key + 1] : null;
+                            if (is_array($field) && in_array($field['name'], $multiLangFields)) {
+                                array_pop($newRow);
+                                $localeFields = $this->getMultiLangLocalesFields($field['name']);
 
-                                if (!$fullWidthRow && !empty($nextRow)) {
-                                    if (in_array(false, $nextRow)) {
-                                        $item = null;
-                                        foreach ($nextRow as $f) {
-                                            if (is_array($f)) {
-                                                $item = $f;
+                                if (!empty($needToAdd = $localeFields)) {
+                                    $nextRow = $key != count($panel['rows']) - 1 ? $panel['rows'][$key + 1] : null;
+
+                                    if (!$fullWidthRow && !empty($nextRow)) {
+                                        if (in_array(false, $nextRow)) {
+                                            $item = null;
+                                            foreach ($nextRow as $f) {
+                                                if (is_array($f)) {
+                                                    $item = $f;
+                                                }
                                             }
                                         }
-
-                                        if (in_array($item['name'], $localeFields)) {
-                                            $newField = $field;
-                                            $newField['name'] = array_shift($needToAdd);
-                                            $newRow[] = $newField;
-                                            $newRow[] = $item;
-
-                                            $skip = true;
-                                        }
                                     }
-                                }
 
-                                foreach ($needToAdd as $item) {
-                                    $newField = $field;
-                                    $newField['name'] = $item;
-                                    $newRow[] = $newField;
+                                    foreach ($needToAdd as $item) {
+                                        $newField = $field;
+                                        $newField['name'] = $item;
+                                        $newRow[] = $newField;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if (!$fullWidthRow && count($newRow) % 2 != 0) {
-                        if ($newRow[count($newRow) - 1] === false) {
-                            array_pop($newRow);
-                        } else {
-                            $newRow[] = false;
+                        if (!$fullWidthRow && count($newRow) % 2 != 0) {
+                            if ($newRow[count($newRow) - 1] === false) {
+                                array_pop($newRow);
+                            } else {
+                                $newRow[] = false;
+                            }
                         }
+
+                        $rows = array_merge($rows, array_chunk($newRow, $fullWidthRow ? 1 : 2));
                     }
 
-                    $rows = array_merge($rows, array_chunk($newRow, $fullWidthRow ? 1 : 2));
+                    $result[$k]['rows'] = $rows;
                 }
-
-                $result[$k]['rows'] = $rows;
             }
         }
+
+        if ($viewType === 'list') {
+            foreach ($data as $field) {
+                if (is_array($field) && in_array($field['name'], $multiLangFields)) {
+                    foreach ($this->getMultiLangLocalesFields($field['name']) as $localeField) {
+                        $result[] = array_merge($field, ['name' => $localeField]);
+                    }
+                } else {
+                    $result[] = $field;
+                }
+            }
+        }
+
 
         return $result;
     }
@@ -572,12 +587,56 @@ class LayoutManager
         return $result;
     }
 
+
+    public static function getSystemMainLocaleCode(Config $config)
+    {
+        foreach ($config->get('languages') ?? [] as $language) {
+            if ($language['role'] === 'main') {
+                return $language['code'];
+            }
+        }
+
+        return 'en_US';
+    }
+
+    public static function getUserLanguages(User $user, EntityManager $entityManager, Config $config): array
+    {
+        $locales = $user->get('additionalLanguages');
+        if (!is_array($locales)) {
+            $locales = [];
+        }
+
+        $userLocale = $entityManager->getEntity('Locale', $user->get('localeId'));
+        if (empty($userLocale)) {
+            $userLocale = $entityManager->getEntity('Locale', $config->get('locale'));
+        }
+
+
+        $systemLocales = $config->get('inputLanguageList', []);
+        $mainLocaleCode = self::getSystemMainLocaleCode($config);
+        $systemLocales[] = $mainLocaleCode;
+
+        if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
+            array_unshift($locales, $userLocale->get('code'));
+        } else {
+            array_unshift($locales, $mainLocaleCode);
+        }
+
+        return array_unique(array_intersect($locales, $systemLocales));
+    }
+
     protected function getPreparedLocalesCodes(): array
     {
         $result = [];
 
-        foreach ($this->getConfig()->get('inputLanguageList', []) as $locale) {
-            $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+        $mainLocaleCode = self::getSystemMainLocaleCode($this->getConfig());
+
+        foreach (self::getUserLanguages($this->getUser(), $this->getEntityManager(), $this->getConfig()) as $locale) {
+            if ($locale === $mainLocaleCode) {
+                $result[] = '';
+            } else {
+                $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
+            }
         }
 
         return $result;
@@ -595,7 +654,7 @@ class LayoutManager
     }
 
     /**
-     * Disable fields from layout if this fields not exist in metadata
+     * Disable fields from layout if this fields are multilang or not exist in metadata
      *
      * @param string $scope
      * @param string $name
@@ -611,12 +670,13 @@ class LayoutManager
         // check if entityDefs exists
         if (!empty($entityDefs)) {
             // get fields for entity
-            $fields = array_keys($entityDefs['fields']);
+            $fields = array_keys(array_filter($entityDefs['fields'], fn($defs) => empty($defs['multilangField'])));
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
                 $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
                     $relationScope = ucfirst($linkData['relationName']);
-                    $relationFields = array_keys($this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? []);
+                    $relationFields = $this->getMetadata()->get(['entityDefs', $relationScope, 'fields']) ?? [];
+                    $relationFields = array_keys(array_filter($relationFields, fn($defs) => empty($defs['multilangField'])));
                     $relationFields[] = 'id';
                     $relationFields = array_map(fn($f) => "{$relationScope}__{$f}", $relationFields);
                     $fields = array_merge($fields, $relationFields);
@@ -668,7 +728,7 @@ class LayoutManager
         return $this->container->get('metadata');
     }
 
-    protected function getConfig(): \Espo\Core\Utils\Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }
@@ -678,7 +738,7 @@ class LayoutManager
         return $this->container->get('entityManager');
     }
 
-    protected function getUser(): \Espo\Entities\User
+    protected function getUser(): User
     {
         return $this->container->get('user');
     }

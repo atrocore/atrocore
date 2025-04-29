@@ -839,6 +839,32 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }
                         }
 
+                        view.getSelectFilters  =  () => {
+                            let bool = {};
+                            let queryBuilder =  {
+                                condition: "AND",
+                                rules: [],
+                                valid: true
+                            }
+                            let subQuery = rule.data?.subQuery || [];
+                            subQuery.forEach(item => {
+                                if(item.type === 'bool') {
+                                    item.value.forEach(v => bool[v] = true);
+                                }
+
+                                if(item.condition) {
+                                    queryBuilder.rules.push(item);
+                                }
+                            });
+
+                            if(queryBuilder.rules.length === 1) {
+                                queryBuilder = queryBuilder.rules[0];
+                            }
+
+                            return {bool, queryBuilder}
+                        }
+
+
                         view.getAutocompleteAdditionalWhereConditions = () => {
                             let boolData = this.getBoolFilterData();
                             if (boolData) {

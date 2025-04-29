@@ -218,6 +218,11 @@
             return false;
         }
 
+        // remove multilang fields
+        if (Metadata.get(['entityDefs', scope, 'fields', name, 'multilangField'])) {
+            return false
+        }
+
         const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`];
         if (params.reelType) {
             disabledParameters.push(`layout${Utils.upperCaseFirst(params.reelType)}Disabled`)

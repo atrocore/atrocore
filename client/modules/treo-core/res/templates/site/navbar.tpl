@@ -117,6 +117,9 @@
                 {{{globalSearch}}}
             </div>
         {{/if}}
+        {{#if hasLocaleSwitcher}}
+        <div class="locale-switcher-container"></div>
+        {{/if}}
 
         <div class="nav navbar-nav navbar-left navbar-favorites">
             <div class="favorites-wrapper">{{{favoritesToolbar}}}</div>
