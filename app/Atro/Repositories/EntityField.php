@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -185,6 +186,23 @@ class EntityField extends ReferenceData
                 || $this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'ReferenceData'
             ) {
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
+            }
+        }
+
+        if ($entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
+            $connection = $this->getEntityManager()->getConnection();
+            $entityName = $entity->get('entityId');
+            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+
+            if (!empty($type) && $type !== 'ReferenceData') {
+                $tableName = $this->getEntityManager()->getMapper()->toDb($entityName);
+                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier($tableName))
+                    ->set($column, ':false')
+                    ->where("$column is null")
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->executeStatement();
             }
         }
     }
