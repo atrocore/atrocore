@@ -61,7 +61,7 @@ export {
     BaseHeader,
     ListHeader,
     DetailHeader,
-    LocaleSwitcher,
     FilterSearchBar,
-    Gallery
+    Gallery,
+    LocaleSwitcher
 };
