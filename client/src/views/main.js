@@ -342,7 +342,7 @@ Espo.define('views/main', 'view', function (Dep) {
                         model: this.model,
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
-                        hasSummary: ['edit', 'detail'].includes(this.getMode()),
+                        showSummary: ['edit', 'detail'].includes(this.getMode()),
                         searchManager: this.searchManager,
                         showFilter: this.shouldShowFilter(),
                         createView: this.createView.bind(this),
