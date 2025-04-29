@@ -273,10 +273,9 @@ Espo.define('search-manager', [], function () {
                 return;
             }
             this.collection.reset();
-debugger
+
             if(this.mandatoryBoolFilterList) {
                 let bool = {};
-                debugger
                 for (const filter of this.mandatoryBoolFilterList) {
                     bool[filter] = true;
                 }
