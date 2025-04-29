@@ -12,7 +12,13 @@
 
     let computedClassNames: string;
     $: {
+        const size = params.size ?? 'regular';
         computedClassNames = `action btn`;
+
+        if (size === 'small') {
+            computedClassNames += ` btn-sm`;
+        }
+
         (params.style ?? 'default').split(' ').forEach(style => {
             if (styles.includes(style)) {
                 computedClassNames += ` btn-${style}`;

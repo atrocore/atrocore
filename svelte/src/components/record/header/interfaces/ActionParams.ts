@@ -18,6 +18,7 @@ export default interface ActionParams {
     label?: string;
     type?: string;
     style?: string;
+    size?: 'small' | 'regular'
     tooltip?: string;
     callback?: (e: Event) => void;
     hidden?: boolean;
