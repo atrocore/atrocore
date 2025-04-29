@@ -37,28 +37,29 @@
 
 <EntityHistory scope={params.scope} />
 <BaseHeader>
-    <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} >
-        <svelte:fragment slot="filter-search">
-            {#if params.showFilter}
-                <FilterSearch searchManager={params.searchManager} scope={params.scope} />
-            {/if}
-        </svelte:fragment>
-        <svelte:fragment slot="search-bar">
+    {#if params.showSearchPanel || params.showFilter}
+        <div class="search-wrapper">
             {#if params.showSearchPanel}
                 <SearchBar searchManager={params.searchManager} scope={params.scope}/>
             {/if}
-        </svelte:fragment>
-    </EntityActionsGroup>
 
-
+            {#if params.showFilter}
+                <FilterSearch searchManager={params.searchManager} scope={params.scope}/>
+            {/if}
+        </div>
+    {/if}
+    <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
 </BaseHeader>
 
 <style>
-    :global(.buttons-container) {
-        margin: 15px 0;
+    .search-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
     }
 
-    :global(.entity-history) {
-        margin-bottom: 10px;
+    .search-wrapper :global(.form-group) {
+        margin: 0;
     }
 </style>

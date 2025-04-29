@@ -1,28 +1,32 @@
 <script lang="ts">
-   import {onMount} from 'svelte'
-   import {get} from 'svelte/store'
-    import {Language} from  '../../../utils/Language'
-    import {Metadata} from  '../../../utils/Metadata'
-    import {Notifier} from  '../../../utils/Notifier'
+    import {onMount} from 'svelte'
+    import {get} from 'svelte/store'
+    import {Language} from '../../../utils/Language'
+    import {Metadata} from '../../../utils/Metadata'
+    import {Notifier} from '../../../utils/Notifier'
     import {getGeneralFilterStore} from './stores/GeneralFilter'
-   import {Acl} from "../../../utils/Acl";
+    import {Acl} from "../../../utils/Acl";
+    import FilterGroup from "./FilterGroup.svelte";
+
+
     export let searchManager: any;
 
     export let scope: string;
+
+    export let opened: boolean = false;
 
     export let uniqueKey: string = "default";
 
     let boolFilterList: string[] = [];
 
-    let selectedBoolFilters: [] = [];
+    let selectedBoolFilters: string[] = [];
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
     initBoolFilter();
 
-
-   const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
-        if(value.length === selectedBoolFilters.length) {
+    const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
+        if (value.length === selectedBoolFilters.length) {
             return;
         }
         selectedBoolFilters = value;
@@ -33,7 +37,7 @@
         searchManager.fetchCollection();
     }
 
-    function toggleBoolFilter(filter: string){
+    function toggleBoolFilter(filter: string) {
         generalFilterStore.toggleBoolFilters(filter);
 
         let value = get(generalFilterStore.selectBoolFilters);
@@ -70,7 +74,7 @@
         });
         const boolData = searchManager.getBool();
         for (const filter in boolData) {
-            if(boolData[filter] && boolFilterList.includes(filter)) {
+            if (boolData[filter] && boolFilterList.includes(filter)) {
                 selectedBoolFilters.push(filter);
             }
         }
@@ -84,19 +88,25 @@
 
     });
 </script>
-<div class="checkboxes-filter">
-    {#if boolFilterList?.length > 0}
-        <h5>{Language.translate('General Filters')}</h5>
-        <ul style="padding:0">
+
+{#if boolFilterList?.length > 0}
+    <FilterGroup {opened} className="checkboxes-filter" title={Language.translate('General Filters')}>
+        <ul>
             {#each boolFilterList as filter}
                 <li class="checkbox">
                     <label class:active={selectedBoolFilters.includes(filter)}>
                         <input type="checkbox" checked={selectedBoolFilters.includes(filter)}
                                on:change={() => toggleBoolFilter(filter)} name="{filter}">
-                        {Language.translate(filter, 'boolFilters', scope)}
+                        <span>{Language.translate(filter, 'boolFilters', scope)}</span>
                     </label>
                 </li>
             {/each}
         </ul>
-    {/if}
-</div>
+    </FilterGroup>
+{/if}
+
+<style>
+    ul {
+        padding: 0;
+    }
+</style>

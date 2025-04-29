@@ -490,7 +490,7 @@ Espo.define('views/file/fields/upload', ['views/fields/attachment-multiple', 'li
             if (entity !== null) {
                 file.attachmentBox.attr('data-id', entity.id).addClass('file-uploading-success');
                 if (!this.model.get('reupload')) {
-                    file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<i class="ph ph-star"></i>');
+                    file.attachmentBox.find('.remove-attachment').attr('title', this.translate('Delete')).html('<i class="ph ph-trash"></i>');
                 }
                 file.attachmentBox.find('.preview').html(`<a target="_blank" href="/#File/view/${entity.id}">${entity.name}</a>`);
                 if(entity.extensionCorrected) {

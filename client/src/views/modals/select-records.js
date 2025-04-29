@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree', 'lib!QueryBuilder', 'lib!Interact'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -206,7 +206,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.listenTo(this.collection, 'update-total', () => {
                 this.$el.find('.for-tree-view .total-count-span').html(this.collection.total);
                 this.$el.find('.for-tree-view .shown-count-span').html(this.collection.total);
-            })
+            });
         },
 
         changeView(e) {
@@ -402,9 +402,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
-            if(window['SvelteFilterSearchBar'+this.dialog.id]) {
+            if(window['SvelteFilterSearchBar' + this.dialog.id]) {
                 try{
-                    window['SvelteFilterSearchBar'+this.dialog.id].$destroy();
+                    window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
                 }catch (e) {
                 }
             }
@@ -420,7 +420,15 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
             });
 
-            new Svelte.RightSideView({
+
+            if(window['SvelteRightSideView' + this.dialog.id]) {
+                try{
+                    window['SvelteRightSideView' + this.dialog.id].$destroy();
+                }catch (e) {
+                }
+            }
+
+            window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
                 target: document.querySelector('.modal-dialog .main-content .right-content'),
                 props: {
                     scope: this.scope,
@@ -434,7 +442,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     uniqueKey: this.dialog.id
                 }
             });
-
         },
 
         isHierarchical() {

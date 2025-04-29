@@ -332,4 +332,8 @@
     :global(.right-side-view .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle) {
         background-color: transparent;
     }
+
+    .filter {
+        margin-top: -5px;
+    }
 </style>

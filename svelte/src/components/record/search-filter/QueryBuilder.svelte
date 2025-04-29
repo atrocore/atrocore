@@ -14,13 +14,9 @@
     import {Config} from "../../../utils/Config";
 
     export let scope: string;
-
     export let searchManager: any;
-
     export let createView: Function;
-
     export let parentWidth: number;
-
     export let uniqueKey: string = 'default';
 
     let filters: Array<any> = [];
@@ -39,11 +35,8 @@
 
     let advancedFilterDisabled: boolean;
 
-    $: {
-        updateStyle(parentWidth);
-    }
-
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
+
     let savedSearchStore = getSavedSearchStore(uniqueKey);
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
@@ -61,49 +54,8 @@
         refreshShowUnsetAll();
     });
 
-    function updateStyle(parentWidth: number) {
-        let rules = [
-            '.query-builder .rule-container .rule-filter-container',
-            '.query-builder .rule-container .rule-operator-container',
-            '.query-builder .rule-container .rule-value-container'
-        ];
-
-        for (const rule of rules) {
-            let elements = document.querySelectorAll(rule);
-            if (!elements.length) {
-                return;
-            }
-            for (const element of elements) {
-                if (element.style.display === 'none') {
-                    continue;
-                }
-                if (parentWidth < 450) {
-                    element.style.display = 'block'
-                    element.style.width = '100%'
-                } else {
-                    element.style.display = 'inline-block';
-                    element.style.width = '25%'
-                    if (rule.includes('operator')) {
-                        element.style.width = '20%'
-                    }
-                }
-            }
-        }
-        let deleteButton = document.querySelector('.query-builder .rule-actions');
-        if (deleteButton) {
-            if (parentWidth > 450) {
-                deleteButton.style.marginTop = '10px';
-                deleteButton.style.marginBottom = '5px';
-
-            } else {
-                deleteButton.style.marginTop = '0';
-                deleteButton.style.marginBottom = '0';
-            }
-        }
-    }
-
     function updateSearchManager(data: any) {
-        searchManager.set({...searchManager.get(), ...data});
+        searchManager.update(data);
     }
 
     function camelCaseToHyphen(str: string) {
@@ -216,19 +168,75 @@
             filters: filters,
             plugins: {
                 sortable: {
-                    icon: 'fas fa-sort'
-                }
+                    icon: 'ph ph-arrows-out-cardinal'
+                },
             },
+            icons: {
+                error: 'ph ph-warning-circle',
+                remove_rule: 'ph ph-x',
+                remove_group: 'ph ph-x',
+            },
+            templates: {
+                group: ({ group_id, level, conditions, icons, settings, translate, builder }) => `
+                    <div id="${group_id}" class="rules-group-container">
+                      <div class="rules-group-header">
+                        ${level > 1 ? `
+                            <button type="button" class="btn btn-danger outline rule-delete" data-delete="group">
+                              <i class="${icons.remove_group}"></i>
+                            </button>
+                          ` : ''}
+                        <div class="btn-group float-end group-actions">
+                          <button type="button" class="btn btn-sm btn-success" data-add="rule">
+                            ${translate("add_rule")}
+                          </button>
+                          ${settings.allow_groups === -1 || settings.allow_groups >= level ? `
+                            <button type="button" class="btn btn-sm btn-success" data-add="group">
+                              ${translate("add_group")}
+                            </button>
+                          ` : ''}
+                        </div>
+                        <div class="btn-group group-conditions">
+                          ${conditions.map(condition => `
+                            <label class="btn btn-sm btn-primary">
+                              <input type="radio" name="${group_id}_cond" value="${condition}"> ${translate("conditions", condition)}
+                            </label>
+                          `).join('\n')}
+                        </div>
+                        ${settings.display_errors ? `
+                          <div class="error-container"><i class="${icons.error}"></i></div>
+                        ` : ''}
+                      </div>
+                      <div class=rules-group-body>
+                        <div class=rules-list></div>
+                      </div>
+                    </div>
+                `,
+                rule: ({rule_id, icons, settings, translate, builder}) => `
+                    <div id="${rule_id}" class="rule-container">
+                      <div class="rule-header">
+                        <div class="btn-group float-end rule-actions">
+                          <button type="button" class="btn btn-danger outline rule-delete" data-delete="rule">
+                            <i class="${icons.remove_rule}"></i>
+                          </button>
+                        </div>
+                      </div>
+                      ${settings.display_errors ? `
+                        <div class="error-container"><i class="${icons.error}"></i></div>
+                      ` : ''}
+                      <div class="rule-container-group">
+                        <div class="rule-filter-container"></div>
+                        <div class="rule-operator-container"></div>
+                        <div class="rule-value-container"></div>
+                      </div>
+                    </div>
+                `
+            }
 
         });
 
         model.trigger('afterInitQueryBuilder');
-        updateStyle(parentWidth);
-        $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
+        $queryBuilder.on('rulesChanged.queryBuilder', async (e, rule) => {
             advancedFilterChecked = false;
-            setTimeout(() => {
-                updateStyle(parentWidth);
-            }, 250)
 
             try {
                 const rules = $queryBuilder.queryBuilder('getRules');
@@ -239,6 +247,10 @@
                     });
                     handleAdvancedFilterChecked(false);
                 }
+
+                await tick();
+                $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
+                $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
             } catch (err) {
             }
             model.trigger('rulesChanged', rule);
@@ -252,19 +264,29 @@
             model.trigger('beforeUpdateRuleFilter', rule);
         });
 
+        $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', async (e, rule) => {
+            await tick();
+            if (rule.$el) {
+                rule.$el.find('.rule-operator-container select:not(.selectized)').selectize();
+            }
+
+            model.trigger('beforeUpdateRuleFilter', rule);
+        });
+
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
             model.trigger('afterInitQueryBuilder');
         });
 
         $queryBuilder.on('afterAddGroup.queryBuilder', (e, rule) => {
             model.trigger('afterAddGroup', rule);
-            updateStyle(parentWidth);
         });
 
-        $queryBuilder.on('afterAddRule.queryBuilder', (e, rule) => {
-            setTimeout(() => {
-                updateStyle(parentWidth);
-            }, 250)
+        $queryBuilder.on('afterAddRule.queryBuilder', async (e, rule) => {
+            await tick();
+            if (rule.$el) {
+                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize();
+            }
+
             model.trigger('afterAddRule', rule);
         });
     }
@@ -377,6 +399,10 @@
 
         Promise.all(promiseList).then(() => {
             callback();
+
+            const $queryBuilder = window.$(queryBuilderElement);
+            $queryBuilder.find('.rule-filter-container select').selectize();
+            $queryBuilder.find('.rule-operator-container select').selectize();
         });
     }
 
@@ -792,6 +818,15 @@
             }
         }
 
+        let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
+        window.$.fn.queryBuilder.constructor.prototype.getFilterById = function (id, doThrow) {
+            if (id === '') {
+                return null;
+            }
+
+            return originalGetFilterById.call(this, id, doThrow);
+        };
+
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
         // show unset all
@@ -810,12 +845,13 @@
 </script>
 
 <div class="query-builder-container">
-    <div>
-
-        <button class="filter-item" data-action="filter" class:disabled={!showUnsetAll} on:click={unsetAll}>
-            <i class="ph ph-x"></i>
-            {Language.translate('Unset All')}
-        </button>
+    <div style="margin-bottom: 5px;min-height: 25px;">
+        {#if showUnsetAll}
+            <button class="btn btn-sm btn-default filter-button" data-action="filter" on:click={unsetAll}>
+                <i class="ph ph-x"></i>
+                {Language.translate('Unset All')}
+            </button>
+        {/if}
     </div>
     <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
     {#if Acl.check('SavedSearch', 'read')}
@@ -835,63 +871,65 @@
         <h5>
             <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked}
                    on:change={(e) => handleAdvancedFilterChecked()}>
-            <span>{Language.translate('Advanced Filter')}</span></h5>
-        <div class="row filter-action">
-            <button class="filter-item" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
+            <span>{Language.translate('Apply Advanced Filter')}</span></h5>
+        <div class="query-builder" bind:this={queryBuilderElement}></div>
+        <div class="filter-action">
+            <button class="btn btn-sm btn-default filter-button" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
                 <i class="ph ph-x"></i>
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
-                <button class="filter-item save" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
+                <button class="btn btn-sm btn-success filter-button" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
                     <i class="ph ph-floppy-disk-back"></i>
                     {Language.translate('Save')}
                 </button>
             {/if}
         </div>
-        <div class="query-builder" bind:this={queryBuilderElement}></div>
     </div>
 </div>
 
 <style>
-    .filter-item {
-        border: 1px solid rgb(126 183 241);
-        border-radius: 5px;
-        background-color: rgba(126, 183, 241, 0.25);
-        color: var(--primary-font-color);
-        padding: 5px 10px;
-        font-size: 13px;
-        line-height: 1;
-        margin-right: 5px;
+    .query-builder-container :global(.checkboxes-filter) {
+        margin-bottom: 10px;
     }
 
-    .filter-item:hover {
-        border: 1px solid rgb(126 183 241);
-        background-color: rgba(126, 183, 241, 0.1);
+    .btn-sm {
+        padding: 4px 8px;
     }
 
-    .filter-item.save {
-        background-color: #85b75f40;
-        border-color: #85b75f;
-    }
-
-    .filter-item.save:hover {
-        background-color: #85b75f12;
+    .btn-sm i {
+        font-size: 14px;
     }
 
     .filter-action {
-        margin-bottom: 10px;
-        margin-left: 0;
-        margin-right: 0;
+        background-color: var(--sidebar-color);
+        margin-top: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .advanced-filters {
+        margin-top: 20px;
+        position: relative;
     }
 
     .advanced-filters h5 {
         display: flex;
         align-items: center;
+        margin: 0 0 15px 0;
     }
 
     .advanced-filters h5 input[type="checkbox"] {
         margin-top: 0;
         margin-right: 10px;
+        margin-left: 3px;
     }
 
     :global(.query-builder .input-group-btn .btn) {
@@ -899,9 +937,43 @@
         padding: 0;
     }
 
-    .filter-item.save.disabled, button.disabled, button.disabled:hover {
-        background-color: #eee;
-        border-color: #eee;
-        cursor: not-allowed;
+    :global(.query-builder .btn.rule-delete) {
+        border: 0;
+        padding: 0;
+        background-color: transparent;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .filter-button {
+        border-radius: 4px;
+    }
+
+    .query-builder :global(.rule-container-group) {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 10px;
+        min-width: 100%;
+        margin-left: 0;
+        margin-right: -5px;
+        container-type: inline-size;
+    }
+
+    .query-builder :global(.rule-container-group .rule-operator-container),
+    .query-builder :global(.rule-container-group .rule-filter-container),
+    .query-builder :global(.rule-container-group .rule-value-container) {
+        flex-basis: 100%;
+    }
+
+    @container (min-width: 400px) {
+        .query-builder :global(.rule-container-group .rule-filter-container) {
+            flex: 1 1 0;
+        }
+
+        .query-builder :global(.rule-container-group .rule-operator-container) {
+            flex-basis: 170px;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
     }
 </style>

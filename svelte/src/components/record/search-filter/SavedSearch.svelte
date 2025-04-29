@@ -7,9 +7,11 @@
     import {getSavedSearchStore} from "./stores/SavedSearch";
     import SavedSearch from "./interfaces/SavedSearch"
     import {get} from "svelte/store"
+    import FilterGroup from "./FilterGroup.svelte";
 
     export let scope: string;
     export let savedSearchList: Array<SavedSearch> = [];
+    export let opened: boolean = true;
     export let loading: boolean = true;
     export let searchManager: any;
     export let hideRowAction: boolean = false;
@@ -67,32 +69,32 @@
 
 </script>
 
-
-<div class="checkboxes-filter">
-    {#if loading }
+<FilterGroup {opened} className="checkboxes-filter" title={Language.translate('Saved Filters')}>
+    {#if loading}
         <div style="margin-top: 5px;">
             <Preloader heightPx={12} />
         </div>
     {:else if savedSearchList.length > 0}
-        <h5>{Language.translate('Saved Filters')}</h5>
-        <ul style="padding: 0">
+        <ul>
             {#each savedSearchList as item}
                 <li class="checkbox">
                     <label class:active={selectedSavedSearchIds.includes(item.id)}>
                         <input type="checkbox" checked={selectedSavedSearchIds.includes(item.id)} on:change={(e) => handleSavedSearchChecked(e, item)} name="{item.id}">
-                        {item.name}
-                        {#if item.isPublic}
-                            <i class="ph ph-users-three visibility"></i>
-                        {:else}
-                            <i class="ph ph-shield visibility"></i>
-                        {/if}
+                        <span>{item.name}</span>
+                        <sup class="status-icons">
+                            {#if item.isPublic}
+                                <i class="ph ph-users-three visibility"></i>
+                            {:else}
+                                <i class="ph ph-shield visibility"></i>
+                            {/if}
+                        </sup>
                     </label>
                     {#if (Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')) && !hideRowAction}
                         <div class="list-row-buttons btn-group">
                             {#if editingItem?.id === item.id}
                                 <span style="position:absolute; right: 20px"><i class="ph ph-pencil-simple-line"></i></span>
                             {/if}
-                            <a style="cursor: pointer" href="javascript:" class="dropdown-toggle" data-toggle="dropdown">
+                            <a style="cursor: pointer; color: var(--action-icon-color)" href="javascript:" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="ph ph-dots-three-vertical"></i>
                             </a>
                             <ul class="dropdown-menu pull-right">
@@ -113,12 +115,25 @@
                 </li>
             {/each}
         </ul>
+    {:else}
+        <span class="empty-filters-placeholder">{Language.translate('emptySavedSearchPlaceholder')}</span>
     {/if}
-</div>
+</FilterGroup>
 
 <style>
-    .visibility {
+    ul {
+        padding: 0;
+    }
+
+    .visibility:not(:first-child) {
         margin-left: 3px;
+    }
+
+    .empty-filters-placeholder {
+        min-height: 20px;
+        font-size: 12px;
+        margin-top: 4px;
+        display: block;
     }
 </style>
 
