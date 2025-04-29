@@ -530,15 +530,6 @@ class LayoutManager
                                                     $item = $f;
                                                 }
                                             }
-
-                                            if (in_array($item['name'], $localeFields)) {
-                                                $newField = $field;
-                                                $newField['name'] = array_shift($needToAdd);
-                                                $newRow[] = $newField;
-                                                $newRow[] = $item;
-
-                                                $skip = true;
-                                            }
                                         }
                                     }
 
@@ -596,6 +587,18 @@ class LayoutManager
         return $result;
     }
 
+
+    public static function getSystemMainLocaleCode(Config $config)
+    {
+        foreach ($config->get('languages') ?? [] as $language) {
+            if ($language['role'] === 'main') {
+                return $language['code'];
+            }
+        }
+
+        return 'en_US';
+    }
+
     public static function getUserLanguages(User $user, EntityManager $entityManager, Config $config): array
     {
         $locales = $user->get('additionalLanguages');
@@ -610,8 +613,7 @@ class LayoutManager
 
 
         $systemLocales = $config->get('inputLanguageList', []);
-        $mainLocale = $entityManager->getEntity('Locale', 'main');
-        $mainLocaleCode = $mainLocale->get('code');
+        $mainLocaleCode = self::getSystemMainLocaleCode($config);
         $systemLocales[] = $mainLocaleCode;
 
         if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
@@ -627,8 +629,7 @@ class LayoutManager
     {
         $result = [];
 
-        $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
-        $mainLocaleCode = $mainLocale->get('code');
+        $mainLocaleCode = self::getSystemMainLocaleCode($this->getConfig());
 
         foreach (self::getUserLanguages($this->getUser(), $this->getEntityManager(), $this->getConfig()) as $locale) {
             if ($locale === $mainLocaleCode) {
