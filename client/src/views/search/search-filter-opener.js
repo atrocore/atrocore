@@ -1,0 +1,80 @@
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
+    return Dep.extend({
+        open(callback, initialWhere = []) {
+            let bool = {};
+            let queryBuilder =  {
+                condition: "AND",
+                rules: [],
+                valid: true
+            }
+            let where = initialWhere || [];
+            where.forEach(item => {
+                if(item.type === 'bool') {
+                    item.value.forEach(v => bool[v] = true);
+                }
+
+                if(item.condition) {
+                    queryBuilder.rules.push(item);
+                }
+            });
+
+            if(queryBuilder.rules.length === 1) {
+                queryBuilder = queryBuilder.rules[0];
+            }
+            let filters = {bool, queryBuilder, queryBuilderApplied: true}
+            this.notify(this.translate('loading', 'messages'));
+            var viewName = this.getMetadata().get('clientDefs.' + this.model.get('entity') + '.modalViews.select') || 'views/modals/select-records';
+
+            this.createView('dialog', viewName, {
+                scope: this.model.get('entity'),
+                createButton: false,
+                filters: filters,
+                multiple: true,
+                massRelateEnabled: true,
+            },  (dialog) => {
+                dialog.render();
+                this.notify(false);
+
+                this.listenTo(dialog, 'select', function (models) {
+                    let query = null;
+                    if (models.massRelate) {
+                        if (models.where.length === 0) {
+                            // force subquery if primary filter "all" is used in modal
+                            models.where = [{asc: true}]
+                        }
+                        query = models.where;
+                    }else{
+                        if (Object.prototype.toString.call(models) !== '[object Array]') {
+                            models = [models];
+                        }
+                        query = [{
+                            condition: 'OR',
+                            rules: models.map(m => {
+                                return {
+                                    id: 'id',
+                                    field: 'id',
+                                    type: 'string',
+                                    operator: 'equal',
+                                    value: m.id
+                                }
+                            })
+                        }];
+                    }
+
+                    callback?.call(query)
+
+                });
+            });
+        }
+    })
+})

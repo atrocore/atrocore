@@ -519,7 +519,7 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && scope === 'Product';
+        return Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim';
     }
 
     function addAttributeFilter(callback) {

@@ -368,7 +368,8 @@
     "Apply Advanced Filter": "Erweiterten Filter anwenden",
     "Unset": "Nicht eingestellt",
     "Unset All": "Alle zurücksetzen",
-    "Cancel Edit": "Bearbeiten abbrechen"
+    "Cancel Edit": "Bearbeiten abbrechen",
+    "openSearchFilter": "Suchfilter öffnen"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

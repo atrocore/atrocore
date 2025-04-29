@@ -372,7 +372,8 @@
     "Apply Advanced Filter": "Застосувати розширений фільтр",
     "Unset": "Не встановлено",
     "Unset All": "Скинути все",
-    "Cancel Edit": "Скасувати"
+    "Cancel Edit": "Скасувати",
+    "openSearchFilter": "Відкрити фільтр пошуку"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

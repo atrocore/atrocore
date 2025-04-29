@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree', 'lib!QueryBuilder', 'lib!Interact'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'model', 'lib!JsTree', 'lib!QueryBuilder', 'lib!Interact'], function (Dep, SearchManager, Model) {
 
     return Dep.extend({
 
@@ -433,7 +433,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     target: document.querySelector('.modal-dialog .main-content .right-content'),
                     props: {
                         scope: this.scope,
-                        model: this.model,
+                        model: this.model ?? new Model(),
                         mode: 'list',
                         isCollapsed: false,
                         useStorage: false,
