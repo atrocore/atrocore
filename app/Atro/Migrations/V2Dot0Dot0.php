@@ -23,6 +23,13 @@ class V2Dot0Dot0 extends Base
     }
     public function up(): void
     {
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE \"user\" ADD additional_languages TEXT DEFAULT NULL;");
+            $this->exec("COMMENT ON COLUMN \"user\".additional_languages IS '(DC2Type:jsonArray)'");
+        } else {
+            $this->exec("ALTER TABLE user ADD additional_languages LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+        }
+
         if($this->isPgSQL()) {
             $this->exec("ALTER TABLE saved_search ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
             $this->exec("ALTER TABLE saved_search ADD modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
