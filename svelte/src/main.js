@@ -31,6 +31,9 @@ import RightSideView from "./components/record/RightSideView.svelte";
 import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
+import Gallery from "./components/record/Gallery.svelte";
+import FilterSearchBar from "./components/record/search/FilterSearchBar.svelte";
+import LocaleSwitcher from "./components/Navbar/LocaleSwitcher.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -57,5 +60,8 @@ export {
     Favorites,
     BaseHeader,
     ListHeader,
-    DetailHeader
+    DetailHeader,
+    FilterSearchBar,
+    Gallery,
+    LocaleSwitcher
 };

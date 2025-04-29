@@ -204,7 +204,7 @@ Espo.define('search-manager', [], function () {
         },
 
         isQueryBuilderApplied: function () {
-            return this.data.queryBuilderApplied === 'apply';
+            return !!this.data.queryBuilderApplied;
         },
 
         getBool: function () {
@@ -266,6 +266,44 @@ Espo.define('search-manager', [], function () {
 
         update: function (newData) {
             this.set({...this.data, ...newData});
+        },
+
+        fetchCollection: function() {
+            if(!this.collection) {
+                return;
+            }
+            this.collection.reset();
+
+            if(this.mandatoryBoolFilterList) {
+                let bool = {};
+                for (const filter of this.mandatoryBoolFilterList) {
+                    bool[filter] = true;
+                }
+                this.setBool({
+                    ...this.getBool(),
+                    ...bool
+                });
+            }
+
+            let where = this.getWhere();
+
+            if(this.boolFilterData ){
+                where.forEach(item => {
+                    if (item.type === 'bool') {
+                        let data = {};
+                        item.value.forEach(elem => {
+                            if (elem in this.boolFilterData) {
+                                data[elem] = this.boolFilterData[elem];
+                            }
+                        });
+                        item.data = data;
+                    }
+                });
+            }
+
+            this.collection.where = where;
+            this.collection.abortLastFetch();
+            this.collection.fetch().then(() => window.Backbone.trigger('after:search', this.collection));
         },
 
         getDateTimeWhere: function (type, field, value) {

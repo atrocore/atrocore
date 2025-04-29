@@ -359,11 +359,13 @@
     "sidebarExpand": "Zum Erweitern anklicken",
     "sidebarCollapse": "Zum Verkleinern anklicken",
     "addAttribute": "Attribut hinzufügen",
-    "filterPlaceHolder": "Attribute / Feld",
+    "filterPlaceHolder": "Attribute / Feld auswählen",
+    "emptySavedSearchPlaceholder": "Keine gespeicherten Filter",
     "General Filters": "Allgemeine Filter",
     "Attributes": "Attribute",
     "Fields": "Felder",
     "Advanced Filter": "Erweiterte Filter",
+    "Apply Advanced Filter": "Erweiterten Filter anwenden",
     "Unset": "Nicht eingestellt",
     "Unset All": "Alle zurücksetzen",
     "Cancel Edit": "Bearbeiten abbrechen"
@@ -623,7 +625,8 @@
     "iconClass": "Icon",
     "isPublic": "Öffentlich",
     "created": "Erstellt",
-    "modified": "Geändert"
+    "modified": "Geändert",
+    "name": "Name"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."

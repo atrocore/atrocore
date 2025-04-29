@@ -15,10 +15,15 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot13Dot52 extends Base
+class V1Dot13Dot51 extends Base
 {
+    public function getMigrationDateTime(): ?\DateTime
+    {
+        return new \DateTime('2025-04-10 11:00:00');
+    }
+
     public function up(): void
     {
-        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
+//        copy('vendor/atrocore/core/copy/.htaccess', '.htaccess');
     }
 }

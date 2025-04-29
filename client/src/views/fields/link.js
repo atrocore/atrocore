@@ -807,6 +807,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.filterValue = null;
 
             let createViewField = (model) => {
+                this.clearView(inputName);
                 let operator = rule.operator.type;
                 if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
@@ -828,14 +829,57 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
-
+                        view.getSelectFilters  = this.getSelectFilters.bind(this);
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
+
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
                         }
+
+                        view.getSelectFilters  =  () => {
+                            let bool = {};
+                            let queryBuilder =  {
+                                condition: "AND",
+                                rules: [],
+                                valid: true
+                            }
+                            let subQuery = rule.data?.subQuery || [];
+                            subQuery.forEach(item => {
+                                if(item.type === 'bool') {
+                                    item.value.forEach(v => bool[v] = true);
+                                }
+
+                                if(item.condition) {
+                                    queryBuilder.rules.push(item);
+                                }
+                            });
+
+                            if(queryBuilder.rules.length === 1) {
+                                queryBuilder = queryBuilder.rules[0];
+                            }
+
+                            return {bool, queryBuilder}
+                        }
+
+
+                        view.getAutocompleteAdditionalWhereConditions = () => {
+                            let boolData = this.getBoolFilterData();
+                            if (boolData) {
+                                return [
+                                    {
+                                        'type': 'bool',
+                                        'data': boolData
+                                    }
+                                ];
+                            }
+
+                            return [];
+                        }
+
+                        view.linkMultiple = this.chooseMultipleOnSearch();
 
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
@@ -856,7 +900,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         });
 
                         this.listenTo(view, 'change', () => {
-                            console.log('input ')
                             this.filterValue = view.ids ?? model.get('valueIds');
                             if (!rule.data) {
                                 rule.data = {};
@@ -912,12 +955,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter(type = null) {
-            let name = this.name;
-            if (!name.includes('attr_') && type !== 'extensibleEnum') {
-                name = this.name + 'Id'
-            }
             return {
-                id: name,
+                id: this.getFilterName(type),
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
@@ -940,6 +979,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
+
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         rule.value = null;
@@ -966,6 +1006,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                         this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
                             if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                                return;
+                            }
+
+                            if(this.getFilterName(type) !== rule.filter.id) {
                                 return;
                             }
 
@@ -996,8 +1040,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || value === null) {
-                            return 'bad float';
+                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                            return 'bad list';
                         }
 
                         return true;
@@ -1005,6 +1049,18 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             };
         },
+
+        chooseMultipleOnSearch: function () {
+            return true;
+        },
+
+        getFilterName(type = null) {
+            let name = this.name;
+            if (!name.includes('attr_') && type !== 'extensibleEnum') {
+                name = this.name + 'Id'
+            }
+            return name;
+        }
 
     });
 });

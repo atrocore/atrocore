@@ -9,5 +9,6 @@
   "type": "Base",
   "object": true,
   "streamDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "defaultRelationAudited": true
 }

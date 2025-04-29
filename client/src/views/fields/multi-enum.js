@@ -373,7 +373,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
                     this.filterValue = null;
                     this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/multi-enum', {
+                        this.createView(inputName, 'views/fields/colored-multi-enum', {
                             name: 'value',
                             el: `#${rule.id} .field-container`,
                             model: model,
@@ -381,12 +381,13 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             defs: {
                                 name: 'value',
                                 params: {
-                                    required: true,
-                                    optionsIds: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'optionsIds']) || [],
-                                    options: this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'options']) || []
+                                    required: true
                                 }
                             },
                         }, view => {
+                            view.params.options = this.params.options ?? this.model.getFieldParam(this.name, 'options')
+                            view.params.optionColors = this.params.optionColors ?? this.model.getFieldParam(this.name, 'optionColors');
+                            view.translatedOptions = this.translatedOptions;
                             this.listenTo(view, 'change', () => {
                                 this.filterValue = model.get('value');
                                 rule.$el.find(`input[name="${inputName}"]`).trigger('change');
@@ -402,7 +403,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if(!Array.isArray(value) || value === null) {
+                        if(!Array.isArray(value) || value.length === 0) {
                             return 'bad array';
                         }
                         return true;

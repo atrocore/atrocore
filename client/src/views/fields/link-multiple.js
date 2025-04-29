@@ -241,7 +241,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                     // force subquery if primary filter "all" is used in modal
                                     models.where = [{asc: true}]
                                 }
+                                this.model.set(this.idsName, null);
+                                this.model.set(this.nameHashName, null);
+                                this.ids = [];
+                                this.nameHash = [];
+                                this.reRender();
                                 this.addLinkSubQuery(models);
+                                this.trigger('change')
                                 return;
                             }
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
@@ -257,6 +263,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                     self.addLink(model.id, model.id);
                                 }
                             });
+
+                            this.deleteLinkSubQuery();
                         });
 
                         this.listenTo(dialog, 'unselect', id => {
@@ -360,6 +368,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             var url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 boolList = this.getSelectBoolFilterList(),
                 where = [];
+
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
                 url += '&' + $.param({'boolFilterList': boolList});
@@ -697,6 +706,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.setTimeoutFunction = {}
             }
             let createViewField = (model) => {
+                this.clearView(inputName);
                 let operator = rule.operator.type;
                 if (['linked_with', 'not_linked_with', 'array_any_of', 'array_none_of',].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
@@ -724,15 +734,56 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         view.render();
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
+                        view.getSelectFilters  =  () => {
+                            let bool = {};
+                            let queryBuilder =  {
+                                condition: "AND",
+                                rules: [],
+                                valid: true
+                            }
+                            let subQuery = rule.data?.subQuery || [];
+                            subQuery.forEach(item => {
+                                if(item.type === 'bool') {
+                                    item.value.forEach(v => bool[v] = true);
+                                }
+
+                                if(item.condition) {
+                                    queryBuilder.rules.push(item);
+                                }
+                            });
+
+                            if(queryBuilder.rules.length === 1) {
+                                queryBuilder = queryBuilder.rules[0];
+                            }
+
+                            return {bool, queryBuilder}
+                        }
+                        view.getAutocompleteAdditionalWhereConditions = () => {
+                            let boolData = this.getBoolFilterData();
+                            // add boolFilter data
+                            if (boolData) {
+                                return [
+                                    {
+                                        'type': 'bool',
+                                        'data': boolData
+                                    }
+                                ];
+                            }
+
+                            return [];
+                        }
+
                         for (const key in this.boolFilterData) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
                         }
+
                         if (rule.data && rule.data['subQuery']) {
                             let data = {where: rule.data['subQuery']};
                             view.addLinkSubQuery(data, true);
                         }
+
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if (!rule.data) {
@@ -752,11 +803,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         });
 
                         this.listenTo(view, 'change', () => {
-                            this.filterValue = view.ids;
+                            this.filterValue = view.ids ?? model.get('valueIds');
                             if (!rule.data) {
                                 rule.data = {};
                             }
-                            rule.data['nameHash'] = view.nameHash ?? view.get('nameHash');
+                            rule.data['nameHash'] = view.nameHash ?? model.get('valueNameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
@@ -834,6 +885,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
+
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         if (type === 'extensibleMultiEnum') {
@@ -849,12 +901,18 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                         }
                     }.bind(this);
+
                      if(!this.isNotListeningToOperatorChange[inputName]) {
                         rule.$el.find('.rule-operator-container select').on('change', callback);
                          this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
                              if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                                  return;
                              }
+
+                             if(this.name !== rule.filter.id) {
+                                 return;
+                             }
+
                              if(rule.operator.type === this.initialOperatorType[inputName]) {
                                  this.initialOperatorType[inputName] = null;
                                  return;
@@ -876,8 +934,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || value === null) {
-                            return 'bad float';
+                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                            return 'bad list';
                         }
 
                         return true;

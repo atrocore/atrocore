@@ -90,14 +90,16 @@ class TextType extends AbstractFieldType
                 $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
-                    'name'        => $lName,
-                    'label'       => $row[$this->prepareKey('name', $row)] . ' / ' . $languageName,
-                    'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-                    'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+                    'name'           => $lName,
+                    'label'          => $row[$this->prepareKey('name', $row)] . ' / ' . $languageName,
+                    'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
+                    'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
+                    'multilangField' => true
                 ]);
 
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
             }
+            $entity->entityDefs['fields'][$name]['isMultilang'] = true;
         }
 
         if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {

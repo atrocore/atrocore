@@ -69,7 +69,7 @@ Here is a AtroCore package description in detail:
 
 
 ## Technologies
-![image](https://github.com/atrocore/atrocore/assets/33658481/26686fdb-ae04-4664-9230-ed37a6066e3d)
+![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
 
 ### Integrations

@@ -17,14 +17,17 @@
     export let hasStream: boolean = false;
     export let searchManager;
     export let createView;
-    export let showFilter;
+    export let showFilter: boolean = false;
+    export let showSummary: boolean = false;
+    export let useStorage: boolean = true;
+    export let uniqueKey: string|null = null;
 
     $: scopeKey = scope + mode;
 
     function toggleFilter() {
         isCollapsed = !isCollapsed;
         setActiveItem(items.find(item => item.name === 'filter'));
-        Storage.set('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
+        storeData('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
     }
     window.addEventListener('right-side-view:toggle-filter', toggleFilter);
 
@@ -33,7 +36,7 @@
     let items: Item[] = [];
     let activeItem: Item;
 
-    if (['detail', 'edit'].includes(mode)) {
+    if (showSummary) {
         items.push({
             name: "summary",
             label: Language.translate('Summary'),
@@ -53,7 +56,8 @@
             refreshActivities()
         }
 
-        Storage.set('right-side-view-active-item', scopeKey, activeItem.name);
+        storeData('right-side-view-active-item', scopeKey, activeItem.name);
+
     }
 
     function refreshActivities() {
@@ -72,36 +76,51 @@
     }
 
     function onSidebarResize(e: CustomEvent): void {
-        Storage.set('rightSideView', scopeKey, currentWidth.toString());
+        storeData('rightSideView', scopeKey, currentWidth.toString());
     }
 
     function onSidebarPin(e: CustomEvent): void {
-        Storage.set('right-side-view-pin', scopeKey, isPin ? 'pin' : 'not-pinned');
+        storeData('right-side-view-pin', scopeKey, isPin ? 'pin' : 'not-pinned');
     }
 
     function onSidebarCollapse(e: CustomEvent): void {
-        Storage.set('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : 'expanded');
+        storeData('right-side-view-collapse', scopeKey, isCollapsed ? 'collapsed' : 'expanded');
         if (activeItem.name === 'activities') {
             refreshActivities();
         }
     }
 
+    function getStoredData(key:string, name: string): any{
+        if(!useStorage) {
+            return null;
+        }
+        return Storage.get(key, name);
+    }
+
+    function storeData(key:string, name: string, value: any): void {
+        if(!useStorage) {
+            return ;
+        }
+        Storage.set(key, name, value);
+    }
+
     onMount(() => {
-        const savedWidth = Storage.get('rightSideView', scopeKey);
+        const savedWidth = getStoredData('rightSideView', scopeKey);
         if (savedWidth) {
             currentWidth = parseInt(savedWidth) || minWidth;
         }
 
-        let collapseState = Storage.get('right-side-view-collapse', scopeKey);
-        if((!collapseState && !['detail', 'edit'].includes(mode)) ||  window.innerWidth <= 768) {
+        let collapseState = getStoredData('right-side-view-collapse', scopeKey);
+
+        if(collapseState){
+            isCollapsed = collapseState === 'collapsed';
+        }else  if(window.innerWidth <= 768) {
             isCollapsed = true;
-        }else{
-            isCollapsed = (collapseState === 'collapsed');
         }
 
-        isPin = Storage.get('right-side-view-pin', scopeKey) !== 'not-pinned';
+        isPin = getStoredData('right-side-view-pin', scopeKey) !== 'not-pinned';
 
-        if (['detail', 'edit'].includes(mode)) {
+        if (showSummary) {
             loadSummary();
         }
 
@@ -112,7 +131,7 @@
                     name: "filter",
                     label: Language.translate('filter')
                 }
-            ]
+            ];
         }
 
         if (hasStream) {
@@ -121,10 +140,11 @@
                 {
                     "name": "activities",
                     "label": Language.translate('Activities')
-                }]
+                }
+            ];
         }
 
-        let itemName = Storage.get('right-side-view-active-item', scopeKey);
+        let itemName = getStoredData('right-side-view-active-item', scopeKey);
 
         if (itemName && items.map(i => i.name).includes(itemName)) {
             setActiveItem(items.find(i => i.name === itemName));
@@ -163,7 +183,7 @@
 
         {#if showFilter}
             <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}"></QueryBuilder>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}" uniqueKey={uniqueKey}></QueryBuilder>
             </div>
         {/if}
 
@@ -311,5 +331,9 @@
 
     :global(.right-side-view .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle) {
         background-color: transparent;
+    }
+
+    .filter {
+        margin-top: -5px;
     }
 </style>

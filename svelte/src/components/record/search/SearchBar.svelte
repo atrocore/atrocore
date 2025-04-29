@@ -22,99 +22,97 @@
         updateCollection();
     }
 
-
-    function reset() {
+    export function reset() {
         searchValue = "";
         search();
     }
 
     function updateCollection() {
-        searchManager.collection.reset();
         Notifier.notify(Language.translate('loading', 'messages'));
 
-        searchManager.collection.where = searchManager.getWhere();
-
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 </script>
 
-
-<div class="search-container">
-    <div class="row search-row">
-        <div class="form-group ">
-            <div class="input-group search">
-                <input
-                        type="text"
-                        class="form-control text-filter"
-                        placeholder={Language.translate("typeToSearch")}
-                        name="textFilter"
-                        bind:value={searchValue}
-                        on:keypress={(e) => {e.key === 'Enter' ? search() : e}}
-                        on:keyup={(e) => {e.key === 'Enter' ? search() : e}}
-                        tabindex="1"
-                >
-                <div class="input-group-btn">
-                    {#if hasSearchValue}
-                        <button
-                                type="button"
-                                class="btn btn-default "
-                                data-original-title="Reset"
-                                aria-expanded="false"
-                                data-tippy="true"
-                                on:click={reset}
-                        >
-                            <i class="ph ph-x"></i>
-                        </button>
-                    {/if}
+<div class="search-row">
+    <div class="form-group">
+        <div class="input-group search">
+            <input
+                    type="text"
+                    class="form-control text-filter"
+                    placeholder={Language.translate("typeToSearch")}
+                    name="textFilter"
+                    bind:value={searchValue}
+                    on:keypress={(e) => {e.key === 'Enter' ? search() : e}}
+                    on:keyup={(e) => {e.key === 'Enter' ? search() : e}}
+                    tabindex="1"
+            >
+            <div class="input-group-btn">
+                {#if hasSearchValue}
                     <button
                             type="button"
-                            class="btn btn-primary"
-                            data-original-title="Search"
+                            class="btn btn-default"
                             aria-expanded="false"
-                            data-tippy="true"
-                            on:click={search}
+                            on:click={reset}
                     >
-                        <i class="ph ph-magnifying-glass"></i>
+                        <i class="ph ph-x"></i>
                     </button>
-                </div>
+                {/if}
+                <button
+                        type="button"
+                        class="btn btn-default" class:has-search-value={hasSearchValue}
+                        title={Language.translate("Search")}
+                        aria-expanded="false"
+                        on:click={search}
+                >
+                    {#if hasSearchValue}
+                        <i class="ph-fill ph-magnifying-glass"></i>
+                    {:else}
+                        <i class="ph ph-magnifying-glass"></i>
+                    {/if}
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
-    .search-container {
-        flex-basis: auto !important;
-    }
-
-    .search-container .search-row {
+    .search-row {
+        flex-basis: auto;
         padding-bottom: 0;
     }
 
-    .search-container .search {
+    .search-row .search {
         flex-grow: 1;
-        width: 250px;
+        width: 300px;
+    }
+
+    .search-row .search input {
+        background: transparent;
+        border: 1px solid #eee;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
     }
 
     .search-row .input-group {
-        border: 1px solid #eee;
-        border-radius: 3px;
+        border: 0;
     }
 
     .search-row .input-group-btn button {
-        border: 0;
-        border-left: 1px solid #eee;
+        border: 1px solid #eee;
         background-color: transparent;
-        color: #333;
+    }
+
+    .search-row .input-group-btn:last-child button:last-child {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
 
     .search-row .form-group {
         display: flex;
     }
 
-    .search-row .search input {
-        background: transparent;
+    .btn.has-search-value {
+        color: #06c;
     }
-
 </style>

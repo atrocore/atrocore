@@ -63,6 +63,8 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         fullHeight: false,
 
+        hasRightSideView: false,
+
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -156,6 +158,7 @@ Espo.define('views/modal', 'view', function (Dep) {
                     draggable: this.isDraggable,
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
+                    hasRightSideView: this.hasRightSideView,
                     footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
                     fullHeight: this.fullHeight,
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),

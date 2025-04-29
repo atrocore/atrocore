@@ -102,6 +102,10 @@
 
 
 <style>
+    .entity-history {
+        margin-bottom: 10px;
+    }
+
     nav > ul {
         display: block;
         margin: 0;
