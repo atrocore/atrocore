@@ -743,38 +743,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }
             ];
 
-            if (this.getConfig().get('isMultilangActive') && (this.getConfig().get('inputLanguageList') || []).length) {
-                let referenceData = this.getConfig().get('referenceData');
-
-                if (referenceData && referenceData['Language']) {
-                    let languages = referenceData['Language'] || {},
-                        options = ['allLanguages', 'unilingual'],
-                        translatedOptions = {};
-
-                    options.forEach(option => {
-                        translatedOptions[option] = this.getLanguage().translateOption(option, 'languageFilter', 'Global');
-                    });
-
-                    Object.keys(languages || {}).forEach((lang) => {
-                        if (languages[lang]['role'] === 'main') {
-                            options.push('main');
-                            translatedOptions['main'] = languages[lang]['name'];
-                        } else {
-                            options.push(lang);
-                            translatedOptions[lang] = languages[lang]['name'];
-                        }
-                    });
-
-                    result.push({
-                        name: "languageFilter",
-                        label: this.translate('language'),
-                        options,
-                        translatedOptions,
-                        defaultValue: 'allLanguages'
-                    });
-                }
-            }
-
             return this.overviewFilterList = result;
         },
 

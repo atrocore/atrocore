@@ -16,10 +16,13 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
+use Atro\Entities\User;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
 use Espo\ORM\IEntity;
 
@@ -593,24 +596,21 @@ class LayoutManager
         return $result;
     }
 
-    protected function getPreparedLocalesCodes(): array
+    public static function getUserLanguages(User $user, EntityManager $entityManager, Config $config): array
     {
-        $result = [];
-        $user = $this->getUser();
-
         $locales = $user->get('additionalLanguages');
         if (!is_array($locales)) {
             $locales = [];
         }
 
-        $userLocale = $this->getEntityManager()->getEntity('Locale', $user->get('localeId'));
+        $userLocale = $entityManager->getEntity('Locale', $user->get('localeId'));
         if (empty($userLocale)) {
-            $userLocale = $this->getEntityManager()->getEntity('Locale', $this->getConfig()->get('locale'));
+            $userLocale = $entityManager->getEntity('Locale', $config->get('locale'));
         }
 
 
-        $systemLocales = $this->getConfig()->get('inputLanguageList', []);
-        $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
+        $systemLocales = $config->get('inputLanguageList', []);
+        $mainLocale = $entityManager->getEntity('Locale', 'main');
         $mainLocaleCode = $mainLocale->get('code');
         $systemLocales[] = $mainLocaleCode;
 
@@ -620,13 +620,21 @@ class LayoutManager
             array_unshift($locales, $mainLocaleCode);
         }
 
-        foreach (array_unique($locales) as $locale) {
-            if (in_array($locale, $systemLocales)) {
-                if ($locale === $mainLocaleCode) {
-                    $result[] = '';
-                } else {
-                    $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
-                }
+        return array_unique(array_intersect($locales, $systemLocales));
+    }
+
+    protected function getPreparedLocalesCodes(): array
+    {
+        $result = [];
+
+        $mainLocale = $this->getEntityManager()->getEntity('Locale', 'main');
+        $mainLocaleCode = $mainLocale->get('code');
+
+        foreach (self::getUserLanguages($this->getUser(), $this->getEntityManager(), $this->getConfig()) as $locale) {
+            if ($locale === $mainLocaleCode) {
+                $result[] = '';
+            } else {
+                $result[] = ucfirst(Util::toCamelCase(strtolower($locale)));
             }
         }
 
@@ -719,7 +727,7 @@ class LayoutManager
         return $this->container->get('metadata');
     }
 
-    protected function getConfig(): \Espo\Core\Utils\Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }
@@ -729,7 +737,7 @@ class LayoutManager
         return $this->container->get('entityManager');
     }
 
-    protected function getUser(): \Espo\Entities\User
+    protected function getUser(): User
     {
         return $this->container->get('user');
     }
