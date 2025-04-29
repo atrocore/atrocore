@@ -5,6 +5,8 @@ import Collection from '../../../../utils/interfaces/Collection'
 import {UserData} from "../../../../utils/UserData";
 
 
+let stores = new Map();
+
 function createStore(): any {
     const savedSearchItems = writable<SavedSearch[]>([]);
     const selectedSavedItemIds = writable<string[]>([]);
@@ -113,6 +115,15 @@ function createStore(): any {
     }
 }
 
-
-export const savedSearchStore = createStore();
+export  function getSavedSearchStore(uniqueKey: string | null)  {
+    let store;
+    uniqueKey  = uniqueKey ?? 'default';
+    store = stores.get(uniqueKey);
+    if(!store) {
+        store = createStore();
+        store.key = uniqueKey;
+        stores.set(uniqueKey, store);
+    }
+    return store;
+}
 
