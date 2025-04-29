@@ -868,7 +868,7 @@
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
                 uniqueKey={uniqueKey}
-                hideRowAction={uniqueKey !== 'default'}
+                hideRowAction={uniqueKey.includes('dialog')}
         />
     {/if}
 
@@ -883,7 +883,7 @@
                 <i class="ph ph-x"></i>
                 {Language.translate('Unset')}
             </button>
-            {#if Acl.check('SavedSearch', 'create')}
+            {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog')}
                 <button class="btn btn-sm btn-success filter-button" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
                     <i class="ph ph-floppy-disk-back"></i>
                     {Language.translate('Save')}

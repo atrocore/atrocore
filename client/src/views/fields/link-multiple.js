@@ -913,6 +913,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                  return;
                              }
 
+
                              if(rule.operator.type === this.initialOperatorType[inputName]) {
                                  this.initialOperatorType[inputName] = null;
                                  return;

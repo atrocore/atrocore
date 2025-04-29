@@ -10,6 +10,7 @@
 
 Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
     return Dep.extend({
+        // convertToQueryBuilder(item)
         open(foreignScope, initialWhere = [], callback) {
             let bool = {};
             let queryBuilder =  {

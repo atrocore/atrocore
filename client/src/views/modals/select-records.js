@@ -411,7 +411,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
             }
 
-            const searchContainer = document.querySelector('.modal-dialog .modal-footer .extra-content');
+            const searchContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .modal-footer .extra-content');
 
             if(searchContainer) {
                 window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
@@ -433,7 +433,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 }
             }
 
-            const rightContainer = document.querySelector('.modal-dialog .main-content .right-content');
+            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
 
             if(showFilter && rightContainer) {
                 window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
@@ -590,7 +590,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         $li.removeClass('disabled');
                     }
 
-                    let search = $('.search-container .text-filter').val();
+                    let search = $('.filter-search-bar .text-filter').val();
                     if (search.length > 0) {
                         search = search.replace(/\*/g, '');
                         if (search.length > 0) {
