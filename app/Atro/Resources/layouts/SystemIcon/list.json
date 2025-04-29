@@ -1,5 +1,9 @@
 [
   {
+    "name": "image",
+    "widthPx": "100"
+  },
+  {
     "name": "name",
     "link": true
   },
@@ -10,7 +14,6 @@
     "name": "library"
   },
   {
-    "name": "image",
-    "widthPx": "150"
+    "name": "description"
   }
 ]

@@ -302,6 +302,37 @@
     },
     "showUser": {
       "type": "bool"
+    },
+    "isDuplicatableRelation": {
+      "view": "views/admin/field-manager/fields/is-duplicatable-relation",
+      "type": "bool"
+    },
+    "isNonComparable": {
+      "type": "bool"
+    },
+    "isUninheritableField": {
+      "view": "views/admin/field-manager/fields/is-uninherited-field",
+      "type": "bool",
+      "tooltip": true
+    },
+    "isUninheritableRelation": {
+      "view": "views/admin/field-manager/fields/is-uninheritable-relation",
+      "type": "bool",
+      "tooltip": true
+    },
+    "modifiedExtendedEnabled": {
+      "view": "views/admin/field-manager/fields/modified-extended-enabled",
+      "type": "bool",
+      "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool"
+    },
+    "auditableEnabled": {
+      "type": "bool"
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool"
     }
   },
   "links": {

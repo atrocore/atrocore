@@ -50,7 +50,15 @@
     "foreignEntity": "Foreign Entity",
     "relationName": "Relation Entity Code",
     "linkMultipleField": "Link Multiple Field",
-    "showUser": "Show Editor Too"
+    "showUser": "Show Editor Too",
+    "isNonComparable": "Non Comparable",
+    "isDuplicatableRelation": "Duplicatable",
+    "isUninheritableRelation": "Uninherited",
+    "isUninheritableField": "Uninherited",
+    "auditableEnabled": "Log the change as a record activity",
+    "auditableDisabled": "Create no record activity",
+    "modifiedExtendedDisabled": "No recording as modification",
+    "modifiedExtendedEnabled": "Recording as modification"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -69,7 +77,10 @@
     "foreignName": "Field to be shown in the relation.",
     "seeMoreDisabled": "If not checked, long texts to be displayed will be shortened.",
     "lengthOfCut": "Excessive characters will be hidden in the view mode.",
-    "linkMultipleField": "This option enables a handy way to edit relations. Don't use it if you can have a large number of related records."
+    "linkMultipleField": "This option enables a handy way to edit relations. Don't use it if you can have a large number of related records.",
+    "modifiedExtendedEnabled": "Changes in this relation will cause the update of \"Modified At\" date and time.",
+    "isUninheritableField": "Values for this field will not be inherited from the parent item.",
+    "isUninheritableRelation": "Relations with this entity will not be inherited from parent item."
   },
   "options": {
     "previewSize": {

@@ -111,6 +111,20 @@
           "name": "hideFieldTypeFilters"
         },
         false
+      ],
+      [
+        {
+          "name": "nonComparableFields"
+        },
+        false
+      ]  ,
+      [
+        {
+          "name": "auditedDisabledFields"
+        },
+        {
+          "name": "auditedEnabledRelations"
+        }
       ]
     ]
   },

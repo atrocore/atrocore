@@ -120,10 +120,11 @@ class TextType extends AbstractFieldType
             $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
-                "type"                 => "measure",
+                "type"                 => "link",
                 'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
                 "view"                 => "views/fields/unit-link",
                 "measureId"            => $row['measure_id'],
+                'attributeId'          => $id,
                 "entity"               => 'Unit',
                 "unitIdField"          => true,
                 "mainField"            => $name,

@@ -94,6 +94,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 var fieldView = this.getFieldView(name);
                 let $field
                 if (fieldView) {
+                    if (fieldView.options?.useRelationModel) {
+                        return
+                    }
                     $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');
@@ -140,6 +143,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 var fieldView = this.getFieldView(name);
                 let $field
                 if (fieldView) {
+                    if (fieldView.options?.useRelationModel) {
+                        return
+                    }
                     $field = fieldView.$el;
                     var $cell = $field.closest('.cell[data-name="' + name + '"]');
                     var $label = $cell.find('label.control-label[data-name="' + name + '"]');

@@ -95,6 +95,28 @@ class LayoutManager
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchOne();
 
+        $storedProfiles = $this->getEntityManager()->getConnection()
+            ->createQueryBuilder()
+            ->select('lp.id', 'lp.name')
+            ->from('layout', 'l')
+            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
+            ->where("l.entity=:entity and l.view_type=:viewType and "
+                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
+                . ' and '
+                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
+                . " and l.deleted=:false and lp.deleted=:false")
+            ->setParameters([
+                'entity'        => $scope,
+                'viewType'      => $viewType,
+                'relatedEntity' => $relatedEntity,
+                'relatedLink'   => $relatedLink,
+            ])->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        if (!empty($selectedProfileId) && !in_array($selectedProfileId, array_column($storedProfiles, 'id'))) {
+            $selectedProfileId = null;
+        }
+
         if (!empty($selectedProfileId) && empty($layoutProfileId)) {
             $layoutProfileId = $selectedProfileId;
         }
@@ -140,24 +162,6 @@ class LayoutManager
 
         $layout = $this->getEventManager()->dispatch('Layout', 'afterGetLayoutContent', $event)
             ->getArgument('result');
-
-        $storedProfiles = $this->getEntityManager()->getConnection()
-            ->createQueryBuilder()
-            ->select('lp.id', 'lp.name')
-            ->from('layout', 'l')
-            ->innerJoin('l', 'layout_profile', 'lp', 'l.layout_profile_id=lp.id')
-            ->where("l.entity=:entity and l.view_type=:viewType and "
-                . (empty($relatedEntity) ? "l.related_entity is null" : "l.related_entity=:relatedEntity")
-                . ' and '
-                . (empty($relatedLink) ? "l.related_link is null" : "l.related_link=:relatedLink")
-                . " and l.deleted=:false and lp.deleted=:false")
-            ->setParameters([
-                'entity'        => $scope,
-                'viewType'      => $viewType,
-                'relatedEntity' => $relatedEntity,
-                'relatedLink'   => $relatedLink,
-            ])->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
 
         return [
             'layout'            => $layout,
@@ -305,7 +309,7 @@ class LayoutManager
     }
 
 
-    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId): array
+    protected function getCustomLayout(string $scope, string $name, ?string $relatedEntity, ?string $relatedLink, ?string $layoutProfileId, bool $keepIds = true): array
     {
         $layoutRepo = $this->getEntityManager()->getRepository('Layout');
         $defaultLayoutProfileId = $this->getDefaultLayoutProfileId();
@@ -345,13 +349,16 @@ class LayoutManager
             }
             $layout = $layoutRepo->where(array_merge($where, ['layoutProfileId' => $profileId]))->findOne();
             if (!empty($layout)) {
-                $isOriginal = $profileId === $layoutProfileId;
+                if ($keepIds) {
+                    $isOriginal = $profileId === $layoutProfileId;
+                }
                 break;
             }
         }
 
         if (empty($layout) && !empty($relatedEntity)) {
-            return $this->getCustomLayout($scope, $name, null, null, $layoutProfileId);
+            list($layout) = $this->getCustomLayout($scope, $name, null, null, $layoutProfileId, false);
+            return [$layout, null];
         }
 
         if (!empty($layout)) {

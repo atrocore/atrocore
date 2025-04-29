@@ -12,6 +12,14 @@ Espo.define('views/user-profile/fields/style', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'after:save', () => {
+                this.getStorage().clear('icons', 'navigationIconColor');
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 

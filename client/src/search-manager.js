@@ -204,7 +204,7 @@ Espo.define('search-manager', [], function () {
         },
 
         isQueryBuilderApplied: function () {
-            return this.data.queryBuilderApplied === 'apply';
+            return !!this.data.queryBuilderApplied;
         },
 
         getBool: function () {

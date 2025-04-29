@@ -2638,6 +2638,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
+            model.defs['_relationName'] = this.relationName;
+
             var scope = data.scope || model.name || this.scope;
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
