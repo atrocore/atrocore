@@ -15212,6 +15212,13 @@ td[data-name="draggableIcon"] {
     padding: 0;
 }
 
+.full-page-modal .modal-content {
+    margin: 40px 30px 30px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
 .full-page-modal .header-container {
     padding: 14px 44px 30px 14px;
     border-bottom: 1px solid #d8d8d8;
@@ -15226,6 +15233,7 @@ td[data-name="draggableIcon"] {
     position: absolute;
     right: 15px;
     top: 8px;
+    z-index: 2;
     font-size: 31px;
 }
 
@@ -15247,10 +15255,16 @@ td[data-name="draggableIcon"] {
     background-color: #f2f2f2
 }
 
-.full-page-modal .html-preview {
+.full-page-modal .html-preview,
+.full-page-modal .gallery-container {
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-height: 100%;
+}
+
+.full-page-modal .gallery-container {
+    padding-bottom: 10px !important;
 }
 
 .full-page-modal .html-preview .body-container {
@@ -15259,8 +15273,11 @@ td[data-name="draggableIcon"] {
     display: flex;
     align-items: stretch;
     overflow: hidden;
-    margin-right: -14px;
     position: relative;
+}
+
+.full-page-modal .html-preview .body-container {
+    margin-right: -20px;
 }
 
 .full-page-modal .html-preview .body-container .main-container {

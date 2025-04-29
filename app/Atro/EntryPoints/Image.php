@@ -19,7 +19,7 @@ use Atro\Core\Exceptions\NotFound;
 
 class Image extends AbstractEntryPoint
 {
-    public const TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+    public const TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp'];
 
     public function run()
     {
