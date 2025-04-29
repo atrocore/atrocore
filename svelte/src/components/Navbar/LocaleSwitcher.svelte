@@ -10,7 +10,11 @@
         return res
     }, {})
 
-    let locale = UserData.get()?.user?.localeId || Config.get('locale')
+    let locale = UserData.get()?.user?.localeId
+    if (!locales[locale]) {
+        locale = Config.get('locale')
+    }
+
     let inputLanguages = UserData.get()?.user?.additionalLanguages || []
     let languagesLabel
 
@@ -19,10 +23,10 @@
         if (languages[locales[locale].code]) {
             delete languages[locales[locale].code]
             // add main locale language
-            const mainLanguageCode = locales['main'].code
-            const mainLanguage = Config.get('referenceData').Language[mainLanguageCode]
-            if (mainLanguage) {
-                languages[mainLanguageCode] = mainLanguage
+            for (const [code, language] of Object.entries(Config.get('referenceData').Language || {})) {
+                if (language.role === 'main') {
+                    languages[code] = language
+                }
             }
         }
     }
