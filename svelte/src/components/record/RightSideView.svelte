@@ -20,7 +20,7 @@
     export let showFilter: boolean = false;
     export let showSummary: boolean = false;
     export let useStorage: boolean = true;
-    export let uniqueKey: string|null = null;
+    export let uniqueKey: string|null = 'default';
 
     $: scopeKey = scope + mode;
 

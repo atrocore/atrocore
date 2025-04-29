@@ -10,7 +10,7 @@
 
 Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
     return Dep.extend({
-        open(callback, initialWhere = []) {
+        open(initialWhere = [], callback) {
             let bool = {};
             let queryBuilder =  {
                 condition: "AND",
@@ -71,8 +71,9 @@ Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
                         }];
                     }
 
-                    callback?.call(query)
-
+                    if(callback) {
+                        callback(query);
+                    }
                 });
             });
         }

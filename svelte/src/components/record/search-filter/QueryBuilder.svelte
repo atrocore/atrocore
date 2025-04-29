@@ -857,6 +857,7 @@
         {/if}
     </div>
     <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
+
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -867,6 +868,7 @@
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
                 uniqueKey={uniqueKey}
+                hideRowAction={uniqueKey !== 'default'}
         />
     {/if}
 

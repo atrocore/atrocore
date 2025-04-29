@@ -401,36 +401,43 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
+            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
+
             if(window['SvelteFilterSearchBar' + this.dialog.id]) {
                 try{
                     window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
                 }catch (e) {
                 }
+
             }
 
-            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
+            const searchContainer = document.querySelector('.modal-dialog .modal-footer .extra-content');
 
-            window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
-                target: document.querySelector('.modal-dialog .modal-footer .extra-content'),
-                props: {
-                    showFilter: showFilter,
-                    showSearchPanel: this.searchPanel,
-                    scope: this.scope,
-                    searchManager: this.searchManager,
-                    uniqueKey: this.dialog.id
-                }
-            });
-
-            if(showFilter) {
-                if(window['SvelteRightSideView' + this.dialog.id]) {
-                    try{
-                        window['SvelteRightSideView' + this.dialog.id].$destroy();
-                    }catch (e) {
+            if(searchContainer) {
+                window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
+                    target: searchContainer,
+                    props: {
+                        showFilter: showFilter,
+                        showSearchPanel: this.searchPanel,
+                        scope: this.scope,
+                        searchManager: this.searchManager,
+                        uniqueKey: this.dialog.id
                     }
-                }
+                });
+            }
 
+            if(window['SvelteRightSideView' + this.dialog.id]) {
+                try{
+                    window['SvelteRightSideView' + this.dialog.id].$destroy();
+                }catch (e) {
+                }
+            }
+
+            const rightContainer = document.querySelector('.modal-dialog .main-content .right-content');
+
+            if(showFilter && rightContainer) {
                 window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
-                    target: document.querySelector('.modal-dialog .main-content .right-content'),
+                    target: rightContainer,
                     props: {
                         scope: this.scope,
                         model: this.model ?? new Model(),
