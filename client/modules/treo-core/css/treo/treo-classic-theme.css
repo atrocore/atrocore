@@ -18222,7 +18222,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .modal-dialog .main-content .middle-content {
-    flex-grow: 1;
+    flex: 1;
+    min-width: 0;
 }
 
 .modal-dialog .main-content .middle-content .list > table {
@@ -18240,6 +18241,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-dialog .right-content {
     position: relative;
+    max-height: calc(100vh - 100px);
 }
 
 
