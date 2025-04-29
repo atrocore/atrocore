@@ -24,7 +24,11 @@ class V1Dot13Dot56 extends Base
 
     public function up(): void
     {
-      $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = false);");
+        if ($this->isPgSQL()) {
+            $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = false);");
+        } else {
+            $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = 0);");
+        }
     }
 
     protected function exec(string $sql): void
