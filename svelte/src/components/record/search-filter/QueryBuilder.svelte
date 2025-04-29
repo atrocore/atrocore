@@ -677,13 +677,20 @@
             const $queryBuilder = window.$(queryBuilderElement)
             try {
                 oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
-                $queryBuilder.queryBuilder('setFilters', filters)
-                $queryBuilder.queryBuilder('setRules', item.data)
+                $queryBuilder.queryBuilder('destroy');
+                searchManager.update({
+                    queryBuilder: item.data
+                })
+                initQueryBuilderFilter();
                 editingSavedSearch = item;
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
-                $queryBuilder.queryBuilder('setRules', searchManager.getQueryBuilder());
+                $queryBuilder.queryBuilder('destroy');
+                searchManager.update({
+                    queryBuilder: oldAdvancedFilter
+                })
+                initQueryBuilderFilter();
             }
         });
     }

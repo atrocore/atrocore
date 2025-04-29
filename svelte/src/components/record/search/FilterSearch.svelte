@@ -140,7 +140,7 @@
     }
 
     function openFilter() {
-        window.dispatchEvent(new CustomEvent('right-side-view:toggle-filter'));
+        window.dispatchEvent(new CustomEvent('right-side-view:toggle-filter', {detail: {uniqueKey}}));
     }
 
     function cleanUpSavedRule( exists: Function): boolean{

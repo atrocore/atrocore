@@ -24,7 +24,10 @@
 
     $: scopeKey = scope + mode;
 
-    function toggleFilter() {
+    function toggleFilter(e) {
+        if(e.detail.uniqueKey !== uniqueKey) {
+            return;
+        }
         isCollapsed = !isCollapsed;
         setActiveItem(items.find(item => item.name === 'filter'));
         storeData('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');

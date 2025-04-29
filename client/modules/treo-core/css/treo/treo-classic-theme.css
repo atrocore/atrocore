@@ -18238,4 +18238,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     align-items: center;
 }
 
+.modal-dialog .right-content {
+    position: relative;
+}
+
 
