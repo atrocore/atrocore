@@ -323,8 +323,8 @@
     "Print to PDF": "Print to PDF",
     "Default": "Default",
     "Number": "Number",
-    "From": "From",
-    "To": "To",
+    "From": "(From)",
+    "To": "(To)",
     "Create Post": "Create Post",
     "Previous Entry": "Previous Entry",
     "Next Entry": "Next Entry",
@@ -393,14 +393,19 @@
     "sidebarExpand": "Click to expand",
     "sidebarCollapse": "Click to collapse",
     "addAttribute": "Add attribute",
-    "filterPlaceHolder": "Filter / Attribute / Field",
+    "filterPlaceHolder": "Select Attribute / Field",
+    "emptySavedSearchPlaceholder": "No saved filters",
     "General Filters": "General Filters",
     "Attributes": "Attributes",
     "Fields": "Fields",
     "Advanced Filter": "Advanced Filter",
+    "Apply Advanced Filter": "Apply Advanced Filter",
     "Unset": "Unset",
     "Unset All": "Unset All",
-    "Cancel Edit": "Cancel Edit"
+    "Cancel Edit": "Cancel Edit",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "doubleClickZoom": "Press the button or double click the image to toggle a zoom."
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",
@@ -502,8 +507,7 @@
     "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
     "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
     "youHaveErrorsInFilter": "The filter have some errors.",
-    "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt.",
-    "searchBarPlaceholder": "Type and press the enter key or click on the search icon to search..."
+    "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt."
   },
   "boolFilters": {
     "onlyActive": "Active",

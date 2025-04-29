@@ -25,7 +25,7 @@
     "targetId": {
       "type": "varchar",
       "readOnly": true,
-      "len": 36
+      "len": 61
     },
     "targetName": {
       "type": "varchar",

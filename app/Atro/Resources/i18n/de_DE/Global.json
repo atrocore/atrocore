@@ -303,8 +303,8 @@
     "Print to PDF": "Als PDF drucken",
     "Default": "Standard",
     "Number": "Nummer",
-    "From": "Von",
-    "To": "Bis",
+    "From": "(Von)",
+    "To": "(Bis)",
     "Create Post": "Nachricht erstellen",
     "Previous Entry": "Vorheriger Eintrag",
     "Next Entry": "Nächster Eintrag",
@@ -359,11 +359,13 @@
     "sidebarExpand": "Zum Erweitern anklicken",
     "sidebarCollapse": "Zum Verkleinern anklicken",
     "addAttribute": "Attribut hinzufügen",
-    "filterPlaceHolder": "Filter / Attribute / Feld",
+    "filterPlaceHolder": "Attribute / Feld auswählen",
+    "emptySavedSearchPlaceholder": "Keine gespeicherten Filter",
     "General Filters": "Allgemeine Filter",
     "Attributes": "Attribute",
     "Fields": "Felder",
     "Advanced Filter": "Erweiterte Filter",
+    "Apply Advanced Filter": "Erweiterten Filter anwenden",
     "Unset": "Nicht eingestellt",
     "Unset All": "Alle zurücksetzen",
     "Cancel Edit": "Bearbeiten abbrechen"
@@ -467,8 +469,7 @@
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
     "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
-    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
-    "searchBarPlaceholder": "eben Sie ein und drücken Sie die Eingabetaste oder klicken Sie auf das Suchsymbol, um zu suchen..."
+    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
   },
   "unit Length": {
     "mm": "mm",
@@ -522,7 +523,8 @@
     "withArchived": "Mit archiviert",
     "onlyFollowed": "Abonniert",
     "onlyMyTeams": "Meine Teams",
-    "onlyBookmarked": "Lesezeichen"
+    "onlyBookmarked": "Lesezeichen",
+    "onlyDeleted": "Gelöscht"
   },
   "presetFilters": {
     "all": "Alle"

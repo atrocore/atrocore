@@ -321,7 +321,7 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
             if (this.mode == 'edit') {
                 actionsHtml +=
                     '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
-                    '<span class="fas fa-times"></span>'+
+                    '<i class="ph ph-x"></i>'+
                     '</a>';
                 actions2Html +=
                     '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+

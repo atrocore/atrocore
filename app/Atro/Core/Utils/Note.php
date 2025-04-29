@@ -232,18 +232,23 @@ class Note
             $this->createRelatedData[$entity->getEntityType()] = [];
 
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $field => $defs) {
-                if ($defs['type'] === 'file') {
+                if (!empty($defs['type']) && $defs['type'] === 'file') {
                     $this->createRelatedData[$entity->getEntityType()][$field . 'Id'] = ['File', null];
                 }
             }
 
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
-                if ($defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
+                if (!empty($defs['type']) && $defs['type'] === 'belongsTo' && !empty($defs['entity']) && $this->streamEnabled($defs['entity'])) {
                     if ($entity->isNew() && $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) === 'Relation' &&
                         !empty($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $link, 'relationField']))
                     ) {
                         continue;
                     }
+
+                    if($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'auditableDisabled'])) {
+                        continue;
+                    }
+
                     $this->createRelatedData[$entity->getEntityType()][$link . 'Id'] = [$defs['entity'], $defs['foreign'] ?? null];
                 }
             }
@@ -337,7 +342,25 @@ class Note
             return;
         }
 
-        if ($this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity1'])) {
+        $defaultRelationScopeAudited =  [];
+        foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
+            if(!empty($scopeDefs['defaultRelationAudited'])) {
+                $defaultRelationScopeAudited[] = $scopeKey;
+            }
+        }
+
+        $fieldDefs = $this->getMetadata()->get([
+            'entityDefs',
+            $this->relationEntityData[$entity->getEntityType()]['entity1'],
+            'fields',
+            $this->relationEntityData[$entity->getEntityType()]['link1'],
+        ]);
+        if (
+            $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity1'])
+            && (!empty($fieldDefs['auditableEnabled'])
+                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity2'], $defaultRelationScopeAudited)))
+        )
+        {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
                 'entityId'    => $entity->id,
                 'entityType'  => $entity->getEntityType(),
@@ -347,7 +370,19 @@ class Note
             ]);
         }
 
-        if ($this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity2'])) {
+        $fieldDefs = $this->getMetadata()->get([
+            'entityDefs',
+            $this->relationEntityData[$entity->getEntityType()]['entity2'],
+            'fields',
+            $this->relationEntityData[$entity->getEntityType()]['link2'],
+        ]);
+
+        if (
+            $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity2'])
+            && (!empty($fieldDefs['auditableEnabled'])
+                || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity1'], $defaultRelationScopeAudited)))
+        )
+        {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
                 'entityId'    => $entity->id,
                 'entityType'  => $entity->getEntityType(),

@@ -492,9 +492,9 @@ class PostUpdate
         self::renderLine('Copying frontend files');
 
         self::removeDir('client', ['client/custom']);
-        self::copyDir(dirname(CORE_PATH) . '/client', 'client');
+        self::copyDir(dirname(CORE_PATH) . '/client', 'public/client');
         foreach (self::$container->get('moduleManager')->getModules() as $module) {
-            self::copyDir($module->getClientPath(), 'client');
+            self::copyDir($module->getClientPath(), 'public/client');
         }
     }
 
@@ -627,7 +627,7 @@ class PostUpdate
         }
 
         self::renderLine('Regenerating measures');
-        exec(self::getPhpBin() . " index.php regenerate measures >/dev/null");
+        exec(self::getPhpBin() . " console.php regenerate measures >/dev/null");
     }
 
     private static function regenerateLists()
@@ -641,7 +641,7 @@ class PostUpdate
         }
 
         self::renderLine('Regenerating lists');
-        exec(self::getPhpBin() . " index.php regenerate lists >/dev/null");
+        exec(self::getPhpBin() . " console.php regenerate lists >/dev/null");
     }
 
     private static function regenerateUiHandlers()
@@ -655,7 +655,7 @@ class PostUpdate
         }
 
         self::renderLine('Regenerating UI handlers');
-        exec(self::getPhpBin() . " index.php regenerate ui handlers >/dev/null");
+        exec(self::getPhpBin() . " console.php regenerate ui handlers >/dev/null");
     }
 
     private static function refreshTranslations()
@@ -669,7 +669,7 @@ class PostUpdate
         }
 
         self::renderLine('Refreshing translations');
-        exec(self::getPhpBin() . " index.php refresh translations >/dev/null");
+        exec(self::getPhpBin() . " console.php refresh translations >/dev/null");
     }
 
     /**

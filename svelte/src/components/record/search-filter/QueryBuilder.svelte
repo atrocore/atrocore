@@ -11,6 +11,7 @@
     import GeneralFilter from "./GeneralFilter.svelte";
     import {savedSearchStore} from "./stores/SavedSearch";
     import {generalFilterStore} from "./stores/GeneralFilter";
+    import {Config} from "../../../utils/Config";
 
     export let scope: string;
     export let searchManager: any;
@@ -31,9 +32,7 @@
 
     let showUnsetAll: boolean = false;
 
-    $: {
-        updateStyle(parentWidth);
-    }
+    let advancedFilterDisabled: boolean;
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
 
@@ -41,56 +40,14 @@
         refreshShowUnsetAll();
     });
 
-   const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
+    const selectBoolSub = generalFilterStore.selectBoolFilters.subscribe(_ => {
         refreshShowUnsetAll();
     });
 
-   const advancedFilterCheckedSub =  generalFilterStore.advancedFilterChecked.subscribe((value) => {
-       advancedFilterChecked = value;
-       refreshShowUnsetAll();
-   })
-
-
-    function updateStyle(parentWidth: number) {
-        let rules = [
-            '.query-builder .rule-container .rule-filter-container',
-            '.query-builder .rule-container .rule-operator-container',
-            '.query-builder .rule-container .rule-value-container'
-        ];
-
-        for (const rule of rules) {
-            let elements = document.querySelectorAll(rule);
-            if (!elements.length) {
-                return;
-            }
-            for (const element of elements) {
-                if (element.style.display === 'none') {
-                    continue;
-                }
-                if (parentWidth < 450) {
-                    element.style.display = 'block'
-                    element.style.width = '100%'
-                } else {
-                    element.style.display = 'inline-block';
-                    element.style.width = '25%'
-                    if (rule.includes('operator')) {
-                        element.style.width = '20%'
-                    }
-                }
-            }
-        }
-        let deleteButton = document.querySelector('.query-builder .rule-actions');
-        if (deleteButton) {
-            if (parentWidth > 450) {
-                deleteButton.style.marginTop = '10px';
-                deleteButton.style.marginBottom = '5px';
-
-            } else {
-                deleteButton.style.marginTop = '0';
-                deleteButton.style.marginBottom = '0';
-            }
-        }
-    }
+    const advancedFilterCheckedSub = generalFilterStore.advancedFilterChecked.subscribe((value) => {
+        advancedFilterChecked = value;
+        refreshShowUnsetAll();
+    });
 
     function updateSearchManager(data: any) {
         searchManager.set({...searchManager.get(), ...data});
@@ -98,6 +55,20 @@
 
     function camelCaseToHyphen(str: string) {
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
+
+    function hyphenToCamelCase(str: string): string {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    }
+
+    function underscoreToCamelCase(str: string) {
+        if (str === null || str === undefined) {
+            return "";
+        }
+        return str.replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase());
     }
 
     function getRulesIds(rules: Rule[]) {
@@ -115,29 +86,11 @@
         return ids;
     }
 
-    function getRulesWithBadRuleRemoved(rules: Rule[]): Rule[] {
-            let newRules: Rule[] = rules;
-            rules.forEach((rule, key) => {
-                if (rule.rules) {
-                    rules[key].rules  = getRulesWithBadRuleRemoved(rules[key].rules)
-                } else if (rule.id ) {
-                    if (!filters.find(f => f.id === rule.id)) {
-                        newRules = rules.filter(r => r.id !== rule.id)
-                    }
-                }
-            });
-        return newRules;
-    }
-
     function initQueryBuilderFilter() {
-
         const $queryBuilder = window.$(queryBuilderElement)
         let rules = searchManager.getQueryBuilder() || [];
-        if(typeof rules === 'object' && !rules.condition) {
+        if (typeof rules === 'object' && !rules.condition) {
             rules = [];
-        }
-        if(rules['rules']) {
-            rules['rules'] = getRulesWithBadRuleRemoved(rules['rules']);
         }
 
         const emptyAttribute = 'emptyAttributeRule';
@@ -158,7 +111,7 @@
         if (hasAttribute()) {
             let attributeButton = {
                 id: emptyAttribute,
-                label: `[${Language.translate('addAttribute')}]`,
+                label: `[ ${Language.translate('addAttribute')} ]`,
                 type: 'boolean',
                 optgroup: Language.translate('Attributes'),
                 operators: ['equal',],
@@ -210,29 +163,89 @@
             filters: filters,
             plugins: {
                 sortable: {
-                    icon: 'fas fa-sort'
-                }
+                    icon: 'ph ph-arrows-out-cardinal'
+                },
             },
+            icons: {
+                error: 'ph ph-warning-circle',
+                remove_rule: 'ph ph-x',
+                remove_group: 'ph ph-x',
+            },
+            templates: {
+                group: ({ group_id, level, conditions, icons, settings, translate, builder }) => `
+                    <div id="${group_id}" class="rules-group-container">
+                      <div class="rules-group-header">
+                        ${level > 1 ? `
+                            <button type="button" class="btn btn-danger outline rule-delete" data-delete="group">
+                              <i class="${icons.remove_group}"></i>
+                            </button>
+                          ` : ''}
+                        <div class="btn-group float-end group-actions">
+                          <button type="button" class="btn btn-sm btn-success" data-add="rule">
+                            ${translate("add_rule")}
+                          </button>
+                          ${settings.allow_groups === -1 || settings.allow_groups >= level ? `
+                            <button type="button" class="btn btn-sm btn-success" data-add="group">
+                              ${translate("add_group")}
+                            </button>
+                          ` : ''}
+                        </div>
+                        <div class="btn-group group-conditions">
+                          ${conditions.map(condition => `
+                            <label class="btn btn-sm btn-primary">
+                              <input type="radio" name="${group_id}_cond" value="${condition}"> ${translate("conditions", condition)}
+                            </label>
+                          `).join('\n')}
+                        </div>
+                        ${settings.display_errors ? `
+                          <div class="error-container"><i class="${icons.error}"></i></div>
+                        ` : ''}
+                      </div>
+                      <div class=rules-group-body>
+                        <div class=rules-list></div>
+                      </div>
+                    </div>
+                `,
+                rule: ({rule_id, icons, settings, translate, builder}) => `
+                    <div id="${rule_id}" class="rule-container">
+                      <div class="rule-header">
+                        <div class="btn-group float-end rule-actions">
+                          <button type="button" class="btn btn-danger outline rule-delete" data-delete="rule">
+                            <i class="${icons.remove_rule}"></i>
+                          </button>
+                        </div>
+                      </div>
+                      ${settings.display_errors ? `
+                        <div class="error-container"><i class="${icons.error}"></i></div>
+                      ` : ''}
+                      <div class="rule-container-group">
+                        <div class="rule-filter-container"></div>
+                        <div class="rule-operator-container"></div>
+                        <div class="rule-value-container"></div>
+                      </div>
+                    </div>
+                `
+            }
 
         });
 
-
         model.trigger('afterInitQueryBuilder');
-        updateStyle(parentWidth);
-        $queryBuilder.on('rulesChanged.queryBuilder', (e, rule) => {
+        $queryBuilder.on('rulesChanged.queryBuilder', async (e, rule) => {
             advancedFilterChecked = false;
-            setTimeout(() => {
-                updateStyle(parentWidth);
-            }, 250)
 
             try {
                 const rules = $queryBuilder.queryBuilder('getRules');
                 if (rules) {
                     updateSearchManager({
-                        queryBuilder: rules
+                        queryBuilder: rules,
+                        advanced: []
                     });
                     handleAdvancedFilterChecked(false);
                 }
+
+                await tick();
+                $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
+                $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
             } catch (err) {
             }
             model.trigger('rulesChanged', rule);
@@ -242,21 +255,51 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
+            model.trigger('beforeUpdateRuleFilter', rule);
+        });
+
+        $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', async (e, rule) => {
+            await tick();
+            if (rule.$el) {
+                rule.$el.find('.rule-operator-container select:not(.selectized)').selectize();
+            }
+
+            model.trigger('beforeUpdateRuleFilter', rule);
+        });
+
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
             model.trigger('afterInitQueryBuilder');
         });
 
         $queryBuilder.on('afterAddGroup.queryBuilder', (e, rule) => {
             model.trigger('afterAddGroup', rule);
-            updateStyle(parentWidth);
         });
 
-        $queryBuilder.on('afterAddRule.queryBuilder', (e, rule) => {
-            setTimeout(() => {
-                updateStyle(parentWidth);
-            }, 250)
+        $queryBuilder.on('afterAddRule.queryBuilder', async (e, rule) => {
+            await tick();
+            if (rule.$el) {
+                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize();
+            }
+
             model.trigger('afterAddRule', rule);
         });
+    }
+
+    function getFieldOrAttributeId(field: string) {
+        let id = field;
+        let parts = field.split('_')
+        if (parts.length >= 2 && parts[0] === 'attr') {
+            id = parts[1];
+            const endings = ["From", "To", "UnitId"];
+            for (const ending of endings) {
+                if (id.endsWith(ending)) {
+                    id = id.slice(0, -ending.length);
+                    break;
+                }
+            }
+        }
+        return id;
     }
 
     function prepareFilters(callback: Function) {
@@ -271,9 +314,7 @@
             }
 
             const fieldType = camelCaseToHyphen(fieldDefs.type);
-            const view = Metadata.get(['fields', fieldType, 'view']) || `views/fields/${fieldType}`;
-
-
+            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view'])  || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
                 createView(field, view, {
                     name: field,
@@ -285,7 +326,7 @@
                         }
                     },
                 }, view => {
-                    let filter = view.createQueryBuilderFilter();
+                    let filter = view.createQueryBuilderFilter(fieldDefs.type);
                     if (filter) {
                         filters.push(filter);
                     }
@@ -303,13 +344,12 @@
          */
         if (rules.rules) {
             promiseList.push(new Promise(resolve => {
-                let attributesIds = [];
+                let attributesIds: string[] = [];
                 getRulesIds(rules.rules).forEach(id => {
-                    let parts = id.split('_');
-                    if (parts.length === 2 && parts[0] === 'attr') {
-                        attributesIds.push(parts[1]);
+                    if (id.startsWith('attr_')) {
+                        attributesIds.push(getFieldOrAttributeId(id));
                     }
-                })
+                });
 
                 if (attributesIds.length > 0) {
                     const where = [{attribute: 'id', type: 'in', value: attributesIds}];
@@ -322,10 +362,23 @@
                         },
                     }).then(response => {
                         return response.json().then(attrs => {
+                            // we clean up the rules to remove attribute rule if attribute does not exist anymore
+                            cleanUpSavedRule((fieldId: string) => {
+                                if (fieldId.startsWith('attr_')) {
+                                    return attrs.list.find(v => v.id === getFieldOrAttributeId(fieldId))
+                                } else {
+                                    return true;
+                                }
+                            });
+
                             if (attrs.list.length) {
+                                let resolved = []
                                 attrs.list.forEach(attribute => {
                                     pushAttributeFilter(attribute, (pushed, filter) => {
-                                        resolve();
+                                        resolved.push(attribute.id);
+                                        if (resolved.length === attrs.list.length) {
+                                            resolve();
+                                        }
                                     })
                                 });
                             } else {
@@ -340,17 +393,24 @@
         }
 
         Promise.all(promiseList).then(() => {
-
             callback();
+
+            const $queryBuilder = window.$(queryBuilderElement);
+            $queryBuilder.find('.rule-filter-container select').selectize();
+            $queryBuilder.find('.rule-operator-container select').selectize();
         });
     }
 
 
     function resetFilter() {
-       advancedFilterChecked = false;
-       handleAdvancedFilterChecked(false)
+        if (advancedFilterDisabled) {
+            return;
+        }
+        advancedFilterChecked = false;
+        handleAdvancedFilterChecked(false)
         updateSearchManager({
-            queryBuilder: []
+            queryBuilder: [],
+            advanced: []
         });
         window.$(queryBuilderElement).queryBuilder('setRules', []);
         updateCollection();
@@ -366,40 +426,96 @@
     }
 
     function pushAttributeFilter(attribute: any, callback: Function) {
-        const fieldType = window.Espo.Utils.camelCaseToHyphen(attribute.type);
-        const view = Metadata.get(['fields', fieldType, 'view']) ?? `views/fields/${fieldType}`;
-
+        let promises: Promise[] = []
+        let filterChanged = false;
+        const fieldType = camelCaseToHyphen(attribute.type);
         const name = `attr_${attribute.id}`;
+        const label = attribute.name;
+        const params: any = {
+            attribute
+        }
 
-        createView(name, view, {
-            name: name,
-            model: model,
-            defs: {
-                name: name,
-                params: {
-                    attribute: attribute
+        if (['extensibleEnum', 'extensibleMultiEnum'].includes(attribute.type)) {
+            params['extensibleEnumId'] = attribute.extensibleEnumId;
+        }
+
+        let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
+            return new Promise((resolve) => {
+                const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
+                let exitingFilter = filters.find(f => f.id === name);
+                if(exitingFilter) {
+                    resolve(exitingFilter);
+                }else{
+                    createView(name, view, {
+                        name: name,
+                        model: model,
+                        defs: {
+                            name: name,
+                            params: params
+                        },
+                    }, view => {
+                        let filter = view.createQueryBuilderFilter(attribute.type);
+                        if (filter) {
+                            filter.label = label;
+                            filter.optgroup = Language.translate('Attributes');
+                            filter.order = order;
+                            if (!filters.find(f => f.id === name)) {
+                                filters.push(filter);
+                                filterChanged = true;
+                                resolve(filter)
+                            }
+                        }
+                    });
                 }
-            },
-        }, view => {
-            let filter = view.createQueryBuilderFilter();
-            if (filter) {
-                filter.label = attribute.name;
-                filter.optgroup = Language.translate('Attributes');
-                let ids = filters.map(item => {
-                    return item.id
-                });
-                if (!ids.includes(name)) {
-                    filters.push(filter);
-                    callback(true, filter);
-                } else {
-                    callback(false, filter);
+            });
+        };
+
+        if (['rangeInt', 'rangeFloat'].includes(attribute.type)) {
+            let type = attribute.type === 'rangeInt' ? 'int' : 'float';
+            ['From', 'To'].forEach((v, key) => {
+                promises.push(createFieldView(name + v, type, label + ' ' + Language.translate(v), params, key));
+            })
+        } else if (attribute.isMultilang) {
+            let languages: string[] = Config.get('inputLanguageList') ?? [];
+            languages = ['main', ...languages];
+            let i = 0;
+            for (const language of languages) {
+                let currentLabel = label;
+                let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
+                if (language !== 'main') {
+                    currentLabel = currentLabel + ' / ' + language
                 }
+                promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
+                i++;
             }
-        });
+
+        } else {
+            promises.push(createFieldView(name, fieldType, label, params));
+        }
+
+        if (attribute.measureId) {
+
+            promises.push(createFieldView(name + 'UnitId', 'unit-link', label + ' ' + Language.translate('Unit'), {
+                ...params,
+                type: 'unit',
+                measureId: attribute.measureId
+            }, 2));
+        }
+
+        Promise.all(promises).then(newFilters => {
+            newFilters.sort((a, b) => a.order - b.order);
+            window.currentFilters = filters;
+            if(attribute.isMultilang) {
+                callback(filterChanged, [newFilters[0]]);
+            }else{
+                callback(filterChanged, newFilters);
+            }
+        })
+
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && Metadata.get(['scopes', scope, 'hasAttribute']) || scope === 'Product';
+        return Acl.check('Attribute', 'read') && scope === 'Product';
     }
 
     function addAttributeFilter(callback) {
@@ -436,20 +552,16 @@
         });
     }
 
-    function handleGeneralFilterChecked(e, filter) {
-        let isChecked = e.target.checked;
-        let bool = searchManager.getBool();
-        bool[filter] = isChecked;
-        updateSearchManager({bool})
-        updateCollection();
-        refreshShowUnsetAll();
-    }
-
     function unsetAll() {
-        if(!showUnsetAll) {
+        if (!showUnsetAll) {
             return;
         }
-        searchManager.reset();
+        searchManager.update({
+            bool: {},
+            savedFilters: [],
+            queryBuilderApplied: false,
+            advanced: []
+        });
         advancedFilterChecked = false;
         handleAdvancedFilterChecked(false);
         savedSearchStore.selectedSavedItemIds.set([]);
@@ -475,7 +587,7 @@
             queryBuilderApplied: advancedFilterChecked ? 'apply' : false
         });
 
-        if(refresh) {
+        if (refresh) {
             updateCollection();
         }
 
@@ -484,7 +596,10 @@
 
     async function saveSaveSearch(data, id = null): Promise<void> {
         Notifier.notify(Language.translate('pleaseWait', 'messages'));
-        savedSearchStore.saveSavedSearch(data, id).then( data =>{
+        savedSearchStore.saveSavedSearch(data, id).then(data => {
+            if (id !== null) {
+                cancelEditSearchQuery()
+            }
             Notifier.notify(Language.translate('Done'), 'success');
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
@@ -493,6 +608,9 @@
     }
 
     function saveFilter() {
+        if (advancedFilterDisabled) {
+            return;
+        }
         let validation = window.$(queryBuilderElement).queryBuilder('validate');
         if (!validation) {
             Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
@@ -573,17 +691,79 @@
         editingSavedSearch = null;
     }
 
+    function refreshAdvancedFilterDisabled() {
+        let rules = searchManager.getQueryBuilder();
+        advancedFilterDisabled = true;
+
+        if (typeof rules === 'object' && rules.condition) {
+            advancedFilterDisabled = isRuleEmpty(rules);
+        }
+
+        generalFilterStore.advancedFilterDisabled.set(advancedFilterDisabled);
+
+        if (advancedFilterDisabled) {
+            generalFilterStore.advancedFilterChecked.set(false);
+            advancedFilterChecked = false;
+        }
+    }
+
+    // return true the filter have been updates
+    function cleanUpSavedRule(exists: Function): boolean {
+        // we clean up to remove  fields that do not exist anymore
+        let hasChanged = false;
+        let cleanUpRule = (rule: Rule) => {
+            if (rule.rules) {
+                let newRules: Rule[] = [];
+                for (const rulesKey in rule.rules) {
+                    if (rule.rules[rulesKey].id) {
+                        if (!exists(rule.rules[rulesKey].id)) {
+                            hasChanged = true;
+                            newRules = rule.rules.filter(v => v.id !== rule.rules[rulesKey].id);
+                        }
+                    }
+                    if (rule.rules[rulesKey] && rule.rules[rulesKey].rules) {
+                        cleanUpRule(rule.rules[rulesKey]);
+                    }
+                }
+                if (newRules.length !== rule.rules.length) {
+                    rule.rules = newRules;
+                }
+            }
+        }
+
+        let rule = searchManager.getQueryBuilder();
+        cleanUpRule(rule);
+        if (hasChanged) {
+            searchManager.update({queryBuilder: rule})
+        }
+
+        return hasChanged
+    }
+
     function refreshShowUnsetAll() {
-       setTimeout(() => {
-           showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
-           let bool = searchManager.getBool();
-           for (const boolKey in bool) {
-               if(bool[boolKey]){
-                   showUnsetAll = true;
-                   break;
-               }
-           }
-       }, 100)
+        refreshAdvancedFilterDisabled();
+        setTimeout(() => {
+            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
+            let bool = searchManager.getBool();
+            for (const boolKey in bool) {
+                if (bool[boolKey]) {
+                    showUnsetAll = true;
+                    break;
+                }
+            }
+        }, 100)
+    }
+
+    function isRuleEmpty(rule: Rule): boolean {
+        if (rule.operator) {
+            return false;
+        }
+
+        if (!rule.rules) {
+            return true;
+        }
+
+        return rule.rules.length === 0;
     }
 
     onMount(() => {
@@ -605,28 +785,48 @@
         // override updateRuleFilter
         let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
         window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
+            this.trigger('beforeUpdateRuleFilter', rule);
             if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
-                addAttributeFilter((pushed, filter) => {
+                addAttributeFilter((pushed, newFilters) => {
                     if (pushed) {
-                        this.setFilters(filters)
-                        rule.filter = filter;
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    } else {
-                        if (rule.filter.id === 'emptyAttributeRule') {
-                            rule.filter = previousFilter;
-                        }
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
+                        this.setFilters(filters);
                     }
+                    if (newFilters) {
+                        rule.filter = newFilters[0];
+                        if (newFilters.length > 1) {
+                            for (const newFilter of newFilters) {
+                                if (newFilter.id === rule.filter.id) {
+                                    continue;
+                                }
+
+                                let r = this.addRule(rule.parent);
+                                r.filter = newFilter;
+                            }
+                        }
+                    }
+                    if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
+                        rule.filter = previousFilter;
+                    }
+                    originalUpdateRuleFilter.call(this, rule, previousFilter);
                 })
             } else {
                 originalUpdateRuleFilter.call(this, rule, previousFilter);
             }
         }
 
+        let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
+        window.$.fn.queryBuilder.constructor.prototype.getFilterById = function (id, doThrow) {
+            if (id === '') {
+                return null;
+            }
+
+            return originalGetFilterById.call(this, id, doThrow);
+        };
+
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
         // show unset all
-       refreshShowUnsetAll();
+        refreshShowUnsetAll();
 
         prepareFilters(() => {
             initQueryBuilderFilter();
@@ -641,14 +841,15 @@
 </script>
 
 <div class="query-builder-container">
-    <div>
-
-        <button class="filter-item" data-action="filter"  class:disabled={!showUnsetAll} on:click={unsetAll}>
-            <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
-            {Language.translate('Unset All')}
-        </button>
+    <div style="margin-bottom: 5px;min-height: 25px;">
+        {#if showUnsetAll}
+            <button class="btn btn-sm btn-default filter-button" data-action="filter" on:click={unsetAll}>
+                <i class="ph ph-x"></i>
+                {Language.translate('Unset All')}
+            </button>
+        {/if}
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager} />
+    <GeneralFilter scope={scope} searchManager={searchManager}/>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -663,73 +864,111 @@
 
     <div class="advanced-filters">
         <h5>
-            <input type="checkbox" bind:checked={advancedFilterChecked} on:change={(e) => handleAdvancedFilterChecked()}>
-            <span on:click={updateCollection}>{Language.translate('Advanced Filter')}</span></h5>
-        <div class="row filter-action">
-            <button class="filter-item" on:click={resetFilter}>
-                <span><svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg></span>
+            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked}
+                   on:change={(e) => handleAdvancedFilterChecked()}>
+            <span>{Language.translate('Apply Advanced Filter')}</span></h5>
+        <div class="query-builder" bind:this={queryBuilderElement}></div>
+        <div class="filter-action">
+            <button class="btn btn-sm btn-default filter-button" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
+                <i class="ph ph-x"></i>
                 {Language.translate('Unset')}
             </button>
             {#if Acl.check('SavedSearch', 'create')}
-                <button class="filter-item save" on:click={saveFilter}>
-                    <span><svg class="icon"><use href="client/img/icons/icons.svg#save"></use></svg></span>
+                <button class="btn btn-sm btn-success filter-button" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
+                    <i class="ph ph-floppy-disk-back"></i>
                     {Language.translate('Save')}
                 </button>
             {/if}
         </div>
-        <div class="query-builder" bind:this={queryBuilderElement}></div>
     </div>
 </div>
 
 <style>
-    .filter-item {
-        border: 1px solid rgb(126 183 241);
-        border-radius: 5px;
-        background-color: rgba(126, 183, 241, 0.25);
-        color: var(--primary-font-color);
-        padding: 5px 10px;
-        font-size: 13px;
-        line-height: 1;
-        margin-right: 5px;
+    .query-builder-container :global(.checkboxes-filter) {
+        margin-bottom: 10px;
     }
 
-    .filter-item:hover {
-        border: 1px solid rgb(126 183 241);
-        background-color: rgba(126, 183, 241, 0.1);
+    .btn-sm {
+        padding: 4px 8px;
     }
 
-    .filter-item.save {
-        background-color: #85b75f40;
-        border-color: #85b75f;
-    }
-
-    .filter-item.save:hover {
-        background-color: #85b75f12;
+    .btn-sm i {
+        font-size: 14px;
     }
 
     .filter-action {
-        margin-bottom: 10px;
-        margin-left: 0;
-        margin-right: 0;
+        background-color: var(--sidebar-color);
+        margin-top: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .advanced-filters {
+        margin-top: 20px;
+        position: relative;
     }
 
     .advanced-filters h5 {
         display: flex;
         align-items: center;
+        margin: 0 0 15px 0;
     }
 
     .advanced-filters h5 input[type="checkbox"] {
         margin-top: 0;
         margin-right: 10px;
+        margin-left: 3px;
     }
+
     :global(.query-builder .input-group-btn .btn) {
-        height: 33px;
+        height: 32px;
         padding: 0;
     }
 
-    button.disabled,  button.disabled:hover{
-        background-color: #eee;
-        border-color: #eee;
-        cursor: not-allowed;
+    :global(.query-builder .btn.rule-delete) {
+        border: 0;
+        padding: 0;
+        background-color: transparent;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .filter-button {
+        border-radius: 4px;
+    }
+
+    .query-builder :global(.rule-container-group) {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 10px;
+        min-width: 100%;
+        margin-left: 0;
+        margin-right: -5px;
+        container-type: inline-size;
+    }
+
+    .query-builder :global(.rule-container-group .rule-operator-container),
+    .query-builder :global(.rule-container-group .rule-filter-container),
+    .query-builder :global(.rule-container-group .rule-value-container) {
+        flex-basis: 100%;
+    }
+
+    @container (min-width: 400px) {
+        .query-builder :global(.rule-container-group .rule-filter-container) {
+            flex: 1 1 0;
+        }
+
+        .query-builder :global(.rule-container-group .rule-operator-container) {
+            flex-basis: 170px;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
     }
 </style>

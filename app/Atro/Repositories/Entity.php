@@ -100,6 +100,7 @@ class Entity extends ReferenceData
         if (!empty($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
+            $this->prepareVirtualFields($entity);
             $entity->setAsFetched();
 
             return $entity;
@@ -267,6 +268,10 @@ class Entity extends ReferenceData
         $saveLanguage = $isCustom;
 
         foreach ($entity->toArray() as $field => $value) {
+            if($this->getMetadata()->get(['entityDefs', 'Entity', 'fields',  $field, 'notStorable'])) {
+                continue;
+            }
+
             if (!$entity->isAttributeChanged($field) || in_array($field, ['id', 'code'])) {
                 continue;
             }
@@ -421,6 +426,73 @@ class Entity extends ReferenceData
         $this->getDataManager()->clearCache();
 
         return true;
+    }
+
+    protected function afterSave(OrmEntity $entity, array $options = [])
+    {
+        if($entity->isAttributeChanged('auditedDisabledFields')) {
+            foreach ($entity->get('fields') ?? [] as $field) {
+                if(in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
+                    $field->set('auditableDisabled', true);
+                }else if(!empty($field->get('auditableDisabled'))) {
+                    $field->set('auditableDisabled', false);
+                }
+                $this->getEntityManager()->getRepository('EntityField')->save($field);
+            }
+        }
+
+        if($entity->isAttributeChanged('auditedEnabledRelations')) {
+            foreach ($entity->get('fields') ?? [] as $field) {
+                if(in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
+                    $field->set('auditableEnabled', true);
+                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                }else if(!empty($field->get('auditableEnabled'))){
+                    $field->set('auditableEnabled', false);
+                }
+                $this->getEntityManager()->getRepository('EntityField')->save($field);
+            }
+        }
+        parent::afterSave($entity, $options);
+    }
+
+    protected function prepareVirtualFields(OrmEntity $entity): void
+    {
+        // prepare auditedDisabledFields
+        $fields = [];
+        $scope = $entity->get('code') ?? $entity->get('name');
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
+            if(!empty($fieldDef['auditableDisabled'])) {
+                $fields[] = $field;
+            }
+        }
+        $entity->set('auditedDisabledFields', $fields);
+
+        $defaultRelationScopeAudited =  [];
+        foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
+            if(!empty($scopeDefs['defaultRelationAudited'])) {
+                $defaultRelationScopeAudited[] = $scopeKey;
+            }
+        }
+        //prepare auditedEnabledRelations
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
+            if(!empty($fieldDef['auditableEnabled']) && $fieldDef['type'] === 'linkMultiple') {
+                $fields[] = $field;
+                continue;
+            }
+
+            if($fieldDef['type'] === 'linkMultiple') {
+                $linkDefs = $this->getMetadata()->get(['entityDefs', $scope, 'links', $field]);
+                if(empty($linkDefs['relationName']) || empty($linkDefs['entity']) || $this->getMetadata()->get(['scopes', ucfirst($linkDefs['relationName']), 'type']) !== 'Relation') {
+                    continue;
+                }
+                if(in_array($linkDefs['entity'], $defaultRelationScopeAudited)) {
+                    $fields[] = $field;
+                }
+            }
+
+        }
+        $entity->set('auditedEnabledRelations', $fields);
     }
 
     protected function init()

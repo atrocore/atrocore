@@ -126,17 +126,17 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             {
                 name: 'refresh',
                 label: 'Refresh',
-                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#sync"></use></svg>',
+                iconHtml: '<i class="ph ph-arrows-clockwise"></i>',
             },
             {
                 name: 'options',
                 label: 'Options',
-                iconHtml: '<svg class="icon icon-small"><use href="client/img/icons/icons.svg#pencil-alt"></use></svg>',
+                iconHtml: '<i class="ph ph-pencil-simple"></i>',
             },
             {
                 name: 'remove',
                 label: 'Remove',
-                iconHtml: '<svg class="icon"><use href="client/img/icons/icons.svg#close"></use></svg>',
+                iconHtml: '<i class="ph ph-x"></i>',
             }
         ],
 

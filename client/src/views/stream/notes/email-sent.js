@@ -48,10 +48,10 @@ Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep)
             'click a[data-action="expandDetails"]': function (e) {
                 if (this.$el.find('.details').hasClass('hidden')) {
                     this.$el.find('.details').removeClass('hidden');
-                    $(e.currentTarget).find('span').removeClass('fa-angle-down').addClass('fa-angle-up');
+                    $(e.currentTarget).find('i').removeClass('ph-caret-down').addClass('ph-caret-up');
                 } else {
                     this.$el.find('.details').addClass('hidden');
-                    $(e.currentTarget).find('span').addClass('fa-angle-down').removeClass('fa-angle-up');
+                    $(e.currentTarget).find('i').addClass('ph-caret-down').removeClass('ph-caret-up');
                 }
             }
         },

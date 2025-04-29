@@ -16,11 +16,12 @@ use Espo\ORM\Entity;
 
 class RealtimeManager
 {
-    public const LISTENING_DIR = 'public/listening';
+    public const PUBLIC_DIR = 'public';
+    public const LISTENING_DIR = 'listening';
 
     public function startEntityListening(string $entityName, string $entityId): array
     {
-        $dir = self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entityName;
+        $dir = self::PUBLIC_DIR . DIRECTORY_SEPARATOR . self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entityName;
         $fileName = $dir . DIRECTORY_SEPARATOR . "{$entityId}.json";
 
         if (file_exists($fileName)) {
@@ -35,13 +36,13 @@ class RealtimeManager
 
         return [
             'timestamp' => $timestamp,
-            'endpoint'  => $fileName
+            'endpoint'  => self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entityName . DIRECTORY_SEPARATOR . "{$entityId}.json"
         ];
     }
 
     public function afterEntityChanged(Entity $entity): void
     {
-        $dir = self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entity->getEntityName();
+        $dir = self::PUBLIC_DIR . DIRECTORY_SEPARATOR . self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entity->getEntityName();
         $fileName = $dir . DIRECTORY_SEPARATOR . "{$entity->get('id')}.json";
 
         if (file_exists($fileName)) {
@@ -51,7 +52,7 @@ class RealtimeManager
 
     public function clear(): void
     {
-        $dir = self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity';
+        $dir = self::PUBLIC_DIR . DIRECTORY_SEPARATOR . self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity';
         if (!is_dir($dir)) {
             return;
         }

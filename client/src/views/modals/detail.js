@@ -101,7 +101,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-left"></use></svg>',
+                    html: '<i class="ph ph-caret-left"></i>',
                     title: this.translate('Previous Entry'),
                     pullLeft: true,
                     className: 'btn-icon',
@@ -109,7 +109,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 });
                 this.buttonList.push({
                     name: 'next',
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#angle-right"></use></svg>',
+                    html: '<i class="ph ph-caret-right"></i>',
                     title: this.translate('Next Entry'),
                     pullLeft: true,
                     className: 'btn-icon',
@@ -390,6 +390,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
             this.createView('quickEdit', viewName, {
                 scope: this.scope,
+                model: this.model,
+                layoutRelatedScope: this.options.layoutRelatedScope,
                 id: this.id,
                 fullFormDisabled: this.fullFormDisabled,
                 htmlStatusIcons: this.options.htmlStatusIcons
@@ -410,7 +412,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.listenToOnce(view, 'after:save', function (model) {
                     this.trigger('after:save', model);
 
-                    this.model.set(model.getClonedAttributes());
+                    this.model.fetch();
+                    if (this.model.relationModel) {
+                        this.model.relationModel.fetch();
+                    }
                 }, this);
 
                 view.render();

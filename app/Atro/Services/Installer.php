@@ -765,10 +765,10 @@ class Installer extends HasContainer
 
         V1Dot13Dot16::setupDefaultFavorites($this->getEntityManager()->getConnection());
 
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php refresh translations >/dev/null");
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate lists >/dev/null");
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate measures >/dev/null");
-        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " index.php regenerate ui handlers >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php refresh translations >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate lists >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate measures >/dev/null");
+        exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate ui handlers >/dev/null");
     }
 
     protected function createDefaultLayoutProfile()

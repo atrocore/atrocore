@@ -6,7 +6,7 @@
             <div class="clearfix option-list-item-header">
                 <div class="pull-right">
                     <a href="javascript:" data-action="removeOptionList" data-index="{{index}}" class="remove-option-list" title="{{translate 'Remove'}}">
-                        <span class="fas fa-minus fa-sm"></span>
+                        <i class="ph ph-minus"></i>
                     </a>
                 </div>
             </div>
@@ -27,6 +27,6 @@
         {{/each}}
     </div>
     <div>
-        <a href="javascript:" data-action="addOptionList" title="{{translate 'Add'}}" class="add-option-list"><span class="fas fa-plus fa-sm"></span></a>
+        <a href="javascript:" data-action="addOptionList" title="{{translate 'Add'}}" class="add-option-list"><span class="ph ph-plus"></span></a>
     </div>
 </div>

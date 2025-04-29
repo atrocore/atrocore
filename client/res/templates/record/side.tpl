@@ -1,6 +1,6 @@
 <button type="button" class="btn btn-default collapse-panel" data-action="collapsePanel">
-    <svg class="icon toggle-icon-left hidden"><use href="client/img/icons/icons.svg#angle-left"></use></svg>
-    <svg class="icon toggle-icon-right"><use href="client/img/icons/icons.svg#angle-right"></use></svg>
+    <i class="ph ph-caret-left toggle-icon-left hidden"></i>
+    <i class="ph ph-caret-right toggle-icon-right"></i>
 </button>
 {{#each panelList}}
 <div class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}" data-name="{{name}}" data-name="{{name}}">

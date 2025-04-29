@@ -26,7 +26,10 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
             searchManager.scope = this.scope;
 
             if (this.options.params.showFullListFilter) {
-                searchManager.set(_.extend(searchManager.get(), {advanced: Espo.Utils.cloneDeep(this.options.params.advanced)}));
+                searchManager.update({
+                    queryBuilder: this.options.params.queryBuilder,
+                    queryBuilderApplied: true
+                });
             }
 
             searchManager.loadStored();
@@ -40,7 +43,8 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                         type: 'equals',
                         attribute: 'entityType',
                         value: this.scope
-                    }]
+                    }],
+                    maxSize: 20
                 }, {async: false}).then((result) => {
                     searchManager.savedSearchList = result.list;
                     savedFilters = savedFilters.map(i => result.list.find(item => item.id === i.id)).filter(i => i);
@@ -48,7 +52,7 @@ Espo.define('treo-core:views/list', ['class-replace!treo-core:views/list', 'sear
                 });
             }
 
-            collection.where = searchManager.getWhere();
+            this.collection.where = searchManager.getWhere();
             this.searchManager = searchManager;
         },
 

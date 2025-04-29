@@ -73,7 +73,7 @@
         border-right: 0;
     }
 
-    .bookmark-panel-container .group .list-row-buttons span {
+    .bookmark-panel-container .group .list-row-buttons i {
         color: var(--action-icon-color);
     }
 

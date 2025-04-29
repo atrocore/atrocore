@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity as OrmEntity;
 
 class EntityField extends ReferenceData
@@ -35,6 +36,7 @@ class EntityField extends ReferenceData
         if (!empty($item)) {
             $entity = $this->entityFactory->create($this->entityName);
             $entity->set($item);
+            $this->prepareVirtualBoolFields($entity);
             $entity->setAsFetched();
 
             return $entity;
@@ -187,6 +189,29 @@ class EntityField extends ReferenceData
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
             }
         }
+
+        if ($entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
+            $connection = $this->getEntityManager()->getConnection();
+            $entityName = $entity->get('entityId');
+            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+
+            if (!empty($type) && $type !== 'ReferenceData') {
+                $tableName = $this->getEntityManager()->getMapper()->toDb($entityName);
+                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier($tableName))
+                    ->set($column, ':false')
+                    ->where("$column is null")
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->executeStatement();
+            }
+        }
+    }
+
+    protected function afterSave(OrmEntity $entity, array $options = [])
+    {
+        $this->updateEntityFromVirtualFields($entity);
+        parent::afterSave($entity, $options);
     }
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])
@@ -374,7 +399,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        $commonFields = ['tooltipLink', 'tooltip', 'type', 'isCustom'];
+        $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled'];
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
         if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $typeFields[] = 'optionColors';
@@ -470,6 +495,71 @@ class EntityField extends ReferenceData
         $this->getMetadata()->delete('entityDefs', $scope, ["fields.$name", "links.$name"]);
     }
 
+    protected function updateEntityFromVirtualFields(OrmEntity $entity): void
+    {
+        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $virtualToEntityFields = [
+            "isNonComparable" => "nonComparableFields",
+            "isDuplicatableRelation" => "duplicatableRelations",
+            "isUninheritableField" => "unInheritedFields",
+            "isUninheritableRelation" => "unInheritedRelations",
+            "modifiedExtendedEnabled" => "modifiedExtendedRelations"
+        ];
+
+        foreach ($virtualToEntityFields as $field => $entityField) {
+            if ($entity->isAttributeChanged($field)) {
+                $values = $entityEntity->get($entityField) ?? [];
+                if (!empty($entity->get($field))) {
+                    if (!in_array($entity->get('code'), $values)) {
+                        $values[] = $entity->get('code');
+                    }
+                } else {
+                    $oldValues = $values;
+                    $values = [];
+                    foreach ($oldValues as $value) {
+                        if ($value === $entity->get('code')) {
+                            continue;
+                        }
+                        $values[] = $value;
+                    }
+                }
+                $entityEntity->set($entityField, $values);
+                $this->getEntityManager()->getRepository('Entity')->save($entityEntity);
+            }
+        }
+    }
+
+    protected  function prepareVirtualBoolFields(OrmEntity $entity): void
+    {
+        $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
+        $virtualToEntityFields = [
+            "isNonComparable" => "nonComparableFields",
+            "isDuplicatableRelation" => "duplicatableRelations",
+            "isUninheritableField" => "unInheritedFields",
+            "isUninheritableRelation" => "unInheritedRelations",
+            "modifiedExtendedEnabled" => "modifiedExtendedRelations"
+        ];
+
+        foreach ($virtualToEntityFields as $field => $entityField) {
+            $entity->set($field, in_array($entity->get('code'), $entityEntity->get($entityField) ?? []));
+        }
+
+        $defaultRelationScopeAudited =  [];
+        foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
+            if(!empty($scopeDefs['defaultRelationAudited'])) {
+                $defaultRelationScopeAudited[] = $scopeKey;
+            }
+        }
+
+        // we set auditableEnabled to true for File, channel and category is nothing was define
+        if(in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
+            $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
+            if( !isset($fieldDefs['auditableEnabled'])) {
+                $entity->set('auditableEnabled', true);
+            }
+        }
+    }
+    
     protected function init()
     {
         parent::init();

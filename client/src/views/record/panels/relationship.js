@@ -169,7 +169,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     link: this.link,
                     acl: 'create',
                     aclScope: this.scope,
-                    html: '<svg class="icon"><use href="client/img/icons/icons.svg#plus"></use></svg>',
+                    html: '<i class="ph ph-plus"></i>',
                     data: {
                         link: this.link,
                     }
@@ -409,7 +409,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                     this.actionList.unshift({
                         action: 'selectFilter',
-                        html: '<span class="fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + this.translate(item, 'presetFilters', this.scope),
+                        html: '<i class="ph ph-check pull-right' + (!selected ? ' hidden' : '') + '"></i>' + this.translate(item, 'presetFilters', this.scope),
                         data: {
                             name: item
                         }
@@ -450,36 +450,52 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             let defs = this.getMetadata().get(['entityDefs', entity, 'fields', foreign]) || {};
             let type = defs.type;
 
-            let advanced = {};
+            let queryBuilder = {};
             if (type === 'link') {
-                advanced = {
-                    [foreign]: {
-                        type: 'equals',
-                        field: foreign + 'Id',
-                        value: data.modelId,
-                        data: {
-                            type: 'is',
-                            idValue: data.modelId,
-                            nameValue: data.modelName
+                queryBuilder = {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: foreign + 'Id',
+                            field: foreign +'Id',
+                            value: [data.modelId],
+                            type: 'string',
+                            operator: 'in',
+                            data: {
+                                nameHash: {
+                                    [data.modelId]: data.modelName
+                                }
+                            }
+
                         }
-                    }
+                    ],
+                    valid: true
                 }
+
             } else if (type === 'linkMultiple') {
-                advanced = {
-                    [foreign]: {
-                        type: 'linkedWith',
-                        value: [data.modelId],
-                        nameHash: {[data.modelId]: data.modelName},
-                        data: {
-                            type: 'anyOf'
+                queryBuilder = {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: foreign,
+                            field: foreign,
+                            value: [data.modelId],
+                            type: 'string',
+                            operator: 'linked_with',
+                            data: {
+                                nameHash: {
+                                    [data.modelId]: data.modelName
+                                }
+                            }
                         }
-                    }
+                    ],
+                    valid: true
                 }
             }
 
             let params = {
                 showFullListFilter: true,
-                advanced: advanced
+                queryBuilder: queryBuilder
             };
 
             this.getRouter().navigate(`#${this.scope}`, {trigger: true});

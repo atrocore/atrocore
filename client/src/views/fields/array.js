@@ -381,7 +381,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             }
 
             var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
-            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
+            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><i class="ph ph-x"></i></a>' +
             '</div>';
 
             return html;
@@ -510,7 +510,16 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(!Array.isArray(value) || value === null) {
+                            return 'bad float';
+                        }
+
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 

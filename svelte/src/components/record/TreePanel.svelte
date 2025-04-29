@@ -134,8 +134,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-up"></use></svg>'),
-            openedIcon: window.$('<svg class="icon"><use href="client/img/icons/icons.svg#angle-down"></use></svg>'),
+            closedIcon: window.$('<i class="ph ph-caret-right"></i>'),
+            openedIcon: window.$('<i class="ph ph-caret-down"></i>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -314,7 +314,7 @@
 
             if (selectNodeId && isSelectionEnabled) {
                 const button = document.createElement('span');
-                button.classList.add('reset-button', 'fa', 'fa-times', 'pull-right');
+                button.classList.add('reset-button', 'ph', 'ph-x', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callUnselectNode();
@@ -879,10 +879,10 @@
                                placeholder={Language.translate('typeToSearch')}>
                         <div class="button-container">
                             {#if searchValue}
-                                <button on:click={treeReset} class="fas fa-times reset-search-in-tree-button"></button>
+                                <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
                             {/if}
                             <button on:click={applySearch} class="search-in-tree-button">
-                                <svg class="icon"><use href="client/img/icons/icons.svg#search"></use></svg>
+                                <i class="ph ph-magnifying-glass"></i>
                             </button>
                         </div>
                     </div>
@@ -892,7 +892,7 @@
                                 <button type="button" class="btn btn-default sort-btn" data-tippy="true"
                                         title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
                                         on:click={onSortAscChange}>
-                                    <i class={'fas '+(sortAsc ? 'fa-sort-amount-up':'fa-sort-amount-down')}></i>
+                                    <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
                                 </button>
                                 <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
                                         on:change={onSortByChange}>
@@ -1004,6 +1004,10 @@
         box-shadow: none;
     }
 
+    :global(ul.jqtree-tree .jqtree-toggler .ph) {
+        font-size: 16px;
+    }
+
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
         display: -webkit-box;
         line-clamp: 1;
@@ -1019,7 +1023,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 8px;
+        margin-top: 6px;
         position: absolute;
         top: 0;
         right: 0;

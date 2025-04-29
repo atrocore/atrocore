@@ -200,7 +200,14 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             window.addEventListener('filter:unset-all', (e) => {
                 this.resetSorting();
             });
-            new Svelte.ListHeader({
+            if(window.svelteListHeader) {
+                try{
+                    window.svelteListHeader.$destroy();
+                }catch (e) {
+
+                }
+            }
+            window.svelteListHeader = new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
@@ -208,6 +215,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         scope: this.scope,
                         searchManager: this.searchManager,
                         showSearchPanel: this.searchPanel,
+                        showFilter: this.shouldShowFilter(),
                         afterOnMount: () => {
                             this.setupTourButton();
                             observer = this.initHeaderObserver();
@@ -453,7 +461,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     this.trigger('record-list-rendered', view)
                 }, this);
 
-                view.notify(false);
+                if(!fetch) {
+                    view.notify(false);
+                }
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', function (obj) {
                         this.getStorage().set('listSorting', this.collection.name, obj);
@@ -465,11 +475,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
+                        this.collection.where = this.searchManager.getWhere();
+                        Espo.Ui.notify(this.translate('loading', 'messages'));
                         this.collection.fetch({
                             headers: {
                                 'Entity-History': 'true'
                             }
-                        });
+                        }).then(_ =>  view.notify(false));
                     }.bind(this));
                 } else {
                     view.render();

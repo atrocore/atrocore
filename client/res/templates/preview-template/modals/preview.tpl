@@ -5,25 +5,25 @@
                 <select class="language-selector"></select>
             {{/if}}
             <button class="btn {{#if editorActive}}btn-primary{{else}}btn-default{{/if}} editor-toggle"
-                    data-action="toggleEditor"><span class="fa fa-expand"></span></button>
+                    data-action="toggleEditor"><i class="ph ph-arrows-out-simple"></i></button>
             <div class="btn-group" role="group">
                 <button class="btn profile {{#if isMobile }}btn-primary{{else}}btn-default{{/if}}"
                         data-action="changeProfile"
                         data-profile="mobile"
                         title="Iphone 12 pro">
-                    <span class="fa fa-mobile-alt"></span>
+                    <i class="ph ph-device-mobile"></i>
                 </button>
                 <button class="btn profile {{#if isTablet }}btn-primary{{else}}btn-default{{/if}}"
                         data-action="changeProfile"
                         title="IPad pro"
                         data-profile="tablet">
-                    <span class="fa fa-tablet-alt"></span>
+                    <i class="ph ph-device-tablet"></i>
                 </button>
                 <button class="btn profile {{#if isDesktop }}btn-primary{{else}}btn-default{{/if}}"
                         data-action="changeProfile"
                         data-profile="desktop"
                         title="Desktop">
-                    <span class="fa fa-desktop"></span>
+                    <i class="ph ph-desktop"></i>
                 </button>
             </div>
         </div>
