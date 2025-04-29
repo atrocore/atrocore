@@ -63,6 +63,7 @@
                         class="btn btn-default" class:has-search-value={hasSearchValue}
                         title={Language.translate("Search")}
                         aria-expanded="false"
+                        data-button-id="search-reset"
                         on:click={search}
                 >
                     {#if hasSearchValue}
