@@ -1,22 +1,27 @@
 <script lang="ts">
-   import {onMount} from 'svelte'
-   import {get} from 'svelte/store'
-    import {Language} from  '../../../utils/Language'
-    import {Metadata} from  '../../../utils/Metadata'
-    import {Notifier} from  '../../../utils/Notifier'
-    import {generalFilterStore} from './stores/GeneralFilter'
+    import {onMount} from 'svelte';
+    import {get} from 'svelte/store';
+
+    import {Language} from '../../../utils/Language';
+    import {Metadata} from '../../../utils/Metadata';
+    import {Notifier} from '../../../utils/Notifier';
+    import {generalFilterStore} from './stores/GeneralFilter';
+
+    import FilterGroup from "./FilterGroup.svelte";
+
     export let searchManager: any;
 
     export let scope: string;
+    export let opened: boolean = false;
 
     let boolFilterList: string[] = [];
 
-    let selectedBoolFilters: [] = [];
+    let selectedBoolFilters: string[] = [];
 
     initBoolFilter();
 
-   const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
-        if(value.length === selectedBoolFilters.length) {
+    const boolFilterSub = generalFilterStore.selectBoolFilters.subscribe((value) => {
+        if (value.length === selectedBoolFilters.length) {
             return;
         }
         selectedBoolFilters = value;
@@ -82,19 +87,25 @@
 
     });
 </script>
-<div class="checkboxes-filter">
-    {#if boolFilterList?.length > 0}
-        <h5>{Language.translate('General Filters')}</h5>
-        <ul style="padding:0">
+
+{#if boolFilterList?.length > 0}
+    <FilterGroup {opened} className="checkboxes-filter" title={Language.translate('General Filters')}>
+        <ul>
             {#each boolFilterList as filter}
                 <li class="checkbox">
                     <label class:active={selectedBoolFilters.includes(filter)}>
                         <input type="checkbox" checked={selectedBoolFilters.includes(filter)}
                                on:change={() => toggleBoolFilter(filter)} name="{filter}">
-                        {Language.translate(filter, 'boolFilters', scope)}
+                        <span>{Language.translate(filter, 'boolFilters', scope)}</span>
                     </label>
                 </li>
             {/each}
         </ul>
-    {/if}
-</div>
+    </FilterGroup>
+{/if}
+
+<style>
+    ul {
+        padding: 0;
+    }
+</style>
