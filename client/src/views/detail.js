@@ -106,7 +106,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }, this);
 
                 this.listenTo(this.model, 'change:followersNames', function () {
-                    window.dispatchEvent(new CustomEvent('record:followers-updated', {detail: this.model.get('followersNames')}));
+                    window.dispatchEvent(new CustomEvent('record:followers-updated', { detail: this.model.get('followersNames') }));
                 });
             }
 
@@ -184,7 +184,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.listenTo(this.model, 'after:change-mode', (mode) => {
                 this.mode = mode;
                 $('#main main').attr('data-mode', mode);
-                window.dispatchEvent(new CustomEvent('record-mode:changed', {detail: mode}));
+                window.dispatchEvent(new CustomEvent('record-mode:changed', { detail: mode }));
             });
         },
 
@@ -203,7 +203,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 mode = 'edit';
             }
 
-            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
+            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, { trigger: false });
             this.getRouter().dispatch(scope, mode, {
                 id: id,
                 model: model,
@@ -313,7 +313,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         isScrolled = true;
                         setTimeout(() => requestAnimationFrame(() => {
                             main.css('padding-bottom', header.find('.header-breadcrumbs').outerHeight() || 0);
-                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolled }));
                         }), 100);
                     }
                 } else {
@@ -321,7 +321,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                         isScrolled = false;
                         setTimeout(() => requestAnimationFrame(() => {
                             main.css('padding-bottom', '');
-                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', { detail: !isScrolled }));
                         }), 100);
                     }
                 }
@@ -509,7 +509,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             });
 
             this.listenTo(this.model, 'change:name', function () {
-                window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', {detail: this.getBreadcrumbsItems()}));
+                window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', { detail: this.getBreadcrumbsItems() }));
                 this.updatePageTitle();
             });
         },
@@ -614,7 +614,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
-                        let data = {shouldDuplicateForeign: duplicate};
+                        let data = { shouldDuplicateForeign: duplicate };
                         if (Array.isArray(selectObj)) {
                             data.massRelate = true;
                             data.where = [{
@@ -695,15 +695,15 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             this.createView('record', this.getRecordViewName(), o, view => {
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     this.panelsList = data.list;
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
 
                 this.listenTo(view.model, 'change after:process-ui-handler', () => {
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
 
                 this.listenTo(view, 'after:render', view => {
-                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
+                    window.dispatchEvent(new CustomEvent('detail:panels-loaded', { detail: this.getVisiblePanels() }));
                 });
             });
         },
@@ -942,7 +942,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', function (selectObj, duplicate = false) {
-                    var data = {shouldDuplicateForeign: duplicate};
+                    var data = { shouldDuplicateForeign: duplicate };
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
                         selectObj.forEach(function (model) {
@@ -1007,7 +1007,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 this.getRouter().dispatch(this.scope, 'create', {
                     attributes: attributes,
                 });
-                this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().navigate(url, { trigger: false });
             }.bind(this));
         },
     });
