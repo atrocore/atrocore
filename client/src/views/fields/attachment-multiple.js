@@ -64,6 +64,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/jpeg',
             'image/png',
             'image/gif',
+            'image/webp',
         ],
 
         validations: ['ready', 'required'],
@@ -126,17 +127,16 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                     imageList.push({
                         id: cId,
                         name: this.nameHash[cId],
-                        pathsData: this.pathsDatas[cId]
+                        url: this.pathsDatas[cId]?.download,
+                        smallThumbnail: this.pathsDatas[cId]?.thumbnails.small,
+                        largeThumbnail: this.pathsDatas[cId]?.thumbnails.large,
+                        isImage: typeHash[cId] !== 'a_document',
                     });
                 }, this);
 
-                this.createView('preview', 'views/modals/image-preview', {
+                this.createView('gallery', 'views/modals/gallery', {
                     id: id,
-                    model: this.model,
-                    name: this.nameHash[id],
-                    fileId: id,
-                    downloadUrl: this.pathsDatas[id].download,
-                    thumbnailUrl: this.pathsDatas[id].thumbnails.large
+                    mediaList: imageList,
                 }, function (view) {
                     view.render();
                 });
@@ -290,9 +290,11 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             var preview = name;
 
             switch (type) {
+                case 'image/webp':
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
+                case 'image/svg+xml':
                     preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
             }
 
@@ -486,6 +488,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 case 'image/png':
                 case 'image/jpeg':
                 case 'image/gif':
+                case 'image/webp':
+                case 'image/svg+xml':
                     return true;
             }
             return false

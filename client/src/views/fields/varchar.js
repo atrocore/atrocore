@@ -349,7 +349,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             return null;
         },
 
-        createQueryBuilderFilter() {
+        createQueryBuilderFilter(type, model) {
+            this.filterModel = model;
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
@@ -364,7 +365,15 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                       if(value === null || typeof value !== 'string') {
+                           return 'bad string';
+                       }
+                       return true;
+                    }.bind(this),
+                }
             };
         },
 

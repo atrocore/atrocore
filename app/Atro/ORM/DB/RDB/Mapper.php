@@ -613,18 +613,7 @@ class Mapper implements MapperInterface
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
-
-                try {
-                    $attributeRepository->addAttributeValue(
-                        $entity->getEntityType(),
-                        $entity->id,
-                        $entity->fields[$key]['attributeId']
-                    );
-                } catch (UniqueConstraintViolationException $e) {
-                    // ignore
-                }
-
-                $attributeRepository->updateAttributeValue($entity, $key, $value);
+                $attributeRepository->upsertAttributeValue($entity, $key, $value);
             }
         }
 

@@ -1,4 +1,4 @@
 {
   "controller": "controllers/record",
-  "iconClass": "home"
+  "iconClass": "address-book"
 }

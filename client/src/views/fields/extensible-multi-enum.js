@@ -91,7 +91,6 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
         data() {
             let data = Dep.prototype.data.call(this);
-
             if (['list', 'detail'].includes(this.mode)) {
                 const ids = this.model.get(this.name);
                 const optionsData = this.model.get(this.name + 'OptionsData') || this.getOptionsData();
@@ -206,59 +205,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             }
 
             return data;
-        },
-
-        createQueryBuilderFilter() {
-            const scope = this.model.urlRoot;
-
-            return {
-                id: this.name,
-                label: this.getLanguage().translate(this.name, 'fields', scope),
-                type: 'string',
-                optgroup: this.getLanguage().translate('Fields'),
-                operators: [
-                    'array_any_of',
-                    'array_none_of',
-                    'is_null',
-                    'is_not_null'
-                ],
-                input: (rule, inputName) => {
-                    if (!rule || !inputName) {
-                        return '';
-                    }
-                    const attribute = this.defs.params.attribute ?? null;
-
-                    this.filterValue = null;
-
-                    this.getModelFactory().create(null, model => {
-                        this.createView(inputName, 'views/fields/extensible-multi-enum', {
-                            name: 'value',
-                            el: `#${rule.id} .field-container`,
-                            model: model,
-                            mode: 'edit',
-                            defs: {
-                                name: 'value',
-                                params: {
-                                    extensibleEnumId: attribute ? attribute.extensibleEnumId : this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'extensibleEnumId'])
-                                }
-                            },
-                        }, view => {
-                            this.listenTo(view, 'change', () => {
-                                this.filterValue = model.get('value');
-                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                            });
-                            this.renderAfterEl(view, `#${rule.id} .field-container`);
-                        });
-                        this.listenTo(this.model, 'afterInitQueryBuilder', () => {
-                            model.set('value', rule.value);
-                        });
-                    });
-                    return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
-                },
-                valueGetter: this.filterValueGetter.bind(this)
-            };
-        },
-
+        }
     });
 });
 

@@ -1,5 +1,5 @@
 {
-  "iconClass": "directions_run",
+  "iconClass": "person-simple-run",
   "controller": "controllers/record",
   "recordViews": {
     "detail": "views/action/record/detail"

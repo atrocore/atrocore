@@ -1004,6 +1004,10 @@
         box-shadow: none;
     }
 
+    :global(ul.jqtree-tree .jqtree-toggler .ph) {
+        font-size: 16px;
+    }
+
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
         display: -webkit-box;
         line-clamp: 1;
@@ -1019,7 +1023,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 8px;
+        margin-top: 6px;
         position: absolute;
         top: 0;
         right: 0;
