@@ -820,7 +820,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         foreignScope = attribute.entityType;
                     }
 
-                    this.createView(inputName, 'treo-core:views/fields/filtered-link-multiple', {
+                    this.createView(inputName, 'views/fields/link-multiple', {
                         name: 'value',
                         el: `#${rule.id} .field-container`,
                         model: model,
@@ -837,6 +837,20 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if (typeof this.boolFilterData[key] === 'function') {
                                 view.boolFilterData[key] = this.boolFilterData[key].bind(this);
                             }
+                        }
+
+                        view.getAutocompleteAdditionalWhereConditions = () => {
+                            let boolData = this.getBoolFilterData();
+                            if (boolData) {
+                                return [
+                                    {
+                                        'type': 'bool',
+                                        'data': boolData
+                                    }
+                                ];
+                            }
+
+                            return [];
                         }
 
                         view.linkMultiple = this.chooseMultipleOnSearch();
@@ -972,7 +986,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if(this.getFilterName(type) !== rule.filter.id) {
                                 return;
                             }
-                            debugger
 
                             if (rule.data) {
                                 delete rule.data['subQuery'];
@@ -1001,8 +1014,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if (!Array.isArray(value) || value === null) {
-                            return 'bad float';
+                        if (!Array.isArray(value) || (value.length === 0 && !rule.data?.subQuery)) {
+                            return 'bad list';
                         }
 
                         return true;
