@@ -14,6 +14,8 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
         open(foreignScope, initialWhere = [], callback) {
             let getOperator = (type) => {
                 let data = {
+                    isTrue: 'equal',
+                    isFalse: 'equal',
                     like: 'contains',
                     notLike: 'not_contains',
                     startsWith: 'contains',
@@ -44,13 +46,19 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                         if (item.isAttribute) {
                             id = 'attr_' + item.attribute;
                         }
-                        if(['isLinked', 'isNotLinked'].includes(item.type) && !Array.isArray(item.value)) {
+
+                        if (['isLinked', 'isNotLinked'].includes(item.type) && !Array.isArray(item.value)) {
                             item.value = [item.value]
                         }
+
+                        if (['isTrue', 'isFalse'].includes(item.type)) {
+                            item.value = item.type === 'isTrue';
+                        }
+
                         queryBuilder.rules.push({
                             id: id,
                             field: id,
-                            type: 'string',
+                            type: 'boolean',
                             value: item.value,
                             operator: getOperator(item.type),
                             subQuery: item.subQuery
@@ -91,7 +99,7 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                 }
             });
 
-            if (queryBuilder.rules.length === 1) {
+            if (queryBuilder.rules.length === 1 && queryBuilder.rules[0].condition) {
                 queryBuilder = queryBuilder.rules[0];
             }
 
@@ -136,7 +144,30 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                     }
 
                     if (callback) {
-                        callback(query);
+                        let bool = {};
+                        let queryBuilder = {
+                            condition: "AND",
+                            rules: [],
+                            valid: true
+                        };
+
+                        query.forEach(item => {
+                            if (item.type === 'bool') {
+                                item.value.forEach(v => bool[v] = true);
+                            }
+
+                            if (item.condition && item.rules) {
+                                (item.condition === 'AND' || item.rules.length === 1) ? queryBuilder.rules = queryBuilder.rules.concat(item.rules): queryBuilder.rules.push(item);
+                            }
+                        });
+
+                        callback({
+                            where: query,
+                            whereData: {
+                                bool,
+                                queryBuilder
+                            }
+                        });
                     }
                 });
             });
