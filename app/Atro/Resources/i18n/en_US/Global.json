@@ -406,6 +406,8 @@
     "zoomIn": "Zoom In",
     "zoomOut": "Zoom Out",
     "doubleClickZoom": "Press the button or double click the image to toggle a zoom.",
+    "showImageBackground": "Show Background",
+    "hideImageBackground": "Hide Background",
     "openSearchFilter": "Open search filter"
   },
   "messages": {

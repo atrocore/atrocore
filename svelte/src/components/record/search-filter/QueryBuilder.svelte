@@ -180,11 +180,16 @@
                 group: ({ group_id, level, conditions, icons, settings, translate, builder }) => `
                     <div id="${group_id}" class="rules-group-container">
                       <div class="rules-group-header">
-                        ${level > 1 ? `
-                            <button type="button" class="btn btn-danger outline rule-delete" data-delete="group">
-                              <i class="${icons.remove_group}"></i>
-                            </button>
-                          ` : ''}
+                        <div class="rules-group-header-icons">
+                            ${settings.display_errors ? `
+                              <div class="error-container"><i class="${icons.error}"></i></div>
+                            ` : ''}
+                            ${level > 1 ? `
+                                <button type="button" class="btn btn-danger outline rule-delete" data-delete="group">
+                                  <i class="${icons.remove_group}"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                         <div class="btn-group float-end group-actions">
                           <button type="button" class="btn btn-sm btn-success" data-add="rule">
                             ${translate("add_rule")}
@@ -202,9 +207,6 @@
                             </label>
                           `).join('\n')}
                         </div>
-                        ${settings.display_errors ? `
-                          <div class="error-container"><i class="${icons.error}"></i></div>
-                        ` : ''}
                       </div>
                       <div class=rules-group-body>
                         <div class=rules-list></div>
@@ -588,7 +590,7 @@
         generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
         updateSearchManager({
-            queryBuilderApplied: advancedFilterChecked ? 'apply' : false
+            queryBuilderApplied: advancedFilterChecked
         });
 
         if (refresh) {
@@ -864,7 +866,6 @@
         {/if}
     </div>
     <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
-
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -885,18 +886,20 @@
                    on:change={(e) => handleAdvancedFilterChecked()}>
             <span>{Language.translate('Apply Advanced Filter')}</span></h5>
         <div class="query-builder" bind:this={queryBuilderElement}></div>
-        <div class="filter-action">
-            <button class="btn btn-sm btn-default filter-button" class:disabled={advancedFilterDisabled} on:click={resetFilter}>
-                <i class="ph ph-x"></i>
-                {Language.translate('Unset')}
-            </button>
-            {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog')}
-                <button class="btn btn-sm btn-success filter-button" class:disabled={advancedFilterDisabled} on:click={saveFilter}>
-                    <i class="ph ph-floppy-disk-back"></i>
-                    {Language.translate('Save')}
+        {#if !advancedFilterDisabled}
+            <div class="filter-action">
+                <button class="btn btn-sm btn-default filter-button" on:click={resetFilter}>
+                    <i class="ph ph-x"></i>
+                    {Language.translate('Unset')}
                 </button>
-            {/if}
-        </div>
+                {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
+                    <button class="btn btn-sm btn-success filter-button" on:click={saveFilter}>
+                        <i class="ph ph-floppy-disk-back"></i>
+                        {Language.translate('Save')}
+                    </button>
+                {/if}
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -954,11 +957,37 @@
         padding: 0;
         background-color: transparent;
         float: right;
-        margin-left: 5px;
+        margin-left: auto;
     }
 
     .filter-button {
         border-radius: 4px;
+    }
+
+    .query-builder :global(.rules-group-header) {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px 5px;
+    }
+
+    .query-builder :global(.rules-group-header .drag-handle) {
+        order: -1;
+    }
+
+    .query-builder :global(.rules-group-header .group-actions) {
+        order: 2;
+    }
+
+    .query-builder :global(.rules-group-header .group-conditions) {
+        order: 1;
+    }
+
+    .query-builder :global(.rules-group-header .rules-group-header-icons) {
+        flex: 1 1 80%;
+        display: flex;
+        justify-content: space-between;
+        order: 0;
     }
 
     .query-builder :global(.rule-container-group) {

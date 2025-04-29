@@ -42,11 +42,6 @@
         "desc"
       ]
     },
-    "textFilterFields": {
-      "type": "array",
-      "view": "views/admin/entity-manager/fields/text-filter-fields",
-      "tooltip": true
-    },
     "statusField": {
       "type": "varchar",
       "view": "views/admin/entity-manager/fields/status-field",
