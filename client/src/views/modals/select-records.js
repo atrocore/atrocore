@@ -408,7 +408,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
             }
 
-            let showFilter = this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData';
+            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
 
             window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
                 target: document.querySelector('.modal-dialog .modal-footer .extra-content'),
@@ -420,7 +420,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                     uniqueKey: this.dialog.id
                 }
             });
-
 
             if(showFilter) {
                 if(window['SvelteRightSideView' + this.dialog.id]) {

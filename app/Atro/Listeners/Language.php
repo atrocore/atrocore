@@ -118,8 +118,7 @@ class Language extends AbstractListener
                 foreach ($rows as $scope => $items) {
                     // add name translation if field exists
                     if (empty($items['fields']['name']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name']))) {
-
-                        $items['fields']['name'] = $data[$locale][$scope]['fields']['name'] = $data[$locale]['Global']['fields']['name'];
+                        $items['fields']['name'] = $data[$locale][$scope]['fields']['name'] = $data[$locale]['Global']['fields']['name'] ?? 'Name';
                     }
                     foreach (['fields', 'tooltips'] as $type) {
                         if (isset($items[$type])) {
