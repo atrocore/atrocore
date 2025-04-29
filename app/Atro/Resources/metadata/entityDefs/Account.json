@@ -10,10 +10,10 @@
       "type": "text"
     },
     "language": {
-      "type": "language",
+      "type": "link",
       "required": false,
-      "view": "views/account/fields/language",
-      "prohibitedEmptyValue": true
+      "entity": "Language",
+      "dropdown": true
     },
     "type": {
       "type": "enum",

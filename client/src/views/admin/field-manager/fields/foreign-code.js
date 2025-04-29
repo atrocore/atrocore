@@ -39,8 +39,6 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
             if (this.mode === 'detail' && this.model.get(this.name)) {
                 this.$el.html(`<a href="/#EntityField/view/${this.model.get('foreignEntityId')}_${this.model.get(this.name)}">${this.model.get(this.name)}</a>`);
             }
-
-            this.toggleFieldVisibility();
         },
 
         lcfirst(str) {
@@ -48,19 +46,7 @@ Espo.define('views/admin/field-manager/fields/foreign-code', 'views/fields/varch
                 return str;
             }
             return str.charAt(0).toLowerCase() + str.slice(1);
-        },
-
-        toggleFieldVisibility() {
-            debugger
-            if (this.model.get('type') === 'link' && this.model.get('foreignEntityId')) {
-                let type = this.getMetadata().get(['scopes', this.model.get('foreignEntityId'), 'type']) || 'Base';
-
-                if (type === 'ReferenceData') {
-                    this.hide();
-                } else {
-                    this.show();
-                }
-            }
         }
+
     });
 });
