@@ -26,6 +26,10 @@ RewriteRule ^(.*)$ index.php?atroq=$1 [L,QSA]
 	Deny from all
 </Files>
 
+<Files installed.json>
+	Deny from all
+</Files>
+
 <Files index.php>
 	Allow from all
 </Files>
