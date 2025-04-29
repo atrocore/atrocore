@@ -21,6 +21,7 @@ class V2Dot0Dot0 extends Base
     {
         return new \DateTime('2025-04-23 17:00:00');
     }
+
     public function up(): void
     {
         if($this->isPgSQL()) {
@@ -38,6 +39,12 @@ class V2Dot0Dot0 extends Base
             $this->exec("CREATE INDEX IDX_SAVED_SEARCH_MODIFIED_BY_ID ON saved_search (modified_by_id, deleted)");
 
             $this->exec("ALTER TABLE action_history_record CHANGE target_id target_id VARCHAR(61) DEFAULT NULL");
+        }
+
+        if ($this->isPgSQL()) {
+            $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = false);");
+        } else {
+            $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = 0);");
         }
 
         rename('client', 'public/client');
@@ -96,6 +103,7 @@ EOD;
                 }
             }
         }
+
     }
 
     protected function exec(string $sql): void
