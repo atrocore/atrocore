@@ -405,7 +405,9 @@
     "Cancel Edit": "Cancel Edit",
     "zoomIn": "Zoom In",
     "zoomOut": "Zoom Out",
-    "doubleClickZoom": "Press the button or double click the image to toggle a zoom."
+    "doubleClickZoom": "Press the button or double click the image to toggle a zoom.",
+    "showImageBackground": "Show Background",
+    "hideImageBackground": "Hide Background"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

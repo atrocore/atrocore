@@ -9,10 +9,6 @@
 
     import {Language} from "../../utils/Language";
 
-    import DownloadIcon from "$assets/icons/download.svg?raw";
-    import ZoomInIcon from "$assets/icons/zoom_in.svg?raw";
-    import ZoomOutIcon from "$assets/icons/zoom_out.svg?raw";
-
     import 'swiper/css';
     import 'swiper/css/navigation';
     import 'swiper/css/thumbs';
@@ -36,23 +32,33 @@
 
     const downloadActionParams: ActionParams = {
         style: 'default',
-        html: `${DownloadIcon}<span>${Language.translate('Download')}</span>`,
+        size: 'small',
+        html: `<i class="ph ph-download-simple"></i>${Language.translate('Download')}`,
         action: 'download'
     } as ActionParams;
 
     const zoomActionParams: ActionParams = {
         style: 'default',
+        size: 'small',
         tooltip: Language.translate('doubleClickZoom'),
         action: 'zoom'
     } as ActionParams;
 
     let isLoadingMore: boolean = false;
     let isZoomActive: boolean = false;
-    $: zoomActionParams.html = isZoomActive ? `${ZoomOutIcon}<span>${Language.translate('zoomOut')}</span>` : `${ZoomInIcon}<span>${Language.translate('zoomIn')}</span>`;
+    $: zoomActionParams.html = isZoomActive ? `<i class="ph ph-magnifying-glass-minus"></i>${Language.translate('zoomOut')}` : `<i class="ph ph-magnifying-glass-plus"></i>${Language.translate('zoomIn')}`;
 
     let currentIndex: number = 0;
     let currentMedia: GalleryMedia;
     $: currentMedia = mediaList[currentIndex];
+
+    let showTransparentBackground: boolean = true;
+    const transparentActionParams: ActionParams = {
+        style: 'default',
+        size: 'small',
+        action: 'toggleAlpha',
+    } as ActionParams;
+    $: transparentActionParams.html = showTransparentBackground ? `<i class="ph ph-square"></i>${Language.translate('hideImageBackground')}` : `<i class="ph ph-checkerboard"></i>${Language.translate('showImageBackground')}`;
 
     let thumbsSwiper: Swiper | null = null;
     let mainSwiper: Swiper;
@@ -192,6 +198,10 @@
         mainSwiper.zoom.toggle();
     }
 
+    function onToggleAlpha(): void {
+        showTransparentBackground = !showTransparentBackground;
+    }
+
     function handleLoadMoreClick() {
         if (isLoadingMore) return;
         isLoadingMore = true;
@@ -208,6 +218,7 @@
             <ActionButton params={downloadActionParams} on:execute={onDownloadMedia} />
         {/if}
         <ActionButton params={zoomActionParams} on:execute={onToggleZoom} />
+        <ActionButton params={transparentActionParams} on:execute={onToggleAlpha} />
     </div>
 </div>
 
@@ -244,7 +255,7 @@
                     <div class="swiper-slide">
                         <div class="swiper-zoom-container">
                             <img src={media.isImage ? media.url : media.largeThumbnail} alt={media.name}
-                                 loading="lazy"/>
+                                 loading="lazy" class:transparent-bg={showTransparentBackground} />
                             <div class="swiper-lazy-preloader"></div>
                         </div>
                     </div>
@@ -278,16 +289,10 @@
 
     .gallery-header > .buttons-container > :global(.btn) {
         border-radius: 3px;
-        line-height: 1;
-        padding: 4px 8px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
     }
 
-    .gallery-header > .buttons-container > :global(.btn svg) {
-        width: 19px;
-        height: 19px;
+    .gallery-header > .buttons-container > :global(.btn i) {
+        margin-right: 5px;
     }
 
     .gallery-header > a {
@@ -401,10 +406,22 @@
     }
 
     .swiper-zoom-container img {
-        height: 100%;
-        transition: transform 0.3s;
+        max-width: 100%;
+        max-height: 100%;
+        height: auto;
+        width: auto;
+        object-fit: unset;
         user-select: none;
-        object-fit: scale-down;
+        transition: transform 0.3s;
+    }
+
+    .swiper-zoom-container img.transparent-bg {
+        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+            linear-gradient(-45deg, #ccc 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #ccc 75%),
+            linear-gradient(-45deg, transparent 75%, #ccc 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0;
     }
 
     .load-more-thumb {
