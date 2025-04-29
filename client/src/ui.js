@@ -45,7 +45,8 @@ Espo.define('ui', [], function () {
         this.buttons = [];
         this.removeOnClose = true;
         this.draggable = false;
-        this.container = 'body'
+        this.container = 'body';
+        this.hasRightSideView = false;
         this.onRemove = function () {};
 
         this.options = options;
@@ -123,16 +124,14 @@ Espo.define('ui', [], function () {
                 rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
                 footer += rightPart;
             }
+            footer+='<div class="extra-content"></div>'
             footer += '</footer>';
         }
 
-        if (this.options.footerAtTheTop) {
-            this.contents += footer + body;
-        } else {
-            this.contents += body + footer;
-        }
-
-        this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
+        let content = ''
+        this.options.footerAtTheTop ? content = footer+body : content = body+footer
+        !this.hasRightSideView ? this.contents+=content : this.contents+=`<div class="main-content"><div>${content}</div><div class="right-content"></div></div>`
+        this.contents=`<div class="modal-dialog"><div class="modal-content">${this.contents} </div></div>`
 
         $('<div />').attr('id', this.id)
           .attr('class', this.className + ' modal')

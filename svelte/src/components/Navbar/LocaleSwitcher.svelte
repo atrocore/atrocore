@@ -4,14 +4,14 @@
     import {UserData} from "../../utils/UserData";
     import {LayoutManager} from "../../utils/LayoutManager";
 
-    let locales = Config.get('locales')
+    let locales = Config.get('locales') || {}
     let languages = (Config.get('inputLanguageList') || []).reduce((res, item) => {
         res[item] = Config.get('referenceData').Language?.[item]
         return res
     }, {})
 
     let locale = UserData.get()?.user?.localeId
-    if (!locales[locale]) {
+    if (!locale || !locales[locale]) {
         locale = Config.get('locale')
     }
 
@@ -20,7 +20,7 @@
 
     if (locale !== Config.get('locale')) {
         // remove language for selected locale if exists
-        if (languages[locales[locale].code]) {
+        if (locale && locales[locale]?.code && languages[locales[locale].code]) {
             delete languages[locales[locale].code]
             // add main locale language
             for (const [code, language] of Object.entries(Config.get('referenceData').Language || {})) {

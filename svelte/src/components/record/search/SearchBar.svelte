@@ -22,19 +22,15 @@
         updateCollection();
     }
 
-
-    function reset() {
+    export function reset() {
         searchValue = "";
         search();
     }
 
     function updateCollection() {
-        searchManager.collection.reset();
         Notifier.notify(Language.translate('loading', 'messages'));
 
-        searchManager.collection.where = searchManager.getWhere();
-
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 </script>
 

@@ -342,9 +342,11 @@ Espo.define('views/main', 'view', function (Dep) {
                         model: this.model,
                         mode: this.getMode(),
                         hasStream: this.canLoadActivities(),
+                        hasSummary: ['edit', 'detail'].includes(this.getMode()),
                         searchManager: this.searchManager,
                         showFilter: this.shouldShowFilter(),
                         createView: this.createView.bind(this),
+                        isCollapsed: !['edit', 'detail'].includes(this.getMode()),
                         loadSummary: () => {
                             this.createView('rightSideView', this.rightSideView, {
                                 el: this.options.el + ' .right-side-view .summary',

@@ -4,7 +4,7 @@
     import {Notifier} from "../../../utils/Notifier";
     import {Acl} from "../../../utils/Acl";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import {savedSearchStore} from "./stores/SavedSearch";
+    import {getSavedSearchStore} from "./stores/SavedSearch";
     import SavedSearch from "./interfaces/SavedSearch"
     import {get} from "svelte/store"
     import FilterGroup from "./FilterGroup.svelte";
@@ -15,6 +15,7 @@
     export let loading: boolean = true;
     export let searchManager: any;
     export let hideRowAction: boolean = false;
+    export let uniqueKey: string|null;
     export let editingItem: any = null;
     export let edit: Function = () => {};
     export let rename: Function = () => {};
@@ -22,6 +23,8 @@
     export let cancel: Function = () => {};
 
     export let selectedSavedSearchIds: Array<string> = [];
+
+    let savedSearchStore = getSavedSearchStore(uniqueKey);
 
 
     const savedSearchSubscribe =  savedSearchStore.savedSearchItems.subscribe(value => {
@@ -49,12 +52,9 @@
     }
 
     function updateCollection() {
-        searchManager.collection.reset();
         Notifier.notify(Language.translate('loading', 'messages'));
 
-        searchManager.collection.where = searchManager.getWhere();
-        searchManager.collection.abortLastFetch();
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.collection.reset();
     }
 
     onMount(() => {

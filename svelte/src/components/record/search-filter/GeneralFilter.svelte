@@ -1,22 +1,27 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
-    import {get} from 'svelte/store';
-
-    import {Language} from '../../../utils/Language';
-    import {Metadata} from '../../../utils/Metadata';
-    import {Notifier} from '../../../utils/Notifier';
-    import {generalFilterStore} from './stores/GeneralFilter';
-
+    import {onMount} from 'svelte'
+    import {get} from 'svelte/store'
+    import {Language} from '../../../utils/Language'
+    import {Metadata} from '../../../utils/Metadata'
+    import {Notifier} from '../../../utils/Notifier'
+    import {getGeneralFilterStore} from './stores/GeneralFilter'
+    import {Acl} from "../../../utils/Acl";
     import FilterGroup from "./FilterGroup.svelte";
+
 
     export let searchManager: any;
 
     export let scope: string;
+
     export let opened: boolean = false;
+
+    export let uniqueKey: string = "default";
 
     let boolFilterList: string[] = [];
 
     let selectedBoolFilters: string[] = [];
+
+    let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
     initBoolFilter();
 
@@ -29,14 +34,10 @@
 
     function updateCollection() {
         Notifier.notify(Language.translate('loading', 'messages'));
-        searchManager.collection.reset();
-
-        searchManager.collection.where = searchManager.getWhere();
-        searchManager.collection.abortLastFetch();
-        searchManager.collection.fetch().then(() => window.Backbone.trigger('after:search', searchManager.collection));
+        searchManager.fetchCollection();
     }
 
-    function toggleBoolFilter(filter: string){
+    function toggleBoolFilter(filter: string) {
         generalFilterStore.toggleBoolFilters(filter);
 
         let value = get(generalFilterStore.selectBoolFilters);
@@ -73,7 +74,7 @@
         });
         const boolData = searchManager.getBool();
         for (const filter in boolData) {
-            if(boolData[filter] && boolFilterList.includes(filter)) {
+            if (boolData[filter] && boolFilterList.includes(filter)) {
                 selectedBoolFilters.push(filter);
             }
         }

@@ -49,8 +49,6 @@
         </div>
     {/if}
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
-
-
 </BaseHeader>
 
 <style>
