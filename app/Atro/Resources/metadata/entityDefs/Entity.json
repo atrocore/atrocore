@@ -173,6 +173,10 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "nonComparableFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/non-comparable-fields"
     }
   },
   "links": {

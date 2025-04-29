@@ -39,6 +39,11 @@ class Entity extends ReferenceData
         return true;
     }
 
+    public function getSelectAttributeList($params)
+    {
+        return [];
+    }
+
     protected function init()
     {
         parent::init();
