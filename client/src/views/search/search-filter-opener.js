@@ -10,7 +10,7 @@
 
 Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
     return Dep.extend({
-        open(initialWhere = [], callback) {
+        open(foreignScope, initialWhere = [], callback) {
             let bool = {};
             let queryBuilder =  {
                 condition: "AND",
@@ -33,10 +33,10 @@ Espo.define('views/search/search-filter-opener', 'view' , function (Dep) {
             }
             let filters = {bool, queryBuilder, queryBuilderApplied: true}
             this.notify(this.translate('loading', 'messages'));
-            var viewName = this.getMetadata().get('clientDefs.' + this.model.get('entity') + '.modalViews.select') || 'views/modals/select-records';
+            var viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
 
             this.createView('dialog', viewName, {
-                scope: this.model.get('entity'),
+                scope: foreignScope,
                 createButton: false,
                 filters: filters,
                 multiple: true,
