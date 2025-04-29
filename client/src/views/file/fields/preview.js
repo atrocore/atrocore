@@ -25,13 +25,17 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
             });
         },
 
-        getFilePathsData: function () {
+        getFilePathsData: function (model) {
+            if (!model) {
+                model = this.model;
+            }
+
             return {
-                download: this.model.get('downloadUrl'),
+                download: model.get('downloadUrl'),
                 thumbnails: {
-                    small: this.model.get('smallThumbnailUrl'),
-                    medium: this.model.get('mediumThumbnailUrl'),
-                    large: this.model.get('largeThumbnailUrl'),
+                    small: model.get('smallThumbnailUrl'),
+                    medium: model.get('mediumThumbnailUrl'),
+                    large: model.get('largeThumbnailUrl'),
                 }
             };
         },

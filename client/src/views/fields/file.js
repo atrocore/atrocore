@@ -56,16 +56,47 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             'click a[data-action="showImagePreview"]': function (e) {
                 e.preventDefault();
 
-                var id = this.model.get(this.idName);
-                this.createView('preview', 'views/modals/image-preview', {
-                    id: id,
+                let items;
+                let canLoadMore = false;
+                let modalContainer = this;
+                let collection = null;
+                if (this.model.collection && this.model.collection.models && this.model.collection.name === 'File') {
+                    collection = this.model.collection;
+                    items = collection.models
+                        .filter(item => this.hasPreview(item.get(this.nameName)))
+                        .map(item => this.prepareMediaFromModel(item));
+
+                    if (collection.length < collection.total) {
+                        canLoadMore = true;
+                        modalContainer = this.getParentView().getParentView();
+                    }
+
+                } else {
+                    items = [this.prepareMediaFromModel(this.model)];
+                }
+
+                modalContainer.createView('gallery', 'views/modals/gallery', {
+                    id: this.model.get(this.idName),
                     model: this.model,
-                    name: this.model.get(this.nameName),
-                    fileId: this.model.get(this.idName),
-                    downloadUrl: this.getFilePathsData().download,
-                    thumbnailUrl: this.getFilePathsData().thumbnails.large,
-                }, function (view) {
+                    mediaList: items,
+                    canLoadMore: canLoadMore
+                }, view => {
                     view.render();
+
+                    view.on('gallery:load-more', () => {
+                        collection.fetch({
+                            more: true,
+                            remove: false,
+                            success: () => {
+                                view.trigger('gallery:load-more:success', {
+                                    mediaList: collection.models
+                                        .filter(item => this.hasPreview(item.get(this.nameName)))
+                                        .map(item => this.prepareMediaFromModel(item)),
+                                    canLoadMore: collection.length < collection.total,
+                                });
+                            }
+                        });
+                    });
                 });
             },
 
@@ -194,7 +225,11 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
         },
 
-        getFilePathsData: function () {
+        getFilePathsData: function (model) {
+            if (model) {
+                return model.get(this.namePathsData);
+            }
+
             return this.model.get(this.namePathsData);
         },
 
@@ -317,6 +352,17 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
             return res;
         },
+
+        prepareMediaFromModel: function (model) {
+            return {
+                id: model.get(this.idName),
+                name: model.get(this.nameName),
+                url: this.getFilePathsData(model).download,
+                smallThumbnail: this.getFilePathsData(model).thumbnails.small,
+                largeThumbnail: this.getFilePathsData(model).thumbnails.large,
+                isImage: model.get('typeId') !== 'a_document',
+            };
+        }
 
     });
 });
