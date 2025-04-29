@@ -252,11 +252,29 @@
       ],
       [
         {
+          "name": "auditableEnabled"
+        },
+        false
+      ],
+      [
+        {
+          "name": "auditableDisabled"
+        },
+        false
+      ],
+      [
+        {
           "name": "isNonComparable"
         },
         {
           "name": "isUninheritableField"
         }
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        false
       ],
       [
         {
@@ -268,7 +286,7 @@
       ],
       [
         {
-          "name": "isModifiedExtended"
+          "name": "modifiedExtendedEnabled"
         },
         false
       ]

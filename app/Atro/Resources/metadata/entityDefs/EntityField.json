@@ -320,10 +320,19 @@
       "type": "bool",
       "tooltip": true
     },
-    "isModifiedExtended": {
-      "view": "views/admin/field-manager/fields/is-modified-extendable",
+    "modifiedExtendedEnabled": {
+      "view": "views/admin/field-manager/fields/modified-extended-enabled",
       "type": "bool",
       "tooltip": true
+    },
+    "auditableDisabled": {
+      "type": "bool"
+    },
+    "auditableEnabled": {
+      "type": "bool"
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool"
     }
   },
   "links": {

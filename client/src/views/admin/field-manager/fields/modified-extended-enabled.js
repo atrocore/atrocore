@@ -8,9 +8,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/field-manager/fields/is-modified-extendable', 'views/fields/bool', Dep => {
+Espo.define('views/admin/field-manager/fields/modified-extended-enabled', 'views/fields/bool', Dep => {
 
     return Dep.extend({
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);

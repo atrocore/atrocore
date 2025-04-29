@@ -12,6 +12,14 @@ Espo.define('views/admin/field-manager/fields/is-uninheritable-relation', 'views
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
             let scope = this.model.get('entityId');

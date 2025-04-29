@@ -247,6 +247,44 @@
             }
           ]
         }
+      },
+      "auditableEnabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "relationType",
+              "type": "equals",
+              "value": "manyToMany"
+            },
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
+      },
+      "auditableDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "relationType",
+              "type": "notEquals",
+              "value": "manyToMany"
+            }
+          ]
+        }
+      },
+      "modifiedExtendedDisabled": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notEquals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
       }
     }
   }
