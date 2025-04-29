@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V1Dot13Dot54 extends Base
+class V2Dot0Dot0 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -23,9 +23,20 @@ class V1Dot13Dot54 extends Base
     }
     public function up(): void
     {
-        if ($this->isPgSQL()) {
+        if($this->isPgSQL()) {
+            $this->exec("ALTER TABLE saved_search ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+            $this->exec("ALTER TABLE saved_search ADD modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+            $this->exec("ALTER TABLE saved_search ADD created_by_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE saved_search ADD modified_by_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("CREATE INDEX IDX_SAVED_SEARCH_CREATED_BY_ID ON saved_search (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_SAVED_SEARCH_MODIFIED_BY_ID ON saved_search (modified_by_id, deleted)");
+
             $this->exec("ALTER TABLE action_history_record ALTER target_id TYPE VARCHAR(61)");
-        } else {
+        }else{
+            $this->exec("ALTER TABLE saved_search ADD created_at DATETIME DEFAULT NULL, ADD modified_at DATETIME DEFAULT NULL, ADD created_by_id VARCHAR(36) DEFAULT NULL, ADD modified_by_id VARCHAR(36) DEFAULT NULL;");
+            $this->exec("CREATE INDEX IDX_SAVED_SEARCH_CREATED_BY_ID ON saved_search (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_SAVED_SEARCH_MODIFIED_BY_ID ON saved_search (modified_by_id, deleted)");
+
             $this->exec("ALTER TABLE action_history_record CHANGE target_id target_id VARCHAR(61) DEFAULT NULL");
         }
 
@@ -61,6 +72,30 @@ EOD;
 
         // reload daemons
         file_put_contents('data/process-kill.txt', '1');
+
+        $path = 'data/metadata/entityDefs';
+        if (file_exists($path)) {
+            foreach (scandir($path) as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
+                }
+
+                $customDefs = @json_decode(file_get_contents("$path/$file"), true);
+
+                if (!empty($customDefs['fields'])) {
+                    $toUpdate = false;
+                    foreach ($customDefs['fields'] as $field => $fieldDefs) {
+                        if (!empty($fieldDefs['type']) && $fieldDefs['type'] == 'bool' && !isset($fieldDefs['notNull'])) {
+                            $customDefs['fields'][$field]['notNull'] = false;
+                            $toUpdate = true;
+                        }
+                    }
+                    if ($toUpdate) {
+                        file_put_contents("$path/$file", json_encode($customDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                    }
+                }
+            }
+        }
     }
 
     protected function exec(string $sql): void
