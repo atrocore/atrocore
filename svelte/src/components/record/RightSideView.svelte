@@ -35,7 +35,6 @@
     let streamView: Object;
     let items: Item[] = [];
     let activeItem: Item;
-
     if (showSummary) {
         items.push({
             name: "summary",

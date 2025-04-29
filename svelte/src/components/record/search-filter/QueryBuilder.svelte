@@ -246,6 +246,9 @@
                         advanced: []
                     });
                     handleAdvancedFilterChecked(false);
+                    if(rules.rules.length === 0) {
+                        updateCollection();
+                    }
                 }
 
                 await tick();
