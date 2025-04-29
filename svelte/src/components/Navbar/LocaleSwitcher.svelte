@@ -2,6 +2,7 @@
     import {Config} from "../../utils/Config";
     import {Utils} from "../../utils/Utils";
     import {UserData} from "../../utils/UserData";
+    import {LayoutManager} from "../../utils/LayoutManager";
 
     let locales = Config.get('locales')
     let languages = (Config.get('inputLanguageList') || []).reduce((res, item) => {
@@ -10,7 +11,7 @@
     }, {})
 
     let locale = UserData.get()?.user?.localeId || Config.get('locale')
-    let inputLanguages = []
+    let inputLanguages = UserData.get()?.user?.additionalLanguages || []
     let languagesLabel
 
     if (locale !== Config.get('locale')) {
@@ -26,8 +27,11 @@
         }
     }
 
+    inputLanguages = inputLanguages.filter(code => !!languages[code])
+
     function unsetLanguages(event) {
         inputLanguages = []
+        onLanguageChange()
     }
 
     $: {
@@ -44,8 +48,13 @@
         window.location.reload()
     }
 
-    function onLanguageChange() {
+    async function onLanguageChange() {
+        const userData = UserData.get()
+        await Utils.patchRequest('/UserProfile/' + userData.user.id, {additionalLanguages: inputLanguages})
 
+        LayoutManager.clearListAndDetailCache()
+        // emit event to reload layouts
+        window.Backbone.trigger('change:additional-languages', inputLanguages)
     }
 </script>
 
@@ -67,7 +76,7 @@
             </select>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
                 <h5>Additional Languages</h5>
-                <ul style="padding: 0" on:mousedown={event => event.stopPropagation()}>
+                <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                     {#each Object.entries(languages).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [code, language] }
                         <li class="checkbox">
                             <label>

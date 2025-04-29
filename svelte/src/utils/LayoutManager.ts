@@ -1,6 +1,8 @@
 import {writable} from 'svelte/store';
 
 interface LayoutManagerInterface {
+    data: any
+
     resetToDefault(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any): any
 
     get(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any, cache: any): any
@@ -43,5 +45,18 @@ export const LayoutManager = {
             }
         })();
         return res
+    },
+
+    clearListAndDetailCache: function () {
+        data.subscribe((current: LayoutManagerInterface) => {
+            if (current) {
+                current.data = {}
+                for (const i in localStorage) {
+                    if (i.startsWith('app-layout') && (i.includes('-list') || i.includes('detail'))) {
+                        delete localStorage[i];
+                    }
+                }
+            }
+        })();
     }
 };
