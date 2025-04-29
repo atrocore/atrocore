@@ -76,6 +76,17 @@ class EntityField extends ReferenceData
             if (!empty($linkDefs['entity'])) {
                 $fieldDefs['foreignEntityId'] = $linkDefs['entity'];
                 $fieldDefs['foreignEntityName'] = $this->translate($linkDefs['entity'], 'scopeNames');
+            } else {
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', $entityName, 'fields', $fieldName], []);
+
+                if (!empty($fieldDefs['entity'])) {
+                    $foreignScope = $this->getMetadata()->get(['scopes', $fieldDefs['entity']], []);
+
+                    if (!empty($foreignScope) && !empty($foreignScope['type']) && $foreignScope['type'] == 'ReferenceData') {
+                        $fieldDefs['foreignEntityId'] = $fieldDefs['entity'];
+                        $fieldDefs['foreignEntityName'] = $this->translate($fieldDefs['entity'], 'scopeNames');
+                    }
+                }
             }
             $fieldDefs['foreignCode'] = $linkDefs['foreign'] ?? null;
         }
@@ -179,7 +190,7 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
+        if ($entity->get('type') == 'linkMultiple') {
             if (
                 $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData'
                 || $this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'ReferenceData'
@@ -279,36 +290,48 @@ class EntityField extends ReferenceData
 
         if ($entity->isNew()) {
             if ($entity->get('type') === 'link') {
-                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                    'links' => [
-                        $entity->get('code') => [
-                            'type'    => 'belongsTo',
-                            'foreign' => $entity->get('foreignCode'),
-                            'entity'  => $entity->get('foreignEntityId'),
-                        ]
-                    ]
-                ]);
+                $foreignType = $this->getMetadata()->get(['scopes', $entity->get('foreignEntityId'), 'type']);
 
-                $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
-                    'fields' => [
-                        $entity->get('foreignCode') => [
-                            'type'                 => 'linkMultiple',
-                            'noLoad'               => true,
-                            'layoutDetailDisabled' => true,
-                            'massUpdateDisabled'   => true,
-                            'isCustom'             => true
+                if ($foreignType !== 'ReferenceData') {
+                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                        'links' => [
+                            $entity->get('code') => [
+                                'type' => 'belongsTo',
+                                'foreign' => $entity->get('foreignCode'),
+                                'entity' => $entity->get('foreignEntityId'),
+                            ]
                         ]
-                    ]
-                ]);
-                $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
-                    'links' => [
-                        $entity->get('foreignCode') => [
-                            'type'    => 'hasMany',
-                            'foreign' => $entity->get('code'),
-                            'entity'  => $entity->get('entityId'),
+                    ]);
+
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'fields' => [
+                            $entity->get('foreignCode') => [
+                                'type'                 => 'linkMultiple',
+                                'noLoad'               => true,
+                                'layoutDetailDisabled' => true,
+                                'massUpdateDisabled'   => true,
+                                'isCustom'             => true
+                            ]
                         ]
-                    ]
-                ]);
+                    ]);
+                    $this->getMetadata()->set('entityDefs', $entity->get('foreignEntityId'), [
+                        'links' => [
+                            $entity->get('foreignCode') => [
+                                'type'    => 'hasMany',
+                                'foreign' => $entity->get('code'),
+                                'entity'  => $entity->get('entityId'),
+                            ]
+                        ]
+                    ]);
+                } else {
+                    $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                        'fields' => [
+                            $entity->get('code') => [
+                                'entity' => $entity->get('foreignEntityId'),
+                            ]
+                        ]
+                    ]);
+                }
             } elseif ($entity->get('type') === 'linkMultiple') {
                 if ($entity->get('relationType') === 'manyToMany') {
                     $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
