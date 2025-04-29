@@ -61,7 +61,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
         isDraggable: false,
 
-        fullHeight: false,
+        fullHeight: true,
 
         hasRightSideView: false,
 
