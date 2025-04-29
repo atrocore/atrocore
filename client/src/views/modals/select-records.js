@@ -60,7 +60,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
         listLayout: null,
 
-        searchView: 'views/record/search',
 
         selectedItems: [],
 
