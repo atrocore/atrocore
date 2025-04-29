@@ -1213,6 +1213,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 $(window).off(this.dragndropEventName);
                 $(window).off(`keydown.${this.cid} keyup.${this.cid}`);
             });
+
+            this.listenTo(window.Backbone, 'change:additional-languages', () => {
+                this.refreshLayout()
+            })
         },
 
         afterSave: function () {
@@ -1220,10 +1224,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            this.listenTo(window.Backbone, 'change:additional-languages', () => {
-                this.refreshLayout()
-            })
-
             this.createLayoutConfigurator()
 
             if (this.allResultIsChecked) {

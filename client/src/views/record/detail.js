@@ -1935,13 +1935,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             const systemLanguages = this.getConfig().get('inputLanguageList')
-            const mainLocale = this.getConfig().get('locales').main
-            systemLanguages.push(mainLocale.code)
+            let mainLocaleCode = ''
+            for (const [code, language] of Object.entries(this.getConfig().get('referenceData').Language ?? {})) {
+                if (language.role === 'main') {
+                    mainLocaleCode = code
+                }
+            }
+
+            systemLanguages.push(mainLocaleCode)
 
             if (userLocale && systemLanguages.includes(userLocale.code)) {
                 languages.unshift(userLocale.code)
             } else {
-                languages.unshift(mainLocale.code)
+                languages.unshift(mainLocaleCode)
             }
 
             // remove duplicates
@@ -1949,7 +1955,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const result = []
             languages.forEach(code => {
                 if (systemLanguages.includes(code)) {
-                    if (code === mainLocale.code) {
+                    if (code === mainLocaleCode) {
                         result.push('')
                     } else {
                         result.push(code.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join(''))
