@@ -14,5 +14,6 @@
   "isActiveUnavailable": true,
   "bookmarkDisabled": true,
   "emHidden": true,
-  "openApiHidden": true
+  "openApiHidden": true,
+  "hideFieldTypeFilters": true
 }

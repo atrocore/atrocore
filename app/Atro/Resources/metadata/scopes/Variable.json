@@ -16,5 +16,6 @@
   "hasOwner": false,
   "bookmarkDisabled": true,
   "actionDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "hideFieldTypeFilters": true
 }
