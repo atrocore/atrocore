@@ -12,6 +12,9 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
     return Dep.extend({
 
         open(foreignScope, initialWhere = [], callback) {
+            if(!Array.isArray(initialWhere)) {
+                initialWhere  = [];
+            }
             let getOperator = (type) => {
                 let data = {
                     isTrue: 'equal',
