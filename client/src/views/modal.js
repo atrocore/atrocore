@@ -92,7 +92,7 @@ Espo.define('views/modal', 'view', function (Dep) {
 
             this.setSelector(this.containerSelector);
 
-                                                                                                                    this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
+            this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
 
             // TODO remove it as depricated
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
