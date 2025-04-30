@@ -179,7 +179,7 @@
       "type": "link",
       "entity": "Locale"
     },
-    "additionalLanguages": {
+    "disabledLanguages": {
       "type": "jsonArray",
       "layoutListDisabled": true,
       "layoutDetailDisabled": true,

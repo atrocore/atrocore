@@ -91,7 +91,7 @@ class TextType extends AbstractFieldType
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
                     'name'           => $lName,
-                    'label'          => $row[$this->prepareKey('name', $row)] . ' / ' . $languageName,
+                    'label'          => $this->getAttributeLabel($row, $language, $languages),
                     'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
                     'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
                     'multilangField' => true
@@ -100,6 +100,7 @@ class TextType extends AbstractFieldType
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
             }
             $entity->entityDefs['fields'][$name]['isMultilang'] = true;
+            $entity->entityDefs['fields'][$name]['label'] = $this->getAttributeLabel($row, '', $languages);
         }
 
         if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
@@ -134,6 +135,32 @@ class TextType extends AbstractFieldType
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+    }
+
+    public function getAttributeLabel(array $row, string $languageCode, array $languages): string
+    {
+        if (!empty($localeId = $this->user->get('localeId'))) {
+            $currentLocale = $this->em->getEntity('Locale', $localeId);
+            if (!empty($currentLocale) && array_key_exists($currentLocale->get('languageCode'), $languages)) {
+                if ($languageCode === $currentLocale->get('languageCode')) {
+                    return $row[$this->prepareKey('name', $row)];
+                }
+                if (empty($languageCode)) {
+                    foreach ($this->config->get('referenceData.Language', []) as $v) {
+                        if ($v['role'] === 'main') {
+                            return $row[$this->prepareKey('name', $row)] . ' / ' . $v['name'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $res = $row[$this->prepareKey('name', $row)];
+        if (!empty($languageCode)) {
+            $res .= ' / ' . $languages[$languageCode];
+        }
+
+        return $res;
     }
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void

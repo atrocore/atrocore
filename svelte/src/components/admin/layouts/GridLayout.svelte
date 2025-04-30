@@ -46,7 +46,7 @@
                 LayoutManager.get(params.scope, params.type, params.relatedScope, params.layoutProfileId, layoutLoaded => {
                     layoutData = layoutLoaded;
                     resolve();
-                }, false);
+                }, false, true);
             })
         );
 
@@ -56,7 +56,7 @@
                     LayoutManager.get(params.scope, 'sidePanelsDetail', null, params.layoutProfileId, layoutLoaded => {
                         sidePanelsLayout = layoutLoaded.layout;
                         resolve();
-                    }, false);
+                    }, false, true);
                 })
             );
         }

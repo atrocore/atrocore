@@ -25,10 +25,10 @@ class V2Dot0Dot0 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE \"user\" ADD additional_languages TEXT DEFAULT NULL;");
-            $this->exec("COMMENT ON COLUMN \"user\".additional_languages IS '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE \"user\" ADD disabled_languages TEXT DEFAULT NULL;");
+            $this->exec("COMMENT ON COLUMN \"user\".disabled_languages IS '(DC2Type:jsonArray)'");
         } else {
-            $this->exec("ALTER TABLE user ADD additional_languages LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+            $this->exec("ALTER TABLE user ADD disabled_languages LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
         }
 
         if($this->isPgSQL()) {

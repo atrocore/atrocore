@@ -51,7 +51,7 @@
                 readDataFromLayout(layoutData.layout);
                 callback(layoutData);
             }
-        }, false);
+        }, false, true);
     }
 
     function readDataFromLayout(layout: Layout) {

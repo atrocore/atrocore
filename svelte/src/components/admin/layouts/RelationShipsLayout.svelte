@@ -41,7 +41,7 @@
                     readDataFromLayout(model, layoutData.layout);
                     callback(layoutData);
                 }
-            }, false);
+            }, false, true);
         })
 
     }
