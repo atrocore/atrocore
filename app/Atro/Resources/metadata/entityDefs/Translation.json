@@ -598,10 +598,6 @@
   },
   "collection": {
     "sortBy": "code",
-    "asc": true,
-    "textFilterFields": [
-      "code",
-      "module"
-    ]
+    "asc": true
   }
 }

@@ -17,10 +17,6 @@
   },
   "collection": {
     "sortBy": "name",
-    "asc": false,
-    "textFilterFields": [
-      "name",
-      "code"
-    ]
+    "asc": false
   }
 }

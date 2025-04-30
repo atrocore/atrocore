@@ -116,11 +116,7 @@
   },
   "collection": {
     "sortBy": "createdAt",
-    "asc": false,
-    "textFilterFields": [
-      "name",
-      "emailAddress"
-    ]
+    "asc": false
   },
   "indexes": {
     "createdAt": {

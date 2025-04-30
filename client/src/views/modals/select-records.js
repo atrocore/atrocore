@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'lib!JsTree', 'lib!QueryBuilder', 'lib!Interact'], function (Dep, SearchManager) {
+Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'model', 'lib!JsTree', 'lib!QueryBuilder', 'lib!Interact'], function (Dep, SearchManager, Model) {
 
     return Dep.extend({
 
@@ -60,7 +60,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
 
         listLayout: null,
 
-        searchView: 'views/record/search',
 
         selectedItems: [],
 
@@ -238,7 +237,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 searchManager.update(this.filters);
             }
 
-
             var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
             if (boolFilterList) {
                 var d = searchManager.getBool();
@@ -402,24 +400,30 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
+            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
+
             if(window['SvelteFilterSearchBar' + this.dialog.id]) {
                 try{
                     window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
                 }catch (e) {
                 }
+
             }
 
-            window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
-                target: document.querySelector('.modal-dialog .modal-footer .extra-content'),
-                props: {
-                    showFilter: this.searchPanel && this.getMetadata(['scopes', this.scope, 'type']) !== 'ReferenceData',
-                    showSearchPanel: this.searchPanel,
-                    scope: this.scope,
-                    searchManager: this.searchManager,
-                    uniqueKey: this.dialog.id
-                }
-            });
+            const searchContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .modal-footer .extra-content');
 
+            if(searchContainer) {
+                window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
+                    target: searchContainer,
+                    props: {
+                        showFilter: showFilter,
+                        showSearchPanel: this.searchPanel,
+                        scope: this.scope,
+                        searchManager: this.searchManager,
+                        uniqueKey: this.dialog.id
+                    }
+                });
+            }
 
             if(window['SvelteRightSideView' + this.dialog.id]) {
                 try{
@@ -428,20 +432,24 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                 }
             }
 
-            window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
-                target: document.querySelector('.modal-dialog .main-content .right-content'),
-                props: {
-                    scope: this.scope,
-                    model: this.model,
-                    mode: 'list',
-                    isCollapsed: false,
-                    useStorage: false,
-                    searchManager: this.searchManager,
-                    createView: this.createView.bind(this),
-                    showFilter: true,
-                    uniqueKey: this.dialog.id
-                }
-            });
+            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
+
+            if(showFilter && rightContainer) {
+                window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
+                    target: rightContainer,
+                    props: {
+                        scope: this.scope,
+                        model: this.model ?? new Model(),
+                        mode: 'list',
+                        isCollapsed: false,
+                        useStorage: false,
+                        searchManager: this.searchManager,
+                        createView: this.createView.bind(this),
+                        showFilter: true,
+                        uniqueKey: this.dialog.id
+                    }
+                });
+            }
         },
 
         isHierarchical() {
@@ -581,7 +589,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'li
                         $li.removeClass('disabled');
                     }
 
-                    let search = $('.search-container .text-filter').val();
+                    let search = $('.filter-search-bar .text-filter').val();
                     if (search.length > 0) {
                         search = search.replace(/\*/g, '');
                         if (search.length > 0) {

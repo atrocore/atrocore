@@ -279,7 +279,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.notify('Loading...');
 
             var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
-
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,
                 createButton: !this.createDisabled && this.mode != 'search',

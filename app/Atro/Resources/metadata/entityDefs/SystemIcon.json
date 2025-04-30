@@ -55,11 +55,6 @@
   },
   "collection": {
     "sortBy": "name",
-    "asc": true,
-    "textFilterFields": [
-      "name",
-      "code",
-      "description"
-    ]
+    "asc": true
   }
 }

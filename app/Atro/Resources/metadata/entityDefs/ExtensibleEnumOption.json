@@ -66,11 +66,7 @@
   },
   "collection": {
     "sortBy": "sortOrder",
-    "asc": true,
-    "textFilterFields": [
-      "name",
-      "code"
-    ]
+    "asc": true
   },
   "indexes": {
     "createdAt": {

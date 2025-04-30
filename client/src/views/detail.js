@@ -203,7 +203,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 mode = 'edit';
             }
 
-            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, {trigger: false});
+            this.getRouter().navigate('#' + scope + '/' + mode + '/' + id, { trigger: false });
             this.getRouter().dispatch(scope, mode, {
                 id: id,
                 model: model,
@@ -270,7 +270,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                                 view.selectNode(data);
                             },
                             treeLoad: (treeScope, treeData) => {
-                                if(view.treeLoad){
+                                if (view.treeLoad) {
                                     view.treeLoad(treeScope, treeData);
                                 }
                             },
@@ -382,6 +382,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         setupLayoutEditorButton() {
             let el = this.options.el || '#' + (this.id);
             const recordView = this.getView('record');
+            if (!recordView) {
+                return;
+            }
             const bottomView = recordView.getView('bottom');
 
             this.createView('layoutRelationshipsConfigurator', "views/record/layout-configurator", {
@@ -611,7 +614,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     if (afterSelectCallback && panelView && typeof panelView[afterSelectCallback] === 'function') {
                         panelView[afterSelectCallback](selectObj);
                     } else {
-                        let data = {shouldDuplicateForeign: duplicate};
+                        let data = { shouldDuplicateForeign: duplicate };
                         if (Array.isArray(selectObj)) {
                             data.massRelate = true;
                             data.where = [{
@@ -939,7 +942,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 dialog.render();
                 this.notify(false);
                 dialog.once('select', function (selectObj, duplicate = false) {
-                    var data = {shouldDuplicateForeign: duplicate};
+                    var data = { shouldDuplicateForeign: duplicate };
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
                         selectObj.forEach(function (model) {
@@ -1004,7 +1007,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 this.getRouter().dispatch(this.scope, 'create', {
                     attributes: attributes,
                 });
-                this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().navigate(url, { trigger: false });
             }.bind(this));
         },
     });

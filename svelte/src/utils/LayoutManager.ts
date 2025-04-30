@@ -52,7 +52,7 @@ export const LayoutManager = {
             if (current) {
                 current.data = {}
                 for (const i in localStorage) {
-                    if (i.startsWith('app-layout') && (i.includes('-list') || i.includes('detail'))) {
+                    if (i.includes('app-layout') && (i.includes('-list') || i.includes('detail'))) {
                         delete localStorage[i];
                     }
                 }

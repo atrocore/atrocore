@@ -756,7 +756,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 queryBuilder = queryBuilder.rules[0];
                             }
 
-                            return {bool, queryBuilder}
+                            return {bool, queryBuilder, queryBuilderApplied: true}
                         }
                         view.getAutocompleteAdditionalWhereConditions = () => {
                             let boolData = this.getBoolFilterData();
@@ -912,6 +912,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                              if(this.name !== rule.filter.id) {
                                  return;
                              }
+
 
                              if(rule.operator.type === this.initialOperatorType[inputName]) {
                                  this.initialOperatorType[inputName] = null;

@@ -53,6 +53,7 @@
                             type="button"
                             class="btn btn-default"
                             aria-expanded="false"
+                            data-button-id="search-reset"
                             on:click={reset}
                     >
                         <i class="ph ph-x"></i>

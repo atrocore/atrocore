@@ -8,5 +8,6 @@
   "showInAdminPanel": false,
   "enabledCopyConfigurations": true,
   "streamDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "hideFieldTypeFilters": true
 }

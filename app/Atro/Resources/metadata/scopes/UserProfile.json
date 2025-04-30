@@ -20,5 +20,6 @@
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "leftSidebarDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "hideFieldTypeFilters": true
 }

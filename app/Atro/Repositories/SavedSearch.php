@@ -64,7 +64,7 @@ class SavedSearch extends Base
     {
         if(!empty($data['rules'])) {
             foreach($data['rules'] as $key => $rule) {
-                if(!empty($rule['field']) && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $rule['field']])){
+                if(!empty($rule['field']) && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $rule['field']]) && $rule['field'] !== 'id'){
                     unset($data['rules'][$key]);
                 }
 

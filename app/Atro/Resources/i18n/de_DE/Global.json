@@ -368,7 +368,10 @@
     "Apply Advanced Filter": "Erweiterten Filter anwenden",
     "Unset": "Nicht eingestellt",
     "Unset All": "Alle zurücksetzen",
-    "Cancel Edit": "Bearbeiten abbrechen"
+    "Cancel Edit": "Bearbeiten abbrechen",
+    "openSearchFilter": "Suchfilter öffnen",
+    "showImageBackground": "Hintergrund anzeigen",
+    "hideImageBackground": "Hintergrund ausblenden"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

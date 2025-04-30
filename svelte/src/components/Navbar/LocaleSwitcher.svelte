@@ -4,25 +4,29 @@
     import {UserData} from "../../utils/UserData";
     import {LayoutManager} from "../../utils/LayoutManager";
 
-    let locales = Config.get('locales')
+    let locales = Config.get('locales') || {}
     let languages = (Config.get('inputLanguageList') || []).reduce((res, item) => {
         res[item] = Config.get('referenceData').Language?.[item]
         return res
     }, {})
 
-    let locale = UserData.get()?.user?.localeId || Config.get('locale')
+    let locale = UserData.get()?.user?.localeId
+    if (!locale || !locales[locale]) {
+        locale = Config.get('locale')
+    }
+
     let inputLanguages = UserData.get()?.user?.additionalLanguages || []
     let languagesLabel
 
     if (locale !== Config.get('locale')) {
         // remove language for selected locale if exists
-        if (languages[locales[locale].code]) {
+        if (locale && locales[locale]?.code && languages[locales[locale].code]) {
             delete languages[locales[locale].code]
             // add main locale language
-            const mainLanguageCode = locales['main'].code
-            const mainLanguage = Config.get('referenceData').Language[mainLanguageCode]
-            if (mainLanguage) {
-                languages[mainLanguageCode] = mainLanguage
+            for (const [code, language] of Object.entries(Config.get('referenceData').Language || {})) {
+                if (language.role === 'main') {
+                    languages[code] = language
+                }
             }
         }
     }

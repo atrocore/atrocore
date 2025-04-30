@@ -6439,7 +6439,7 @@ button.close {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1550;
+    z-index: 2010;
     -webkit-overflow-scrolling: touch;
     outline: 0
 }
@@ -8014,7 +8014,7 @@ button.close {
     top: 0;
     left: 0;
     width: 100% !important;
-    z-index: 5000
+    z-index: 2001
 }
 
 .note-editor.note-frame.fullscreen .note-editable {
@@ -13304,7 +13304,7 @@ input#sn-checkbox-open-in-new-window {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2000;
+    z-index: 2020;
     box-shadow: 0 0 5px -1px rgba(0, 0, 0, .3);
 }
 
@@ -15208,6 +15208,10 @@ td[data-name="draggableIcon"] {
     width: 100%;
 }
 
+.modal-open .full-page-modal .modal-dialog {
+    height: 100%;
+}
+
 .full-page-modal .modal-body {
     padding: 0;
 }
@@ -15217,6 +15221,20 @@ td[data-name="draggableIcon"] {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+    max-height: calc(100% - 70px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.full-page-modal .modal-header {
+    flex-shrink: 0;
+}
+
+.full-page-modal .main-content {
+    flex: 1;
+    min-height: 0;
+    position: relative;
 }
 
 .full-page-modal .header-container {
@@ -18222,7 +18240,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .modal-dialog .main-content .middle-content {
-    flex-grow: 1;
+    flex: 1;
+    min-width: 0;
 }
 
 .modal-dialog .main-content .middle-content .list > table {
@@ -18236,6 +18255,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-dialog .main-content .modal-footer {
     align-items: center;
+}
+
+.modal-dialog .right-content {
+    position: relative;
 }
 
 

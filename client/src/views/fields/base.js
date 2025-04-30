@@ -1162,7 +1162,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     rule.rightValue = null;
                     rule.leftValue = null;
                     let view = this.getView(viewKey);
-                    if(rule.operator.type !== 'between'){
+                    if(rule.operator.type !== 'between' && view){
                        this.filterValue = view.model.get('value');
                         rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                     }
