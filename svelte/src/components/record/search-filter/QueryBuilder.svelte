@@ -248,6 +248,9 @@
                         advanced: []
                     });
                     handleAdvancedFilterChecked(false);
+                    if(rules.rules.length === 0) {
+                        updateCollection();
+                    }
                 }
 
                 await tick();
@@ -518,7 +521,7 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && scope === 'Product';
+        return Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim';
     }
 
     function addAttributeFilter(callback) {
@@ -587,7 +590,7 @@
         generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
         updateSearchManager({
-            queryBuilderApplied: advancedFilterChecked ? 'apply' : false
+            queryBuilderApplied: advancedFilterChecked
         });
 
         if (refresh) {
@@ -676,13 +679,20 @@
             const $queryBuilder = window.$(queryBuilderElement)
             try {
                 oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
-                $queryBuilder.queryBuilder('setFilters', filters)
-                $queryBuilder.queryBuilder('setRules', item.data)
+                $queryBuilder.queryBuilder('destroy');
+                searchManager.update({
+                    queryBuilder: item.data
+                })
+                initQueryBuilderFilter();
                 editingSavedSearch = item;
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
-                $queryBuilder.queryBuilder('setRules', searchManager.getQueryBuilder());
+                $queryBuilder.queryBuilder('destroy');
+                searchManager.update({
+                    queryBuilder: oldAdvancedFilter
+                })
+                initQueryBuilderFilter();
             }
         });
     }
@@ -866,6 +876,7 @@
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
                 uniqueKey={uniqueKey}
+                hideRowAction={uniqueKey.includes('dialog')}
         />
     {/if}
 
@@ -881,7 +892,7 @@
                     <i class="ph ph-x"></i>
                     {Language.translate('Unset')}
                 </button>
-                {#if Acl.check('SavedSearch', 'create')}
+                {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
                     <button class="btn btn-sm btn-success filter-button" on:click={saveFilter}>
                         <i class="ph ph-floppy-disk-back"></i>
                         {Language.translate('Save')}

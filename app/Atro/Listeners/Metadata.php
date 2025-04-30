@@ -291,7 +291,7 @@ class Metadata extends AbstractListener
                     ]
                 ];
 
-                if ($action['usage'] === 'record' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
                         'massAction' => !empty($action['mass_action']),
                     ]);

@@ -374,7 +374,8 @@
     "Unset All": "Скинути все",
     "Cancel Edit": "Скасувати",
     "showImageBackground": "Показати фон",
-    "hideImageBackground": "Сховати фон"
+    "hideImageBackground": "Сховати фон",
+    "openSearchFilter": "Відкрити фільтр пошуку"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

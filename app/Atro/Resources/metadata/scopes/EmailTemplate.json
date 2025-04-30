@@ -9,5 +9,6 @@
   "type": "ReferenceData",
   "object": true,
   "bookmarkDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "hideFieldTypeFilters": true
 }
