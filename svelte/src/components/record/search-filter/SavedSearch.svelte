@@ -53,8 +53,7 @@
 
     function updateCollection() {
         Notifier.notify(Language.translate('loading', 'messages'));
-
-        searchManager.collection.reset();
+        searchManager.fetchCollection();
     }
 
     onMount(() => {

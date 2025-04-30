@@ -20,11 +20,14 @@
     export let showFilter: boolean = false;
     export let showSummary: boolean = false;
     export let useStorage: boolean = true;
-    export let uniqueKey: string|null = null;
+    export let uniqueKey: string|null = 'default';
 
     $: scopeKey = scope + mode;
 
-    function toggleFilter() {
+    function toggleFilter(e) {
+        if(e.detail.uniqueKey !== uniqueKey) {
+            return;
+        }
         isCollapsed = !isCollapsed;
         setActiveItem(items.find(item => item.name === 'filter'));
         storeData('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
@@ -35,7 +38,6 @@
     let streamView: Object;
     let items: Item[] = [];
     let activeItem: Item;
-
     if (showSummary) {
         items.push({
             name: "summary",
