@@ -297,7 +297,7 @@ class Metadata extends AbstractListener
                     ]);
                 }
 
-                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
+                if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
                     $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
                 }
 
