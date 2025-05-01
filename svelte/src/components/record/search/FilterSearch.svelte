@@ -53,17 +53,7 @@
 
     function refreshShowUnsetAll() {
         setTimeout(() => {
-            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
-            let bool = searchManager.getBool();
-            for (const boolKey in bool) {
-                if(searchManager.mandatoryBoolFilterList && searchManager.mandatoryBoolFilterList.includes(boolKey)){
-                    continue;
-                }
-                if(bool[boolKey]){
-                    showUnsetAll = true;
-                    break;
-                }
-            }
+            showUnsetAll = searchManager.isFilterSet();
         }, 100)
     }
 
@@ -333,8 +323,7 @@
     }
 
     .dropdown:last-child .btn:last-of-type {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
+        border-radius: 0 3px 3px 0;
     }
 
     .filter-group .filter.active {

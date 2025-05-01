@@ -756,17 +756,7 @@
     function refreshShowUnsetAll() {
         refreshAdvancedFilterDisabled();
         setTimeout(() => {
-            showUnsetAll = searchManager.isQueryBuilderApplied() || searchManager.getSavedFilters().length > 0
-            let bool = searchManager.getBool();
-            for (const boolKey in bool) {
-                if(searchManager.mandatoryBoolFilterList && searchManager.mandatoryBoolFilterList.includes(boolKey)){
-                    continue;
-                }
-                if (bool[boolKey]) {
-                    showUnsetAll = true;
-                    break;
-                }
-            }
+            showUnsetAll = searchManager.isFilterSet();
         }, 100)
     }
 

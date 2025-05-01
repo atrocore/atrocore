@@ -375,7 +375,9 @@
     "Cancel Edit": "Скасувати",
     "showImageBackground": "Показати фон",
     "hideImageBackground": "Сховати фон",
-    "openSearchFilter": "Відкрити фільтр пошуку"
+    "openSearchFilter": "Відкрити фільтр пошуку",
+    "applySearch": "Застосувати пошук",
+    "unsetSearch": "Видалити пошук"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
