@@ -373,7 +373,8 @@
     "showImageBackground": "Hintergrund anzeigen",
     "hideImageBackground": "Hintergrund ausblenden",
     "applySearch": "Suche anwenden",
-    "unsetSearch": "uche entfernen"
+    "unsetSearch": "uche entfernen",
+    "searchResults": "Suchergebnisse"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

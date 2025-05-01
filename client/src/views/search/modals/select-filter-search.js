@@ -15,7 +15,8 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             Dep.prototype.setup.call(this);
             this.multiple = false;
             this.createButton = false;
-
+            this.header = this.translate(this.scope, 'scopeNamesPlural');
+            this.header += ' / ' + this.translate('searchResults')
             this.buttonList =  [
                 {
                     name: 'applySearch',
@@ -32,7 +33,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                     name: 'unsetSearch',
                     style: 'primary',
                     label: 'unsetSearch',
-                    disabled: !this.options.showUnsetSearch,
+                    disabled: !this.options.disabledUnsetSearch,
                     onClick: (dialog) => {
                         this.trigger('select', {
                             where: null

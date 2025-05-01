@@ -129,7 +129,7 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                showUnsetSearch: initialWhere.length > 0
+                disabledUnsetSearch: initialWhere.length > 0
             }, (dialog) => {
                 dialog.render();
                 this.notify(false);
