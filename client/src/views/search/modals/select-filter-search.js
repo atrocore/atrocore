@@ -16,7 +16,6 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             this.multiple = false;
             this.createButton = false;
 
-            let disabled = !this.searchManager.isFilterSet() && this.searchManager.geTextFilter().trim().length === 0;
             this.buttonList =  [
                 {
                     name: 'applySearch',
@@ -33,7 +32,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                     name: 'unsetSearch',
                     style: 'primary',
                     label: 'unsetSearch',
-                    disabled: disabled,
+                    disabled: !this.options.showUnsetSearch,
                     onClick: (dialog) => {
                         this.trigger('select', {
                             where: null
