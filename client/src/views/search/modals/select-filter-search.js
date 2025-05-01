@@ -15,7 +15,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             Dep.prototype.setup.call(this);
             this.multiple = false;
             this.createButton = false;
-            this.header = this.translate(this.scope, 'scopeNamesPlural');
+            this.header = this.translate(this.scope, 'scopeNames');
             this.header += ' / ' + this.translate('searchResults')
             this.buttonList =  [
                 {
