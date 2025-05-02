@@ -34,7 +34,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
 
             this.childrenFields.forEach(child => {
                 this.createView(child.name, this.getFieldManager().getViewName(child.params.type), {
-                    el: `${this.options.el} > .composite-container > .composite-container-field[data-name="${child.name}"]`,
+                    el: `${this.options.el} > .composite-container .field[data-name="${child.name}"]`,
                     name: child.name,
                     model: this.model,
                     params: child.params,
@@ -53,6 +53,8 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
+
+            this.$el.css('border-bottom', 'none')
         },
 
         initInlineEdit() {

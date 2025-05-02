@@ -3445,6 +3445,12 @@ textarea.input-lg, select[multiple].input-lg {
         vertical-align: middle
     }
 
+    .composite-container {
+        padding: 2px 5px;
+        border-left: 1px solid var(--secondary-border-color);
+        float: left;
+    }
+
     .form-inline .radio, .form-inline .checkbox {
         display: inline-block;
         margin-top: 0;
