@@ -1232,6 +1232,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.refreshLayout()
                 })
             }
+
+            this.listenTo(this.model, 'sync', () => {
+                this.putAttributesToModel();
+            });
         },
 
         remove() {
@@ -1970,6 +1974,37 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return result
         },
 
+        putAttributesToModel() {
+            if (this.layoutName !== 'detail' || !this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) || !this.getAcl().check(this.model.name, 'read') || this.model.isNew()) {
+                return;
+            }
+
+            $.each(this.model.defs.fields, (name, defs) => {
+                if (defs.attributeId) {
+                    delete this.model.defs.fields[name];
+                }
+            })
+
+            let attributesDefs = this.model.get('attributesDefs') || {};
+
+            // prepare composited attributes
+            $.each(attributesDefs, (name, defs) => {
+                if (defs.type === 'composite') {
+                    (defs.childrenIds || []).forEach(attributeId => {
+                        $.each(attributesDefs, (name1, defs1) => {
+                            if (defs1.attributeId === attributeId) {
+                                attributesDefs[name1]['layoutDetailDisabled'] = true;
+                            }
+                        });
+                    })
+                }
+            });
+
+            $.each(attributesDefs, (name, defs) => {
+                this.model.defs['fields'][name] = defs;
+            });
+        },
+
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
                 let layoutRows = [];
@@ -1993,23 +2028,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
 
                 if (!this.model.isNew()) {
-                    let attributesDefs = this.model.get('attributesDefs') || {};
-
-                    // prepare composited attributes
-                    $.each(attributesDefs, (name, defs) => {
-                        if (defs.type === 'composite') {
-                            (defs.childrenIds || []).forEach(attributeId => {
-                                $.each(attributesDefs, (name1, defs1) => {
-                                    if (defs1.attributeId === attributeId){
-                                        attributesDefs[name1]['layoutDetailDisabled'] = true;
-                                    }
-                                });
-                            })
-                        }
-                    });
-
-                    $.each(attributesDefs, (name, defs) => {
-                        this.model.defs['fields'][name] = defs;
+                    this.putAttributesToModel();
+                    $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
                         if (!defs.layoutDetailDisabled) {
                             if (defs.multilangField) {
                                 return
