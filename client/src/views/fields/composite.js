@@ -12,6 +12,8 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
 
         detailTemplate: 'fields/composite/detail',
 
+        editTemplate: 'fields/composite/edit',
+
         childrenFields: [],
 
         setup() {
@@ -23,7 +25,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
                     if (params.attributeId === attributeId) {
                         this.childrenFields.push({
                             name: name,
-                            label: params.label,
+                            label: params.detailViewLabel || params.label,
                             params: params
                         });
                     }
@@ -53,6 +55,9 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             Dep.prototype.afterRender.call(this);
         },
 
+        initInlineEdit() {
+        },
+
         setMode(mode) {
             Dep.prototype.setMode.call(this, mode);
 
@@ -60,6 +65,27 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
                 this.getView(child.name).setMode(mode);
             });
         },
+
+        fetch() {
+            let data = {};
+
+            this.childrenFields.forEach(child => {
+                _.extend(data, this.getView(child.name).fetch());
+            });
+
+            console.log(data)
+
+            return data;
+        },
+
+        // validate() {
+        //     let validate = false;
+        //     let view = this.getView('valueField');
+        //     if (view) {
+        //         validate = view.validate();
+        //     }
+        //     return validate;
+        // },
 
     })
 );
