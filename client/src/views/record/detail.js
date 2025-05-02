@@ -1993,7 +1993,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     (defs.childrenIds || []).forEach(attributeId => {
                         $.each(attributesDefs, (name1, defs1) => {
                             if (defs1.attributeId === attributeId) {
-                                attributesDefs[name1]['layoutDetailDisabled'] = true;
+                                attributesDefs[name1]['compositedField'] = true;
                             }
                         });
                     })
@@ -2030,7 +2030,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (!this.model.isNew()) {
                     this.putAttributesToModel();
                     $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
-                        if (!defs.layoutDetailDisabled) {
+                        if (!defs.layoutDetailDisabled && !defs.compositedField) {
                             if (defs.multilangField) {
                                 return
                             }

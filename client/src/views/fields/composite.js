@@ -21,20 +21,25 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
 
             this.childrenFields = [];
             (this.model.getFieldParam(this.name, 'childrenIds') || []).forEach(attributeId => {
-                $.each(this.model.defs.fields || {}, (name, params) => {
-                    if (params.attributeId === attributeId) {
-                        params['disableAttributeRemove'] = params.type !== 'composite';
+                $.each(this.model.defs.fields || {}, (name, defs) => {
+                    if (defs.attributeId === attributeId && !defs.layoutDetailDisabled) {
+                        defs['disableAttributeRemove'] = defs.type !== 'composite';
                         this.childrenFields.push({
                             name: name,
-                            label: params.detailViewLabel || params.label,
-                            params: params
+                            label: defs.detailViewLabel || defs.label,
+                            params: defs
                         });
                     }
                 });
             })
 
             this.childrenFields.forEach(child => {
-                this.createView(child.name, this.getFieldManager().getViewName(child.params.type), {
+                let view = this.getFieldManager().getViewName(child.params.type);
+                if (child.params.layoutDetailView) {
+                    view = child.params.layoutDetailView;
+                }
+
+                this.createView(child.name, view, {
                     el: `${this.options.el} > .composite-container .field[data-name="${child.name}"]`,
                     name: child.name,
                     model: this.model,
