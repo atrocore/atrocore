@@ -66,7 +66,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             const options = {
                 collection: this.collection,
                 el: this.containerSelector + ' .list-container',
-                selectable: false,
+                selectable: true,
                 checkboxes: false,
                 massActionsDisabled: true,
                 rowActionsView: false,
@@ -81,6 +81,9 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             }
 
             this.createView('list', viewName, options, function (view) {
+                this.listenTo(view, 'select', function (model) {
+                    window.open(`#${this.scope}/view/${model.id}`, '_blank');
+                }.bind(this));
                     view.getSelectAttributeList(function (selectAttributeList) {
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
