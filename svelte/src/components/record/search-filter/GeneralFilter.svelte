@@ -52,7 +52,8 @@
     }
 
     function initBoolFilter() {
-        boolFilterList = (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
+        boolFilterList = [];
+        (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
             if (typeof item === 'string') return true;
             item = item || {};
             if (item.accessDataList) {
@@ -61,11 +62,21 @@
                 }
             }
             return true;
-        }).map(function (item) {
-            if (typeof item === 'string') return item;
+        }).forEach(function (item) {
+            if (boolFilterList.includes(item)) {
+                return;
+            }
+            if (typeof item === 'string') {
+                boolFilterList.push(item);
+                return;
+            }
             item = item || {};
-            return item.name;
+            if (item.name) {
+                boolFilterList.push(item.name);
+            }
         });
+
+
 
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
 
