@@ -183,7 +183,7 @@ class EntityField extends ReferenceData
 
         if (in_array($entity->get('type'), ['link', 'linkMultiple'])) {
             if (
-                $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData'
+                ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData' && $entity->isNew())
                 || $this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'ReferenceData'
             ) {
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
@@ -499,9 +499,9 @@ class EntityField extends ReferenceData
     {
         $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
         $virtualToEntityFields = [
-            "isNonComparable" => "nonComparableFields",
-            "isDuplicatableRelation" => "duplicatableRelations",
-            "isUninheritableField" => "unInheritedFields",
+            "isNonComparable"         => "nonComparableFields",
+            "isDuplicatableRelation"  => "duplicatableRelations",
+            "isUninheritableField"    => "unInheritedFields",
             "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
@@ -529,13 +529,13 @@ class EntityField extends ReferenceData
         }
     }
 
-    protected  function prepareVirtualBoolFields(OrmEntity $entity): void
+    protected function prepareVirtualBoolFields(OrmEntity $entity): void
     {
         $entityEntity = $this->getEntityManager()->getEntity('Entity', $entity->get('entityId'));
         $virtualToEntityFields = [
-            "isNonComparable" => "nonComparableFields",
-            "isDuplicatableRelation" => "duplicatableRelations",
-            "isUninheritableField" => "unInheritedFields",
+            "isNonComparable"         => "nonComparableFields",
+            "isDuplicatableRelation"  => "duplicatableRelations",
+            "isUninheritableField"    => "unInheritedFields",
             "isUninheritableRelation" => "unInheritedRelations",
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
@@ -544,22 +544,22 @@ class EntityField extends ReferenceData
             $entity->set($field, in_array($entity->get('code'), $entityEntity->get($entityField) ?? []));
         }
 
-        $defaultRelationScopeAudited =  [];
+        $defaultRelationScopeAudited = [];
         foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
-            if(!empty($scopeDefs['defaultRelationAudited'])) {
+            if (!empty($scopeDefs['defaultRelationAudited'])) {
                 $defaultRelationScopeAudited[] = $scopeKey;
             }
         }
 
         // we set auditableEnabled to true for File, channel and category is nothing was define
-        if(in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
+        if (in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
-            if( !isset($fieldDefs['auditableEnabled'])) {
+            if (!isset($fieldDefs['auditableEnabled'])) {
                 $entity->set('auditableEnabled', true);
             }
         }
     }
-    
+
     protected function init()
     {
         parent::init();
