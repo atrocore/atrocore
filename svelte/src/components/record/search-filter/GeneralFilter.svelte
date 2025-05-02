@@ -68,9 +68,12 @@
             }
             if (typeof item === 'string') {
                 boolFilterList.push(item);
+                return;
             }
             item = item || {};
-             boolFilterList.push(item.name);
+            if(item.name){
+                boolFilterList.push(item.name);
+            }
         });
 
 
