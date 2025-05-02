@@ -408,7 +408,10 @@
     "doubleClickZoom": "Press the button or double click the image to toggle a zoom.",
     "showImageBackground": "Show Background",
     "hideImageBackground": "Hide Background",
-    "openSearchFilter": "Open search filter"
+    "openSearchFilter": "Open search filter",
+    "applySearch": "Apply Search",
+    "unsetSearch": "Unset search",
+    "searchResults": "Search Results"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

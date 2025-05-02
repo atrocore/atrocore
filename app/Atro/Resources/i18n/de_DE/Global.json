@@ -371,7 +371,10 @@
     "Cancel Edit": "Bearbeiten abbrechen",
     "openSearchFilter": "Suchfilter öffnen",
     "showImageBackground": "Hintergrund anzeigen",
-    "hideImageBackground": "Hintergrund ausblenden"
+    "hideImageBackground": "Hintergrund ausblenden",
+    "applySearch": "Suche anwenden",
+    "unsetSearch": "uche entfernen",
+    "searchResults": "Suchergebnisse"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
