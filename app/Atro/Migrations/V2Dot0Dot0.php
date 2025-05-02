@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V2Dot0Dot0 extends Base
 {
@@ -111,6 +112,82 @@ EOD;
             }
         }
 
+        $this->updateAccountLanguage();
+    }
+
+    protected function updateAccountLanguage(): void
+    {
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        if ($toSchema->hasTable('account')) {
+            $table = $toSchema->getTable('account');
+
+            $languages = [];
+
+            $currentLanguages = $this->getConfig()->get('referenceData.Language', []);
+            $mainLanguage = array_filter(array_values($currentLanguages), function (array $language) {
+                return $language['role'] === 'main';
+            });
+            $mainLanguage = !empty($mainLanguage) ? array_shift($mainLanguage) : null;
+
+            if ($table->hasColumn('language')) {
+                $languages = $this->getConnection()
+                    ->createQueryBuilder()
+                    ->from('account')
+                    ->select('id', 'language')
+                    ->where('deleted = :false')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+                $languages = array_column($languages, 'language', 'id');
+
+                $table->dropColumn('language');
+            }
+
+            if (!$table->hasColumn('language_id')) {
+                $table->addColumn('language_id', 'string', ['length' => 36, 'notnull' => false]);
+            }
+
+            foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                $this->exec($sql);
+            }
+
+            $this->setAccountsLanguageId($languages, $mainLanguage['id'] ?? null);
+        }
+    }
+
+    protected function setAccountsLanguageId(array $languages, ?string $mainLanguageId): void
+    {
+        $langs = $this->getLanguagesList();
+
+        foreach ($languages as $id => $language) {
+            $langId = $langs[$language] ?? $mainLanguageId;
+
+            $this
+                ->getConnection()
+                ->createQueryBuilder()
+                ->update('account')
+                ->set('language_id', ':language_id')
+                ->where('id = :id')
+                ->andWhere('deleted = :false')
+                ->setParameter('language_id', $langId)
+                ->setParameter('id', $id)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->executeQuery();
+        }
+    }
+
+    protected function getLanguagesList(): array
+    {
+        $result = [];
+
+        $languages = $this->getConfig()->get('referenceData.Language', []);
+
+        foreach ($languages as $code => $language) {
+            $result[$code] = $language['id'];
+        }
+
+        return $result;
     }
 
     protected function exec(string $sql): void

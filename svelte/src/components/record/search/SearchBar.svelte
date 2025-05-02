@@ -105,8 +105,8 @@
     }
 
     .search-row .input-group-btn:last-child button:last-child {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
+        margin-left: 0;
+        border-radius: 0 3px 3px 0;
     }
 
     .search-row .form-group {

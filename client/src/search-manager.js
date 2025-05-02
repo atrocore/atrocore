@@ -41,6 +41,7 @@ Espo.define('search-manager', [], function () {
         this.dateTime = dateTime;
         this.emptyOnReset = emptyOnReset;
         this.savedSearchList = [];
+        this.isFilterSetValue = null;
 
         this.emptyData = {
             textFilter: '',
@@ -192,6 +193,7 @@ Espo.define('search-manager', [], function () {
         loadStored: function () {
             this.data = this.storage.get(this.type + 'QueryBuilder', this.scope) || Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
             this.sanitizeData();
+            this.isFilterSetValue = this.isFilterSet()
             return this;
         },
 
@@ -241,6 +243,7 @@ Espo.define('search-manager', [], function () {
 
         set: function (data) {
             this.data = data;
+            this.refreshIsFilterSet();
             if (this.storage) {
                 this.storage.set(this.type + 'QueryBuilder', this.scope, data);
             }
@@ -262,6 +265,7 @@ Espo.define('search-manager', [], function () {
             if (this.storage) {
                 this.storage.clear(this.type + 'QueryBuilder', this.scope);
             }
+            this.refreshIsFilterSet();
         },
 
         update: function (newData) {
@@ -304,6 +308,41 @@ Espo.define('search-manager', [], function () {
             this.collection.where = where;
             this.collection.abortLastFetch();
             this.collection.fetch().then(() => window.Backbone.trigger('after:search', this.collection));
+        },
+
+        refreshIsFilterSet() {
+            this.isFilterSetValue = this.isFilterSet();
+            if(this.collection) {
+                this.collection.trigger('filter-state:changed', this.isFilterSetValue);
+            }
+        },
+
+        isFilterSet() {
+            let filterIsSet = this.data.savedFilters.length > 0 ;
+            if(filterIsSet) {
+                return true;
+            }
+
+            let queryBuilder = this.data.queryBuilder;
+
+            if(this.data.queryBuilderApplied) {
+                filterIsSet = queryBuilder.condition && Array.isArray(queryBuilder.rules) && queryBuilder.rules.length > 0;
+                if(filterIsSet) {
+                    return true;
+                }
+            }
+
+            let bool = this.data.bool;
+
+            for (const boolKey in bool) {
+                if(Array.isArray(this.mandatoryBoolFilterList) && this.mandatoryBoolFilterList.includes(boolKey)){
+                    continue;
+                }
+                if(bool[boolKey]){
+                    return true;
+                }
+            }
+            return false;
         },
 
         getDateTimeWhere: function (type, field, value) {

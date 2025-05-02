@@ -371,6 +371,9 @@
     "Cancel Edit": "Bearbeiten abbrechen",
     "openSearchFilter": "Suchfilter öffnen",
     "showImageBackground": "Hintergrund anzeigen",
+    "applySearch": "Suche anwenden",
+    "unsetSearch": "uche entfernen",
+    "searchResults": "Suchergebnisse",
     "hideImageBackground": "Hintergrund ausblenden",
     "selectAll": "Alle auswählen",
     "additionalLanguages": "Zusätzliche Sprachen"

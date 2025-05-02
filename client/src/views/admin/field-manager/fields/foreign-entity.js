@@ -17,7 +17,7 @@ Espo.define('views/admin/field-manager/fields/foreign-entity', 'views/fields/lin
         boolFilterData: {
             fieldsFilter() {
                 return {
-                    type: ["Base", "Hierarchy"]
+                    type: ["Base", "Hierarchy", "ReferenceData"]
                 };
             }
         },
