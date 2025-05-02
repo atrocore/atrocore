@@ -53,7 +53,7 @@
 
     function initBoolFilter() {
         boolFilterList = [];
-            (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
+        (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
             if (typeof item === 'string') return true;
             item = item || {};
             if (item.accessDataList) {
@@ -63,7 +63,7 @@
             }
             return true;
         }).forEach(function (item) {
-            if(boolFilterList.includes(item)) {
+            if (boolFilterList.includes(item)) {
                 return;
             }
             if (typeof item === 'string') {
@@ -71,7 +71,7 @@
                 return;
             }
             item = item || {};
-            if(item.name){
+            if (item.name) {
                 boolFilterList.push(item.name);
             }
         });
