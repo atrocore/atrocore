@@ -581,32 +581,30 @@ class Mapper implements MapperInterface
             }
         }
 
-        if (count($setArr) == 0) {
-            return true;
+        if (!empty($setArr)) {
+            $qb = $this->connection->createQueryBuilder();
+
+            $qb->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
+            foreach ($setArr as $field => $value) {
+                $qb->set($this->connection->quoteIdentifier($this->toDb($field)), ":u_$field");
+                $qb->setParameter("u_$field", $value, self::getParameterType($value));
+            }
+
+            $qb->where('id = :id');
+            $qb->setParameter('id', $entity->id, self::getParameterType($entity->id));
+            $qb->andWhere('deleted = :deleted');
+            $qb->setParameter('deleted', false, self::getParameterType(false));
+
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+                $sql = $qb->getSQL();
+                $this->error("RDB UPDATE failed for SQL: $sql");
+                throw $e;
+            }
         }
 
-        $qb = $this->connection->createQueryBuilder();
-
-        $qb->update($this->connection->quoteIdentifier($this->toDb($entity->getEntityType())));
-        foreach ($setArr as $field => $value) {
-            $qb->set($this->connection->quoteIdentifier($this->toDb($field)), ":u_$field");
-            $qb->setParameter("u_$field", $value, self::getParameterType($value));
-        }
-
-        $qb->where('id = :id');
-        $qb->setParameter('id', $entity->id, self::getParameterType($entity->id));
-        $qb->andWhere('deleted = :deleted');
-        $qb->setParameter('deleted', false, self::getParameterType(false));
-
-        try {
-            $qb->executeQuery();
-        } catch (\Throwable $e) {
-            $sql = $qb->getSQL();
-            $this->error("RDB UPDATE failed for SQL: $sql");
-            throw $e;
-        }
-
-        if ($this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute") && class_exists(Attribute::class)) {
+        if (!empty($attrs) && class_exists(Attribute::class)) {
             /** @var Attribute $attributeRepository */
             $attributeRepository = $this->em->getRepository('Attribute');
             foreach ($attrs as $key => $value) {
