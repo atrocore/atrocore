@@ -5,7 +5,7 @@ interface LayoutManagerInterface {
 
     resetToDefault(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any): any
 
-    get(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any, cache: any): any
+    get(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any, cache: any, isAdminPage: boolean): any
 
     set(scope: string, type: string, relatedScope: string | null, layoutProfileId: string, layout: any, callback: any): any
 }
@@ -27,11 +27,11 @@ export const LayoutManager = {
         return res
     },
 
-    get: function (scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any, cache: any): any {
+    get: function (scope: string, type: string, relatedScope: string | null, layoutProfileId: string, callback: any, cache: any, isAdminPage: boolean): any {
         let res = null
         data.subscribe((current: LayoutManagerInterface) => {
             if (current) {
-                res = current.get(scope, type, relatedScope, layoutProfileId, callback, cache);
+                res = current.get(scope, type, relatedScope, layoutProfileId, callback, cache, isAdminPage);
             }
         })();
         return res

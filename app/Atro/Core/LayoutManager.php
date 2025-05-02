@@ -601,9 +601,9 @@ class LayoutManager
 
     public static function getUserLanguages(User $user, EntityManager $entityManager, Config $config): array
     {
-        $locales = $user->get('additionalLanguages');
-        if (!is_array($locales)) {
-            $locales = [];
+        $disabledLanguages = $user->get('disabledLanguages');
+        if (!is_array($disabledLanguages)) {
+            $disabledLanguages = [];
         }
 
         $userLocale = $entityManager->getEntity('Locale', $user->get('localeId'));
@@ -616,13 +616,15 @@ class LayoutManager
         $mainLocaleCode = self::getSystemMainLocaleCode($config);
         $systemLocales[] = $mainLocaleCode;
 
+        $locales = array_diff($systemLocales, $disabledLanguages);
+
         if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
             array_unshift($locales, $userLocale->get('code'));
         } else {
             array_unshift($locales, $mainLocaleCode);
         }
 
-        return array_unique(array_intersect($locales, $systemLocales));
+        return array_unique($locales);
     }
 
     protected function getPreparedLocalesCodes(): array

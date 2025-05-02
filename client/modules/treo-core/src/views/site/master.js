@@ -36,6 +36,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             highlightingColorForDataQuality: '--highlighting-color-for-data-quality'
         },
 
+        rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],
+
         afterRender() {
             if ($(":root").length > 0) {
                 let style = this.getThemeManager().getStyle();
@@ -43,6 +45,9 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     (Object.keys(this.styleVariableMap) || []).forEach(param => {
                         if (style[param]) {
                             $(":root")[0].style.setProperty(this.styleVariableMap[param], style[param]);
+                            if (this.rgbVariables.includes(param)) {
+                                $(":root")[0].style.setProperty(this.styleVariableMap[param] + '-rgb', this.hexToRgb(style[param]))
+                            }
                         }
                     });
                 }
@@ -127,7 +132,21 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                 attributes: true,
                 attributeFilter: ['title', 'data-title-link']
             });
+        },
+
+        hexToRgb(hex) {
+            hex = hex.replace(/^#/, '');
+            if (hex.length === 3) {
+                hex = hex.split('').map(char => char + char).join('');
+            }
+            let bigint = parseInt(hex, 16);
+            let r = (bigint >> 16) & 255;
+            let g = (bigint >> 8) & 255;
+            let b = bigint & 255;
+
+            return `${r}, ${g}, ${b}`;
         }
+
 
     })
 );
