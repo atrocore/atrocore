@@ -108,7 +108,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getInlineActionsContainer: function () {
-            return this.getCellElement().find('.inline-actions');
+            return this.getCellElement().children('.inline-actions');
         },
 
         setDisabled: function (locked) {
@@ -398,7 +398,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 label.append('<sup class="status-icons"></sup>');
             }
 
-            if (this.getCellElement().find('.inline-actions').size() === 0) {
+            if (this.getCellElement().children('.inline-actions').size() === 0) {
                 this.getCellElement().prepend('<div class="pull-right inline-actions"></div>');
             }
         },
@@ -665,15 +665,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            const $cell = this.getCellElement();
-            const inlineActions = this.getInlineActionsContainer();
+            if (this.options?.params?.disableAttributeRemove){
+                return;
+            }
 
-            $cell.find('.ph-trash-simple').parent().remove();
+            const $cell = this.getCellElement();
+            const $inlineActions = this.getInlineActionsContainer();
+
+            $inlineActions.find('.ph-trash-simple').parent().remove();
 
             const $removeLink = $(`<a href="javascript:" class="remove-attribute-value hidden" title="${this.translate('Delete')}"><i class="ph ph-trash-simple"></i></a>`);
 
-            if (inlineActions.size()) {
-                inlineActions.prepend($removeLink);
+            if ($inlineActions.size()) {
+                $inlineActions.prepend($removeLink);
             } else {
                 $cell.prepend($removeLink);
             }

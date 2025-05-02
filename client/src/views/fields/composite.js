@@ -23,6 +23,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             (this.model.getFieldParam(this.name, 'childrenIds') || []).forEach(attributeId => {
                 $.each(this.model.defs.fields || {}, (name, params) => {
                     if (params.attributeId === attributeId) {
+                        params['disableAttributeRemove'] = params.type !== 'composite';
                         this.childrenFields.push({
                             name: name,
                             label: params.detailViewLabel || params.label,
@@ -54,7 +55,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.css('border-bottom', 'none')
+            // this.$el.css('border-bottom', 'none')
         },
 
         initInlineEdit() {
@@ -74,8 +75,6 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             this.childrenFields.forEach(child => {
                 _.extend(data, this.getView(child.name).fetch());
             });
-
-            console.log(data)
 
             return data;
         },
