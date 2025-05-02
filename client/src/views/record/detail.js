@@ -1979,7 +1979,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let item = {
                         name: name,
                         customLabel: defs.detailViewLabel || defs.label,
-                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script'].includes(defs.type)
+                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script', 'composite'].includes(defs.type)
                     }
                     if (defs.layoutDetailView) {
                         item.view = defs.layoutDetailView;
@@ -1993,7 +1993,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
 
                 if (!this.model.isNew()) {
-                    $.each(this.model.get('attributesDefs') || {}, (name, defs) => {
+                    let attributesDefs = this.model.get('attributesDefs') || {};
+
+                    // prepare composited attributes
+                    $.each(attributesDefs, (name, defs) => {
+                        if (defs.type === 'composite') {
+                            (defs.childrenIds || []).forEach(attributeId => {
+                                $.each(attributesDefs, (name1, defs1) => {
+                                    if (defs1.attributeId === attributeId){
+                                        attributesDefs[name1]['layoutDetailDisabled'] = true;
+                                    }
+                                });
+                            })
+                        }
+                    });
+
+                    $.each(attributesDefs, (name, defs) => {
                         this.model.defs['fields'][name] = defs;
                         if (!defs.layoutDetailDisabled) {
                             if (defs.multilangField) {
