@@ -11,5 +11,6 @@
   "clearDeletedAfterDays": 35,
   "actionDisabled": true,
   "emHidden": true,
-  "openApiHidden": true
+  "openApiHidden": true,
+  "hideFieldTypeFilters": true
 }

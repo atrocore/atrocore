@@ -58,7 +58,7 @@
                 readDataFromLayout(layout.layout);
                 callback(layout);
             }
-        }, false);
+        }, false, true);
     }
 
     function getTranslation(scope: string, field: string) {

@@ -263,7 +263,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if (this.options.rootUrl) {
                     options.rootUrl = this.options.rootUrl;
                 }
-                this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
+                this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, { trigger: false });
                 this.getRouter().dispatch(this.scope, 'edit', options);
             }
         },
@@ -274,7 +274,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 confirmText: this.translate('Apply')
             }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', {id: this.model.id}).then(() => {
+                this.ajaxPostRequest(this.scope + '/action/InheritAllForChildren', { id: this.model.id }).then(() => {
                     this.notify('Done', 'success');
                 });
             });
@@ -286,7 +286,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 confirmText: this.translate('Apply')
             }, () => {
                 this.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.scope + '/action/InheritAllFromParent', {id: this.model.id}).then(() => {
+                this.ajaxPostRequest(this.scope + '/action/InheritAllFromParent', { id: this.model.id }).then(() => {
                     this.notify('Done', 'success');
                 });
             });
@@ -332,7 +332,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         this.notify(response.message, 'success');
                         if (response.redirect) {
                             const action = response.action ?? 'view'
-                            this.getRouter().navigate('#' + response.scope + '/' + action + '/' + response.entityId, {trigger: false});
+                            this.getRouter().navigate('#' + response.scope + '/' + action + '/' + response.entityId, { trigger: false });
                             this.getRouter().dispatch(response.scope, action, {
                                 id: response.entityId,
                             })
@@ -374,7 +374,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionSaveAndCreate: function () {
             this.save(function () {
-                this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
+                this.getRouter().navigate('#' + this.scope + '/create', { trigger: false });
                 this.getRouter().dispatch(this.scope, 'create');
             }.bind(this), true);
         },
@@ -572,7 +572,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this[method] = function () {
                         let path = dropDownItems[item].actionViewPath;
 
-                        let o = {dropdownItem: dropDownItems[item]};
+                        let o = { dropdownItem: dropDownItems[item] };
                         (dropDownItems[item].optionsToPass || []).forEach((option) => {
                             if (option in this) {
                                 o[option] = this[option];
@@ -617,7 +617,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this[method] = function () {
                         let path = additionalButtons[item].actionViewPath;
 
-                        let o = {button: additionalButtons[item]};
+                        let o = { button: additionalButtons[item] };
 
                         (additionalButtons[item].optionsToPass || []).forEach((option) => {
                             if (option in this) {
@@ -763,7 +763,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 window.dispatchEvent(new Event('record:actions-reload'));
             });
 
-            window.dispatchEvent(new CustomEvent('record:buttons-update', {detail: this.getRecordButtons()}));
+            window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
 
             var $container = this.$el.find('.detail-button-container');
 
@@ -1227,9 +1227,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
 
-                this.listenTo(window.Backbone, 'change:additional-languages', (value) => {
-                    this.getUser().set('additionalLanguages', value)
-                    this.refreshLayout()
+                this.listenTo(window.Backbone, 'change:disabled-languages', (value) => {
+                    this.getUser().set('disabledLanguages', value)
+                    this.refreshLayout(true)
                 })
             }
         },
@@ -1271,7 +1271,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.realtimeInterval = setInterval(() => {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true})
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true })
                             .done(data => {
                                 if (data.timestamp !== timestamp) {
                                     timestamp = data.timestamp;
@@ -1928,7 +1928,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         getUserLanguages() {
             const user = this.getUser()
-            let languages = user.get('additionalLanguages') || []
+            let disabledLanguages = user.get('disabledLanguages') || []
             let userLocale = this.getConfig().get('locales')[user.get('localeId')]
             if (!userLocale) {
                 userLocale = this.getConfig().get('locales')[this.getConfig().get('locale')]
@@ -1943,6 +1943,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             systemLanguages.push(mainLocaleCode)
+            let languages = systemLanguages.filter(item => disabledLanguages.indexOf(item) === -1);
 
             if (userLocale && systemLanguages.includes(userLocale.code)) {
                 languages.unshift(userLocale.code)
@@ -2109,7 +2110,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordViewObject: this
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
-                    this.trigger('detailPanelsLoaded', {list: this.getMiddlePanels().concat(view.panelList)});
+                    this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(view.panelList) });
                 })
                 if (callback) {
                     callback(view)
@@ -2124,7 +2125,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let name = panel.label || panel.customLabel;
 
                     if (name) {
-                        middlePanels.push({title: name, name: panel.name});
+                        middlePanels.push({ title: name, name: panel.name });
                     }
                 });
             }
@@ -2146,7 +2147,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
 
-                this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().navigate(url, { trigger: false });
                 this.getRouter().dispatch(this.scope, 'view', {
                     id: this.model.id,
                     rootUrl: this.options.rootUrl
@@ -2175,7 +2176,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             } else {
                 if (after == 'delete') {
                     url = this.options.rootUrl || '#' + this.scope;
-                    this.getRouter().navigate(url, {trigger: false});
+                    this.getRouter().navigate(url, { trigger: false });
                     this.getRouter().dispatch(this.scope, null, {
                         isReturn: true
                     });
@@ -2185,7 +2186,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     url = '#' + this.scope + '/view/' + this.model.id;
 
                     if (!this.returnDispatchParams) {
-                        this.getRouter().navigate(url, {trigger: false});
+                        this.getRouter().navigate(url, { trigger: false });
                         var options = {
                             id: this.model.id,
                             model: this.model
@@ -2204,12 +2205,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var controller = this.returnDispatchParams.controller;
                 var action = this.returnDispatchParams.action;
                 var options = this.returnDispatchParams.options || {};
-                this.getRouter().navigate(url, {trigger: false});
+                this.getRouter().navigate(url, { trigger: false });
                 this.getRouter().dispatch(controller, action, options);
                 return;
             }
 
-            this.getRouter().navigate(url, {trigger: true});
+            this.getRouter().navigate(url, { trigger: true });
         },
 
         actionCopyConfigurations() {

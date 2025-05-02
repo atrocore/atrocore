@@ -17,12 +17,14 @@ Espo.define('views/file/fields/name', 'views/fields/varchar',
 
         validations: ['name'],
 
+        fileExt: null,
+
         data() {
             let data = _.extend({attachmentId: this.model.get("id")}, Dep.prototype.data.call(this));
 
             const parts = (data.value || '').split('.');
             if (parts.length >= 2) {
-                parts.pop();
+                this.fileExt = parts.pop();
             }
 
             data['fileExt'] = this.model.get('extension');
@@ -38,8 +40,9 @@ Espo.define('views/file/fields/name', 'views/fields/varchar',
             if ($el) {
                 let value = $el.val();
 
-                if (this.model.get('extension')) {
-                    value += '.' + this.model.get('extension');
+                let ext = this.fileExt === this.model.get('extension') ? this.model.get('extension') : this.fileExt;
+                if (ext) {
+                    value += '.' + ext;
                 }
 
                 if (this.params.trim || this.forceTrim) {

@@ -10,8 +10,10 @@
       "type": "text"
     },
     "language": {
-      "type": "language",
-      "required": false
+      "type": "link",
+      "required": false,
+      "entity": "Language",
+      "dropdown": true
     },
     "type": {
       "type": "enum",

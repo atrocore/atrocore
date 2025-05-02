@@ -371,10 +371,12 @@
     "Cancel Edit": "Bearbeiten abbrechen",
     "openSearchFilter": "Suchfilter öffnen",
     "showImageBackground": "Hintergrund anzeigen",
-    "hideImageBackground": "Hintergrund ausblenden",
     "applySearch": "Suche anwenden",
     "unsetSearch": "Suche entfernen",
-    "searchResults": "Suchergebnisse"
+    "searchResults": "Suchergebnisse",
+    "hideImageBackground": "Hintergrund ausblenden",
+    "selectAll": "Alle auswählen",
+    "additionalLanguages": "Zusätzliche Sprachen"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

@@ -7,5 +7,6 @@
   "customizable": false,
   "streamDisabled": true,
   "bookmarkDisabled": true,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "hideFieldTypeFilters": true
 }
