@@ -257,7 +257,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function prepareFieldsByType(Entity $entity): void
     {
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
+        foreach ($entity->entityDefs['fields'] ?? $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []) as $fieldName => $fieldData) {
             if (isset($fieldData['type'])) {
                 $method = "prepareFieldType" . ucfirst($fieldData['type']);
                 if (method_exists($this, $method)) {
