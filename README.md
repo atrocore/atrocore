@@ -100,10 +100,12 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ## Demo
-> This is a Demo Instance of AtroCore with a PIM module installed.
+
 - URL: https://demo.atropim.com/
 - Login: admin
 - Password: admin
+> This is a Demo Instance of AtroCore with a PIM module installed (AtroPIM Demo).
+
 
 ## License
 
