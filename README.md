@@ -58,9 +58,19 @@ The following full-fledged software products are already available on the AtroCo
 
 ### Integrations
 
-AtroCore has a REST API and can be integrated with any third-party system. 
+AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
 You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
-We offer automated integrations with a lot of systems as a paid functionality.
+
+We offer the following native paid integrations:
+
+- Any channel manager: Channable, ChannelPilot, ChannelAdvisor and others
+- ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
+- Marketplaces: Amazon, Otto
+- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
+
+Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
+
+Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 ## What Are the Advantages of Using It?
 
