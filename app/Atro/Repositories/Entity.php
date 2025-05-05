@@ -453,18 +453,6 @@ class Entity extends ReferenceData
             }
         }
 
-        if($entity->isAttributeChanged('modifiedExtendedDisabledFields')) {
-            foreach ($entity->get('fields') ?? [] as $field) {
-                if(in_array($field->get('code'), $entity->get('modifiedExtendedDisabledFields')) && empty($field->get('modifiedExtendedDisabledFields'))) {
-                    $field->set('modifiedExtendedDisabled', true);
-                    $this->getEntityManager()->getRepository('EntityField')->save($field);
-                }else if(!empty($field->get('auditableEnabled'))){
-                    $field->set('modifiedExtendedDisabled', false);
-                }
-                $this->getEntityManager()->getRepository('EntityField')->save($field);
-            }
-        }
-
         parent::afterSave($entity, $options);
     }
 
@@ -506,15 +494,6 @@ class Entity extends ReferenceData
 
         }
         $entity->set('auditedEnabledRelations', $fields);
-
-        //prepare modifiedExtendedDisabledFields
-        $fields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
-            if(!empty($fieldDef['modifiedExtendedDisabled']) && $fieldDef['type'] !== 'linkMultiple') {
-                $fields[] = $field;
-            }
-        }
-        $entity->set('modifiedExtendedDisabledFields', $fields);
     }
 
     protected function init()
