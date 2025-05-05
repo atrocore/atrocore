@@ -30,7 +30,7 @@ AtroCore is a single page application (SPA) with API-first architecture and flex
 ## Feature Overview
 ![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
-### For Whom Is AtroCore?
+## For Whom Is AtroCore?
 
 AtroCore is the best fit **for businesses**, who want to:
 
@@ -46,7 +46,7 @@ AtroCore is the best fit **for businesses**, who want to:
 Companies whose needs go beyond the limitations of standard software solutions.
 
 
-### Software based on AtroCore
+## Software which extends AtroCore
 
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
@@ -56,7 +56,7 @@ The following full-fledged software products are already available on the AtroCo
 ![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
 
-### Integrations
+## Integrations
 
 AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
 You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
@@ -105,7 +105,7 @@ Installation Guide is available [here](https://help.atrocore.com/installation-an
 - Login: admin
 - Password: admin
 
-### License
+## License
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
