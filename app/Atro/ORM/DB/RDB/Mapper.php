@@ -522,7 +522,16 @@ class Mapper implements MapperInterface
 
     public function insert(IEntity $entity, bool $ignoreDuplicate = false): bool
     {
-        $dataArr = $this->toValueMap($entity);
+        $dataArr = [];
+        $attrs = [];
+
+        foreach ($this->toValueMap($entity) as $attribute => $value) {
+            if (!empty($entity->fields[$attribute]['column'])) {
+                $attrs[$attribute] = $value;
+            } else {
+                $dataArr[$attribute] = $value;
+            }
+        }
 
         if (!empty($dataArr)) {
             $qb = $this->connection->createQueryBuilder();
@@ -553,6 +562,8 @@ class Mapper implements MapperInterface
             }
         }
 
+        $this->upsertAttributes($attrs, $entity);
+
         return true;
     }
 
@@ -560,6 +571,7 @@ class Mapper implements MapperInterface
     {
         $setArr = [];
         $attrs = [];
+
         foreach ($this->toValueMap($entity) as $attribute => $value) {
             if ($attribute == 'id') {
                 continue;
@@ -604,16 +616,7 @@ class Mapper implements MapperInterface
             }
         }
 
-        if (!empty($attrs) && class_exists(Attribute::class)) {
-            /** @var Attribute $attributeRepository */
-            $attributeRepository = $this->em->getRepository('Attribute');
-            foreach ($attrs as $key => $value) {
-                if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
-                    $value = json_encode($value);
-                }
-                $attributeRepository->upsertAttributeValue($entity, $key, $value);
-            }
-        }
+        $this->upsertAttributes($attrs, $entity);
 
         return true;
     }
@@ -635,6 +638,18 @@ class Mapper implements MapperInterface
         }
 
         return true;
+    }
+
+    protected function upsertAttributes(array $attrs, IEntity $entity): void
+    {
+        if (!empty($attrs) && class_exists(Attribute::class)) {
+            foreach ($attrs as $key => $value) {
+                if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
+                    $value = json_encode($value);
+                }
+                $this->em->getRepository('Attribute')->upsertAttributeValue($entity, $key, $value);
+            }
+        }
     }
 
     public static function getParameterType($value): ?int
