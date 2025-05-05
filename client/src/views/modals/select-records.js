@@ -439,7 +439,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
                 if (treeSearch) {
                     window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
-                        target: searchContainer,
+                        target: treeSearch,
                         props: {
                             showFilter: false,
                             showSearchPanel: this.searchPanel,

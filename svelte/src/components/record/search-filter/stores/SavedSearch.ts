@@ -5,7 +5,6 @@ import {UserData} from "../../../../utils/UserData";
 
 
 let stores = new Map();
-console.log('Init map');
 
 function createStore(): any {
     const savedSearchItems = writable<SavedSearch[]>([]);
