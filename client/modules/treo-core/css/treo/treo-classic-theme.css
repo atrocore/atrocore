@@ -3042,10 +3042,9 @@ output {
 .form-control, .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown) {
     display: block;
     width: 100%;
-    height: 32px;
     padding: 6px 10px;
     font-size: 14px;
-    line-height: 1.36;
+    line-height: 16px;
     color: #555;
     background-color: #fff;
     background-image: none;
@@ -3524,9 +3523,9 @@ textarea.input-lg, select[multiple].input-lg {
     background-image: none;
     border: 1px solid transparent;
     white-space: nowrap;
-    padding: 6px 10px;
+    padding: 7px 12px;
     font-size: 14px;
-    line-height: 1.36;
+    line-height: 16px;
     border-radius: 0;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -3827,11 +3826,6 @@ a:has(> .ph-fill:only-of-type) {
     text-decoration: none;
 }
 
-button:has(> .ph:only-of-type),
-button:has(> .ph-fill:only-of-type) {
-    line-height: 1;
-}
-
 .btn-lg, .btn-group-lg > .btn {
     padding: 10px 16px;
     font-size: 18px;
@@ -3840,17 +3834,17 @@ button:has(> .ph-fill:only-of-type) {
 }
 
 .btn-sm, .btn-group-sm > .btn {
-    padding: 5px 10px;
+    padding: 4px 8px;
     font-size: 12px;
-    line-height: 1.5;
-    border-radius: 0
+    line-height: 14px;
+    border-radius: 0;
 }
 
 .btn-xs, .btn-group-xs > .btn {
     padding: 1px 5px;
     font-size: 12px;
-    line-height: 1.5;
-    border-radius: 0
+    line-height: 14px;
+    border-radius: 0;
 }
 
 .btn-block {
@@ -4266,8 +4260,8 @@ tbody.collapse.in {
 
 .input-group {
     position: relative;
-    display: table;
-    border-collapse: separate
+    display: flex;
+    align-items: stretch;
 }
 
 .input-group[class*="col-"] {
@@ -4322,18 +4316,13 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     height: auto
 }
 
-.input-group-addon, .input-group-btn, .input-group .form-control {
-    display: table-cell
-}
-
 .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child), .input-group .form-control:not(:first-child):not(:last-child) {
     border-radius: 0
 }
 
 .input-group-addon, .input-group-btn {
-    width: 1%;
     white-space: nowrap;
-    vertical-align: middle
+    vertical-align: middle;
 }
 
 .input-group-addon {
@@ -6558,7 +6547,7 @@ button.close {
     padding-bottom: 20px;
 }
 
-.modal-body > div:not(.record-container):not(.edit-container):not(.entity-manager-container) {
+.modal-body > div:not(.record-container):not(.edit-container) {
     padding: 0 20px;
 }
 
@@ -10131,14 +10120,6 @@ label {
     margin-right: -9px;
 }
 
-#main .list-container .list-buttons-container .btn-group .dropdown-toggle {
-    padding-left: 0;
-}
-
-#main .list-container .list-buttons-container .btn-group.open .dropdown-toggle {
-    background-color: unset;
-}
-
 .page-header .header-buttons-container {
     margin-left: auto;
 }
@@ -10655,27 +10636,8 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin: 0 8px 0 0;
 }
 
-.page-header .breadcrumb-separator {
-    padding: 0 6px
-}
-
 .modal-header a {
     color: #333
-}
-
-.list-buttons-container > div {
-    float: left;
-    margin-right: 14px
-}
-
-.list-buttons-container > div.total-count {
-    margin-right: 0;
-    float: right;
-    padding: 6px 0
-}
-
-.list-buttons-container > div.selected-count {
-    float: right;
 }
 
 .list-container .pagination {
@@ -12635,7 +12597,8 @@ a.field-info > span.fa-info-circle {
 .btn .ph-fill {
     position: relative;
     font-size: 18px;
-    text-align: center
+    text-align: center;
+    line-height: inherit;
 }
 
 .btn-icon.btn-sm {
@@ -13516,27 +13479,53 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .list-container .list-buttons-container {
-    margin-bottom: 10px
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .list-container .list-buttons-container .actions-button {
-    color: #000;
-    border: 0;
-    padding-left: 2px;
-    padding-top: 0;
-    padding-bottom: 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
-.list-container .list-buttons-container .actions-button:hover,
-.list-container .list-buttons-container .actions-button:focus,
-.list-container .list-buttons-container .actions-button:active {
-    background: #fff;
-    box-shadow: none;
+.list-container .list-buttons-container .actions-button i {
+    font-size: 14px;
 }
 
+.list-container .list-buttons-container .form-group {
+    margin-bottom: 0;
+}
+
+.list-container .list-buttons-container .counters-container {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.list-container .list-buttons-container .selected-count,
 .list-container .list-buttons-container .total-count {
-    color: #000;
+    color: var(--primary-font-color);
     padding: 0;
+    display: inline;
+}
+
+.list-container .list-buttons-container .selected-count {
+    margin-right: 20px;
+}
+
+.list-container .list-buttons-container .counters-container > * {
+    display: inline;
+    vertical-align: bottom;
+}
+
+@media screen and (max-width: 768px) {
+    .list-container .list-buttons-container .filter-container {
+        order: -1;
+        flex-basis: 100%;
+    }
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
@@ -16165,6 +16154,7 @@ select {
     width: 100%;
     float: left;
     font-size: 26px;
+    line-height: 1.36;
     color: #8e8e8e;
     margin-top: 10px;
 }
@@ -16252,29 +16242,6 @@ select {
     border-color: transparent transparent gray transparent
 }
 
-.modal-content .entity-manager-container > .panel-body-form {
-    padding: 14px 14px 0 14px;
-}
-
-.modal-content .entity-manager-container .cell {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-@media screen and (min-width: 768px) {
-    .modal-content .entity-manager-container .cell {
-        padding-right: 16px;
-    }
-}
-
-.modal-content .entity-manager-container .cell:not(.hidden) + .cell {
-    padding-right: 0;
-}
-
-.entity-manager-container > .panel-heading {
-    padding-left: 14px;
-}
-
 del.diffmod, del.diffdel {
     color: red;
     background: #fdd;
@@ -16299,10 +16266,6 @@ td.cell[data-name="tag"] {
 
 td.cell[data-name="tag"]:first-line {
     line-height: 1.36 !important;
-}
-
-.btn span {
-    vertical-align: middle;
 }
 
 .attachment-upload {
@@ -16541,8 +16504,6 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder .group-conditions .btn, .query-builder .group-actions .btn, .query-builder .rule-actions .btn {
     font-size: 12px;
-    padding: 4px 8px;
-    line-height: 1;
 }
 
 .query-builder .rules-list {
@@ -16681,10 +16642,7 @@ div.list-kanban > div > table .item .panel .form-group {
 .query-builder .btn {
     text-transform: none;
     display: inline-block;
-    padding: 6px 12px;
     margin-bottom: 0;
-    font-size: 14px;
-    font-weight: 400;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
@@ -17794,6 +17752,7 @@ span[data-img-src]::after {
     background-color: rgba(0, 0, 0, 0.1);
     color: var(--nav-font-color);
     border-color: rgba(0, 0, 0, 0.1);
+    line-height: 1;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create:hover {

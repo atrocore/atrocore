@@ -1,7 +1,5 @@
-{{#if collection.models.length}}
-
 {{#if topBar}}
-<div class="list-buttons-container clearfix">
+<div class="list-buttons-container">
     {{#if paginationTop}}
     <div>
         {{{pagination}}}
@@ -10,7 +8,7 @@
 
     {{#if checkboxes}}
     <div class="check-all-container" data-name="r-checkbox">
-        <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+        <span class="select-all-container"><input type="checkbox" class="select-all" {{#unless collection.models.length}}disabled{{/unless}}></span>
     </div>
 
     {{#if massActionList}}
@@ -28,45 +26,50 @@
     {{/if}}
     {{/if}}
 
-    {{#if displayTotalCount}}
-        <div class="text-muted total-count">
-        {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span>
-        </div>
-    {{/if}}
+    <div class="filter-container"></div>
 
     {{#each buttonList}}
         {{button name scope=../../scope label=label style=style}}
     {{/each}}
 
-    <div class="sort-container">
-        <div class="sort-label"> {{translate 'sort' category='labels' scope=scope}}:</div>
-        <div class="btn-group sort-field">
-            <button type="button" class="btn btn-default dropdown-toggle sort-field-button" data-toggle="dropdown">
-                {{translate collection.sortBy category='fields' scope=scope}}
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-                {{#each sortFields}}
-                <li>
-                    <a href="javascript:" data-action="sortByField" data-name="{{this}}">{{translate this category='fields' scope=../scope}}</a>
-                </li>
-                {{/each}}
-            </ul>
-        </div>
-        <div class="btn-group sort-direction">
-            <button type="button" class="btn btn-default sort-direction-button" data-action="sortByDirection">
-                {{#if collection.asc}}
-                &#8593;
-                {{else}}
-                &#8595;
-                {{/if}}
-            </button>
-        </div>
-    </div>
+    <div class="counters-container">
+        <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
 
-    <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
+        <div class="sort-container">
+            <div class="sort-label"> {{translate 'sort' category='labels' scope=scope}}:</div>
+            <div class="btn-group sort-field">
+                <button type="button" class="btn btn-default dropdown-toggle sort-field-button" data-toggle="dropdown">
+                    {{translate collection.sortBy category='fields' scope=scope}}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    {{#each sortFields}}
+                        <li>
+                            <a href="javascript:" data-action="sortByField" data-name="{{this}}">{{translate this category='fields' scope=../scope}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="btn-group sort-direction">
+                <button type="button" class="btn btn-default sort-direction-button" data-action="sortByDirection">
+                    {{#if collection.asc}}
+                        &#8593;
+                    {{else}}
+                        &#8595;
+                    {{/if}}
+                </button>
+            </div>
+        </div>
+
+        {{#if displayTotalCount}}
+            <div class="text-muted total-count">
+                {{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span>
+            </div>
+        {{/if}}
+    </div>
 </div>
 {{/if}}
 
+{{#if collection.models.length}}
 <div class="list">
 	<div>
 		<div class="col-xs-12 plate">
@@ -149,6 +152,6 @@
         box-shadow: none;
 	}
 	.total-count {
-	    margin-left: 30px;
+	    margin-left: 20px;
 	}
 </style>

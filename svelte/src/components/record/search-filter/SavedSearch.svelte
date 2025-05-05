@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount} from "svelte";
+    import {createEventDispatcher, onDestroy, onMount} from "svelte";
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
     import {Acl} from "../../../utils/Acl";
@@ -15,33 +15,36 @@
     export let loading: boolean = true;
     export let searchManager: any;
     export let hideRowAction: boolean = false;
-    export let uniqueKey: string|null;
+    export let uniqueKey: string | null;
     export let editingItem: any = null;
-    export let edit: Function = () => {};
-    export let rename: Function = () => {};
-    export let remove: Function = () => {};
-    export let cancel: Function = () => {};
+    export let edit: Function = () => {
+    };
+    export let rename: Function = () => {
+    };
+    export let remove: Function = () => {
+    };
+    export let cancel: Function = () => {
+    };
 
     export let selectedSavedSearchIds: Array<string> = [];
 
-    let savedSearchStore = getSavedSearchStore(uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
+        items: searchManager.savedSearchList || [],
+        selectedItems: searchManager.getSavedFilters().map(v => v.id)
+    });
 
-
-    const savedSearchSubscribe =  savedSearchStore.savedSearchItems.subscribe(value => {
+    let savedSearchSubscribe = savedSearchStore.savedSearchItems.subscribe(value => {
         savedSearchList = value;
-     });
+    });
 
-    savedSearchStore.savedSearchItems.set(searchManager.savedSearchList || []);
-
-    savedSearchStore.selectedSavedItemIds.set(searchManager.getSavedFilters().map(v => v.id));
-
-   const selectedSavedItemIdsSub =  savedSearchStore.selectedSavedItemIds.subscribe(value => {
+    const selectedSavedItemIdsSub = savedSearchStore.selectedSavedItemIds.subscribe(value => {
         selectedSavedSearchIds = value;
     });
 
     const loadingSubscribe = savedSearchStore.loading.subscribe(value => {
         loading = value;
     });
+
     function handleSavedSearchChecked(e, item) {
         savedSearchStore.toggleSavedItemSelection(item.id);
         let checked = get(savedSearchStore.selectedSavedItemIds);
@@ -56,19 +59,15 @@
         searchManager.fetchCollection();
     }
 
-    onMount(() => {
-        savedSearchStore.fetchSavedSearch(scope);
-
-        return () => {
-            savedSearchSubscribe();
-            selectedSavedItemIdsSub();
-            loadingSubscribe();
-        }
-    })
+    onDestroy (() => {
+        savedSearchSubscribe();
+        selectedSavedItemIdsSub();
+        loadingSubscribe();
+    });
 
 </script>
 
-<FilterGroup {opened} className="checkboxes-filter" title={Language.translate('Saved Filters')}>
+<FilterGroup bind:opened={opened} className="checkboxes-filter" title={Language.translate('Saved Filters')}>
     {#if loading}
         <div style="margin-top: 5px;">
             <Preloader heightPx={12} />

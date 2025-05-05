@@ -2,11 +2,15 @@
     export let className: string | null = null;
     export let opened: boolean = false;
     export let title: string;
+
+    function toggleOpened(): void {
+        opened = !opened;
+    }
 </script>
 
 <div class={className}>
     <details open={opened}>
-        <summary>
+        <summary on:click|preventDefault={toggleOpened}>
             <i class="ph ph-caret-right"></i>
             <h5>{title}</h5>
         </summary>
