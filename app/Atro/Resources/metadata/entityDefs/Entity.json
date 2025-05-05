@@ -184,6 +184,11 @@
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-enabled-relations",
       "notStorable": true
+    },
+    "modifiedExtendedDisabledFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/modified-extended-disabled-fields",
+      "notStorable": true
     }
   },
   "links": {

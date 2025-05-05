@@ -574,7 +574,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        // we set auditableEnabled to true for File, channel and category is nothing was define
+        // we set auditableEnabled to true for File, channel and category is nothing was defined
         if (in_array($entity->get('foreignEntityId'), $defaultRelationScopeAudited)) {
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
             if (!isset($fieldDefs['auditableEnabled'])) {

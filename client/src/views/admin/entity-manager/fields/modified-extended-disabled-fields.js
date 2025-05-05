@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/admin/entity-manager/fields/audited-enabled-relations', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/modified-extended-disabled-fields', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 
@@ -24,15 +24,13 @@ Espo.define('views/admin/entity-manager/fields/audited-enabled-relations', 'view
         setupOptions() {
             this.params.options = [];
             this.translatedOptions = {};
-            let scope = this.model.get('code');
-            $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
+            $.each((this.getMetadata().get(['entityDefs', this.model.get('code'), 'fields']) || {}), (field, fieldDefs) => {
                 if (
-                    fieldDefs.type === 'linkMultiple'
-                    && fieldDefs.notStorable !== true
-                    && fieldDefs.disabled !== true
+                    fieldDefs.type !== 'jsonArray'
+                    && fieldDefs.type !== 'jsonObject'
                 ) {
                     this.params.options.push(field);
-                    this.translatedOptions[field] = this.translate(field, 'fields', scope);
+                    this.translatedOptions[field] = this.translate(field, 'fields', this.model.get('code'));
                 }
             });
 
