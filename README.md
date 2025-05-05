@@ -8,11 +8,7 @@ GitHub mirror: https://github.com/atrocore/atrocore
 
 ## What Is AtroCore? 
 
-AtroCore is an open-source software distributed under GPLv3 License for free.
-
-AtroCore is a Data and Process Management software. It is a software ecosystem designed for rapid development of responsive web-based business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
-
-AtroCore is a single page application (SPA) with API-first architecture and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
+AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
 ### AtroCore Software can be used for:
 
