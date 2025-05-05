@@ -56,6 +56,14 @@ class MassActionCreator extends AbstractJob implements JobInterface
             $sp['select'] = $select;
         }
 
+        if (!empty($actionEntity)) {
+            $name = $actionEntity->get('name');
+        } else if ($action === 'custom') {
+            $name = $this->translate($data['type'], 'massActions');
+        } else {
+            $name = $this->translate($action, 'massActions');
+        }
+
         while (true) {
             if (!empty($ids)) {
                 $collection = $repository
@@ -66,6 +74,11 @@ class MassActionCreator extends AbstractJob implements JobInterface
                     ->find();
 
             } else {
+                if (!empty($data['selectParams'])) {
+                    $sp = $data['selectParams'];
+                    $sp['select'] = $select;
+                }
+
                 $collection = $repository
                     ->limit($offset, $chunkSize)
                     ->order($orderBy)
@@ -93,15 +106,16 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 $jobData['deletePermanently'] = true;
             }
 
-            $name = (empty($actionEntity) ? ($this->translate($action, 'massActions')) : $actionEntity->get('name')) . ': ' . $entityName;
-            if ($part > 0) {
-                $name .= " ($part)";
+            if ($action === 'custom') {
+                $type = $data['type'];
+            } else {
+                $type = $action === 'action' ? 'ActionHandler' : 'Mass' . ucfirst($action);
             }
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
-                'name'        => $name,
-                'type'        => $action === 'action' ? 'ActionHandler' : 'Mass' . ucfirst($action),
+                'name'        => $name . ': ' . $entityName . ($part > 0 ? " ($part)" : ""),
+                'type'        => $type,
                 'status'      => 'Awaiting',
                 'priority'    => $job->get('priority'),
                 'ownerUserId' => $job->get('ownerUserId'),
@@ -119,7 +133,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
 
             $i = 1;
             foreach ($jobs as $job) {
-                $job->set('name', sprintf($this->translate('massActionJobName'), (empty($actionEntity) ? ($this->translate($action, 'massActions')) : $actionEntity->get('name')), $entityName, $i, $jobsCount));
+                $job->set('name', sprintf($this->translate('massActionJobName'), $name, $entityName, $i, $jobsCount));
                 $job->set('status', 'Pending');
                 $job->set('executeTime', (new \DateTime())->format('Y-m-d H:i:s'));
                 $this->getEntityManager()->saveEntity($job);
