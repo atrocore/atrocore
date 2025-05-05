@@ -23,7 +23,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             (this.model.getFieldParam(this.name, 'childrenIds') || []).forEach(attributeId => {
                 $.each(this.model.defs.fields || {}, (name, defs) => {
                     if (defs.attributeId === attributeId && !defs.layoutDetailDisabled) {
-                        defs['disableAttributeRemove'] = defs.type !== 'composite';
+                        defs['disableAttributeRemove'] = true;
                         this.childrenFields.push({
                             name: name,
                             label: defs.detailViewLabel || defs.label,
@@ -57,12 +57,6 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             };
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            // this.$el.css('border-bottom', 'none')
-        },
-
         initInlineEdit() {
         },
 
@@ -84,14 +78,17 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
             return data;
         },
 
-        // validate() {
-        //     let validate = false;
-        //     let view = this.getView('valueField');
-        //     if (view) {
-        //         validate = view.validate();
-        //     }
-        //     return validate;
-        // },
+        validate() {
+            let validate = false;
+
+            this.childrenFields.forEach(child => {
+                if (this.getView(child.name).validate()) {
+                    validate = true;
+                }
+            });
+
+            return validate;
+        },
 
     })
 );
