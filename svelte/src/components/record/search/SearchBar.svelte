@@ -91,6 +91,7 @@
     .search-row .search input {
         background: transparent;
         border: 1px solid #eee;
+        border-right: 0;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
     }
@@ -105,7 +106,6 @@
     }
 
     .search-row .input-group-btn:last-child button:last-child {
-        margin-left: 0;
         border-radius: 0 3px 3px 0;
     }
 

@@ -377,7 +377,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
+                topBar: paginationTop || this.checkboxes || this.options.showSearchPanel || this.options.showFilter || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
@@ -1237,6 +1237,25 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.checkRecord(id);
                     }, this);
                 }
+            }
+
+            const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
+            if (target && this.options.searchManager && (this.options.showSearchPanel || this.options.showFilter)) {
+                const props = {
+                    searchManager: this.options.searchManager,
+                    showSearchPanel: this.options.showSearchPanel,
+                    showFilter: this.options.showFilter,
+                    scope: this.scope,
+                };
+
+                if (this.options.searchUniqueKey) {
+                    props.uniqueKey = this.options.searchUniqueKey;
+                }
+
+                new Svelte.FilterSearchBar({
+                    target: target,
+                    props: props
+                })
             }
 
             let list = $('#main .list-container > .list');

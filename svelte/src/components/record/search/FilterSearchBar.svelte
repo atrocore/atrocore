@@ -30,8 +30,7 @@
 <style>
     .filter-search-bar {
         display: flex;
-    }
-    .filter-search-bar .filter-search {
-        margin-left: 10px;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 </style>

@@ -1,7 +1,7 @@
 {{#unless showNoData}}
 
 {{#if topBar}}
-<div class="list-buttons-container clearfix">
+<div class="list-buttons-container">
     {{#if paginationTop}}
     <div>
         {{{pagination}}}
@@ -9,35 +9,36 @@
     {{/if}}
 
     {{#if checkboxes}}
-        {{#if collection.models.length }}
-            {{#if massActionList}}
-                <div class="btn-group actions">
-                    <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
-                    {{translate 'Actions'}}
-                    <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {{#each massActionList}}
-                        {{#if action}}
-                        <li><a href="javascript:" data-action="{{action}}" data-id="{{id}}" class='mass-action'>{{label}}</a></li>
-                        {{else if divider}}
-                            <li class="divider"></li>
-                        {{else}}
-                        <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
-                        {{/if}}
-                        {{/each}}
-                    </ul>
-                </div>
-            {{/if}}
+        {{#if massActionList}}
+            <div class="btn-group actions">
+                <button type="button" class="btn btn-default dropdown-toggle actions-button" data-toggle="dropdown" disabled>
+                    {{translate 'Actions'}} <i class="ph ph-caret-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    {{#each massActionList}}
+                    {{#if action}}
+                    <li><a href="javascript:" data-action="{{action}}" data-id="{{id}}" class='mass-action'>{{label}}</a></li>
+                    {{else if divider}}
+                        <li class="divider"></li>
+                    {{else}}
+                    <li><a href="javascript:" data-action="{{./this}}" class='mass-action'>{{translate this category="massActions" scope=../scope}}</a></li>
+                    {{/if}}
+                    {{/each}}
+                </ul>
+            </div>
         {{/if}}
     {{/if}}
 
-    {{#if displayTotalCount}}
-    <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
-    <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
-    {{/if}}
+    <div class="filter-container"></div>
 
-    <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
+    <div class="counters-container">
+        <div class="text-muted selected-count hidden">{{translate 'Selected'}}: <span class="selected-count-span">0</span></div>
+
+        {{#if displayTotalCount}}
+            <div class="text-muted total-count {{#if totalLoading}} hidden {{/if}}">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+            <img class="preloader {{#unless totalLoading}} hidden {{/unless}}" style="float:right;height:12px;" src="client/img/atro-loader.svg" />
+        {{/if}}
+    </div>
 
     {{#each buttonList}}
         {{button name scope=../scope label=label style=style}}
@@ -53,7 +54,7 @@
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
                     {{#if allowSelectAllResult}}
-                        <span class="select-all-container"><input type="checkbox" class="select-all fixed"></span>
+                        <span class="select-all-container"><input type="checkbox" class="select-all fixed" {{#unless collection.models.length}}disabled{{/unless}}></span>
                     {{/if}}
                 </th>
                 {{/if}}
@@ -98,7 +99,7 @@
                 {{#if checkboxes}}
                 <th width="40" data-name="r-checkbox">
                     {{#if allowSelectAllResult}}
-                        <span class="select-all-container"><input type="checkbox" class="select-all"></span>
+                        <span class="select-all-container"><input type="checkbox" class="select-all" {{#unless collection.models.length}}disabled{{/unless}}></span>
                     {{/if}}
                 </th>
                 {{/if}}

@@ -1,9 +1,12 @@
 
 {{#if topBar}}
-<div class="list-buttons-container clearfix">
-    {{#if displayTotalCount}}
-    <div class="text-muted total-count">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
-    {{/if}}
+<div class="list-buttons-container">
+    <div class="filter-container"></div>
+    <div class="counters-container">
+        {{#if displayTotalCount}}
+            <div class="text-muted total-count">{{translate 'Shown'}}: <span class="shown-count-span">{{collection.length}}</span><span class="pipeline">|</span>{{translate 'Total'}}: <span class="total-count-span">{{collection.total}}</span></div>
+        {{/if}}
+    </div>
 
     {{#each buttonList}}
         {{button name scope=../../scope label=label style=style}}

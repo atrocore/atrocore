@@ -213,9 +213,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems(),
                         scope: this.scope,
-                        searchManager: this.searchManager,
-                        showSearchPanel: this.searchPanel,
-                        showFilter: this.shouldShowFilter(),
                         afterOnMount: () => {
                             this.setupTourButton();
                             observer = this.initHeaderObserver();
@@ -437,7 +434,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 collection: this.collection,
                 el: this.options.el + ' .list-container',
                 scope: this.scope,
-                skipBuildRows: true
+                skipBuildRows: true,
+                searchManager: this.searchManager,
+                showSearchPanel: this.searchPanel,
+                showFilter: this.shouldShowFilter(),
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];

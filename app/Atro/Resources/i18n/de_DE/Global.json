@@ -376,7 +376,9 @@
     "searchResults": "Suchergebnisse",
     "hideImageBackground": "Hintergrund ausblenden",
     "selectAll": "Alle auswählen",
-    "additionalLanguages": "Zusätzliche Sprachen"
+    "additionalLanguages": "Zusätzliche Sprachen",
+    "collapseAll": "Alles einklappen",
+    "expandAll": "Alle erweitern"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

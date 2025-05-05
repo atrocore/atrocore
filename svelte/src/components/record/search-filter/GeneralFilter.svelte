@@ -101,7 +101,7 @@
 </script>
 
 {#if boolFilterList?.length > 0}
-    <FilterGroup {opened} className="checkboxes-filter" title={Language.translate('General Filters')}>
+    <FilterGroup bind:opened={opened} className="checkboxes-filter" title={Language.translate('General Filters')}>
         <ul>
             {#each boolFilterList as filter}
                 <li class="checkbox">

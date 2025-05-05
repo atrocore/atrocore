@@ -27,6 +27,10 @@
 
     let advancedFilterChecked = false;
 
+    let generalFilterOpened: boolean = false;
+
+    let savedFiltersOpened: boolean = true;
+
     let editingSavedSearch: any = null;
 
     let oldAdvancedFilter: any = null;
@@ -37,7 +41,7 @@
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
-    let savedSearchStore = getSavedSearchStore(uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey);
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
 
@@ -755,9 +759,7 @@
 
     function refreshShowUnsetAll() {
         refreshAdvancedFilterDisabled();
-        setTimeout(() => {
-            showUnsetAll = searchManager.isFilterSet();
-        }, 100)
+        showUnsetAll = searchManager.isFilterSet();
     }
 
     function isRuleEmpty(rule: Rule): boolean {
@@ -770,6 +772,16 @@
         }
 
         return rule.rules.length === 0;
+    }
+
+    function collapseAll(e: MouseEvent) {
+        savedFiltersOpened = false;
+        generalFilterOpened = false;
+    }
+
+    function expandAll(e: MouseEvent) {
+        savedFiltersOpened = true;
+        generalFilterOpened = true;
     }
 
     onMount(() => {
@@ -833,12 +845,15 @@
 
         // show unset all
         refreshShowUnsetAll();
+        searchManager.collection.on('filter-state:changed', (value) => showUnsetAll = !!value);
 
         prepareFilters(() => {
             initQueryBuilderFilter();
         });
 
         return () => {
+            searchManager.collection.off('filter-state:changed');
+
             selectBoolSub();
             selectSavedSub();
             advancedFilterCheckedSub();
@@ -847,7 +862,17 @@
 </script>
 
 <div class="query-builder-container">
-    <div style="margin-bottom: 5px;min-height: 25px;">
+    <div class="filters-top-buttons">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default filter-button" data-action="collapseAll"
+                    title={Language.translate('collapseAll')} on:click={collapseAll}>
+                <i class="ph ph-caret-line-up"></i>
+            </button>
+            <button class="btn btn-sm btn-default filter-button" data-action="expandAll"
+                    title={Language.translate('expandAll')} on:click={expandAll}>
+                <i class="ph ph-caret-line-down"></i>
+            </button>
+        </div>
         {#if showUnsetAll}
             <button class="btn btn-sm btn-default filter-button" data-action="filter" on:click={unsetAll}>
                 <i class="ph ph-x"></i>
@@ -855,7 +880,7 @@
             </button>
         {/if}
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey}/>
+    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey} bind:opened={generalFilterOpened} />
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -867,6 +892,7 @@
                 cancel={cancelEditSearchQuery}
                 uniqueKey={uniqueKey}
                 hideRowAction={uniqueKey.includes('dialog')}
+                bind:opened={savedFiltersOpened}
         />
     {/if}
 
@@ -904,6 +930,28 @@
 
     .btn-sm i {
         font-size: 14px;
+    }
+
+    .filters-top-buttons {
+        margin-bottom: 5px;
+        min-height: 25px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .filters-top-buttons .btn-group .filter-button {
+        border-radius: 0;
+    }
+
+    .filters-top-buttons .btn-group .filter-button:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .filters-top-buttons .btn-group .filter-button:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
     }
 
     .filter-action {
@@ -978,6 +1026,10 @@
         display: flex;
         justify-content: space-between;
         order: 0;
+    }
+
+    .query-builder :global(> .rules-group-container > .rules-group-header .rules-group-header-icons) {
+        display: none;
     }
 
     .query-builder :global(.rule-container-group) {

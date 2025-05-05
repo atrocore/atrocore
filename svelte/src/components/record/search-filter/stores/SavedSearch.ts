@@ -1,6 +1,5 @@
 import {writable, get} from 'svelte/store';
 import SavedSearch from '../interfaces/SavedSearch'
-import {CollectionFactory} from '../../../../utils/CollectionFactory'
 import Collection from '../../../../utils/interfaces/Collection'
 import {UserData} from "../../../../utils/UserData";
 
@@ -12,6 +11,7 @@ function createStore(): any {
     const selectedSavedItemIds = writable<string[]>([]);
     const collection = writable<Collection | null>(null);
     const loading = writable(false);
+    let savedSearchFetched: boolean = false;
 
     async function fetchSavedSearch(scope: string) {
         const userData = UserData.get();
@@ -19,7 +19,7 @@ function createStore(): any {
             return;
         }
 
-        if (get(loading) || get(savedSearchItems).length > 0) {
+        if (get(loading) || savedSearchFetched) {
             return;
         }
 
@@ -38,11 +38,13 @@ function createStore(): any {
             }
         })
 
+        savedSearchFetched = true;
+
         if (response.ok) {
             let data = await response.json();
             savedSearchItems.set(data.list);
             loading.set(false);
-            return  data.list;
+            return data.list;
         }
     }
 
@@ -115,14 +117,21 @@ function createStore(): any {
     }
 }
 
-export  function getSavedSearchStore(uniqueKey: string | null)  {
+export function getSavedSearchStore(scope: string, uniqueKey: string | null, initial: Record<string, any> | null = null)  {
     let store;
-    uniqueKey  = uniqueKey ?? 'default';
+    uniqueKey = scope + '_' + (uniqueKey ?? 'default');
     store = stores.get(uniqueKey);
     if(!store) {
         store = createStore();
         store.key = uniqueKey;
         stores.set(uniqueKey, store);
+
+        if (initial) {
+            store.savedSearchItems.set(initial.items ?? []);
+            store.selectedSavedItemIds.set(initial.selected ?? []);
+        }
+
+        store.fetchSavedSearch(scope);
     }
     return store;
 }

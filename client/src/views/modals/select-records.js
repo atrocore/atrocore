@@ -267,8 +267,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.collection.whereAdditional = this.options.whereAdditional || [];
 
             this.listenTo(this, 'change-view', e => {
-                if(window['SvelteFilterSearchBar'+this.dialog.id]) {
-                    window['SvelteFilterSearchBar'+this.dialog.id].reset();
+                if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                    window['SvelteFilterSearchBar' + this.dialog.id].reset();
                 }
                 this.changeView(e);
             });
@@ -400,20 +400,16 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
-            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
-
-            if(window['SvelteFilterSearchBar' + this.dialog.id]) {
-                try{
+            if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                try {
                     window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
-                }catch (e) {
-                }
-
+                } catch (e) {}
             }
 
-            const searchContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .modal-footer .extra-content');
-
-            if(searchContainer) {
-                window['SvelteFilterSearchBar'+this.dialog.id] = new Svelte.FilterSearchBar({
+            let showFilter =  this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData'
+            const searchContainer = document.querySelector('#' + this.dialog.id + ' .modal-body .list-container.for-table-view .filter-container');
+            if (searchContainer) {
+                window['SvelteFilterSearchBar' + this.dialog.id] = new Svelte.FilterSearchBar({
                     target: searchContainer,
                     props: {
                         showFilter: showFilter,
@@ -423,19 +419,48 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         uniqueKey: this.dialog.id
                     }
                 });
+
+                const listView = this.getView('list');
+                if (listView) {
+                    listView.options.showFilter = showFilter;
+                    listView.options.showSearchPanel = this.searchPanel;
+                    listView.options.searchManager = this.searchManager;
+                    listView.options.searchUniqueKey = this.dialog.id;
+                }
             }
 
-            if(window['SvelteRightSideView' + this.dialog.id]) {
-                try{
+            if (this.isHierarchical()) {
+                if (window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
+                    try {
+                        window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$destroy();
+                    } catch (e) {}
+                }
+
+                const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
+                if (treeSearch) {
+                    window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
+                        target: treeSearch,
+                        props: {
+                            showFilter: false,
+                            showSearchPanel: this.searchPanel,
+                            scope: this.scope,
+                            searchManager: this.searchManager,
+                            uniqueKey: this.dialog.id
+                        }
+                    });
+                }
+            }
+
+            if (window['SvelteRightSideView' + this.dialog.id]) {
+                try {
                     window['SvelteRightSideView' + this.dialog.id].$destroy();
-                }catch (e) {
+                } catch (e) {
                 }
             }
 
             const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
-
-            if(showFilter && rightContainer) {
-                window['SvelteRightSideView' + this.dialog.id] =  new Svelte.RightSideView({
+            if (showFilter && rightContainer) {
+                window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
                     target: rightContainer,
                     props: {
                         scope: this.scope,

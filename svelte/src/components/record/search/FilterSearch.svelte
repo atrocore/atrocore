@@ -24,7 +24,7 @@
     let dropdownDiv: HTMLElement;
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
-    let savedSearchStore = getSavedSearchStore(uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey);
 
     generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
@@ -52,9 +52,7 @@
     })
 
     function refreshShowUnsetAll() {
-        setTimeout(() => {
-            showUnsetAll = searchManager.isFilterSet();
-        }, 100)
+        showUnsetAll = searchManager.isFilterSet();
     }
 
 
@@ -168,6 +166,7 @@
 
     onMount(() => {
         refreshShowUnsetAll();
+        searchManager.collection.on('filter-state:changed', (value) => showUnsetAll = !!value);
         refreshAdvancedFilterDisabled();
         cleanUpSavedRule((field: string) => {
             // we do not clean up attribute here
@@ -182,6 +181,7 @@
         });
 
         return () => {
+            searchManager.collection.off('filter-state:changed');
             advancedFilterCheckedSub();
             selectSavedSub();
             selectBoolSub();
