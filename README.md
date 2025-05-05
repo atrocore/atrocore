@@ -27,6 +27,8 @@ AtroCore is a single page application (SPA) with API-first architecture and flex
 - Reference Data Management
 - File Management
 
+## Feature Overview
+![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
 ### For Whom Is AtroCore?
 
@@ -48,10 +50,6 @@ Companies whose needs go beyond the limitations of standard software solutions.
 
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
-
-
-## Feature Overview
-![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
 
 ## Technologies
