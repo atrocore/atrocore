@@ -14,29 +14,35 @@ AtroCore is a Data and Process Management software. It is a software ecosystem d
 
 AtroCore is a single page application (SPA) with API-first architecture and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
 
-### AtroCore Software can be used as:
+### AtroCore Software can be used for:
 
-- Data Platform
+- Master Data Management
+- Product Information Management
 - Application Development Platform
-- Database Management System (DBMS)
 - Data Integration Software
 - Business Process Management
-- Master Data Management
 - Data Warehouse Software
 - Enterprise Content Management (ECM)
+- Digital Asset Management
+- Reference Data Management
+- File Management
 
 
 ### For Whom Is AtroCore?
 
 AtroCore is the best fit **for businesses**, who want to:
 
-* unify any kind of data;
-* increase data quality;
-* solve custom business problems;
-* store data and organize business processes;
-* set up and use a middleware to connect with the third-party systems;
-* create added value and best experience for their employees, customers, and partners;
-* extend the functionality of the existing software infrastructure.
+* Unify all types of data across the organization
+* Improve overall data quality
+* Address custom business challenges with tailored solutions
+* Store diverse data types and streamline associated business processes
+* Synchronize any data across multiple third-party systems
+* Extend and enhance the capabilities of existing software infrastructure
+* Deliver added value and an optimal experience for employees, customers, and partners.
+
+### Who is our Typical Customer?
+Companies whose needs go beyond the limitations of standard software solutions.
+
 
 ### Software based on AtroCore
 
@@ -44,28 +50,8 @@ The following full-fledged software products are already available on the AtroCo
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
 
 
-## What is on Board?
-
-Here is a AtroCore package description in detail:
-
-| Feature                           | Description                                                   |
-|-----------------------------------| ------------------------------------------------------------ |
-| Dashboards                        | Use multiple dashboards to control all main activities in the system. |
-| Module Management                 | It allows you to install and/or update any module directly from the administration panel. Just choose the version you want to use. |
-| Configurable Data Model           | You can configure the data model directly from the administration panel, create new or edit existing entities and set relations of different types. |
-| UI Handlers                       | You can configure the conditions that make some fields invisible, read-only or editable etc. |
-| Configurable UIs                  | Use it to configure any User Interface in the system or to show up the panels for related entities, via drag-and-drop. |
-| UI Translations                   | You can edit any label in the system, in all languages you want to use. |
-| Configurable navigation           | Use the drag-and-drop functionality to set up the navigation as you wish, also separately for each user, if needed. |
-| Scheduled Jobs                    | You can configure, which jobs should be run by cron and at what schedule. |
-| Notifications                     | Set up a system or e-mail notifications for different events in the system. |
-| Data import and export            | You can import or export any data to any and from any entity in the system, even those you have just created. |
-| Advanced mass updates             | Choose the entries to be updated, set the new values and perform a mass update. |
-| Advanced search and filters       | You can configure the filters and search criteria as you wish, and save them, if you want to use the saved filters later. |
-| Change Log and Stream             | See all changes to the entries (who, old and new value, when) and add your own posts with a timestamp and attachments. |
-| Job Management                    | Use it if you want to run or control processes in the background. |
-| Permissions and access Management | Enterprise Level ACL based on Teams and Roles, with access level (own, team, all). You can edit permissions even for each field separately. |
-| REST API                          | Integrate it with any third-party software, fully automated. |
+## Feature Overview
+![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
 
 ## Technologies
@@ -80,18 +66,17 @@ We offer automated integrations with a lot of systems as a paid functionality.
 
 ## What Are the Advantages of Using It?
 
-* Really quick time-to-market and low implementation costs
-* Configurable (entities, relations, layouts, labels, navigation)
-* Extensible - you can use our or write your own modules
-* Free – 100% open source, licensed under GPLv3
 * API-first development approarch
-* REST API for all your custom configurations in the data model
+* Really quick time-to-market and low implementation costs
+* Highly Configurable
+* Extensible - you can use our or write your own modules
+* Open source (licensed under GPLv3), free with some enterprise-level paid modules
+* REST API for your custom data model
 * Web-based and platform independent
 * Based on modern technologies
 * Good code quality
-* Responsive and user-friendly UI
+* User-friendly and mobile-friendly
 * Easy to maintain and support
-*	Powerful export and import functionality (additional free modules are needed)
 
 ## Requirements
 
@@ -107,7 +92,7 @@ We offer automated integrations with a lot of systems as a paid functionality.
 Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ## Demo
-> This is a Demo with PIM module installed.
+> This is a Demo Instance of AtroCore with a PIM module installed.
 - URL: https://demo.atropim.com/
 - Login: admin
 - Password: admin
