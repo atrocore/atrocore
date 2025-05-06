@@ -475,6 +475,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     }
                 });
             }
+            $(rightContainer).addClass('for-table-view')
         },
 
         isHierarchical() {
