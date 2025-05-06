@@ -185,7 +185,7 @@ class Entity extends ReferenceData
             }
 
             if ($canHasAttributes) {
-                if (!in_array($row['type'], ['Base', 'Hierarchy']) || !empty($row['disabledAttributes'])) {
+                if (!in_array($row['type'], ['Base', 'Hierarchy']) || !empty($row['attributesDisabled'])) {
                     continue;
                 }
             }

@@ -19,5 +19,5 @@
   "streamDisabled": true,
   "isActiveUnavailable": true,
   "hideFieldTypeFilters": true,
-  "disabledAttributes": true
+  "attributesDisabled": true
 }

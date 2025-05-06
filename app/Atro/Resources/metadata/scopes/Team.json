@@ -9,5 +9,5 @@
     "streamDisabled": true,
     "customizable": false,
     "hideFieldTypeFilters": true,
-    "disabledAttributes": true
+    "attributesDisabled": true
 }

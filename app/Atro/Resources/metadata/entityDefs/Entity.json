@@ -139,6 +139,10 @@
     "hideFieldTypeFilters": {
       "type": "bool"
     },
+    "attributesDisabled": {
+      "type": "bool",
+      "tooltip": true
+    },
     "streamDisabled": {
       "type": "bool",
       "tooltip": true

@@ -8,5 +8,5 @@
   "streamDisabled": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
-  "disabledAttributes": true
+  "attributesDisabled": true
 }

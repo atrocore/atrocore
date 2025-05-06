@@ -9,5 +9,5 @@
   "bookmarkDisabled": true,
   "actionDisabled": true,
   "hideFieldTypeFilters": true,
-  "disabledAttributes": true
+  "attributesDisabled": true
 }

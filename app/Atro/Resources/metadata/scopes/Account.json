@@ -12,5 +12,5 @@
     "hasAssignedUser": true,
     "hasActive": true,
     "hideFieldTypeFilters": true,
-    "disabledAttributes": true
+    "attributesDisabled": true
 }
