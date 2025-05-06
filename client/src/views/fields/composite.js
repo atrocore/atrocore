@@ -63,31 +63,30 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
         },
 
         getChildrenRows: function () {
-            let rows = [];
-            let row = [];
+            const rows = [];
+            let currentRow = [];
 
-            console.log(this.childrenFields);
-            this.childrenFields.forEach(child => {
-                if (row.length === 2) {
-                    rows.push(row);
-                    row = [];
-                }
-
-                if (child.params.fullWidth) {
-                    if (row.length > 0) {
-                        rows.push(row);
-                        row = [];
+            const addToRows = (child) => {
+                if (child.fullWidth) {
+                    if (currentRow.length) {
+                        rows.push(currentRow);
+                        currentRow = [];
                     }
-
                     rows.push([child]);
                     return;
                 }
 
-                row.push(child);
-            });
+                if (currentRow.length === 2) {
+                    rows.push(currentRow);
+                    currentRow = [];
+                }
+                currentRow.push(child);
+            };
 
-            if (row.length > 0) {
-                rows.push(row);
+            this.childrenFields.forEach(addToRows);
+
+            if (currentRow.length) {
+                rows.push(currentRow);
             }
 
             return rows;
