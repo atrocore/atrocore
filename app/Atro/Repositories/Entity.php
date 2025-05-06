@@ -184,10 +184,8 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if ($canHasAttributes) {
-                if (!in_array($row['type'], ['Base', 'Hierarchy']) || !empty($row['attributesDisabled'])) {
-                    continue;
-                }
+            if ($canHasAttributes && !empty($row['attributesDisabled'])) {
+                continue;
             }
 
             if (!empty($item = $this->prepareItem($code, $row))) {
