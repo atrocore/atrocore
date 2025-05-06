@@ -18,5 +18,6 @@
   "object": true,
   "streamDisabled": true,
   "isActiveUnavailable": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "disabledAttributes": true
 }

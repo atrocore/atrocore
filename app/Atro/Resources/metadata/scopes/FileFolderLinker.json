@@ -3,5 +3,6 @@
   "object": true,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "emHidden": true
 }
