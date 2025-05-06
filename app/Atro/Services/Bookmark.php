@@ -140,6 +140,11 @@ class Bookmark extends Base
             $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
             $fields = ['id', 'name'];
+            $localizedNameField = $this->getLocalizedNameField($scope);
+            if (!empty($localizedNameField)) {
+                $fields[] = $localizedNameField;
+            }
+
             if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
                 $fields[] = $selectParams['orderBy'];
             }
@@ -152,7 +157,7 @@ class Bookmark extends Base
             foreach ($collection as $key => $item) {
                 $result[] = [
                     'id'             => $item->get('id'),
-                    'name'           => $item->get('name') ?? $item->get('id'),
+                    'name'           => (!empty($localizedNameField) ? $item->get($localizedNameField) : null) ?? $item->get('name') ?? $item->get('id'),
                     'offset'         => $offset + $key,
                     'total'          => $total,
                     'disabled'       => false,

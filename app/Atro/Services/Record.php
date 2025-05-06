@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
 use Atro\ORM\DB\RDB\Mapper;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Services\RecordService;
 
@@ -131,7 +132,7 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update', 'action','download'])) {
+        if (!in_array($action, ['restore', 'delete', 'update', 'action', 'download'])) {
             return [];
         }
 
@@ -221,6 +222,22 @@ class Record extends RecordService
         return [$total, $errors, $sync];
     }
 
+    public function getLocalizedNameField(string $scope): ?string
+    {
+        if (!empty($languages = $this->getConfig()->get('inputLanguageList'))) {
+            if (!empty($userLanguage = $this->getUser()->getLanguage())) {
+                if (in_array($userLanguage, $languages)) {
+                    $localeNameField = Util::toCamelCase('name_' . strtolower($userLanguage));
+                    if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $localeNameField]))) {
+                        return $localeNameField;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getTreeItems(string $link, string $scope, array $params): array
     {
         $foreignLink = '';
@@ -243,6 +260,11 @@ class Record extends RecordService
         $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
         $fields = ['id', 'name'];
+        $localizedNameField = $this->getLocalizedNameField($scope);
+        if (!empty($localizedNameField)) {
+            $fields[] = $localizedNameField;
+        }
+
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
         }
@@ -255,7 +277,7 @@ class Record extends RecordService
         foreach ($collection as $key => $item) {
             $result[] = [
                 'id'             => $item->get('id'),
-                'name'           => $item->get('name') ?? $item->get('id'),
+                'name'           => (!empty($localizedNameField) ? $item->get($localizedNameField) : null) ?? $item->get('name') ?? $item->get('id'),
                 'offset'         => $offset + $key,
                 'total'          => $total,
                 'disabled'       => false,
