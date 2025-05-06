@@ -46,7 +46,7 @@
 
     let isLoadingMore: boolean = false;
     let isZoomActive: boolean = false;
-    $: zoomActionParams.html = isZoomActive ? `<i class="ph ph-magnifying-glass-minus"></i>${Language.translate('zoomOut')}` : `<i class="ph ph-magnifying-glass-plus"></i>${Language.translate('zoomIn')}`;
+    $: zoomActionParams.html = (isZoomActive ? `<i class="ph ph-magnifying-glass-minus"></i>` : `<i class="ph ph-magnifying-glass-plus"></i>`) + Language.translate('galleryZoom');
 
     let currentIndex: number = 0;
     let currentMedia: GalleryMedia;
@@ -58,7 +58,10 @@
         size: 'small',
         action: 'toggleAlpha',
     } as ActionParams;
-    $: transparentActionParams.html = showTransparentBackground ? `<i class="ph ph-square"></i>${Language.translate('hideImageBackground')}` : `<i class="ph ph-checkerboard"></i>${Language.translate('showImageBackground')}`;
+    $: {
+        transparentActionParams.html = (showTransparentBackground ? `<i class="ph ph-checkerboard"></i>` : `<i class="ph ph-square"></i>`) + Language.translate('galleryBackground');
+        transparentActionParams.disabled = !['png', 'svg', 'tiff', 'webp'].includes(currentMedia.name.split('.').pop() || '');
+    }
 
     let thumbsSwiper: Swiper | null = null;
     let mainSwiper: Swiper;
@@ -180,9 +183,7 @@
             }
         }
 
-        // mainSwiper.updateSlides();
         mainSwiper.update();
-        // mainSwiper.navigation.update();
     }
 
     function onDownloadMedia(): void {
