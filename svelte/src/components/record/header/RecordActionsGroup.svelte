@@ -9,11 +9,11 @@
     import ActionButton from "./buttons/ActionButton.svelte";
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
-    import OverviewFilterButton from "./buttons/OverviewFilterButton.svelte";
     import BookmarkButton from "./buttons/BookmarkButton.svelte";
     import FollowButton from "./buttons/FollowButton.svelte";
     import RecordCallbacks from "./interfaces/RecordCallbacks";
     import NavigationButtons from "./buttons/NavigationButtons.svelte";
+    import ContentFilter from "../ContentFilter.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -148,7 +148,8 @@
 </script>
 
 <div class="button-row">
-    <ActionGroup actions={recordActions} {dropdownActions} dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
+    <ActionGroup actions={recordActions} {dropdownActions}
+                 dynamicActionsDropdown={mode !== 'edit' ? dynamicActionsDropdown : []}
                  {executeAction} {loadingActions} hasMoreButton={true} className="record-actions">
         {#if mode === 'detail'}
             {#each additionalActions as action}
@@ -172,20 +173,20 @@
             <div class="header-buttons">
                 <div class="header-items">
                     {#each headerButtons as button}
-                        {#if button.action === 'openOverviewFilter'}
-                            <OverviewFilterButton filterApplied={recordButtons.isOverviewFilterActive ?? false}
-                                                  onExecute={executeAction}/>
+                        {#if button.name === 'filtering'}
+                            <ContentFilter scope="{scope}" onExecute={executeAction}/>
                         {:else if ['bookmark', 'unbookmark'].includes(button.action)}
                             {#if id}
-                                <BookmarkButton entity={scope} {id} bookmarkId={bookmarkId} loading={loadingActions} />
+                                <BookmarkButton entity={scope} {id} bookmarkId={bookmarkId} loading={loadingActions}/>
                             {/if}
                         {:else if ['follow', 'unfollow'].includes(button.action)}
                             {#if id && recordButtons.followers}
                                 <FollowButton entity={scope} {id} followers={recordButtons.followers}
-                                              onFollow={callbacks.onFollow} onUnfollow={callbacks.onUnfollow} />
+                                              onFollow={callbacks.onFollow} onUnfollow={callbacks.onUnfollow}/>
                             {/if}
                         {:else if button.action === 'navigation'}
-                            <NavigationButtons hasNext={recordButtons.hasNext} hasPrevious={recordButtons.hasPrevious} onExecute={executeAction} />
+                            <NavigationButtons hasNext={recordButtons.hasNext} hasPrevious={recordButtons.hasPrevious}
+                                               onExecute={executeAction}/>
                         {:else}
                             <ActionButton params={button} on:execute={executeAction}/>
                         {/if}
