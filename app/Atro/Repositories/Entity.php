@@ -477,21 +477,25 @@ class Entity extends ReferenceData
         //prepare auditedEnabledRelations
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
-            if(!empty($fieldDef['auditableEnabled']) && $fieldDef['type'] === 'linkMultiple') {
+            if($fieldDef['type'] !== 'linkMultiple') {
+                continue;
+            }
+            if(!empty($fieldDef['auditableEnabled'])) {
                 $fields[] = $field;
                 continue;
             }
 
-            if($fieldDef['type'] === 'linkMultiple') {
-                $linkDefs = $this->getMetadata()->get(['entityDefs', $scope, 'links', $field]);
-                if(empty($linkDefs['relationName']) || empty($linkDefs['entity']) || $this->getMetadata()->get(['scopes', ucfirst($linkDefs['relationName']), 'type']) !== 'Relation') {
-                    continue;
-                }
-                if(in_array($linkDefs['entity'], $defaultRelationScopeAudited)) {
-                    $fields[] = $field;
-                }
+            if(isset($fieldDef['auditableEnabled'])) {
+                continue;
             }
 
+            $linkDefs = $this->getMetadata()->get(['entityDefs', $scope, 'links', $field]);
+            if(empty($linkDefs['relationName']) || empty($linkDefs['entity']) || $this->getMetadata()->get(['scopes', ucfirst($linkDefs['relationName']), 'type']) !== 'Relation') {
+                continue;
+            }
+            if(in_array($linkDefs['entity'], $defaultRelationScopeAudited)) {
+                $fields[] = $field;
+            }
         }
         $entity->set('auditedEnabledRelations', $fields);
     }
