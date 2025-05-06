@@ -255,6 +255,9 @@ class Note
         }
 
         foreach ($this->createRelatedData[$entity->getEntityType()] as $field => list($scope, $foreignLink)) {
+            if(!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'auditableEnabled'])) {
+                continue;
+            }
             if ($entity->isAttributeChanged($field)) {
                 $wasValue = $entity->getFetched($field);
                 $value = $entity->get($field);

@@ -252,11 +252,6 @@
         "visible": {
           "conditionGroup": [
             {
-              "attribute": "relationType",
-              "type": "equals",
-              "value": "manyToMany"
-            },
-            {
               "attribute": "type",
               "type": "equals",
               "value": "linkMultiple"
@@ -268,9 +263,9 @@
         "visible": {
           "conditionGroup": [
             {
-              "attribute": "relationType",
+              "attribute": "type",
               "type": "notEquals",
-              "value": "manyToMany"
+              "value": "linkMultiple"
             }
           ]
         }

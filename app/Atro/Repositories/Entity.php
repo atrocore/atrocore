@@ -452,6 +452,7 @@ class Entity extends ReferenceData
                 $this->getEntityManager()->getRepository('EntityField')->save($field);
             }
         }
+
         parent::afterSave($entity, $options);
     }
 
