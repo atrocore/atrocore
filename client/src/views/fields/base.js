@@ -225,6 +225,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
             }
             this.template = this[property];
+            this.getCellElement()?.attr('data-mode', this.mode);
         },
 
         getTooltipText() {

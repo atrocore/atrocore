@@ -31,6 +31,8 @@ class ExtensibleEnumType extends AbstractFieldType
         ];
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+
         $entity->entityDefs['fields'][$name] = [
             'attributeId'          => $row['id'],
             'type'                 => 'extensibleEnum',
@@ -40,10 +42,9 @@ class ExtensibleEnumType extends AbstractFieldType
             'dropdown'             => !empty($row['dropdown']),
             'extensibleEnumId'     => $row['extensible_enum_id'] ?? null,
             'tooltip'              => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'          => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText'          => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'            => !empty($attributeData['fullWidth']),
         ];
-
-        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-enum-dropdown";
