@@ -326,13 +326,16 @@
       "tooltip": true
     },
     "auditableDisabled": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "auditableEnabled": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     },
     "modifiedExtendedDisabled": {
-      "type": "bool"
+      "type": "bool",
+      "tooltip": true
     }
   },
   "links": {
