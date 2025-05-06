@@ -480,6 +480,7 @@ class Entity extends ReferenceData
             if($fieldDef['type'] !== 'linkMultiple') {
                 continue;
             }
+
             if(!empty($fieldDef['auditableEnabled'])) {
                 $fields[] = $field;
                 continue;
