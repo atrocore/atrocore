@@ -263,52 +263,54 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
 
-            $result['paths']["/{$scopeName}"]['post'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Create a record of the $scopeName",
-                "description" => "Create a record of the $scopeName",
-                "operationId" => "create{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => $schema
-                        ]
+            if ($scopeName !== 'ActionHistoryRecord') {
+                $result['paths']["/{$scopeName}"]['post'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Create a record of the $scopeName",
+                    "description" => "Create a record of the $scopeName",
+                    "operationId" => "create{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => $schema
+                            ]
+                        ],
                     ],
-                ],
-                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
-            ];
+                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                ];
 
-            $putSchema = $schema;
-            unset($putSchema['properties']['id']);
+                $putSchema = $schema;
+                unset($putSchema['properties']['id']);
 
-            $result['paths']["/{$scopeName}/{id}"]['put'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Update a record of the $scopeName",
-                "description" => "Update a record of the $scopeName",
-                "operationId" => "update{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
+                $result['paths']["/{$scopeName}/{id}"]['put'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Update a record of the $scopeName",
+                    "description" => "Update a record of the $scopeName",
+                    "operationId" => "update{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string"
+                            ]
+                        ],
                     ],
-                ],
-                'requestBody' => [
-                    'required' => true,
-                    'content'  => [
-                        'application/json' => [
-                            'schema' => $putSchema
-                        ]
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => $putSchema
+                            ]
+                        ],
                     ],
-                ],
-                "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
-            ];
+                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                ];
+            }
 
             $result['paths']["/{$scopeName}/{id}"]['delete'] = [
                 'tags'        => [$scopeName],
@@ -339,7 +341,7 @@ class OpenApiGenerator
                 "responses"   => self::prepareResponses(['type' => 'boolean'])
             ];
 
-            if (!empty($scopeData['type']) && $scopeData['type'] !== 'ReferenceData') {
+            if (!empty($scopeData['type']) && $scopeData['type'] !== 'ReferenceData' && $scopeName !== 'ActionHistoryRecord') {
                 $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns linked entities for the $scopeName",
@@ -1098,7 +1100,7 @@ class OpenApiGenerator
 
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
-        if(!empty($fieldData['openApiDisabled'])) {
+        if (!empty($fieldData['openApiDisabled'])) {
             return;
         }
 
