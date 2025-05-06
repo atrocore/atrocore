@@ -93,6 +93,7 @@
                     <i class="ph ph-caret-down chevron"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
+                    <h5 style="margin-top: 0">{Language.translate('fieldValueFilters', 'labels', 'Global')}</h5>
                     <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                         {#each allFilters as filter }
                             <li class="checkbox">
@@ -174,15 +175,6 @@
 
     .dropdown ul {
         padding: 0;
-    }
-
-    .dropdown .advanced-checkbox,
-    .dropdown .advanced-checkbox .checkbox {
-        margin-bottom: 0;
-    }
-
-    .dropdown .advanced-checkbox {
-        padding-left: 3px;
     }
 
     .dropdown:last-child .btn:last-of-type {
