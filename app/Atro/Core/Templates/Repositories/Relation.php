@@ -374,7 +374,7 @@ class Relation extends Base
 
             foreach ($modifiedExtendedRelations as $relation) {
                 $relDefs = $this->getMetadata()->get(['entityDefs', $defs['entity'], 'links', $relation]);
-                if (!empty($relDefs['relationName']) && $relDefs['relationName'] == lcfirst($this->entityType)) {
+                if (!empty($relDefs['relationName']) && ucfirst($relDefs['relationName']) == $this->entityType) {
                     if ($isHierarchyEntity) {
                         if (empty($relDefs['midKeys']) || !is_array($relDefs['midKeys']) || count($relDefs['midKeys']) < 2) {
                             continue;
