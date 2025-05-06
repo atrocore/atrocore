@@ -226,7 +226,8 @@ class Record extends RecordService
     {
         if (!empty($languages = $this->getConfig()->get('inputLanguageList'))) {
             if (!empty($userLanguage = $this->getUser()->getLanguage())) {
-                if (in_array($userLanguage, $languages)) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'isMultilang'])) &&
+                    in_array($userLanguage, $languages)) {
                     $localeNameField = Util::toCamelCase('name_' . strtolower($userLanguage));
                     if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $localeNameField]))) {
                         return $localeNameField;
