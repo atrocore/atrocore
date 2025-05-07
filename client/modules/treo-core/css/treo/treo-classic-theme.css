@@ -3124,7 +3124,7 @@ input[type="search"] {
 }
 
 .form-group {
-    margin-bottom: 12px
+    margin-bottom: 10px;
 }
 
 .radio, .checkbox {
@@ -3409,6 +3409,25 @@ textarea.input-lg, select[multiple].input-lg {
     color: #737373
 }
 
+.composite-container {
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    padding: 10px 10px 4px;
+}
+
+.composite-container .row > .form-group {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.composite-container .row:last-child .form-group {
+    margin-bottom: 0;
+}
+
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group .composite-container > .row:last-child .form-group .field {
+    border-bottom: 0;
+}
+
 @media (min-width: 768px) {
     .form-inline .form-group {
         display: inline-block;
@@ -3442,12 +3461,6 @@ textarea.input-lg, select[multiple].input-lg {
     .form-inline .control-label {
         margin-bottom: 0;
         vertical-align: middle
-    }
-
-    .composite-container {
-        padding: 2px 5px;
-        border-left: 1px solid var(--secondary-border-color);
-        float: left;
     }
 
     .form-inline .radio, .form-inline .checkbox {
@@ -6197,6 +6210,10 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
 .panel-default > .panel-heading .badge {
     color: #fff;
     background-color: #333
+}
+
+.panel-default > .panel-heading .add-attribute-value-container {
+    margin-right: -5px;
 }
 
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
@@ -13237,9 +13254,13 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group div.field {
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field {
     padding-bottom: 6px;
     border-bottom: 1px solid var(--secondary-border-color);
+}
+
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group div.field:has(> .composite-container) {
+    border-bottom: 0;
 }
 
 .modal-header {

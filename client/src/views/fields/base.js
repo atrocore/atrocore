@@ -225,6 +225,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
             }
             this.template = this[property];
+            this.getCellElement()?.attr('data-mode', this.mode);
         },
 
         getTooltipText() {
@@ -431,7 +432,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let $sign = statusIcons.find('.required-sign');
 
             if (statusIcons.size() && !$sign.size()) {
-                statusIcons.prepend(`<i class="ph ph-warning required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
+                statusIcons.prepend(`<i class="ph ph-asterisk required-sign pressable-icon" title="${this.translate('Required')}"></i>`);
                 $sign = statusIcons.find('.required-sign');
                 $sign.click(() => {
                     this.model.trigger('toggle-required-fields-highlight');

@@ -30,6 +30,7 @@ class BoolType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
         if ($entity->get($name) !== null) {
@@ -43,7 +44,8 @@ class BoolType extends AbstractFieldType
             'notNull'     => !empty($row['not_null']),
             'label'       => $row[$this->prepareKey('name', $row)],
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

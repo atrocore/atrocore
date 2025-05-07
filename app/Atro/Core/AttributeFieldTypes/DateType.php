@@ -35,13 +35,15 @@ class DateType extends AbstractFieldType
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId' => $row['id'],
             'type'        => $this->type,
             'required'    => !empty($row['is_required']),
             'label'       => $row[$this->prepareKey('name', $row)],
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
     }
 

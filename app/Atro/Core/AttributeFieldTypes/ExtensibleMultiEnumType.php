@@ -29,7 +29,8 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $row['id'],
             'column'      => "json_value",
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
