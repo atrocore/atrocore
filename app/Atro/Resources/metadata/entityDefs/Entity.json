@@ -178,12 +178,14 @@
     "auditedDisabledFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-disabled-fields",
-      "notStorable": true
+      "notStorable": true,
+      "tooltip": true
     },
     "auditedEnabledRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-enabled-relations",
-      "notStorable": true
+      "notStorable": true,
+      "tooltip": true
     }
   },
   "links": {

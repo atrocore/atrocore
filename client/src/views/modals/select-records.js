@@ -181,8 +181,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
             this.waitForView('list');
 
-
-
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
@@ -206,6 +204,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 this.$el.find('.for-tree-view .total-count-span').html(this.collection.total);
                 this.$el.find('.for-tree-view .shown-count-span').html(this.collection.total);
             });
+
+            this.listenTo(this, 'cancel, close', () => {
+                this.destroySveltePanels();
+            })
         },
 
         changeView(e) {
@@ -348,6 +350,21 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             });
         },
 
+        destroySveltePanels() {
+            if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                try {
+                    window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
+                } catch (e) {}
+            }
+
+            if (window['SvelteRightSideView' + this.dialog.id]) {
+                try {
+                    window['SvelteRightSideView' + this.dialog.id].$destroy();
+                } catch (e) {
+                }
+            }
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -474,8 +491,15 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         uniqueKey: this.dialog.id
                     }
                 });
-                $(rightContainer).addClass('for-table-view')
+                $(rightContainer).addClass('for-table-view');
+                if(this.getSelectedViewType() === 'tree') {
+                    $(rightContainer).hide();
+                }
             }
+
+            this.dialog.$el.on('hidden.bs.modal', (e) => {
+                this.destroySveltePanels();
+            });
         },
 
         isHierarchical() {

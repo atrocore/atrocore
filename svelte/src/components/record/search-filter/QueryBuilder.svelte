@@ -58,6 +58,15 @@
         refreshShowUnsetAll();
     });
 
+    $:  {
+        if(uniqueKey) {
+            if(!window.queryBuilderFilters) {
+                window.queryBuilderFilters = {};
+            }
+            window.queryBuilderFilters[uniqueKey] = filters;
+        }
+    }
+
     function updateSearchManager(data: any) {
         searchManager.update(data);
     }
@@ -144,7 +153,8 @@
             ...(filterPerGroups[Language.translate('Fields')] ?? []),
         ]
 
-        $queryBuilder.queryBuilder({
+       $queryBuilder.queryBuilder({
+            uniqueKey: uniqueKey,
             allow_empty: true,
             select_placeholder: Language.translate('filterPlaceHolder'),
             operators: [
@@ -801,45 +811,58 @@
         window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
         // override updateRuleFilter
-        let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
-        window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-            this.trigger('beforeUpdateRuleFilter', rule);
-            if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
-                addAttributeFilter((pushed, newFilters) => {
-                    if (pushed) {
-                        this.setFilters(filters);
-                    }
-                    if (newFilters) {
-                        rule.filter = newFilters[0];
-                        if (newFilters.length > 1) {
-                            for (const newFilter of newFilters) {
-                                if (newFilter.id === rule.filter.id) {
-                                    continue;
-                                }
 
-                                let r = this.addRule(rule.parent);
-                                r.filter = newFilter;
+        if(!window.queryBuilderFilters) {
+            window.queryBuilderFilters = {}
+        }
+        window.queryBuilderFilters[uniqueKey] = filters;
+
+        if(!window.$.fn.queryBuilder.prototype.overridden) {
+            window.$.extend(window.$.fn.queryBuilder.prototype, {
+                overridden: true
+            });
+            let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
+
+            window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
+                this.trigger('beforeUpdateRuleFilter', rule);
+                if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
+                    addAttributeFilter((pushed, newFilters) => {
+                        if (pushed) {
+                            this.setFilters(window.queryBuilderFilters[this.settings.uniqueKey]);
+                        }
+                        if (newFilters) {
+                            rule.filter = newFilters[0];
+                            if (newFilters.length > 1) {
+                                for (const newFilter of newFilters) {
+                                    if (newFilter.id === rule.filter.id) {
+                                        continue;
+                                    }
+
+                                    let r = this.addRule(rule.parent);
+                                    r.filter = newFilter;
+                                }
                             }
                         }
-                    }
-                    if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
-                        rule.filter = previousFilter;
-                    }
+                        if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
+                            rule.filter = previousFilter;
+                        }
+                        originalUpdateRuleFilter.call(this, rule, previousFilter);
+                    })
+                } else {
                     originalUpdateRuleFilter.call(this, rule, previousFilter);
-                })
-            } else {
-                originalUpdateRuleFilter.call(this, rule, previousFilter);
+                }
             }
+
+            let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
+            window.$.fn.queryBuilder.constructor.prototype.getFilterById = function (id, doThrow) {
+                if (id === '') {
+                    return null;
+                }
+
+                return originalGetFilterById.call(this, id, doThrow);
+            };
         }
 
-        let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
-        window.$.fn.queryBuilder.constructor.prototype.getFilterById = function (id, doThrow) {
-            if (id === '') {
-                return null;
-            }
-
-            return originalGetFilterById.call(this, id, doThrow);
-        };
 
         advancedFilterChecked = searchManager.isQueryBuilderApplied();
 
@@ -853,6 +876,7 @@
 
         return () => {
             searchManager.collection.off('filter-state:changed');
+            delete window.queryBuilderFilters[uniqueKey]
 
             selectBoolSub();
             selectSavedSub();

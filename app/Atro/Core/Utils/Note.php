@@ -245,7 +245,7 @@ class Note
                         continue;
                     }
 
-                    if($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'auditableDisabled'])) {
+                    if(!empty($defs['foreign']) && $this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'auditableDisabled'])) {
                         continue;
                     }
 

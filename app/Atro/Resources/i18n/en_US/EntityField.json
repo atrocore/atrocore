@@ -80,7 +80,9 @@
     "linkMultipleField": "This option enables a handy way to edit relations. Don't use it if you can have a large number of related records.",
     "modifiedExtendedEnabled": "Changes in this relation will cause the update of \"Modified At\" date and time.",
     "isUninheritableField": "Values for this field will not be inherited from the parent item.",
-    "isUninheritableRelation": "Relations with this entity will not be inherited from parent item."
+    "isUninheritableRelation": "Relations with this entity will not be inherited from parent item.",
+    "modifiedExtendedDisabled": "If set the changes in this field will not update the \"Modified At\" timestamp.",
+    "auditableDisabled": "Changes in this field are not displayed as Activity."
   },
   "options": {
     "previewSize": {
