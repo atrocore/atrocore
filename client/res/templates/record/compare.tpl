@@ -1,17 +1,4 @@
 <div class="detail" id="{{id}}">
-    <div class="detail-button-container button-container record-buttons clearfix">
-        {{#unless hideButtonPanel }}
-        <div class="buttons">
-            <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
-            <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
-            <a href="javascript:" title="Click to filter" class="btn btn-default action disabled pull-right" data-action="openOverviewFilter">
-                <i class="ph ph-funnel"></i>
-            </a>
-        </div>
-        {{/unless}}
-        <div class="panel-navigation panel-left pull-left"></div>
-    </div>
-
     <div class="row">
         <div class="compare-panel list col-md-12">
             <div class="panel panel-default panel-overviewPanels" data-panel="fields-overviews">
@@ -75,6 +62,7 @@
         margin-bottom: 50px;
         background-color: white;
         width: 100%;
+        padding: 0;
     }
 
     .compare-panel table td, .compare-panel table th {

@@ -237,6 +237,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             searchManager.emptyOnReset = true;
             if (this.filters) {
                 searchManager.update(this.filters);
+                searchManager.update({queryBuilderApplied: true});
             }
 
             var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');

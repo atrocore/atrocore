@@ -44,25 +44,44 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.model.trigger('select-model', id);
             },
 
-            'click button[data-action="cancel"]': function () {
+            'click a[data-action="openOverviewFilter"]': function () {
+                this.openOverviewFilter();
+            }
+        },
+
+        init() {
+            Dep.prototype.init.call(this);
+
+            this.scope = this.name = this.options.scope;
+            this.collection = this.options.collection;
+
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
+            this.merging = this.options.merging;
+            this.renderedPanels = [];
+            this.hideButtonPanel = false;
+            this.hidePanelNavigation = false;
+        },
+
+        setup() {
+            this.listenTo(this, 'cancel', (dialog) => {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 if (this.merging) {
                     this.merging = false;
-                    $('[data-action="cancel"]').addClass('hidden');
                     relationshipsPanels.changeViewMode('detail');
                     this.setupFieldsPanels();
                     relationshipsPanels.merging = false;
                     return;
                 }
-                this.getParentView().close();
-            },
+                dialog.close();
+            });
 
-            'click button[data-action="merge"]': function () {
+            this.listenTo(this, 'merge', (dialog) => {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 if (!this.merging) {
                     this.notify('Loading...')
                     this.merging = true;
-                    $('[data-action="cancel"]').removeClass('hidden');
                     this.setupFieldsPanels();
                     this.handleRadioButtonsDisableState(false)
                     relationshipsPanels.merging = true;
@@ -104,55 +123,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }).done(() => {
                     this.notify('Merged', 'success');
                     this.trigger('merge-success');
-                    this.getParentView().close();
+                    dialog.close();
                 });
-
-            },
-
-            'click a[data-action="openOverviewFilter"]': function () {
-                this.openOverviewFilter();
-            }
-        },
-
-        init() {
-            Dep.prototype.init.call(this);
-
-            this.scope = this.name = this.options.scope;
-            this.collection = this.options.collection;
-
-            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
-            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
-            this.merging = this.options.merging;
-            this.renderedPanels = [];
-            this.hideButtonPanel = false;
-            this.hidePanelNavigation = false;
-        },
-
-        setup() {
-
-            this.listenTo(this, 'after:render', () => {
-                $('.full-page-modal  .modal-body').css('overflow', 'auto');
-                this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
-                let filterButton = $('[data-action="openOverviewFilter"]');
-                if(this.isOverviewFilterApply()) {
-                    filterButton.css('color', 'white');
-                    filterButton.addClass('btn-danger')
-                    filterButton.removeClass('btn-default')
-                }else{
-                    filterButton.css('color', 'black');
-                    filterButton.addClass('btn-default')
-                    filterButton.removeClass('btn-danger')
-                }
-
-                this.notify('Loading...');
-                this.renderedPanels = [];
-                this.setupFieldsData();
-                this.setupFieldsPanels();
-                this.setupRelationshipsPanels();
-                this.createPanelNavigationView();
             });
 
+            this.listenTo(this, 'open-filter', () => {
+                this.openOverviewFilter();
+            });
         },
 
         getOtherModelsForComparison(model) {
@@ -556,7 +533,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.renderedPanels.length === 2 || name === 'fieldsPanels') {
                 this.notify(false);
                 this.handleRadioButtonsDisableState(false);
-                $('.button-container button').removeClass('disabled');
+                $('button[data-name]').removeClass('disabled');
                 $('.button-container a').removeClass('disabled');
             }
         },
@@ -590,13 +567,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return m;
             });
 
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                el: this.options.el + ' #' + this.getId() + ' .panel-navigation.panel-left',
-            }, function (view) {
-                view.render();
-            });
+
         },
 
         getOverviewFiltersList: function () {
@@ -705,5 +676,36 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 });
             });
         },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+            let filterButton = $('a[data-action="openOverviewFilter"]');
+            if(!filterButton.length) {
+                filterButton = $('<a href="javascript:" class="btn btn-default action pull-right" data-action="openOverviewFilter"' +
+                    ' data-original-title="Click to filter" style="color: black;">\n' +
+                    '                <i class="ph ph-funnel"></i>\n' +
+                    '            </a>');
+                filterButton.on('click', () => this.trigger('open-filter'))
+                this.getParentView().$el.find('.modal-footer').append(filterButton);
+            }
+
+            this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
+            if(this.isOverviewFilterApply()) {
+                filterButton.css('color', 'white');
+                filterButton.addClass('btn-danger')
+                filterButton.removeClass('btn-default')
+            }else{
+                filterButton.css('color', 'black');
+                filterButton.addClass('btn-default')
+                filterButton.removeClass('btn-danger')
+            }
+
+            this.notify('Loading...');
+            this.renderedPanels = [];
+            this.setupFieldsData();
+            this.setupFieldsPanels();
+            this.setupRelationshipsPanels();
+            this.createPanelNavigationView();
+        }
     });
 });
