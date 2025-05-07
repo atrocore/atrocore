@@ -28,7 +28,7 @@ class Layout extends AbstractRecordController
         if (!empty($relatedData)) {
             $parts = explode('.', $relatedData);
             $relatedEntity = $parts[0];
-            $relatedLink = $parts[1];
+            $relatedLink = $parts[1] ?? null;
         }
 
         $data = $this->getLayoutManager()->get($params['scope'], $params['viewType'],

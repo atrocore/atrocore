@@ -30,6 +30,7 @@ class ArrayType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
         $entity->set($name, is_array($value) ? $value : null);
 
@@ -39,7 +40,8 @@ class ArrayType extends AbstractFieldType
             'required'    => !empty($row['is_required']),
             'label'       => $row[$this->prepareKey('name', $row)],
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

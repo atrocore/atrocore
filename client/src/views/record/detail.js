@@ -2013,7 +2013,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let item = {
                         name: name,
                         customLabel: defs.detailViewLabel || defs.label,
-                        fullWidth: ['text', 'markdown', 'wysiwyg', 'script', 'composite'].includes(defs.type)
+                        fullWidth: defs.fullWidth,
                     }
                     if (defs.layoutDetailView) {
                         item.view = defs.layoutDetailView;

@@ -1,4 +1,4 @@
-![Logo](_assets/atrocore-logo.svg)
+<img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"><br><br>
 
 This repository is hosted on: https://gitlab.atrocore.com/atrocore/atrocore
 
@@ -8,11 +8,7 @@ GitHub mirror: https://github.com/atrocore/atrocore
 
 ## What Is AtroCore? 
 
-AtroCore is an open-source software distributed under GPLv3 License for free.
-
-AtroCore is a Data and Process Management software. It is a software ecosystem designed for rapid development of responsive web-based business applications of any kind (ERP, PIM, CRM, DMS, MDM, DAM, etc.). Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
-
-AtroCore is a single page application (SPA) with API-first architecture and flexible data model based on configurable entities and relations. You can organize any data and business-related processes directly in AtroCore, many of them via a simple and user-friendly configuration.
+AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
 ### AtroCore Software can be used for:
 
@@ -30,7 +26,7 @@ AtroCore is a single page application (SPA) with API-first architecture and flex
 ## Feature Overview
 ![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
-### For Whom Is AtroCore?
+## For Whom Is AtroCore?
 
 AtroCore is the best fit **for businesses**, who want to:
 
@@ -46,7 +42,7 @@ AtroCore is the best fit **for businesses**, who want to:
 Companies whose needs go beyond the limitations of standard software solutions.
 
 
-### Software based on AtroCore
+## Software which extends AtroCore
 
 The following full-fledged software products are already available on the AtroCore basis:
 * [AtroPIM (Product Information Management)](https://github.com/atrocore/atropim)
@@ -56,11 +52,21 @@ The following full-fledged software products are already available on the AtroCo
 ![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
 
-### Integrations
+## Integrations
 
-AtroCore has a REST API and can be integrated with any third-party system. 
+AtroPIM has a REST API and can be integrated with any third-party system, channel or marketplace. 
 You can also use import and export functions or use our modules (import feeds and export feeds) to get even more flexibility.
-We offer automated integrations with a lot of systems as a paid functionality.
+
+We offer the following native paid integrations:
+
+- Multichannel tools: Channable, ChannelPilot, ChannelAdvisor and others
+- ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
+- Marketplaces: Amazon, Otto
+- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
+
+Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
+
+Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 ## What Are the Advantages of Using It?
 
@@ -90,12 +96,14 @@ We offer automated integrations with a lot of systems as a paid functionality.
 Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 ## Demo
-> This is a Demo Instance of AtroCore with a PIM module installed.
+
 - URL: https://demo.atropim.com/
 - Login: admin
 - Password: admin
+> This is a Demo Instance of AtroCore with a PIM module installed (AtroPIM Demo).
 
-### License
+
+## License
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 

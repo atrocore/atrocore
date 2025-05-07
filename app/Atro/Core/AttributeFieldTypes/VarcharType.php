@@ -15,4 +15,5 @@ class VarcharType extends TextType
 {
     protected string $type = 'varchar';
     protected string $column = 'varchar_value';
+    protected bool $isFullWidth = false;
 }

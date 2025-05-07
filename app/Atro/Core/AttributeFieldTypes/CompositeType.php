@@ -26,7 +26,8 @@ class CompositeType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId' => $row['id'],
             'type'        => 'composite',
-            'label'       => $row[$this->prepareKey('name', $row)]
+            'label'       => $row[$this->prepareKey('name', $row)],
+            'fullWidth'   => true,
         ];
 
         $entity->entityDefs['fields'][$name]['childrenIds'] = $this->em->getConnection()->createQueryBuilder()

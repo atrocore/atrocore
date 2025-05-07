@@ -30,15 +30,9 @@ Espo.define('views/admin/entity-manager/fields/audited-enabled-relations', 'view
                     fieldDefs.type === 'linkMultiple'
                     && fieldDefs.notStorable !== true
                     && fieldDefs.disabled !== true
-                    && this.getMetadata().get(['entityDefs', scope, 'links', field, 'relationName'])
                 ) {
-                    let relEntity = this.getMetadata().get(['entityDefs', scope, 'links', field, 'relationName']);
-                    relEntity = relEntity.charAt(0).toUpperCase() + relEntity.slice(1);
-
-                    if ((this.getMetadata().get(['scopes', relEntity, 'type']) || 'Base') === 'Relation') {
-                        this.params.options.push(field);
-                        this.translatedOptions[field] = this.translate(field, 'fields', scope);
-                    }
+                    this.params.options.push(field);
+                    this.translatedOptions[field] = this.translate(field, 'fields', scope);
                 }
             });
 

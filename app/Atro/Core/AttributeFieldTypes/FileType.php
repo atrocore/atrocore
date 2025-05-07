@@ -54,13 +54,15 @@ class FileType extends AbstractFieldType
         $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
         $entity->set($name . 'Name', $row['file_name'] ?? null);
 
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId' => $row['id'],
             'type'        => 'file',
             'required'    => !empty($row['is_required']),
             'label'       => $row[$this->prepareKey('name', $row)],
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
     }
 

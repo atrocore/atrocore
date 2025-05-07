@@ -35,6 +35,7 @@ class IntType extends AbstractFieldType
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($id);
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
             'type'        => $this->type,
@@ -53,7 +54,8 @@ class IntType extends AbstractFieldType
             'notNull'     => !empty($row['not_null']),
             'label'       => $row[$this->prepareKey('name', $row)],
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;

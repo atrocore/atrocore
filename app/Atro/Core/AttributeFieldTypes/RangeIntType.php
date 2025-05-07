@@ -35,6 +35,7 @@ class RangeIntType extends AbstractFieldType
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($id);
+        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
             'type'        => 'range' . ucfirst($this->type),
@@ -43,7 +44,8 @@ class RangeIntType extends AbstractFieldType
             'label'       => $row[$this->prepareKey('name', $row)],
             'view'        => "views/fields/range-{$this->type}",
             'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
         $entity->fields[$name . 'From'] = [

@@ -474,6 +474,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         uniqueKey: this.dialog.id
                     }
                 });
+                $(rightContainer).addClass('for-table-view')
             }
         },
 
