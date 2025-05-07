@@ -18245,6 +18245,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-dialog .right-content {
     position: relative;
+    min-width: 25px;
 }
 
 

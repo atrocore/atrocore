@@ -236,8 +236,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
             searchManager.emptyOnReset = true;
             if (this.filters) {
-                searchManager.update(this.filters);
-                searchManager.update({queryBuilderApplied: true});
+                searchManager.update({queryBuilderApplied: true, ...this.filters});
             }
 
             var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
