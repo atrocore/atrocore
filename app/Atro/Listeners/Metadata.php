@@ -83,6 +83,12 @@ class Metadata extends AbstractListener
 
         $this->prepareEntityFields($data);
 
+        foreach ($data['scopes'] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type']) || !in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
+                $data['scopes'][$scope]['attributesDisabled'] = true;
+            }
+        }
+
         $event->setArgument('data', $data);
     }
 
@@ -1087,11 +1093,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($metadata['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (
-                !empty($scopeDefs['hasAttribute'])
-                && in_array($scopeDefs['type'], ['Base', 'Hierarchy'])
-                && !in_array($scope, ["Attribute", "Classification", "Product", "ProductAttributeValue"])
-            ) {
+            if (!empty($scopeDefs['hasAttribute'])) {
                 $entityName = "{$scope}AttributeValue";
 
                 $metadata['scopes'][$entityName] = [

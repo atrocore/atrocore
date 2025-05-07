@@ -79,7 +79,9 @@
     "linkMultipleField": "Das Feld Mehrfach verknüpfen bietet eine praktische Möglichkeit, Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Bezugsdatensätzen haben können.",
     "modifiedExtendedEnabled": "Änderungen in dieser Beziehung führen zur Aktualisierung des Datums und der Uhrzeit \"Geändert am\".",
     "isUninheritableField": "Die Werte für dieses Feld werden nicht vom übergeordneten Element geerbt.",
-    "isUninheritableRelation": "Die Beziehungen zu dieser Entität werden nicht vom übergeordneten Element geerbt."
+    "isUninheritableRelation": "Die Beziehungen zu dieser Entität werden nicht vom übergeordneten Element geerbt.",
+    "modifiedExtendedDisabled": "Wenn aktiviert, wird bei Änderungen in diesem Feld der Zeitstempel „Geändert am“ nicht aktualisiert.",
+    "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt."
   },
   "options": {
     "previewSize": {

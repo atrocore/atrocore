@@ -70,7 +70,9 @@
     "hasTeam": "Увімкнути команди для керування доступом.",
     "hasOwner": "Увімкнути власника для керування доступом.",
     "streamDisabled": "Якщо відмічено, на сторінці деталей запису не відображатиметься панель Дій. Ви також не зможете додавати нотатки.",
-    "disableActionHistory": "Якщо позначено, жодні дії користувача над записами цієї сутності не будуть реєструватися."
+    "disableActionHistory": "Якщо позначено, жодні дії користувача над записами цієї сутності не будуть реєструватися.",
+    "auditedDisabledFields": "міни в цих полях не відображатимуться в панелі Дій.",
+    "auditedEnabledRelations": "міни в цих зв'язках відображатимуться в панелі Дій."
   },
   "exceptions": {
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time"
