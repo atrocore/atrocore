@@ -13,6 +13,15 @@
       "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink"
     }
   },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "attributes",
+        "label": "attributes",
+        "view": "views/admin/field-manager/record/panels/attributes"
+      }
+    ]
+  },
   "boolFilterList": [
     "canHasAttributes"
   ],
