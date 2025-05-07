@@ -153,8 +153,8 @@
             ...(filterPerGroups[Language.translate('Fields')] ?? []),
         ]
 
-       const $instance =  $queryBuilder.queryBuilder({
-           uniqueKey: uniqueKey,
+       $queryBuilder.queryBuilder({
+            uniqueKey: uniqueKey,
             allow_empty: true,
             select_placeholder: Language.translate('filterPlaceHolder'),
             operators: [
