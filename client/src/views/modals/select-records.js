@@ -206,7 +206,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             });
 
             this.listenTo(this, 'cancel, close', () => {
-                debugger
                 this.destroySveltePanels();
             })
         },
@@ -492,6 +491,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         uniqueKey: this.dialog.id
                     }
                 });
+                $(rightContainer).addClass('for-table-view');
+                if(this.getSelectedViewType() === 'tree') {
+                    $(rightContainer).hide();
+                }
             }
 
             this.dialog.$el.on('hidden.bs.modal', (e) => {
