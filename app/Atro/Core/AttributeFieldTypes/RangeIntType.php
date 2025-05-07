@@ -60,6 +60,7 @@ class RangeIntType extends AbstractFieldType
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
             'attributeId'          => $id,
             'type'                 => $this->type,
+            "mainField"            => $name,
             'required'             => !empty($row['is_required']),
             'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
             'layoutDetailDisabled' => true
@@ -77,6 +78,7 @@ class RangeIntType extends AbstractFieldType
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
             'attributeId'          => $id,
             'type'                 => $this->type,
+            "mainField"            => $name,
             'required'             => !empty($row['is_required']),
             'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
             'layoutDetailDisabled' => true

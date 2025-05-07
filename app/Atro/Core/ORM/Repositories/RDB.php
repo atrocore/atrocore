@@ -304,7 +304,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $fromName = $fieldData['mainField'] . 'From';
         $toName = $fieldData['mainField'] . 'To';
 
-        if (!$entity->isAttributeChanged($fromName) && $entity->isAttributeChanged($toName)) {
+        if (!$entity->isAttributeChanged($fromName) && !$entity->isAttributeChanged($toName)) {
             return;
         }
 
