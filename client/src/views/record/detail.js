@@ -218,7 +218,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 scope: 'Attribute',
                 multiple: true,
                 createButton: false,
-                massRelateEnabled: false
+                massRelateEnabled: false,
+                boolFilterList: ['onlyForEntity'],
+                boolFilterData: {
+                    onlyForEntity: this.model.name
+                }
             }, dialog => {
                 dialog.render();
                 this.notify(false);
@@ -358,12 +362,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionDelete: function () {
             this.delete();
-        },
-
-        actionSave: function () {
-            if (this.save(null, true)) {
-                this.setDetailMode();
-            }
         },
 
         actionSaveAndNext: function () {

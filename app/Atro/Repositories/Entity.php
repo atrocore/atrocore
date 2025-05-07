@@ -171,9 +171,20 @@ class Entity extends ReferenceData
     {
         $scopeTypes = $params['whereClause'][0]['type'] ?? null;
 
+        $canHasAttributes = false;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['canHasAttributes'])) {
+                $canHasAttributes = true;
+            }
+        }
+
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
             if (!empty($row['emHidden']) || (!empty($scopeTypes) && !empty($row['type']) && !in_array($row['type'], $scopeTypes))) {
+                continue;
+            }
+
+            if ($canHasAttributes && empty($row['hasAttribute'])) {
                 continue;
             }
 
