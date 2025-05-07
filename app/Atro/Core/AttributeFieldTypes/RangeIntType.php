@@ -38,14 +38,15 @@ class RangeIntType extends AbstractFieldType
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
-            'type'        => 'range' . ucfirst($this->type),
-            'attributeId' => $id,
-            'required'    => !empty($row['is_required']),
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'view'        => "views/fields/range-{$this->type}",
-            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'   => !empty($attributeData['fullWidth']),
+            'type'           => 'range' . ucfirst($this->type),
+            'attributeId'    => $id,
+            'required'       => !empty($row['is_required']),
+            'label'          => $row[$this->prepareKey('name', $row)],
+            'view'           => "views/fields/range-{$this->type}",
+            'importDisabled' => true,
+            'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'      => !empty($attributeData['fullWidth']),
         ];
 
         $entity->fields[$name . 'From'] = [
