@@ -46,8 +46,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
         rightSideView: 'views/record/right-side-view',
 
-        overviewFilterView: 'views/modals/overview-filter',
-
         relatedAttributeMap: {},
 
         relatedAttributeFunctions: {},
@@ -138,7 +136,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             ) {
                 this.addMenuItem('buttons', {
                     name: 'filtering',
-                    action: 'openOverviewFilter'
+                    action: 'applyOverviewFilter'
                 }, true, false, true);
             }
 
@@ -763,46 +761,8 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             return false;
         },
 
-        actionOpenOverviewFilter: function (e) {
-            this.notify('Loading...')
-            let overviewFilterList = this.getOverviewFiltersList();
-            let currentValues = {};
-            overviewFilterList.forEach((filter) => {
-                currentValues[filter.name] = this.getStorage().get(filter.name, this.scope);
-            });
-            this.createView('overviewFilter', this.overviewFilterView, {
-                scope: this.scope,
-                model: this.model,
-                overviewFilters: overviewFilterList,
-                currentValues: currentValues
-            }, view => {
-                view.render()
-                if (view.isRendered()) {
-                    this.notify(false)
-                }
-                this.listenTo(view, 'after:render', () => {
-                    this.notify(false)
-                });
-
-                this.listenTo(view, 'save', (filterModel) => {
-                    let filterChanged = false;
-                    this.getOverviewFiltersList().forEach((filter) => {
-                        if (filterModel.get(filter.name)) {
-                            filterChanged = true;
-                            this.getStorage().set(filter.name, this.scope, filterModel.get(filter.name));
-                        }
-                    });
-
-                    if (filterChanged) {
-                        this.model.trigger('overview-filters-changed');
-                        window.dispatchEvent(new CustomEvent('detail:overview-filters-changed', {
-                            detail: {
-                                isOverviewFilterActive: this.isOverviewFilterApply()
-                            }
-                        }));
-                    }
-                });
-            });
+        actionApplyOverviewFilter: function (e) {
+            this.model.trigger('overview-filters-changed')
         },
 
         getBreadcrumbsItems: function (isAdmin = false) {

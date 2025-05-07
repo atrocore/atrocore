@@ -91,7 +91,7 @@
                 <option value="" selected>{languagesLabel}</option>
             </select>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
-                <h5>{Language.translate('additionalLanguages', 'labels', 'Global')}</h5>
+                <h5 style="margin-top: 0">{Language.translate('additionalLanguages', 'labels', 'Global')}</h5>
                 <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                     {#each Object.entries(languages).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [code, language] }
                         <li class="checkbox">

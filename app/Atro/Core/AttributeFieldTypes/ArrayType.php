@@ -31,7 +31,10 @@ class ArrayType extends AbstractFieldType
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
-        $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
+        $value = $row[$entity->fields[$name]['column']];
+        if ($value !== null) {
+            $value = @json_decode((string)$value, true);
+        }
         $entity->set($name, is_array($value) ? $value : null);
 
         $entity->entityDefs['fields'][$name] = [
