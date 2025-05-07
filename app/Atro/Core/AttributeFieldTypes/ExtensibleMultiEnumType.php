@@ -33,7 +33,10 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
-        $value = @json_decode($row[$entity->fields[$name]['column']] ?? '[]', true);
+        $value = $row[$entity->fields[$name]['column']];
+        if ($value !== null) {
+            $value = @json_decode((string)$value, true);
+        }
 
         if (!empty($attributeData['dropdown'])) {
             $entity->set($name, is_array($value) ? $value : []);
