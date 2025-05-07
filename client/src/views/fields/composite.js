@@ -27,6 +27,7 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
                         this.childrenFields.push({
                             name: name,
                             label: defs.detailViewLabel || defs.label,
+                            fullWidth: !!defs.fullWidth,
                             params: defs
                         });
                     }
@@ -53,11 +54,42 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
 
         data() {
             return {
-                childrenFields: this.childrenFields
+                childrenFields: this.childrenFields,
+                childrenRows: this.getChildrenRows()
             };
         },
 
         initInlineEdit() {
+        },
+
+        getChildrenRows: function () {
+            const rows = [];
+            let currentRow = [];
+
+            const addToRows = (child) => {
+                if (child.fullWidth) {
+                    if (currentRow.length) {
+                        rows.push(currentRow);
+                        currentRow = [];
+                    }
+                    rows.push([child]);
+                    return;
+                }
+
+                if (currentRow.length === 2) {
+                    rows.push(currentRow);
+                    currentRow = [];
+                }
+                currentRow.push(child);
+            };
+
+            this.childrenFields.forEach(addToRows);
+
+            if (currentRow.length) {
+                rows.push(currentRow);
+            }
+
+            return rows;
         },
 
         setMode(mode) {
