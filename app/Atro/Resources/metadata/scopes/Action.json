@@ -11,6 +11,5 @@
   "hasActive": true,
   "streamDisabled": true,
   "enabledCopyConfigurations": true,
-  "hideFieldTypeFilters": true,
-  "attributesDisabled": true
+  "hideFieldTypeFilters": true
 }

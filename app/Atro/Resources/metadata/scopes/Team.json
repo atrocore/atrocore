@@ -8,6 +8,5 @@
     "aclLevelList": ["all", "team", "no"],
     "streamDisabled": true,
     "customizable": false,
-    "hideFieldTypeFilters": true,
-    "attributesDisabled": true
+    "hideFieldTypeFilters": true
 }

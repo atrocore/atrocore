@@ -85,7 +85,6 @@ class Metadata extends AbstractListener
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type']) || !in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
-                $data['scopes'][$scope]['hideAttributesDisabled'] = true;
                 $data['scopes'][$scope]['attributesDisabled'] = true;
             }
         }

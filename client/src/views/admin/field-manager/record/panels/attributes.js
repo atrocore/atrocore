@@ -31,7 +31,7 @@ Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/
 
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:attributesDisabled', () => {
+            this.listenTo(this.model, 'change:hasAttribute', () => {
                 this.reRender();
             })
         },
@@ -39,9 +39,6 @@ Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/
         actionCreateRelated(data) {
             let link = 'attributes';
             let scope = 'Attribute';
-            // let foreignLink = this.model.defs['links'][link].foreign;
-
-            // this.model.defs['_relationName'] = link;
 
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
@@ -86,7 +83,7 @@ Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/
         },
 
         panelVisible() {
-            return !this.model.get('attributesDisabled');
+            return this.model.get('hasAttribute');
         },
     })
 );

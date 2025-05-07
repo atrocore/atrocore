@@ -7,6 +7,5 @@
   "customizable": false,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "hideFieldTypeFilters": true,
-  "attributesDisabled": true
+  "hideFieldTypeFilters": true
 }

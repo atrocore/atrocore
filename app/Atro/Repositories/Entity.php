@@ -184,7 +184,7 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if ($canHasAttributes && !empty($row['attributesDisabled'])) {
+            if ($canHasAttributes && empty($row['hasAttribute'])) {
                 continue;
             }
 
