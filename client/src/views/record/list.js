@@ -1216,7 +1216,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
 
             if (!this.options.disableRefreshOnLanguageChange) {
-                this.listenTo(window.Backbone, 'change:disabled-languages', () => {
+                this.addToLanguageObservables();
+                this.listenTo(this, 'change:disabled-languages', () => {
                     this.refreshLayout()
                 })
             }

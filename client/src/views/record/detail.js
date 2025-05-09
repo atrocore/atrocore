@@ -1225,7 +1225,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
 
-                this.listenTo(window.Backbone, 'change:disabled-languages', (value) => {
+                this.addToLanguageObservables();
+
+                this.listenTo(this, 'change:disabled-languages', (value) => {
                     this.getUser().set('disabledLanguages', value)
                     this.refreshLayout(true)
                 })
