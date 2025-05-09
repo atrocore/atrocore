@@ -56,13 +56,13 @@ Espo.define('views/file/fields/preview', 'views/fields/file',
             if (this.mode === 'list') {
 
                 if (this.hasImagePreview() && this.getImageUrl(id, this.previewSize)) {
-                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '?time=' + (new Date(this.model.get('fileMtime'))).getTime()  + '" class="image-preview"></a></div>';
                 } else {
                     return '<a' + (this.hasVideoPlayer() ? ' data-action="showVideoPreview"' : '') + ' href="' + this.getDownloadUrl(id) + '"><span class="fiv-cla fiv-icon-' + this.model.get('extension') + ' fiv-size-lg"></span></a>';
                 }
             }else{
                 if (this.hasImagePreview() && this.getImageUrl(id, this.previewSize)) {
-                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+                    return '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '?time=' + (new Date(this.model.get('fileMtime'))).getTime() + '" class="image-preview"></a></div>';
                 } else if (this.hasVideoPlayer()) {
                     return '<video src="' + this.getDownloadUrl(id) + '" controls width="100%"></video>';
                 } else {
