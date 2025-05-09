@@ -50,7 +50,6 @@ class LinkType extends AbstractFieldType
             'notStorable' => true
         ];
 
-        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
 
         if (!empty($attributeData['entityType'])) {
