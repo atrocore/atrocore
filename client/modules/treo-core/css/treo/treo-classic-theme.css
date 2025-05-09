@@ -8038,9 +8038,15 @@ button.close {
 }
 
 .note-editor.note-frame .note-statusbar {
-    background-color: #f5f5f5;
+    background-color: #fff;
     border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px
+    border-bottom-right-radius: 4px;
+    border-top: 1px solid var(--primary-border-color);
+    transition: background-color .2s;
+}
+
+.note-editor.note-frame .note-statusbar:hover {
+    background-color: #fcfcfc;
 }
 
 .note-editor.note-frame .note-statusbar .note-resizebar {
@@ -8126,8 +8132,8 @@ button.close {
 }
 
 .note-popover .popover-content .note-color .dropdown-toggle, .panel-heading.note-toolbar .note-color .dropdown-toggle {
-    width: 20px;
-    padding-left: 5px
+    width: 24px;
+    padding-left: 5px;
 }
 
 .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
@@ -8171,7 +8177,7 @@ button.close {
 }
 
 .note-popover .popover-content .note-para .dropdown-menu, .panel-heading.note-toolbar .note-para .dropdown-menu {
-    min-width: 216px;
+    min-width: 230px;
     padding: 5px
 }
 
@@ -11446,7 +11452,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .panel.note-editor {
     border: 1px solid #d1d5d6;
-    border-width: 1px
+    border-radius: 4px;
 }
 
 .field > .note-editor {
@@ -11454,12 +11460,18 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .note-editor .note-toolbar {
-    border-bottom: 0 !important;
     background-color: transparent
 }
 
 .note-editor .panel-heading {
     padding: 0 5px 2px 5px
+}
+
+.panel-default.note-editor > .panel-heading {
+    background-color: #fff;
+    border-top: 0;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
 }
 
 .note-editor .panel-heading > .btn-group {
@@ -12848,9 +12860,36 @@ a.field-info > span.fa-info-circle {
     border-bottom-width: 0
 }
 
-.panel-default.note-editor .panel-heading .btn-default {
-    background-color: #f7f7f7;
-    border-color: #ccc
+.panel-default.note-editor .panel-heading .btn-default,
+.panel-default.note-editor .panel-heading .open .btn-default {
+    border-color: #ccc;
+    border-radius: 3px;
+}
+
+.panel-default.note-editor .panel-heading .btn-default.active {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.panel-default.note-editor .panel-heading .btn-group .btn {
+    border-radius: 0;
+}
+
+.panel-default.note-editor .panel-heading .btn-group .btn:first-of-type {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.panel-default.note-editor .panel-heading .btn-group .btn:last-of-type {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.panel-default.note-editor .panel-heading .btn-default i {
+    font-size: 18px;
+}
+
+.panel-default.note-editor .panel-heading .btn .caret-icon {
+    font-size: inherit;
 }
 
 .panel .panel-heading .btn-default {
@@ -17901,7 +17940,7 @@ span[data-img-src]::after {
     display: flex;
     height: 100%;
     align-items: stretch;
-    margin-left: 30px;
+    margin-left: 10px;
     position: relative;
     flex: 1;
 }
