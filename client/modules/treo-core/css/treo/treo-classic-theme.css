@@ -18161,6 +18161,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--highlighting-color-for-data-quality);
 }
 
+.panel-stream .btn.post,
+.panel-stream .btn.discussion {
+    border-radius: 3px;
+}
+
 .panel-stream .header {
     width: 100%;
     border-bottom: 1px solid #e8eced;

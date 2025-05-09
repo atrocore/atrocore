@@ -70,7 +70,9 @@
 
         LayoutManager.clearListAndDetailCache()
         // emit event to reload layouts
-        window.Backbone.trigger('change:disabled-languages', disabledLanguages)
+        for (const [_, view] of (window.languageObservableViews?.entries() ?? [])) {
+            view?.trigger('change:disabled-languages', disabledLanguages)
+        }
     }
 </script>
 
