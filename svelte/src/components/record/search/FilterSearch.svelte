@@ -24,7 +24,10 @@
     let dropdownDiv: HTMLElement;
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
-    let savedSearchStore = getSavedSearchStore(scope, uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
+        items: searchManager.savedSearchList || [],
+        selectedItems: searchManager.getSavedFilters().map(v => v.id)
+    });
 
     generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
@@ -218,7 +221,7 @@
                         <span class="filter-names">{filterNames}</span>
                         <i class="ph ph-caret-down chevron"></i>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-menu">
                         <GeneralFilter scope={scope} searchManager={searchManager} opened={true} uniqueKey={uniqueKey}/>
                         <SavedSearch scope={scope} searchManager={searchManager} hideRowAction={true} opened={true} uniqueKey={uniqueKey}/>
                         <ul class="advanced-checkbox">

@@ -196,18 +196,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             this.reRender();
                         }
                     })
-
-                    // update panel navigation
-                    let bottom = this.getView('bottom')
-                    if (bottom) {
-                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
-                            let navigation = this.getView(key)
-                            if (navigation) {
-                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                navigation.reRender()
-                            }
-                        }
-                    }
                 }
             })
         },

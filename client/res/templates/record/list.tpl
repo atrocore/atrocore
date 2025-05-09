@@ -1,5 +1,3 @@
-{{#unless showNoData}}
-
 {{#if topBar}}
 <div class="list-buttons-container">
     {{#if paginationTop}}
@@ -46,6 +44,7 @@
 </div>
 {{/if}}
 
+{{#unless showNoData}}
 <div class="list">
     <table class="table fixed-header-table hidden">
         {{#if header}}
