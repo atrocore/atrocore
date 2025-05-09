@@ -421,7 +421,7 @@ Espo.define('view', [], function () {
             window.languageObservableViews.set(this.cid, this);
 
             this.once('remove', () => {
-                window.languageObservableViews.delete(this.cid);
+                window.languageObservableViews?.delete(this.cid);
             });
         }
     });
