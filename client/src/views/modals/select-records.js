@@ -417,26 +417,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
             this.searchManager.boolFilterData = this.boolFilterData;
 
-            // if (window['SvelteFilterSearchBar' + this.dialog.id]) {
-            //     try {
-            //         window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
-            //     } catch (e) {}
-            // }
-            //
-            // const searchContainer = document.querySelector('#' + this.dialog.id + ' .modal-body .list-container.for-table-view .filter-container');
-            // if (searchContainer) {
-            //     window['SvelteFilterSearchBar' + this.dialog.id] = new Svelte.FilterSearchBar({
-            //         target: searchContainer,
-            //         props: {
-            //             showFilter: this.showFilter,
-            //             showSearchPanel: this.searchPanel,
-            //             scope: this.scope,
-            //             searchManager: this.searchManager,
-            //             uniqueKey: this.dialog.id
-            //         }
-            //     });
-            //
-            // }
             const listView = this.getView('list');
             if (listView && !listView.canRenderSearch()) {
                 listView.showFilter = this.showFilter;
