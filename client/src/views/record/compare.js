@@ -44,43 +44,77 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.model.trigger('select-model', id);
             },
 
-            'click button[data-action="cancel"]': function () {
+            'click a[data-action="openOverviewFilter"]': function () {
+                this.openOverviewFilter();
+            }
+        },
+
+        init() {
+            Dep.prototype.init.call(this);
+
+            this.scope = this.name = this.options.scope;
+            this.collection = this.options.collection;
+
+            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
+            this.merging = this.options.merging;
+            this.renderedPanels = [];
+            this.hideButtonPanel = false;
+            this.hidePanelNavigation = false;
+        },
+
+        setup() {
+            this.listenTo(this, 'cancel', (dialog) => {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 if (this.merging) {
                     this.merging = false;
-                    $('[data-action="cancel"]').addClass('hidden');
                     relationshipsPanels.changeViewMode('detail');
-                    this.setupFieldsPanels();
+                    this.renderFieldsPanels();
                     relationshipsPanels.merging = false;
                     return;
                 }
-                this.getParentView().close();
-            },
+                dialog.close();
+            });
 
-            'click button[data-action="merge"]': function () {
+            this.listenTo(this, 'merge', (dialog) => {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 if (!this.merging) {
                     this.notify('Loading...')
                     this.merging = true;
-                    $('[data-action="cancel"]').removeClass('hidden');
-                    this.setupFieldsPanels();
+                    this.renderFieldsPanels();
                     this.handleRadioButtonsDisableState(false)
                     relationshipsPanels.merging = true;
                     relationshipsPanels.changeViewMode('edit');
                     this.notify(false)
                     return;
                 }
-                this.notify('Loading...')
-                let fieldsPanels = this.getView('fieldsPanels');
 
-                if (fieldsPanels.validate() || relationshipsPanels.validate()) {
+                this.notify('Loading...');
+
+                let attributes = {};
+
+
+                for (const panel of this.fieldPanels) {
+                    let fieldsPanels = this.getView(panel.name);
+
+                    if (fieldsPanels.validate() ) {
+                        this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
+                        return;
+                    }
+
+                    attributes = {...attributes, ...fieldsPanels.fetch()};
+                }
+
+
+                let buttons = this.getParentView().$el.find('.modal-footer button');
+
+                let relationshipData = relationshipsPanels.fetch();
+
+                if (relationshipsPanels.validate()) {
                     this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
                     return;
                 }
-
-                let buttons = $('.button-container button');
-                let attributes = fieldsPanels.fetch();
-                let relationshipData = relationshipsPanels.fetch();
 
                 let id = $('input[type="radio"][name="check-all"]:checked').val();
                 buttons.addClass('disabled');
@@ -104,70 +138,45 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }).done(() => {
                     this.notify('Merged', 'success');
                     this.trigger('merge-success');
-                    this.getParentView().close();
+                    dialog.close();
                 });
 
-            },
 
-            'click a[data-action="openOverviewFilter"]': function () {
-                this.openOverviewFilter();
-            }
-        },
-
-        init() {
-            Dep.prototype.init.call(this);
-
-            this.scope = this.name = this.options.scope;
-            this.collection = this.options.collection;
-
-            this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
-            this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
-            this.merging = this.options.merging;
-            this.renderedPanels = [];
-            this.hideButtonPanel = false;
-            this.hidePanelNavigation = false;
-        },
-
-        setup() {
-
-            this.listenTo(this, 'after:render', () => {
-                $('.full-page-modal  .modal-body').css('overflow', 'auto');
-                this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
-                let filterButton = $('[data-action="openOverviewFilter"]');
-                if(this.isOverviewFilterApply()) {
-                    filterButton.css('color', 'white');
-                    filterButton.addClass('btn-danger')
-                    filterButton.removeClass('btn-default')
-                }else{
-                    filterButton.css('color', 'black');
-                    filterButton.addClass('btn-default')
-                    filterButton.removeClass('btn-danger')
-                }
-
-                this.notify('Loading...');
-                this.renderedPanels = [];
-                this.setupFieldsData();
-                this.setupFieldsPanels();
-                this.setupRelationshipsPanels();
-                this.createPanelNavigationView();
             });
 
+            this.listenTo(this, 'open-filter', () => {
+                this.openOverviewFilter();
+            });
+
+            this.fieldPanels = [{
+                name: 'fieldsOverviews',
+                title: 'Overviews',
+                filter: (field) => !field.attributeId
+            }];
+
+            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+                this.fieldPanels.push( {
+                    name: 'attributeValueOverviews',
+                    title: 'Attribute Values',
+                    filter: (field) => field.attributeId
+                });
+                this.putAttributesToModel();
+            }
+            
+            this.prepareFieldsData();
         },
 
         getOtherModelsForComparison(model) {
             return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
-        setupFieldsData() {
+        prepareFieldsData() {
             this.fieldsArr = [];
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
+            
 
-            let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields']) || {};
-
-            Object.entries(fieldDefs).forEach(function ([field, fieldDef]) {
-
+            Object.entries(this.model.defs.fields).forEach(function ([field, fieldDef]) {
                 if (this.nonComparableFields.includes(field)) {
                     return;
                 }
@@ -178,7 +187,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                if(!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
+                if (!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
                     return;
                 }
 
@@ -215,38 +224,45 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     fieldValueRows: fieldValueRows,
                     different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
                     required: !!fieldDef['required'],
-                    disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id'
+                    disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id',
+                    attributeId: fieldDef['attributeId']
                 });
             }, this);
 
+
             this.fieldsArr.sort((v1, v2) =>
-                this.translate(v1.field, 'fields', this.scope).localeCompare(this.translate(v2.field, 'fields', this.scope))
+                v1.label.localeCompare(v2.label)
             );
         },
 
-        setupFieldsPanels() {
-            this.createView('fieldsPanels', this.fieldsPanelsView, {
-                scope: this.scope,
-                model: this.model,
-                fieldList: this.fieldsArr,
-                instances: this.instances,
-                columns: this.buildComparisonTableHeaderColumn(),
-                instanceComparison: this.instanceComparison,
-                models: this.collection.models,
-                merging: this.merging,
-                el: `${this.options.el} [data-panel="fields-overviews"] .list-container`
-            }, view => {
-                view.render();
-                if (view.isRendered()) {
-                    this.handlePanelRendering('fieldsPanels');
-                }
-                this.listenTo(view, 'all-fields-rendered', () => {
-                    this.handlePanelRendering('fieldsPanels');
-                });
-            }, true);
+        renderFieldsPanels() {
+
+            this.fieldPanels.forEach((panel,index) => {
+                this.createView(panel.name, this.fieldsPanelsView, {
+                    scope: this.scope,
+                    model: this.model,
+                    fieldList: this.fieldsArr.filter(panel.filter),
+                    instances: this.instances,
+                    columns: this.buildComparisonTableHeaderColumn(),
+                    instanceComparison: this.instanceComparison,
+                    models: this.collection.models,
+                    merging: this.merging,
+                    hideCheckAll: index !== 0,
+                    el: `${this.options.el} [data-panel="${panel.name}"] .list-container`
+                }, view => {
+                    view.render();
+                    if (view.isRendered()) {
+                        this.handlePanelRendering(panel.name);
+                    }
+                    this.listenTo(view, 'all-fields-rendered', () => {
+                        this.handlePanelRendering(panel.name);
+                    });
+                }, true);
+            });
         },
 
-        setupRelationshipsPanels() {
+
+        renderRelationshipsPanels() {
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
@@ -349,7 +365,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         data() {
             let column = this.buildComparisonTableHeaderColumn()
             return {
-                fieldsArr: this.fieldsArr,
+                fieldPanels: this.fieldPanels,
                 columns: column,
                 columnLength: column.length,
                 scope: this.scope,
@@ -409,6 +425,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             for (const other of others) {
                 result = result && current.get(field)?.toString() === other.get(field)?.toString();
             }
+
             return result;
 
         },
@@ -452,7 +469,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging && !this.getFieldManager().isMergeable(type)) {
                 return false;
             }
-            return type && type !== 'linkMultiple';
+            return type && !['linkMultiple', 'composite'].includes(type);
         },
 
         isFieldEnabled(model, name) {
@@ -490,7 +507,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 // hide empty
                 if (!hide && fieldFilter.includes('empty')) {
-                    hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels) ;
+                    hide = !(fieldValues.every(value => this.isEmptyValue(value)) && equalValueForModels);
                 }
 
                 // hide optional
@@ -553,10 +570,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
             this.renderedPanels.push(name);
-            if (this.renderedPanels.length === 2 || name === 'fieldsPanels') {
+            if (this.renderedPanels.length === 2 || this.fieldPanels.map(f => f.name).includes(name)) {
                 this.notify(false);
                 this.handleRadioButtonsDisableState(false);
-                $('.button-container button').removeClass('disabled');
+                $('button[data-name="merge"]').removeClass('disabled');
+                $('button[data-name="merge"]').attr('disabled', false);
                 $('.button-container a').removeClass('disabled');
             }
         },
@@ -581,8 +599,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return this.collection.models ?? [];
         },
 
-        createPanelNavigationView() {
-            if(this.hidePanelNavigation) {
+        renderPanelNavigationView() {
+            if (this.hidePanelNavigation) {
                 return;
             }
             let panelList = this.getRelationshipPanels().map(m => {
@@ -590,12 +608,31 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return m;
             });
 
-            this.createView('panelDetailNavigation', this.panelNavigationView, {
-                panelList: panelList,
-                model: this.model,
-                el: this.options.el + ' #' + this.getId() + ' .panel-navigation.panel-left',
-            }, function (view) {
-                view.render();
+            let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
+            if (!anchorContainer.length) {
+                anchorContainer = $('<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>')
+                this.getParentView().$el.find('.modal-footer').append(anchorContainer)
+            }
+
+            this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
+
+            new Svelte.AnchorNavigation({
+                target: anchorContainer.get(0),
+                props: {
+                    items: panelList,
+                    scrollCallback: (name) => {
+                        let panel = this.$el.find(`.panel[data-name="${name}"]`);
+                        if (panel.size() > 0) {
+                            panel = panel.get(0);
+                            let content = this.getParentView().$el.find('.modal-body').get(0);
+                            const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                            content.scrollTo({
+                                top: window.screen.width < 768 ? panelOffset : panelOffset,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
+                }
             });
         },
 
@@ -656,7 +693,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         isOverviewFilterApply() {
             for (const filter of this.getOverviewFiltersList()) {
                 let selected = this.selectedFilters[filter.name] ?? [];
-                if (!Array.isArray(selected)  || selected.length === 0) {
+                if (!Array.isArray(selected) || selected.length === 0) {
                     continue;
                 }
                 if (selected && selected.join('') !== filter.defaultValue) {
@@ -704,6 +741,78 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     }
                 });
             });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+            let filterButton = $('a[data-action="openOverviewFilter"]');
+            if (!filterButton.length) {
+                filterButton = $('<a href="javascript:" class="btn btn-default action pull-right" data-action="openOverviewFilter"' +
+                    ' data-original-title="Click to filter" style="color: black;">\n' +
+                    '                <i class="ph ph-funnel"></i>\n' +
+                    '            </a>');
+                filterButton.on('click', () => this.trigger('open-filter'))
+                this.getParentView().$el.find('.modal-footer').append(filterButton);
+            }
+
+            this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
+            if (this.isOverviewFilterApply()) {
+                filterButton.css('color', 'white');
+                filterButton.addClass('btn-danger')
+                filterButton.removeClass('btn-default')
+            } else {
+                filterButton.css('color', 'black');
+                filterButton.addClass('btn-default')
+                filterButton.removeClass('btn-danger')
+            }
+
+            this.notify('Loading...');
+            this.renderedPanels = [];
+            
+            this.renderFieldsPanels();
+            this.renderRelationshipsPanels();
+            this.renderPanelNavigationView();
+        },
+
+        putAttributesToModel() {
+            if (!this.getMetadata().get(`scopes.${this.scope}.hasAttribute`)) {
+                return;
+            }
+
+            let models = [...this.collection.models, this.model];
+
+            models.forEach(model => {
+                model.fetch({async: false})
+                $.each(model.defs.fields, (name, defs) => {
+                    if (defs.attributeId) {
+                        delete this.model.defs.fields[name];
+                    }
+                })
+            });
+            models.forEach(model => {
+                let attributesDefs = model.get('attributesDefs') || {};
+
+                // prepare composited attributes
+                $.each(attributesDefs, (name, defs) => {
+                    if (defs.type === 'composite') {
+                        (defs.childrenIds || []).forEach(attributeId => {
+                            $.each(attributesDefs, (name1, defs1) => {
+                                if (defs1.attributeId === attributeId) {
+                                    attributesDefs[name1]['compositedField'] = true;
+                                }
+                            });
+                        })
+                    }
+                });
+
+                models.forEach(model => {
+                    $.each(attributesDefs, (name, defs) => {
+                        if(!model.defs['fields'][name]) {
+                            model.defs['fields'][name] = defs;
+                        }
+                    });
+                })
+            })
         },
     });
 });

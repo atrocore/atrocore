@@ -1,23 +1,11 @@
 <div class="detail" id="{{id}}">
-    <div class="detail-button-container button-container record-buttons clearfix">
-        {{#unless hideButtonPanel }}
-        <div class="buttons">
-            <button class="btn btn-primary disabled" data-action="merge">{{translate 'Merge'}}</button>
-            <button class="btn btn-default {{#unless merging }} hidden {{/unless}}#" data-action="cancel" style="margin-right: 15px">{{translate 'Cancel'}}</button>
-            <a href="javascript:" title="Click to filter" class="btn btn-default action disabled pull-right" data-action="openOverviewFilter">
-                <i class="ph ph-funnel"></i>
-            </a>
-        </div>
-        {{/unless}}
-        <div class="panel-navigation panel-left pull-left"></div>
-    </div>
-
     <div class="row">
+        {{#each fieldPanels }}
         <div class="compare-panel list col-md-12">
-            <div class="panel panel-default panel-overviewPanels" data-panel="fields-overviews">
+            <div class="panel panel-default panel-{{name}}" data-panel="{{name}}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        Overviews
+                        {{title}}
                     </h4>
                 </div>
 
@@ -27,7 +15,7 @@
                             <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
                                 <thead>
                                 <tr>
-                                    {{#each columns}}
+                                    {{#each ../columns}}
                                     <th class="text-center">
                                         {{{name}}}
                                         {{#if _error}}
@@ -40,10 +28,10 @@
                                 </thead>
                                 <tbody>
                                 <tr class="list-row">
-                                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
+                                    <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
                                 </tr>
                                 <tr class="list-row">
-                                    <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
+                                    <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -52,6 +40,7 @@
                 </div>
             </div>
         </div>
+        {{/each}}
 
         <div class="compare-panel  list col-md-12" data-name="relationshipsPanels">
 
@@ -75,6 +64,7 @@
         margin-bottom: 50px;
         background-color: white;
         width: 100%;
+        padding: 0;
     }
 
     .compare-panel table td, .compare-panel table th {
@@ -170,37 +160,4 @@
         overflow: hidden;
     }
 
-    .detail > .detail-button-container {
-        z-index: 1000;
-        background-color: white;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        right: 20px;
-        left: 12px;
-    }
-
-    .detail  > .detail-button-container  > .panel-navigation {
-        padding-top: 10px;
-    }
-
-    .detail  > .detail-button-container  > .panel-navigation > .nav-pills > li {
-        margin-left: 0;
-    }
-
-    .nav-pills > li {
-        float: left;
-        margin-left: 4px;
-    }
-
-    .nav-pills > li > a {
-        border-radius: 2px;
-        border: 1px solid #eee;
-        background-color: var(--anchor-nav-background);
-    }
-
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-        color: #fff;
-        background-color: #537898
-    }
 </style>

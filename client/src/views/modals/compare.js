@@ -55,6 +55,25 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             }
 
             this.listenTo(this, 'after:render', () => this.setupRecord());
+
+            this.buttonList =  [
+                {
+                    name: 'merge',
+                    style: 'primary',
+                    label: 'merge',
+                    disabled: true,
+                    onClick: (dialog) => {
+                      this.trigger('merge', dialog)
+                    }
+                },
+                {
+                    name: 'cancel',
+                    label: 'cancel',
+                    onClick: (dialog) => {
+                        this.trigger('cancel', dialog)
+                    }
+                }
+            ];
         },
 
         setupRecord() {
@@ -133,8 +152,16 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.createView('modalRecord', this.recordView, options, (view) => {
                 view.render();
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+                this.listenTo(this, 'merge', (dialog) => {
+                    view.trigger('merge', dialog);
+                })
+
+                this.listenTo(this, 'cancel', (dialog) => {
+                    view.trigger('cancel', dialog);
+                })
             });
-        }
+        },
+
     });
 });
 

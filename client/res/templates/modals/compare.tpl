@@ -1,1 +1,1 @@
-<div class="modal-record"></div>
+<div class="modal-record record-container"></div>
