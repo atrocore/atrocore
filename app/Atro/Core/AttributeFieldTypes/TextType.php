@@ -17,7 +17,6 @@ use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class TextType extends AbstractFieldType
@@ -189,10 +188,31 @@ class TextType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        $item['attribute'] = Util::toCamelCase($this->column);
+        if(str_ends_with('UnitId', $item['attribute'])) {
+            if ($item['type'] === 'isNull') {
+                $item = [
+                    'type' => 'or',
+                    'value' => [
+                        [
+                            'type' => 'equals',
+                            'attribute' => 'referenceValue',
+                            'value' => ''
+                        ],
+                        [
+                            'type' => 'isNull',
+                            'attribute' => 'referenceValue'
+                        ],
+                    ]
+                ];
+            } else {
+                $item['attribute'] = 'referenceValue';
+            }
+        }else{
+            $item['attribute'] = Util::toCamelCase($this->column);
 
-        if(!empty($attribute['is_multilang'] && !empty($item['language']) && $item['language'] !== 'main'){
-            $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
+            if(!empty($attribute['is_multilang']) && !empty($item['language']) && $item['language'] !== 'main'){
+                $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
+            }
         }
 
         return $item;
