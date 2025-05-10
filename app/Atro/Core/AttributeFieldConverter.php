@@ -46,7 +46,17 @@ class AttributeFieldConverter
 
     public static function getAttributeIdFromFieldName(string $name): string
     {
-        return $name;
+        $id = $name;
+
+        if (str_ends_with($id,'UnitId')) {
+            $id = substr($id, 0, -6);
+        } elseif (str_ends_with($id,'From')) {
+            $id = substr($id, 0, -4);
+        } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
+            $id = substr($id, 0, -2);
+        }
+
+        return $id;
     }
 
     public function getWherePart(IEntity $entity, array &$item, array &$result): void
@@ -57,14 +67,6 @@ class AttributeFieldConverter
             $this->attributes = [];
             $attributeIds = [];
             foreach ($result['attributesIds'] as $id) {
-                if (str_ends_with($id,'UnitId')) {
-                    $id = substr($id, 0, -6);
-                } elseif (str_ends_with($id,'From')) {
-                    $id = substr($id, 0, -4);
-                } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
-                    $id = substr($id, 0, -2);
-                }
-
                 $attributeIds[]  = self::getAttributeIdFromFieldName($id);
             }
 
