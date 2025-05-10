@@ -2,7 +2,7 @@
     <div class="row">
         {{#each fieldPanels }}
         <div class="compare-panel list col-md-12">
-            <div class="panel panel-default panel-{{name}}" data-panel="{{name}}">
+            <div class="panel panel-default panel-{{name}}" data-name="{{name}}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         {{title}}

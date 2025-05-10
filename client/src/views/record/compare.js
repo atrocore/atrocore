@@ -150,14 +150,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.fieldPanels = [{
                 name: 'fieldsOverviews',
-                title: 'Overviews',
+                title: this.translate('Fields'),
                 filter: (field) => !field.attributeId
             }];
 
             if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
                 this.fieldPanels.push( {
                     name: 'attributeValueOverviews',
-                    title: 'Attribute Values',
+                    title: this.translate('Attribute Values'),
                     filter: (field) => field.attributeId
                 });
                 this.putAttributesToModel();
@@ -248,7 +248,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     models: this.collection.models,
                     merging: this.merging,
                     hideCheckAll: index !== 0,
-                    el: `${this.options.el} [data-panel="${panel.name}"] .list-container`
+                    el: `${this.options.el} [data-name="${panel.name}"] .list-container`
                 }, view => {
                     view.render();
                     if (view.isRendered()) {
@@ -607,6 +607,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 m.title = m.label;
                 return m;
             });
+
+            panelList = this.fieldPanels.concat(panelList);
 
             let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
             if (!anchorContainer.length) {
