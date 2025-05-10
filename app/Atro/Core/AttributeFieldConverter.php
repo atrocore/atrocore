@@ -14,7 +14,6 @@ namespace Atro\Core;
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -23,7 +22,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
-use Pim\Entities\Attribute;
 
 class AttributeFieldConverter
 {

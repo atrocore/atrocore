@@ -11,14 +11,12 @@
 
 namespace Atro\Core\AttributeFieldTypes;
 
-use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Entities\User;
 use Espo\Core\ORM\Entity;
 use Espo\Core\SelectManagerFactory;
-use Espo\Core\SelectManagers\Base;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
