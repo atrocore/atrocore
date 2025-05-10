@@ -17,6 +17,7 @@ use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class TextType extends AbstractFieldType
@@ -184,5 +185,16 @@ class TextType extends AbstractFieldType
             $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
             $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
         }
+    }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        $item['attribute'] = Util::toCamelCase($this->column);
+
+        if(!empty($item['language']) && $item['language'] !== 'main'){
+            $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
+        }
+
+        return $item;
     }
 }

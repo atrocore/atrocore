@@ -12,8 +12,10 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class ExtensibleEnumType extends AbstractFieldType
@@ -58,5 +60,16 @@ class ExtensibleEnumType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
+    }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        if(!empty($item['subQuery'])) {
+            $this->convertSubquery($entity, 'ExtensibleEnumOption', $item);
+        }
+
+        $item['attribute'] = 'referenceValue';
+
+        return $item;
     }
 }

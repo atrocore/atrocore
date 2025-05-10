@@ -14,6 +14,7 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\AttributeFieldConverter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
@@ -55,5 +56,70 @@ class ArrayType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
+    }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        if ($item['type'] === 'arrayIsEmpty') {
+            $item = [
+                'type'  => 'or',
+                'value' => [
+                    [
+                        'type'      => 'isNull',
+                        'attribute' => 'textValue'
+                    ],
+                    [
+                        'type'      => 'equals',
+                        'attribute' => 'textValue',
+                        'value'     => ''
+                    ],
+                    [
+                        'type'      => 'equals',
+                        'attribute' => 'textValue',
+                        'value'     => '[]'
+                    ]
+                ]
+            ];
+        } elseif ($item['type'] === 'arrayIsNotEmpty') {
+            $item = [
+                'type'  => 'or',
+                'value' => [
+                    [
+                        'type'      => 'isNotNull',
+                        'attribute' => 'textValue'
+                    ],
+                    [
+                        'type'      => 'notEquals',
+                        'attribute' => 'textValue',
+                        'value'     => ''
+                    ],
+                    [
+                        'type'      => 'notEquals',
+                        'attribute' => 'textValue',
+                        'value'     => '[]'
+                    ]
+                ]
+            ];
+        } else {
+            $where = [
+                'type'  => 'or',
+                'value' => []
+            ];
+
+            $values = (empty($item['value'])) ? [md5('no-such-value-' . time())] : $item['value'];
+            foreach ($values as $value) {
+                // escape slashes to search in escaped json
+                $value = str_replace('\\', '\\\\\\\\', $value);
+                $value = str_replace("/", "\\\\/", $value);
+                $where['value'][] = [
+                    'type'      => 'like',
+                    'attribute' => 'textValue',
+                    'value'     => "%\"$value\"%"
+                ];
+            }
+            $item = $where;
+        }
+
+        return $item;
     }
 }

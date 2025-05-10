@@ -535,7 +535,8 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim';
+        return (Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim')
+            || Metadata.get(['scopes', scope, 'hasAttribute']);
     }
 
     function addAttributeFilter(callback) {
@@ -547,7 +548,11 @@
             multiple: false,
             createButton: false,
             massRelateEnabled: false,
-            allowSelectAllResult: false
+            allowSelectAllResult: false,
+            boolFilterList: ['onlyForEntity'],
+            boolFilterData: {
+                onlyForEntity: scope
+            }
         }, dialog => {
             dialog.render();
             Notifier.notify(false);
@@ -817,7 +822,8 @@
         }
         window.queryBuilderFilters[uniqueKey] = filters;
 
-        if(!window.$.fn.queryBuilder.prototype.overridden) {
+        // we override only if it is a new page
+        if(!window.$.fn.queryBuilder.prototype.overridden || uniqueKey === 'default') {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });

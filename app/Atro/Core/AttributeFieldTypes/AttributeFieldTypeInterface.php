@@ -13,6 +13,7 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 interface AttributeFieldTypeInterface
@@ -20,4 +21,6 @@ interface AttributeFieldTypeInterface
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void;
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void;
+
+    public function getWherePart(IEntity $entity, Entity $attribute, &$item): void;
 }

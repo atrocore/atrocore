@@ -13,9 +13,11 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class RangeIntType extends AbstractFieldType
@@ -148,5 +150,34 @@ class RangeIntType extends AbstractFieldType
         $qb->addSelect("{$alias}.{$this->type}_value1 as " . $mapper->getQueryConverter()->fieldToAlias($name . 'To'));
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
         $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+    }
+
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        if(str_ends_with('UnitId', $item['attribute'])) {
+            if($item['type'] === 'isNull') {
+                $item =  [
+                    'type'  => 'or',
+                    'value' => [
+                        [
+                            'type'      => 'equals',
+                            'attribute' => 'referenceValue',
+                            'value'     => ''
+                        ],
+                        [
+                            'type'      => 'isNull',
+                            'attribute' => 'referenceValue'
+                        ],
+                    ]
+                ];
+            }else{
+                $item['attribute'] = 'referenceValue';
+            }
+        }else{
+            $item['attribute'] = str_ends_with('From', $item['attribute']) ? "{$this->type}Value" :  "{$this->type}Value1";
+        }
+
+        return $item;
     }
 }

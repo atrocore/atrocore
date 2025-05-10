@@ -18,6 +18,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class LinkType extends AbstractFieldType
@@ -101,5 +102,17 @@ class LinkType extends AbstractFieldType
             $qb->addSelect("{$referenceAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
             $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
         }
+    }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        if(!empty($item['subQuery'])) {
+            $attribute = $this->em->getEntity('Attribute', $this->getAttributeId($item['attribute']));
+            $this->convertSubquery($entity, $attribute->get('entityType') , $item);
+        }
+
+        $item['attribute'] = 'referenceValue';
+
+        return $item;
     }
 }

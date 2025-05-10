@@ -12,7 +12,9 @@
 namespace Atro\Core;
 
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -21,6 +23,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
+use Pim\Entities\Attribute;
 
 class AttributeFieldConverter
 {
@@ -28,6 +31,7 @@ class AttributeFieldConverter
     protected Config $config;
     protected Connection $conn;
     private Container $container;
+    private array $attributes = [];
 
     public function __construct(Container $container)
     {
@@ -40,6 +44,40 @@ class AttributeFieldConverter
     public static function prepareFieldName(string $id): string
     {
         return $id;
+    }
+
+    public static function getAttributeIdFromFieldName(string $name): string
+    {
+        return $name;
+    }
+
+    public function getWherePart(IEntity $entity, array &$item): void
+    {
+        $id = $item['attribute'];
+
+        if (!isset($this->attributes[$id])) {
+            if (str_ends_with($id,'UnitId')) {
+                $id = substr($id, 0, -6);
+            } elseif (str_ends_with($id,'From')) {
+                $id = substr($id, 0, -4);
+            } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
+                $id = substr($id, 0, -2);
+            }
+
+            $id  = self::getAttributeIdFromFieldName($id);
+            $attribute = $this->container->get('entityManager')->getEntity('Attribute', $id);
+
+            if (empty($attribute)) {
+                throw new BadRequest('The attribute "' . $id . '" does not exist.');
+            }
+
+            $this->attributes[$id] = $attribute;
+        }
+
+        $attribute = $this->attributes[$id];
+
+        $this->getFieldType($attribute->get('type'))->getWherePart($entity, $attribute, $item);
+
     }
 
     public function putAttributesToSelect(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void

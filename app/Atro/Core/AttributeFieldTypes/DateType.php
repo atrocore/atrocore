@@ -12,8 +12,10 @@
 namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class DateType extends AbstractFieldType
@@ -52,5 +54,12 @@ class DateType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
         $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
+    }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        $item['attribute'] = Util::toCamelCase($this->column);
+
+        return $item;
     }
 }
