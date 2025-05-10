@@ -191,7 +191,7 @@ class TextType extends AbstractFieldType
     {
         $item['attribute'] = Util::toCamelCase($this->column);
 
-        if(!empty($item['language']) && $item['language'] !== 'main'){
+        if(!empty($attribute['is_multilang'] && !empty($item['language']) && $item['language'] !== 'main'){
             $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
         }
 

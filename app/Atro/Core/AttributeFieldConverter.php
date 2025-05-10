@@ -69,7 +69,7 @@ class AttributeFieldConverter
             }
 
           $attributes =  $this->conn->createQueryBuilder()
-                ->select('id, type, data, is_multilang')
+                ->select('*')
                 ->from($this->conn->quoteIdentifier('attribute'))
                 ->where('id IN (:ids)')
                 ->andWhere('deleted = :false')
