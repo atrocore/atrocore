@@ -29,7 +29,7 @@ class AttributeFieldConverter
     protected Config $config;
     protected Connection $conn;
     private Container $container;
-    private array $attributes = [];
+    private array $cachedAttributes = [];
 
     public function __construct(Container $container)
     {
@@ -53,8 +53,8 @@ class AttributeFieldConverter
     {
         $id = $item['attribute'];
 
-        if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
-            $this->attributes = [];
+        if (!isset($this->cachedAttributes[$id]) && !empty($result['attributesIds'])) {
+            $this->cachedAttributes = [];
             $attributeIds = [];
             foreach ($result['attributesIds'] as $id) {
                 if (str_ends_with($id,'UnitId')) {
@@ -83,16 +83,15 @@ class AttributeFieldConverter
             }
 
             foreach ($attributes as $attribute) {
-                $this->attributes[$attribute['id']] = $attribute;
+                $this->cachedAttributes[$attribute['id']] = $attribute;
             }
 
-            if (empty($this->attributes[$id])) {
+            if (empty($this->cachedAttributes[$id])) {
                 throw new BadRequest('The attribute "' . $id . '" does not exist.');
             }
-            unset($result['attributesIds']);
         }
 
-        $attribute = $this->attributes[$id];
+        $attribute = $this->cachedAttributes[$id];
 
         $this->getFieldType($attribute['type'])->getWherePart($entity, $attribute, $item);
 
