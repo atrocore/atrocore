@@ -79,11 +79,6 @@ class AttributeFieldConverter
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
 
-
-            if (empty($attributes)) {
-                throw new BadRequest('The attribute "' . $id . '" does not exist.');
-            }
-
             foreach ($attributes as $attribute) {
                 $this->attributes[$attribute['id']] = $attribute;
             }
