@@ -14,9 +14,10 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
+use Atro\Core\Utils\Util;
 use Atro\Entities\User;
+use Doctrine\DBAL\ParameterType;
 use Espo\Core\SelectManagerFactory;
-use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
 
@@ -64,6 +65,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
         $qb1 = $avRepo->getMapper()->createSelectQueryBuilder($avRepo->get(), $sp);
 
+        $type = $item['type'];
         $operator = 'IN';
         if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
             $operator = 'NOT IN';
@@ -83,6 +85,36 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 "parameters" => $qb1->getParameters()
             ]
         ];
+
+        if($operator === 'NOT IN' || $type === 'isNull') {
+            $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
+            $attributeAlias = Util::generateUniqueHash();
+            $aliasMiddle = Util::generateUniqueHash();
+            // we also select records that is not linked with the attribute
+            $subQb = $this->em->getConnection()->createQueryBuilder()
+                ->select('1')
+                ->from("{$tableName}_attribute_value", $aliasMiddle)
+                ->join($aliasMiddle, 'attribute', $attributeAlias, "$aliasMiddle.attribute_id = $attributeAlias.id AND $attributeAlias.deleted = :false")
+                ->where("$aliasMiddle.{$tableName}_id= $mainTableAlias.id")
+                ->andWhere("$aliasMiddle.attribute_id= :{$attributeAlias}AttributeId")
+                ->andWhere("$aliasMiddle.deleted = :false")
+                ->setParameter("{$attributeAlias}AttributeId", $attributeId)
+                ->setParameter("false", false, ParameterType::BOOLEAN);
+
+            $item = [
+                'type' => 'or',
+                'value' => [
+                    $item,
+                    [
+                        'type' => 'innerSql',
+                        'value' => [
+                            'sql' => 'NOT EXISTS (' . $subQb->getSQL() . ')',
+                            'parameters' => $subQb->getParameters(),
+                        ]
+                    ]
+                ]
+            ];
+        }
     }
 
     protected function prepareKey(string $nameKey, array $row): string
