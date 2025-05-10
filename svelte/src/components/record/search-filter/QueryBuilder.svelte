@@ -318,7 +318,7 @@
         let parts = field.split('_')
         if (parts.length >= 2 && parts[0] === 'attr') {
             id = parts[1];
-            const endings = ["From", "To", "UnitId"];
+            const endings = ["From", "To", "UnitId", "Id"];
             for (const ending of endings) {
                 if (id.endsWith(ending)) {
                     id = id.slice(0, -ending.length);
@@ -503,6 +503,9 @@
             languages = ['main', ...languages];
             let i = 0;
             for (const language of languages) {
+                if(language === Config.get('mainLanguage')) {
+                    continue;
+                }
                 let currentLabel = label;
                 let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
                 if (language !== 'main') {
