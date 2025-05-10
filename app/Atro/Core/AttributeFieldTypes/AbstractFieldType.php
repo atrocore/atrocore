@@ -38,29 +38,8 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         $this->selectManagerFactory = $container->get('selectManagerFactory');
     }
 
-    protected function prepareKey(string $nameKey, array $row): string
+    public function getWherePart(IEntity $entity, Entity $attribute, array &$item): void
     {
-        if (!empty($localeId = $this->user->get('localeId'))) {
-            $currentLocale = $this->em->getEntity('Locale', $localeId);
-            if (!empty($currentLocale)) {
-                $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
-                if (!empty($row[$languageNameKey])) {
-                    $nameKey = $languageNameKey;
-                }
-            }
-        }
-
-        return $nameKey;
-    }
-
-    protected function convertWhere(IEntity $entity, array $item): array
-    {
-        return [];
-    }
-
-    public function getWherePart(IEntity $entity, Entity $attribute, &$item): void
-    {
-
         $attributeId = $attribute->get('id');
 
         $where = [
@@ -107,7 +86,22 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         ];
     }
 
-    protected function convertSubquery(IEntity $entity, string $foreignEntity, &$item): void
+    protected function prepareKey(string $nameKey, array $row): string
+    {
+        if (!empty($localeId = $this->user->get('localeId'))) {
+            $currentLocale = $this->em->getEntity('Locale', $localeId);
+            if (!empty($currentLocale)) {
+                $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
+                if (!empty($row[$languageNameKey])) {
+                    $nameKey = $languageNameKey;
+                }
+            }
+        }
+
+        return $nameKey;
+    }
+
+    protected function convertSubquery(IEntity $entity, string $foreignEntity, array &$item): void
     {
         if (empty($item['subQuery'])) {
             return;
@@ -133,6 +127,12 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             ]
         ];
     }
+
+    protected function convertWhere(IEntity $entity, array $item): array
+    {
+        return [];
+    }
+
 
     protected function getSelectManagerFactory(): SelectManagerFactory
     {
