@@ -196,18 +196,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             this.reRender();
                         }
                     })
-
-                    // update panel navigation
-                    let bottom = this.getView('bottom')
-                    if (bottom) {
-                        for (let key of ['panelDetailNavigation', 'panelEditNavigation']) {
-                            let navigation = this.getView(key)
-                            if (navigation) {
-                                navigation.panelList = this.getMiddlePanels().concat(bottom.panelList)
-                                navigation.reRender()
-                            }
-                        }
-                    }
                 }
             })
         },
@@ -1225,7 +1213,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
 
-                this.listenTo(window.Backbone, 'change:disabled-languages', (value) => {
+                this.addToLanguageObservables();
+
+                this.listenTo(this, 'change:disabled-languages', (value) => {
                     this.getUser().set('disabledLanguages', value)
                     this.refreshLayout(true)
                 })

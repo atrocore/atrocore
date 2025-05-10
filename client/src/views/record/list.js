@@ -83,6 +83,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         layoutProfileId: null,
 
+        searchManager: null,
+
+        showFilter: false,
+
+        showSearch: false,
+
+        uniqueKey: 'default',
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -1005,6 +1013,21 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
 
+            if (this.options.searchManager) {
+                this.searchManager = this.options.searchManager;
+            }
+
+            if (typeof this.options.showFilter === 'boolean') {
+                this.showFilter = this.options.showFilter;
+            }
+
+            if (typeof this.options.showSearch === 'boolean') {
+                this.showSearch = this.options.showSearch;
+            }
+
+            if (typeof this.options.searchUniqueKey === 'string') {
+                this.uniqueKey = this.options.searchUniqueKey;
+            }
 
             if (this.getMetadata().get(['scopes', this.getModelScope(), 'disabled'])) {
                 this.checkboxes = false;
@@ -1216,7 +1239,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
 
             if (!this.options.disableRefreshOnLanguageChange) {
-                this.listenTo(window.Backbone, 'change:disabled-languages', () => {
+                this.addToLanguageObservables();
+                this.listenTo(this, 'change:disabled-languages', () => {
                     this.refreshLayout()
                 })
             }
@@ -1226,8 +1250,35 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.collection.fetch();
         },
 
+        canRenderSearch: function () {
+            return this.searchManager && (this.showSearch || this.showFilter)
+        },
+
         afterRender: function () {
-            this.createLayoutConfigurator()
+            this.createLayoutConfigurator();
+
+            try {
+                this.svelteFilter?.$destroy();
+            } catch (e) {}
+
+            const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
+            if (target && this.canRenderSearch()) {
+                const props = {
+                    searchManager: this.searchManager,
+                    showSearchPanel: this.showSearch,
+                    showFilter: this.showFilter,
+                    scope: this.scope,
+                };
+
+                if (this.uniqueKey) {
+                    props.uniqueKey = this.uniqueKey;
+                }
+
+                this.svelteFilter = new Svelte.FilterSearchBar({
+                    target: target,
+                    props: props
+                })
+            }
 
             if (this.allResultIsChecked) {
                 this.selectAllResult();
@@ -1237,25 +1288,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.checkRecord(id);
                     }, this);
                 }
-            }
-
-            const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
-            if (target && this.options.searchManager && (this.options.showSearchPanel || this.options.showFilter)) {
-                const props = {
-                    searchManager: this.options.searchManager,
-                    showSearchPanel: this.options.showSearchPanel,
-                    showFilter: this.options.showFilter,
-                    scope: this.scope,
-                };
-
-                if (this.options.searchUniqueKey) {
-                    props.uniqueKey = this.options.searchUniqueKey;
-                }
-
-                new Svelte.FilterSearchBar({
-                    target: target,
-                    props: props
-                })
             }
 
             let list = $('#main .list-container > .list');

@@ -41,7 +41,10 @@
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
-    let savedSearchStore = getSavedSearchStore(scope, uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
+        items: searchManager.savedSearchList || [],
+        selectedItems: searchManager.getSavedFilters().map(v => v.id)
+    });
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
 

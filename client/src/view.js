@@ -411,6 +411,18 @@ Espo.define('view', [], function () {
                 url: '#Admin',
                 label: this.getLanguage().translate('Administration', 'labels')
             };
+        },
+
+        addToLanguageObservables: function() {
+            if (!window.languageObservableViews) {
+                window.languageObservableViews = new Map();
+            }
+
+            window.languageObservableViews.set(this.cid, this);
+
+            this.once('remove', () => {
+                window.languageObservableViews?.delete(this.cid);
+            });
         }
     });
 
