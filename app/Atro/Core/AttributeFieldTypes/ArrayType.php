@@ -65,16 +65,16 @@ class ArrayType extends AbstractFieldType
                 'value' => [
                     [
                         'type'      => 'isNull',
-                        'attribute' => 'textValue'
+                        'attribute' => 'jsonValue'
                     ],
                     [
                         'type'      => 'equals',
-                        'attribute' => 'textValue',
+                        'attribute' => 'jsonValue',
                         'value'     => ''
                     ],
                     [
                         'type'      => 'equals',
-                        'attribute' => 'textValue',
+                        'attribute' => 'jsonValue',
                         'value'     => '[]'
                     ]
                 ]
@@ -85,16 +85,16 @@ class ArrayType extends AbstractFieldType
                 'value' => [
                     [
                         'type'      => 'isNotNull',
-                        'attribute' => 'textValue'
+                        'attribute' => 'jsonValue'
                     ],
                     [
                         'type'      => 'notEquals',
-                        'attribute' => 'textValue',
+                        'attribute' => 'jsonValue',
                         'value'     => ''
                     ],
                     [
                         'type'      => 'notEquals',
-                        'attribute' => 'textValue',
+                        'attribute' => 'jsonValue',
                         'value'     => '[]'
                     ]
                 ]
@@ -112,7 +112,7 @@ class ArrayType extends AbstractFieldType
                 $value = str_replace("/", "\\\\/", $value);
                 $where['value'][] = [
                     'type'      => 'like',
-                    'attribute' => 'textValue',
+                    'attribute' => 'jsonValue',
                     'value'     => "%\"$value\"%"
                 ];
             }
