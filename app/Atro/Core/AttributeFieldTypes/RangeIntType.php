@@ -13,11 +13,9 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
-use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class RangeIntType extends AbstractFieldType
@@ -153,7 +151,7 @@ class RangeIntType extends AbstractFieldType
     }
 
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(str_ends_with('UnitId', $item['attribute'])) {
             if($item['type'] === 'isNull') {

@@ -13,11 +13,9 @@ namespace Atro\Core\AttributeFieldTypes;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
-use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class IntType extends AbstractFieldType
@@ -129,7 +127,7 @@ class IntType extends AbstractFieldType
         $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(str_ends_with('UnitId', $item['attribute'])) {
             if($item['type'] === 'isNull') {

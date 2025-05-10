@@ -187,7 +187,7 @@ class TextType extends AbstractFieldType
         }
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         $item['attribute'] = Util::toCamelCase($this->column);
 

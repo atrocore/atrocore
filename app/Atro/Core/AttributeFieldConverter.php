@@ -49,32 +49,52 @@ class AttributeFieldConverter
         return $name;
     }
 
-    public function getWherePart(IEntity $entity, array &$item): void
+    public function getWherePart(IEntity $entity, array &$item, array &$result): void
     {
         $id = $item['attribute'];
 
-        if (!isset($this->attributes[$id])) {
-            if (str_ends_with($id,'UnitId')) {
-                $id = substr($id, 0, -6);
-            } elseif (str_ends_with($id,'From')) {
-                $id = substr($id, 0, -4);
-            } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
-                $id = substr($id, 0, -2);
+        if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
+            $this->attributes = [];
+            $attributeIds = [];
+            foreach ($result['attributesIds'] as $id) {
+                if (str_ends_with($id,'UnitId')) {
+                    $id = substr($id, 0, -6);
+                } elseif (str_ends_with($id,'From')) {
+                    $id = substr($id, 0, -4);
+                } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
+                    $id = substr($id, 0, -2);
+                }
+
+                $attributeIds[]  = self::getAttributeIdFromFieldName($id);
             }
 
-            $id  = self::getAttributeIdFromFieldName($id);
-            $attribute = $this->container->get('entityManager')->getEntity('Attribute', $id);
+          $attributes =  $this->conn->createQueryBuilder()
+                ->select('id, type, data, is_multilang')
+                ->from($this->conn->quoteIdentifier('attribute'))
+                ->where('id IN (:ids)')
+                ->andWhere('deleted = :false')
+                ->setParameter('ids', array_unique($attributeIds), Connection::PARAM_INT_ARRAY)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
 
-            if (empty($attribute)) {
+
+            if (empty($attributes)) {
                 throw new BadRequest('The attribute "' . $id . '" does not exist.');
             }
 
-            $this->attributes[$id] = $attribute;
+            foreach ($attributes as $attribute) {
+                $this->attributes[$attribute['id']] = $attribute;
+            }
+
+            if (empty($this->attributes[$id])) {
+                throw new BadRequest('The attribute "' . $id . '" does not exist.');
+            }
+            unset($result['attributesIds']);
         }
 
         $attribute = $this->attributes[$id];
 
-        $this->getFieldType($attribute->get('type'))->getWherePart($entity, $attribute, $item);
+        $this->getFieldType($attribute['type'])->getWherePart($entity, $attribute, $item);
 
     }
 

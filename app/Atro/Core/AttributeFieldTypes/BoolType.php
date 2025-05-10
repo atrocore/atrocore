@@ -14,7 +14,6 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\AttributeFieldConverter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class BoolType extends AbstractFieldType
@@ -59,7 +58,7 @@ class BoolType extends AbstractFieldType
         $qb->addSelect("{$alias}.bool_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         $item['attribute'] = 'boolValue';
 

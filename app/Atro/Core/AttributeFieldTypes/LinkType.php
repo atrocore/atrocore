@@ -18,7 +18,6 @@ use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class LinkType extends AbstractFieldType
@@ -104,11 +103,13 @@ class LinkType extends AbstractFieldType
         }
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(!empty($item['subQuery'])) {
-            $attribute = $this->em->getEntity('Attribute', $this->getAttributeId($item['attribute']));
-            $this->convertSubquery($entity, $attribute->get('entityType') , $item);
+            $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+            if(!empty($attributeData['entityType'])) {
+                $this->convertSubquery($entity, $attributeData['entityType'] , $item);
+            }
         }
 
         $item['attribute'] = 'referenceValue';

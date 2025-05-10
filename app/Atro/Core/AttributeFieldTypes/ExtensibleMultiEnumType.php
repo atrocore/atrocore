@@ -85,7 +85,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if ($item['type'] === 'arrayIsEmpty') {
             $item = [

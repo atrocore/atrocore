@@ -16,7 +16,6 @@ use Atro\Core\Container;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class FileType extends AbstractFieldType
@@ -78,7 +77,7 @@ class FileType extends AbstractFieldType
         $qb->addSelect("{$fileAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(!empty($item['subQuery'])) {
             $this->convertSubquery($entity, 'File', $item);
@@ -87,13 +86,5 @@ class FileType extends AbstractFieldType
         $item['attribute'] = 'referenceValue';
 
         return $item;
-    }
-
-    protected  function getAttributeId(string $name) : string
-    {
-        if(str_ends_with($name, 'Id')) {
-            $name = substr($name, 0, -2);
-        }
-        return parent::getAttributeId($name);
     }
 }

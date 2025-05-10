@@ -14,7 +14,6 @@ namespace Atro\Core\AttributeFieldTypes;
 use Atro\Core\AttributeFieldConverter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\ORM\Entity;
 use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
@@ -58,7 +57,7 @@ class ArrayType extends AbstractFieldType
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if ($item['type'] === 'arrayIsEmpty') {
             $item = [

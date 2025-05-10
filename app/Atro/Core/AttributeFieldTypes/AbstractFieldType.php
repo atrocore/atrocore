@@ -15,7 +15,6 @@ use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
 use Atro\Entities\User;
-use Espo\Core\ORM\Entity;
 use Espo\Core\SelectManagerFactory;
 use Espo\Core\Utils\Util;
 use Espo\ORM\EntityManager;
@@ -38,9 +37,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         $this->selectManagerFactory = $container->get('selectManagerFactory');
     }
 
-    public function getWherePart(IEntity $entity, Entity $attribute, array &$item): void
+    public function getWherePart(IEntity $entity, array $attribute, array &$item): void
     {
-        $attributeId = $attribute->get('id');
+        $attributeId = $attribute['id'];
 
         $where = [
             'type' => 'and',
@@ -53,7 +52,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             ]
         ];
 
-        $where['value'][] = $this->convertWhere($entity, $item);
+        $where['value'][] = $this->convertWhere($entity, $item, $item);
         $attributeValueEntity = "{$entity->getEntityType()}AttributeValue";
         $avRepo = $this->em->getRepository($attributeValueEntity);
 
@@ -128,7 +127,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         ];
     }
 
-    protected function convertWhere(IEntity $entity, array $item): array
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         return [];
     }
