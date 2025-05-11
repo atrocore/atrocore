@@ -430,7 +430,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 scope: this.scope,
                 skipBuildRows: true,
                 searchManager: this.searchManager,
-                searchPanel: this.searchPanel,
+                showSearch: !!this.searchPanel,
                 showFilter: this.shouldShowFilter(),
             };
             this.optionsToPass.forEach(function (option) {
