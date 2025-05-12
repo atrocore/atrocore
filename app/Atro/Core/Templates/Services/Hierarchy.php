@@ -1007,7 +1007,7 @@ class Hierarchy extends Record
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
-                    if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
+                    if ($this->areValuesEqual($parent, $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
                         $inheritedFields[] = $field;
                     }
                     break;
@@ -1017,7 +1017,7 @@ class Hierarchy extends Record
                         sort($parentIds);
                         $entityIds = $child->getLinkMultipleIdList($field);
                         sort($entityIds);
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
+                        if ($this->areValuesEqual($parent, $field . 'Ids', $parentIds, $entityIds)) {
                             $inheritedFields[] = $field;
                         }
                     }
