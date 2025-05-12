@@ -207,24 +207,7 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                         async: false,
                     }).responseJSON
                 }
-
-                if (this.inlineEditModeIsOn && this.isRequired() && this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])) {
-                    this.applyDefaultValue()
-                }
             }
-        },
-
-        setRequired: function () {
-            if (this.mode === 'edit' && !this.isRequired() && this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'setDefaultOnlyIfRequired'])) {
-                if (this.isRendered()) {
-                    this.applyDefaultValue()
-                } else {
-                    this.once('after:render', function () {
-                        this.applyDefaultValue();
-                    }, this);
-                }
-            }
-            Dep.prototype.setRequired.call(this)
         },
 
         fetch: function () {

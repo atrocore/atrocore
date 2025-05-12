@@ -136,9 +136,6 @@ Espo.define('model', [], function () {
                         if (defaultValue.includes('{{') && defaultValue.includes('}}') && seed && seed[field] != null) {
                             defaultValue = seed[field]
                         }
-                        if (this.getFieldParam(field, 'setDefaultOnlyIfRequired') && !this.getFieldParam(field, 'required')) {
-                            defaultValue = null
-                        }
                     }
 
                     if (defaultValue != null) {

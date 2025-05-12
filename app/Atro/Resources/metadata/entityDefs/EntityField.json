@@ -121,9 +121,6 @@
       "notStorable": true,
       "readOnly": true
     },
-    "setDefaultOnlyIfRequired": {
-      "type": "bool"
-    },
     "pattern": {
       "type": "varchar",
       "tooltip": true
