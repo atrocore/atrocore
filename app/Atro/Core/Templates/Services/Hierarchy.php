@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Relation;
@@ -107,6 +108,8 @@ class Hierarchy extends Record
             throw new NotFound();
         }
 
+        $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+
         $parents = $entity->get('parents');
         if (empty($parents[0])) {
             return false;
@@ -114,8 +117,8 @@ class Hierarchy extends Record
 
         $inheritableFields = [];
         $inheritableLinks = [];
-        foreach ($this->getRepository()->getInheritableFields() as $field) {
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) === 'linkMultiple') {
+        foreach ($this->getRepository()->getInheritableFields($entity->entityDefs['fields']) as $field) {
+            if ($entity->entityDefs['fields'][$field]['type'] === 'linkMultiple') {
                 $inheritableLinks[] = $field;
             } else {
                 $inheritableFields[] = $field;
@@ -346,6 +349,8 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
+        $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+
         $parents = $entity->get('parents');
         if (empty($parents[0])) {
             throw new BadRequest('No parents found.');
@@ -353,6 +358,7 @@ class Hierarchy extends Record
 
         $resultInput = new \stdClass();
         foreach ($parents as $parent) {
+            $this->getAttributeFieldConverter()->putAttributesToEntity($parent);
             $input = new \stdClass();
 
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
@@ -996,8 +1002,8 @@ class Hierarchy extends Record
     protected function getInheritedFromParentFields(Entity $parent, Entity $child): array
     {
         $inheritedFields = [];
-        foreach ($this->getRepository()->getInheritableFields() as $field) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+        foreach ($this->getRepository()->getInheritableFields($child->entityDefs['fields'] ?? null) as $field) {
+            $fieldDefs = $child->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
@@ -1017,7 +1023,7 @@ class Hierarchy extends Record
                     }
                     break;
                 default:
-                    if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))) {
+                    if ($this->areValuesEqual($parent, $field, $parent->get($field), $child->get($field))) {
                         $inheritedFields[] = $field;
                     }
                     break;
@@ -1051,6 +1057,7 @@ class Hierarchy extends Record
         $inheritedFields = [];
         foreach ($parents as $parent) {
             $this->getServiceFactory()->create($parent->getEntityType())->prepareEntityForOutput($parent);
+            $this->getAttributeFieldConverter()->putAttributesToEntity($parent);
             $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $entity));
         }
 
@@ -1082,5 +1089,17 @@ class Hierarchy extends Record
 
         return $result;
 
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency(AttributeFieldConverter::class);
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection(AttributeFieldConverter::class);
     }
 }
