@@ -385,7 +385,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || this.options.showSearchPanel || this.options.showFilter || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
+                topBar: paginationTop || this.checkboxes || this.showSearch || this.showFilter || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
