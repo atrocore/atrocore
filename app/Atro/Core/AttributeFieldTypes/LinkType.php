@@ -102,4 +102,18 @@ class LinkType extends AbstractFieldType
             $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
         }
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        if(!empty($item['subQuery'])) {
+            $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+            if(!empty($attributeData['entityType'])) {
+                $this->convertSubquery($entity, $attributeData['entityType'] , $item);
+            }
+        }
+
+        $item['attribute'] = 'referenceValue';
+
+        return $item;
+    }
 }

@@ -318,7 +318,7 @@
         let parts = field.split('_')
         if (parts.length >= 2 && parts[0] === 'attr') {
             id = parts[1];
-            const endings = ["From", "To", "UnitId"];
+            const endings = ["From", "To", "UnitId", "Id"];
             for (const ending of endings) {
                 if (id.endsWith(ending)) {
                     id = id.slice(0, -ending.length);
@@ -503,6 +503,9 @@
             languages = ['main', ...languages];
             let i = 0;
             for (const language of languages) {
+                if(language === Config.get('mainLanguage')) {
+                    continue;
+                }
                 let currentLabel = label;
                 let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
                 if (language !== 'main') {
@@ -538,7 +541,8 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim';
+        return (Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim')
+            || Metadata.get(['scopes', scope, 'hasAttribute']);
     }
 
     function addAttributeFilter(callback) {
@@ -550,7 +554,11 @@
             multiple: false,
             createButton: false,
             massRelateEnabled: false,
-            allowSelectAllResult: false
+            allowSelectAllResult: false,
+            boolFilterList: ['onlyForEntity'],
+            boolFilterData: {
+                onlyForEntity: scope
+            }
         }, dialog => {
             dialog.render();
             Notifier.notify(false);
@@ -820,7 +828,8 @@
         }
         window.queryBuilderFilters[uniqueKey] = filters;
 
-        if(!window.$.fn.queryBuilder.prototype.overridden) {
+        // we override only if it is a new page
+        if(!window.$.fn.queryBuilder.prototype.overridden || uniqueKey === 'default') {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });

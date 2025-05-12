@@ -59,4 +59,15 @@ class ExtensibleEnumType extends AbstractFieldType
 
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        if(!empty($item['subQuery'])) {
+            $this->convertSubquery($entity, 'ExtensibleEnumOption', $item);
+        }
+
+        $item['attribute'] = 'referenceValue';
+
+        return $item;
+    }
 }
