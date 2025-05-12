@@ -49,9 +49,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
             ->getQueryConverter()
             ->getMainTableAlias();
 
+        // we  select records that are linked or not linked with the attribute
         if (in_array($initialItem['type'], ['isLinked', 'isNotLinked'])) {
             $operator = $initialItem['type'] === 'isLinked' ? 'EXISTS': 'NOT EXISTS';
-            // we also select records that are not linked with the attribute
             $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
             $attributeAlias = Util::generateUniqueHash();
             $aliasMiddle = Util::generateUniqueHash();
