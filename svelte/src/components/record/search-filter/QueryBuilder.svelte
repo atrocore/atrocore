@@ -338,7 +338,7 @@
         let promiseList: Promise[] = [];
 
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, fieldDefs]) => {
-            if (fieldDefs.filterDisabled) {
+            if (fieldDefs.filterDisabled || fieldDefs.virtualField) {
                 return;
             }
 
