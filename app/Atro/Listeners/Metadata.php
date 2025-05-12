@@ -46,7 +46,7 @@ class Metadata extends AbstractListener
 
         $data = $this->addActive($data);
 
-        $this->addAttributeValuePanel($data);
+        $this->addAttributesToEntity($data);
 
         $data = $this->prepareMultiLang($data);
 
@@ -1086,7 +1086,7 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    protected function addAttributeValuePanel(array &$metadata): void
+    protected function addAttributesToEntity(array &$metadata): void
     {
         if (empty($metadata['scopes']['Attribute']['type'])) {
             return;
