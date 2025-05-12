@@ -87,10 +87,10 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         ];
 
         if($operator === 'NOT IN' || $type === 'isNull') {
+            // we also select records that are not linked with the attribute
             $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
             $attributeAlias = Util::generateUniqueHash();
             $aliasMiddle = Util::generateUniqueHash();
-            // we also select records that is not linked with the attribute
             $subQb = $this->em->getConnection()->createQueryBuilder()
                 ->select('1')
                 ->from("{$tableName}_attribute_value", $aliasMiddle)
@@ -163,7 +163,6 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     {
         return [];
     }
-
 
     protected function getSelectManagerFactory(): SelectManagerFactory
     {
