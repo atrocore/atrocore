@@ -64,7 +64,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
             if (this.layoutIsBeingLoaded) return;
 
             this.layoutIsBeingLoaded = true;
-            this._helper.layoutManager.get(this.collection.name, type,null, function (data) {
+            this._helper.layoutManager.get(this.collection.name, type, null, function (data) {
                 this.layoutLoadCallbackList.forEach(function (c) {
                     c(data.layout)
                     this.layoutLoadCallbackList = [];
@@ -142,7 +142,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<li data-id="'+id+'" class="list-group-item list-row"></li>';
+            return '<li data-id="' + id + '" class="list-group-item list-row"></li>';
         },
 
         prepareInternalLayout: function (internalLayout, model) {
@@ -153,7 +153,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
                 }, this);
             }, this);
             if (internalLayout.right) {
-                internalLayout.right.el = this.getItemEl(model, internalLayout.right);
+                internalLayout.right.el = this.options.el + ' li[data-id="' + model.id + '"] .cell[data-name="buttons"]';
             }
         },
 
