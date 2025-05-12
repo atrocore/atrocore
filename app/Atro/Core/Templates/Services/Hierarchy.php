@@ -16,10 +16,8 @@ namespace Atro\Core\Templates\Services;
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
-use Atro\Core\Templates\Repositories\Relation;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
@@ -361,7 +359,7 @@ class Hierarchy extends Record
             $this->getAttributeFieldConverter()->putAttributesToEntity($parent);
             $input = new \stdClass();
 
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            $fieldDefs = $parent->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
@@ -384,6 +382,8 @@ class Hierarchy extends Record
                 case 'linkMultiple':
                     $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
                     break;
+                case 'int':
+                case 'float':
                 case 'varchar':
                     if (empty($fieldDefs['unitField'])) {
                         $input->$field = $parent->get($field);
@@ -551,7 +551,7 @@ class Hierarchy extends Record
         }
 
         $fetchedEntity = $this->getRepository()->get($id);
-
+        $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
         $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
 
         $result = parent::updateEntity($id, $data);
@@ -915,9 +915,10 @@ class Hierarchy extends Record
         foreach ($children as $childArray) {
             $child = $this->getRepository()->get();
             $child->set($childArray);
+            $this->getAttributeFieldConverter()->putAttributesToEntity($child);
             $childData = Util::arrayKeysToUnderScore($child->toArray());
             $this->getRepository()->pushLinkMultipleFields($childData);
-            $inputData = $this->createInputDataForPseudoTransactionJob($parent, $childData, clone $data);
+            $inputData = $this->createInputDataForPseudoTransactionJob($child, $parent, $childData, clone $data);
             if (!empty((array)$inputData)) {
                 $inputData->_fieldValueInheritance = true;
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $childData['id'], $inputData, $parentTransactionId);
@@ -975,7 +976,7 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createInputDataForPseudoTransactionJob(array $parent, array $child, \stdClass $data): \stdClass
+    protected function createInputDataForPseudoTransactionJob(Entity $entity, array $parent, array $child, \stdClass $data): \stdClass
     {
         $unInheritedFields = $this->getRepository()->getUnInheritedFields();
         $inputData = new \stdClass();
@@ -991,7 +992,7 @@ class Hierarchy extends Record
             $parentValue = $parent[$underScoredField];
             $childValue = $child[$underScoredField];
 
-            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
+            if ($this->areValuesEqual($entity, $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
             }
         }
