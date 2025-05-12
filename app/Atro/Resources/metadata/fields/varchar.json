@@ -16,14 +16,6 @@
       "entity": "Measure"
     },
     {
-      "name": "default",
-      "type": "varchar"
-    },
-    {
-      "name": "defaultUnit",
-      "type": "varchar"
-    },
-    {
       "name": "maxLength",
       "type": "int"
     },
