@@ -1047,9 +1047,8 @@ class Metadata extends AbstractListener
                         $mParams['multilangField'] = $field;
                         $mParams['multilangLocale'] = $locale;
                         $mParams['isCustom'] = false;
-                        if (isset($params['requiredForMultilang'])) {
-                            $mParams['required'] = $params['requiredForMultilang'];
-                        }
+                        $mParams['required'] = false;
+                        $mParams['unique'] = false;
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
                             $mParams['notStorable'] = true;
                             $mParams['optionsOriginal'] = $params['options'];
@@ -1063,7 +1062,7 @@ class Metadata extends AbstractListener
                             } else {
                                 $mParams['default'] = null;
                             }
-                            $mParams['required'] = false;
+
                             $mParams['emHidden'] = true;
                         }
                         if ($mParams['type'] == 'script' && isset($mParams['script' . $preparedLocale])) {

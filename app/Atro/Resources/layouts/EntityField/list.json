@@ -16,6 +16,9 @@
     "name": "readOnly"
   },
   {
+    "name": "isMultilang"
+  },
+  {
     "name": "tooltip"
   },
   {
