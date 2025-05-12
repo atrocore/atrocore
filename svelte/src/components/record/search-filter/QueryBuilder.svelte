@@ -179,7 +179,9 @@
                 {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']}
+                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_attribute_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']}
             ],
             rules: rules,
             filters: filters,
@@ -482,6 +484,8 @@
                             filter.label = label;
                             filter.optgroup = Language.translate('Attributes');
                             filter.order = order;
+                            filter.operators.unshift('is_attribute_not_linked');
+                            filter.operators.unshift('is_attribute_linked');
                             if (!filters.find(f => f.id === name)) {
                                 filters.push(filter);
                                 filterChanged = true;
@@ -700,14 +704,13 @@
     }
 
     function editSaveSearchQuery(item) {
+        oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
+        searchManager.update({queryBuilder: item.data});
         prepareFilters(() => {
             const $queryBuilder = window.$(queryBuilderElement)
             try {
-                oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
                 $queryBuilder.queryBuilder('destroy');
-                searchManager.update({
-                    queryBuilder: item.data
-                })
+
                 initQueryBuilderFilter();
                 editingSavedSearch = item;
             } catch (e) {

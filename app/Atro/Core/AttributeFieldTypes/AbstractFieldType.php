@@ -42,51 +42,15 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     {
         $attributeId = $attribute['id'];
 
-        $where = [
-            'type' => 'and',
-            'value' => [
-                [
-                    'type' => 'equals',
-                    'attribute' => 'attributeId',
-                    'value' => $attributeId
-                ],
-            ]
-        ];
-
-        $where['value'][] = $this->convertWhere($entity, $item, $item);
-        $attributeValueEntity = "{$entity->getEntityType()}AttributeValue";
-        $avRepo = $this->em->getRepository($attributeValueEntity);
-
-        $sp = $this->getSelectManagerFactory()
-            ->create($attributeValueEntity)
-            ->getSelectParams(['where' => [$where]], true, true);
-
-        $sp['select'] = [lcfirst($entity->getEntityType()) . 'Id'];
-
-        $qb1 = $avRepo->getMapper()->createSelectQueryBuilder($avRepo->get(), $sp);
-
-        $type = $item['type'];
-        $operator = 'IN';
-        if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
-            $operator = 'NOT IN';
-        }
+        $initialItem = $item;
 
         $mainTableAlias = $this->em->getRepository($entity->getEntityType())
             ->getMapper()
             ->getQueryConverter()
             ->getMainTableAlias();
 
-        $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
-
-        $item = [
-            'type' => 'innerSql',
-            'value' => [
-                "sql" => "$mainTableAlias.id $operator ({$innerSql})",
-                "parameters" => $qb1->getParameters()
-            ]
-        ];
-
-        if($operator === 'NOT IN' || $type === 'isNull') {
+        if (in_array($initialItem['type'], ['isLinked', 'isNotLinked'])) {
+            $operator = $initialItem['type'] === 'isLinked' ? 'EXISTS': 'NOT EXISTS';
             // we also select records that are not linked with the attribute
             $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
             $attributeAlias = Util::generateUniqueHash();
@@ -102,19 +66,53 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 ->setParameter("false", false, ParameterType::BOOLEAN);
 
             $item = [
-                'type' => 'or',
+                'type' => 'innerSql',
                 'value' => [
-                    $item,
-                    [
-                        'type' => 'innerSql',
-                        'value' => [
-                            'sql' => 'NOT EXISTS (' . $subQb->getSQL() . ')',
-                            'parameters' => $subQb->getParameters(),
-                        ]
-                    ]
+                    'sql' => "$operator ({$subQb->getSQL()})",
+                    'parameters' => $subQb->getParameters(),
                 ]
+
             ];
+            return;
         }
+
+        $where = [
+            'type' => 'and',
+            'value' => [
+                [
+                    'type' => 'equals',
+                    'attribute' => 'attributeId',
+                    'value' => $attributeId
+                ],
+            ]
+        ];
+
+        $where['value'][] = $this->convertWhere($entity, $attribute, $item);
+        $attributeValueEntity = "{$entity->getEntityType()}AttributeValue";
+        $avRepo = $this->em->getRepository($attributeValueEntity);
+
+        $sp = $this->getSelectManagerFactory()
+            ->create($attributeValueEntity)
+            ->getSelectParams(['where' => [$where]], true, true);
+
+        $sp['select'] = [lcfirst($entity->getEntityType()) . 'Id'];
+
+        $qb1 = $avRepo->getMapper()->createSelectQueryBuilder($avRepo->get(), $sp);
+
+        $operator = 'IN';
+        if (isset($item['type']) && $item['type'] === 'arrayNoneOf') {
+            $operator = 'NOT IN';
+        }
+
+        $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
+
+        $item = [
+            'type' => 'innerSql',
+            'value' => [
+                "sql" => "$mainTableAlias.id $operator ($innerSql)",
+                "parameters" => $qb1->getParameters()
+            ]
+        ];
     }
 
     protected function prepareKey(string $nameKey, array $row): string
