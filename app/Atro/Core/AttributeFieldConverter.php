@@ -48,11 +48,11 @@ class AttributeFieldConverter
     {
         $id = $name;
 
-        if (str_ends_with($id,'UnitId')) {
+        if (str_ends_with($id, 'UnitId')) {
             $id = substr($id, 0, -6);
-        } elseif (str_ends_with($id,'From')) {
+        } elseif (str_ends_with($id, 'From')) {
             $id = substr($id, 0, -4);
-        } elseif (str_ends_with($id,'Id') || str_ends_with($id, 'To')) {
+        } elseif (str_ends_with($id, 'Id') || str_ends_with($id, 'To')) {
             $id = substr($id, 0, -2);
         }
 
@@ -61,16 +61,16 @@ class AttributeFieldConverter
 
     public function getWherePart(IEntity $entity, array &$item, array &$result): void
     {
-        $id = $item['attribute'];
+        $id = self::getAttributeIdFromFieldName($item['attribute']);
 
         if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
             $this->attributes = [];
             $attributeIds = [];
-            foreach ($result['attributesIds'] as $id) {
-                $attributeIds[]  = self::getAttributeIdFromFieldName($id);
+            foreach ($result['attributesIds'] as $attributeId) {
+                $attributeIds[] = self::getAttributeIdFromFieldName($attributeId);
             }
 
-          $attributes =  $this->conn->createQueryBuilder()
+            $attributes = $this->conn->createQueryBuilder()
                 ->select('*')
                 ->from($this->conn->quoteIdentifier('attribute'))
                 ->where('id IN (:ids)')

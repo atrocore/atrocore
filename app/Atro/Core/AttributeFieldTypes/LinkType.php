@@ -106,7 +106,7 @@ class LinkType extends AbstractFieldType
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(!empty($item['subQuery'])) {
-            $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+            $attributeData = @json_decode($attribute['data'], true)['field'] ?? null;
             if(!empty($attributeData['entityType'])) {
                 $this->convertSubquery($entity, $attributeData['entityType'] , $item);
             }
