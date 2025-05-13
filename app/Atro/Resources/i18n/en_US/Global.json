@@ -1118,7 +1118,9 @@
       "is_linked": "is not empty",
       "is_not_linked": "is empty",
       "query_in": "query",
-      "query_linked_with": "query"
+      "query_linked_with": "query",
+      "is_attribute_linked": "is linked",
+      "is_attribute_not_linked": "is not linked"
     },
     "errors": {
       "no_filter": "No filter selected",

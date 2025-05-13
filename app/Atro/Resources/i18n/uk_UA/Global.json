@@ -1057,7 +1057,9 @@
       "is_linked": "не порожньо",
       "is_not_linked": "порожньо",
       "query_in": "запит",
-      "query_linked_with": "запит"
+      "query_linked_with": "запит",
+      "is_attribute_linked": "пов'язано",
+      "is_attribute_not_linked": "не пов'язано"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

@@ -215,7 +215,7 @@
                     <button
                             bind:this={dropdownButton}
                             data-toggle="dropdown"
-                            class="btn btn-default filter-switcher"
+                            class="btn btn-default actions-button filter-switcher"
                             on:mousedown={event => event.preventDefault()}
                     >
                         <span class="filter-names">{filterNames}</span>
