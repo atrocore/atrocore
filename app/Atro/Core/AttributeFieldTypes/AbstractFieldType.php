@@ -111,6 +111,21 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 "parameters" => $qb1->getParameters()
             ]
         ];
+
+        if($operator === 'NOT IN') {
+            // we ensure that the results are also linked to the attributes
+            $item = [
+                'type' => 'and',
+                'value' => [
+                    $item,
+                    [
+                        'type' => 'isLinked',
+                        'attribute' => $attributeId,
+                        'isAttribute' => true
+                    ]
+                ]
+            ];
+        }
     }
 
     protected function prepareKey(string $nameKey, array $row): string
