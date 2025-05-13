@@ -129,7 +129,7 @@ class IntType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(str_ends_with('UnitId', $item['attribute'])) {
+        if(str_ends_with($item['attribute'], 'UnitId')) {
             if($item['type'] === 'isNull') {
                 $item = [
                     'type'  => 'or',
@@ -149,7 +149,7 @@ class IntType extends AbstractFieldType
                 $item['attribute'] = 'referenceValue';
             }
         }else{
-            $item['attribute'] = 'intValue';
+            $item['attribute'] = "{$this->type}Value";
         }
 
         return $item;
