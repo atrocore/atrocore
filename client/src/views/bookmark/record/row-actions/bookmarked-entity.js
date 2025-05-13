@@ -13,22 +13,26 @@ Espo.define('views/bookmark/record/row-actions/bookmarked-entity', 'views/record
     return Dep.extend({
 
         getActionList: function () {
-            return  list = [
-                {
-                    action: 'compare',
-                    label: 'Compare',
-                    data: {
-                        key: this.options.key
-                    }
-                },
-                {
-                    action: 'merge',
-                    label: 'Merge',
-                    data: {
-                        key: this.options.key
-                    }
-                }
-            ];
+           let  list = [];
+           if(this.model.get('collection').length > 1) {
+               list = list.concat( [
+                   {
+                       action: 'compare',
+                       label: 'Compare',
+                       data: {
+                           key: this.options.key
+                       }
+                   },
+                   {
+                       action: 'merge',
+                       label: 'Merge',
+                       data: {
+                           key: this.options.key
+                       }
+                   }
+               ])
+           }
+            return list;
         }
     })
 });

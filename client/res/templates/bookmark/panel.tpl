@@ -49,7 +49,7 @@
     }
 
     .bookmark-panel-container .group .group-name {
-        padding-left: 20px;
+        padding: 5px 0 5px 20px;
     }
 
     .bookmark-panel-container .group .group-name * {
