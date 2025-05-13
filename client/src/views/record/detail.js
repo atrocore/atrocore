@@ -394,7 +394,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.notify('Access denied', 'error');
                 return false;
             }
-            this.createView('recordCompareInstance', 'views/modals/compare', {
+            let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+            this.createView('recordCompareInstance', view, {
                 model: this.model,
                 scope: this.scope,
                 instanceComparison: true,

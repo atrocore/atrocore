@@ -435,7 +435,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.getModelFactory().create(data.scope, (model) => {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('dialog', 'views/modals/compare', {
+                    let view = this.getMetadata().get(['clientDefs', data.scope, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
                         "model": model,
                         "scope": data.scope,
                         "mode": "details",

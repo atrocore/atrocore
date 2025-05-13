@@ -220,7 +220,8 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 this.notify(this.translate('Loading'))
                 collection.fetch().success(() => {
-                    this.createView('dialog', 'views/modals/compare', {
+                    let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
                         collection: collection,
                         scope: group.key,
                         mode: "details",
