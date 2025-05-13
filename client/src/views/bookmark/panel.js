@@ -163,7 +163,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                                 this.groups[key].collection = this.groups[key].collection.filter(item => item.id !== bookmarkId)
                                 this.groups[key].rowList = this.groups[key].rowList.filter(id => id !== bookmarkId)
                                 view.$el.find('[data-id="' + bookmark.get('entityId') + '"]').remove()
-                                if (!this.groups[key].length) {
+                                if (!this.groups[key].collection.length) {
                                     $(`${this.options.el} .group[data-name="${group.key}"]`).remove()
                                 }
                             })
