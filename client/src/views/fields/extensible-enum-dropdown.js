@@ -42,13 +42,13 @@ Espo.define('views/fields/extensible-enum-dropdown', 'views/fields/link-dropdown
         prepareOptionsList: function () {
             this.params.options = [];
             this.translatedOptions = {};
-            this.params.optionColors = [];
+            this.params.optionColors = {};
 
             this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
                     this.translatedOptions[option.id] = option.name || option.id;
-                    this.params.optionColors.push(option.color || null);
+                    this.params.optionColors[option.id] = option.color || null;
                 }
             })
         }
