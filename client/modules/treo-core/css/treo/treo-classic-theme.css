@@ -17873,6 +17873,10 @@ span[data-img-src]::after {
     text-decoration: none;
 }
 
+.sidebar .layout-editor-container .btn-link .ph {
+    font-size: 16px;
+}
+
 @media screen and (min-width: 768px) {
     .layout-editor-container {
         display: none;

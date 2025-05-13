@@ -686,14 +686,14 @@
     }
 
     function loadLayout(callback) {
-        if(isAdminPage) {
+        if (isAdminPage) {
             activeItem = {
                 name: '_admin',
                 label: Language.get('Global', 'labels', 'Administration')
             }
             treeItems = [activeItem];
             callback()
-        }else{
+        } else {
             LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
                 layoutData = data
                 treeItems = data.layout.map(item => {
@@ -716,28 +716,28 @@
                         }
                     }
 
-
                     return {
                         name: item.name,
                         label: label
-                    }
-                })
+                    };
+                });
+
                 let treeItem = Storage.get('treeItem', scope);
                 // admin should always be the selected one
-                if (getHashScope() === scope) {
+                if (isAdminPage) {
                     treeItem = '_admin';
                 }
                 if (treeItems.length > 0) {
                     if (!treeItem || !treeItems.find(ti => ti.name === treeItem)) {
                         Storage.set('treeItem', scope, treeItems[0].name);
-                        activeItem = treeItems[0]
+                        activeItem = treeItems[0];
                     } else {
                         activeItem = treeItems.find(ti => ti.name === treeItem);
                     }
-                    initSorting(true)
+                    initSorting(true);
                 }
 
-                callback()
+                callback();
             })
         }
     }
@@ -853,7 +853,7 @@
                 <Preloader heightPx={12} />
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px;">
+            <div class="panel-group" style="margin-bottom: 10px; min-height: 26px;">
                 <div class="btn-group">
                     {#each treeItems as treeItem}
                         {#if treeItem.name !== activeItem.name}
