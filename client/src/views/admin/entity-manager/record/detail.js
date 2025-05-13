@@ -16,7 +16,7 @@ Espo.define('views/admin/entity-manager/record/detail', 'views/record/detail', D
 
             Dep.prototype.setup.call(this);
 
-            if (!this.getMetadata().get(`scopes.${this.model.get('code')}.isCustom`)) {
+            if (!this.model.get('isCustom')) {
                 this.removeButton('delete');
                 this.buttonList.push({
                     name: "resetToDefault",
