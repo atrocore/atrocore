@@ -154,6 +154,9 @@ class RangeIntType extends AbstractFieldType
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         if(str_ends_with($item['attribute'], 'UnitId')) {
+            if(!empty($item['subQuery'])) {
+                $this->convertSubquery($entity, 'Unit', $item);
+            }
             if($item['type'] === 'isNull') {
                 $item =  [
                     'type'  => 'or',
