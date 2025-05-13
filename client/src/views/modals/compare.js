@@ -60,7 +60,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 {
                     name: 'merge',
                     style: 'primary',
-                    label: 'merge',
+                    label: 'Merge',
                     disabled: true,
                     onClick: (dialog) => {
                       this.trigger('merge', dialog)
@@ -68,7 +68,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 },
                 {
                     name: 'cancel',
-                    label: 'cancel',
+                    label: 'Cancel',
                     onClick: (dialog) => {
                         this.trigger('cancel', dialog)
                     }
