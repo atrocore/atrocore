@@ -84,7 +84,7 @@ class UiHandler extends ReferenceData
 
             $items = array_values($filtered);
         }
-        g
+
         // sort data
         if (!empty($params['orderBy'])) {
             usort($items, function ($a, $b) use ($params) {
