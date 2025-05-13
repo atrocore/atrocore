@@ -37,7 +37,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             }
 
             if (this.options.customBoolFilterData) {
-                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+                this.boolFilterData = { ...this.boolFilterData, ...this.options.customBoolFilterData }
             }
 
             if (this.options.customSelectBoolFilters) {
@@ -75,7 +75,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         prepareOptionsList: function () {
             this.params.options = [];
             this.translatedOptions = {};
-            this.params.optionColors = [];
+            this.params.optionColors = {};
 
             this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
                 maxSize: 300,
@@ -86,7 +86,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
                 if (option.id) {
                     this.params.options.push(option.id);
                     this.translatedOptions[option.id] = option.name || option.id;
-                    this.params.optionColors.push(option.color || null);
+                    this.params.optionColors[option.id] = option.color || null;
                 }
             })
         },
