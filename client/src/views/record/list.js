@@ -1160,7 +1160,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkboxes = false;
             }
 
-            // sometimes listenTo doesn't work so listening directly works, I can't explain why
+            //After investigation,  sometimes listenTo doesn't work so listening directly works, I can't explain why
             this.collection.on('sync',  (c, r, options) => {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) return;
                 if (this.noRebuild) {
