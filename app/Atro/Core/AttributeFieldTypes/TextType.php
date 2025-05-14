@@ -205,6 +205,9 @@ class TextType extends AbstractFieldType
                     ]
                 ];
             } else {
+                if(!empty($item['subQuery'])) {
+                    $this->convertSubquery($entity, 'Unit', $item);
+                }
                 $item['attribute'] = 'referenceValue';
             }
         }else{
