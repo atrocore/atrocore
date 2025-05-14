@@ -313,7 +313,8 @@
     "mobileTextFilterPlaceholder": "Wpisz i naciśnij Enter...",
     "Apply filter": "Zastosuj filtr",
     "Reset filter": "Resetuj filtr",
-    "Dashboard": "Pulpit"
+    "Dashboard": "Pulpit",
+    "fullscreen": "Pełny ekran"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",

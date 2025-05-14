@@ -379,7 +379,8 @@
     "openSearchFilter": "Відкрити фільтр пошуку",
     "applySearch": "Застосувати пошук",
     "unsetSearch": "Видалити пошук",
-    "searchResults": "Результати пошуку"
+    "searchResults": "Результати пошуку",
+    "fullscreen": "На весь екран"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

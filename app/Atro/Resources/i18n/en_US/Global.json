@@ -414,7 +414,8 @@
     "unsetSearch": "Unset search",
     "searchResults": "Search Results",
     "collapseAll": "Collapse all",
-    "expandAll": "Expand all"
+    "expandAll": "Expand all",
+    "fullscreen": "Full Screen"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

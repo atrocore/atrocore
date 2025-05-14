@@ -431,12 +431,13 @@
         if (!cell) {
             return
         }
-        cell.querySelectorAll('.fa-expand').forEach(el => el.parentElement.remove());
+        cell.querySelectorAll('.ph-corners-out').forEach(el => el.parentElement.remove());
 
         const link = document.createElement('a');
         link.href = 'javascript:';
-        link.className = 'pull-right fullscreen hidden';
+        link.className = 'fullscreen hidden';
         link.title = Language.translate('fullscreen', 'labels');
+        link.style.order = '-1';
         link.innerHTML = '<i class="ph ph-corners-out"></i>';
 
         let container = cell.querySelector(':scope > .inline-actions');
