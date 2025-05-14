@@ -72,6 +72,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     }
 
                 } else {
+                    debugger
                     items = [this.prepareMediaFromModel(this.model)];
                 }
 
@@ -354,12 +355,14 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         prepareMediaFromModel: function (model) {
+            let cachePart = model.get('fileMtime') ? '?time=' + (new Date(model.get('fileMtime'))).getTime() : '';
+
             return {
                 id: model.get(this.idName),
                 name: model.get(this.nameName),
                 url: this.getFilePathsData(model).download,
-                smallThumbnail: this.getFilePathsData(model).thumbnails.small,
-                largeThumbnail: this.getFilePathsData(model).thumbnails.large,
+                smallThumbnail: this.getFilePathsData(model).thumbnails.small + cachePart,
+                largeThumbnail: this.getFilePathsData(model).thumbnails.large + cachePart,
                 isImage: model.get('typeId') !== 'a_document',
             };
         }
