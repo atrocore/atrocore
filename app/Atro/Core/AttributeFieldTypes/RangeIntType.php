@@ -40,6 +40,7 @@ class RangeIntType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'type'           => 'range' . ucfirst($this->type),
             'attributeId'    => $id,
+            'classificationAttributeId'           => $row['classification_attribute_id'] ?? null,
             'required'       => !empty($row['is_required']),
             'label'          => $row[$this->prepareKey('name', $row)],
             'view'           => "views/fields/range-{$this->type}",
@@ -60,6 +61,7 @@ class RangeIntType extends AbstractFieldType
 
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
             'attributeId'          => $id,
+            'classificationAttributeId'                 => $row['classification_attribute_id'] ?? null,
             'type'                 => $this->type,
             "mainField"            => $name,
             'required'             => !empty($row['is_required']),
@@ -78,6 +80,7 @@ class RangeIntType extends AbstractFieldType
 
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
             'attributeId'          => $id,
+            'classificationAttributeId'                 => $row['classification_attribute_id'] ?? null,
             'type'                 => $this->type,
             "mainField"            => $name,
             'required'             => !empty($row['is_required']),
@@ -122,16 +125,17 @@ class RangeIntType extends AbstractFieldType
             $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'] = [
-                "type"                 => "link",
-                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
-                "view"                 => "views/fields/unit-link",
-                "measureId"            => $row['measure_id'],
-                'attributeId'          => $id,
-                "entity"               => 'Unit',
-                "unitIdField"          => true,
-                "mainField"            => $name,
-                'required'             => !empty($row['is_required']),
-                'layoutDetailDisabled' => true
+                "type"                      => "link",
+                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                "view"                      => "views/fields/unit-link",
+                "measureId"                 => $row['measure_id'],
+                'attributeId'               => $id,
+                'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                "entity"                    => 'Unit',
+                "unitIdField"               => true,
+                "mainField"                 => $name,
+                'required'                  => !empty($row['is_required']),
+                'layoutDetailDisabled'      => true
             ];
         }
 

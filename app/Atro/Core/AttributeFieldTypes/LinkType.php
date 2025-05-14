@@ -54,14 +54,15 @@ class LinkType extends AbstractFieldType
 
         if (!empty($attributeData['entityType'])) {
             $entity->entityDefs['fields'][$name] = [
-                'attributeId' => $id,
-                'type'        => 'link',
-                'entity'      => $attributeData['entityType'],
-                'required'    => !empty($row['is_required']),
-                'label'       => $row[$this->prepareKey('name', $row)],
-                'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-                'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-                'fullWidth'   => !empty($attributeData['fullWidth']),
+                'attributeId'               => $id,
+                'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'type'                      => 'link',
+                'entity'                    => $attributeData['entityType'],
+                'required'                  => !empty($row['is_required']),
+                'label'                     => $row[$this->prepareKey('name', $row)],
+                'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+                'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+                'fullWidth'                 => !empty($attributeData['fullWidth']),
             ];
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));

@@ -34,16 +34,17 @@ class ExtensibleEnumType extends AbstractFieldType
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId'          => $row['id'],
-            'type'                 => 'extensibleEnum',
-            'required'             => !empty($row['is_required']),
-            'label'                => $row[$this->prepareKey('name', $row)],
-            'prohibitedEmptyValue' => !empty($row['prohibited_empty_value']),
-            'dropdown'             => !empty($row['dropdown']),
-            'extensibleEnumId'     => $row['extensible_enum_id'] ?? null,
-            'tooltip'              => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'          => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'            => !empty($attributeData['fullWidth']),
+            'attributeId'               => $row['id'],
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'type'                      => 'extensibleEnum',
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'prohibitedEmptyValue'      => !empty($row['prohibited_empty_value']),
+            'dropdown'                  => !empty($row['dropdown']),
+            'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         if (!empty($attributeData['dropdown'])) {

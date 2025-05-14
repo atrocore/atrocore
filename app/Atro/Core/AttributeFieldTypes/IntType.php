@@ -49,6 +49,7 @@ class IntType extends AbstractFieldType
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId' => $id,
+            'classificationAttributeId'        => $row['classification_attribute_id'] ?? null,
             'type'        => $this->type,
             'required'    => !empty($row['is_required']),
             'notNull'     => !empty($row['not_null']),
@@ -101,16 +102,17 @@ class IntType extends AbstractFieldType
             $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
-                "type"                 => "link",
-                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
-                "view"                 => "views/fields/unit-link",
-                "measureId"            => $row['measure_id'],
-                'attributeId'          => $id,
-                "entity"               => 'Unit',
-                "unitIdField"          => true,
-                "mainField"            => $name,
-                'required'             => !empty($row['is_required']),
-                'layoutDetailDisabled' => true
+                "type"                      => "link",
+                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                "view"                      => "views/fields/unit-link",
+                "measureId"                 => $row['measure_id'],
+                'attributeId'               => $id,
+                'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                "entity"                    => 'Unit',
+                "unitIdField"               => true,
+                "mainField"                 => $name,
+                'required'                  => !empty($row['is_required']),
+                'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }

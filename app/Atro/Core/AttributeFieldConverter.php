@@ -138,7 +138,7 @@ class AttributeFieldConverter
             foreach ($res as $k => $attribute) {
                 foreach ($classificationAttrs as $classificationAttribute) {
                     if ($attribute['id'] === $classificationAttribute['attribute_id']) {
-                        $res[$k]['is_classification_attribute'] = true;
+                        $res[$k]['classification_attribute_id'] = $classificationAttribute['id'];
                         $res[$k]['is_required'] = $classificationAttribute['is_required'];
 
                         $attributeData = @json_decode($attribute['data'] ?? '', true);

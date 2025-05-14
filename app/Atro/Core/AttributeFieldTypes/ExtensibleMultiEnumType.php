@@ -62,14 +62,15 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         }
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId'      => $row['id'],
-            'type'             => 'extensibleMultiEnum',
-            'required'         => !empty($row['is_required']),
-            'label'            => $row[$this->prepareKey('name', $row)],
-            'dropdown'         => !empty($row['dropdown']),
-            'extensibleEnumId' => $row['extensible_enum_id'] ?? null,
-            'tooltip'          => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'      => $row[$this->prepareKey('tooltip', $row)]
+            'attributeId'               => $row['id'],
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'type'                      => 'extensibleMultiEnum',
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'dropdown'                  => !empty($row['dropdown']),
+            'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)]
         ];
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
