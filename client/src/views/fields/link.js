@@ -880,6 +880,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
                         view.linkMultiple = this.chooseMultipleOnSearch();
 
+                        view.getSelectAllByDefault = () => {
+                            let subQuery = rule.data?.subQuery || [];
+                            return subQuery.length > 0;
+                        }
+
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
                             if (!rule.data) {
