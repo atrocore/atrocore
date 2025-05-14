@@ -128,9 +128,11 @@ class AttributeFieldConverter
                 ->leftJoin('c', 'classification_attribute', 'ca', 'c.id=ca.classification_id AND ca.deleted=:false')
                 ->where("r.{$tableName}_id=:id")
                 ->andWhere('r.deleted=:false')
+                ->andWhere('ca.attribute_id IN (:attributesIds)')
                 ->orderBy('ca.is_required', 'ASC')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setParameter('id', $entity->get('id'))
+                ->setParameter('attributesIds', array_column($res, 'id'), $this->conn::PARAM_STR_ARRAY)
                 ->fetchAllAssociative();
 
             foreach ($res as $k => $attribute) {
