@@ -972,7 +972,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.notify(this.translate('Loading'))
             collection.fetch().success(() => {
-                this.createView('dialog', 'views/modals/compare', {
+                let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                this.createView('dialog', view, {
                     collection: collection,
                     scope: this.entityType,
                     merging: merging
@@ -3133,7 +3134,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.getModelFactory().create(data.scope, function (model) {
                 model.id = data.id;
                 this.listenToOnce(model, 'sync', function () {
-                    this.createView('recordCompareInstance', 'views/modals/compare', {
+                    let view = this.getMetadata().get(['clientDefs', data.scope, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('recordCompareInstance', view, {
                         model: model,
                         scope: data.scope,
                         instanceComparison: true,
