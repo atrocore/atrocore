@@ -419,6 +419,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (!this.inheritanceActionDisabled) {
                 this.listenTo(this, 'after:render', () => {
                     this.initStatusContainer();
+                    this.initClassificationFieldMarker();
                     this.initInheritedFieldMarker();
                 }, this);
             }
@@ -467,7 +468,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getInheritedIconHtml: function () {
-            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal info-field-icon inherited" title="${this.translate('inherited')}"></i>`;
+            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal info-field-icon inherited" title="${this.translate('inheritedFromParent')}"></i>`;
         },
 
         getNonInheritedIconEl: function () {
@@ -475,7 +476,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getNonInheritedIconHtml: function () {
-            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal-break info-field-icon not-inherited" title="${this.translate('notInherited')}"></i>`;
+            return `<i data-name="${this.name}" class="ph ph-link-simple-horizontal-break info-field-icon not-inherited" title="${this.translate('notInheritedFromParent')}"></i>`;
         },
 
         getInheritActionEl: function () {
@@ -526,6 +527,23 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const nonInheritedFields = this.getNonInheritedFields();
 
             return !nonInheritedFields.includes(this.name);
+        },
+
+        initClassificationFieldMarker: function () {
+            if (!this.model.get('attributesDefs')){
+                return;
+            }
+
+            const name = this.originalName || this.name;
+            const defs = this.model.get('attributesDefs')[name] || null;
+
+            if (!defs || !defs.classificationAttributeId) {
+                return;
+            }
+
+            if (this.getCellElement().find(`.info-field-icon.classification-attribute[data-name="${this.name}"]`).length === 0) {
+                this.getStatusIconsContainer().append(`<i data-name="${this.name}" class="ph ph-tree-structure info-field-icon classification-attribute" title="${this.translate('classificationAttribute', 'labels', 'ClassificationAttribute')}"></i>`);
+            }
         },
 
         initInheritedFieldMarker: function () {

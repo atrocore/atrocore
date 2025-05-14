@@ -146,6 +146,8 @@
     "deleteAll": "Alles löschen",
     "inherited": "Vererbt",
     "notInherited": "Nicht vererbt",
+    "inheritedFromParent": "Vererbt von Parent",
+    "notInheritedFromParent": "Von Parent nicht vererbt",
     "resetAllToDefault": "Alles auf Standardwerte zurücksetzen",
     "pleaseReloadPage": "Bitte <a href=\"javascript:\" onClick=\"window.location.reload();\">laden</a> Sie die Seite neu, um die Metadaten zu aktualisieren.",
     "pleaseRebuildDatabase": "Bitte <a href=\"javascript:\" data-action=\"rebuild-notification\">aktualisieren Sie die Datenbankstruktur</a> über die Administration. Das Datenbankschema ist inkonsistent.",
