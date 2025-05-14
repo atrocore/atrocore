@@ -120,6 +120,43 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
+        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
+            $classificationAttrs = $this->conn->createQueryBuilder()
+                ->select('ca.*')
+                ->from("{$tableName}_classification", 'r')
+                ->innerJoin('r', 'classification', 'c', 'c.id=r.classification_id AND c.deleted=:false')
+                ->leftJoin('c', 'classification_attribute', 'ca', 'c.id=ca.classification_id AND ca.deleted=:false')
+                ->where("r.{$tableName}_id=:id")
+                ->andWhere('r.deleted=:false')
+                ->orderBy('ca.is_required', 'ASC')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('id', $entity->get('id'))
+                ->fetchAllAssociative();
+
+            foreach ($res as $k => $attribute) {
+                foreach ($classificationAttrs as $classificationAttribute) {
+                    if ($attribute['id'] === $classificationAttribute['attribute_id']) {
+                        $res[$k]['is_classification_attribute'] = true;
+                        $res[$k]['is_required'] = $classificationAttribute['is_required'];
+
+                        $attributeData = @json_decode($attribute['data'] ?? '', true);
+                        if (empty($attributeData)) {
+                            $attributeData = [];
+                        }
+
+                        $classificationAttributeData = @json_decode($classificationAttribute['data'] ?? '', true);
+                        if (!empty($classificationAttributeData['field'])) {
+                            foreach ($classificationAttributeData['field'] as $param => $paramValue) {
+                                $attributeData['field'][$param] = $paramValue;
+                            }
+                        }
+
+                        $res[$k]['data'] = json_encode($attributeData);
+                    }
+                }
+            }
+        }
+
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
             $attributesIds = $entity->_originalInput->__attributes ?? [];
