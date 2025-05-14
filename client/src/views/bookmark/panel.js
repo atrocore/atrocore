@@ -109,8 +109,8 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 this.groups.forEach((group, key) => {
                     let rowActionViewKey = 'rowActionView' + group.key;
-                    this.getModelFactory().create('Bookmark', model => {
-                        model.set(group.collection[0]);
+                    this.getModelFactory().create(null, model => {
+                        model.set(group);
                         this.createView(rowActionViewKey, this.rowActionsViewEntity, {
                             el: `${this.options.el} .group[data-name="${group.key}"] .action`,
                             key: group.key,
