@@ -72,7 +72,6 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                     }
 
                 } else {
-                    debugger
                     items = [this.prepareMediaFromModel(this.model)];
                 }
 
