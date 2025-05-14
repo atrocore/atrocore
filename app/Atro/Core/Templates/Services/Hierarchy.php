@@ -551,8 +551,10 @@ class Hierarchy extends Record
         }
 
         $fetchedEntity = $this->getRepository()->get($id);
-        $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
-        $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        if (!empty($fetchedEntity)) {
+            $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        }
 
         $result = parent::updateEntity($id, $data);
 

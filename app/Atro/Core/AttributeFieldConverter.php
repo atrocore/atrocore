@@ -122,21 +122,31 @@ class AttributeFieldConverter
 
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
+            $attributesIds = $entity->_originalInput->__attributes ?? [];
             foreach ($entity->_originalInput as $field => $value) {
                 $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityType()}.fields.{$field}.attributeId");
                 if ($attributeId) {
-                    if (in_array($attributeId, array_column($res, 'id'))) {
-                        continue;
-                    }
-                    $attr = $this->conn->createQueryBuilder()
-                        ->select('*')
-                        ->from($this->conn->quoteIdentifier('attribute'))
-                        ->where('id=:id')
-                        ->setParameter('id', $attributeId)
-                        ->fetchAssociative();
-                    if (!empty($attr)) {
-                        $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
-                    }
+                    $attributesIds[] = $attributeId;
+                }
+            }
+
+            $preparedAttributesIds = [];
+            foreach ($attributesIds as $attributeId) {
+                if (!in_array($attributeId, array_column($res, 'id'))) {
+                    $preparedAttributesIds[] = $attributeId;
+                }
+            }
+
+            if (!empty($preparedAttributesIds)) {
+                $attrs = $this->conn->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->conn->quoteIdentifier('attribute'))
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', $preparedAttributesIds, $this->conn::PARAM_STR_ARRAY)
+                    ->fetchAllAssociative();
+
+                foreach ($attrs as $attr) {
+                    $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
                 }
             }
         }
