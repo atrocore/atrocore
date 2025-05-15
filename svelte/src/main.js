@@ -35,6 +35,7 @@ import Gallery from "./components/record/Gallery.svelte";
 import FilterSearchBar from "./components/record/search/FilterSearchBar.svelte";
 import LocaleSwitcher from "./components/Navbar/LocaleSwitcher.svelte";
 import ContentFilter from "./components/record/ContentFilter.svelte";
+import AnchorNavigation from "./components/record/header/navigation/AnchorNavigation.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -65,5 +66,6 @@ export {
     FilterSearchBar,
     Gallery,
     LocaleSwitcher,
-    ContentFilter
+    ContentFilter,
+    AnchorNavigation
 };

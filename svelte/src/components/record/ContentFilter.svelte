@@ -55,7 +55,7 @@
 
 </script>
 
-<div class="search-row" style="padding-bottom: 0">
+<div class="search-row" style="padding-bottom: 0;margin-left: 20px !important;">
     <div class="form-group">
         <div class="btn-group input-group filter-group">
             <button
@@ -71,17 +71,6 @@
                     <i class="ph ph-funnel"></i>
                 {/if}
             </button>
-            {#if selectedFilters.length > 0 }
-                <button type="button"
-                        class="btn btn-default reset"
-                        title={Language.translate('Reset Filter')}
-                        aria-expanded="false"
-                        on:click={unsetAll}
-                >
-                    <i class="ph ph-x"></i>
-                </button>
-            {/if}
-
             <div bind:this={dropdownDiv} class="dropdown" class:has-content={selectedFilters.length>0}>
                 <button
                         bind:this={dropdownButton}
@@ -108,6 +97,16 @@
                     </ul>
                 </div>
             </div>
+            {#if selectedFilters.length > 0 }
+                <button type="button"
+                        class="btn btn-default reset"
+                        title={Language.translate('Reset Filter')}
+                        aria-expanded="false"
+                        on:click={unsetAll}
+                >
+                    <i class="ph ph-x"></i>
+                </button>
+            {/if}
         </div>
     </div>
 </div>

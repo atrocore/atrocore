@@ -119,20 +119,19 @@ function createStore(): any {
 
 export function getSavedSearchStore(scope: string, uniqueKey: string | null, initial: Record<string, any> | null = null)  {
     let store;
-    uniqueKey = scope + '_' + (uniqueKey ?? 'default');
-    store = stores.get(uniqueKey);
+    const key = scope + '_' + (uniqueKey ?? 'default');
+    store = stores.get(key);
     if(!store) {
         store = createStore();
-        store.key = uniqueKey;
-        stores.set(uniqueKey, store);
+        store.key = key;
+        stores.set(key, store);
 
         if (initial) {
             store.savedSearchItems.set(initial.items ?? []);
-            store.selectedSavedItemIds.set(initial.selected ?? []);
+            store.selectedSavedItemIds.set(initial.selectedItems ?? []);
         }
 
         store.fetchSavedSearch(scope);
     }
     return store;
 }
-

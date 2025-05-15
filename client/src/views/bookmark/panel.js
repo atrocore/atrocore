@@ -109,8 +109,8 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 this.groups.forEach((group, key) => {
                     let rowActionViewKey = 'rowActionView' + group.key;
-                    this.getModelFactory().create('Bookmark', model => {
-                        model.set(group.collection[0]);
+                    this.getModelFactory().create(null, model => {
+                        model.set(group);
                         this.createView(rowActionViewKey, this.rowActionsViewEntity, {
                             el: `${this.options.el} .group[data-name="${group.key}"] .action`,
                             key: group.key,
@@ -163,7 +163,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                                 this.groups[key].collection = this.groups[key].collection.filter(item => item.id !== bookmarkId)
                                 this.groups[key].rowList = this.groups[key].rowList.filter(id => id !== bookmarkId)
                                 view.$el.find('[data-id="' + bookmark.get('entityId') + '"]').remove()
-                                if (!this.groups[key].length) {
+                                if (!this.groups[key].collection.length) {
                                     $(`${this.options.el} .group[data-name="${group.key}"]`).remove()
                                 }
                             })
@@ -220,7 +220,8 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
                 this.notify(this.translate('Loading'))
                 collection.fetch().success(() => {
-                    this.createView('dialog', 'views/modals/compare', {
+                    let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
                         collection: collection,
                         scope: group.key,
                         mode: "details",

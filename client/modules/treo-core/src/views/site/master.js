@@ -66,6 +66,11 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             const initializeTooltips = (node = document) => {
                 node.querySelectorAll('[title]').forEach(el => {
+                    // do not set tooltips for the summernote wysiwyg editor
+                    if (el.closest('.note-toolbar')) {
+                        return;
+                    }
+
                     if (!el.getAttribute('data-original-title')) {
                         el.setAttribute('data-original-title', el.getAttribute('title'));
                     }

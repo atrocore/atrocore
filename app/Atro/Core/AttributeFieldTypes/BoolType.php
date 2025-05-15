@@ -58,4 +58,11 @@ class BoolType extends AbstractFieldType
 
         $qb->addSelect("{$alias}.bool_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        $item['attribute'] = 'boolValue';
+
+        return $item;
+    }
 }

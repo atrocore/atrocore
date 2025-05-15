@@ -41,7 +41,10 @@
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
-    let savedSearchStore = getSavedSearchStore(scope, uniqueKey);
+    let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
+        items: searchManager.savedSearchList || [],
+        selectedItems: searchManager.getSavedFilters().map(v => v.id)
+    });
 
     generalFilterStore.advancedFilterChecked.set(searchManager.isQueryBuilderApplied());
 
@@ -176,7 +179,9 @@
                 {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'array_none_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']}
+                {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_attribute_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']}
             ],
             rules: rules,
             filters: filters,
@@ -315,7 +320,7 @@
         let parts = field.split('_')
         if (parts.length >= 2 && parts[0] === 'attr') {
             id = parts[1];
-            const endings = ["From", "To", "UnitId"];
+            const endings = ["From", "To", "UnitId", "Id"];
             for (const ending of endings) {
                 if (id.endsWith(ending)) {
                     id = id.slice(0, -ending.length);
@@ -333,7 +338,7 @@
         let promiseList: Promise[] = [];
 
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, fieldDefs]) => {
-            if (fieldDefs.filterDisabled) {
+            if (fieldDefs.filterDisabled || fieldDefs.virtualField) {
                 return;
             }
 
@@ -479,6 +484,8 @@
                             filter.label = label;
                             filter.optgroup = Language.translate('Attributes');
                             filter.order = order;
+                            filter.operators.unshift('is_attribute_not_linked');
+                            filter.operators.unshift('is_attribute_linked');
                             if (!filters.find(f => f.id === name)) {
                                 filters.push(filter);
                                 filterChanged = true;
@@ -500,6 +507,9 @@
             languages = ['main', ...languages];
             let i = 0;
             for (const language of languages) {
+                if(language === Config.get('mainLanguage')) {
+                    continue;
+                }
                 let currentLabel = label;
                 let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
                 if (language !== 'main') {
@@ -535,7 +545,8 @@
     }
 
     function hasAttribute() {
-        return Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim';
+        return (Acl.check('Attribute', 'read') && scope === 'Product' && Metadata.get(['scopes', 'Product', 'module']) === 'Pim')
+            || Metadata.get(['scopes', scope, 'hasAttribute']);
     }
 
     function addAttributeFilter(callback) {
@@ -547,7 +558,11 @@
             multiple: false,
             createButton: false,
             massRelateEnabled: false,
-            allowSelectAllResult: false
+            allowSelectAllResult: false,
+            boolFilterList: ['onlyForEntity'],
+            boolFilterData: {
+                onlyForEntity: scope
+            }
         }, dialog => {
             dialog.render();
             Notifier.notify(false);
@@ -689,14 +704,13 @@
     }
 
     function editSaveSearchQuery(item) {
+        oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
+        searchManager.update({queryBuilder: item.data});
         prepareFilters(() => {
             const $queryBuilder = window.$(queryBuilderElement)
             try {
-                oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
                 $queryBuilder.queryBuilder('destroy');
-                searchManager.update({
-                    queryBuilder: item.data
-                })
+
                 initQueryBuilderFilter();
                 editingSavedSearch = item;
             } catch (e) {
@@ -817,7 +831,8 @@
         }
         window.queryBuilderFilters[uniqueKey] = filters;
 
-        if(!window.$.fn.queryBuilder.prototype.overridden) {
+        // we override only if it is a new page
+        if(!window.$.fn.queryBuilder.prototype.overridden || uniqueKey === 'default') {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });

@@ -12,6 +12,7 @@
 namespace Atro\Core;
 
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
@@ -28,6 +29,7 @@ class AttributeFieldConverter
     protected Config $config;
     protected Connection $conn;
     private Container $container;
+    private array $attributes = [];
 
     public function __construct(Container $container)
     {
@@ -40,6 +42,56 @@ class AttributeFieldConverter
     public static function prepareFieldName(string $id): string
     {
         return $id;
+    }
+
+    public static function getAttributeIdFromFieldName(string $name): string
+    {
+        $id = $name;
+
+        if (str_ends_with($id, 'UnitId')) {
+            $id = substr($id, 0, -6);
+        } elseif (str_ends_with($id, 'From')) {
+            $id = substr($id, 0, -4);
+        } elseif (str_ends_with($id, 'Id') || str_ends_with($id, 'To')) {
+            $id = substr($id, 0, -2);
+        }
+
+        return $id;
+    }
+
+    public function getWherePart(IEntity $entity, array &$item, array &$result): void
+    {
+        $id = self::getAttributeIdFromFieldName($item['attribute']);
+
+        if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
+            $this->attributes = [];
+            $attributeIds = [];
+            foreach ($result['attributesIds'] as $attributeId) {
+                $attributeIds[] = self::getAttributeIdFromFieldName($attributeId);
+            }
+
+            $attributes = $this->conn->createQueryBuilder()
+                ->select('*')
+                ->from($this->conn->quoteIdentifier('attribute'))
+                ->where('id IN (:ids)')
+                ->andWhere('deleted = :false')
+                ->setParameter('ids', array_unique($attributeIds), Connection::PARAM_INT_ARRAY)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+
+            foreach ($attributes as $attribute) {
+                $this->attributes[$attribute['id']] = $attribute;
+            }
+
+            if (empty($this->attributes[$id])) {
+                throw new BadRequest('The attribute "' . $id . '" does not exist.');
+            }
+        }
+
+        $attribute = $this->attributes[$id];
+
+        $this->getFieldType($attribute['type'])->getWherePart($entity, $attribute, $item);
+
     }
 
     public function putAttributesToSelect(QueryBuilder $qb, IEntity $entity, array $params, Mapper $mapper): void

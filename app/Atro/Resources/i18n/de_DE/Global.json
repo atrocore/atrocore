@@ -1054,7 +1054,9 @@
       "is_linked": "ist nicht leer",
       "is_not_linked": "ist leer",
       "query_in": "abfrage",
-      "query_linked_with": "abfrage"
+      "query_linked_with": "abfrage",
+      "is_attribute_linked": "ist verknüpft",
+      "is_attribute_not_linked": "ist nicht verknüpft"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

@@ -130,4 +130,35 @@ class IntType extends AbstractFieldType
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
         $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        if(str_ends_with($item['attribute'], 'UnitId')) {
+            if($item['type'] === 'isNull') {
+                $item = [
+                    'type'  => 'or',
+                    'value' => [
+                        [
+                            'type'      => 'equals',
+                            'attribute' => 'referenceValue',
+                            'value'     => ''
+                        ],
+                        [
+                            'type'      => 'isNull',
+                            'attribute' => 'referenceValue'
+                        ],
+                    ]
+                ];
+            }else{
+                if(!empty($item['subQuery'])) {
+                    $this->convertSubquery($entity, 'Unit', $item);
+                }
+                $item['attribute'] = 'referenceValue';
+            }
+        }else{
+            $item['attribute'] = "{$this->type}Value";
+        }
+
+        return $item;
+    }
 }

@@ -57,4 +57,69 @@ class ArrayType extends AbstractFieldType
 
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        if ($item['type'] === 'arrayIsEmpty') {
+            $item = [
+                'type'  => 'or',
+                'value' => [
+                    [
+                        'type'      => 'isNull',
+                        'attribute' => 'jsonValue'
+                    ],
+                    [
+                        'type'      => 'equals',
+                        'attribute' => 'jsonValue',
+                        'value'     => ''
+                    ],
+                    [
+                        'type'      => 'equals',
+                        'attribute' => 'jsonValue',
+                        'value'     => '[]'
+                    ]
+                ]
+            ];
+        } elseif ($item['type'] === 'arrayIsNotEmpty') {
+            $item = [
+                'type'  => 'or',
+                'value' => [
+                    [
+                        'type'      => 'isNotNull',
+                        'attribute' => 'jsonValue'
+                    ],
+                    [
+                        'type'      => 'notEquals',
+                        'attribute' => 'jsonValue',
+                        'value'     => ''
+                    ],
+                    [
+                        'type'      => 'notEquals',
+                        'attribute' => 'jsonValue',
+                        'value'     => '[]'
+                    ]
+                ]
+            ];
+        } else {
+            $where = [
+                'type'  => 'or',
+                'value' => []
+            ];
+
+            $values = (empty($item['value'])) ? [md5('no-such-value-' . time())] : $item['value'];
+            foreach ($values as $value) {
+                // escape slashes to search in escaped json
+                $value = str_replace('\\', '\\\\\\\\', $value);
+                $value = str_replace("/", "\\\\/", $value);
+                $where['value'][] = [
+                    'type'      => 'like',
+                    'attribute' => 'jsonValue',
+                    'value'     => "%\"$value\"%"
+                ];
+            }
+            $item = $where;
+        }
+
+        return $item;
+    }
 }

@@ -134,18 +134,23 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             const buttons = [];
             const selectImageButton = context => {
                 return $.summernote.ui.button({
-                    contents: '<i class="glyphicon glyphicon-picture"></i>',
+                    contents: '<i class="ph ph-file-image"></i>',
                     tooltip: this.translate('Select Image'),
                     click: () => {
                         this.notify('Loading...');
                         this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select') || 'views/modals/select-records', {
                             scope: 'File',
                             filters: {
-                                fileType: {
-                                    type: 'in',
-                                    field: 'typeId',
-                                    attribute: 'typeId',
-                                    value: ['a_image', 'a_favicon']
+                                queryBuilder: {
+                                    condition: 'AND',
+                                    rules: [
+                                        {
+                                            id: 'typeId',
+                                            field: 'typId',
+                                            operator: 'in',
+                                            value: ['a_image', 'a_favicon']
+                                        }
+                                    ]
                                 }
                             },
                         }, view => {
@@ -176,7 +181,7 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
 
             const uploadImageButton = context => {
                 return $.summernote.ui.button({
-                    contents: '<i class="glyphicon glyphicon-open"></i>',
+                    contents: '<i class="ph ph-download"></i>',
                     tooltip: this.translate('Upload Image'),
                     click: () => {
                         this.notify('Loading...')
@@ -459,14 +464,37 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                     onBlur: function () {
                         this.trigger('change')
                     }.bind(this),
-                    onPaste: function(e) {
+                    onPaste: function (e) {
                         let bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
                         e.preventDefault();
                         document.execCommand('insertText', false, bufferText);
                     }.bind(this)
                 },
                 toolbar: this.toolbar,
-                buttons: this.buttons
+                buttons: this.buttons,
+                icons: {
+                    magic: 'ph ph-magic-wand',
+                    caret: 'ph ph-caret-down caret-icon',
+                    bold: 'ph ph-text-b',
+                    italic: 'ph ph-text-italic',
+                    underline: 'ph ph-text-underline',
+                    eraser: 'ph ph-eraser',
+                    font: 'ph ph-text-aa',
+                    unorderedlist: 'ph ph-list-dashes',
+                    orderedlist: 'ph ph-list-numbers',
+                    alignLeft: 'ph ph-text-align-left',
+                    alignCenter: 'ph ph-text-align-center',
+                    alignRight: 'ph ph-text-align-right',
+                    alignJustify: 'ph ph-text-align-justify',
+                    indent: 'ph ph-text-indent',
+                    outdent: 'ph ph-text-outdent',
+                    textHeight: 'ph ph-text-t',
+                    table: 'ph ph-grid-nine',
+                    link: 'ph ph-link',
+                    minus: 'ph ph-minus',
+                    code: 'ph ph-code',
+                    arrowsAlt: 'ph ph-arrows-out'
+                },
             };
 
             if (this.height) {

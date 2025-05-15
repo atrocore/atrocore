@@ -135,11 +135,16 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                         this.createView('selectFileDialog', this.getMetadata().get('clientDefs.File.modalViews.select') || 'views/modals/select-records', {
                             scope: 'File',
                             filters: {
-                                fileType: {
-                                    type: 'in',
-                                    field: 'typeId',
-                                    attribute: 'typeId',
-                                    value: ['a_image', 'a_favicon']
+                                queryBuilder: {
+                                    condition: 'AND',
+                                    rules: [
+                                        {
+                                            id: 'typeId',
+                                            field: 'typId',
+                                            operator: 'in',
+                                            value: ['a_image', 'a_favicon']
+                                        }
+                                    ]
                                 }
                             },
                         }, view => {

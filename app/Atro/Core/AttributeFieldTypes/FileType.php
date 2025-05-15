@@ -77,4 +77,15 @@ class FileType extends AbstractFieldType
         $qb->addSelect("{$fileAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
         $qb->addSelect("{$fileAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
     }
+
+    protected function convertWhere(IEntity $entity, array $attribute, array $item): array
+    {
+        if(!empty($item['subQuery'])) {
+            $this->convertSubquery($entity, 'File', $item);
+        }
+
+        $item['attribute'] = 'referenceValue';
+
+        return $item;
+    }
 }

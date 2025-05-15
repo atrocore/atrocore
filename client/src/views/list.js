@@ -187,8 +187,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
 
                         if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
                             this.setupTourButton();
-                        } else if (node.classList.contains('search-container') && this.searchPanel) {
-                            this.setupSearchPanel();
                         }
                     })
                 });
@@ -322,10 +320,6 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 this.getStorage().set('state', modeKey, mode);
             }
 
-            if (this.searchView && this.getView('search')) {
-                this.getView('search').setViewMode(mode);
-            }
-
             var methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
             if (this[methodName]) {
                 this[methodName]();
@@ -436,7 +430,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 scope: this.scope,
                 skipBuildRows: true,
                 searchManager: this.searchManager,
-                showSearchPanel: this.searchPanel,
+                showSearch: !!this.searchPanel,
                 showFilter: this.shouldShowFilter(),
             };
             this.optionsToPass.forEach(function (option) {
@@ -475,7 +469,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
-                        if(this.searchManager){
+                        if (this.searchManager) {
                             this.collection.where = this.searchManager.getWhere();
                         }
                         Espo.Ui.notify(this.translate('loading', 'messages'));

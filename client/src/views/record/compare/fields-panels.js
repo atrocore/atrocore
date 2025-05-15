@@ -53,7 +53,8 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 fieldList: this.fieldList,
                 columns: this.columns,
                 merging: this.merging,
-                columnLength: this.columns.length
+                columnLength: this.columns.length,
+                hideCheckAll: this.options.hideCheckAll
             }
         },
 

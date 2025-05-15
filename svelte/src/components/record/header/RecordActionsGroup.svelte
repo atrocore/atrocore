@@ -161,6 +161,9 @@
                     <Preloader heightPx={12}/>
                 </button>
             {/if}
+            {#if recordButtons?.headerButtons && headerButtons.find(item => item.name === 'filtering') }
+                <ContentFilter scope="{scope}" onExecute={executeAction}/>
+            {/if}
         {:else if mode === 'edit'}
             {#each uiHandlerActions as action}
                 <ActionButton params={action} on:execute={executeAction} className="additional-button"/>
@@ -174,7 +177,7 @@
                 <div class="header-items">
                     {#each headerButtons as button}
                         {#if button.name === 'filtering'}
-                            <ContentFilter scope="{scope}" onExecute={executeAction}/>
+                            <!--Skip-->
                         {:else if ['bookmark', 'unbookmark'].includes(button.action)}
                             {#if id}
                                 <BookmarkButton entity={scope} {id} bookmarkId={bookmarkId} loading={loadingActions}/>
