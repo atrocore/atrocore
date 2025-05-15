@@ -227,7 +227,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         massRelateEnabled: true,
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes
+                        forceSelectAllAttributes: this.forceSelectAllAttributes,
+                        selectAllByDefault: this.getSelectAllByDefault(),
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);
@@ -701,6 +702,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
         },
 
+        getSelectAllByDefault: function() {
+            return true;
+        },
+
         createFilterView(rule, inputName, type, delay = true) {
             const scope = this.model.urlRoot;
             this.filterValue = null;
@@ -733,7 +738,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         foreignScope: foreignScope,
                         hideSearchType: true
                     }, view => {
-                        view.render();
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
                         view.getSelectFilters  =  () => {
@@ -760,6 +764,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                             return {bool, queryBuilder, queryBuilderApplied: true}
                         }
+
                         view.getAutocompleteAdditionalWhereConditions = () => {
                             let boolData = this.getBoolFilterData();
                             // add boolFilter data
@@ -773,6 +778,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
 
                             return [];
+                        }
+
+                        view.getSelectAllByDefault = () => {
+                            let subQuery = rule.data?.subQuery || [];
+                            return subQuery.length > 0;
                         }
 
                         for (const key in this.boolFilterData) {
@@ -812,6 +822,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             rule.data['nameHash'] = view.nameHash ?? model.get('valueNameHash');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
+                        view.render();
                         this.renderAfterEl(view, `#${rule.id} .field-container`);
                     });
 
