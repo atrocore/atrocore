@@ -40,6 +40,7 @@ class BoolType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'bool',
             'required'                  => !empty($row['is_required']),
             'notNull'                   => !empty($row['not_null']),

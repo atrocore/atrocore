@@ -40,6 +40,7 @@ class DateType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],

@@ -40,6 +40,7 @@ class ArrayType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'array',
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],

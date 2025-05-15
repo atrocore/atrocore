@@ -56,6 +56,7 @@ class LinkType extends AbstractFieldType
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'channelId'                 => $row['channel_id'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $attributeData['entityType'],
                 'required'                  => !empty($row['is_required']),

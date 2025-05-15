@@ -36,6 +36,7 @@ class ExtensibleEnumType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'extensibleEnum',
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],

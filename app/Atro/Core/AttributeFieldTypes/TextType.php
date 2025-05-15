@@ -51,15 +51,16 @@ class TextType extends AbstractFieldType
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $id,
-            'classificationAttributeId'        => $row['classification_attribute_id'] ?? null,
-            'type'        => $this->type,
-            'required'    => !empty($row['is_required']),
-            'notNull'     => !empty($row['not_null']),
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'   => $this->isFullWidth ?: !empty($attributeData['fullWidth']),
+            'attributeId'               => $id,
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
+            'type'                      => $this->type,
+            'required'                  => !empty($row['is_required']),
+            'notNull'                   => !empty($row['not_null']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'                 => $this->isFullWidth ?: !empty($attributeData['fullWidth']),
         ];
 
         if ($this->type === 'varchar' && !empty($row['pattern'])) {
@@ -134,6 +135,7 @@ class TextType extends AbstractFieldType
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'channelId'                 => $row['channel_id'] ?? null,
                 "entity"                    => 'Unit',
                 "unitIdField"               => true,
                 "mainField"                 => $name,
