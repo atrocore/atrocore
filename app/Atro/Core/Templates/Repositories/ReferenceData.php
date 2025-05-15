@@ -283,7 +283,7 @@ class ReferenceData extends Repository implements Injectable
                 $field = str_replace('*', '', $k);
                 $search = str_replace('%', '', $v);
                 foreach ($items as $item) {
-                    if(empty($item[$field])){
+                    if(!isset($item[$field])){
                         continue;
                     }
                     if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
