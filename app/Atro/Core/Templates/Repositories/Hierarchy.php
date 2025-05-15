@@ -144,19 +144,19 @@ class Hierarchy extends Base
         return (int)$position;
     }
 
-    public function getInheritableFields(): array
+    public function getInheritableFields(array $fieldsDefs = null): array
     {
         $unInheritableFields = $this->getUnInheritableFields();
 
         $fields = [];
 
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
+        foreach ($fieldsDefs ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldData) {
             if (in_array($field, $fields) || in_array($field, $unInheritableFields)) {
-                continue 1;
+                continue;
             }
 
             if (!empty($fieldData['notStorable'])) {
-                continue 1;
+                continue;
             }
 
             $fields[] = $field;

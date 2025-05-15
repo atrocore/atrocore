@@ -43,6 +43,15 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
 
             let type = this.model.get('type');
 
+            if (this.name === 'default') {
+                this.$el.parent().hide();
+                (this.getMetadata().get(`fields.${type}.params`) || []).forEach(item => {
+                    if (item.name === 'default' || item.name === 'defaultDate') {
+                        this.$el.parent().show();
+                    }
+                })
+            }
+
             if (type) {
                 const types = {
                     link: "views/admin/field-manager/fields/link-default",

@@ -592,7 +592,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         deleteLinkSubQuery: function () {
             this.deleteLinkSubQueryHtml();
-            this.searchData.subQuery = [];
+            if (this.searchData) {
+                this.searchData.subQuery = [];
+            }
             this.trigger('clear-subquery');
         },
 

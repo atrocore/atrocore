@@ -120,15 +120,11 @@ class EntityField extends ReferenceData
         $entities = [];
 
         $entityName = null;
-        $skipLingual = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['entityId='])) {
                 $entityName = $item['entityId='];
             } elseif (!empty($item['entityId'])) {
                 $entityName = $item['entityId'];
-            }
-            if (array_key_exists('multilangField', $item) && $item['multilangField'] === null) {
-                $skipLingual = true;
             }
         }
 
@@ -167,7 +163,7 @@ class EntityField extends ReferenceData
                     continue;
                 }
 
-                if ($skipLingual && !empty($fieldDefs['multilangField'])) {
+                if (!empty($fieldDefs['multilangField'])) {
                     continue;
                 }
 
@@ -187,6 +183,10 @@ class EntityField extends ReferenceData
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
+
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.multilangField")) {
+            throw new Forbidden();
+        }
 
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
             throw new Forbidden();

@@ -38,13 +38,14 @@ class ArrayType extends AbstractFieldType
         $entity->set($name, is_array($value) ? $value : null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $row['id'],
-            'type'        => 'array',
-            'required'    => !empty($row['is_required']),
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'   => !empty($attributeData['fullWidth']),
+            'attributeId'               => $row['id'],
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'type'                      => 'array',
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

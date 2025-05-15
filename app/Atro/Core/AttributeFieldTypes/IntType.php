@@ -49,6 +49,7 @@ class IntType extends AbstractFieldType
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId' => $id,
+            'classificationAttributeId'        => $row['classification_attribute_id'] ?? null,
             'type'        => $this->type,
             'required'    => !empty($row['is_required']),
             'notNull'     => !empty($row['not_null']),
@@ -81,6 +82,8 @@ class IntType extends AbstractFieldType
 
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+            $entity->entityDefs['fields'][$name]['mainField'] = $name;
+            $entity->entityDefs['fields'][$name]['unitField'] = true;
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
             $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
             $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
@@ -99,16 +102,17 @@ class IntType extends AbstractFieldType
             $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
-                "type"                 => "link",
-                'label'                => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
-                "view"                 => "views/fields/unit-link",
-                "measureId"            => $row['measure_id'],
-                'attributeId'          => $id,
-                "entity"               => 'Unit',
-                "unitIdField"          => true,
-                "mainField"            => $name,
-                'required'             => !empty($row['is_required']),
-                'layoutDetailDisabled' => true
+                "type"                      => "link",
+                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                "view"                      => "views/fields/unit-link",
+                "measureId"                 => $row['measure_id'],
+                'attributeId'               => $id,
+                'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                "entity"                    => 'Unit',
+                "unitIdField"               => true,
+                "mainField"                 => $name,
+                'required'                  => !empty($row['is_required']),
+                'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }

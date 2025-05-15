@@ -38,14 +38,15 @@ class BoolType extends AbstractFieldType
         }
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $row['id'],
-            'type'        => 'bool',
-            'required'    => !empty($row['is_required']),
-            'notNull'     => !empty($row['not_null']),
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'   => !empty($attributeData['fullWidth']),
+            'attributeId'               => $row['id'],
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'type'                      => 'bool',
+            'required'                  => !empty($row['is_required']),
+            'notNull'                   => !empty($row['not_null']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

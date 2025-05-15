@@ -11,10 +11,6 @@
       "default": false
     },
     {
-      "name": "default",
-      "type": "markdown"
-    },
-    {
       "name": "countBytesInsteadOfCharacters",
       "type": "bool"
     },

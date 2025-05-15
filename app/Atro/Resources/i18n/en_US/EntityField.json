@@ -15,7 +15,6 @@
     "pattern": "Regex pattern",
     "defaultUnit": "Default Unit",
     "default": "Default",
-    "setDefaultOnlyIfRequired": "Apply default value only if required",
     "tooltip": "Tooltip",
     "tooltipText": "Tooltip text",
     "tooltipLink": "Tooltip link",

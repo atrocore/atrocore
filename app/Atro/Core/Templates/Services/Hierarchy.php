@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotUnique;
-use Atro\Core\Templates\Repositories\Relation;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Utils\Util;
@@ -107,6 +106,8 @@ class Hierarchy extends Record
             throw new NotFound();
         }
 
+        $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+
         $parents = $entity->get('parents');
         if (empty($parents[0])) {
             return false;
@@ -114,8 +115,8 @@ class Hierarchy extends Record
 
         $inheritableFields = [];
         $inheritableLinks = [];
-        foreach ($this->getRepository()->getInheritableFields() as $field) {
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) === 'linkMultiple') {
+        foreach ($this->getRepository()->getInheritableFields($entity->entityDefs['fields']) as $field) {
+            if ($entity->entityDefs['fields'][$field]['type'] === 'linkMultiple') {
                 $inheritableLinks[] = $field;
             } else {
                 $inheritableFields[] = $field;
@@ -346,6 +347,8 @@ class Hierarchy extends Record
             throw new Forbidden();
         }
 
+        $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+
         $parents = $entity->get('parents');
         if (empty($parents[0])) {
             throw new BadRequest('No parents found.');
@@ -353,9 +356,10 @@ class Hierarchy extends Record
 
         $resultInput = new \stdClass();
         foreach ($parents as $parent) {
+            $this->getAttributeFieldConverter()->putAttributesToEntity($parent);
             $input = new \stdClass();
 
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            $fieldDefs = $parent->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
@@ -378,6 +382,8 @@ class Hierarchy extends Record
                 case 'linkMultiple':
                     $input->{$field . 'Ids'} = array_column($parent->get($field)->toArray(), 'id');
                     break;
+                case 'int':
+                case 'float':
                 case 'varchar':
                     if (empty($fieldDefs['unitField'])) {
                         $input->$field = $parent->get($field);
@@ -545,8 +551,10 @@ class Hierarchy extends Record
         }
 
         $fetchedEntity = $this->getRepository()->get($id);
-
-        $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        if (!empty($fetchedEntity)) {
+            $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+            $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
+        }
 
         $result = parent::updateEntity($id, $data);
 
@@ -909,9 +917,10 @@ class Hierarchy extends Record
         foreach ($children as $childArray) {
             $child = $this->getRepository()->get();
             $child->set($childArray);
+            $this->getAttributeFieldConverter()->putAttributesToEntity($child);
             $childData = Util::arrayKeysToUnderScore($child->toArray());
             $this->getRepository()->pushLinkMultipleFields($childData);
-            $inputData = $this->createInputDataForPseudoTransactionJob($parent, $childData, clone $data);
+            $inputData = $this->createInputDataForPseudoTransactionJob($child, $parent, $childData, clone $data);
             if (!empty((array)$inputData)) {
                 $inputData->_fieldValueInheritance = true;
                 $transactionId = $this->getPseudoTransactionManager()->pushUpdateEntityJob($this->entityType, $childData['id'], $inputData, $parentTransactionId);
@@ -969,7 +978,7 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createInputDataForPseudoTransactionJob(array $parent, array $child, \stdClass $data): \stdClass
+    protected function createInputDataForPseudoTransactionJob(Entity $entity, array $parent, array $child, \stdClass $data): \stdClass
     {
         $unInheritedFields = $this->getRepository()->getUnInheritedFields();
         $inputData = new \stdClass();
@@ -985,7 +994,7 @@ class Hierarchy extends Record
             $parentValue = $parent[$underScoredField];
             $childValue = $child[$underScoredField];
 
-            if ($this->areValuesEqual($this->getRepository()->get(), $field, $parentValue, $childValue)) {
+            if ($this->areValuesEqual($entity, $field, $parentValue, $childValue)) {
                 $inputData->$field = $value;
             }
         }
@@ -996,12 +1005,12 @@ class Hierarchy extends Record
     protected function getInheritedFromParentFields(Entity $parent, Entity $child): array
     {
         $inheritedFields = [];
-        foreach ($this->getRepository()->getInheritableFields() as $field) {
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+        foreach ($this->getRepository()->getInheritableFields($child->entityDefs['fields'] ?? null) as $field) {
+            $fieldDefs = $child->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':
-                    if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
+                    if ($this->areValuesEqual($parent, $field . 'Id', $parent->get($field . 'Id'), $child->get($field . 'Id'))) {
                         $inheritedFields[] = $field;
                     }
                     break;
@@ -1011,13 +1020,13 @@ class Hierarchy extends Record
                         sort($parentIds);
                         $entityIds = $child->getLinkMultipleIdList($field);
                         sort($entityIds);
-                        if ($this->areValuesEqual($this->getRepository()->get(), $field . 'Ids', $parentIds, $entityIds)) {
+                        if ($this->areValuesEqual($parent, $field . 'Ids', $parentIds, $entityIds)) {
                             $inheritedFields[] = $field;
                         }
                     }
                     break;
                 default:
-                    if ($this->areValuesEqual($this->getRepository()->get(), $field, $parent->get($field), $child->get($field))) {
+                    if ($this->areValuesEqual($parent, $field, $parent->get($field), $child->get($field))) {
                         $inheritedFields[] = $field;
                     }
                     break;
@@ -1051,6 +1060,7 @@ class Hierarchy extends Record
         $inheritedFields = [];
         foreach ($parents as $parent) {
             $this->getServiceFactory()->create($parent->getEntityType())->prepareEntityForOutput($parent);
+            $this->getAttributeFieldConverter()->putAttributesToEntity($parent);
             $inheritedFields = array_merge($inheritedFields, $this->getInheritedFromParentFields($parent, $entity));
         }
 
@@ -1082,5 +1092,17 @@ class Hierarchy extends Record
 
         return $result;
 
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency(AttributeFieldConverter::class);
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection(AttributeFieldConverter::class);
     }
 }

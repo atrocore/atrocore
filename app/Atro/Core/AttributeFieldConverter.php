@@ -172,23 +172,72 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
+        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
+            $classificationAttrs = $this->conn->createQueryBuilder()
+                ->select('ca.*')
+                ->from("{$tableName}_classification", 'r')
+                ->innerJoin('r', 'classification', 'c', 'c.id=r.classification_id AND c.deleted=:false')
+                ->leftJoin('c', 'classification_attribute', 'ca', 'c.id=ca.classification_id AND ca.deleted=:false')
+                ->where("r.{$tableName}_id=:id")
+                ->andWhere('r.deleted=:false')
+                ->andWhere('ca.attribute_id IN (:attributesIds)')
+                ->orderBy('ca.is_required', 'ASC')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->setParameter('id', $entity->get('id'))
+                ->setParameter('attributesIds', array_column($res, 'id'), $this->conn::PARAM_STR_ARRAY)
+                ->fetchAllAssociative();
+
+            foreach ($res as $k => $attribute) {
+                foreach ($classificationAttrs as $classificationAttribute) {
+                    if ($attribute['id'] === $classificationAttribute['attribute_id']) {
+                        $res[$k]['classification_attribute_id'] = $classificationAttribute['id'];
+                        $res[$k]['is_required'] = $classificationAttribute['is_required'];
+
+                        $attributeData = @json_decode($attribute['data'] ?? '', true);
+                        if (empty($attributeData)) {
+                            $attributeData = [];
+                        }
+
+                        $classificationAttributeData = @json_decode($classificationAttribute['data'] ?? '', true);
+                        if (!empty($classificationAttributeData['field'])) {
+                            foreach ($classificationAttributeData['field'] as $param => $paramValue) {
+                                $attributeData['field'][$param] = $paramValue;
+                            }
+                        }
+
+                        $res[$k]['data'] = json_encode($attributeData);
+                    }
+                }
+            }
+        }
+
         // it needs because we should be able to create attribute value on entity update
         if (!empty($entity->_originalInput)) {
+            $attributesIds = $entity->_originalInput->__attributes ?? [];
             foreach ($entity->_originalInput as $field => $value) {
                 $attributeId = $this->metadata->get("entityDefs.{$entity->getEntityType()}.fields.{$field}.attributeId");
                 if ($attributeId) {
-                    if (in_array($attributeId, array_column($res, 'id'))) {
-                        continue;
-                    }
-                    $attr = $this->conn->createQueryBuilder()
-                        ->select('*')
-                        ->from($this->conn->quoteIdentifier('attribute'))
-                        ->where('id=:id')
-                        ->setParameter('id', $attributeId)
-                        ->fetchAssociative();
-                    if (!empty($attr)) {
-                        $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
-                    }
+                    $attributesIds[] = $attributeId;
+                }
+            }
+
+            $preparedAttributesIds = [];
+            foreach ($attributesIds as $attributeId) {
+                if (!in_array($attributeId, array_column($res, 'id'))) {
+                    $preparedAttributesIds[] = $attributeId;
+                }
+            }
+
+            if (!empty($preparedAttributesIds)) {
+                $attrs = $this->conn->createQueryBuilder()
+                    ->select('*')
+                    ->from($this->conn->quoteIdentifier('attribute'))
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', $preparedAttributesIds, $this->conn::PARAM_STR_ARRAY)
+                    ->fetchAllAssociative();
+
+                foreach ($attrs as $attr) {
+                    $res[] = array_merge($attr, ['entity_id' => $entity->get('id')]);
                 }
             }
         }
@@ -201,6 +250,14 @@ class AttributeFieldConverter
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
+
+        foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
+            foreach ($attributesDefs as $name => $defs) {
+                if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
+                    $entity->unsetFetched($name);
+                }
+            }
+        }
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array

@@ -24,10 +24,11 @@ class CompositeType extends AbstractFieldType
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $row['id'],
-            'type'        => 'composite',
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'fullWidth'   => true,
+            'attributeId'               => $row['id'],
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'type'                      => 'composite',
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'fullWidth'                 => true,
         ];
 
         $entity->entityDefs['fields'][$name]['childrenIds'] = $this->em->getConnection()->createQueryBuilder()

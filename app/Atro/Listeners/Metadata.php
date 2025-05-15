@@ -46,7 +46,7 @@ class Metadata extends AbstractListener
 
         $data = $this->addActive($data);
 
-        $this->addAttributeValuePanel($data);
+        $this->addAttributesToEntity($data);
 
         $data = $this->prepareMultiLang($data);
 
@@ -1047,9 +1047,8 @@ class Metadata extends AbstractListener
                         $mParams['multilangField'] = $field;
                         $mParams['multilangLocale'] = $locale;
                         $mParams['isCustom'] = false;
-                        if (isset($params['requiredForMultilang'])) {
-                            $mParams['required'] = $params['requiredForMultilang'];
-                        }
+                        $mParams['required'] = false;
+                        $mParams['unique'] = false;
                         if (in_array($mParams['type'], ['enum', 'multiEnum'])) {
                             $mParams['notStorable'] = true;
                             $mParams['optionsOriginal'] = $params['options'];
@@ -1063,7 +1062,7 @@ class Metadata extends AbstractListener
                             } else {
                                 $mParams['default'] = null;
                             }
-                            $mParams['required'] = false;
+
                             $mParams['emHidden'] = true;
                         }
                         if ($mParams['type'] == 'script' && isset($mParams['script' . $preparedLocale])) {
@@ -1086,7 +1085,7 @@ class Metadata extends AbstractListener
         return $data;
     }
 
-    protected function addAttributeValuePanel(array &$metadata): void
+    protected function addAttributesToEntity(array &$metadata): void
     {
         if (empty($metadata['scopes']['Attribute']['type'])) {
             return;
