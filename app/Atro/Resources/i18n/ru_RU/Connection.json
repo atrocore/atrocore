@@ -9,8 +9,7 @@
   },
   "labels": {
     "connectionSuccess": "Соединение успешно установлено",
-    "testConnection": "Проверить соединение",
-    "Create Connection": "Создать соединение"
+    "testConnection": "Проверить соединение"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не установлен.",

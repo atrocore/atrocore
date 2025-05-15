@@ -46,7 +46,6 @@
     }
   },
   "labels": {
-    "Create Entity": "Створити сутність",
     "accessManagement": "Управління доступом",
     "hierarchyManagement": "Управління ієрархією",
     "other": "Інше",

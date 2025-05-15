@@ -7,8 +7,5 @@
   },
   "tooltips": {
     "roles": "Access Roles. Users of this team obtain access control level from selected roles."
-  },
-  "labels": {
-    "Create Team": "Create Team"
   }
 }

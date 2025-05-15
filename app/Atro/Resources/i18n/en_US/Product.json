@@ -8,8 +8,5 @@
     "children": "Child Products",
     "parents": "Parent Products",
     "quantity": "Quantity"
-  },
-  "labels": {
-    "Create Product": "Create Product"
   }
 }

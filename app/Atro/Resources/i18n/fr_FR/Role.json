@@ -13,7 +13,6 @@
   },
   "labels": {
     "Access": "Accès",
-    "Create Role": "Créer un rôle",
     "Scope Level": "Niveau du champ d'application",
     "Field Level": "Niveau du terrain"
   },

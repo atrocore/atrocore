@@ -28,7 +28,6 @@
     "tasks": "Tareas"
   },
   "labels": {
-    "Create User": "Crear usuario",
     "Generate": "Generar",
     "Access": "Acceso",
     "Change Password": "Cambiar Contraseña",

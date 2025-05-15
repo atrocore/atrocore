@@ -4,9 +4,6 @@
     "description": "Описание",
     "units": "Единицы измерения"
   },
-  "labels": {
-    "Create Measure": "Создать меру"
-  },
   "options": {
     "displayFormat": {
       "format1": "10€",

@@ -4,8 +4,7 @@
     "body": "Ciało"
   },
   "labels": {
-    "send": "Wysłać",
-    "Create EmailTemplate": "Utwórz szablon e-maila"
+    "send": "Wysłać"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Nie można usunąć szablonów systemowych",

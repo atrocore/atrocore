@@ -21,8 +21,5 @@
       "billing": "Rechnungsschreibung",
       "delivery": "Lieferung"
     }
-  },
-  "labels": {
-    "Create Address": "Adresse erstellen"
   }
 }

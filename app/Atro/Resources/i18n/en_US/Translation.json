@@ -141,8 +141,7 @@
   },
   "labels": {
     "reset": "Reset to Default",
-    "push": "Send for Review",
-    "Create Translation": "Create Label"
+    "push": "Send for Review"
   },
   "messages": {
     "resetConfirm": "Are you sure you want to reset labels to default?",

@@ -2,8 +2,5 @@
   "fields": {
     "image": "Obraz",
     "library": "Biblioteka"
-  },
-  "labels": {
-    "Create SystemIcon": "Utwórz ikonę systemową"
   }
 }

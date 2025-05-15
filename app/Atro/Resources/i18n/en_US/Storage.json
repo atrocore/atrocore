@@ -16,7 +16,6 @@
     "syncFolders": "If checked, the physical file and folder structure in the storage will be the same as in the system. It means that only one file/folder with similar name can be stored in the same path."
   },
   "labels": {
-    "Create Storage": "Create Storage",
     "scan": "Scan",
     "scanDone": "Scanning of the Storage '%s' is completed."
   },

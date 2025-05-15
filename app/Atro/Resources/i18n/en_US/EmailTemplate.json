@@ -5,8 +5,7 @@
     "isHtml": "HTML"
   },
   "labels": {
-    "send": "Send",
-    "Create EmailTemplate": "Create Email Template"
+    "send": "Send"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "System Templates cannot be deleted",

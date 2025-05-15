@@ -3,8 +3,5 @@
     "isActive": "Активний",
     "description": "Опис",
     "notificationRules": "Правила сповіщення"
-  },
-  "labels": {
-    "Create NotificationProfile": "Створити профіль сповіщень"
   }
 }

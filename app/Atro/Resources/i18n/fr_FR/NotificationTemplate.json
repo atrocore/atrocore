@@ -4,9 +4,6 @@
     "subject": "Sujet",
     "body": "Corps"
   },
-  "labels": {
-    "Create NotificationTemplate": "Créer un modèle de notification"
-  },
   "options": {
     "type": {
       "system": "Notification du système",

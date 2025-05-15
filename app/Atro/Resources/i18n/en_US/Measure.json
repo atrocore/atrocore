@@ -5,9 +5,6 @@
     "units": "Units",
     "displayFormat": "Display Format"
   },
-  "labels": {
-    "Create Measure": "Create Measure"
-  },
   "options": {
     "displayFormat": {
       "format1": "10€",

@@ -5,7 +5,6 @@
     "jobs": "Jobs"
   },
   "labels": {
-    "Create ScheduledJob": "Create Scheduled Job",
     "executeNow": "Execute Now"
   },
   "exceptions": {

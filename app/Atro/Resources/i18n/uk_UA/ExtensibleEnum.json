@@ -3,9 +3,6 @@
     "extensibleEnumOptions": "Опції списку",
     "multilingual": "Багатомовний"
   },
-  "labels": {
-    "Create ExtensibleEnum": "Створити список"
-  },
   "exceptions": {
     "extensibleEnumIsUsed": "Список '%s' використовується полем '%s' в сутності '%s'."
   }

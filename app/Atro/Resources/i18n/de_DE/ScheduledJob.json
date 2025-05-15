@@ -4,7 +4,6 @@
     "scheduling": "Planung"
   },
   "labels": {
-    "Create ScheduledJob": "Geplante Aufgabe erstellen",
     "executeNow": "Jetzt ausführen"
   },
   "messages": {

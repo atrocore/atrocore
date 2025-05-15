@@ -8,8 +8,5 @@
     "children": "Kinderprodukte",
     "parents": "Elternprodukte",
     "quantity": "Menge"
-  },
-  "labels": {
-    "Create Product": "Produkt erstellen"
   }
 }

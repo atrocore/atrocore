@@ -8,8 +8,5 @@
 		"children": "Produkty potomne",
 		"parents": "Produkty nadrzędne",
 		"quantity": "Ilość"
-	},
-	"labels": {
-		"Create Product": "Utwórz Produkt"
 	}
 }

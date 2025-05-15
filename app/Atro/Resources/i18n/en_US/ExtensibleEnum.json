@@ -3,9 +3,6 @@
     "extensibleEnumOptions": "List Options",
     "multilingual": "Multilingual"
   },
-  "labels": {
-    "Create ExtensibleEnum": "Create List"
-  },
   "exceptions": {
     "extensibleEnumIsUsed": "The List '%s' is used by the field '%s' in the Entity '%s'."
   }

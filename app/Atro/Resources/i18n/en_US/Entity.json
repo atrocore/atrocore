@@ -45,7 +45,6 @@
     }
   },
   "labels": {
-    "Create Entity": "Create entity",
     "accessManagement": "Access management",
     "hierarchyManagement": "Hierarchy management",
     "other": "Other",

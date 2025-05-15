@@ -4,8 +4,5 @@
     "emailAddress": "Адрес эл. почты",
     "phoneNumber": "Телефон",
     "description": "Описание"
-  },
-  "labels": {
-    "Create Account": "Создать контрагента"
   }
 }

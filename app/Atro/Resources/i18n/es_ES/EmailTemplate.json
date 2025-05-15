@@ -4,8 +4,7 @@
     "body": "Cuerpo"
   },
   "labels": {
-    "send": "Enviar",
-    "Create EmailTemplate": "Crear plantilla de correo electrónico"
+    "send": "Enviar"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Las plantillas de sistema no pueden borrarse",

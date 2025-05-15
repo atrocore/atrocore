@@ -21,9 +21,6 @@
       "customer": "Замовник"
     }
   },
-  "labels": {
-    "Create Account": "Створити контрагента"
-  },
   "exceptions": {
     "defaultAddressAlreadyExist": "Адреса за замовчуванням для облікового запису вже існує."
   }

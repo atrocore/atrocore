@@ -16,8 +16,5 @@
       "billing": "Facturación",
       "delivery": "Entrega"
     }
-  },
-  "labels": {
-    "Create Address": "Crear dirección"
   }
 }
