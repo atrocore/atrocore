@@ -198,6 +198,14 @@ class AttributeFieldConverter
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
+
+        foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
+            foreach ($attributesDefs as $name => $defs) {
+                if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
+                    $entity->unsetFetched($name);
+                }
+            }
+        }
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
