@@ -29,14 +29,8 @@ Espo.define('views/admin/field-manager/fields/modified-extended-enabled', 'views
                 this.model.get('type') === 'linkMultiple'
                 && this.model.get('notStorable') !== true
                 && this.model.get('disabled') !== true
-                && this.getMetadata().get(['entityDefs', scope, 'links', field, 'relationName'])
             ) {
-                let relEntity = this.getMetadata().get(['entityDefs', scope, 'links', field, 'relationName']);
-                relEntity = relEntity.charAt(0).toUpperCase() + relEntity.slice(1);
-
-                if ((this.getMetadata().get(['scopes', relEntity, 'type']) || 'Base') === 'Relation') {
                   shouldHide = false;
-                }
             }
 
             if (
