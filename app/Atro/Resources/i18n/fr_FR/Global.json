@@ -363,7 +363,8 @@
     "previewTemplate": "Aperçu des modèles",
     "Select Image": "Sélectionner une image existante",
     "Upload Image": "Télécharger une image à partir d'un système de fichiers local",
-    "copyConfigurations": "Copier les configurations"
+    "copyConfigurations": "Copier les configurations",
+    "fullscreen": "Plein écran"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",

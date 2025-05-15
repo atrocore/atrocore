@@ -382,7 +382,8 @@
     "selectAll": "Alle auswählen",
     "additionalLanguages": "Zusätzliche Sprachen",
     "collapseAll": "Alles einklappen",
-    "expandAll": "Alle erweitern"
+    "expandAll": "Alle erweitern",
+    "fullscreen": "Vollbild"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

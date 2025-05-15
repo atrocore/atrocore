@@ -12287,6 +12287,7 @@ h5 {
     width: 270px
 }
 
+.cell .inline-actions > .fullscreen,
 .cell .inline-actions > .inline-save-link,
 .cell .inline-actions > .inline-cancel-link {
     padding-left: 6px;
