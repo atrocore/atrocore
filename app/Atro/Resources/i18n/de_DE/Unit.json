@@ -10,7 +10,6 @@
     "isActive": "Aktiv"
   },
   "labels": {
-    "Create Unit": "Maßeinheit erstellen",
     "unitSetDefault": "Als Default setzen"
   },
   "exceptions": {

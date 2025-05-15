@@ -10,7 +10,6 @@
     "isActive": "Активний"
   },
   "labels": {
-    "Create Unit": "Створити одиницю виміру",
     "unitSetDefault": "Встановити як дефолтне"
   },
   "exceptions": {

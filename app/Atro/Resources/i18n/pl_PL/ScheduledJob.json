@@ -4,7 +4,6 @@
     "scheduling": "Harmonogram"
   },
   "labels": {
-    "Create ScheduledJob": "Utwórz Zaplanowane Zadanie",
     "executeNow": "Wykonaj teraz"
   },
   "exceptions": {

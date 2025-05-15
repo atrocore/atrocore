@@ -32,7 +32,6 @@
     }
   },
   "labels": {
-    "Create NotificationRule": "Створити правило сповіщення",
     "Notify User": "Сповістити користувача",
     "Transport": "Transport"
   }

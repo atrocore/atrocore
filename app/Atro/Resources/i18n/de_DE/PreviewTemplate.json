@@ -3,8 +3,5 @@
     "entityType": "Entität",
     "isActive": "Aktiv",
     "template": "HTML/CSS-Vorlage"
-  },
-  "labels": {
-    "Create PreviewTemplate": "Vorschauvorlage erstellen"
   }
 }

@@ -2,8 +2,5 @@
   "fields": {
     "type": "Type",
     "body": "Body"
-  },
-  "labels": {
-    "Create NotificationTemplate": "Create Notification Template"
   }
 }

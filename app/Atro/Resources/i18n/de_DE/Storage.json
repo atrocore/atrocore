@@ -16,7 +16,6 @@
     "syncFolders": "Wenn aktiviert, entspricht die physische Datei- und Ordnerstruktur im Storage der des Systems. Das bedeutet, dass nur eine Datei/Ordner mit ähnlichem Namen im gleichen Pfad gespeichert werden kann."
   },
   "labels": {
-    "Create Storage": "Storage erstellen",
     "scan": "Scannen",
     "scanDone": "Das Scannen des Storages ist zu '%s' abgeschlossen."
   },

@@ -7,8 +7,5 @@
   },
   "tooltips": {
     "roles": "Rôles d'accès. Les utilisateurs de cette équipe obtiennent le niveau de contrôle d'accès à partir des rôles sélectionnés."
-  },
-  "labels": {
-    "Create Team": "Créer une équipe"
   }
 }

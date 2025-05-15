@@ -16,8 +16,5 @@
       "supplier": "Proveedor",
       "customer": "Cliente"
     }
-  },
-  "labels": {
-    "Create Account": "Crear cuenta"
   }
 }

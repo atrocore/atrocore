@@ -4,8 +4,7 @@
     "body": "Тіло"
   },
   "labels": {
-    "send": "Надіслати",
-    "Create EmailTemplate": "Створити шаблон електронної пошти"
+    "send": "Надіслати"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Системні шаблони не можна видалити",

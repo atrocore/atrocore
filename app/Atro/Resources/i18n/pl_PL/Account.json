@@ -18,8 +18,5 @@
       "supplier": "Dostawca",
       "customer": "Klient"
     }
-  },
-  "labels": {
-    "Create Account": "Utwórz konto"
   }
 }

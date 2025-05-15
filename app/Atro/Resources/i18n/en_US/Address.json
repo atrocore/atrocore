@@ -21,8 +21,5 @@
       "billing": "Billing",
       "delivery": "Delivery"
     }
-  },
-  "labels": {
-    "Create Address": "Create Address"
   }
 }

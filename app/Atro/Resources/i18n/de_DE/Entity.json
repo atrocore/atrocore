@@ -43,7 +43,6 @@
     }
   },
   "labels": {
-    "Create Entity": "Entität erstellen",
     "accessManagement": "Zugriffsverwaltung",
     "hierarchyManagement": "Hierarchieverwaltung",
     "other": "Sonstiges",

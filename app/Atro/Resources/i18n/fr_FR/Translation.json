@@ -9,7 +9,6 @@
   },
   "labels": {
     "reset": "Rétablissement des valeurs par défaut",
-    "push": "Envoyer pour examen",
-    "Create Translation": "Créer une étiquette"
+    "push": "Envoyer pour examen"
   }
 }

@@ -10,7 +10,6 @@
     "isActive": "Active"
   },
   "labels": {
-    "Create Unit": "Create Unit",
     "unitSetDefault": "Set as default"
   },
   "exceptions": {

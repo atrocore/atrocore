@@ -10,7 +10,6 @@
     "dashboardLayout": "Dashboard-Layout"
   },
   "labels": {
-    "Create LayoutProfile": "Layoutprofil erstellen",
     "addGroup": "Gruppe hinzufügen",
     "Menu": "Menu",
     "Dashboards": "Dashboards"

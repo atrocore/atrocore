@@ -5,8 +5,7 @@
   },
   "labels": {
     "reset": "Przywróć domyślne",
-    "push": "Wyślij do przeglądu",
-    "Create Translation": "Utwórz etykietę"
+    "push": "Wyślij do przeglądu"
   },
   "messages": {
     "resetConfirm": "Czy na pewno chcesz przywrócić etykiety do domyślnych?",

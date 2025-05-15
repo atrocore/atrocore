@@ -30,7 +30,6 @@
     "tasks": "Задачи"
   },
   "labels": {
-    "Create User": "Создать пользователя",
     "Generate": "Сгенерировать",
     "Access": "Доступ",
     "Change Password": "Изменить пароль",

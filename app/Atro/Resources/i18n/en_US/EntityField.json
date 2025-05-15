@@ -116,7 +116,6 @@
     "resetToDefault": "Are you sure you want to reset configuration to default?"
   },
   "labels": {
-    "Create EntityField": "Create Entity Field",
     "resetToDefault": "Reset to default",
     "relationManagement": "Relation Management"
   }

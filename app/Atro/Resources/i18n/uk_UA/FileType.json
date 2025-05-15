@@ -6,8 +6,5 @@
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в полі '%s' сутності '%s'."
-  },
-  "labels": {
-    "Create FileType": "Створити тип файлу"
   }
 }

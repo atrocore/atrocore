@@ -3,8 +3,5 @@
     "isActive": "Aktiv",
     "description": "Beschreibung",
     "notificationRules": "Benachrichtigungsregeln"
-  },
-  "labels": {
-    "Create NotificationProfile": "Benachrichtigungsprofil erstellen"
   }
 }

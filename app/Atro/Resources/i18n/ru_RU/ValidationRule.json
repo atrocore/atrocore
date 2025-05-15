@@ -15,7 +15,6 @@
     "mimeList": "Список"
   },
   "labels": {
-    "Create ValidationRule": "Создать правило проверки",
     "minSize": "Мин., Кб",
     "maxSize": "Макс, Кб"
   }

@@ -13,7 +13,6 @@
   },
   "labels": {
     "Access": "Доступ",
-    "Create Role": "Создать роль",
     "Scope Level": "Уровень области действия",
     "Field Level": "Уровень поля"
   },

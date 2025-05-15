@@ -16,7 +16,6 @@
     "fileType": "File Type"
   },
   "labels": {
-    "Create ValidationRule": "Create Validation Rule",
     "minSize": "Min, Kb",
     "maxSize": "Max, Kb"
   }

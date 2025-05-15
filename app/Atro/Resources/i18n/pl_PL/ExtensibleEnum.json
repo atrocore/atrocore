@@ -3,9 +3,6 @@
        "extensibleEnumOptions":"Opcje listy",
        "multilingual":"Wielojęzyczny"
     },
-    "labels":{
-       "Create ExtensibleEnum":"Utwórz listę"
-    },
     "exceptions":{
        "extensibleEnumIsUsed":"Lista '%s' jest używana przez pole '%s' w jednostce '%s'."
     }

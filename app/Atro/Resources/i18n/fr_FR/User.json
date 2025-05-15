@@ -32,7 +32,6 @@
     "tasks": "Tâches"
   },
   "labels": {
-    "Create User": "Créer un utilisateur",
     "Generate": "Générer",
     "Access": "Accès",
     "Change Password": "Modifier le mot de passe",

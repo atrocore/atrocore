@@ -16,7 +16,6 @@
     "syncFolders": "Si cette case est cochée, la structure physique des fichiers et des dossiers dans le stockage sera la même que dans le système. Cela signifie qu'un seul fichier/dossier portant un nom similaire peut être stocké dans le même chemin."
   },
   "labels": {
-    "Create Storage": "Créer un espace de stockage",
     "scan": "Scanner",
     "scanDone": "L'analyse du stockage \"%s\" est terminée."
   },

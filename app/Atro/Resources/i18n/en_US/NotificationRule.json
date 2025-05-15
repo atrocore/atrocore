@@ -32,7 +32,6 @@
     }
   },
   "labels": {
-    "Create NotificationRule": "Create Notification Rule",
     "Notify User": "Notify User",
     "Transport": "Transport"
   }

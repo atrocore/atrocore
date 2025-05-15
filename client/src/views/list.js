@@ -277,7 +277,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    label: this.translate('Create ' + this.scope, 'labels', this.scope),
+                    label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
@@ -287,7 +287,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     action: 'create',
-                    label: this.translate('Create ' + this.scope, 'labels', this.scope),
+                    label: this.translate('Create', 'labels', this.scope),
                     style: 'primary',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,

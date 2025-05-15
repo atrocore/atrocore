@@ -4,9 +4,6 @@
     "files": "Fichiers",
     "storages": "Stockages"
   },
-  "labels": {
-    "Create Folder": "Créer un dossier"
-  },
   "exceptions": {
     "folderStorageCannotBeChanged": "Il n'est pas possible de modifier le stockage des dossiers.",
     "folderCreateFailed": "La création du dossier a échoué.",

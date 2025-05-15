@@ -115,7 +115,6 @@
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardwerte zurücksetzen wollen?"
   },
   "labels": {
-    "Create EntityField": "Entitätsfeld erstellen",
     "resetToDefault": "Auf Standardwerte zurücksetzen",
     "relationManagement": "Beziehungs-Management"
   }

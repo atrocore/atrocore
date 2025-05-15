@@ -7,8 +7,5 @@
   },
   "tooltips": {
     "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen."
-  },
-  "labels": {
-    "Create Team": "Team erstellen"
   }
 }

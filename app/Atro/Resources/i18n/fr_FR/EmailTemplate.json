@@ -4,8 +4,7 @@
     "body": "Corps"
   },
   "labels": {
-    "send": "Envoyer",
-    "Create EmailTemplate": "Créer un modèle d'e-mail"
+    "send": "Envoyer"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Les modèles de système ne peuvent pas être supprimés",

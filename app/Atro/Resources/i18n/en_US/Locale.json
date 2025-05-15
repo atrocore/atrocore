@@ -11,8 +11,7 @@
   },
   "labels": {
     "sunday": "Sunday",
-    "monday": "Monday",
-    "Create Locale": "Create Locale"
+    "monday": "Monday"
   },
   "exceptions": {
     "localeIsUsed": "Locale in use cannot be removed."

@@ -20,9 +20,6 @@
       "customer": "Kunde"
     }
   },
-  "labels": {
-    "Create Account": "Account erstellen"
-  },
   "exceptions": {
     "defaultAddressAlreadyExist": "Die Standardadresse für das Konto ist bereits vorhanden."
   }

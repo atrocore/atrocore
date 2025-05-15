@@ -13,7 +13,6 @@
   },
   "labels": {
     "Access": "Acceso",
-    "Create Role": "Crear rol",
     "Scope Level": "Nivel de acceso a entidades",
     "Field Level": "Nivel de acceso a campos"
   },

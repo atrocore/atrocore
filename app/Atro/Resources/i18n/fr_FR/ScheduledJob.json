@@ -4,7 +4,6 @@
     "scheduling": "Programmation"
   },
   "labels": {
-    "Create ScheduledJob": "Créer un travail programmé",
     "executeNow": "Exécuter maintenant"
   },
   "exceptions": {

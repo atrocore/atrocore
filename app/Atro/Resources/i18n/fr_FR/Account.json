@@ -21,9 +21,6 @@
       "customer": "Client"
     }
   },
-  "labels": {
-    "Create Account": "Créer un compte"
-  },
   "exceptions": {
     "defaultAddressAlreadyExist": "L'adresse par défaut du compte existe déjà."
   }

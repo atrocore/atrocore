@@ -20,7 +20,6 @@
     "connectionSuccess": "З'єднання успішно встановлено",
     "testConnection": "Перевірити з'єднання",
     "sendTestEmail": "Надіслати тестовий електронний лист",
-    "Create Connection": "Створити з'єднання",
     "smtp": "SMTP",
     "pdoSql": "PDO SQL"
   },

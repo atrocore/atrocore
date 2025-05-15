@@ -4,9 +4,6 @@
     "files": "Files",
     "storages": "Storages"
   },
-  "labels": {
-    "Create Folder": "Create Folder"
-  },
   "exceptions": {
     "folderStorageCannotBeChanged": "The Folder Storage cannot be changed.",
     "folderCreateFailed": "Folder creation failed.",

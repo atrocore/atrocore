@@ -4,8 +4,7 @@
     "body": "Körper"
   },
   "labels": {
-    "send": "Senden",
-    "Create EmailTemplate": "E-Mail-Vorlage erstellen"
+    "send": "Senden"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Systemvorlagen können nicht gelöscht werden",

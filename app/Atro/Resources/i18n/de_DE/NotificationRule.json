@@ -32,7 +32,6 @@
     }
   },
   "labels": {
-    "Create NotificationRule": "Benachrichtigungsregel erstellen",
     "Notify User": "Benutzer benachrichtigen",
     "transport": "Transport"
   }

@@ -5,9 +5,6 @@
     "units": "Одиниці виміру",
     "displayFormat": "Формат відображення"
   },
-  "labels": {
-    "Create Measure": "Створити міру"
-  },
   "options": {
     "displayFormat": {
       "format1": "10€",

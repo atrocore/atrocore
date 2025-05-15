@@ -9,8 +9,7 @@
   },
   "labels": {
     "sunday": "Dimanche",
-    "monday": "Lundi",
-    "Create Locale": "Créer en local"
+    "monday": "Lundi"
   },
   "exceptions": {
     "localeIsUsed": "La localité utilisée ne peut pas être supprimée."
