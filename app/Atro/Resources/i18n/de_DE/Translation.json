@@ -1,7 +1,7 @@
 {
   "labels": {
     "reset": "Zurücksetzen",
-    "push": "Zur Überprüfung senden",
+    "push": "Zur Überprüfung senden"
   },
   "messages": {
     "resetConfirm": "Möchten Sie die Labels wirklich auf die Standardwerte zurücksetzen?",

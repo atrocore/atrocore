@@ -206,6 +206,11 @@ class Language
             $module->loadTranslates($data[$name]);
         }
 
+        foreach ($data as $key => $value) {
+            foreach ($value as $category => $names) {
+
+            }
+        }
         return $data;
     }
 
