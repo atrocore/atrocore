@@ -60,7 +60,7 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored
             let input = this.$el.find('input').get(0);
 
             if (input) {
-                let options = {zIndex: 2000, required: false};
+                let options = {zIndex: 2020, required: false};
 
                 if (this.model && this.model.name) {
                     const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name]) || [];
