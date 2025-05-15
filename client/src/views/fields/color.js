@@ -56,7 +56,6 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored
         },
 
         afterRender() {
-            debugger
             Dep.prototype.afterRender.call(this);
             let input = this.$el.find('input').get(0);
 
