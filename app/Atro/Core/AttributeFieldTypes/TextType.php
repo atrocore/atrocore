@@ -62,6 +62,10 @@ class TextType extends AbstractFieldType
             'fullWidth'   => $this->isFullWidth ?: !empty($attributeData['fullWidth']),
         ];
 
+        if ($this->type === 'varchar' && !empty($row['pattern'])) {
+            $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
+        }
+
         if (!empty($attributeData['maxLength'])) {
             $entity->entityDefs['fields'][$name]['maxLength'] = $attributeData['maxLength'];
         }
