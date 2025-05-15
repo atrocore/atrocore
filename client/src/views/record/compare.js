@@ -798,6 +798,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.notify('Loading...');
             this.renderedPanels = [];
+
+            this.prepareFieldsData();
             this.renderFieldsPanels();
             this.renderRelationshipsPanels();
             this.renderPanelNavigationView();
