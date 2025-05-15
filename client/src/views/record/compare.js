@@ -62,6 +62,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderedPanels = [];
             this.hideButtonPanel = false;
             this.hidePanelNavigation = false;
+            this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
         },
 
         setup() {
@@ -148,6 +149,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.openOverviewFilter();
             });
 
+
+            this.setupFieldPanels();
+            
+            this.prepareFieldsData();
+        },
+
+        getOtherModelsForComparison(model) {
+            return this.collection.models.filter(model => model.id !== this.model.id);
+        },
+
+        setupFieldPanels() {
             this.fieldPanels = [{
                 name: 'fieldsOverviews',
                 title: this.translate('Fields'),
@@ -155,19 +167,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }];
 
             if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
-                this.fieldPanels.push( {
-                    name: 'attributeValueOverviews',
-                    title: this.translate('Attribute Values'),
-                    filter: (field) => field.attributeId
-                });
-                this.putAttributesToModel();
+                if(this.putAttributesToModel()) {
+                    this.fieldPanels.push( {
+                        name: 'attributeValueOverviews',
+                        title: this.translate('Attribute Values'),
+                        filter: (field) => field.attributeId
+                    });
+                }
             }
-            
-            this.prepareFieldsData();
-        },
-
-        getOtherModelsForComparison(model) {
-            return this.collection.models.filter(model => model.id !== this.model.id);
         },
 
         prepareFieldsData() {
@@ -236,7 +243,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         renderFieldsPanels() {
-
             this.fieldPanels.forEach((panel,index) => {
                 this.createView(panel.name, this.fieldsPanelsView, {
                     scope: this.scope,
@@ -618,8 +624,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
 
             this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
-
-            new Svelte.AnchorNavigation({
+            
+            if(this.anchorNavigation !== null) {
+                try{
+                    this.anchorNavigation.$destroy();
+                }catch (e) {
+                    
+                }
+            }
+           this.anchorNavigation = new Svelte.AnchorNavigation({
                 target: anchorContainer.get(0),
                 props: {
                     items: panelList,
@@ -740,10 +753,25 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed', this.selectedFilters);
                         this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
-                        this.reRender();
+                        this.reRenderFieldsPanels();
                     }
                 });
             });
+        },
+
+        reRenderFieldsPanels(){
+            let filterButton = $('a[data-action="openOverviewFilter"]');
+            if (this.isOverviewFilterApply()) {
+                filterButton.css('color', 'white');
+                filterButton.addClass('btn-danger')
+                filterButton.removeClass('btn-default')
+            } else {
+                filterButton.css('color', 'black');
+                filterButton.addClass('btn-default')
+                filterButton.removeClass('btn-danger')
+            }
+            this.prepareFieldsData();
+            this.renderFieldsPanels();
         },
 
         afterRender() {
@@ -758,7 +786,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.getParentView().$el.find('.modal-footer').append(filterButton);
             }
 
-            this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
             if (this.isOverviewFilterApply()) {
                 filterButton.css('color', 'white');
                 filterButton.addClass('btn-danger')
@@ -771,13 +798,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.notify('Loading...');
             this.renderedPanels = [];
-            
+
+            this.prepareFieldsData();
             this.renderFieldsPanels();
             this.renderRelationshipsPanels();
             this.renderPanelNavigationView();
         },
 
         putAttributesToModel() {
+            let hasAttributeValues = false;
             if (!this.getMetadata().get(`scopes.${this.scope}.hasAttribute`)) {
                 return;
             }
@@ -810,12 +839,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 models.forEach(model => {
                     $.each(attributesDefs, (name, defs) => {
+                        hasAttributeValues = true;
                         if(!model.defs['fields'][name]) {
                             model.defs['fields'][name] = defs;
                         }
                     });
-                })
-            })
+                });
+            });
+            return hasAttributeValues;
         },
     });
 });
