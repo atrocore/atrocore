@@ -251,7 +251,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     instances: this.instances,
                     columns: this.buildComparisonTableHeaderColumn(),
                     instanceComparison: this.instanceComparison,
-                    models: this.collection.models,
+                    models: this.getModels(),
                     merging: this.merging,
                     hideCheckAll: index !== 0,
                     el: `${this.options.el} [data-name="${panel.name}"] .list-container`
@@ -267,7 +267,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-
         renderRelationshipsPanels() {
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
@@ -275,6 +274,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 model: this.model,
                 relationshipsPanels: this.getRelationshipPanels(),
                 collection: this.collection,
+                models: this.getModels(),
+                distantModels: this.getDistantModels(),
                 instanceComparison: this.instanceComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
                 merging: this.merging,
@@ -288,7 +289,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
                 });
-
             }, true);
         },
 
@@ -604,6 +604,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         getModels() {
             return this.collection.models ?? [];
+        },
+
+        getDistantModels() {
+          return null;
         },
 
         renderPanelNavigationView() {
