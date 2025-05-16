@@ -423,7 +423,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let mainFieldDef = this.model.defs.fields[mainField];
                 let unitIdField = mainField + 'Unit'
                 let unitFieldDef = this.model.defs.fields[unitIdField];
-                return this.areEquals(current, others, mainField, mainFieldDef) && this.areEquals(current, others, unitIdField, unitFieldDef);
+                let result = this.areEquals(current, others, unitIdField, unitFieldDef);
+                if(mainField !== field) {
+                    return result &&  this.areEquals(current, others, mainField, mainFieldDef);
+                }
+
+                if(!result) {
+                    return false;
+                }
             }
 
             if (['link', 'file'].includes(fieldDef['type'])) {
