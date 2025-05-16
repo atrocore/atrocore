@@ -2435,7 +2435,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let path =defs.actionViewPath;
 
             let o = {
-                previewTemplateId: data.id,
+                previewTemplateId: defs.id,
                 label: defs.name
             };
             (defs.optionsToPass || []).forEach((option) => {
