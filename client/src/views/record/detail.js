@@ -201,17 +201,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
 
-        actionAddAttribute() {
+        actionAddAttribute(panelName) {
+            let boolFilterList = ['onlyForEntity'];
+            let boolFilterData = {
+                onlyForEntity: this.model.name
+            };
+
+            if (typeof panelName === 'string') {
+                boolFilterList.push('onlyForAttributePanel');
+                boolFilterData['onlyForAttributePanel'] = panelName;
+            }
+
             this.notify('Loading...');
             this.createView('dialog', 'views/modals/select-records', {
                 scope: 'Attribute',
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                boolFilterList: ['onlyForEntity'],
-                boolFilterData: {
-                    onlyForEntity: this.model.name
-                }
+                boolFilterList: boolFilterList,
+                boolFilterData: boolFilterData
             }, dialog => {
                 dialog.render();
                 this.notify(false);
@@ -824,15 +832,21 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }.bind(this));
 
+            let attributePanels = ['attributeValues'];
+            $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                attributePanels.push(panel.id);
+            })
+
             this.$el.find('.panel-heading').each((k, el) => {
                 let $el = $(el);
-                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
+                let panelName = $el.parent().data('name');
+                let isAttributeValuePanel = attributePanels.includes(panelName);
 
                 if (isAttributeValuePanel) {
                     let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><i class="ph ph-plus cursor-pointer" style="font-size: 1em;"></i></a></div>';
                     $el.append(html);
                     $el.find('.add-attribute-value-container').click(() => {
-                        this.actionAddAttribute();
+                        this.actionAddAttribute(panelName);
                     });
                 }
             });
@@ -2077,6 +2091,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (item.layoutRows.length > 0) {
                         data.layout.push({
                             id: id,
+                            name: id,
                             label: item.name,
                             rows: item.layoutRows
                         });
