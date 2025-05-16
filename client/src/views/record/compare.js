@@ -407,6 +407,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
+            if(['rangeFloat', 'rangeInt'].includes(fieldDef['type'] )) {
+                let result = this.areEquals(current, others, field +'From', this.model.defs.fields[field +'From'])
+                    && this.areEquals(current, others, field +'To', this.model.defs.fields[field +'To']);
+
+                if(fieldDef['measureId']) {
+                    result = result && this.areEquals(current, others, field +'Unit', this.model.defs.fields[field +'Unit']);
+                }
+
+                return result;
+            }
+
             if (fieldDef['unitField']) {
                 let mainField = fieldDef['mainField'];
                 let mainFieldDef = this.model.defs.fields[mainField];
