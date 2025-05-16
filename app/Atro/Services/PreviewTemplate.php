@@ -42,13 +42,8 @@ class PreviewTemplate extends Base
 
     public function canExecute(string $scope, string $entityId, array $where): bool
     {
-        $where[] = [
-            'type' => 'equals',
-            'attribute' => 'id',
-            'value' => $entityId
-        ];
-        $selectParams = $this->getSelectManager($scope)
-            ->getSelectParams(['where' => $where], true, true);
+        $where[] = ['type' => 'equals', 'attribute' => 'id', 'value' => $entityId];
+        $selectParams = $this->getSelectManager($scope)->getSelectParams(['where' => $where], true, true);
         $repository = $this->getEntityManager()->getRepository($scope);
         $repository->handleSelectParams($selectParams);
         return $repository->count($selectParams) > 0;
