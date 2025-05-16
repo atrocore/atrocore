@@ -34,10 +34,24 @@ class PreviewTemplate extends Base
         }
 
         return $this->getInjection('twig')->renderTemplate($previewTemplate->get('template') ?? '', [
-            'entities'     => [$entity],
-            'language'     => $this->getHeaderLanguage() ?? 'en_US',
+            'entities' => [$entity],
+            'language' => $this->getHeaderLanguage() ?? 'en_US',
             'mainLanguage' => $this->getConfig()->get('mainLanguage', 'en_US')
         ]);
+    }
+
+    public function canExecute(string $scope, string $entityId, array $where): bool
+    {
+        $where[] = [
+            'type' => 'equals',
+            'attribute' => 'id',
+            'value' => $entityId
+        ];
+        $selectParams = $this->getSelectManager($scope)
+            ->getSelectParams(['where' => $where], true, true);
+        $repository = $this->getEntityManager()->getRepository($scope);
+        $repository->handleSelectParams($selectParams);
+        return $repository->count($selectParams) > 0;
     }
 
     protected function init()

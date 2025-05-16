@@ -1483,7 +1483,7 @@ class Metadata extends AbstractListener
         if ($previewTemplates === null) {
             try {
                 $previewTemplates = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->select('id, name, entity_type')
+                    ->select('id, name, entity_type, data')
                     ->from('preview_template')
                     ->where('is_active = :true')
                     ->andWhere('deleted = :false')
@@ -1498,14 +1498,21 @@ class Metadata extends AbstractListener
         }
 
         foreach ($previewTemplates as $previewTemplate) {
-            $data['clientDefs'][$previewTemplate['entity_type']]['additionalButtons'][$previewTemplate['id']] = [
-                'name'           => $previewTemplate['id'],
-                'label'          => $previewTemplate['name'],
-                'actionViewPath' => 'views/preview-template/record/actions/preview',
-                'action'         => 'showHtmlPreview',
-                'optionsToPass'  => [
-                    'model'
-                ]
+            $data['clientDefs'][$previewTemplate['entity_type']]['dynamicRecordActions'][] = [
+                    'id'             => $previewTemplate['id'],
+                    'name'           => $previewTemplate['name'],
+                    'type'           => 'previewTemplate',
+                    'display'        => 'single',
+                    'actionViewPath' => 'views/preview-template/record/actions/preview',
+                    'action'         => 'showHtmlPreview',
+                    'optionsToPass'  => [
+                        'model'
+                    ],
+                    'acl'           => [
+                        'scope'     => $previewTemplate['entity_type'],
+                        'action'    => 'read',
+                     ],
+                    'data' => @json_decode($previewTemplate['data'] ?? '')
             ];
         }
     }
