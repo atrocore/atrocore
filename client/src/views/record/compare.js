@@ -409,9 +409,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             if (fieldDef['unitField']) {
                 let mainField = fieldDef['mainField'];
-                let mainFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', mainField]);
+                let mainFieldDef = this.model.defs.fields[mainField];
                 let unitIdField = mainField + 'Unit'
-                let unitFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', unitIdField]);
+                let unitFieldDef = this.model.defs.fields[unitIdField];
                 return this.areEquals(current, others, mainField, mainFieldDef) && this.areEquals(current, others, unitIdField, unitFieldDef);
             }
 
