@@ -703,7 +703,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getSelectAllByDefault: function() {
-            return true;
+            return false;
         },
 
         createFilterView(rule, inputName, type, delay = true) {
