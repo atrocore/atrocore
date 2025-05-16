@@ -58,6 +58,7 @@ class FileType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'file',
             'required'                  => !empty($row['is_required']),

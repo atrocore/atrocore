@@ -1996,25 +1996,45 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        sortPanelsBySortOrder(jsonObj) {
+            const sortedEntries = Object.entries(jsonObj).sort(([, a], [, b]) => a.sortOrder - b.sortOrder);
+            return Object.fromEntries(sortedEntries);
+        },
+
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
-                let layoutRows = [];
-                let layoutRow = [];
+                let attributePanels = {
+                    attributeValues: {
+                        id: 'attributeValues',
+                        name: this.translate('attributeValues'),
+                        layoutRows: [],
+                        layoutRow: [],
+                        sortOrder: 999
+                    }
+                };
+                $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                    attributePanels[panel.id] = panel;
+                    attributePanels[panel.id]['layoutRows'] = [];
+                    attributePanels[panel.id]['layoutRow'] = [];
+                });
+
+                attributePanels = this.sortPanelsBySortOrder(attributePanels);
 
                 const pushItem = (name, defs) => {
+                    let panelId = defs.attributePanelId ?? 'attributeValues';
                     let item = {
                         name: name,
                         customLabel: defs.detailViewLabel || defs.label,
-                        fullWidth: defs.fullWidth,
+                        fullWidth: defs.fullWidth
                     }
                     if (defs.layoutDetailView) {
                         item.view = defs.layoutDetailView;
                     }
 
-                    layoutRow.push(item);
-                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                        layoutRows.push(layoutRow);
-                        layoutRow = [];
+                    attributePanels[panelId].layoutRow.push(item);
+                    if (attributePanels[panelId].layoutRow[0]['fullWidth'] || attributePanels[panelId]['layoutRow'][1]) {
+                        attributePanels[panelId].layoutRows.push(attributePanels[panelId].layoutRow);
+                        attributePanels[panelId].layoutRow = [];
                     }
                 }
 
@@ -2038,24 +2058,30 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
 
-                if (layoutRow.length > 0) {
-                    layoutRow.push(false);
-                    layoutRows.push(layoutRow);
-                }
-
-                data.layout.forEach((row, k) => {
-                    if (row.id === 'attributeValues') {
-                        delete data.layout[k];
+                $.each(attributePanels, (id, item) => {
+                    if (item.layoutRow.length > 0) {
+                        attributePanels[id].layoutRow.push(false);
+                        attributePanels[id].layoutRows.push(item.layoutRow);
                     }
                 })
 
-                if (layoutRows.length > 0) {
-                    data.layout.push({
-                        id: 'attributeValues',
-                        label: this.translate('attributeValues'),
-                        rows: layoutRows
-                    });
-                }
+                $.each(attributePanels, (id, item) => {
+                    data.layout.forEach((row, k) => {
+                        if (row.id === id) {
+                            delete data.layout[k];
+                        }
+                    })
+                })
+
+                $.each(attributePanels, (id, item) => {
+                    if (item.layoutRows.length > 0) {
+                        data.layout.push({
+                            id: id,
+                            label: item.name,
+                            rows: item.layoutRows
+                        });
+                    }
+                })
             }
         },
 
