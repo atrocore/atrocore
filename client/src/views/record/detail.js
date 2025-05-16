@@ -2087,12 +2087,24 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     })
                 })
 
+                let languageCode = null;
+                $.each((this.getConfig().get('referenceData')?.Locale || {}), (code, item) => {
+                    if (item.id === this.getUser().get('localeId')) {
+                        languageCode = item.languageCode;
+                    }
+                })
+
+                let labelName = 'name';
+                if (languageCode) {
+                    labelName += languageCode.split('_').map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('');
+                }
+
                 $.each(attributePanels, (id, item) => {
                     if (item.layoutRows.length > 0) {
                         data.layout.push({
                             id: id,
                             name: id,
-                            label: item.name,
+                            label: item[labelName] || item.name,
                             rows: item.layoutRows
                         });
                     }
