@@ -313,7 +313,9 @@ Espo.define('search-manager', [], function () {
         refreshIsFilterSet() {
             this.isFilterSetValue = this.isFilterSet();
             if(this.collection) {
+                console.log('trigger is done ohhh');
                 this.collection.trigger('filter-state:changed', this.isFilterSetValue);
+                window.Backbone.trigger('filter-state:changed', this.collection)
             }
         },
 
