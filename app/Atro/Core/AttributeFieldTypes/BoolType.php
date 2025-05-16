@@ -41,6 +41,7 @@ class BoolType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'type'                      => 'bool',
             'required'                  => !empty($row['is_required']),
             'notNull'                   => !empty($row['not_null']),

@@ -53,6 +53,7 @@ class TextType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $id,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
@@ -135,6 +136,7 @@ class TextType extends AbstractFieldType
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'channelId'                 => $row['channel_id'] ?? null,
                 "entity"                    => 'Unit',
                 "unitIdField"               => true,
