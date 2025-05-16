@@ -169,12 +169,12 @@
     <div class="content">
         <div class="btn-group">
             {#each items as item}
-                {#if item.name !== activeItem.name}
-                    <a href="javascript:" on:click={()=>setActiveItem(item)}
-                       class="btn btn-link item">
-                        {item.label}
-                    </a>
-                {/if}
+                <a href="javascript:" on:click={()=>setActiveItem(item)}
+                   class="btn btn-link item"
+                   class:active={item.name===activeItem.name}
+                >
+                    {item.label}
+                </a>
             {/each}
         </div>
 
@@ -212,6 +212,10 @@
         padding: 4px 20px 4px 0;
         color: #333;
         text-decoration: underline;
+    }
+
+    .btn-group .item.active {
+        color: #2895ea;
     }
 
     .btn-group .item:hover:not(.active) {
