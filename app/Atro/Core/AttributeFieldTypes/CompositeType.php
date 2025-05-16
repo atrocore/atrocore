@@ -26,6 +26,7 @@ class CompositeType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'composite',
             'label'                     => $row[$this->prepareKey('name', $row)],
             'fullWidth'                 => true,

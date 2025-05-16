@@ -38,16 +38,17 @@ class RangeIntType extends AbstractFieldType
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
-            'type'           => 'range' . ucfirst($this->type),
-            'attributeId'    => $id,
-            'classificationAttributeId'           => $row['classification_attribute_id'] ?? null,
-            'required'       => !empty($row['is_required']),
-            'label'          => $row[$this->prepareKey('name', $row)],
-            'view'           => "views/fields/range-{$this->type}",
-            'importDisabled' => true,
-            'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'      => !empty($attributeData['fullWidth']),
+            'type'                      => 'range' . ucfirst($this->type),
+            'attributeId'               => $id,
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'view'                      => "views/fields/range-{$this->type}",
+            'importDisabled'            => true,
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         $entity->fields[$name . 'From'] = [
@@ -60,13 +61,14 @@ class RangeIntType extends AbstractFieldType
         $entity->set($name . 'From', $row[$entity->fields[$name . 'From']['column']] ?? null);
 
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
-            'attributeId'          => $id,
-            'classificationAttributeId'                 => $row['classification_attribute_id'] ?? null,
-            'type'                 => $this->type,
-            "mainField"            => $name,
-            'required'             => !empty($row['is_required']),
-            'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
-            'layoutDetailDisabled' => true
+            'attributeId'               => $id,
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
+            'type'                      => $this->type,
+            "mainField"                 => $name,
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
+            'layoutDetailDisabled'      => true
         ];
 
         $entity->fields[$name . 'To'] = [
@@ -79,13 +81,14 @@ class RangeIntType extends AbstractFieldType
         $entity->set($name . 'To', $row[$entity->fields[$name . 'To']['column']] ?? null);
 
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
-            'attributeId'          => $id,
-            'classificationAttributeId'                 => $row['classification_attribute_id'] ?? null,
-            'type'                 => $this->type,
-            "mainField"            => $name,
-            'required'             => !empty($row['is_required']),
-            'label'                => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
-            'layoutDetailDisabled' => true
+            'attributeId'               => $id,
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'channelId'                 => $row['channel_id'] ?? null,
+            'type'                      => $this->type,
+            "mainField"                 => $name,
+            'required'                  => !empty($row['is_required']),
+            'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
+            'layoutDetailDisabled'      => true
         ];
 
         if ($this->type === 'float') {
@@ -131,6 +134,7 @@ class RangeIntType extends AbstractFieldType
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'channelId'                 => $row['channel_id'] ?? null,
                 "entity"                    => 'Unit',
                 "unitIdField"               => true,
                 "mainField"                 => $name,
