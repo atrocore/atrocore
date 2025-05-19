@@ -142,7 +142,7 @@
     "inherit": "Успадкувати",
     "unlinkAll": "Прибрати все",
     "deleteAll": "Видалити все",
-    "setAsInherited": "Успадкувати значення",
+    "setAsInherited": "Унаслідувати від батька",
     "inherited": "Успадковується",
     "notInherited": "Не успадковується",
     "resetAllToDefault": "Відновити все за замовчуванням",

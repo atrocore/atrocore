@@ -166,7 +166,7 @@
     "inherit": "Inherit",
     "unlinkAll": "Unlink All",
     "deleteAll": "Delete All",
-    "setAsInherited": "Set as inherited",
+    "setAsInherited": "Inherit from parent",
     "inherited": "Inherited",
     "notInherited": "Not inherited",
     "inheritedFromParent": "Inherited from parent",
