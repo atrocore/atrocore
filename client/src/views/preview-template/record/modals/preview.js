@@ -148,7 +148,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.notify(this.translate('Loading...'));
             this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
-                previewTemplateId: this.options.htmlTemplateId,
+                previewTemplateId: this.options.previewTemplateId,
                 entityId: this.options.entityId
             }, options).success(res => {
                 this.htmlContent = res.htmlPreview ?? '';

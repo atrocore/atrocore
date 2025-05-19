@@ -2425,6 +2425,30 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-        }
+        },
+
+        actionDynamicActionPreviewTemplate(data) {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
+            if(!defs) {
+                return;
+            }
+            let path =defs.actionViewPath;
+
+            let o = {
+                previewTemplateId: defs.id,
+                label: defs.name
+            };
+            (defs.optionsToPass || []).forEach((option) => {
+                if (option in this) {
+                    o[option] = this[option];
+                }
+            });
+
+            this.createView(defs.id, path, o, (view) => {
+                if (typeof view[defs.action] === 'function') {
+                    view[defs.action]();
+                }
+            });
+        },
     });
 });
