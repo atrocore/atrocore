@@ -14,6 +14,7 @@ namespace Atro\Core;
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -28,6 +29,7 @@ class AttributeFieldConverter
     protected Metadata $metadata;
     protected Config $config;
     protected Connection $conn;
+    protected StorageInterface $memoryStorage;
     private Container $container;
     private array $attributes = [];
 
@@ -36,6 +38,7 @@ class AttributeFieldConverter
         $this->metadata = $container->get('metadata');
         $this->config = $container->get('config');
         $this->conn = $container->get('connection');
+        $this->memoryStorage = $container->get('memoryStorage');
         $this->container = $container;
     }
 
@@ -172,7 +175,7 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
-        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
+        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification") && empty($this->memoryStorage->get('disableCA'))) {
             $classificationAttrs = $this->conn->createQueryBuilder()
                 ->select('ca.*')
                 ->from("{$tableName}_classification", 'r')
