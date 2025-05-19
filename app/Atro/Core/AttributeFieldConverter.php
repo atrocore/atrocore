@@ -242,9 +242,15 @@ class AttributeFieldConverter
             }
         }
 
+        $attributePanelsIds = array_column($this->config->get('referenceData.AttributePanel'), 'id');
+
         $attributesDefs = [];
 
         foreach ($res as $row) {
+            // set null if attribute-panel does not exist
+            if (!empty($row['attribute_panel_id']) && !in_array($row['attribute_panel_id'], $attributePanelsIds)) {
+                $row['attribute_panel_id'] = null;
+            }
             $this->convert($entity, $row, $attributesDefs);
         }
 
