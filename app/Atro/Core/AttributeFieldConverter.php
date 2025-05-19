@@ -29,7 +29,6 @@ class AttributeFieldConverter
     protected Metadata $metadata;
     protected Config $config;
     protected Connection $conn;
-    protected StorageInterface $memoryStorage;
     private Container $container;
     private array $attributes = [];
 
@@ -38,7 +37,6 @@ class AttributeFieldConverter
         $this->metadata = $container->get('metadata');
         $this->config = $container->get('config');
         $this->conn = $container->get('connection');
-        $this->memoryStorage = $container->get('memoryStorage');
         $this->container = $container;
     }
 
@@ -175,7 +173,7 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
 
-        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification") && empty($this->memoryStorage->get('disableCA'))) {
+        if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
             $classificationAttrs = $this->conn->createQueryBuilder()
                 ->select('ca.*')
                 ->from("{$tableName}_classification", 'r')
@@ -261,7 +259,7 @@ class AttributeFieldConverter
         $entity->setAsFetched();
 
         foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
-            foreach ($attributesDefs as $name => $defs) {
+            foreach ($entity->fields ?? [] as $name => $defs) {
                 if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
                     $entity->unsetFetched($name);
                 }
