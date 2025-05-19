@@ -407,12 +407,30 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
+            if(['rangeFloat', 'rangeInt'].includes(fieldDef['type'] )) {
+                let result = this.areEquals(current, others, field +'From', this.model.defs.fields[field +'From'])
+                    && this.areEquals(current, others, field +'To', this.model.defs.fields[field +'To']);
+
+                if(fieldDef['measureId']) {
+                    result = result && this.areEquals(current, others, field +'Unit', this.model.defs.fields[field +'Unit']);
+                }
+
+                return result;
+            }
+
             if (fieldDef['unitField']) {
                 let mainField = fieldDef['mainField'];
-                let mainFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', mainField]);
+                let mainFieldDef = this.model.defs.fields[mainField];
                 let unitIdField = mainField + 'Unit'
-                let unitFieldDef = this.getMetadata().get(['entityDefs', this.scope, 'fields', unitIdField]);
-                return this.areEquals(current, others, mainField, mainFieldDef) && this.areEquals(current, others, unitIdField, unitFieldDef);
+                let unitFieldDef = this.model.defs.fields[unitIdField];
+                let result = this.areEquals(current, others, unitIdField, unitFieldDef);
+                if(mainField !== field) {
+                    return result &&  this.areEquals(current, others, mainField, mainFieldDef);
+                }
+
+                if(!result) {
+                    return false;
+                }
             }
 
             if (['link', 'file'].includes(fieldDef['type'])) {
