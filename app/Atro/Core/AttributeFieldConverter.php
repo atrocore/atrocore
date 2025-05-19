@@ -242,7 +242,7 @@ class AttributeFieldConverter
             }
         }
 
-        $attributePanelsIds = array_column($this->config->get('referenceData.AttributePanel'), 'id');
+        $attributePanelsIds = array_column($this->config->get('referenceData.AttributePanel', []), 'id');
 
         $attributesDefs = [];
 
