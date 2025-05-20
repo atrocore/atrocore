@@ -27,6 +27,10 @@
       "type": "link"
     },
     {
+      "name": "allowedOptions",
+      "type": "array"
+    },
+    {
       "name": "default",
       "type": "varchar"
     },

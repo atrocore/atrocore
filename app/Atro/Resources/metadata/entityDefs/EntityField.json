@@ -168,6 +168,10 @@
     "extensibleEnum": {
       "type": "link"
     },
+    "allowedOptions": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/allowed-options"
+    },
     "extensibleEnumOptions": {
       "type": "jsonObject",
       "notStorable": true,
