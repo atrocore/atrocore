@@ -16,7 +16,7 @@ Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/ex
             setup() {
                 Dep.prototype.setup.call(this);
 
-                this.listenTo(this.model, 'change:extensibleEnumId', () => {
+                this.listenTo(this.model, 'change:extensibleEnumId change:attributeExtensibleEnumId', () => {
                     this.model.set(this.name, null);
                     this.prepareOptionsList();
                     this.reRender();
@@ -24,7 +24,7 @@ Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/ex
             },
 
             getExtensibleEnumId() {
-                return this.model.get('extensibleEnumId');
+                return this.model.get('attributeExtensibleEnumId') || this.model.get('extensibleEnumId');
             },
 
             afterRender() {
