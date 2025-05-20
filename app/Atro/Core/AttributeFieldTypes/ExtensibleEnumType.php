@@ -44,9 +44,10 @@ class ExtensibleEnumType extends AbstractFieldType
             'prohibitedEmptyValue'      => !empty($row['prohibited_empty_value']),
             'dropdown'                  => !empty($row['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
+            'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'                 => !empty($attributeData['fullWidth']),
+            'fullWidth'                 => !empty($attributeData['fullWidth'])
         ];
 
         if (!empty($attributeData['dropdown'])) {

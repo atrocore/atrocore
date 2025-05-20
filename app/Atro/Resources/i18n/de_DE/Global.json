@@ -569,6 +569,7 @@
     "compare": "Vergleichen Sie"
   },
   "fields": {
+    "allowedOptions": "Optionen zulassen",
     "disableActionHistory": "Aktionsprotokollierung deaktivieren",
     "followers": "Abonnenten",
     "path": "Ordner Pfad",
