@@ -13,8 +13,28 @@ Espo.define('views/admin/field-manager/fields/allowed-options', 'views/fields/ex
 
         return Dep.extend({
 
+            setup() {
+                Dep.prototype.setup.call(this);
+
+                this.listenTo(this.model, 'change:extensibleEnumId', () => {
+                    this.model.set(this.name, null);
+                    this.prepareOptionsList();
+                    this.reRender();
+                });
+            },
+
             getExtensibleEnumId() {
                 return this.model.get('extensibleEnumId');
+            },
+
+            afterRender() {
+                Dep.prototype.afterRender.call(this);
+
+                this.$el.parent().hide();
+
+                if (this.getExtensibleEnumId()) {
+                    this.$el.parent().show();
+                }
             },
 
         });

@@ -71,6 +71,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'dropdown'                  => !empty($row['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
+            'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)]
         ];

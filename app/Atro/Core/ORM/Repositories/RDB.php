@@ -409,7 +409,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             if (!empty($allowedOptions) && !in_array($option['id'], $allowedOptions)) {
                 throw new BadRequest(sprintf(
                     $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                    $option['name']
+                    $option['name'],
+                    $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
                 ));
             }
         }
@@ -436,7 +437,8 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 if (!empty($allowedOptions) && !in_array($option['id'], $allowedOptions)) {
                     throw new BadRequest(sprintf(
                         $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                        $option['name']
+                        $option['name'],
+                        $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
                     ));
                 }
             }
