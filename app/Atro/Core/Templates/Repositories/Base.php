@@ -17,6 +17,7 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Services\Record;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
@@ -49,7 +50,11 @@ class Base extends RDB
                 $qb->setValue($column, ":{$column}");
                 $qb->setParameter($column, $value, Mapper::getParameterType($value));
             }
-            $qb->executeQuery();
+
+            try {
+                $qb->executeQuery();
+            } catch (UniqueConstraintViolationException $e) {
+            }
         }
     }
 
