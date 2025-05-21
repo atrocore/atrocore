@@ -1,46 +1,48 @@
 <div class="detail" id="{{id}}">
     <div class="row">
-        {{#each fieldPanels }}
-        <div class="compare-panel list col-md-12">
-            <div class="panel panel-default panel-{{name}}" data-name="{{name}}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        {{title}}
-                    </h4>
-                </div>
+        <div class="fields-compare-panel">
+            {{#each fieldPanels }}
+            <div class="compare-panel list col-md-12">
+                <div class="panel panel-default panel-{{name}}" data-name="{{name}}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{title}}
+                        </h4>
+                    </div>
 
-                <div class="panel-body">
-                    <div class="list-container">
-                        <div class="list">
-                            <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
-                                <thead>
-                                <tr>
-                                    {{#each ../columns}}
-                                    <th class="text-center">
-                                        {{{name}}}
-                                        {{#if _error}}
-                                        <br>
-                                        <span class="danger"> ({{_error}})</span>
-                                        {{/if}}
-                                    </th>
-                                    {{/each}}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="list-row">
-                                    <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
-                                </tr>
-                                <tr class="list-row">
-                                    <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                    <div class="panel-body">
+                        <div class="list-container">
+                            <div class="list">
+                                <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
+                                    <thead>
+                                    <tr>
+                                        {{#each ../columns}}
+                                        <th class="text-center">
+                                            {{{name}}}
+                                            {{#if _error}}
+                                            <br>
+                                            <span class="danger"> ({{_error}})</span>
+                                            {{/if}}
+                                        </th>
+                                        {{/each}}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="list-row">
+                                        <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
+                                    </tr>
+                                    <tr class="list-row">
+                                        <td class="cell" colspan="{{../columnLength}}"> {{translate 'Loading...'}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {{/each}}
         </div>
-        {{/each}}
 
         <div class="compare-panel  list col-md-12" data-name="relationshipsPanels">
 
@@ -56,12 +58,15 @@
         text-align: center;
     }
 
-    .compare-panel[data-name='relationshipsPanels'] .panel.panel-default {
+    .fields-compare-panel {
+        display: inline-block;
+    }
+
+    .compare-panel[data-name='relationshipsPanels'] .panel.panel-default, .fields-compare-panel {
         margin-bottom: 50px;
     }
 
     .compare-panel {
-        margin-bottom: 50px;
         background-color: white;
         width: 100%;
         padding: 0;
