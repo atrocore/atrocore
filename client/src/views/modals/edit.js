@@ -175,6 +175,12 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.header = iconHtml + this.header;
 
+            this.listenTo(this.model, 'change', () => {
+                if(this.dialog && this.dialog.$el) {
+                    this.dialog.$el.trigger('shown.bs.modal')
+                }
+            });
+
             if (!this.model.isNew()) {
                 this.listenTo(this, 'after:render', () => {
                     if ((this.options.htmlStatusIcons || []).length > 0) {
