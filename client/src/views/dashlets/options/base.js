@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail', 'model', 'view-record-helper'], function (Dep, Detail, Model, ViewRecordHelper) {
+Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail', 'model', 'view-record-helper', 'views/search/search-filter-opener'], function (Dep, Detail, Model, ViewRecordHelper, SearchFilterOpener) {
 
     var self;
 
@@ -77,7 +77,6 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             var i = 0;
             var a = [];
             for (var field in this.fields) {
-
                 if (!(i % 2)) {
                     a = [];
                     layout[0].rows.push(a);
@@ -132,6 +131,50 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             });
 
             this.header = this.getLanguage().translate('Dashlet Options') + ': ' + this.getLanguage().translate(this.name, 'dashlets');
+
+            this.buttonList.push({
+                title: this.translate('openSearchFilter'),
+                name: 'filterButton',
+                hidden: true,
+                html: this.getFilterButtonHtml(),
+                onClick: () => {
+                    SearchFilterOpener.prototype.open.call(this, this.model.get('entityType'), this.model.get('entityFilter')?.where,  ({where, whereData}) => {
+                        this.model.set('entityFilter',  _.extend({}, this.model.get('entityFilter'), {
+                            where,
+                            whereData,
+                            whereScope: this.model.get('entityType')
+                        }));
+                        this.$el.find('button[data-name="filterButton"]').html(this.getFilterButtonHtml());
+                    });
+                }
+            });
+
+            this.listenTo(this.model, 'change:entityType', () => {
+                this.model.set('entityFilter', null);
+                this.$el.find('button[data-name="filterButton"]').html(this.getFilterButtonHtml());
+                this.checkFieldVisibility();
+            });
+
+            this.listenTo(this, 'after:render', () => {
+                this.$el.find('button[data-name="filterButton"]').html(this.getFilterButtonHtml());
+                this.checkFieldVisibility();
+            });
+        },
+
+        getFilterButtonHtml(){
+            if (this.model.get('entityFilter')?.where && Array.isArray(this.model.get('entityFilter').where) && this.model.get('entityFilter').where.length > 0) {
+                return `<i class="ph-fill ph-binoculars" style="color:#06c"></i>`
+            } else {
+                return `<i class="ph ph-binoculars" ></i>`
+            }
+        },
+
+        checkFieldVisibility() {
+            if(this.getMetadata().get(['scopes', this.model.get('entityType'), 'type'])) {
+                this.$el.find('button[data-name="filterButton"]').removeClass('hidden')
+            }else{
+                this.$el.find('button[data-name="filterButton"]').addClass('hidden')
+            }
         },
 
         setupBeforeFinal: function () {},
@@ -142,6 +185,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 var fieldView = this.getView('record').getFieldView(field);
                 if(fieldView){
                     _.extend(attributes, fieldView.fetch());
+                }
+                if(field === 'entityFilter' && this.model.get('entityFilter')) {
+                    attributes['entityFilter'] = this.model.get('entityFilter');
                 }
             }, this);
 

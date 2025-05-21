@@ -37,8 +37,7 @@
         "translation": "Global.scopeNames"
       },
       "entityFilter": {
-        "type": "jsonObject",
-        "view": "views/dashlets/fields/records/entity-filter"
+        "type": "jsonObject"
       },
       "sortBy": {
         "type": "enum",
@@ -92,12 +91,6 @@
             },
             {
               "name": "sortDirection"
-            }
-          ],
-          [
-            {
-              "name": "entityFilter",
-              "fullWidth": true
             }
           ]
         ]
