@@ -17,7 +17,7 @@ class ClientManager
 
     private Config $config;
 
-    protected string $mainHtmlFilePath = 'client/html/main.html';
+    protected string $mainHtmlFilePath = 'public/client/html/main.html';
 
     protected string $htmlFilePathForDeveloperMode = 'client/html/main.html';
 
