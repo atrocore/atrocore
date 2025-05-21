@@ -182,6 +182,13 @@ class AttributeFieldConverter
         }
 
         if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
+            $propertyFields = [];
+            foreach ($this->metadata->get('entityDefs.ClassificationAttribute.fields', []) as $f => $fDefs) {
+                if (!empty($fDefs['fieldProperty'])) {
+                    $propertyFields[] = $f;
+                }
+            }
+
             $classificationAttrs = $this->conn->createQueryBuilder()
                 ->select('ca.*')
                 ->from("{$tableName}_classification", 'r')
@@ -205,6 +212,10 @@ class AttributeFieldConverter
                         $attributeData = @json_decode($attribute['data'] ?? '', true);
                         if (empty($attributeData)) {
                             $attributeData = [];
+                        }
+
+                        foreach ($propertyFields as $field) {
+                            $attributeData['field'][$field] = null;
                         }
 
                         $classificationAttributeData = @json_decode($classificationAttribute['data'] ?? '', true);

@@ -1253,11 +1253,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         initLinkIfAttribute() {
-
-            let fieldDefs  = this.model.defs.fields[this.name];
-            if(!fieldDefs.attributeId ||  this.getLabelTextContainer().find('a').length) {
+            let fieldDefs = this.model.defs.fields[this.name];
+            if (!fieldDefs || !fieldDefs.attributeId || this.getLabelTextContainer().find('a').length) {
                 return;
             }
+
             this.getLabelTextContainer().html(`<a href="#/Attribute/view/${fieldDefs.attributeId}" target="_blank"> ${this.getLabelTextContainer().text()}</a>`)
         }
     });
