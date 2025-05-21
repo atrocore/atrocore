@@ -12,13 +12,16 @@ Espo.define('views/admin/field-manager/fields/extensible-multi-enum-default', 'v
 
     return Dep.extend({
 
-        selectBoolFilterList: ['defaultOption'],
+        selectBoolFilterList: ['defaultOption', 'onlyAllowedOptions'],
 
         boolFilterData: {
             defaultOption() {
                 return {
                     extensibleEnumId: this.model.get('extensibleEnumId') ?? this.model.defs.fields[this.name]?.extensibleEnumId
                 };
+            },
+            onlyAllowedOptions() {
+                return this.model.get('allowedOptions') || null
             }
         },
 
