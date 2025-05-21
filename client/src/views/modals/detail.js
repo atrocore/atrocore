@@ -163,6 +163,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                     this.applyOverviewFilters();
                 });
             }
+
+            this.listenTo(this.model, 'change', () => {
+                if(this.dialog && this.dialog.$el) {
+                    this.dialog.$el.trigger('shown.bs.modal')
+                }
+            });
         },
 
         addEditButton: function () {
