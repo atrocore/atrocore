@@ -249,10 +249,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 });
                 searchManager.setBool(d);
             }
-            var primaryFilterName = this.primaryFilterName || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
-            if (primaryFilterName) {
-                searchManager.setPrimary(primaryFilterName);
-            }
 
             let where = searchManager.getWhere();
             where.forEach(item => {
@@ -408,7 +404,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             if (this.createButton) {
-                let buttonLabel = this.translate('Create ' + this.scope, 'labels', this.scope);
+                let buttonLabel = this.translate('Create');
                 html += `<a href="javascript:" data-action="create" ${html ? 'style="margin-left: 15px"' : ''} class="btn action btn-primary">${buttonLabel}</a>`
             }
 
@@ -421,7 +417,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 );
             }
 
-            this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
+            let hiddenBoolFilters = this.getMetadata().get(['clientDefs', this.scope, 'hiddenBoolFilterList']) || []
+            this.searchManager.mandatoryBoolFilterList = this.boolFilterList.filter(filter => {
+                return hiddenBoolFilters.includes(filter);
+            });
             this.searchManager.boolFilterData = this.boolFilterData;
 
             const listView = this.getView('list');
