@@ -4,11 +4,11 @@
   "boolFilterList": [
     "defaultOption",
     "onlyForExtensibleEnum",
-    "isNot"
+    "onlyAllowedOptions"
   ],
   "hiddenBoolFilterList": [
     "defaultOption",
     "onlyForExtensibleEnum",
-    "isNot"
+    "onlyAllowedOptions"
   ]
 }

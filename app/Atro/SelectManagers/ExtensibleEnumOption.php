@@ -33,11 +33,12 @@ class ExtensibleEnumOption extends Base
         $this->addExtensibleEnumIdWhere($this->getBoolFilterParameter('onlyForExtensibleEnum'), $result);
     }
 
-    protected function boolFilterIsNot(array &$result): void
+    protected function boolFilterOnlyAllowedOptions(array &$result): void
     {
-        $data = $this->getBoolFilterParameter('isNot');
-        if (!empty($data)) {
-            $result['whereClause'][] = ['id!=' => $data];
+        $ids = $this->getBoolFilterParameter('onlyAllowedOptions');
+
+        if (!empty($ids)) {
+            $result['whereClause'][] = ['id=' => $ids];
         }
     }
 

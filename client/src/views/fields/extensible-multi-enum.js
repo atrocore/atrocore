@@ -38,25 +38,20 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
         detailTemplate: 'fields/extensible-multi-enum/detail',
 
-        selectBoolFilterList: ['onlyForExtensibleEnum'],
+        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions'],
 
         boolFilterData: {
             onlyForExtensibleEnum() {
                 return this.getExtensibleEnumId();
             },
-            isNot() {
-                return this.disabledOptions
+            onlyAllowedOptions() {
+                return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
             }
         },
-
-        disabledOptions: [],
 
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name;
-
-            this.disabledOptions = [];
-            this.selectBoolFilterList = ['onlyForExtensibleEnum'];
 
             this.foreignScope = 'ExtensibleEnumOption';
 
@@ -70,10 +65,6 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                         this.selectBoolFilterList.push(item);
                     }
                 });
-            }
-
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
             }
 
             Dep.prototype.setup.call(this);
@@ -146,19 +137,6 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             }
 
             return res;
-        },
-
-        disableOptions(list) {
-            this.disabledOptions = list || []
-            if (this.disabledOptions.length === 0) {
-                if (this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.splice(this.selectBoolFilterList.indexOf('isNot'), 1)
-                }
-            } else {
-                if (!this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.push('isNot')
-                }
-            }
         },
 
         fetchSearch: function () {

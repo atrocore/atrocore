@@ -38,25 +38,21 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
 
         detailTemplate: 'fields/extensible-enum/detail',
 
-        selectBoolFilterList: ['onlyForExtensibleEnum'],
+        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions'],
 
         boolFilterData: {
             onlyForExtensibleEnum() {
                 return this.getExtensibleEnumId();
             },
-            isNot() {
-                return this.disabledOptions
+            onlyAllowedOptions() {
+                return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
             }
         },
-
-        disabledOptions: [],
 
         setup: function () {
             this.idName = this.name;
             this.nameName = this.name + 'Name';
             this.foreignScope = 'ExtensibleEnumOption';
-            this.disabledOptions = [];
-            this.selectBoolFilterList = ['onlyForExtensibleEnum'];
 
             if (this.options.customBoolFilterData) {
                 this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
@@ -68,10 +64,6 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                         this.selectBoolFilterList.push(item);
                     }
                 });
-            }
-
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
             }
 
             Dep.prototype.setup.call(this);
@@ -130,18 +122,6 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             }
         },
 
-        disableOptions(list) {
-            this.disabledOptions = list || []
-            if (this.disabledOptions.length === 0) {
-                if (this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.splice(this.selectBoolFilterList.indexOf('isNot'), 1)
-                }
-            } else {
-                if (!this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.push('isNot')
-                }
-            }
-        }
     });
 });
 
