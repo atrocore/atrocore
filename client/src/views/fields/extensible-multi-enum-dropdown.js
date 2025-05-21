@@ -43,10 +43,10 @@ Espo.define('views/fields/extensible-multi-enum-dropdown', 'views/fields/link-mu
             this.translatedOptions = {};
             this.params.optionColors = {};
 
-            let allowedOptions = this.model.getFieldParam(this.name, 'allowedOptions');
+            let allowedOptions = this.model.getFieldParam(this.name, 'allowedOptions') || [];
 
             this.getListOptionsData(this.getExtensibleEnumId()).forEach(option => {
-                if (option.id && (!allowedOptions || allowedOptions.includes(option.id))) {
+                if (option.id && (allowedOptions.length === 0 || allowedOptions.includes(option.id))) {
                     this.params.options.push(option.id);
                     this.translatedOptions[option.id] = option.name || option.id;
                     this.params.optionColors[option.id] = option.color || null;
