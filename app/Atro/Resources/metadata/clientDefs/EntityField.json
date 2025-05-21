@@ -2,6 +2,9 @@
   "controller": "controllers/record",
   "acl": "acl/entity-field",
   "limit": 500,
+  "views": {
+    "detail": "views/admin/field-manager/detail"
+  },
   "recordViews": {
     "list": "views/admin/field-manager/record/list",
     "detail": "views/admin/field-manager/record/detail"
