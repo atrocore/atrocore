@@ -249,10 +249,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 });
                 searchManager.setBool(d);
             }
-            var primaryFilterName = this.primaryFilterName || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
-            if (primaryFilterName) {
-                searchManager.setPrimary(primaryFilterName);
-            }
 
             let where = searchManager.getWhere();
             where.forEach(item => {
@@ -421,7 +417,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 );
             }
 
-            this.searchManager.mandatoryBoolFilterList = this.boolFilterList;
+            let hiddenBoolFilters = this.getMetadata().get(['clientDefs', this.scope, 'hiddenBoolFilterList']) || []
+            this.searchManager.mandatoryBoolFilterList = this.boolFilterList.filter(filter => {
+                return hiddenBoolFilters.includes(filter);
+            });
             this.searchManager.boolFilterData = this.boolFilterData;
 
             const listView = this.getView('list');
