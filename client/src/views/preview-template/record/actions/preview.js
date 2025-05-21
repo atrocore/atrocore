@@ -14,11 +14,11 @@ Espo.define('views/preview-template/record/actions/preview', 'view',
         _template: '',
 
         showHtmlPreview() {
-            const htmlTemplateId = this.options.button.name;
-            this.createView('htmlPreviewModal' + htmlTemplateId, 'views/preview-template/record/modals/preview', {
-                htmlTemplateId: htmlTemplateId,
+            const previewTemplateId = this.options.previewTemplateId;
+            this.createView('htmlPreviewModal' + previewTemplateId, 'views/preview-template/record/modals/preview', {
+                previewTemplateId: previewTemplateId,
                 entityId: this.model.get('id'),
-                modalTitle: this.options.button.label || null
+                modalTitle: this.options.label || null
             }, view => {
                 view.render();
             });

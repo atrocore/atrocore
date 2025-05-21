@@ -314,6 +314,7 @@ Espo.define('search-manager', [], function () {
             this.isFilterSetValue = this.isFilterSet();
             if(this.collection) {
                 this.collection.trigger('filter-state:changed', this.isFilterSetValue);
+                window.Backbone.trigger('filter-state:changed', this.collection)
             }
         },
 

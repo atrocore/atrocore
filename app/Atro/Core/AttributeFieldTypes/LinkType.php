@@ -56,6 +56,7 @@ class LinkType extends AbstractFieldType
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'channelId'                 => $row['channel_id'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $attributeData['entityType'],
@@ -67,20 +68,22 @@ class LinkType extends AbstractFieldType
             ];
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
-            try {
-                $referenceItem = $this->conn->createQueryBuilder()
-                    ->select('id, name')
-                    ->from($referenceTable)
-                    ->where('id=:id')
-                    ->andWhere('deleted=:false')
-                    ->setParameter('id', $row['reference_value'])
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchAssociative();
 
+            if (!empty($row['reference_value'])) {
+                try {
+                    $referenceItem = $this->conn->createQueryBuilder()
+                        ->select('id, name')
+                        ->from($referenceTable)
+                        ->where('id=:id')
+                        ->andWhere('deleted=:false')
+                        ->setParameter('id', $row['reference_value'])
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->fetchAssociative();
 
-                $entity->set($name . 'Name', $referenceItem['name'] ?? null);
-            } catch (\Throwable $e) {
-                // ignore all
+                    $entity->set($name . 'Name', $referenceItem['name'] ?? null);
+                } catch (\Throwable $e) {
+                    // ignore all
+                }
             }
 
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

@@ -116,7 +116,9 @@
         {
           "name": "extensibleEnum"
         },
-        false
+        {
+          "name": "allowedOptions"
+        }
       ],
       [
         {

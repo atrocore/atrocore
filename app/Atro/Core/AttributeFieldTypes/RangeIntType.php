@@ -41,6 +41,7 @@ class RangeIntType extends AbstractFieldType
             'type'                      => 'range' . ucfirst($this->type),
             'attributeId'               => $id,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],
@@ -63,6 +64,7 @@ class RangeIntType extends AbstractFieldType
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
             'attributeId'               => $id,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => $this->type,
             "mainField"                 => $name,
@@ -83,6 +85,7 @@ class RangeIntType extends AbstractFieldType
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
             'attributeId'               => $id,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => $this->type,
             "mainField"                 => $name,
@@ -134,6 +137,7 @@ class RangeIntType extends AbstractFieldType
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'channelId'                 => $row['channel_id'] ?? null,
                 "entity"                    => 'Unit',
                 "unitIdField"               => true,

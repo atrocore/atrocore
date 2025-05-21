@@ -64,12 +64,14 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'extensibleMultiEnum',
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'dropdown'                  => !empty($row['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
+            'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)]
         ];

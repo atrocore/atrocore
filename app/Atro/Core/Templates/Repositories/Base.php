@@ -17,42 +17,12 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Services\Record;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Base extends RDB
 {
-    public function duplicateAttributeValues(Entity $entity, Entity $duplicatingEntity): void
-    {
-        $tableName = Util::toUnderScore(lcfirst($entity->getEntityName()));
-
-        $attrs = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from("{$tableName}_attribute_value")
-            ->where("deleted=:false")
-            ->andWhere("{$tableName}_id=:id")
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $duplicatingEntity->get('id'))
-            ->fetchAllAssociative();
-
-        if (empty($attrs)) {
-            return;
-        }
-
-        foreach ($attrs as $attr) {
-            $attr['id'] = Util::generateId();
-            $attr["{$tableName}_id"] = $entity->get('id');
-
-            $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-            $qb->insert("{$tableName}_attribute_value");
-            foreach ($attr as $column => $value) {
-                $qb->setValue($column, ":{$column}");
-                $qb->setParameter($column, $value, Mapper::getParameterType($value));
-            }
-            $qb->executeQuery();
-        }
-    }
-
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {

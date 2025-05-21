@@ -14,6 +14,7 @@ namespace Atro\Core;
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -242,9 +243,15 @@ class AttributeFieldConverter
             }
         }
 
+        $attributePanelsIds = array_column($this->config->get('referenceData.AttributePanel', []), 'id');
+
         $attributesDefs = [];
 
         foreach ($res as $row) {
+            // set null if attribute-panel does not exist
+            if (!empty($row['attribute_panel_id']) && !in_array($row['attribute_panel_id'], $attributePanelsIds)) {
+                $row['attribute_panel_id'] = null;
+            }
             $this->convert($entity, $row, $attributesDefs);
         }
 
@@ -252,7 +259,7 @@ class AttributeFieldConverter
         $entity->setAsFetched();
 
         foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
-            foreach ($attributesDefs as $name => $defs) {
+            foreach ($entity->fields ?? [] as $name => $defs) {
                 if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
                     $entity->unsetFetched($name);
                 }

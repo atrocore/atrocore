@@ -139,7 +139,7 @@
     "typeAndPressEnter": "Tippen und Eingabetaste drücken um zu suchen ...",
     "allLanguages": "Alle Sprachen",
     "mainLanguage": "Hauptsprache",
-    "setAsInherited": "Als vererbt setzen",
+    "setAsInherited": "Vom Parent vererben",
     "inheritAll": "Alle vererben",
     "inherit": "Vererben",
     "unlinkAll": "Alle Verknüpfungen aufheben",
@@ -569,6 +569,7 @@
     "compare": "Vergleichen Sie"
   },
   "fields": {
+    "allowedOptions": "Optionen zulassen",
     "disableActionHistory": "Aktionsprotokollierung deaktivieren",
     "followers": "Abonnenten",
     "path": "Ordner Pfad",

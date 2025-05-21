@@ -178,6 +178,13 @@ class Entity extends ReferenceData
             }
         }
 
+        $canHasClassifications = false;
+        foreach ($params['whereClause'] ?? [] as $item) {
+            if (!empty($item['canHasClassifications'])) {
+                $canHasClassifications = true;
+            }
+        }
+
         $items = [];
         foreach ($this->getMetadata()->get('scopes', []) as $code => $row) {
             if (!empty($row['emHidden']) || (!empty($scopeTypes) && !empty($row['type']) && !in_array($row['type'], $scopeTypes))) {
@@ -185,6 +192,10 @@ class Entity extends ReferenceData
             }
 
             if ($canHasAttributes && empty($row['hasAttribute'])) {
+                continue;
+            }
+
+            if ($canHasClassifications && empty($row['hasClassification'])) {
                 continue;
             }
 

@@ -217,6 +217,32 @@ class EntityField extends ReferenceData
                     ->executeStatement();
             }
         }
+
+        if (!empty($entity->get('default')) && !empty($entity->get('allowedOptions'))) {
+            switch ($entity->get('type')) {
+                case 'extensibleEnum':
+                    if (!in_array($entity->get('default'), $entity->get('allowedOptions'))) {
+                        throw new BadRequest(sprintf(
+                            $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
+                            $entity->get('defaultName') ?? $entity->get('default'),
+                            $this->getLanguage()->translate('default', 'fields', 'EntityField')
+                        ));
+                    }
+                    break;
+                case 'extensibleMultiEnum':
+                    foreach ($entity->get('default') as $optionId) {
+                        if (!in_array($optionId, $entity->get('allowedOptions'))) {
+                            $defaultNames = $entity->get('defaultNames') ?? new \stdClass();
+                            throw new BadRequest(sprintf(
+                                $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
+                                $defaultNames->{$optionId} ?? $optionId,
+                                $this->getLanguage()->translate('default', 'fields', 'EntityField')
+                            ));
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     protected function afterSave(OrmEntity $entity, array $options = [])

@@ -892,6 +892,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 scope: scope,
                 multiple: type !== 'belongsTo',
                 createButton: false,
+                allowSelectAllResult: !this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.disabledSelectAllResult`),
                 filters: filters,
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
