@@ -357,6 +357,10 @@
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
     },
+    "extensibleEnumOptions": {
+      "type": "hasMany",
+      "entity": "ExtensibleEnumOption"
+    },
     "htmlSanitizer": {
       "type": "belongsTo",
       "entity": "HtmlSanitizer"
