@@ -18297,4 +18297,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-width: 25px;
 }
 
+.cell label .label-text a {
+    color: var(--label-color);
+}
+
+.cell label .label-text a:hover, .cell label .label-text a:focus {
+    color: var(--label-color);
+    text-decoration: none;
+}
+
 

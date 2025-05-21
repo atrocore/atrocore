@@ -149,7 +149,8 @@ class AttributeFieldConverter
             'av.text_value',
             'av.reference_value',
             'av.json_value',
-            'f.name as file_name'
+            'f.name as file_name',
+            'c.name as channel_name'
         ];
 
         if (!empty($this->config->get('isMultilangActive'))) {
@@ -163,6 +164,7 @@ class AttributeFieldConverter
             ->select(implode(',', $select))
             ->from("{$tableName}_attribute_value", 'av')
             ->leftJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
             ->where('av.deleted=:false')
             ->andWhere('a.deleted=:false')
@@ -172,6 +174,12 @@ class AttributeFieldConverter
             ->setParameter('id', $entity->get('id'))
             ->setParameter('fileType', 'file')
             ->fetchAllAssociative();
+
+        foreach ($res as $k => $attribute) {
+            if (!empty($attribute['channel_name'])) {
+                $res[$k]['name'] = $attribute['name'] . ' / ' . $attribute['channel_name'];
+            }
+        }
 
         if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
             $classificationAttrs = $this->conn->createQueryBuilder()

@@ -107,6 +107,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.getLabelElement().find('.status-icons');
         },
 
+        getLabelTextContainer: function () {
+            return this.getLabelElement().find('.label-text');
+        },
+
         getInlineActionsContainer: function () {
             return this.getCellElement().children('.inline-actions');
         },
@@ -312,6 +316,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
+                this.initLinkIfAttribute();
                 if (this.hasRequiredMarker()) {
                     this.showRequiredSign();
                 } else {
@@ -1245,6 +1250,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         filterValueGetter(rule) {
             return this.filterValue;
+        },
+
+        initLinkIfAttribute() {
+
+            let fieldDefs  = this.model.defs.fields[this.name];
+            if(!fieldDefs.attributeId ||  this.getLabelTextContainer().find('a').length) {
+                return;
+            }
+            this.getLabelTextContainer().html(`<a href="#/Attribute/view/${fieldDefs.attributeId}" target="_blank"> ${this.getLabelTextContainer().text()}</a>`)
         }
     });
 });
