@@ -95,7 +95,7 @@ class Note
                 }
             }
             if ($updated) {
-                $updatedFieldList[] = $field;
+                $updated = false;
 
                 foreach (['actualList', 'notActualList'] as $key) {
                     foreach ($item[$key] as $attribute) {
@@ -105,8 +105,13 @@ class Note
                         if (!(($valueWas === null || $valueWas === '') && ($valueBecame === null || $valueBecame === ''))) {
                             $was[$attribute] = $valueWas;
                             $became[$attribute] = $valueBecame;
+                            $updated = true;
                         }
                     }
+                }
+
+                if ($updated) {
+                    $updatedFieldList[] = $field;
                 }
 
                 if ($item['fieldType'] === 'linkParent') {
