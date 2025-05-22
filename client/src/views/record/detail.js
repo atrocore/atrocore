@@ -2072,7 +2072,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if (!addedGroups[panelId][attributeGroupId]) {
                             addedGroups[panelId][attributeGroupId] = true;
                             attributePanels[panelId].layoutRow.push({
-                                name: panelId + attributeGroupId,
+                                name: panelId + '_'+ attributeGroupId,
                                 customLabel: defs.attributeGroup.name,
                                 view: "pim:views/attribute/fields/attribute-group-layout-item",
                                 fullWidth: true
