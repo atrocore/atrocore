@@ -258,7 +258,7 @@ class Record extends RecordService
             'attribute' => $foreignLink,
         ];
 
-        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
 
         $fields = ['id', 'name'];
         $localizedNameField = $this->getLocalizedNameField($scope);
@@ -272,6 +272,7 @@ class Record extends RecordService
         $selectParams['select'] = $fields;
         $collection = $repository->find($selectParams);
         $total = $repository->count($selectParams);
+
         $offset = $params['offset'];
         $result = [];
 
