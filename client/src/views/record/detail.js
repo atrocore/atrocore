@@ -2017,15 +2017,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
-                let attributePanels = {
-                    attributeValues: {
-                        id: 'attributeValues',
-                        name: this.translate('attributeValues'),
-                        layoutRows: [],
-                        layoutRow: [],
-                        sortOrder: 999
-                    }
-                };
+                let attributePanels = {};
                 $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
                     attributePanels[panel.id] = panel;
                     attributePanels[panel.id]['layoutRows'] = [];
