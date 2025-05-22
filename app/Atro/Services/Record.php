@@ -258,7 +258,7 @@ class Record extends RecordService
             'attribute' => $foreignLink,
         ];
 
-        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
 
         $fields = ['id', 'name'];
         $localizedNameField = $this->getLocalizedNameField($scope);
