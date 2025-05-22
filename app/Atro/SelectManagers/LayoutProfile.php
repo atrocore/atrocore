@@ -38,7 +38,7 @@ class LayoutProfile extends Base
             $qb->andWhere("ly.entity=:entity and ly.view_type=:viewType and ly.deleted=:false and " . (empty($boolParams['relatedScope']) ? "ly.related_entity is null" : "ly.related_entity = :relatedEntity"));
             $qb->setParameter('entity', $boolParams['scope'])
                 ->setParameter('viewType', $boolParams['viewType'])
-                ->setParameter('relatedEntity', $boolParams['relatedScope']);
+                ->setParameter('relatedEntity', $boolParams['relatedScope'] ?? null);
         }
         $qb->setParameter('false', false, ParameterType::BOOLEAN);
     }
