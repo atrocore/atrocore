@@ -272,7 +272,6 @@ class Record extends RecordService
         $selectParams['select'] = $fields;
         $collection = $repository->find($selectParams);
         $total = $repository->count($selectParams);
-
         $offset = $params['offset'];
         $result = [];
 
