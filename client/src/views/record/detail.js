@@ -2010,9 +2010,40 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        sortPanelsBySortOrder(jsonObj) {
+        sortBySortOrder(jsonObj) {
             const sortedEntries = Object.entries(jsonObj).sort(([, a], [, b]) => a.sortOrder - b.sortOrder);
             return Object.fromEntries(sortedEntries);
+        },
+
+        sortAttributeDefs(originalAttributeDefs) {
+            let attributesDefs = {};
+
+            let attributeGroups = {};
+
+            $.each(originalAttributeDefs, (name, defs) => {
+                if (!defs.attributeGroup.id) {
+                    attributesDefs[name] = defs;
+                } else {
+                    attributeGroups[defs.attributeGroup.id] = defs.attributeGroup;
+                }
+            })
+
+            attributeGroups = this.sortBySortOrder(attributeGroups);
+
+            $.each(attributeGroups, (id, group) => {
+                let groupItems = {};
+                $.each(originalAttributeDefs, (name, defs) => {
+                    if (defs.attributeGroup.id === id) {
+                        groupItems[name] = defs;
+                    }
+                });
+                const sortedEntries = Object.entries(groupItems).sort(([, a], [, b]) => a.sortOrderInAttributeGroup - b.sortOrderInAttributeGroup);
+                $.each(Object.fromEntries(sortedEntries), (name, defs) => {
+                    attributesDefs[name] = defs;
+                });
+            })
+
+            return attributesDefs;
         },
 
         prepareLayoutData(data) {
@@ -2024,10 +2055,33 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     attributePanels[panel.id]['layoutRow'] = [];
                 });
 
-                attributePanels = this.sortPanelsBySortOrder(attributePanels);
+                attributePanels = this.sortBySortOrder(attributePanels);
+
+                let addedGroups = {};
 
                 const pushItem = (name, defs) => {
-                    let panelId = defs.attributePanelId ?? 'attributeValues';
+                    let panelId = defs.attributePanelId;
+                    let attributeGroupId = defs.attributeGroup.id || null;
+
+                    // put attribute group item
+                    if (attributeGroupId) {
+                        if (!addedGroups[panelId]) {
+                            addedGroups[panelId] = {};
+                        }
+
+                        if (!addedGroups[panelId][attributeGroupId]) {
+                            addedGroups[panelId][attributeGroupId] = true;
+                            attributePanels[panelId].layoutRow.push({
+                                name: panelId + attributeGroupId,
+                                customLabel: defs.attributeGroup.name,
+                                view: "pim:views/attribute/fields/attribute-group-layout-item",
+                                fullWidth: true
+                            });
+                            attributePanels[panelId].layoutRows.push(attributePanels[panelId].layoutRow);
+                            attributePanels[panelId].layoutRow = [];
+                        }
+                    }
+
                     let item = {
                         name: name,
                         customLabel: defs.detailViewLabel || defs.label,
@@ -2046,7 +2100,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 if (!this.model.isNew()) {
                     this.putAttributesToModel();
-                    $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
+                    $.each(this.sortAttributeDefs(this.model.get('attributesDefs') || {}), (name, defs) => {
                         if (!defs.layoutDetailDisabled && !defs.compositedField) {
                             if (defs.multilangField) {
                                 return
