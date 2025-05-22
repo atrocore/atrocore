@@ -1189,8 +1189,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     }
                     rule.rightValue = null;
                     rule.leftValue = null;
-
                     let view = this.getView(viewKey);
+
                     if(!['is_null', 'is_not_null'].includes(rule.operator.type)) {
                         if(rule.operator.type !== 'between' && view){
                             this.filterValue = view.model.get('value');
