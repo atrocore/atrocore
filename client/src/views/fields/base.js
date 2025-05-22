@@ -1189,17 +1189,26 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     }
                     rule.rightValue = null;
                     rule.leftValue = null;
+
                     let view = this.getView(viewKey);
-                    if(rule.operator.type !== 'between' && view){
-                       this.filterValue = view.model.get('value');
-                        rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                    if(!['is_null', 'is_not_null'].includes(rule.operator.type)) {
+                        if(rule.operator.type !== 'between' && view){
+                            this.filterValue = view.model.get('value');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        }
+                    }else{
+                        rule.value = this.defaultFilterValue;
+                        if(view) {
+                            view.model.set('value', this.defaultFilterValue);
+                        }
                     }
+
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
-            this.filterValue = this.defaultFilterValue;
-
+               this.filterValue = this.defaultFilterValue;
                 this.getModelFactory().create(null, model => {
+                    model.set('value', this.defaultFilterValue);
                     setTimeout(() => {
                         let view =  `views/fields/${this.type}`
 
@@ -1215,8 +1224,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                                 notNull: true
                             }
                         }, view => {
+                            console.log('iciiii', rule.value)
                             view.render();
-
                             this.listenTo(model, 'change', () => {
                                 if(rule.operator.type === 'between') {
                                     if(inputName.endsWith('value_1')){
