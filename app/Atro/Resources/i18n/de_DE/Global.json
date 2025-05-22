@@ -569,6 +569,7 @@
     "compare": "Vergleichen Sie"
   },
   "fields": {
+    "entity": "Entität",
     "allowedOptions": "Optionen zulassen",
     "disableActionHistory": "Aktionsprotokollierung deaktivieren",
     "followers": "Abonnenten",
