@@ -27,6 +27,13 @@ class CompositeType extends AbstractFieldType
             'attributeId'               => $row['id'],
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+            'sortOrder'                 => $row['sort_order'] ?? null,
+            'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+            'attributeGroup'            => [
+                'id'        => $row['attribute_group_id'] ?? null,
+                'name'      => $row['attribute_group_name'] ?? null,
+                'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+            ],
             'channelId'                 => $row['channel_id'] ?? null,
             'type'                      => 'composite',
             'label'                     => $row[$this->prepareKey('name', $row)],

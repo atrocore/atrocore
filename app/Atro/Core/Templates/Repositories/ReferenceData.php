@@ -298,6 +298,12 @@ class ReferenceData extends Repository implements Injectable
         if (!empty($params['orderBy'])) {
             usort($items, function ($a, $b) use ($params) {
                 $field = $params['orderBy'];
+                if (!array_key_exists($field, $a)) {
+                    $a[$field] = null;
+                }
+                if (!array_key_exists($field, $b)) {
+                    $b[$field] = null;
+                }
                 if (strtolower($params['order']) === 'desc') {
                     return $b[$field] <=> $a[$field];
                 } else {

@@ -561,6 +561,7 @@
     "compare": "Compare"
   },
   "fields": {
+    "entity": "Entity",
     "allowedOptions": "Allowed Options",
     "disableActionHistory": "Disable action logging",
     "followers": "Followers",

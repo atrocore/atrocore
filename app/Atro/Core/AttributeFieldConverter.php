@@ -150,7 +150,12 @@ class AttributeFieldConverter
             'av.reference_value',
             'av.json_value',
             'f.name as file_name',
-            'c.name as channel_name'
+            'c.name as channel_name',
+            'ag.id as attribute_group_id',
+            'ag.name as attribute_group_name',
+            'ag.sort_order as attribute_group_sort_order',
+            'a.sort_order as sort_order',
+            'a.attribute_group_sort_order as sort_order_in_attribute_group'
         ];
 
         if (!empty($this->config->get('isMultilangActive'))) {
@@ -163,11 +168,11 @@ class AttributeFieldConverter
         $res = $this->conn->createQueryBuilder()
             ->select(implode(',', $select))
             ->from("{$tableName}_attribute_value", 'av')
-            ->leftJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
-            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id')
-            ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
+            ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
+            ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false')
+            ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
             ->where('av.deleted=:false')
-            ->andWhere('a.deleted=:false')
             ->andWhere("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
