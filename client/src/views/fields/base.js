@@ -1224,7 +1224,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                                 notNull: true
                             }
                         }, view => {
-                            console.log('iciiii', rule.value)
                             view.render();
                             this.listenTo(model, 'change', () => {
                                 if(rule.operator.type === 'between') {
