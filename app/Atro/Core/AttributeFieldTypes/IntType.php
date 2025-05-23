@@ -133,6 +133,10 @@ class IntType extends AbstractFieldType
                 'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
+
+            $entity->entityDefs['fields'][$name . 'UnitId'] = [
+                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+            ];
         }
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

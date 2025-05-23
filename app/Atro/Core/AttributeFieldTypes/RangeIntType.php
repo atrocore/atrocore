@@ -174,8 +174,11 @@ class RangeIntType extends AbstractFieldType
                 'layoutDetailDisabled'      => true
             ];
         }
-
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+
+        $entity->entityDefs['fields'][$name . 'UnitId'] = [
+            'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+        ];
     }
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
@@ -193,9 +196,9 @@ class RangeIntType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(str_ends_with($item['attribute'], 'UnitId')) {
-            if($item['type'] === 'isNull') {
-                $item =  [
+        if (str_ends_with($item['attribute'], 'UnitId')) {
+            if ($item['type'] === 'isNull') {
+                $item = [
                     'type'  => 'or',
                     'value' => [
                         [
@@ -209,14 +212,14 @@ class RangeIntType extends AbstractFieldType
                         ],
                     ]
                 ];
-            }else{
-                if(!empty($item['subQuery'])) {
+            } else {
+                if (!empty($item['subQuery'])) {
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
             }
-        }else{
-            $item['attribute'] = str_ends_with($item['attribute'], 'From') ? "{$this->type}Value" :  "{$this->type}Value1";
+        } else {
+            $item['attribute'] = str_ends_with($item['attribute'], 'From') ? "{$this->type}Value" : "{$this->type}Value1";
         }
 
         return $item;
