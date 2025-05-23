@@ -98,7 +98,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
-                this.model.set({ids: this.ids});
+                this.model.set({ ids: this.ids });
                 let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
 
                 this.fields = [];
@@ -172,7 +172,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                allowSelectAllResult: false
+                allowSelectAllResult: false,
+                boolFilterData: {
+                    onlyForEntity: this.scope
+                },
+                boolFilterList: ['onlyForEntity'],
             }, dialog => {
                 dialog.render();
                 this.notify(false);
