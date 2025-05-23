@@ -67,12 +67,17 @@ class LinkType extends AbstractFieldType
                 'channelId'                 => $row['channel_id'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $attributeData['entityType'],
+                'dropdown'                  => $attributeData['dropdown'] ?? null,
                 'required'                  => !empty($row['is_required']),
                 'label'                     => $row[$this->prepareKey('name', $row)],
                 'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
             ];
+
+            if(!empty($attributeData['dropdown'])) {
+                $entity->entityDefs['fields'][$name]['view'] = 'views/fields/link-dropdown';
+            }
 
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
 
@@ -116,10 +121,10 @@ class LinkType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(!empty($item['subQuery'])) {
+        if (!empty($item['subQuery'])) {
             $attributeData = @json_decode($attribute['data'], true)['field'] ?? null;
-            if(!empty($attributeData['entityType'])) {
-                $this->convertSubquery($entity, $attributeData['entityType'] , $item);
+            if (!empty($attributeData['entityType'])) {
+                $this->convertSubquery($entity, $attributeData['entityType'], $item);
             }
         }
 
