@@ -64,5 +64,8 @@
   },
   "formatField": {
     "handler": "\\Atro\\TwigFunction\\FormatField"
+  },
+  "convertMeasureUnit": {
+    "handler": "\\Atro\\TwigFunction\\ConvertMeasureUnit"
   }
 }
