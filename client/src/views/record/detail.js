@@ -831,25 +831,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             }.bind(this));
-
-            let attributePanels = ['attributeValues'];
-            $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
-                attributePanels.push(panel.id);
-            })
-
-            this.$el.find('.panel-heading').each((k, el) => {
-                let $el = $(el);
-                let panelName = $el.parent().data('name');
-                let isAttributeValuePanel = attributePanels.includes(panelName);
-
-                if (isAttributeValuePanel) {
-                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><i class="ph ph-plus cursor-pointer" style="font-size: 1em;"></i></a></div>';
-                    $el.append(html);
-                    $el.find('.add-attribute-value-container').click(() => {
-                        this.actionAddAttribute(panelName);
-                    });
-                }
-            });
         },
 
         fetch: function (onlyRelation) {
@@ -1484,6 +1465,26 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.render()
                     })
                 }
+
+                // Add buttons on attribute panels
+                let attributePanels = ['attributeValues'];
+                $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                    attributePanels.push(panel.id);
+                })
+
+                this.$el.find('.panel-heading').each((k, el) => {
+                    let $el = $(el);
+                    let panelName = $el.parent().data('name');
+                    let isAttributeValuePanel = attributePanels.includes(panelName);
+
+                    if (isAttributeValuePanel) {
+                        let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><i class="ph ph-plus cursor-pointer" style="font-size: 1em;"></i></a></div>';
+                        $el.append(html);
+                        $el.find('.add-attribute-value-container').click(() => {
+                            this.actionAddAttribute(panelName);
+                        });
+                    }
+                });
             });
         },
 
@@ -2072,7 +2073,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         if (!addedGroups[panelId][attributeGroupId]) {
                             addedGroups[panelId][attributeGroupId] = true;
                             attributePanels[panelId].layoutRow.push({
-                                name: panelId + '_'+ attributeGroupId,
+                                name: panelId + '_' + attributeGroupId,
                                 customLabel: defs.attributeGroup.name,
                                 view: "pim:views/attribute/fields/attribute-group-layout-item",
                                 fullWidth: true
@@ -2475,10 +2476,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         actionDynamicActionPreviewTemplate(data) {
             const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
-            if(!defs) {
+            if (!defs) {
                 return;
             }
-            let path =defs.actionViewPath;
+            let path = defs.actionViewPath;
 
             let o = {
                 previewTemplateId: defs.id,
