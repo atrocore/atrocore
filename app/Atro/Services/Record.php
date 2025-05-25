@@ -140,7 +140,7 @@ class Record extends RecordService
             ->getArgument('res');
     }
 
-    public function executeMassAction(array $params, ?\Closure $actionOperation = null): array|\Atro\Entities\Job
+    public function executeMassAction(array $params, ?\Closure $actionOperation = null): array
     {
         if (empty($params['action']) || !is_int($params['maxCountWithoutJob']) || empty($params['maxChunkSize']) || empty($params['minChunkSize'])) {
             return [];

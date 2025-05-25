@@ -434,7 +434,7 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
 
-                if (!empty($scopeData['hasAttributes'])) {
+                if (!empty($scopeData['hasAttribute'])) {
                     $result['paths']["/{$scopeName}/action/massRemoveAttribute"]['post'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Mass remove attribute on $scopeName record",

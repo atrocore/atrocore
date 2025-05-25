@@ -93,7 +93,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
             }
 
             $jobData = array_merge($additionJobData, [
-                'jobCreatorId'   => $job->get('id'),
+                'creatorId'   => $job->get('id'),
                 'entityType'  => $entityName,
                 'total'       => $total,
                 'chunkSize'   => count($collectionIds),
@@ -119,8 +119,7 @@ class MassActionCreator extends AbstractJob implements JobInterface
                 'status'      => 'Awaiting',
                 'priority'    => $job->get('priority'),
                 'ownerUserId' => $job->get('ownerUserId'),
-                'payload'     => $jobData,
-                'creatorJobId' => $job->get('id'),
+                'payload'     => $jobData
             ]);
             $this->getEntityManager()->saveEntity($jobEntity);
 

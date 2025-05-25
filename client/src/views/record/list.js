@@ -1261,8 +1261,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             try {
                 this.svelteFilter?.$destroy();
-            } catch (e) {
-            }
+            } catch (e) {}
 
             const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
             if (target && this.canRenderSearch()) {
@@ -2077,24 +2076,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     });
                 });
             });
-        }
-        ,
+        },
 
         massActionAddRelation() {
             this.massActionUpdateRelation('addRelation');
-        }
-        ,
+        },
 
         massActionRemoveRelation() {
             this.massActionUpdateRelation('removeRelation');
-        }
-        ,
+        },
 
         getParentModel() {
             let parentView = this.getParentView();
             return parentView?.options?.model
-        }
-        ,
+        },
 
         filterListLayout: function (listLayout) {
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly && listLayout
@@ -2172,8 +2167,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
 
             return checkedViaAclListLayout;
-        }
-        ,
+        },
 
         _loadListLayout: function (callback) {
             this.layoutLoadCallbackList.push(callback);
@@ -2193,8 +2187,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.layoutIsBeingLoaded = false;
                 }, this);
             }.bind(this));
-        }
-        ,
+        },
 
         getSelectAttributeList: function (callback) {
             if (this.scope == null || this.rowHasOwnLayout) {
@@ -2214,8 +2207,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this));
                 return;
             }
-        }
-        ,
+        },
 
         fetchAttributeListFromLayout: function () {
             let list = [];
@@ -2248,13 +2240,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             return selectList;
-        }
-        ,
+        },
 
         modifyAttributeList(attributeList) {
             return _.union(attributeList, this.getMetadata().get(['clientDefs', this.scope, 'additionalSelectAttributes']));
-        }
-        ,
+        },
 
         _getHeaderDefs: function () {
             var defs = [];
@@ -2320,8 +2310,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
 
             return defs;
-        }
-        ,
+        },
 
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
@@ -2406,8 +2395,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             return layout;
-        }
-        ,
+        },
 
         checkRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
@@ -2424,8 +2412,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             $target.closest('tr').addClass('active');
 
             this.handleAfterCheck(isSilent);
-        }
-        ,
+        },
 
         uncheckRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
@@ -2443,8 +2430,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             this.handleAfterCheck(isSilent);
-        }
-        ,
+        },
 
         handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
@@ -2466,8 +2452,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (!isSilent) {
                 this.trigger('check');
             }
-        }
-        ,
+        },
 
         getRowActionsDefs: function () {
             return {
@@ -2480,8 +2465,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                 }
             };
-        }
-        , /**
+        }, /**
          * Returns checked models.
          * @return {Array} Array of models
          */
@@ -2493,8 +2477,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 list.push(model);
             }.bind(this));
             return list;
-        }
-        ,
+        },
 
         getInternalLayoutForModel: function (callback, model) {
             var scope = model.name;
@@ -2505,8 +2488,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this._internalLayout[scope] = this._convertLayout(this.listLayout[scope], model);
             }
             callback(this._internalLayout[scope]);
-        }
-        ,
+        },
 
         getInternalLayout: function (callback, model) {
             if (this.scope == null || this.rowHasOwnLayout) {
@@ -2533,20 +2515,17 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 callback(this._internalLayout);
                 return;
             }.bind(this));
-        }
-        ,
+        },
 
         getItemEl: function (model, item) {
             return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.columnName + '"]';
-        }
-        ,
+        },
 
         prepareInternalLayout: function (internalLayout, model) {
             internalLayout.forEach(function (item) {
                 item.el = this.getItemEl(model, item);
             }, this);
-        }
-        ,
+        },
 
         getRelationScope() {
             const entityType = (this.options.layoutRelatedScope ?? '').split('.')[0]
@@ -2554,14 +2533,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', entityType, 'links', this.relationName, 'relationName']))
             }
             return null
-        }
-        ,
+        },
 
         isRelationField(name) {
             if (!name) return false
             return name.split('__').length === 2
-        }
-        ,
+        },
 
         buildRow: function (i, model, callback) {
             var key = model.id;
@@ -2611,8 +2588,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
 
             }.bind(this), model);
-        }
-        ,
+        },
 
         createLayoutConfigurator() {
             $(this.getSelector() + ' .layout-editor-container').each((idx, el) => {
@@ -2634,8 +2610,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     view.render()
                 })
             })
-        }
-        ,
+        },
 
         buildRows: function (callback) {
             this.rowList = [];
@@ -2699,13 +2674,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.trigger('after:build-rows');
                 }
             }
-        }
-        ,
+        },
 
         afterRenderStatusIcons(icons, model) {
             // do something
-        }
-        ,
+        },
 
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
@@ -2782,13 +2755,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 remove: false,
                 more: true
             });
-        }
-        ,
+        },
 
         getRowContainerHtml: function (id) {
             return '<tr data-id="' + id + '" class="list-row"></tr>';
-        }
-        ,
+        },
 
         getStatusIcons: function (model) {
             const htmlIcons = [];
@@ -2798,8 +2769,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             return htmlIcons;
-        }
-        ,
+        },
 
         actionQuickView: function (data) {
             data = data || {};
@@ -2854,13 +2824,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else {
                 this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: true });
             }
-        }
-        ,
+        },
 
         actionOpenInTab: function (data) {
             window.open(data.url, "_blank");
-        }
-        ,
+        },
 
         actionReupload: function (data) {
             if (!data.id || !this.collection) {
@@ -2886,8 +2854,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.clearView('upload');
                 });
             });
-        }
-        ,
+        },
 
         actionQuickEdit: function (data) {
             data = data || {}
@@ -2968,8 +2935,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.getRouter().navigate('#' + scope + '/edit/' + id, { trigger: false });
                 this.getRouter().dispatch(scope, 'edit', options);
             }
-        }
-        ,
+        },
 
         actionDynamicAction: function (data) {
             const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.action_id)
@@ -2985,8 +2951,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 actionId: data.action_id,
                 entityId: data.entity_id
             })
-        }
-        ,
+        },
 
         executeActionRequest: function (payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
@@ -3019,13 +2984,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     }
                     this.notify(message, 'error')
                 })
-        }
-        ,
+        },
 
         getRowSelector: function (id) {
             return 'tr[data-id="' + id + '"]';
-        }
-        ,
+        },
 
         actionBookmark: function (data) {
             data = data || {}
@@ -3085,8 +3048,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 }.bind(this));
             }
-        }
-        ,
+        },
 
         actionQuickRemove: function (data) {
             data = data || {}
@@ -3139,8 +3101,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }, function () {
                 action();
             }, this);
-        }
-        ,
+        },
 
         actionQuickRestore: function (data) {
             data = data || {}
@@ -3182,8 +3143,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.push(model);
                 }.bind(this))
             }, this);
-        }
-        ,
+        },
 
         actionDeletePermanently(data) {
             let id = (data || { id: null }).id;
@@ -3218,8 +3178,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.collection.push(model);
                 });
             });
-        }
-        ,
+        },
 
         removeRecordFromList: function (id) {
             this.collection.remove(id);
@@ -3237,16 +3196,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (~index) {
                 this.rowList.splice(index, 1);
             }
-        }
-        ,
+        },
 
         removeRowHtml: function (id) {
             this.$el.find(this.getRowSelector(id)).remove();
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
-        ,
+        },
 
         actionQuickCompare: function (data) {
             data = data || {}
@@ -3281,8 +3238,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }, this);
                 model.fetch({ main: true });
             }, this);
-        }
-        ,
+        },
     });
-})
-;
+});

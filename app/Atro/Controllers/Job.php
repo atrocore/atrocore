@@ -25,7 +25,8 @@ class Job extends Base
         throw new NotFound();
     }
 
-    public function actionMassActionStatus($params, $data, $request){
+    public function actionMassActionStatus($params, $data, $request)
+    {
         if (!$request->isGet()) {
             throw new BadRequest();
         }
@@ -35,6 +36,6 @@ class Job extends Base
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->getMassActionJobStatus($jobId);
+        return $this->getRecordService()->getMassActionJobStatus((string)$jobId);
     }
 }
