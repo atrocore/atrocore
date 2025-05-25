@@ -93,7 +93,8 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 ## Installation
 
-Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
+Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
+Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
 
 ## Demo
 
