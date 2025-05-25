@@ -46,7 +46,7 @@ class Job extends Base
             $childJobs = $this
                 ->getRepository()
                 ->where([
-                    'payload*' => '%"jobCreatorId":"' . $jobId . '"%'
+                    'payload*' => '%"creatorId":"' . $jobId . '"%'
                 ])
                 ->find();
 
