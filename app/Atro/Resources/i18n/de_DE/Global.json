@@ -566,7 +566,8 @@
     "restore": "Wiederherstellen",
     "massRestore": "Massenwiederherstellung",
     "download": "Nachladen",
-    "compare": "Vergleichen Sie"
+    "compare": "Vergleichen Sie",
+    "removeAttribute": "AttributDee entfernen"
   },
   "fields": {
     "entity": "Entität",

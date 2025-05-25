@@ -434,6 +434,48 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
 
+                if (!empty($scopeData['hasAttributes'])) {
+                    $result['paths']["/{$scopeName}/action/massRemoveAttribute"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Mass remove attribute on $scopeName record",
+                        "description" => "Mass remove attribute on $scopeName record",
+                        "operationId" => "massRemove{$scopeName}Attribute",
+                        'security'    => [['Authorization-Token' => []]],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        "type"       => "object",
+                                        "properties" => [
+                                            "attributes" => [
+                                                "type"       => "object",
+                                                "properties" => [
+                                                    "ids" => [
+                                                        "type"    => "array",
+                                                        "items"   => [
+                                                            "type" => "string"
+                                                        ],
+                                                        'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                                    ]
+                                                ]
+                                            ],
+                                            "ids"        => [
+                                                "type"    => "array",
+                                                "items"   => [
+                                                    "type" => "string"
+                                                ],
+                                                'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                            ],
+                                        ],
+                                    ]
+                                ]
+                            ],
+                        ],
+                        "responses"   => self::prepareResponses(['type' => 'object'])
+                    ];
+                }
+
                 $result['paths']["/{$scopeName}/action/massDelete"]['post'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Mass delete of $scopeName data",
