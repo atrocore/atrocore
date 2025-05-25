@@ -546,6 +546,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
+            if (this.getMetadata().get(['scopes', this.model.urlRoot, 'hasAttribute']) && this.getMetadata().get(['scopes', this.model.urlRoot, 'disableAttributeLinking'])) {
+                return;
+            }
+
             if (this.getCellElement().find(`.info-field-icon.classification-attribute[data-name="${this.name}"]`).length === 0) {
                 this.getStatusIconsContainer().append(`<i data-name="${this.name}" class="ph ph-tree-structure info-field-icon classification-attribute" title="${this.translate('classificationAttribute', 'labels', 'ClassificationAttribute')}"></i>`);
             }
@@ -690,6 +694,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.options?.params?.disableAttributeRemove){
+                return;
+            }
+
+            if (this.getMetadata().get(['scopes', this.model.urlRoot, 'hasAttribute']) && this.getMetadata().get(['scopes', this.model.urlRoot, 'disableAttributeLinking'])) {
                 return;
             }
 
