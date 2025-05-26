@@ -206,7 +206,7 @@ class Daemon extends AbstractConsole
                 }
             }
 
-            sleep(2);
+            sleep(1);
         }
     }
 
