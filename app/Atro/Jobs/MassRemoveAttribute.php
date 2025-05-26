@@ -25,6 +25,14 @@ class MassRemoveAttribute extends AbstractJob implements JobInterface
         if (empty($data['entityType']) || empty($data['total']) || empty($data['ids']) || empty($data['attributes'])) {
             return;
         }
+
+        if (
+            $this->getMetadata()->get(['scopes', $data['entityType'], 'hasAttribute'])
+            && $this->getMetadata()->get(['scopes', $data['entityType'], 'disableAttributeLinking'])
+        ) {
+            return;
+        }
+
         $attributes = $data['attributes'];
 
         $service = $this->getServiceFactory()->create('Attribute');
