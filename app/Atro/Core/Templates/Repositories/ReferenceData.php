@@ -68,11 +68,19 @@ class ReferenceData extends Repository implements Injectable
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $this->validateUnique($entity);
-
         if (empty($entity->get('code'))) {
             throw new BadRequest('Code is required.');
         }
+
+        if ($entity->isNew()) {
+            foreach ($this->find() as $exist) {
+                if ($exist->get('code') === $entity->get('code')) {
+                    throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), 'code'));
+                }
+            }
+        }
+
+        $this->validateUnique($entity);
 
         $this->dispatch('beforeSave', $entity, $options);
     }
