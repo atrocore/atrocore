@@ -14,6 +14,7 @@ namespace Atro\Core;
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
@@ -305,11 +306,40 @@ class AttributeFieldConverter
 
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            // Add attribute value id to know if attribute is linked
+            $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias(AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId'));
+        }
         $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
     }
 
     public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
     {
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            // Add field for attribute value id
+            $name = AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId';
+
+            $entity->fields[$name] = [
+                'type'        => 'varchar',
+                'name'        => $name,
+                'attributeId' => $attribute['id'],
+                'column'      => 'id'
+            ];
+        }
+
+        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
+            // add field to delete attribute value
+            $name = AttributeFieldConverter::prepareFieldName($attribute['id']) . 'Deleted';
+
+            $entity->fields[$name] = [
+                'type'        => 'bool',
+                'name'        => $name,
+                'attributeId' => $attribute['id'],
+                'column'      => 'deleted',
+                'removeField' => true
+            ];
+        }
+
         $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
     }
 
@@ -328,5 +358,10 @@ class AttributeFieldConverter
         }
 
         return $this->container->get($className);
+    }
+
+    public function getMemoryStorage(): MemoryStorage
+    {
+        return $this->container->get('memoryStorage');
     }
 }
