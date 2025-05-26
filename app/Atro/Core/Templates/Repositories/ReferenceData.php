@@ -72,14 +72,7 @@ class ReferenceData extends Repository implements Injectable
             throw new BadRequest('Code is required.');
         }
 
-        if ($entity->isNew()) {
-            foreach ($this->find() as $exist) {
-                if ($exist->get('code') === $entity->get('code')) {
-                    throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), 'code'));
-                }
-            }
-        }
-
+        $this->validateCode($entity);
         $this->validateUnique($entity);
 
         $this->dispatch('beforeSave', $entity, $options);
@@ -88,6 +81,17 @@ class ReferenceData extends Repository implements Injectable
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->dispatch('afterSave', $entity, $options);
+    }
+
+    public function validateCode(Entity $entity): void
+    {
+        if ($entity->isNew()) {
+            foreach ($this->find() as $exist) {
+                if ($exist->get('code') === $entity->get('code')) {
+                    throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), 'code'));
+                }
+            }
+        }
     }
 
     public function validateUnique(Entity $entity): void

@@ -176,6 +176,10 @@ class EntityField extends ReferenceData
         return $items;
     }
 
+    public function validateCode(OrmEntity $entity): void
+    {
+    }
+
     public function validateUnique(OrmEntity $entity): void
     {
     }
