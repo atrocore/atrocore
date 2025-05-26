@@ -452,24 +452,23 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 }else{
                     window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$set(searchBarOptions)
                 }
-
-
             }
 
-            const rightViewOption = {
-                scope: this.scope,
-                model: this.model ?? new Model(),
-                mode: 'list',
-                isCollapsed: false,
-                useStorage: false,
-                searchManager: this.searchManager,
-                createView: this.createView.bind(this),
-                showFilter: true,
-                uniqueKey: this.dialog.id
-            }
-            if (!window['SvelteRightSideView' + this.dialog.id]) {
-                const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
-                if (this.showFilter && rightContainer) {
+            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
+            if (this.showFilter && rightContainer) {
+                const rightViewOption = {
+                    scope: this.scope,
+                    model: this.model ?? new Model(),
+                    mode: 'list',
+                    isCollapsed: false,
+                    useStorage: false,
+                    searchManager: this.searchManager,
+                    createView: this.createView.bind(this),
+                    showFilter: true,
+                    uniqueKey: this.dialog.id
+                }
+                if (!window['SvelteRightSideView' + this.dialog.id]) {
+
                     window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
                         target: rightContainer,
                         props: rightViewOption
@@ -478,10 +477,12 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     if(this.getSelectedViewType() === 'tree') {
                         $(rightContainer).hide();
                     }
+                }else{
+                    window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
                 }
-            }else{
-                window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
             }
+
+
 
             this.dialog.$el.on('hidden.bs.modal', (e) => {
                 this.destroySveltePanels();
