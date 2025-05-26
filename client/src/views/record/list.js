@@ -1901,7 +1901,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             }
 
-            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute']) && !this.getMetadata().get(['scopes', this.scope, 'disableAttributeLinking'])) {
                 this.massActionList.push('removeAttribute');
                 this.checkAllResultMassActionList.push('removeAttribute');
             }
