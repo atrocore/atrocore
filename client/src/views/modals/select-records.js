@@ -434,57 +434,56 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             if (this.isHierarchical()) {
-                if (window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
-                    try {
-                        window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$destroy();
-                    } catch (e) {}
+                const searchBarOptions = {
+                    showFilter: false,
+                    showSearchPanel: this.searchPanel,
+                    scope: this.scope,
+                    searchManager: this.searchManager,
+                    uniqueKey: this.dialog.id
                 }
-
-                const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
-                if (treeSearch) {
-                    window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
-                        target: treeSearch,
-                        props: {
-                            showFilter: false,
-                            showSearchPanel: this.searchPanel,
-                            scope: this.scope,
-                            searchManager: this.searchManager,
-                            uniqueKey: this.dialog.id
-                        }
-                    });
-                }
-            }
-
-            if (window['SvelteRightSideView' + this.dialog.id]) {
-                try {
-                    window['SvelteRightSideView' + this.dialog.id].$destroy();
-                } catch (e) {
-                }
-            }
-
-            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
-            if (this.showFilter && rightContainer) {
-                window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
-                    target: rightContainer,
-                    props: {
-                        scope: this.scope,
-                        model: this.model ?? new Model(),
-                        mode: 'list',
-                        isCollapsed: false,
-                        useStorage: false,
-                        searchManager: this.searchManager,
-                        createView: this.createView.bind(this),
-                        showFilter: true,
-                        uniqueKey: this.dialog.id
+                if (!window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
+                    const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
+                    if (treeSearch) {
+                        window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
+                            target: treeSearch,
+                            props: searchBarOptions
+                        });
                     }
-                });
-                $(rightContainer).addClass('for-table-view');
-                if(this.getSelectedViewType() === 'tree') {
-                    $(rightContainer).hide();
+                }else{
+                    window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$set(searchBarOptions)
                 }
+
+
             }
 
-            this.dialog.$el.on('hidden.bs.modal', (e) => {
+            const rightViewOption = {
+                scope: this.scope,
+                model: this.model ?? new Model(),
+                mode: 'list',
+                isCollapsed: false,
+                useStorage: false,
+                searchManager: this.searchManager,
+                createView: this.createView.bind(this),
+                showFilter: true,
+                uniqueKey: this.dialog.id
+            }
+            if (!window['SvelteRightSideView' + this.dialog.id]) {
+                const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
+                if (this.showFilter && rightContainer) {
+                    window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
+                        target: rightContainer,
+                        props: rightViewOption
+                    });
+                    $(rightContainer).addClass('for-table-view');
+                    if(this.getSelectedViewType() === 'tree') {
+                        $(rightContainer).hide();
+                    }
+                }
+            }else{
+                window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
+            }
+
+            this.on('remove', (e) => {
                 this.destroySveltePanels();
             });
         },
