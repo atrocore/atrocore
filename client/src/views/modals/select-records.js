@@ -110,7 +110,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.scope = this.entityType = this.options.scope || this.scope;
             this.selectDuplicateEnabled = !!this.options.selectDuplicateEnabled;
             this.showFilter = this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData';
-            this.selectAllByDefault = this.options.selectAllByDefault ;
+            this.selectAllByDefault = this.options.selectAllByDefault;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
@@ -319,7 +319,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
                     this.listenToOnce(view, 'after:build-rows', function () {
                         this.wait(false);
-                        if(this.selectAllByDefault) {
+                        if (this.selectAllByDefault) {
                             view.selectAllResult();
                         }
                     }, this);
@@ -342,7 +342,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         }
                         this.listenToOnce(view, 'after:build-rows', function () {
                             this.wait(false);
-                            if(this.selectAllByDefault) {
+                            if (this.selectAllByDefault) {
                                 view.selectAllResult();
                             }
                         }, this);
@@ -433,7 +433,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 listView.reRender();
             }
 
-            if (this.isHierarchical()) {
+            const treeSearch = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-container.for-tree-view .filter-container');
+            if (this.isHierarchical() && treeSearch) {
                 const searchBarOptions = {
                     showFilter: false,
                     showSearchPanel: this.searchPanel,
@@ -441,20 +442,18 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     searchManager: this.searchManager,
                     uniqueKey: this.dialog.id
                 }
+
                 if (!window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
-                    const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
-                    if (treeSearch) {
-                        window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
-                            target: treeSearch,
-                            props: searchBarOptions
-                        });
-                    }
-                }else{
+                    window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
+                        target: treeSearch,
+                        props: searchBarOptions
+                    });
+                } else {
                     window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$set(searchBarOptions)
                 }
             }
 
-            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
+            const rightContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .main-content .right-content');
             if (this.showFilter && rightContainer) {
                 const rightViewOption = {
                     scope: this.scope,
@@ -474,14 +473,13 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         props: rightViewOption
                     });
                     $(rightContainer).addClass('for-table-view');
-                    if(this.getSelectedViewType() === 'tree') {
+                    if (this.getSelectedViewType() === 'tree') {
                         $(rightContainer).hide();
                     }
-                }else{
+                } else {
                     window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
                 }
             }
-
 
 
             this.dialog.$el.on('hidden.bs.modal', (e) => {
