@@ -46,12 +46,13 @@ class SavedSearch extends Base
         if(array_key_exists('condition', $data)) {
           $this->cleanQueryBuilderData($data, $entity->get('entityType'));
         }else{
+            $searchEntity = $this->getEntityManager()->getEntity($entity->get('entityType'));
             foreach ($data as $filterField => $value) {
                 $name = explode('-', $filterField)[0];
                 if ($name === 'id') {
                     continue;
                 }
-                if (!$this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', $name])) {
+                if (!$searchEntity->hasField($name)) {
                     unset($data[$filterField]);
                 }
             }
@@ -63,9 +64,10 @@ class SavedSearch extends Base
     private function cleanQueryBuilderData(array &$data, string $scope): void
     {
         if(!empty($data['rules'])) {
+            $searchEntity = $this->getEntityManager()->getEntity($scope);
             foreach($data['rules'] as $key => $rule) {
                 if(!empty($rule['field'])
-                    && !$this->getMetadata()->get(['entityDefs', $scope, 'fields', $rule['field']]) && $rule['field'] !== 'id'
+                    && !$searchEntity->hasField($rule['field']) && $rule['field'] !== 'id'
                     && !str_starts_with($rule['field'], 'attr_')
                 ){
                     unset($data['rules'][$key]);

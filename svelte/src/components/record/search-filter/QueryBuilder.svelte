@@ -61,15 +61,6 @@
         refreshShowUnsetAll();
     });
 
-    $:  {
-        if(uniqueKey) {
-            if(!window.queryBuilderFilters) {
-                window.queryBuilderFilters = {};
-            }
-            window.queryBuilderFilters[uniqueKey] = filters;
-        }
-    }
-
     function updateSearchManager(data: any) {
         searchManager.update(data);
     }
@@ -284,8 +275,43 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
-        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
-            model.trigger('beforeUpdateRuleFilter', rule);
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder',function(e, rule, previousFilter) {
+            let qb = window.$(this)[0].queryBuilder;
+            if(qb.settings.uniqueKey !== uniqueKey) {
+                e.preventDefault();
+            }
+
+            if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
+                e.preventDefault();
+                addAttributeFilter((pushed, newFilters) => {
+                    if (pushed) {
+                        qb.setFilters(filters);
+                    }
+                    if (newFilters) {
+                        rule.filter = newFilters[0];
+                        if (newFilters.length > 1) {
+                            for (const newFilter of newFilters) {
+                                if (newFilter.id === rule.filter.id) {
+                                    continue;
+                                }
+
+                                let r = qb.addRule(rule.parent);
+                                r.filter = newFilter;
+                            }
+                        }
+                    }
+                    if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
+                        rule.filter = previousFilter;
+                        previousFilter = null
+                        qb.updateRuleFilter(rule, previousFilter);
+                        rule.$el.find('.rule-filter-container select')[0].selectize.setValue(rule.filter.id);
+                    }else{
+                        qb.updateRuleFilter(rule, previousFilter);
+                    }
+                })
+            }else{
+                model.trigger('beforeUpdateRuleFilter', rule);
+            }
         });
 
         $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', async (e, rule) => {
@@ -294,7 +320,7 @@
                 rule.$el.find('.rule-operator-container select:not(.selectized)').selectize();
             }
 
-            model.trigger('beforeUpdateRuleFilter', rule);
+            model.trigger('afterUpdateRuleFilter', rule);
         });
 
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
@@ -824,48 +850,20 @@
         window.$.fn.queryBuilder.regional['main'] = Language.getData().Global.queryBuilderFilter;
         window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
-        // override updateRuleFilter
-
-        if(!window.queryBuilderFilters) {
-            window.queryBuilderFilters = {}
-        }
-        window.queryBuilderFilters[uniqueKey] = filters;
 
         // we override only if it is a new page
-        if(!window.$.fn.queryBuilder.prototype.overridden || uniqueKey === 'default') {
+        if(!window.$.fn.queryBuilder.prototype.overridden) {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });
             let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
 
             window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-                this.trigger('beforeUpdateRuleFilter', rule);
-                if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
-                    addAttributeFilter((pushed, newFilters) => {
-                        if (pushed) {
-                            this.setFilters(window.queryBuilderFilters[this.settings.uniqueKey]);
-                        }
-                        if (newFilters) {
-                            rule.filter = newFilters[0];
-                            if (newFilters.length > 1) {
-                                for (const newFilter of newFilters) {
-                                    if (newFilter.id === rule.filter.id) {
-                                        continue;
-                                    }
-
-                                    let r = this.addRule(rule.parent);
-                                    r.filter = newFilter;
-                                }
-                            }
-                        }
-                        if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
-                            rule.filter = previousFilter;
-                        }
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    })
-                } else {
-                    originalUpdateRuleFilter.call(this, rule, previousFilter);
+                let e =  this.trigger('beforeUpdateRuleFilter', rule, previousFilter);
+                if (e.isDefaultPrevented()) {
+                    return null;
                 }
+                originalUpdateRuleFilter.call(this, rule, previousFilter);
             }
 
             let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
@@ -891,8 +889,6 @@
 
         return () => {
             searchManager.collection.off('filter-state:changed');
-            delete window.queryBuilderFilters[uniqueKey]
-
             selectBoolSub();
             selectSavedSub();
             advancedFilterCheckedSub();
