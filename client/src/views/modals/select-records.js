@@ -110,7 +110,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.scope = this.entityType = this.options.scope || this.scope;
             this.selectDuplicateEnabled = !!this.options.selectDuplicateEnabled;
             this.showFilter = this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData';
-            this.selectAllByDefault = this.options.selectAllByDefault ;
+            this.selectAllByDefault = this.options.selectAllByDefault;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
@@ -319,7 +319,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
                     this.listenToOnce(view, 'after:build-rows', function () {
                         this.wait(false);
-                        if(this.selectAllByDefault) {
+                        if (this.selectAllByDefault) {
                             view.selectAllResult();
                         }
                     }, this);
@@ -342,7 +342,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         }
                         this.listenToOnce(view, 'after:build-rows', function () {
                             this.wait(false);
-                            if(this.selectAllByDefault) {
+                            if (this.selectAllByDefault) {
                                 view.selectAllResult();
                             }
                         }, this);
@@ -433,54 +433,51 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 listView.reRender();
             }
 
-            if (this.isHierarchical()) {
-                if (window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
-                    try {
-                        window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$destroy();
-                    } catch (e) {}
+            const treeSearch = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-container.for-tree-view .filter-container');
+            if (this.isHierarchical() && treeSearch) {
+                const searchBarOptions = {
+                    showFilter: false,
+                    showSearchPanel: this.searchPanel,
+                    scope: this.scope,
+                    searchManager: this.searchManager,
+                    uniqueKey: this.dialog.id
                 }
 
-                const treeSearch = document.querySelector('#' + this.dialog.id +' .modal-dialog .list-container.for-tree-view .filter-container');
-                if (treeSearch) {
+                if (!window['SvelteFilterSearchBar' + this.dialog.id + 'tree']) {
                     window['SvelteFilterSearchBar' + this.dialog.id + 'tree'] = new Svelte.FilterSearchBar({
                         target: treeSearch,
-                        props: {
-                            showFilter: false,
-                            showSearchPanel: this.searchPanel,
-                            scope: this.scope,
-                            searchManager: this.searchManager,
-                            uniqueKey: this.dialog.id
-                        }
+                        props: searchBarOptions
                     });
+                } else {
+                    window['SvelteFilterSearchBar' + this.dialog.id + 'tree'].$set(searchBarOptions)
                 }
             }
 
-            if (window['SvelteRightSideView' + this.dialog.id]) {
-                try {
-                    window['SvelteRightSideView' + this.dialog.id].$destroy();
-                } catch (e) {
-                }
-            }
-
-            const rightContainer = document.querySelector('#' + this.dialog.id +' .modal-dialog .main-content .right-content');
+            const rightContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .main-content .right-content');
             if (this.showFilter && rightContainer) {
-                window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
-                    target: rightContainer,
-                    props: {
-                        scope: this.scope,
-                        model: this.model ?? new Model(),
-                        mode: 'list',
-                        isCollapsed: false,
-                        useStorage: false,
-                        searchManager: this.searchManager,
-                        createView: this.createView.bind(this),
-                        showFilter: true,
-                        uniqueKey: this.dialog.id
+                const rightViewOption = {
+                    scope: this.scope,
+                    model: this.model ?? new Model(),
+                    mode: 'list',
+                    isCollapsed: false,
+                    useStorage: false,
+                    searchManager: this.searchManager,
+                    createView: this.createView.bind(this),
+                    showFilter: true,
+                    uniqueKey: this.dialog.id
+                }
+                if (!window['SvelteRightSideView' + this.dialog.id]) {
+
+                    window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
+                        target: rightContainer,
+                        props: rightViewOption
+                    });
+                    $(rightContainer).addClass('for-table-view');
+                    if (this.getSelectedViewType() === 'tree') {
+                        $(rightContainer).hide();
                     }
-                });
-                $(rightContainer).addClass('for-table-view');
-                if(this.getSelectedViewType() === 'tree') {
-                    $(rightContainer).hide();
+                } else {
+                    window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
                 }
             }
 
