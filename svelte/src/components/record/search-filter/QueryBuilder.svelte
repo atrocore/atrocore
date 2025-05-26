@@ -61,15 +61,6 @@
         refreshShowUnsetAll();
     });
 
-    $:  {
-        if(uniqueKey) {
-            if(!window.queryBuilderFilters) {
-                window.queryBuilderFilters = {};
-            }
-            window.queryBuilderFilters[uniqueKey] = filters;
-        }
-    }
-
     function updateSearchManager(data: any) {
         searchManager.update(data);
     }
@@ -898,8 +889,6 @@
 
         return () => {
             searchManager.collection.off('filter-state:changed');
-            delete window.queryBuilderFilters[uniqueKey]
-
             selectBoolSub();
             selectSavedSub();
             advancedFilterCheckedSub();
