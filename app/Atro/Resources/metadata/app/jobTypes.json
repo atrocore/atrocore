@@ -47,6 +47,10 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassDownload"
   },
+  "MassRemoveAttribute": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassRemoveAttribute"
+  },
   "Upsert": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\Upsert"

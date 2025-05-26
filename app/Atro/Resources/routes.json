@@ -424,6 +424,42 @@
     }
   },
   {
+    "route": "Job/action/massActionStatus",
+    "method": "get",
+    "params": {
+      "controller": "Job",
+      "action": "massActionStatus"
+    },
+    "description": "Get status of mass action job",
+    "requestParameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "613219736ca7a1c68"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "done": {
+          "type": "boolean"
+        },
+        "errors": {
+          "type": "string",
+          "nullable": true
+        },
+        "message": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  },
+  {
     "route": "/:scope/layout/:viewType",
     "method": "get",
     "params": {

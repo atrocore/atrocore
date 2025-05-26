@@ -340,6 +340,32 @@ abstract class AbstractRecordController extends AbstractController
         return $this->getRecordService()->massRemove($params);
     }
 
+    public function actionMassRemoveAttribute($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+        if (!$this->getAcl()->check($this->name, 'update')) {
+            throw new Forbidden();
+        }
+
+        $params = array();
+        if (property_exists($data, 'where') && !empty($data->byWhere)) {
+            $where = json_decode(json_encode($data->where), true);
+            $params['where'] = $where;
+            if (property_exists($data, 'selectData')) {
+                $params['selectData'] = json_decode(json_encode($data->selectData), true);
+            }
+        }
+        if (property_exists($data, 'ids')) {
+            $params['ids'] = $data->ids;
+        }
+
+        $attributes = json_decode(json_encode($data->attributes), true);
+
+        return $this->getRecordService()->massRemoveAttribute($attributes, $params);
+    }
+
     public function actionRestore($params, $data, $request)
     {
         if (!$request->isPost() || !property_exists($data, 'id')) {

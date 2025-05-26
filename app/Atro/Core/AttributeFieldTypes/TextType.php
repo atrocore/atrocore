@@ -161,6 +161,10 @@ class TextType extends AbstractFieldType
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+
+        $entity->entityDefs['fields'][$name . 'UnitId'] = [
+            'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+        ];
     }
 
     public function getAttributeLabel(array $row, string $languageCode, array $languages): string
