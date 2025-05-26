@@ -445,7 +445,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && !this.getMetadata().get(`scopes.${this.model.name}.disableAttributeLinking`)) {
                 this.dropdownItemList.push({
                     label: 'addAttribute',
                     name: 'addAttribute'
