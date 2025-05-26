@@ -147,7 +147,7 @@
             ...(filterPerGroups[Language.translate('Fields')] ?? []),
         ]
 
-       $queryBuilder.queryBuilder({
+        $queryBuilder.queryBuilder({
             uniqueKey: uniqueKey,
             allow_empty: true,
             select_placeholder: Language.translate('filterPlaceHolder'),
@@ -187,7 +187,7 @@
                 remove_group: 'ph ph-x',
             },
             templates: {
-                group: ({ group_id, level, conditions, icons, settings, translate, builder }) => `
+                group: ({group_id, level, conditions, icons, settings, translate, builder}) => `
                     <div id="${group_id}" class="rules-group-container">
                       <div class="rules-group-header">
                         <div class="rules-group-header-icons">
@@ -258,7 +258,7 @@
                         advanced: []
                     });
                     handleAdvancedFilterChecked(false);
-                    if(rules.rules.length === 0) {
+                    if (rules.rules.length === 0) {
                         updateCollection();
                     }
                 }
@@ -275,9 +275,9 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
-        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder',function(e, rule, previousFilter) {
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', function (e, rule, previousFilter) {
             let qb = window.$(this)[0].queryBuilder;
-            if(qb.settings.uniqueKey !== uniqueKey) {
+            if (qb.settings.uniqueKey !== uniqueKey) {
                 e.preventDefault();
             }
 
@@ -305,11 +305,11 @@
                         previousFilter = null
                         qb.updateRuleFilter(rule, previousFilter);
                         rule.$el.find('.rule-filter-container select')[0].selectize.setValue(rule.filter.id);
-                    }else{
+                    } else {
                         qb.updateRuleFilter(rule, previousFilter);
                     }
                 })
-            }else{
+            } else {
                 model.trigger('beforeUpdateRuleFilter', rule);
             }
         });
@@ -369,9 +369,9 @@
             }
 
             const fieldType = camelCaseToHyphen(fieldDefs.type);
-            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view'])  || `views/fields/${fieldType}`;
+            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view']) || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
-                createView(field, view, {
+                createView('qb_' + field, view, {
                     name: field,
                     model: model,
                     defs: {
@@ -494,9 +494,9 @@
             return new Promise((resolve) => {
                 const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
                 let exitingFilter = filters.find(f => f.id === name);
-                if(exitingFilter) {
+                if (exitingFilter) {
                     resolve(exitingFilter);
-                }else{
+                } else {
                     createView(name, view, {
                         name: name,
                         model: model,
@@ -533,7 +533,7 @@
             languages = ['main', ...languages];
             let i = 0;
             for (const language of languages) {
-                if(language === Config.get('mainLanguage')) {
+                if (language === Config.get('mainLanguage')) {
                     continue;
                 }
                 let currentLabel = label;
@@ -561,9 +561,9 @@
         Promise.all(promises).then(newFilters => {
             newFilters.sort((a, b) => a.order - b.order);
             window.currentFilters = filters;
-            if(attribute.isMultilang) {
+            if (attribute.isMultilang) {
                 callback(filterChanged, [newFilters[0]]);
-            }else{
+            } else {
                 callback(filterChanged, newFilters);
             }
         })
@@ -852,14 +852,14 @@
 
 
         // we override only if it is a new page
-        if(!window.$.fn.queryBuilder.prototype.overridden) {
+        if (!window.$.fn.queryBuilder.prototype.overridden) {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });
             let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
 
             window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-                let e =  this.trigger('beforeUpdateRuleFilter', rule, previousFilter);
+                let e = this.trigger('beforeUpdateRuleFilter', rule, previousFilter);
                 if (e.isDefaultPrevented()) {
                     return null;
                 }
@@ -915,7 +915,7 @@
             </button>
         {/if}
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey} bind:opened={generalFilterOpened} />
+    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey} bind:opened={generalFilterOpened}/>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
