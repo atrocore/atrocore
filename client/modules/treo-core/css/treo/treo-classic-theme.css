@@ -11341,7 +11341,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     color: #333
 }
 
-.panel > .panel-heading > .btn-group > .btn + .dropdown-toggle:last-child {
+.bottom .panel > .panel-heading > .btn-group > .btn:last-of-type {
     width: 43px;
 }
 
