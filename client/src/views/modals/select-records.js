@@ -483,7 +483,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
             }
 
-            this.on('remove', (e) => {
+            this.dialog.$el.on('hidden.bs.modal', (e) => {
                 this.destroySveltePanels();
             });
         },
