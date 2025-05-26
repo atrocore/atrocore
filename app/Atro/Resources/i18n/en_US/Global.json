@@ -559,7 +559,7 @@
     "massDelete": "Mass Delete",
     "download": "Download",
     "compare": "Compare",
-    "removeAttribute": "Remove Attribute"
+    "removeAttribute": "Delete Attribute"
   },
   "fields": {
     "entity": "Entity",

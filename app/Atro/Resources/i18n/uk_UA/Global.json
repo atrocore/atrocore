@@ -522,7 +522,8 @@
     "delete": "Видалити",
     "massDelete": "Масове видалення",
     "download": "Завантажити",
-    "compare": "Порівняйте"
+    "compare": "Порівняйте",
+    "removeAttribute": "Видалити атрибут"
   },
   "fields": {
     "folderPath": "Шлях папки",
