@@ -315,18 +315,6 @@ class AttributeFieldConverter
 
     public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
     {
-        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
-            // Add field for attribute value id
-            $name = AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId';
-
-            $entity->fields[$name] = [
-                'type'        => 'varchar',
-                'name'        => $name,
-                'attributeId' => $attribute['id'],
-                'column'      => 'id'
-            ];
-        }
-
         $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
     }
 
