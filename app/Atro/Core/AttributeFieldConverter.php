@@ -327,19 +327,6 @@ class AttributeFieldConverter
             ];
         }
 
-        if (!empty($this->getMemoryStorage()->get('importJobId'))) {
-            // add field to delete attribute value
-            $name = AttributeFieldConverter::prepareFieldName($attribute['id']) . 'Deleted';
-
-            $entity->fields[$name] = [
-                'type'        => 'bool',
-                'name'        => $name,
-                'attributeId' => $attribute['id'],
-                'column'      => 'deleted',
-                'removeField' => true
-            ];
-        }
-
         $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
     }
 

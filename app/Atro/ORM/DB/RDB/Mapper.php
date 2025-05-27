@@ -642,31 +642,22 @@ class Mapper implements MapperInterface
 
     protected function upsertAttributes(array $attrs, IEntity $entity): void
     {
-        if (!empty($attrs) && class_exists(Attribute::class)) {
-            $toRemove = [];
+        if (!class_exists(Attribute::class)) {
+            return;
+        }
+
+        if (!empty($attrs)) {
             foreach ($attrs as $key => $value) {
-                if (!empty($entity->fields[$key]['removeField'])) {
-                    unset($attrs[$key]);
-                    if (!empty($value)) {
-                        $toRemove[] = $entity->fields[$key]['attributeId'];
-                    }
-                }
-            }
-
-            foreach($toRemove as $attributeId) {
-                $this->em->getRepository('Attribute')->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
-            }
-
-
-            foreach ($attrs as $key => $value) {
-                if (in_array($entity->fields[$key]['attributeId'], $toRemove)) {
-                    continue;
-                }
-
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
                 $this->em->getRepository('Attribute')->upsertAttributeValue($entity, $key, $value);
+            }
+        }
+
+        if (!empty($entity->_originalInput?->__attributesToRemove)) {
+            foreach ($entity->_originalInput->__attributesToRemove as $attributeId) {
+                $this->em->getRepository('Attribute')->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
             }
         }
     }
