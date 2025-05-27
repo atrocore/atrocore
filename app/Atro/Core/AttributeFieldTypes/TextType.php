@@ -34,7 +34,7 @@ class TextType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($id);

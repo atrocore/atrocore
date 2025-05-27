@@ -18,7 +18,7 @@ use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 

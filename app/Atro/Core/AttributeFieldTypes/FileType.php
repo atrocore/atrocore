@@ -29,7 +29,7 @@ class FileType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 

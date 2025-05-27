@@ -22,7 +22,7 @@ class DateType extends AbstractFieldType
     protected string $type = 'date';
     protected string $column = 'date_value';
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
