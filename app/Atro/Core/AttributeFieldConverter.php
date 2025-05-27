@@ -14,8 +14,6 @@ namespace Atro\Core;
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
-use Atro\Core\KeyValueStorages\MemoryStorage;
-use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
@@ -306,10 +304,9 @@ class AttributeFieldConverter
 
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
-            // Add attribute value id to know if attribute is linked
-            $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias(AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId'));
-        }
+        // Add attribute value id to know if attribute is linked
+        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias(AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId'));
+
         $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
     }
 
@@ -333,10 +330,5 @@ class AttributeFieldConverter
         }
 
         return $this->container->get($className);
-    }
-
-    public function getMemoryStorage(): MemoryStorage
-    {
-        return $this->container->get('memoryStorage');
     }
 }
