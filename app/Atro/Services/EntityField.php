@@ -58,7 +58,7 @@ class EntityField extends ReferenceData
         }
 
         $preview = $this->twig()->renderTemplate($data->script, ['entity' => $entity], $outputType);
-        if (is_string($preview)) {
+        if (is_string($preview) && $outputType !== 'wysiwyg') {
             $outputType = 'text';
         }
 
