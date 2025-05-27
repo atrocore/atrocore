@@ -23,7 +23,6 @@ class TextType extends AbstractFieldType
 {
     protected string $type = 'text';
     protected string $column = 'text_value';
-    protected bool $isFullWidth = true;
 
     protected Connection $conn;
 
@@ -68,7 +67,7 @@ class TextType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'                 => $this->isFullWidth ?: !empty($attributeData['fullWidth']),
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         if ($this->type === 'varchar' && !empty($row['pattern'])) {
