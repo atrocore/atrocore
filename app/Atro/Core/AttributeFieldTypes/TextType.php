@@ -36,7 +36,7 @@ class TextType extends AbstractFieldType
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
@@ -194,7 +194,7 @@ class TextType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
 

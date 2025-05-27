@@ -34,7 +34,7 @@ class LinkType extends AbstractFieldType
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name . 'Id'] = [
@@ -109,7 +109,7 @@ class LinkType extends AbstractFieldType
         if (!empty($attributeData['entityType'])) {
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
 
-            $name = AttributeFieldConverter::prepareFieldName($row['id']);
+            $name = AttributeFieldConverter::prepareFieldName($row);
 
             $referenceAlias = "{$alias}{$referenceTable}";
             $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");

@@ -34,7 +34,7 @@ class RangeIntType extends AbstractFieldType
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
@@ -183,7 +183,7 @@ class RangeIntType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
 

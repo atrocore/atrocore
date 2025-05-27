@@ -40,9 +40,9 @@ class AttributeFieldConverter
         $this->container = $container;
     }
 
-    public static function prepareFieldName(string $id): string
+    public static function prepareFieldName(array $row): string
     {
-        return $id;
+        return $row['code'] ?? $row['id'];
     }
 
     public static function getAttributeIdFromFieldName(string $name): string

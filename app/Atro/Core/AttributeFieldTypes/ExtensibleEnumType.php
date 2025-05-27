@@ -20,7 +20,7 @@ class ExtensibleEnumType extends AbstractFieldType
 {
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name] = [
             'type'        => 'varchar',
@@ -66,7 +66,7 @@ class ExtensibleEnumType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }

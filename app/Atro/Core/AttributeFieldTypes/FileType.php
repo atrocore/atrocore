@@ -31,7 +31,7 @@ class FileType extends AbstractFieldType
 
     public function convert(IEntity $entity, array $row, array &$attributesDefs): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name . 'Id'] = [
             'type'        => 'varchar',
@@ -78,7 +78,7 @@ class FileType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $fileAlias = "{$alias}file";
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('file'), $fileAlias, "{$fileAlias}.id={$alias}.reference_value AND {$fileAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
