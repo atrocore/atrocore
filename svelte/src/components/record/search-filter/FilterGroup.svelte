@@ -13,6 +13,9 @@
         <summary on:click|preventDefault={toggleOpened}>
             <i class="ph ph-caret-right"></i>
             <h5>{title}</h5>
+            <span class="icons">
+                <slot name="icons"></slot>
+            </span>
         </summary>
 
         <div class="details-inner">
@@ -26,13 +29,18 @@
         list-style: none;
         cursor: pointer;
         user-select: none;
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 5px;
     }
 
     summary i {
         transition: transform 0.2s ease;
+    }
+
+    summary > .icons {
+        margin-left: auto;
+        margin-right: 0;
     }
 
     details[open] summary i {

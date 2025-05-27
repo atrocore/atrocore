@@ -16709,17 +16709,17 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .query-builder .btn-group > .btn:first-child {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .query-builder .btn-group > .btn:first-child:not(:last-child) {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .query-builder .btn-group > .btn:last-child:not(:first-child) {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .query-builder .btn-group .btn + .btn, .query-builder .btn-group .btn + .btn-group,
