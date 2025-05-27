@@ -31,7 +31,7 @@ class LinkType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($id);
@@ -50,11 +50,15 @@ class LinkType extends AbstractFieldType
             'notStorable' => true
         ];
 
-        $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+        }
+
 
         if (!empty($attributeData['entityType'])) {
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
                 'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'sortOrder'                 => $row['sort_order'] ?? null,
@@ -75,26 +79,29 @@ class LinkType extends AbstractFieldType
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
             ];
 
-            if(!empty($attributeData['dropdown'])) {
+            if (!empty($attributeData['dropdown'])) {
                 $entity->entityDefs['fields'][$name]['view'] = 'views/fields/link-dropdown';
             }
 
-            $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+            if (empty($skipValueProcessing)) {
+                $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
 
-            if (!empty($row['reference_value'])) {
-                try {
-                    $referenceItem = $this->conn->createQueryBuilder()
-                        ->select('id, name')
-                        ->from($referenceTable)
-                        ->where('id=:id')
-                        ->andWhere('deleted=:false')
-                        ->setParameter('id', $row['reference_value'])
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->fetchAssociative();
+                if (!empty($row['reference_value'])) {
+                    try {
+                        $referenceItem = $this->conn->createQueryBuilder()
+                            ->select('id, name')
+                            ->from($referenceTable)
+                            ->where('id=:id')
+                            ->andWhere('deleted=:false')
+                            ->setParameter('id', $row['reference_value'])
+                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                            ->fetchAssociative();
 
-                    $entity->set($name . 'Name', $referenceItem['name'] ?? null);
-                } catch (\Throwable $e) {
-                    // ignore all
+
+                        $entity->set($name . 'Name', $referenceItem['name'] ?? null);
+                    } catch (\Throwable $e) {
+                        // ignore all
+                    }
                 }
             }
 

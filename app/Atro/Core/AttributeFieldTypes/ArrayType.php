@@ -18,7 +18,7 @@ use Espo\ORM\IEntity;
 
 class ArrayType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
@@ -31,14 +31,19 @@ class ArrayType extends AbstractFieldType
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
-        $value = $row[$entity->fields[$name]['column']];
-        if ($value !== null) {
-            $value = @json_decode((string)$value, true);
+
+        if (empty($skipValueProcessing)) {
+            $value = $row[$entity->fields[$name]['column']];
+            if ($value !== null) {
+                $value = @json_decode((string)$value, true);
+            }
+            $entity->set($name, is_array($value) ? $value : null);
         }
-        $entity->set($name, is_array($value) ? $value : null);
+
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,

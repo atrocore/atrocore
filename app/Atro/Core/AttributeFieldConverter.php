@@ -121,10 +121,19 @@ class AttributeFieldConverter
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
 
             $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper);
-            $this->convert($entity, $attribute, $attributesDefs);
+            $this->convert($entity, $attribute, $attributesDefs, true);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
+    }
+
+    public function putAdditionalDataAfterSelect(IEntity $entity, array $attributeIds): void
+    {
+        foreach ($entity->entityDefs['fields'] as $key => $defs) {
+            if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
+                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['attributeId'])] ?? null;
+            }
+        }
     }
 
     public function putAttributesToEntity(IEntity $entity): void
@@ -137,6 +146,7 @@ class AttributeFieldConverter
 
         $select = [
             'a.*',
+            'av.id as av_id',
             'av.bool_value',
             'av.date_value',
             'av.datetime_value',
@@ -305,14 +315,19 @@ class AttributeFieldConverter
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
         // Add attribute value id to know if attribute is linked
-        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias(AttributeFieldConverter::prepareFieldName($attribute['id']) . 'AvId'));
+        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias($this->getAttributeValueIdField($attribute['id'])));
 
         $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
     }
 
-    public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
+    public function getAttributeValueIdField($attributeId): string
     {
-        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
+        return AttributeFieldConverter::prepareFieldName($attributeId) . 'AvId';
+    }
+
+    public function convert(IEntity $entity, array $attribute, array &$attributesDefs, bool $skipValueProcessing = false): void
+    {
+        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs, $skipValueProcessing);
     }
 
     public function getFieldType(string $type): AttributeFieldTypeInterface

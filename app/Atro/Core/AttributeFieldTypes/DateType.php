@@ -22,7 +22,7 @@ class DateType extends AbstractFieldType
     protected string $type = 'date';
     protected string $column = 'date_value';
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
@@ -34,11 +34,14 @@ class DateType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        if (empty($skipValueProcessing)){
+            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        }
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,

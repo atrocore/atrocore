@@ -18,7 +18,7 @@ use Espo\ORM\IEntity;
 
 class BoolType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row['id']);
 
@@ -31,14 +31,19 @@ class BoolType extends AbstractFieldType
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
-        if ($entity->get($name) !== null) {
-            $entity->set($name, !empty($entity->get($name)));
+        if (empty($skipValueProcessing)) {
+            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+
+            if ($entity->get($name) !== null) {
+                $entity->set($name, !empty($entity->get($name)));
+            }
         }
+
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'channelId'                 => $row['channel_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,

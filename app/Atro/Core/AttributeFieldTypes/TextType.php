@@ -34,7 +34,7 @@ class TextType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($id);
@@ -48,10 +48,13 @@ class TextType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        }
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -103,7 +106,9 @@ class TextType extends AbstractFieldType
                     'name'   => $lName,
                     'column' => $this->column . "_" . strtolower($language)
                 ]);
-                $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
+                if (empty($skipValueProcessing)) {
+                    $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
+                }
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
                     'name'           => $lName,
@@ -134,7 +139,9 @@ class TextType extends AbstractFieldType
                 'type'        => 'varchar',
                 'notStorable' => true
             ];
-            $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            if (empty($skipValueProcessing)) {
+                $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            }
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
@@ -142,6 +149,7 @@ class TextType extends AbstractFieldType
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
                 'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'sortOrder'                 => $row['sort_order'] ?? null,
@@ -163,7 +171,7 @@ class TextType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
 
         $entity->entityDefs['fields'][$name . 'UnitId'] = [
-            'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+            'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
         ];
     }
 
@@ -216,32 +224,32 @@ class TextType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(str_ends_with($item['attribute'], 'UnitId')) {
+        if (str_ends_with($item['attribute'], 'UnitId')) {
             if ($item['type'] === 'isNull') {
                 $item = [
-                    'type' => 'or',
+                    'type'  => 'or',
                     'value' => [
                         [
-                            'type' => 'equals',
+                            'type'      => 'equals',
                             'attribute' => 'referenceValue',
-                            'value' => ''
+                            'value'     => ''
                         ],
                         [
-                            'type' => 'isNull',
+                            'type'      => 'isNull',
                             'attribute' => 'referenceValue'
                         ],
                     ]
                 ];
             } else {
-                if(!empty($item['subQuery'])) {
+                if (!empty($item['subQuery'])) {
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
             }
-        }else{
+        } else {
             $item['attribute'] = Util::toCamelCase($this->column);
 
-            if(!empty($attribute['is_multilang']) && !empty($item['language']) && $item['language'] !== 'main'){
+            if (!empty($attribute['is_multilang']) && !empty($item['language']) && $item['language'] !== 'main') {
                 $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
             }
         }

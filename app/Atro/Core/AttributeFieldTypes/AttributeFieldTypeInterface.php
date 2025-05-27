@@ -17,7 +17,7 @@ use Espo\ORM\IEntity;
 
 interface AttributeFieldTypeInterface
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void;
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing): void;
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void;
 
