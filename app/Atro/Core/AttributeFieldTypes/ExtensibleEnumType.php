@@ -18,9 +18,9 @@ use Espo\ORM\IEntity;
 
 class ExtensibleEnumType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name] = [
             'type'        => 'varchar',
@@ -29,12 +29,16 @@ class ExtensibleEnumType extends AbstractFieldType
             'column'      => "reference_value",
             'required'    => !empty($row['is_required'])
         ];
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+
+        if (empty($skipValueProcessing)) {
+            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        }
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -66,14 +70,14 @@ class ExtensibleEnumType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(!empty($item['subQuery'])) {
+        if (!empty($item['subQuery'])) {
             $this->convertSubquery($entity, 'ExtensibleEnumOption', $item);
         }
 

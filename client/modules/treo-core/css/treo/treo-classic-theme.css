@@ -6212,10 +6212,6 @@ a.list-group-item-danger.active, button.list-group-item-danger.active, a.list-gr
     background-color: #333
 }
 
-.panel-default > .panel-heading .add-attribute-value-container {
-    margin-right: -5px;
-}
-
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
     border-bottom-color: var(--primary-border-color);
 }
@@ -11333,8 +11329,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.dashlet > .panel-heading > .btn-group {
-    margin-top: -7px;
-    top: 0;
+    top: -2px;
     right: -10px
 }
 
@@ -11346,14 +11341,8 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     color: #333
 }
 
-.panel.dashlet > .panel-heading > .btn-group > .btn + .dropdown-toggle {
-    padding-left: 10px;
-    padding-right: 10px
-}
-
-.panel > .panel-heading > .btn-group > .btn + .dropdown-toggle {
-    padding-left: 10px;
-    padding-right: 10px
+.bottom .panel > .panel-heading > .btn-group > .btn:last-of-type {
+    width: 43px;
 }
 
 .panel.dashlet {
@@ -11433,11 +11422,6 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .grid-stack.grid-stack-4 .grid-stack-item[data-gs-x="1"] {
     left: 25%
-}
-
-.panel-heading > .btn-group {
-    top: -7px;
-    right: -11px
 }
 
 .list-container + .button-container, .row-list-container + .button-container {
@@ -11821,16 +11805,12 @@ h4.panel-title span.color-icon {
 }
 
 .record .middle {
-    margin-bottom: 19px
+    margin-bottom: 30px;
 }
 
 .record .middle > .panel {
     border-top-width: 0;
     margin-bottom: 0
-}
-
-.record .middle > .panel > .panel-heading .btn-group {
-    top: -6px
 }
 
 .record .middle > .panel > .panel-heading .btn-group .btn {
@@ -12933,17 +12913,6 @@ a.field-info > span.fa-info-circle {
     background-color: #fff
 }
 
-.panel-heading > .btn-group {
-    top: -5px;
-    right: -10px
-}
-
-@media screen and (max-width: 767px) {
-    .panel-heading > .btn-group {
-        top: -6px;
-    }
-}
-
 .middle > .panel-default > .panel-heading > .btn-group > .btn,
 .bottom > .panel-default > .panel-heading > .btn-group > .btn,
 .side > .panel-default > .panel-heading > .btn-group > .btn {
@@ -13054,11 +13023,6 @@ table.table {
 
 .admin-panel-iframe-container {
     background-color: #fff
-}
-
-.panel.dashlet > .panel-heading > .btn-group {
-    margin-top: -6px;
-    margin-bottom: -7px;
 }
 
 .panel-extensibleEnumOptions > .panel-heading, .panel-variables > .panel-heading, .panel-translationsRules > .panel-heading, .panel-ldapMappingFields > .panel-heading {
@@ -13277,8 +13241,11 @@ a:hover, a:focus {
     margin-left: 0;
 }
 
-.middle > .panel > .panel-heading > h4.panel-title {
-    display: inline-block;
+.panel > .panel-heading > h4.panel-title {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    line-height: 1;
 }
 
 .record .middle > .panel {
@@ -13401,12 +13368,13 @@ input#sn-checkbox-open-in-new-window {
     border-bottom: 1px solid var(--primary-border-color);
 }
 
+.dashlets .panel-default > .panel-heading,
 .middle > .panel-default > .panel-heading,
-.bottom > .panel-default > .panel-heading,
-.side > .panel-default > .panel-heading {
-    height: 28px;
+.bottom > .panel-default > .panel-heading {
+    height: 34px;
 }
 
+.middle .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
 .bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group {
     display: inline-flex;
     justify-content: flex-end;
@@ -13416,7 +13384,7 @@ input#sn-checkbox-open-in-new-window {
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
     text-align: right;
     background-color: transparent;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #dcdcdc;
     padding-right: 12px;
     padding-left: 12px;
 }
@@ -13438,14 +13406,6 @@ input#sn-checkbox-open-in-new-window {
 .panel-translationsRules > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle,
 .panel-ldapMappingFields > .panel-heading:not(.note-toolbar) > .btn-group > .btn.dropdown-toggle {
     width: 37px;
-}
-
-.middle > .panel-default > .panel-heading {
-    padding-top: 4px;
-}
-
-.middle > .panel-default > .panel-heading:first-child {
-    height: 29px;
 }
 
 .record .row .side > .panel-default:first-of-type > .panel-heading {
@@ -14400,17 +14360,6 @@ button.category:focus {
         margin-left: -15px
     }
 
-    .detail .bottom .panel-default > .panel-heading:not(.note-toolbar) {
-        position: relative
-    }
-
-    .detail .bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
-        top: 0;
-        right: 1px;
-        position: absolute;
-        height: 100%;
-    }
-
     #main main > .record > .detail > .detail-button-container.detail-tree-button-container:not(.stick-sub) {
         position: relative;
         padding-right: 15px;
@@ -14425,6 +14374,23 @@ button.category:focus {
     #main .page-header.collapsed .overview-filters-container {
         width: auto;
     }
+}
+
+.detail .middle .panel-default > .panel-heading:not(.note-toolbar),
+.detail .bottom .panel-default > .panel-heading:not(.note-toolbar) {
+    position: relative
+}
+
+.detail .middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
+.detail .bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
+    top: 0;
+    right: 1px;
+    position: absolute;
+    height: 100%;
+}
+
+.detail .middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
+    right: 10px;
 }
 
 #header .menu {
@@ -14554,7 +14520,7 @@ button.category:focus {
     .bottom .panel .panel-title > .action {
         display: inline-block;
         max-width: calc(100% - 40px);
-        overflow-x: hidden;
+        overflow-x: clip;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -16743,17 +16709,17 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .query-builder .btn-group > .btn:first-child {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .query-builder .btn-group > .btn:first-child:not(:last-child) {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .query-builder .btn-group > .btn:last-child:not(:first-child) {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .query-builder .btn-group .btn + .btn, .query-builder .btn-group .btn + .btn-group,
@@ -17893,6 +17859,7 @@ span[data-img-src]::after {
 
     .panel-heading:hover .layout-editor-container {
         display: block;
+        right: 20px;
     }
 
     .sidebar .panel-group:hover .layout-editor-container {
@@ -17908,13 +17875,16 @@ span[data-img-src]::after {
     }
 }
 
-.add-attribute-value-container .btn-link {
-    color: #333;
-    padding: 5px 6px 6px 6px;
-}
-
 .panel .layout-editor-container {
     text-align: right;
+}
+
+.panel-heading .layout-editor-container {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 1;
 }
 
 .dashlet-body {

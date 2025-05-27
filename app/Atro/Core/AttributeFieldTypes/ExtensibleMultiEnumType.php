@@ -18,9 +18,9 @@ use Espo\ORM\IEntity;
 
 class ExtensibleMultiEnumType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
@@ -33,36 +33,39 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'fullWidth'   => !empty($attributeData['fullWidth']),
         ];
 
-        $value = $row[$entity->fields[$name]['column']] ?? null;
-        if ($value !== null) {
-            $value = @json_decode((string)$value, true);
-        }
-
-        if (!empty($attributeData['dropdown'])) {
-            $entity->set($name, is_array($value) ? $value : []);
-        } else {
-            $entity->set($name, !empty($value) ? $value : null);
-        }
-
         $entity->fields[$name . 'Names'] = [
             'type'        => 'jsonObject',
             'notStorable' => true
         ];
 
-        if (!empty($entity->get($name))) {
-            $options = $this->em
-                ->getRepository('ExtensibleEnumOption')
-                ->select(['id', 'name'])
-                ->where(['id' => $value])
-                ->find();
+        if (empty($skipValueProcessing)) {
+            $value = $row[$entity->fields[$name]['column']];
+            if ($value !== null) {
+                $value = @json_decode((string)$value, true);
+            }
 
-            if (!empty($options)) {
-                $entity->set($name . 'Names', array_column($options->toArray(), 'name', 'id'));
+            if (!empty($attributeData['dropdown'])) {
+                $entity->set($name, is_array($value) ? $value : []);
+            } else {
+                $entity->set($name, !empty($value) ? $value : null);
+            }
+
+            if (!empty($entity->get($name))) {
+                $options = $this->em
+                    ->getRepository('ExtensibleEnumOption')
+                    ->select(['id', 'name'])
+                    ->where(['id' => $value])
+                    ->find();
+
+                if (!empty($options)) {
+                    $entity->set($name . 'Names', array_column($options->toArray(), 'name', 'id'));
+                }
             }
         }
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -91,7 +94,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.json_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
     }

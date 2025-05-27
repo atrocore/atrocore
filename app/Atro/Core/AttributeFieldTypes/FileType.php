@@ -29,9 +29,9 @@ class FileType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name . 'Id'] = [
             'type'        => 'varchar',
@@ -51,12 +51,16 @@ class FileType extends AbstractFieldType
             'notStorable' => true
         ];
 
-        $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
-        $entity->set($name . 'Name', $row['file_name'] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+            $entity->set($name . 'Name', $row['file_name'] ?? null);
+        }
+
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -78,7 +82,7 @@ class FileType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $fileAlias = "{$alias}file";
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('file'), $fileAlias, "{$fileAlias}.id={$alias}.reference_value AND {$fileAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
@@ -89,7 +93,7 @@ class FileType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(!empty($item['subQuery'])) {
+        if (!empty($item['subQuery'])) {
             $this->convertSubquery($entity, 'File', $item);
         }
 

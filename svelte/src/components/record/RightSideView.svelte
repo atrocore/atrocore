@@ -185,7 +185,7 @@
 
         {#if showFilter}
             <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}" uniqueKey={uniqueKey}></QueryBuilder>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} uniqueKey={uniqueKey}></QueryBuilder>
             </div>
         {/if}
 

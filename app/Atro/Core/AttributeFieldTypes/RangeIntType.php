@@ -31,15 +31,16 @@ class RangeIntType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->entityDefs['fields'][$name] = [
             'type'                      => 'range' . ucfirst($this->type),
             'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -66,10 +67,14 @@ class RangeIntType extends AbstractFieldType
             'column'      => "{$this->type}_value",
             'required'    => !empty($row['is_required'])
         ];
-        $entity->set($name . 'From', $row[$entity->fields[$name . 'From']['column']] ?? null);
+
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'From', $row[$entity->fields[$name . 'From']['column']] ?? null);
+        }
 
         $attributesDefs[$name . 'From'] = $entity->entityDefs['fields'][$name . 'From'] = [
             'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -94,10 +99,14 @@ class RangeIntType extends AbstractFieldType
             'column'      => "{$this->type}_value1",
             'required'    => !empty($row['is_required'])
         ];
-        $entity->set($name . 'To', $row[$entity->fields[$name . 'To']['column']] ?? null);
+
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'To', $row[$entity->fields[$name . 'To']['column']] ?? null);
+        }
 
         $attributesDefs[$name . 'To'] = $entity->entityDefs['fields'][$name . 'To'] = [
             'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -120,18 +129,22 @@ class RangeIntType extends AbstractFieldType
             $entity->entityDefs['fields'][$name . 'From']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
             $entity->entityDefs['fields'][$name . 'To']['amountOfDigitsAfterComma'] = $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'];
 
-            if ($entity->get($name . 'From') !== null) {
-                $entity->set($name . 'From', (float)$entity->get($name . 'From'));
-            }
-            if ($entity->get($name . 'To') !== null) {
-                $entity->set($name . 'To', (float)$entity->get($name . 'To'));
+            if (empty($skipValueProcessing)) {
+                if ($entity->get($name . 'From') !== null) {
+                    $entity->set($name . 'From', (float)$entity->get($name . 'From'));
+                }
+                if ($entity->get($name . 'To') !== null) {
+                    $entity->set($name . 'To', (float)$entity->get($name . 'To'));
+                }
             }
         } else {
-            if ($entity->get($name . 'From') !== null) {
-                $entity->set($name . 'From', (int)$entity->get($name . 'From'));
-            }
-            if ($entity->get($name . 'To') !== null) {
-                $entity->set($name . 'To', (int)$entity->get($name . 'To'));
+            if (empty($skipValueProcessing)) {
+                if ($entity->get($name . 'From') !== null) {
+                    $entity->set($name . 'From', (int)$entity->get($name . 'From'));
+                }
+                if ($entity->get($name . 'To') !== null) {
+                    $entity->set($name . 'To', (int)$entity->get($name . 'To'));
+                }
             }
         }
 
@@ -149,7 +162,10 @@ class RangeIntType extends AbstractFieldType
                 'type'        => 'varchar',
                 'notStorable' => true
             ];
-            $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+
+            if (empty($skipValueProcessing)) {
+                $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            }
 
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
@@ -157,6 +173,7 @@ class RangeIntType extends AbstractFieldType
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
                 'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'sortOrder'                 => $row['sort_order'] ?? null,
@@ -183,7 +200,7 @@ class RangeIntType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
 

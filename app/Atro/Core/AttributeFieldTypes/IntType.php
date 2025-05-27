@@ -31,10 +31,10 @@ class IntType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
@@ -48,7 +48,8 @@ class IntType extends AbstractFieldType
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $id,
+            'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
             'attributePanelId'          => $row['attribute_panel_id'] ?? null,
             'sortOrder'                 => $row['sort_order'] ?? null,
@@ -80,12 +81,16 @@ class IntType extends AbstractFieldType
         if ($this->type === 'float') {
             $entity->entityDefs['fields'][$name]['amountOfDigitsAfterComma'] = $row['amount_of_digits_after_comma'] ?? null;
 
-            if ($entity->get($name) !== null) {
-                $entity->set($name, (float)$entity->get($name));
+            if (empty($skipValueProcessing)) {
+                if ($entity->get($name) !== null) {
+                    $entity->set($name, (float)$entity->get($name));
+                }
             }
         } else {
-            if ($entity->get($name) !== null) {
-                $entity->set($name, (int)$entity->get($name));
+            if (empty($skipValueProcessing)) {
+                if ($entity->get($name) !== null) {
+                    $entity->set($name, (int)$entity->get($name));
+                }
             }
         }
 
@@ -108,7 +113,10 @@ class IntType extends AbstractFieldType
                 'type'        => 'varchar',
                 'notStorable' => true
             ];
-            $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+
+            if (empty($skipValueProcessing)) {
+                $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            }
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
@@ -116,6 +124,7 @@ class IntType extends AbstractFieldType
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
                 'attributePanelId'          => $row['attribute_panel_id'] ?? null,
                 'sortOrder'                 => $row['sort_order'] ?? null,
@@ -135,7 +144,7 @@ class IntType extends AbstractFieldType
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
-                'label'                     => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+                'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
             ];
         }
 
@@ -144,7 +153,7 @@ class IntType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('unit'), "{$alias}_unit", "{$alias}_unit.id={$alias}.reference_value");
 
@@ -155,8 +164,8 @@ class IntType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(str_ends_with($item['attribute'], 'UnitId')) {
-            if($item['type'] === 'isNull') {
+        if (str_ends_with($item['attribute'], 'UnitId')) {
+            if ($item['type'] === 'isNull') {
                 $item = [
                     'type'  => 'or',
                     'value' => [
@@ -171,13 +180,13 @@ class IntType extends AbstractFieldType
                         ],
                     ]
                 ];
-            }else{
-                if(!empty($item['subQuery'])) {
+            } else {
+                if (!empty($item['subQuery'])) {
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
             }
-        }else{
+        } else {
             $item['attribute'] = "{$this->type}Value";
         }
 
