@@ -367,7 +367,7 @@
             const fieldType = camelCaseToHyphen(fieldDefs.type);
             const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view']) || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
-                createView(field, view, {
+                createView('qb_' + field, view, {
                     name: field,
                     model: model,
                     defs: {
