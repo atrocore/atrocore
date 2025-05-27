@@ -55,6 +55,8 @@ class V2Dot0Dot0 extends Base
             $this->exec("DELETE FROM extensible_enum_extensible_enum_option WHERE extensible_enum_option_id NOT IN (SELECT id FROM extensible_enum_option WHERE deleted = 0);");
         }
 
+        @mkdir('public');
+
         rename('client', 'public/client');
         rename('apidocs', 'public/apidocs');
 
