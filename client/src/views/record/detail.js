@@ -1493,19 +1493,23 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             $panelBody.collapse('toggle')
                         })
 
-                        $panelBody.on('show.bs.collapse', () => {
-                            let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                            if (collapsedPanels.includes(panelName)) {
-                                collapsedPanels = collapsedPanels.filter(item => item !== panelName)
-                                this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                        $panelBody.on('show.bs.collapse', (event) => {
+                            if ($panelBody.is(event.target)) {
+                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
+                                if (collapsedPanels.includes(panelName)) {
+                                    collapsedPanels = collapsedPanels.filter(item => item !== panelName)
+                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                }
                             }
                         })
 
-                        $panelBody.on('hide.bs.collapse', () => {
-                            let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                            if (!collapsedPanels.includes(panelName)) {
-                                collapsedPanels.push(panelName)
-                                this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                        $panelBody.on('hide.bs.collapse', (event) => {
+                            if ($panelBody.is(event.target)) {
+                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
+                                if (!collapsedPanels.includes(panelName)) {
+                                    collapsedPanels.push(panelName)
+                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                }
                             }
                         })
 
