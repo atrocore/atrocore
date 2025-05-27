@@ -57,7 +57,19 @@ class V2Dot0Dot0 extends Base
 
         @mkdir('public');
 
-        rename('client', 'public/client');
+        $container = (new \Atro\Core\Application())->getContainer();
+
+        echo 'Copying frontend files' . PHP_EOL;
+        self::removeDir('public/client', ['public/client/custom']);
+        self::copyDir(dirname(CORE_PATH) . '/client', 'public/client');
+        foreach ($container->get('moduleManager')->getModules() as $module) {
+            self::copyDir($module->getClientPath(), 'public/client');
+        }
+        if (is_dir('client/custom')) {
+            @rename('client/custom', 'public/client/custom');
+        }
+        self::removeDir('client');
+
         rename('apidocs', 'public/apidocs');
 
         @mkdir('public/upload');
@@ -197,6 +209,67 @@ EOD;
         try {
             $this->getPDO()->exec($sql);
         } catch (\Throwable $e) {
+        }
+    }
+
+    public static function removeDir(string $dir, array $exceptDirs = []): void
+    {
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (self::scanDir($dir) as $object) {
+                if(in_array($dir . "/" . $object, $exceptDirs)) {
+                    continue;
+                }
+                if (is_dir($dir . "/" . $object)) {
+                    self::removeDir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
+
+    public static function scanDir(string $dir): array
+    {
+        // prepare result
+        $result = [];
+
+        if (file_exists($dir) && is_dir($dir)) {
+            foreach (scandir($dir) as $item) {
+                if (!in_array($item, ['.', '..'])) {
+                    $result[] = $item;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public static function copyDir(string $src, string $dest): void
+    {
+        if (!is_dir($src)) {
+            return;
+        }
+
+        if (!is_dir($dest)) {
+            if (!mkdir($dest)) {
+                return;
+            }
+        }
+
+        $i = new \DirectoryIterator($src);
+        foreach ($i as $f) {
+            if ($f->isFile()) {
+                // do not replace index.php condition
+                if ($f->getFilename() === 'index.php' && file_exists($f->getFilename())) {
+                    continue;
+                }
+                copy($f->getRealPath(), "$dest/" . $f->getFilename());
+            } else {
+                if (!$f->isDot() && $f->isDir()) {
+                    self::copyDir($f->getRealPath(), "$dest/$f");
+                }
+            }
         }
     }
 }
