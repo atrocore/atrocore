@@ -11918,7 +11918,9 @@ img.avatar.avatar-link {
 
 .link-container .list-group-item {
     padding: 6px 10px;
-    line-height: 19px
+    line-height: 19px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
 .note-editable blockquote {
@@ -17844,6 +17846,18 @@ span[data-img-src]::after {
     font-size: 16px;
 }
 
+.panel .layout-editor-container {
+    text-align: right;
+}
+
+.panel-heading .layout-editor-container {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
 @media screen and (min-width: 768px) {
     .layout-editor-container {
         display: none;
@@ -17857,9 +17871,12 @@ span[data-img-src]::after {
         display: block;
     }
 
+    .panel-heading .layout-editor-container {
+        right: 20px;
+    }
+
     .panel-heading:hover .layout-editor-container {
         display: block;
-        right: 20px;
     }
 
     .sidebar .panel-group:hover .layout-editor-container {
@@ -17873,18 +17890,6 @@ span[data-img-src]::after {
     .anchor-nav-container .layout-editor-container {
         display: block;
     }
-}
-
-.panel .layout-editor-container {
-    text-align: right;
-}
-
-.panel-heading .layout-editor-container {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    z-index: 1;
 }
 
 .dashlet-body {
