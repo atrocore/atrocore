@@ -543,7 +543,7 @@ class Hierarchy extends Record
 
             $sortAsc = true;
             if (property_exists($data, '_sortAsc')) {
-                $sortAsc = $data->_sortAsc === 'true';
+                $sortAsc = $data->_sortAsc === true;
             }
             $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId, $sortAsc);
             return $this->getEntity($id);
