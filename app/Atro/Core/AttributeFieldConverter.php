@@ -131,7 +131,7 @@ class AttributeFieldConverter
     {
         foreach ($entity->entityDefs['fields'] as $key => $defs) {
             if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
-                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['attributeId'])] ?? null;
+                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['mainField'] ?? $key)] ?? null;
             }
         }
     }
@@ -315,14 +315,14 @@ class AttributeFieldConverter
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
         // Add attribute value id to know if attribute is linked
-        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias($this->getAttributeValueIdField($attribute['id'])));
+        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias($this->getAttributeValueIdField(AttributeFieldConverter::prepareFieldName($attribute))));
 
         $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
     }
 
-    public function getAttributeValueIdField($attributeId): string
+    public function getAttributeValueIdField(string $fieldName): string
     {
-        return AttributeFieldConverter::prepareFieldName($attributeId) . 'AvId';
+        return $fieldName . 'AvId';
     }
 
     public function convert(IEntity $entity, array $attribute, array &$attributesDefs, bool $skipValueProcessing = false): void
