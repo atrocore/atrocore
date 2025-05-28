@@ -302,14 +302,22 @@ class AttributeFieldConverter
 
     public function getAttributesRowsByIds(array $attributesIds): array
     {
-        return $this->conn->createQueryBuilder()
-            ->select('*')
-            ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->andWhere('deleted=:false')
+        $attributes = $this->conn->createQueryBuilder()
+            ->select('a.*, c.name as channel_name')
+            ->from($this->conn->quoteIdentifier('attribute'), 'a')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
+            ->where('a.id IN (:ids)')
+            ->andWhere('a.deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
+
+        foreach ($attributes as $key => $attribute) {
+            if(!empty($attribute['channel_name'])){
+                $attributes[$key]['name'] .= ' / '.$attribute['channel_name'];
+            }
+        }
+        return $attributes;
     }
 
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
