@@ -1,7 +1,4 @@
 {
-  "putAttributesToEntity": {
-    "handler": "\\Atro\\TwigFunction\\PutAttributesToEntity"
-  },
   "isNew": {
     "handler": "\\Atro\\TwigFunction\\IsNew"
   },
