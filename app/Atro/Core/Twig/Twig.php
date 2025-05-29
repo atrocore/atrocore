@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Core\Twig;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 
 class Twig
 {
@@ -30,6 +32,12 @@ class Twig
     {
         $twig = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['template' => $template]));
         $templateData['config'] = $this->getConfig()->getData();
+
+        foreach (['entity', 'record'] as $key) {
+            if (isset($templateData[$key]) && $templateData[$key] instanceof Entity) {
+                $this->getAttributeFieldConverter()->putAttributesToEntity($templateData[$key]);
+            }
+        }
 
         try {
             foreach ($this->getMetadata()->get(['twig', 'filters'], []) as $alias => $data) {
@@ -106,5 +114,10 @@ class Twig
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->container->get(AttributeFieldConverter::class);
     }
 }

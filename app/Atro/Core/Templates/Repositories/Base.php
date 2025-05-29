@@ -15,11 +15,8 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
-use Atro\ORM\DB\RDB\Mapper;
 use Atro\Services\Record;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
-use Espo\ORM\Entity;
 
 class Base extends RDB
 {

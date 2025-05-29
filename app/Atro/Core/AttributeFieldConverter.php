@@ -138,7 +138,7 @@ class AttributeFieldConverter
 
     public function putAttributesToEntity(IEntity $entity): void
     {
-        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
+        if ($entity->hasAllEntityAttributes || !$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
             return;
         }
 
@@ -298,6 +298,8 @@ class AttributeFieldConverter
                 }
             }
         }
+
+        $entity->hasAllEntityAttributes = true;
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
