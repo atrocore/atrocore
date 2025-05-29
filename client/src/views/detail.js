@@ -493,7 +493,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             const recordView = this.getView('record')
 
                             recordView.showAttributeValuePanel(name, () => {
-                                this.scrollToPanel(name);
+                                setTimeout(() => this.scrollToPanel(panel.name), 100);
                             })
                         } else {
                             Backbone.trigger('create-bottom-panel', panel);

@@ -2256,9 +2256,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         data.layout.push(panel);
                     }
-                });
-
-                console.log(data.layout)
+                })
             }
         },
 
