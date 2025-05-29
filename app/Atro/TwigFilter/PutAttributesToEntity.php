@@ -34,6 +34,8 @@ class PutAttributesToEntity extends AbstractTwigFilter
         }
 
         $this->getAttributeFieldConverter()->putAttributesToEntity($value);
+
+        return $value;
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
