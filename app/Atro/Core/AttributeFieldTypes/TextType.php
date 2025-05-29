@@ -79,7 +79,7 @@ class TextType extends AbstractFieldType
                 $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
             }
         } else {
-            $entity->entityDefs['fields'][$name]['fullWidth'] = !array_key_exists('fullWidth', $attributeData) || !empty($attributeData['fullWidth']);
+            $entity->entityDefs['fields'][$name]['fullWidth'] = $attributeData['fullWidth'] ?? true;
         }
 
         if (!empty($attributeData['maxLength'])) {
