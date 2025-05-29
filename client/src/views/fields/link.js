@@ -1038,6 +1038,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }
                         });
 
+                        this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
+                            const view = this.getView(inputName);
+                            if (view && rule.data && rule.data.nameHash) {
+                                view.model.set('valueNames', rule.data.nameHash);
+                            }
+                        });
+
                         this.isNotListeningToOperatorChange[inputName] = true;
                     }
 

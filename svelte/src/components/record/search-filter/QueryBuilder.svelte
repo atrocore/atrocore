@@ -66,7 +66,7 @@
     });
 
     function updateSearchManager(data: any) {
-        searchManager.update(data);
+        searchManager.update(window.Espo.utils.cloneDeep(data));
         refreshAdvancedFilterDisabled();
     }
 
