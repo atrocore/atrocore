@@ -138,7 +138,7 @@ class AttributeFieldConverter
 
     public function putAttributesToEntity(IEntity $entity): void
     {
-        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
+        if ($entity->hasAllEntityAttributes || !$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
             return;
         }
 
@@ -298,15 +298,18 @@ class AttributeFieldConverter
                 }
             }
         }
+
+        $entity->hasAllEntityAttributes = true;
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
     {
         return $this->conn->createQueryBuilder()
-            ->select('*')
-            ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->andWhere('deleted=:false')
+            ->select('a.*, c.name as channel_name')
+            ->from($this->conn->quoteIdentifier('attribute'), 'a')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
+            ->where('a.id IN (:ids)')
+            ->andWhere('a.deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();

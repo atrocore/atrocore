@@ -70,11 +70,16 @@ class TextType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
-        if ($this->type === 'varchar' && !empty($row['pattern'])) {
-            $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
+        if ($this->type === 'varchar') {
+            $entity->entityDefs['fields'][$name]['fullWidth'] = !empty($attributeData['fullWidth']);
+
+            if (!empty($row['pattern'])) {
+                $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
+            }
+        } else {
+            $entity->entityDefs['fields'][$name]['fullWidth'] = $attributeData['fullWidth'] ?? true;
         }
 
         if (!empty($attributeData['maxLength'])) {

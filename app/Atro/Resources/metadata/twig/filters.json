@@ -1,4 +1,7 @@
 {
+  "putAttributesToEntity": {
+    "handler": "\\Atro\\TwigFilter\\PutAttributesToEntity"
+  },
   "prepareEntity": {
     "handler": "\\Atro\\TwigFilter\\PrepareEntity"
   },

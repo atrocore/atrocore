@@ -33,7 +33,6 @@
   "findRecords": {
     "handler": "\\Atro\\TwigFunction\\FindEntities",
     "insertText": "findEntities(${1:entityName}, $0)"
-
   },
   "convertAssetToBase64FromUrl": {
     "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
