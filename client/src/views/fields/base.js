@@ -741,7 +741,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             $cell.on('mouseenter', e => {
                 e.stopPropagation();
-                if (this.disabled || this.readOnly) {
+                if (this.disabled) {
                     return;
                 }
                 if (this.mode === 'detail') {
