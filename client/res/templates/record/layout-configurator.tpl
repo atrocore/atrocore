@@ -1,6 +1,6 @@
 {{#if showLayoutEditor}}
     <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer" data-toggle="dropdown">
-        <i class="ph ph-faders-horizontal"></i>
+        <i class="ph ph-gear-six"></i>
     </a>
     <ul class="dropdown-menu {{#if alignRight}}pull-right{{/if}}">
         {{#each storedProfiles}}

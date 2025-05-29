@@ -133,5 +133,9 @@
         margin-top: 4px;
         display: block;
     }
+
+    .dropdown-menu li {
+        cursor: pointer;
+    }
 </style>
 
