@@ -66,7 +66,7 @@
     });
 
     function updateSearchManager(data: any) {
-        searchManager.update(data);
+        searchManager.update(window.Espo.utils.cloneDeep(data));
         refreshAdvancedFilterDisabled();
     }
 
@@ -830,6 +830,12 @@
         }
 
         advancedFilterChecked = !advancedFilterChecked;
+        if (advancedFilterChecked && queryBuilderRulesChanged) {
+            const rules = searchManager.getQueryBuilder();
+            const $queryBuilder = window.$(queryBuilderElement);
+            $queryBuilder.queryBuilder('setRules', rules ?? []);
+        }
+
         handleAdvancedFilterChecked();
     }
 
@@ -968,7 +974,7 @@
                     {#if advancedFilterChecked}
                         <i class="ph-fill ph-toggle-right"></i>
                     {:else}
-                        <i class="ph ph-toggle-left"></i>
+                        <i class="ph-fill ph-toggle-left"></i>
                     {/if}
                 </span>
             </span>
@@ -1045,7 +1051,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1;
+        z-index: 5;
         display: flex;
         justify-content: space-between;
     }
@@ -1137,6 +1143,7 @@
     .query-builder :global(.rule-container-group .rule-filter-container),
     .query-builder :global(.rule-container-group .rule-value-container) {
         flex-basis: 100%;
+        min-width: 0;
     }
 
     @container (min-width: 400px) {

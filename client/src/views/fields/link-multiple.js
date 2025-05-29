@@ -940,6 +940,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                  delete rule.data['subQuery'];
                              }
                          });
+
+                         this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
+                             const view = this.getView(inputName);
+                             if (view && rule.data && rule.data.nameHash) {
+                                 view.model.set('valueNames', rule.data.nameHash);
+                             }
+                         });
+
                          this.isNotListeningToOperatorChange[inputName] = true;
                      }
 
