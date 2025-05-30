@@ -1495,7 +1495,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             this.actionCloseAttributeValuePanel(panelName);
                         });
 
-
                         $el.find('.panel-title').prepend('<span class="collapser" >\n' +
                             '        <i class="ph ph-caret-up-down"></i>\n' +
                             '    </span>')
@@ -1532,6 +1531,43 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
             });
+        },
+
+        actionCloseAttributeValuePanel: function (name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closedAttributePanels'] ?? []
+            if (!panels.includes(name)) {
+                panels.push(name)
+            }
+            scopePreferences['closedAttributePanels'] = panels;
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({ patch: true });
+            this.getPreferences().trigger('update');
+
+            this.refreshLayout(true)
+        },
+
+        showAttributeValuePanel: function (name, callback) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closedAttributePanels'] ?? []
+            scopePreferences['closedAttributePanels'] = panels.filter(item => item !== name);
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({ patch: true });
+            this.getPreferences().trigger('update');
+
+            if (callback) {
+                this.listenToOnce(this.getView('middle'), 'after:render', () => {
+                    callback()
+                })
+            }
+
+            this.refreshLayout(true)
         },
 
         setIsChanged: function () {
@@ -1800,6 +1836,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if ('customLabel' in simplifiedLayout[p]) {
                     panel.customLabel = simplifiedLayout[p].customLabel;
                 }
+                if (simplifiedLayout[p].isAttributePanel) {
+                    panel.isAttributePanel = true;
+                }
                 panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
@@ -1971,6 +2010,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                data = Espo.Utils.clone(data)
                 this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {
@@ -2110,6 +2150,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let panelId = defs.attributePanelId;
                     let attributeGroupId = defs.attributeGroup.id || null;
 
+                    if (!attributePanels[panelId]) {
+                        // skip item when panel do not exist
+                        return
+                    }
+
                     // put attribute group item
                     if (attributeGroupId) {
                         if (!addedGroups[panelId]) {
@@ -2192,14 +2237,28 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     labelName += languageCode.split('_').map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('');
                 }
 
+                let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+                let scopePreferences = preferences[this.scope] ?? {}
+                let closedAttributePanels = scopePreferences['closedAttributePanels'] ?? []
+
                 $.each(attributePanels, (id, item) => {
                     if (item.layoutRows.length > 0) {
-                        data.layout.push({
+                        const panel = {
                             id: id,
                             name: id,
+                            isAttributePanel: true,
                             label: item[labelName] || item.name,
                             rows: item.layoutRows
-                        });
+                        }
+
+                        if (closedAttributePanels.includes(id)) {
+                            panel.rows = []
+                            this.recordHelper.setPanelStateParam(id, 'hidden', true)
+                        } else {
+                            this.recordHelper.setPanelStateParam(id, 'hidden', false)
+                        }
+
+                        data.layout.push(panel);
                     }
                 })
             }
@@ -2296,7 +2355,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let name = panel.label || panel.customLabel;
 
                     if (name) {
-                        middlePanels.push({ title: name, name: panel.name });
+                        middlePanels.push({ title: name, name: panel.name, isAttributePanel: panel.isAttributePanel });
                     }
                 });
             }
