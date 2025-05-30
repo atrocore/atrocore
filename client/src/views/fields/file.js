@@ -48,6 +48,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
 
         uploadDisabled: false,
 
+        disableLink: false,
+
         accept: false,
 
         shouldAvoidAutomaticalExtensionUpdate : false,
@@ -140,6 +142,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             this.fileTypeId = this.options.fileTypeId || this.params.fileTypeId || this.model.getFieldParam(this.name, 'fileTypeId') || this.fileTypeId;
             this.previewSize = this.options.previewSize || this.params.previewSize || this.model.getFieldParam(this.name, 'previewSize') || this.previewSize;
 
+            if (typeof this.options.disableLink === 'boolean') {
+                this.disableLink = this.options.disableLink;
+            } else if (typeof this.model.getFieldParam(this.name, 'disableLink') === 'boolean') {
+                this.disableLink = this.model.getFieldParam(this.name, 'disableLink');
+            }
+
             if ('uploadDisabled' in this.options) {
                 this.uploadDisabled = this.options.uploadDisabled;
             }
@@ -216,6 +224,10 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 let html = '';
                 if (this.hasPreview(name) && this.getImageUrl(id, this.previewSize)) {
                     html += '<div class="attachment-preview"><a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '"><img src="' + this.getImageUrl(id, this.previewSize) + '" class="image-preview"></a></div>';
+
+                    if (this.disableLink) {
+                        return html;
+                    }
                 } else if (this.hasVideoPlayer(name) && !this.isParentNoteUpdatedType()) {
                     html += `<div class="attachment-preview"><a data-action="showVideoPreview" href="${this.getDownloadUrl(id)}"><span class="fiv-cla fiv-icon-${this.getFileExtension(name)} fiv-size-lg"></span></a></div>`;
                 }
