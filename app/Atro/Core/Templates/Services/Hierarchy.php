@@ -560,6 +560,7 @@ class Hierarchy extends Record
         $fetchedEntity = $this->getRepository()->get($id);
         if (!empty($fetchedEntity)) {
             $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+            $fetchedEntity->hasAllEntityAttributes = false;
             $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
         }
 
@@ -1014,7 +1015,7 @@ class Hierarchy extends Record
         $inheritedFields = [];
         foreach ($this->getRepository()->getInheritableFields($child->entityDefs['fields'] ?? null) as $field) {
             $fieldDefs = $child->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
-            if(empty($fieldDefs['type'])) {
+            if (empty($fieldDefs['type'])) {
                 continue;
             }
             switch ($fieldDefs['type']) {
