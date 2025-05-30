@@ -30,4 +30,11 @@ class Entity extends Base
             'canHasClassifications' => true
         ];
     }
+
+    protected function boolFilterCanHasComponents(&$result)
+    {
+        $result['whereClause'][] = [
+            'canHasComponents' => true
+        ];
+    }
 }
