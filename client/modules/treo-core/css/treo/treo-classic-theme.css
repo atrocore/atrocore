@@ -18285,7 +18285,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-flex;
     align-items: stretch;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 4px;
 }
 
 .component-summary > .item {
