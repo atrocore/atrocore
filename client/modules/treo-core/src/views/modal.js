@@ -34,6 +34,7 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                let diffHeight = headerHeight + footerHeight + $('.navbar .navbar-header').outerHeight();
 
                const adjustHeight = () => {
+                   const contentComputed = getComputedStyle(this.$el.find('.modal-content')[0]);
                    const windowHeight = window.innerHeight;
                    const windowWidth = window.innerWidth;
                    const cssParams = {
@@ -45,11 +46,12 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                        cssParams.maxHeight = 'none';
                        cssParams.height = 'none';
                    } else if (this.dialog.options.fullHeight) {
-                       let height = windowHeight - diffHeight;
-                       if (this.dialog.$el.hasClass('full-page-modal')) {
-                           height -= 70;
-                       }
+                       let marginTop = parseInt(contentComputed.marginTop);
+                       let marginBottom = parseInt(contentComputed.marginBottom);
+                       let height = windowHeight - diffHeight - marginTop - marginBottom;
+
                        cssParams.height = height + 'px';
+                       cssParams.maxHeight = height + 'px';
                    } else {
                        if (windowWidth <= this.dialog.options.screenWidthXs) {
                            cssParams.maxHeight = 'none';

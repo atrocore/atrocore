@@ -202,16 +202,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var model = this.model;
             var scope = this.getScope();
 
-            this.header = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.header += this.getLanguage().translate(scope, 'scopeNames');
-
             if (model.get('name')) {
-                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
-            }
-            if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + scope + '/view/' + this.id + '" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
+                this.header = Handlebars.Utils.escapeExpression(model.get('name'));
+            } else {
+                this.header = this.getLanguage().translate(scope, 'scopeNames');
             }
 
             this.header = iconHtml + this.header;

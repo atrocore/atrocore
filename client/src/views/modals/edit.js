@@ -163,14 +163,6 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 this.header = this.getLanguage().translate('Edit') + ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
             }
 
-            if (!this.fullFormDisabled) {
-                if (!this.id) {
-                    this.header = '<a href="#' + this.scope + '/create" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
-                } else {
-                    this.header = '<a href="#' + this.scope + '/edit/' + this.id + '" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
-                }
-            }
-
             const iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             this.header = iconHtml + this.header;
