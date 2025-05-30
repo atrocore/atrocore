@@ -1479,11 +1479,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let isAttributeValuePanel = attributePanels.includes(panelName);
 
                     if (isAttributeValuePanel) {
-                        let html = '<div class="btn-group pull-right"><button type="button" class="btn btn-default btn-sm add-attribute-value-container"><i class="ph ph-plus"></i></button></div>';
-                        $el.append(html);
-                        $el.find('.add-attribute-value-container').click(() => {
-                            this.actionAddAttribute(panelName);
-                        });
+                        if (
+                            this.getMetadata().get(['scopes', this.model.name, 'hasAttribute'])
+                            && !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
+                        ) {
+                            let html = '<div class="btn-group pull-right"><button type="button" class="btn btn-default btn-sm add-attribute-value-container"><i class="ph ph-plus"></i></button></div>';
+                            $el.append(html);
+                            $el.find('.add-attribute-value-container').click(() => {
+                                this.actionAddAttribute(panelName);
+                            });
+                        }
 
                         $el.find('.panel-title').prepend('<span class="collapser" >\n' +
                             '        <i class="ph ph-caret-up-down"></i>\n' +
