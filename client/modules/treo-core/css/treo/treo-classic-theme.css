@@ -18281,4 +18281,18 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-decoration: none;
 }
 
+.component-summary {
+    display: inline-flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
+.component-summary > .item {
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--primary-border-color);
+    font-size: 12px;
+    background: #fff;
+    cursor: pointer;
+}
