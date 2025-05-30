@@ -165,7 +165,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
 
             this.listenTo(this.model, 'change', () => {
-                if(this.dialog && this.dialog.$el) {
+                if (this.dialog && this.dialog.$el) {
                     this.dialog.$el.trigger('shown.bs.modal')
                 }
             });
@@ -352,6 +352,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, this);
 
             this.createRecordView(function () {
+                // set element before reRender
+                this.setElement(this.containerSelector + ' .body');
                 this.reRender();
             }.bind(this));
 
@@ -470,7 +472,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             setTimeout(function () {
                 router.dispatch(scope, 'view', options);
-                router.navigate(url, {trigger: false});
+                router.navigate(url, { trigger: false });
             }.bind(this), 10);
 
             this.trigger('leave');
