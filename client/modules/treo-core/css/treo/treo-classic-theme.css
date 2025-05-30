@@ -6558,6 +6558,8 @@ button.close {
     position: relative;
     padding-top: 30px;
     padding-bottom: 20px;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
 }
 
 .modal-body > div:not(.record-container):not(.edit-container) {
@@ -6666,7 +6668,13 @@ button.close {
     .modal-content {
         -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         -moz-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5)
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        margin: 20px;
+    }
+
+    .full-page-modal .modal-content {
+        margin: 40px 30px 30px;
+        max-height: calc(100% - 70px);
     }
 
     .modal-sm {
@@ -10046,9 +10054,11 @@ blockquote {
 }
 
 .modal-header {
-    padding: 10px 14px;
+    padding: 10px 20px;
     border-bottom: 0 solid #e5e5e5;
-    min-height: 34px
+    min-height: 34px;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
 }
 
 .modal-header .close {
@@ -10073,7 +10083,8 @@ blockquote {
 .modal-dialog > .modal-content {
     background-clip: border-box;
     border-color: #e8eced;
-    border-width: 0
+    border-width: 0;
+    border-radius: 10px;
 }
 
 .table thead > tr > th {
@@ -13273,13 +13284,13 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .modal-header {
-    background-color: #273238;
+    background-color: var(--nav-menu-background);
     padding-top: 12px;
     padding-bottom: 12px
 }
 
 .modal-header a, .modal-title {
-    color: #fff;
+    color: var(--nav-font-color);
     text-transform: uppercase;
     font-weight: 600;
     font-size: 14px
@@ -13289,12 +13300,9 @@ input#sn-checkbox-open-in-new-window {
     opacity: 1
 }
 
-.modal-header .close:hover, .modal-header .close:focus {
-    color: #fff
-}
-
+.modal-header .close:hover, .modal-header .close:focus,
 .modal-header .close > span {
-    color: #fff;
+    color: var(--nav-font-color);
 }
 
 #notification {
@@ -15241,11 +15249,6 @@ td[data-name="draggableIcon"] {
 }
 
 .full-page-modal .modal-content {
-    margin: 40px 30px 30px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    max-height: calc(100% - 70px);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -18259,8 +18262,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .modal-footer .btn-group .btn {
-    margin-right: 10px;
     border-radius: 3px;
+}
+
+.modal-footer .btn-group .btn:not(:last-child) {
+    margin-right: 10px;
 }
 
 .modal-dialog .main-content .modal-footer {
@@ -18281,4 +18287,18 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-decoration: none;
 }
 
+.component-summary {
+    display: inline-flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 4px;
+}
 
+.component-summary > .item {
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--primary-border-color);
+    font-size: 12px;
+    background: #fff;
+    cursor: pointer;
+}

@@ -1209,7 +1209,7 @@ class Metadata extends AbstractListener
                     "uniqueIndexes" => [
                         "unique_relationship" => [
                             "deleted",
-                            lcfirst($scope) . "_id",
+                            Util::toUnderScore(lcfirst($scope)) . "_id",
                             "attribute_id"
                         ]
                     ],

@@ -165,7 +165,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
 
             this.listenTo(this.model, 'change', () => {
-                if(this.dialog && this.dialog.$el) {
+                if (this.dialog && this.dialog.$el) {
                     this.dialog.$el.trigger('shown.bs.modal')
                 }
             });
@@ -202,16 +202,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var model = this.model;
             var scope = this.getScope();
 
-            this.header = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.header += this.getLanguage().translate(scope, 'scopeNames');
-
             if (model.get('name')) {
-                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(model.get('name'));
-            }
-            if (!this.fullFormDisabled) {
-                this.header = '<a href="#' + scope + '/view/' + this.id + '" class="action" title="' + this.translate('Full Form') + '" data-action="fullForm">' + this.header + '</a>';
+                this.header = Handlebars.Utils.escapeExpression(model.get('name'));
+            } else {
+                this.header = this.getLanguage().translate(scope, 'scopeNames');
             }
 
             this.header = iconHtml + this.header;
@@ -352,6 +348,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, this);
 
             this.createRecordView(function () {
+                // set element before reRender
+                this.setElement(this.containerSelector + ' .body');
                 this.reRender();
             }.bind(this));
 
@@ -470,7 +468,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             setTimeout(function () {
                 router.dispatch(scope, 'view', options);
-                router.navigate(url, {trigger: false});
+                router.navigate(url, { trigger: false });
             }.bind(this), 10);
 
             this.trigger('leave');

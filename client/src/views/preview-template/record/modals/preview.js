@@ -139,18 +139,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
-            const options = {};
-            if (this.selectedLanguage && !this.selectedLanguage.main) {
-                options.headers = {
-                    language: this.selectedLanguage.code
-                }
-            }
-
-            this.notify(this.translate('Loading...'));
-            this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
-                previewTemplateId: this.options.previewTemplateId,
-                entityId: this.options.entityId
-            }, options).success(res => {
+            this.getPreviewRequest().success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
 
                 this.notify(false);
@@ -159,6 +148,20 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                     afterLoad();
                 }
             });
+        },
+
+        getPreviewRequest() {
+            const options = {};
+            if (this.selectedLanguage && !this.selectedLanguage.main) {
+                options.headers = {
+                    language: this.selectedLanguage.code
+                }
+            }
+
+            return this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
+                previewTemplateId: this.options.previewTemplateId,
+                entityId: this.options.entityId
+            }, options);
         },
 
         loadHtmlPage(htmlContent) {

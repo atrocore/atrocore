@@ -656,8 +656,11 @@ class Mapper implements MapperInterface
         }
 
         if (!empty($entity->_originalInput?->__attributesToRemove)) {
-            foreach ($entity->_originalInput->__attributesToRemove as $attributeId) {
-                $this->em->getRepository('Attribute')->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
+            foreach ($entity->_originalInput->__attributesToRemove as $name) {
+                $attributeId = $entity->entityDefs['fields'][$name]['attributeId'] ?? null;
+                if (!empty($attributeId)) {
+                    $this->em->getRepository('Attribute')->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
+                }
             }
         }
     }

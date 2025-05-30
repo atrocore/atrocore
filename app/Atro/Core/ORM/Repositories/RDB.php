@@ -941,7 +941,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                     $data = ['entityType' => $entity->getEntityType()];
                                 }
                                 try {
-                                    $this->relate($entity, $name, $id, $data, $options);
+                                    $this->relate($entity, $name, $id, $data, array_merge($options, ['ignoreDuplicate' => true]));
                                 } catch (NotUnique $e) {
                                 }
                             }
