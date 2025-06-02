@@ -231,22 +231,20 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
-            const sideEdit = this.getView('sideEdit');
-            if (sideEdit) {
-                sideEdit.remove();
-            }
+            this.clearView('sideEdit');
 
-            let detailLayout = null;
-            if (Array.isArray(fields) && fields.length > 0) {
-                detailLayout = [
-                    {
-                        label: '',
-                        rows: []
-                    }
-                ];
-
-                fields.forEach(field => detailLayout[0].rows.push([{name: field}]));
-            }
+            //
+            // let detailLayout = null;
+            // if (Array.isArray(fields) && fields.length > 0) {
+            //     detailLayout = [
+            //         {
+            //             label: '',
+            //             rows: []
+            //         }
+            //     ];
+            //
+            //     fields.forEach(field => detailLayout[0].rows.push([{name: field}]));
+            // }
 
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
@@ -256,7 +254,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 scope: scope,
                 id: id,
                 autosaveDisabled: !this.useAutosave,
-                detailLayout: detailLayout
+                fields: fields
             }, view => {
                 this.listenToOnce(view, 'cancel', () => {
                     container.classList.remove('active');
@@ -289,7 +287,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             this.htmlContent = null;
             let callback = null;
 
-            // if there was a trigger element, activate it after new render
+            // if there was a trigger element, activate it after a new render
             if (trigger) {
                 const scope = trigger.dataset.editorType;
                 const id = trigger.dataset.editorId;
