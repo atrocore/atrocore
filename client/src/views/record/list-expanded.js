@@ -117,6 +117,7 @@ Espo.define('views/record/list-expanded', 'views/record/list', function (Dep) {
                         name: name,
                         view: listLayout.right.view,
                         options: {
+                            mode: 'list',
                             defs: {
                                 params: {
                                     width: listLayout.right.width || '7%'
