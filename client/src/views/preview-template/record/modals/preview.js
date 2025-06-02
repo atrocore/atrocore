@@ -233,19 +233,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.clearView('sideEdit');
 
-            //
-            // let detailLayout = null;
-            // if (Array.isArray(fields) && fields.length > 0) {
-            //     detailLayout = [
-            //         {
-            //             label: '',
-            //             rows: []
-            //         }
-            //     ];
-            //
-            //     fields.forEach(field => detailLayout[0].rows.push([{name: field}]));
-            // }
-
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
 
