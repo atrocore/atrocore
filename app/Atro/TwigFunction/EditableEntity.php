@@ -22,19 +22,19 @@ class EditableEntity extends AbstractTwigFunction
         $this->addDependency('metadata');
     }
 
-    public function run(mixed $value, array $fields = []): ?string
+    public function run(mixed $entity, array $fields = []): ?string
     {
-        if (!$value instanceof Entity) {
+        if (!$entity instanceof Entity) {
             return null;
         }
 
-        if (!$this->getInjection('acl')->check($value->getEntityType(), 'edit')) {
+        if (!$this->getInjection('acl')->check($entity->getEntityType(), 'edit')) {
             return null;
         }
 
         $filteredFields = [];
         foreach ($fields as $field) {
-            if ($this->hasField($value, $field)) {
+            if ($this->hasField($entity, $field)) {
                 $filteredFields[] = $field;
             }
         }
@@ -43,15 +43,15 @@ class EditableEntity extends AbstractTwigFunction
             return null;
         }
 
-        $filteredFields = array_map(function ($field) use ($value) {
-            if (!empty($value->fields[$field]['measureId'])) {
+        $filteredFields = array_map(function ($field) use ($entity) {
+            if (!empty($entity->fields[$field]['measureId'])) {
                 return 'unit' . ucfirst($field);
             }
 
             return $field;
         }, $filteredFields);
 
-        $result = "data-editor-type={$value->getEntityType()} data-editor-id={$value->id}";
+        $result = "data-editor-type={$entity->getEntityType()} data-editor-id={$entity->id}";
         if (!empty($filteredFields)) {
             $result .= ' data-editor-fields=' . implode(',', $filteredFields);
         }
