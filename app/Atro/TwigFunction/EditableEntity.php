@@ -32,15 +32,19 @@ class EditableEntity extends AbstractTwigFunction
             return null;
         }
 
-        $fieldsMetadata = $this->getInjection('metadata')->get(['entityDefs', $value->getEntityType(), 'fields']);
-        $filteredFields = array_filter($fields, fn($field) => array_key_exists($field, $fieldsMetadata));
+        $filteredFields = [];
+        foreach ($fields as $field) {
+            if ($this->hasField($value, $field)) {
+                $filteredFields[] = $field;
+            }
+        }
 
         if (!empty($fields) && empty($filteredFields)) {
             return null;
         }
 
-        $filteredFields = array_map(function ($field) use ($fieldsMetadata) {
-            if (!empty($fieldsMetadata[$field]['measureId'])) {
+        $filteredFields = array_map(function ($field) use ($value) {
+            if (!empty($value->fields[$field]['measureId'])) {
                 return 'unit' . ucfirst($field);
             }
 
@@ -53,5 +57,16 @@ class EditableEntity extends AbstractTwigFunction
         }
 
         return $result;
+    }
+
+    private function hasField(Entity $entity, string $field): bool
+    {
+        if (array_key_exists($field, $entity->fields)) {
+            return true;
+        } else if (($defs = $entity->get('attributesDefs')) && is_array($defs)) {
+            return array_key_exists($field, $defs);
+        }
+
+        return false;
     }
 }
