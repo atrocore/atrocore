@@ -25,5 +25,8 @@
   },
   "generateFontColor": {
     "handler": "\\Atro\\TwigFilter\\GenerateFontColor"
+  },
+  "unique": {
+    "handler": "\\Atro\\TwigFilter\\Unique"
   }
 }
