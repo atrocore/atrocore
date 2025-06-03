@@ -56,7 +56,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             this.foreignScope = 'ExtensibleEnumOption';
 
             if (this.options.customBoolFilterData) {
-                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+                this.boolFilterData = { ...this.boolFilterData, ...this.options.customBoolFilterData }
             }
 
             if (this.options.customSelectBoolFilters) {
@@ -116,9 +116,29 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             return extensibleEnumId;
         },
 
+        getExtensibleEnumName() {
+            const extensibleEnumId = this.getExtensibleEnumId()
+            if (!extensibleEnumId) {
+                return null
+            }
+            let key = 'extensible_enum_name_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}`, {}, { async: false }).then(res => {
+                    Espo[key] = res['name'];
+                });
+            }
+
+            return Espo[key];
+        },
+
+
         getCreateAttributes: function () {
             return {
-                "extensibleEnumsIds": [this.getExtensibleEnumId()]
+                "extensibleEnumsIds": [this.getExtensibleEnumId()],
+                "extensibleEnumsNames": {
+                    [this.getExtensibleEnumId()]: this.getExtensibleEnumName()
+                }
             }
         },
 
