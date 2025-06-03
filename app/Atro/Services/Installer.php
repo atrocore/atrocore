@@ -657,7 +657,7 @@ class Installer extends HasContainer
                     'id'             => 'ComposerAutoUpdate',
                     'name'           => 'Update system automatically',
                     'type'           => 'ComposerAutoUpdate',
-                    'is_active'      => true,
+                    'is_active'      => false,
                     'scheduling'     => '0 0 * * SUN',
                     'created_at'     => date('Y-m-d H:i:s'),
                     'modified_at'    => date('Y-m-d H:i:s'),
