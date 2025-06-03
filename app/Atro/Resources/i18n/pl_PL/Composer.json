@@ -52,7 +52,7 @@
     "canceledModuleInstall": "Instalacja modułu została anulowana",
     "Log": "Log",
     "confirmRun": "Po zakończeniu aktualizacji wszyscy użytkownicy zostaną wylogowani z systemu. Czy na pewno chcesz zaktualizować system?",
-    "daemonDisabled": "<b>Demon kompozytora nie jest uruchomiony!</b><br>Prawdopodobnie demon jest teraz przeładowywany i powinieneś poczekać minutę lub crontab nie jest skonfigurowany. Instrukcje dotyczące konfiguracji crontab znajdziesz <a href=\"https://github.com/atrocore/atrocore-docs/blob/master/en/administration/installation.md#4-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">tutaj</a>.",
+    "daemonDisabled": "<b>Demon kompozytora nie jest uruchomiony!</b><br>Prawdopodobnie demon jest teraz przeładowywany i powinieneś poczekać minutę lub crontab nie jest skonfigurowany. Instrukcje dotyczące konfiguracji crontab znajdziesz <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">tutaj</a>.",
     "jobManagerRunning": "Możliwość aktualizacji modułów jest zablokowana. Spróbuj ponownie później.",
     "showReleaseNotes": "Informacje o wydaniu"
   },
