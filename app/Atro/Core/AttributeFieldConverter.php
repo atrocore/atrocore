@@ -39,9 +39,18 @@ class AttributeFieldConverter
         $this->container = $container;
     }
 
+    public static function isValidCode(string $code): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
+    }
+
     public static function prepareFieldName(array $row): string
     {
-        return $row['code'] ?? $row['id'];
+        if (!empty($row['code']) && self::isValidCode($row['code'])) {
+            return $row['code'];
+        }
+
+        return $row['id'];
     }
 
     public static function getAttributeIdFromFieldName(string $name): string
