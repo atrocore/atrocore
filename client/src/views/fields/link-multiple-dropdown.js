@@ -36,7 +36,7 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
             }
 
             if (this.options.customBoolFilterData) {
-                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+                this.boolFilterData = { ...this.boolFilterData, ...this.options.customBoolFilterData }
             }
 
             if (this.options.customSelectBoolFilters) {
@@ -55,6 +55,7 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
             this.name = this.idsName;
 
             this.prepareOptionsList();
+            this.params.disableCreate = true
 
             Dep.prototype.setup.call(this);
         },
@@ -74,14 +75,14 @@ Espo.define('views/fields/link-multiple-dropdown', ['views/fields/colored-multi-
 
         prepareOptionsList: function () {
             Link.prototype.prepareOptionsList.call(this);
-            if(this.mode === 'edit') {
+            if (this.mode === 'edit') {
                 let newValues = [];
                 (this.model.get(this.idsName) ?? []).forEach((id) => {
-                    if((this.params.options ?? []).includes(id)){
+                    if ((this.params.options ?? []).includes(id)) {
                         newValues.push(id);
                     }
                 })
-                if ((this.model.get(this.idsName) ?? []).length  !== newValues.length) {
+                if ((this.model.get(this.idsName) ?? []).length !== newValues.length) {
                     this.model.set(this.idsName, newValues);
                 }
             }

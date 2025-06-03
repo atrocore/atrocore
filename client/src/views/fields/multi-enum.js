@@ -201,7 +201,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     }
                 };
 
-                if (!(this.params.options || []).length) {
+                if (!(this.params.options || []).length && !this.params.disableCreate) {
                     selectizeOptions.persist = false;
                     selectizeOptions.create = function (input) {
                         return {
