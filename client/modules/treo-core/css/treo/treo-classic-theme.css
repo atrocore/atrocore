@@ -15319,6 +15319,7 @@ td[data-name="draggableIcon"] {
     align-items: stretch;
     overflow: hidden;
     position: relative;
+    padding-top: 0;
 }
 
 .full-page-modal .html-preview .body-container {
@@ -15392,10 +15393,6 @@ td[data-name="draggableIcon"] {
     margin-right: 15px;
 }
 
-.full-page-modal .html-preview .header-container .screen-size-icons .btn {
-    font-size: 1.25em;
-    width: 50px;
-}
 
 .full-page-modal .html-preview iframe {
     display: block;
