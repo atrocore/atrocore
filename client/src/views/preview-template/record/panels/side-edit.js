@@ -140,6 +140,10 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                     Espo.ui.notify(false);
 
                     this.createRecordView(model, view => {
+                        if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+                            view.putAttributesToModel();
+                        }
+
                         this.listenToOnce(view, 'remove', () => {
                             this.clearView('edit');
                             clearTimeout(this.timerHandle);
