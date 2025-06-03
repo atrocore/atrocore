@@ -23,6 +23,6 @@ class Unique extends AbstractTwigFilter
             return $value;
         }
 
-        return array_unique($value);
+        return array_values(array_unique($value));
     }
 }
