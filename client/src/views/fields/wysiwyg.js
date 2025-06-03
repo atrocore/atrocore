@@ -663,12 +663,14 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
-                callback: function (value, rule) {
-                    if(value === null || typeof value !== 'string') {
-                        return 'bad string';
-                    }
-                    return true;
-                }.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        if(value === null || typeof value !== 'string') {
+                            return 'bad string';
+                        }
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 

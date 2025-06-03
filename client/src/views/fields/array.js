@@ -504,8 +504,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
                 operators: [
-                    'in',
-                    'not_in',
+                    'array_any_of',
+                    'array_none_of',
                     'is_null',
                     'is_not_null'
                 ],

@@ -174,7 +174,16 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                         });
                     }
 
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                    let viewName =  fieldDefs[field]['view'] || model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                    for (const key in fieldDefs) {
+                       if(!modelWas.defs.fields[key]) {
+                           modelWas.defs.fields[key] = fieldDefs[key];
+                       }
+
+                       if(!modelBecame.defs.fields[key]) {
+                           modelBecame.defs.fields[key] = fieldDefs[key];
+                       }
+                    }
                     this.createView(field + 'Was', viewName, {
                         el: this.options.el + ' .was',
                         model: modelWas,
