@@ -19,7 +19,6 @@ class EditableEntity extends AbstractTwigFunction
     public function __construct()
     {
         $this->addDependency('acl');
-        $this->addDependency('metadata');
     }
 
     public function run(mixed $entity, array $fields = []): ?string

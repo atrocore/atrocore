@@ -13,14 +13,13 @@ namespace Atro\TwigFunction;
 
 use Atro\Core\Twig\AbstractTwigFunction;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class FormatField extends AbstractTwigFunction
 {
 
-    public function __construct(private readonly Metadata $metadata, private readonly Language $language)
+    public function __construct(private readonly Language $language)
     {
     }
 
@@ -30,7 +29,7 @@ class FormatField extends AbstractTwigFunction
             return $entity->id;
         }
 
-        if (empty($metadata = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field], []))) {
+        if (empty($metadata = $entity->entityDefs['fields'][$field] ?? null)) {
             return null;
         }
 
@@ -42,10 +41,18 @@ class FormatField extends AbstractTwigFunction
             $value = $this->language->translateOption($value, $field, $entity->getEntityType());
         } else if ($metadata['type'] == 'multiEnum' && is_array($value)) {
             $value = array_map(fn($i) => $this->language->translateOption($i, $field, $entity->getEntityType()), $value);
+        } else if ($metadata['type'] == 'bool' && is_bool($value)) {
+            $value = $value ? 'True' : 'False';
+        } else if ($metadata['type'] == 'link') {
+            $value = $entity->get($field . 'Name');
+        } else if ($metadata['type'] == 'markdown') {
+            $value = (new \Parsedown())->parse($value);
         }
 
-        if ($value && !empty($metadata['measureId']) && in_array($metadata['type'], ['int', 'float', 'rangeInt', 'rangeFloat'])) {
+        if ($value && $entity->get($field . 'UnitName')) {
             $value .= ' ' . $entity->get($field . 'UnitName');
+        } else if ($value && $entity->get($field . 'Unit')) {
+            $value .= ' ' . $entity->get($field . 'Unit');
         }
 
         if ($value instanceof EntityCollection) {
