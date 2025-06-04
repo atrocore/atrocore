@@ -221,6 +221,7 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 buttonsDisabled: true,
                 sideDisabled: true,
                 bottomDisabled: false,
+                disableRealtimeListener: true,
                 scope: model.name,
                 exit: function () {
                 }

@@ -753,7 +753,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
-            this.initRealtimeListener();
+            if (!this.options.disableRealtimeListener) {
+                this.initRealtimeListener();
+            }
 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
