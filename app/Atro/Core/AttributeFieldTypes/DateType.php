@@ -52,6 +52,7 @@ class DateType extends AbstractFieldType
                 'sortOrder' => $row['attribute_group_sort_order'] ?? null,
             ],
             'channelId'                 => $row['channel_id'] ?? null,
+            'channelName'               => $row['channel_name'] ?? null,
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'label'                     => $row[$this->prepareKey('name', $row)],

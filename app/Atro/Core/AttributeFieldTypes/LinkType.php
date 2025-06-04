@@ -69,6 +69,7 @@ class LinkType extends AbstractFieldType
                     'sortOrder' => $row['attribute_group_sort_order'] ?? null,
                 ],
                 'channelId'                 => $row['channel_id'] ?? null,
+                'channelName'               => $row['channel_name'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $attributeData['entityType'],
                 'dropdown'                  => $attributeData['dropdown'] ?? null,

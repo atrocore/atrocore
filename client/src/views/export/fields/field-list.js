@@ -102,6 +102,9 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                             if (!fieldDefs.importDisabled) {
                                 this.params.options.push(field);
                                 this.translatedOptions[field] = fieldDefs.label;
+                                if (fieldDefs.channelName) {
+                                    this.translatedOptions[field] = `${fieldDefs.label} / ${fieldDefs.channelName}`;
+                                }
 
                                 this.model.get(this.name).push(field);
                                 this.selected.push(field);

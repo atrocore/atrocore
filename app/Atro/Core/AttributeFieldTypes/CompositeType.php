@@ -36,6 +36,7 @@ class CompositeType extends AbstractFieldType
                 'sortOrder' => $row['attribute_group_sort_order'] ?? null,
             ],
             'channelId'                 => $row['channel_id'] ?? null,
+            'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'composite',
             'label'                     => $row[$this->prepareKey('name', $row)],
             'fullWidth'                 => true,
