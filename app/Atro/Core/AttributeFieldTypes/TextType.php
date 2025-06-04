@@ -67,6 +67,7 @@ class TextType extends AbstractFieldType
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'notNull'                   => !empty($row['not_null']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
@@ -170,6 +171,7 @@ class TextType extends AbstractFieldType
                 "unitIdField"               => true,
                 "mainField"                 => $name,
                 'required'                  => !empty($row['is_required']),
+                'readOnly'                  => !empty($row['is_read_only']),
                 'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];

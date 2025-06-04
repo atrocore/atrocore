@@ -55,6 +55,7 @@ class DateType extends AbstractFieldType
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],

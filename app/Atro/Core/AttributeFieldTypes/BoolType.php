@@ -57,6 +57,7 @@ class BoolType extends AbstractFieldType
             ],
             'type'                      => 'bool',
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'notNull'                   => !empty($row['not_null']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),

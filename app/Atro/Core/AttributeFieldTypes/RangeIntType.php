@@ -53,6 +53,7 @@ class RangeIntType extends AbstractFieldType
             'channelId'                 => $row['channel_id'] ?? null,
             'channelName'               => $row['channel_name'] ?? null,
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'view'                      => "views/fields/range-{$this->type}",
             'importDisabled'            => true,
@@ -90,6 +91,7 @@ class RangeIntType extends AbstractFieldType
             'type'                      => $this->type,
             "mainField"                 => $name,
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
             'layoutDetailDisabled'      => true
         ];
@@ -123,6 +125,7 @@ class RangeIntType extends AbstractFieldType
             'type'                      => $this->type,
             "mainField"                 => $name,
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
             'layoutDetailDisabled'      => true
         ];
@@ -192,6 +195,7 @@ class RangeIntType extends AbstractFieldType
                 "unitIdField"               => true,
                 "mainField"                 => $name,
                 'required'                  => !empty($row['is_required']),
+                'readOnly'                  => !empty($row['is_read_only']),
                 'layoutDetailDisabled'      => true
             ];
         }
