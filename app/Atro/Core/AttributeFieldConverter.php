@@ -317,7 +317,7 @@ class AttributeFieldConverter
             ->select('a.*, c.name as channel_name')
             ->from($this->conn->quoteIdentifier('attribute'), 'a')
             ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
-            ->where('a.id IN (:ids)')
+            ->where('a.id IN (:ids) or a.code IN (:ids)')
             ->andWhere('a.deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
