@@ -288,10 +288,10 @@ class Metadata extends AbstractListener
         foreach ($actions ?? [] as $action) {
             if (in_array($action['type'], ['webhook', 'set'])) {
                 $params = [
-                    'id'         => $action['id'],
-                    'name'       => $action['name'],
-                    'display'    => $action['display'],
-                    'acl'        => [
+                    'id'      => $action['id'],
+                    'name'    => $action['name'],
+                    'display' => $action['display'],
+                    'acl'     => [
                         'scope'  => $action['source_entity'],
                         'action' => 'read',
                     ]
@@ -1021,15 +1021,12 @@ class Metadata extends AbstractListener
                 if (in_array($field, $toSkip)) {
                     continue 1;
                 }
-                if (empty($params['type'])) {
-                    continue 1;
-                }
 
                 $fieldParams = $data['fields'][$params['type']]['params'] ?? [];
                 $multilingual = in_array('isMultilang', array_column($fieldParams, 'name'));
 
                 $newFields[$field] = $params;
-                if ($multilingual && !empty($params['isMultilang'])) {
+                if ($multilingual && !empty($params['type']) && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
@@ -1405,29 +1402,29 @@ class Metadata extends AbstractListener
             }
 
             $data['entityDefs'][$scope]['fields']['created'] = [
-                'type' => 'datetime',
-                'view' => 'views/fields/created-at-with-user',
-                'notStorable' => true,
-                'readOnly' => true,
+                'type'                => 'datetime',
+                'view'                => 'views/fields/created-at-with-user',
+                'notStorable'         => true,
+                'readOnly'            => true,
                 'ignoreViewForSearch' => true,
-                "massUpdateDisabled"=> true,
-                "filterDisabled"=> true,
-                "exportDisabled"=> true,
-                "importDisabled"=> true,
-                "emHidden"=> true
+                "massUpdateDisabled"  => true,
+                "filterDisabled"      => true,
+                "exportDisabled"      => true,
+                "importDisabled"      => true,
+                "emHidden"            => true
             ];
 
             $data['entityDefs'][$scope]['fields']['modified'] = [
-                'type' => 'datetime',
-                'view' => 'views/fields/modified-at-with-user',
-                'notStorable' => true,
-                'readOnly' => true,
+                'type'                => 'datetime',
+                'view'                => 'views/fields/modified-at-with-user',
+                'notStorable'         => true,
+                'readOnly'            => true,
                 'ignoreViewForSearch' => true,
-                "massUpdateDisabled"=> true,
-                "filterDisabled"=> true,
-                "exportDisabled"=> true,
-                "importDisabled"=> true,
-                "emHidden"=> true
+                "massUpdateDisabled"  => true,
+                "filterDisabled"      => true,
+                "exportDisabled"      => true,
+                "importDisabled"      => true,
+                "emHidden"            => true
             ];
 
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
@@ -1499,20 +1496,20 @@ class Metadata extends AbstractListener
 
         foreach ($previewTemplates as $previewTemplate) {
             $data['clientDefs'][$previewTemplate['entity_type']]['dynamicRecordActions'][] = [
-                    'id'             => $previewTemplate['id'],
-                    'name'           => $previewTemplate['name'],
-                    'type'           => 'previewTemplate',
-                    'display'        => 'single',
-                    'actionViewPath' => 'views/preview-template/record/actions/preview',
-                    'action'         => 'showHtmlPreview',
-                    'optionsToPass'  => [
-                        'model'
-                    ],
-                    'acl'           => [
-                        'scope'     => $previewTemplate['entity_type'],
-                        'action'    => 'read',
-                     ],
-                    'data' => @json_decode($previewTemplate['data'] ?? '')
+                'id'             => $previewTemplate['id'],
+                'name'           => $previewTemplate['name'],
+                'type'           => 'previewTemplate',
+                'display'        => 'single',
+                'actionViewPath' => 'views/preview-template/record/actions/preview',
+                'action'         => 'showHtmlPreview',
+                'optionsToPass'  => [
+                    'model'
+                ],
+                'acl'            => [
+                    'scope'  => $previewTemplate['entity_type'],
+                    'action' => 'read',
+                ],
+                'data'           => @json_decode($previewTemplate['data'] ?? '')
             ];
         }
     }
