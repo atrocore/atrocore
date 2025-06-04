@@ -309,8 +309,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 labelField: "name",
                 searchField: ["name", "code"],
                 options: this.languages,
-                items: [this.selectedLanguage.code],
-                // maxItems: 1
+                items: [this.selectedLanguage.code]
             });
 
             this.frame = document.querySelector('.html-preview iframe');
