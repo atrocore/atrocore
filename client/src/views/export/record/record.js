@@ -74,25 +74,6 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 mode: 'edit'
             });
 
-            let fields = [];
-            let fieldListTranslatedOption = {};
-
-            Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'fields'])).forEach(([field, fieldDefs]) => {
-                if (fieldDefs['exportDisabled']) {
-                    return;
-                }
-
-                if (fieldDefs['type'] === 'linkMultiple') {
-                    return;
-                }
-
-                fields.push(field);
-            })
-            fields.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            })
-            fields.forEach(field => fieldListTranslatedOption[field] = this.translate(field, 'fields', this.scope))
-
             this.model.set('fileType','csv')
 
             this.createView('fileType', 'views/fields/enum', {
@@ -121,20 +102,16 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
                 mode: 'edit'
             });
 
-            this.createView('fieldList', 'views/fields/multi-enum', {
+            this.createView('fieldList', 'views/export/fields/field-list', {
                 prohibitedEmptyValue: true,
                 model: this.model,
                 el: `${this.options.el} .field[data-name="fieldList"]`,
+                scope: this.scope,
                 defs: {
                     name: 'fieldList',
-                    params: {
-                        options: fields,
-                        translatedOptions: fieldListTranslatedOption
-                    }
                 },
                 mode: 'edit'
             });
-
 
             this.model.set('ignoreFilter', true);
 
