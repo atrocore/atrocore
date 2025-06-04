@@ -94,11 +94,17 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 return
             }
 
+            let fieldDefs = {};
+            this.model.get('fieldList').forEach(field => {
+                fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
+            })
+
             let data = {
                 id: this.model.get('exportFeed'),
                 fileType: this.model.get('fileType'),
                 exportAllField: this.model.get('exportAllField'),
                 fieldList: this.model.get('fieldList'),
+                fieldDefs: fieldDefs,
                 ignoreFilter: this.model.get('ignoreFilter'),
                 scope: this.scope,
                 entityFilterData: this.options.entityFilterData
