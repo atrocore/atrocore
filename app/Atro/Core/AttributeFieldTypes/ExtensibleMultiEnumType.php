@@ -79,6 +79,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'extensibleMultiEnum',
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'dropdown'                  => !empty($row['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,

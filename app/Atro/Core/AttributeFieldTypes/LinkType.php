@@ -74,6 +74,7 @@ class LinkType extends AbstractFieldType
                 'entity'                    => $attributeData['entityType'],
                 'dropdown'                  => $attributeData['dropdown'] ?? null,
                 'required'                  => !empty($row['is_required']),
+                'readOnly'                  => !empty($row['is_read_only']),
                 'label'                     => $row[$this->prepareKey('name', $row)],
                 'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],

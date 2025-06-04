@@ -52,6 +52,7 @@ class ExtensibleEnumType extends AbstractFieldType
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'extensibleEnum',
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'prohibitedEmptyValue'      => !empty($row['prohibited_empty_value']),
             'dropdown'                  => !empty($row['dropdown']),
