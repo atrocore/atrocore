@@ -36,6 +36,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
         template: 'record/row-actions/default',
 
+        hiddenActionTypes: ['previewTemplate'],
+
         setup: function () {
             this.options.acl = this.options.acl || {};
         },
@@ -106,7 +108,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
             this.model.fetchDynamicActions('record')
                 .then(dynamicActions => {
-                    $(this.$el).find('li.dynamic-action').remove()
+                    $(this.$el).find('li.dynamic-action').remove();
+
+                    dynamicActions = dynamicActions.filter(action => !this.hiddenActionTypes.includes(action.type));
 
                     const template = this._templator.compileTemplate(`
                     {{#each dynamicActions}}
