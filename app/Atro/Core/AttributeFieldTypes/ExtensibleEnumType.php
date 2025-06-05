@@ -30,8 +30,14 @@ class ExtensibleEnumType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
+        $entity->fields[$name . 'Name'] = [
+            'type'        => 'varchar',
+            'notStorable' => true
+        ];
+
         if (empty($skipValueProcessing)) {
             $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+            $entity->set($name . 'Name', $row['extensible_enum_option_name'] ?? null);
         }
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
