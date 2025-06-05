@@ -43,8 +43,19 @@ class FormatField extends AbstractTwigFunction
             $value = array_map(fn($i) => $this->language->translateOption($i, $field, $entity->getEntityType()), $value);
         } else if ($metadata['type'] == 'bool' && is_bool($value)) {
             $value = $value ? 'True' : 'False';
-        } else if ($metadata['type'] == 'link') {
-            $value = $entity->get($field . 'Name');
+        } else if (in_array($metadata['type'], ['link', 'linkMultiple', 'extensibleEnum', 'extensibleMultiEnum'])) {
+            list($attributeValue, $attributeValueName) = match ($metadata['type']) {
+                'extensibleEnum'      => [$entity->get($field), $entity->get($field . 'Name')],
+                'extensibleMultiEnum' => [$entity->get($field), $entity->get($field . 'Names')],
+                'link'                => [$entity->get($field . 'Id'), $entity->get($field . 'Name')],
+                'linkMultiple'        => [$entity->get($field . 'Ids'), $entity->get($field . 'Names')]
+            };
+
+            if (is_array($attributeValue)) {
+                $value = array_map(fn($v) => $attributeValueName->{$v} ?? $attributeValueName[$v] ?? $v, $attributeValue);
+            } else {
+                $value = $attributeValueName ?: $attributeValue;
+            }
         } else if ($metadata['type'] == 'markdown') {
             $value = (new \Parsedown())->parse($value);
         }

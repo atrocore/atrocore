@@ -1022,11 +1022,15 @@ class Metadata extends AbstractListener
                     continue 1;
                 }
 
+                if (empty($params['type'])) {
+                    continue;
+                }
+
                 $fieldParams = $data['fields'][$params['type']]['params'] ?? [];
                 $multilingual = in_array('isMultilang', array_column($fieldParams, 'name'));
 
                 $newFields[$field] = $params;
-                if ($multilingual && !empty($params['type']) && !empty($params['isMultilang'])) {
+                if ($multilingual && !empty($params['isMultilang'])) {
                     $newFields[$field]['lingualFields'] = [];
                     foreach ($locales as $locale) {
                         // prepare locale
