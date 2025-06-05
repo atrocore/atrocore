@@ -170,6 +170,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
+            if (!this.frame) {
+                return;
+            }
+
             this.frame.contentWindow.document.open();
             this.frame.contentWindow.document.write(htmlContent);
             this.frame.contentWindow.document.close();
@@ -298,7 +302,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('.language-selector').selectize({
+            this.$el.find('select.language-selector').selectize({
                 setFirstOptionActive: true,
                 persist: false,
                 valueField: "code",
