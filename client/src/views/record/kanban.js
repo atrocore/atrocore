@@ -242,10 +242,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$content = $('#content');
 
             const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
-            if (target && this.options.searchManager && (this.options.showSearchPanel || this.options.showFilter)) {
+            if (target && this.options.searchManager && (this.options.showSearch || this.options.showFilter)) {
                 const props = {
                     searchManager: this.options.searchManager,
-                    showSearchPanel: this.options.showSearchPanel,
+                    showSearchPanel: this.options.showSearch,
                     showFilter: this.options.showFilter,
                     scope: this.scope,
                 };
