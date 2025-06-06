@@ -13,6 +13,7 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
@@ -45,6 +46,15 @@ abstract class AbstractAction implements TypeInterface
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function executeViaWorkflow(array $workflowData, Event $event): bool
+    {
+        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
+        $input = new \stdClass();
+        $input->entityId = $event->getArgument('entity')->get('id');
+
+        return $this->executeNow($action, $input);
     }
 
     public function useMassActions(Entity $action, \stdClass $input): bool

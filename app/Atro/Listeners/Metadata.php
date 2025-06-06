@@ -123,6 +123,7 @@ class Metadata extends AbstractListener
             }
 
             $name = str_replace('.php', '', $fileName);
+            $typeName = 'custom' . $name;
 
             $className = '\\CustomActions\\' . $name;
 
@@ -130,10 +131,10 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = $name;
+            $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = $typeName;
 
-            $data['action']['types'][$className] = $className;
-            $data['action']['typesData'][$className] = [
+            $data['action']['types'][$typeName] = $className;
+            $data['action']['typesData'][$typeName] = [
                 'handler'     => $className,
                 'typeLabel'   => $className::getTypeLabel(),
                 'name'        => $className::getName(),

@@ -59,12 +59,7 @@ class {{name}} extends AbstractAction
 
     public static function getDescription(): ?string
     {
-        return null;
-    }
-
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        return true;
+        return 'Describe {{name}}';
     }
 
     public function executeNow(Entity $action, \stdClass $input): bool
@@ -79,5 +74,8 @@ EOD;
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
         self::show("Action handler class 'data/custom-code/CustomActions/{$className}.php' has been created successfully.", self::SUCCESS);
+
+        // refresh ui handlers
+        exec('php console.php regenerate ui handlers');
     }
 }
