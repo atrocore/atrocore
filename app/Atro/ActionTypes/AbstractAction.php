@@ -27,6 +27,21 @@ abstract class AbstractAction implements TypeInterface
 {
     protected Container $container;
 
+    public static function getTypeLabel(): ?string
+    {
+        return null;
+    }
+
+    public static function getName(): ?string
+    {
+        return null;
+    }
+
+    public static function getDescription(): ?string
+    {
+        return null;
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;

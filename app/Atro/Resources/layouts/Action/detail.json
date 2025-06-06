@@ -61,6 +61,12 @@
           "name": "conditions",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "customAction"
+        },
+        false
       ]
     ]
   },

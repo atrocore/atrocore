@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Listeners;
 
-use Atro\ActionTypes\CustomCodeTypeInterface;
-use Atro\ActionTypes\TypeInterface;
+use Atro\ActionTypes\AbstractAction;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Repositories\NotificationRule;
@@ -127,15 +126,17 @@ class Metadata extends AbstractListener
 
             $className = '\\CustomActions\\' . $name;
 
-            if (
-                !class_exists($className)
-                || !is_a($className, CustomCodeTypeInterface::class, true)
-                || !is_a($className, TypeInterface::class, true)
-            ) {
+            if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
                 continue;
             }
 
-            $data['app']['customActions'][$name] = $className;
+            $data['action']['types'][$name] = $className;
+            $data['action']['typesData'][$name] = [
+                'handler'     => $className,
+                'typeLabel'   => $className::getTypeLabel(),
+                'name'        => $className::getName(),
+                'description' => $className::getDescription(),
+            ];
         }
     }
 

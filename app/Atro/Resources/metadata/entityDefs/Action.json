@@ -10,14 +10,8 @@
     },
     "type": {
       "type": "enum",
+      "view": "views/action/fields/type",
       "required": true,
-      "prohibitedEmptyValue": false,
-      "optionsIds": [],
-      "options": []
-    },
-    "customAction": {
-      "type": "enum",
-      "required": false,
       "prohibitedEmptyValue": false,
       "optionsIds": [],
       "options": []
