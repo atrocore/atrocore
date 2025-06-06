@@ -130,6 +130,8 @@ class Metadata extends AbstractListener
                 continue;
             }
 
+            $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = $name;
+
             $data['action']['types'][$name] = $className;
             $data['action']['typesData'][$name] = [
                 'handler'     => $className,
@@ -320,33 +322,31 @@ class Metadata extends AbstractListener
         $this->getMemoryStorage()->set('dynamic_action', $actions);
 
         foreach ($actions ?? [] as $action) {
-            if (in_array($action['type'], ['webhook', 'set'])) {
-                $params = [
-                    'id'      => $action['id'],
-                    'name'    => $action['name'],
-                    'display' => $action['display'],
-                    'acl'     => [
-                        'scope'  => $action['source_entity'],
-                        'action' => 'read',
-                    ]
-                ];
+            $params = [
+                'id'      => $action['id'],
+                'name'    => $action['name'],
+                'display' => $action['display'],
+                'acl'     => [
+                    'scope'  => $action['source_entity'],
+                    'action' => 'read',
+                ]
+            ];
 
-                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
-                        'massAction' => !empty($action['mass_action']),
-                    ]);
-                }
+            if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
+            }
 
-                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
-                }
+            if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
+                    'massAction' => !empty($action['mass_action']),
+                ]);
+            }
 
-                if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
-                        'displayField' => $action['display_field'],
-                        'massAction'   => !empty($action['mass_action']),
-                    ]);
-                }
+            if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
+                    'displayField' => $action['display_field'],
+                    'massAction'   => !empty($action['mass_action']),
+                ]);
             }
         }
     }
