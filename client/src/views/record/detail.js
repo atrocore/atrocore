@@ -64,7 +64,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         route: [],
 
-        realtimeInterval: null,
+        realtimeId: null,
 
         buttonList: [
             {
@@ -1225,12 +1225,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        remove() {
-            Dep.prototype.remove.call(this);
-
-            clearInterval(this.realtimeInterval);
-        },
-
         highlightRequired() {
             let highlight = $('.highlighted-required').length === 0;
             $(`.required-sign`).each((k, el) => {
@@ -1248,32 +1242,37 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        checkRealtimeListener(res) {
+            setTimeout(() => {
+                let id = this.$el.find('.detail').attr('id');
+                if (id && this.realtimeId === this.model.get('id')) {
+                    if (this.mode !== 'edit') {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                            if (data.timestamp !== res.timestamp) {
+                                res.timestamp = data.timestamp;
+                                this.model.fetch();
+                            }
+                        });
+                    }
+                    this.checkRealtimeListener(res);
+                }
+            }, 3000);
+        },
+
         initRealtimeListener() {
-            if (!this.model.get('id')) {
+            if (!this.model.get('id') || this.realtimeId === this.model.get('id')) {
                 return;
             }
 
-            clearInterval(this.realtimeInterval);
+            if (!this.realtimeId || this.realtimeId !== this.model.get('id')) {
+                this.realtimeId = this.model.get('id');
+            }
+
             this.ajaxPostRequest('App/action/startEntityListening', {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
             }).success(res => {
-                let timestamp = res.timestamp;
-
-                this.realtimeInterval = setInterval(() => {
-                    if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true })
-                            .done(data => {
-                                if (data.timestamp !== timestamp) {
-                                    timestamp = data.timestamp;
-                                    this.model.fetch();
-                                }
-                            })
-                            .fail(() => {
-                                clearInterval(this.realtimeInterval);
-                            });
-                    }
-                }, 3000)
+                this.checkRealtimeListener(res);
             });
         },
 
