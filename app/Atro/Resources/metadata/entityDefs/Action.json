@@ -5,9 +5,19 @@
       "required": true,
       "trim": true
     },
+    "description": {
+      "type": "text"
+    },
     "type": {
       "type": "enum",
       "required": true,
+      "prohibitedEmptyValue": false,
+      "optionsIds": [],
+      "options": []
+    },
+    "customAction": {
+      "type": "enum",
+      "required": false,
       "prohibitedEmptyValue": false,
       "optionsIds": [],
       "options": []

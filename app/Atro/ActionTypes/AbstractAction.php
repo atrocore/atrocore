@@ -39,8 +39,8 @@ abstract class AbstractAction implements TypeInterface
 
     public function canExecute(Entity $action, \stdClass $input): bool
     {
-        $sourceEntity = $this->getSourceEntity($action, $input);
         if ($action->get('conditionsType') === 'basic') {
+            $sourceEntity = $this->getSourceEntity($action, $input);
             if (empty($sourceEntity)) {
                 return true;
             }
@@ -52,12 +52,10 @@ abstract class AbstractAction implements TypeInterface
                 return Condition::isCheck(Condition::prepare($sourceEntity, $conditions));
             }
             return true;
-        }
-
-        if ($action->get('conditionsType') === 'script') {
+        } elseif ($action->get('conditionsType') === 'script') {
             $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
             $templateData = [
-                'entity' => $sourceEntity,
+                'entity' => $this->getSourceEntity($action, $input),
                 'user'   => $this->getEntityManager()->getUser()
             ];
 
@@ -71,7 +69,6 @@ abstract class AbstractAction implements TypeInterface
 
         return true;
     }
-
 
     public function getSourceEntity($action, \stdClass $input): ?Entity
     {

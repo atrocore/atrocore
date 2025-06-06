@@ -1,3 +1,4 @@
 {
-  "webhook": "\\Atro\\ActionTypes\\Webhook"
+  "webhook": "\\Atro\\ActionTypes\\Webhook",
+  "customCode": "\\Atro\\ActionTypes\\CustomCode"
 }

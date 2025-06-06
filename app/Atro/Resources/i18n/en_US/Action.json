@@ -37,7 +37,8 @@
     },
     "type": {
       "set": "Action Set",
-      "webhook": "Webhook"
+      "webhook": "Webhook",
+      "customCode": "Custom Code"
     },
     "executeAs": {
       "system": "System",
