@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\ParameterType;
 
 class V2Dot0Dot3 extends Base
 {
