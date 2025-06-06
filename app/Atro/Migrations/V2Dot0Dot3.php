@@ -30,8 +30,6 @@ class V2Dot0Dot3 extends Base
         } else {
             $this->exec("ALTER TABLE action ADD description LONGTEXT DEFAULT NULL");
         }
-
-        $this->exec("ALTER TABLE action ADD custom_action VARCHAR(255) DEFAULT NULL");
     }
 
     protected function exec(string $sql): void
