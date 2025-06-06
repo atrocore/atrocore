@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Listeners;
 
+use Atro\ActionTypes\AbstractAction;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Repositories\NotificationRule;
@@ -84,10 +85,13 @@ class Metadata extends AbstractListener
         $this->prepareEntityFields($data);
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type']) || !in_array($scopeDefs['type'], ['Base', 'Hierarchy'])) {
+            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type']) || !in_array($scopeDefs['type'],
+                    ['Base', 'Hierarchy'])) {
                 $data['scopes'][$scope]['attributesDisabled'] = true;
             }
         }
+
+        $this->putCustomCodeActions($data);
 
         $event->setArgument('data', $data);
     }
@@ -104,6 +108,39 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function putCustomCodeActions(array &$data): void
+    {
+        $dir = 'data/custom-code/CustomActions';
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        foreach (scandir($dir) as $fileName) {
+            if (!preg_match('/\.php$/i', $fileName)) {
+                continue;
+            }
+
+            $name = str_replace('.php', '', $fileName);
+            $typeName = 'custom' . $name;
+
+            $className = '\\CustomActions\\' . $name;
+
+            if (!class_exists($className) || !is_a($className, AbstractAction::class, true)) {
+                continue;
+            }
+
+            $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = $typeName;
+
+            $data['action']['types'][$typeName] = $className;
+            $data['action']['typesData'][$typeName] = [
+                'handler'     => $className,
+                'typeLabel'   => $className::getTypeLabel(),
+                'name'        => $className::getName(),
+                'description' => $className::getDescription(),
+            ];
+        }
     }
 
     protected function prepareUserProfile(array &$data): void
@@ -286,33 +323,31 @@ class Metadata extends AbstractListener
         $this->getMemoryStorage()->set('dynamic_action', $actions);
 
         foreach ($actions ?? [] as $action) {
-            if (in_array($action['type'], ['webhook', 'set'])) {
-                $params = [
-                    'id'      => $action['id'],
-                    'name'    => $action['name'],
-                    'display' => $action['display'],
-                    'acl'     => [
-                        'scope'  => $action['source_entity'],
-                        'action' => 'read',
-                    ]
-                ];
+            $params = [
+                'id'      => $action['id'],
+                'name'    => $action['name'],
+                'display' => $action['display'],
+                'acl'     => [
+                    'scope'  => $action['source_entity'],
+                    'action' => 'read',
+                ]
+            ];
 
-                if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
-                        'massAction' => !empty($action['mass_action']),
-                    ]);
-                }
+            if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
+            }
 
-                if ($action['usage'] === 'entity' && !empty($action['source_entity']) && !empty($action['target_entity'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
-                }
+            if ($action['usage'] === 'record' && !empty($action['source_entity'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicRecordActions'][] = array_merge($params, [
+                    'massAction' => !empty($action['mass_action']),
+                ]);
+            }
 
-                if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
-                    $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
-                        'displayField' => $action['display_field'],
-                        'massAction'   => !empty($action['mass_action']),
-                    ]);
-                }
+            if ($action['usage'] === 'field' && !empty($action['source_entity']) && !empty($action['display_field'])) {
+                $data['clientDefs'][$action['source_entity']]['dynamicFieldActions'][] = array_merge($params, [
+                    'displayField' => $action['display_field'],
+                    'massAction'   => !empty($action['mass_action']),
+                ]);
             }
         }
     }
@@ -952,12 +987,11 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array  &$metadata,
+        array &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    )
-    {
+    ) {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1439,7 +1473,10 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
                 }
 
-                if (in_array($field, ['createdAt', 'modifiedAt']) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
+                if (in_array($field, [
+                        'createdAt',
+                        'modifiedAt'
+                    ]) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
                     empty($data['entityDefs'][$scope]['fields'][$field]['view'])) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/datetime-with-user';
                     $data['entityDefs'][$scope]['fields'][$field]['ignoreViewForSearch'] = true;
@@ -1453,7 +1490,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array  $indexes
+     * @param array $indexes
      * @param string $fieldName
      *
      * @return array

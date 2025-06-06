@@ -51,7 +51,8 @@
     "psr-0": {
       "": [
         "../../../data/migrations/",
-        "../../../data/module-manager-events/"
+        "../../../data/module-manager-events/",
+        "../../../data/custom-code/"
       ]
     },
     "psr-4": {
