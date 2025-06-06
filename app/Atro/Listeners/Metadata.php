@@ -132,8 +132,8 @@ class Metadata extends AbstractListener
 
             $data['clientDefs']['Action']['dynamicLogic']['fields']['sourceEntity']['visible']['conditionGroup'][0]['value'][] = $name;
 
-            $data['action']['types'][$name] = $className;
-            $data['action']['typesData'][$name] = [
+            $data['action']['types'][$className] = $className;
+            $data['action']['typesData'][$className] = [
                 'handler'     => $className,
                 'typeLabel'   => $className::getTypeLabel(),
                 'name'        => $className::getName(),

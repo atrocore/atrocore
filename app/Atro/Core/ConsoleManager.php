@@ -112,6 +112,7 @@ class ConsoleManager
             "storages --refresh-items"     => Console\RefreshStoragesItems::class,
             "storages --scan"              => Console\ScanStorages::class,
             "storage <id> --scan"          => Console\ScanStorage::class,
+            "create action <className>"         => Console\CreateAction::class,
         ];
     }
 
