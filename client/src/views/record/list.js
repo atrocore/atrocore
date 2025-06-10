@@ -2958,6 +2958,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
+
+                    if (callback) {
+                        callback();
+                    }
                 } else {
                     if (response.success) {
                         this.notify(response.message, 'success');
@@ -2969,7 +2973,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             return;
                         }
                         if (callback) {
-                            callback()
+                            callback();
                         }
                     } else {
                         this.notify(response.message, 'error');
