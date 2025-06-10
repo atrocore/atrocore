@@ -255,7 +255,8 @@
         $queryBuilder.on('rulesChanged.queryBuilder', async (e, rule) => {
             try {
                 $queryBuilder.queryBuilder('validate');
-            } catch (e) {}
+            } catch (e) {
+            }
 
             queryBuilderRulesChanged = true;
 
@@ -583,6 +584,7 @@
             massRelateEnabled: false,
             allowSelectAllResult: false,
             boolFilterList: ['onlyForEntity'],
+            mandatorySelectAttributeList: ['name', 'type'],
             boolFilterData: {
                 onlyForEntity: scope
             }
@@ -999,7 +1001,8 @@
                     </button>
                 </div>
 
-                <button class="btn btn-sm btn-primary filter-button" disabled={!queryBuilderRulesChanged} on:click={applyFilter}>
+                <button class="btn btn-sm btn-primary filter-button" disabled={!queryBuilderRulesChanged}
+                        on:click={applyFilter}>
                     <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
                 </button>
             </div>
