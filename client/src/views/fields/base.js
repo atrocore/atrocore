@@ -1241,7 +1241,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                                         rule.leftValue = model.get('value')
                                     }
 
-                                    if(rule.rightValue && rule.leftValue) {
+                                    if(rule.rightValue != null && rule.leftValue != null) {
                                         this.filterValue = [rule.leftValue, rule.rightValue];
                                     }
                                 }else{
