@@ -41,14 +41,6 @@
           "conditionGroup": [
             {
               "type": "in",
-              "attribute": "type",
-              "value": [
-                "webhook",
-                "set"
-              ]
-            },
-            {
-              "type": "in",
               "attribute": "usage",
               "value": [
                 "entity",
