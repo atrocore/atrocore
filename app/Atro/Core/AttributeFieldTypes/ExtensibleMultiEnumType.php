@@ -39,7 +39,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         ];
 
         if (empty($skipValueProcessing)) {
-            $value = $row[$entity->fields[$name]['column']];
+            $value = $row[$entity->fields[$name]['column']] ?? null;
             if ($value !== null) {
                 $value = @json_decode((string)$value, true);
             }
