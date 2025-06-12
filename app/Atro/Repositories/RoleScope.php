@@ -22,11 +22,11 @@ class RoleScope extends Base
     public function beforeSave(Entity $entity, array $options = [])
     {
         if (empty($entity->get('hasAccess'))) {
-            $entity->set('createAction', false);
-            $entity->set('readAction', 'no');
-            $entity->set('editAction', 'no');
-            $entity->set('deleteAction', 'no');
-            $entity->set('streamAction', 'no');
+            $entity->set('createAction', null);
+            $entity->set('readAction', null);
+            $entity->set('editAction', null);
+            $entity->set('deleteAction', null);
+            $entity->set('streamAction', null);
         }
 
         if ($entity->isNew()) {

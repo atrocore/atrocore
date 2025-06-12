@@ -46,7 +46,7 @@ class V2Dot0Dot6 extends Base
             }
 
             foreach ($data as $scope => $row) {
-                $this->getConnection()->createQueryBuilder()
+                $qb = $this->getConnection()->createQueryBuilder()
                     ->insert('role_scope')
                     ->setValue('id', ':id')
                     ->setValue('role_id', ':roleId')
@@ -65,14 +65,19 @@ class V2Dot0Dot6 extends Base
                     ->setParameter('roleId', $role['id'])
                     ->setParameter('scope', $scope)
                     ->setParameter('hasAccess', !empty($row), ParameterType::BOOLEAN)
-                    ->setParameter('createAction', !empty($row['create']) && $row['create'] === 'yes', ParameterType::BOOLEAN)
-                    ->setParameter('readAction', !empty($row['read']) ? $row['read'] : 'no')
-                    ->setParameter('editAction', !empty($row['edit']) ? $row['edit'] : 'no')
-                    ->setParameter('deleteAction', !empty($row['delete']) ? $row['delete'] : 'no')
-                    ->setParameter('streamAction', !empty($row['stream']) ? $row['stream'] : 'no')
+                    ->setParameter('createAction', null, ParameterType::NULL)
+                    ->setParameter('readAction', $row['read'] ?? null)
+                    ->setParameter('editAction', $row['edit'] ?? null)
+                    ->setParameter('deleteAction', $row['delete'] ?? null)
+                    ->setParameter('streamAction', $row['stream'] ?? null)
                     ->setParameter('date', date('Y-m-d H:i:s'))
-                    ->setParameter('system', 'system')
-                    ->executeQuery();
+                    ->setParameter('system', 'system');
+
+                if (isset($row['create'])) {
+                    $qb->setParameter('createAction', $row['create'] === 'yes', ParameterType::BOOLEAN);
+                }
+
+                $qb->executeQuery();
             }
         }
     }

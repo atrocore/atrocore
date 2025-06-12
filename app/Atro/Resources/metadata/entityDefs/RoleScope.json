@@ -17,14 +17,11 @@
     "createAction": {
       "type": "bool",
       "view": "views/role-scope/fields/create-action",
-      "default": false,
-      "notNull": true
+      "notNull": false
     },
     "readAction": {
       "type": "enum",
       "view": "views/role-scope/fields/read-action",
-      "default": "no",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
@@ -35,8 +32,6 @@
     "editAction": {
       "type": "enum",
       "view": "views/role-scope/fields/edit-action",
-      "default": "no",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
@@ -47,8 +42,6 @@
     "deleteAction": {
       "type": "enum",
       "view": "views/role-scope/fields/delete-action",
-      "default": "no",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
@@ -59,8 +52,6 @@
     "streamAction": {
       "type": "enum",
       "view": "views/role-scope/fields/stream-action",
-      "default": "no",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "all"
