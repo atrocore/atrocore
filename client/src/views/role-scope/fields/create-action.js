@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/role-scope/fields/create-action', 'views/fields/bool', Dep => {
+Espo.define('views/role-scope/fields/create-action', 'views/fields/enum', Dep => {
 
     return Dep.extend({
 
