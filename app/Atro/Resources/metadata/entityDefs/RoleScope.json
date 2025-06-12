@@ -15,11 +15,13 @@
     },
     "createAction": {
       "type": "bool",
+      "view": "views/role-scope/fields/create-action",
       "default": true,
       "notNull": true
     },
     "readAction": {
       "type": "enum",
+      "view": "views/role-scope/fields/read-action",
       "default": "all",
       "prohibitedEmptyValue": true,
       "options": [
