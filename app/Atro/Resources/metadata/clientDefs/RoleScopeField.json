@@ -1,3 +1,27 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "dynamicLogic": {
+    "fields": {
+      "readAction": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "name"
+            }
+          ]
+        }
+      },
+      "editAction": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "name"
+            }
+          ]
+        }
+      }
+    }
+  }
 }
