@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "name": "Field",
+    "roleScope": "Scope",
+    "readAction": "Read",
+    "editAction": "Edit"
+  }
+}

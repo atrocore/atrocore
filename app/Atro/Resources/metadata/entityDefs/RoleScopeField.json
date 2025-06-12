@@ -10,6 +10,16 @@
       "type": "link",
       "required": true
     },
+    "readAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "editAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

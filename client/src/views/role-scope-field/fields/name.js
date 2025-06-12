@@ -13,10 +13,22 @@ Espo.define('views/role-scope-field/fields/name', 'views/fields/enum', Dep => {
     return Dep.extend({
 
         setup() {
-            this.params.options = [];
-            this.translatedOptions = {};
+            Dep.prototype.setup.call(this);
 
-            let scope = this.model.get('roleScopeName');
+            this.prepareOptionsList();
+            this.listenTo(this.model, 'change:roleScopeName', () => {
+                this.model.set(this.name, null);
+                this.prepareOptionsList();
+                this.reRender();
+            });
+        },
+
+        prepareOptionsList() {
+            const scope = this.model.get('roleScopeName');
+
+            this.params.options = [''];
+            this.translatedOptions = {'': ''};
+
             this.getFieldManager().getScopeFieldList(scope).forEach(field => {
                 if (!['id'].includes(field)) {
                     this.translatedOptions[field] = this.translate(field, 'fields', scope);
@@ -29,8 +41,6 @@ Espo.define('views/role-scope-field/fields/name', 'views/fields/enum', Dep => {
 
             this.translatedOptions = Object.fromEntries(sortedEntries);
             this.params.options = Object.keys(this.translatedOptions);
-
-            Dep.prototype.setup.call(this);
         },
 
     });

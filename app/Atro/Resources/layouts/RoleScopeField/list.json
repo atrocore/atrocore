@@ -4,6 +4,12 @@
     "link": true
   },
   {
+    "name": "readAction"
+  },
+  {
+    "name": "editAction"
+  },
+  {
     "name": "roleScope"
   }
 ]

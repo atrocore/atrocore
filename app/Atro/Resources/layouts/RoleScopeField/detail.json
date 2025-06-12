@@ -12,5 +12,19 @@
         }
       ]
     ]
+  },
+  {
+    "style": "default",
+    "label": "Actions",
+    "rows": [
+      [
+        {
+          "name": "readAction"
+        },
+        {
+          "name": "editAction"
+        }
+      ]
+    ]
   }
 ]
