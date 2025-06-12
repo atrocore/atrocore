@@ -7,7 +7,13 @@
     "readAction": "Read",
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "activitiesAction": "Activities",
+    "streamAction": "Activities",
     "fields": "Fields"
+  },
+  "labels": {
+    "all": "All",
+    "team": "Team",
+    "own": "Own",
+    "no": "No"
   }
 }
