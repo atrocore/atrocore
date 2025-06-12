@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Scope",
-    "role": "Role"
+    "role": "Role",
+    "hasAccess": "Access"
   }
 }

@@ -1,9 +1,11 @@
 {
   "type": "Base",
   "entity": true,
+  "object": true,
   "layouts": false,
-  "tab": true,
+  "tab": false,
   "acl": false,
+  "disabled": false,
   "customizable": false,
   "streamDisabled": true,
   "hideFieldTypeFilters": true,
