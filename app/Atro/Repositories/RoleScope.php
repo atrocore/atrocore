@@ -21,12 +21,27 @@ class RoleScope extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
+        $actions = ['create', 'read', 'edit', 'delete', 'stream'];
+
         if (empty($entity->get('hasAccess'))) {
-            $entity->set('createAction', null);
-            $entity->set('readAction', null);
-            $entity->set('editAction', null);
-            $entity->set('deleteAction', null);
-            $entity->set('streamAction', null);
+            foreach ($actions as $action) {
+                $entity->set("{$action}Action", null);
+            }
+        } else {
+            $scope = $entity->get('name');
+            $aclActionLevelListMap = $this->getMetadata()->get("scopes.$scope.aclActionLevelListMap");
+
+            if (is_array($aclActionLevelListMap)) {
+                foreach ($actions as $action) {
+                    if (!in_array($scope, $aclActionLevelListMap)) {
+                        $entity->set("{$action}Action", null);
+                    }
+                }
+            }
+
+            if ($this->getMetadata()->get("scopes.$scope.streamDisabled")) {
+                $entity->set("streamAction", null);
+            }
         }
 
         if ($entity->isNew()) {
