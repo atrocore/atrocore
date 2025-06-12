@@ -17,28 +17,20 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
-class RoleScope extends Base
+class RoleScopeField extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (empty($entity->get('hasAccess'))) {
-            $entity->set('createAction', false);
-            $entity->set('readAction', 'no');
-            $entity->set('editAction', 'no');
-            $entity->set('deleteAction', 'no');
-            $entity->set('streamAction', 'no');
-        }
-
         if ($entity->isNew()) {
             $exists = $this
                 ->where([
-                    'roleId' => $entity->get('roleId'),
-                    'name'   => $entity->get('name')
+                    'roleScopeId' => $entity->get('roleScopeId'),
+                    'name'        => $entity->get('name')
                 ])
                 ->findOne();
 
             if (!empty($exists)) {
-                $fieldName = $this->getLanguage()->translate('name', 'fields', 'RoleScope');
+                $fieldName = $this->getLanguage()->translate('name', 'fields', 'RoleScopeField');
                 $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
                 throw new NotUnique(sprintf($message, $fieldName));
             }
