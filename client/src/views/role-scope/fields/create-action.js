@@ -25,9 +25,11 @@ Espo.define('views/role-scope/fields/create-action', 'views/fields/bool', Dep =>
 
             const aclActionList = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionList`) || ['create'];
 
-            this.$el.parent().hide();
-            if (aclActionList.includes('create')) {
-                this.$el.parent().show();
+            if (['detail', 'edit'].includes(this.mode)) {
+                this.$el.parent().hide();
+                if (aclActionList.includes('create')) {
+                    this.$el.parent().show();
+                }
             }
         },
 

@@ -31,9 +31,11 @@ Espo.define('views/role-scope/fields/delete-action', 'views/fields/enum', Dep =>
 
             const aclActionList = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionList`) || ['delete'];
 
-            this.$el.parent().hide();
-            if (aclActionList.includes('delete')) {
-                this.$el.parent().show();
+            if (['detail', 'edit'].includes(this.mode)) {
+                this.$el.parent().hide();
+                if (aclActionList.includes('delete')) {
+                    this.$el.parent().show();
+                }
             }
         },
 
