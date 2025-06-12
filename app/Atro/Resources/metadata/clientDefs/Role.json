@@ -1,21 +1,25 @@
 {
-    "recordViews":{
-        "detail":"views/role/record/detail",
-        "edit":"views/role/record/edit",
-        "editQuick":"views/role/record/edit",
-        "list":"views/role/record/list"
+  "recordViews": {
+    "detail": "views/role/record/detail",
+    "edit": "views/role/record/edit",
+    "editQuick": "views/role/record/edit",
+    "list": "views/role/record/list"
+  },
+  "relationshipPanels": {
+    "scopes": {
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     },
-    "relationshipPanels": {
-        "users":{
-            "create":false,
-            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
-        },
-        "teams":{
-            "create":false,
-            "rowActionsView": "views/record/row-actions/relationship-unlink-only"
-        }
+    "users": {
+      "create": false,
+      "rowActionsView": "views/record/row-actions/relationship-unlink-only"
     },
-    "views": {
-        "list": "views/role/list"
+    "teams": {
+      "create": false,
+      "rowActionsView": "views/record/row-actions/relationship-unlink-only"
     }
+  },
+  "views": {
+    "list": "views/role/list"
+  }
 }

@@ -2,6 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "view": "views/role-scope/fields/name",
       "required": true,
       "trim": true
     },
