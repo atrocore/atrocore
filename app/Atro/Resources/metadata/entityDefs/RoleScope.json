@@ -13,6 +13,53 @@
       "type": "bool",
       "notNull": true
     },
+    "createAction": {
+      "type": "bool",
+      "default": true,
+      "notNull": true
+    },
+    "readAction": {
+      "type": "enum",
+      "default": "all",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "editAction": {
+      "type": "enum",
+      "default": "all",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "deleteAction": {
+      "type": "enum",
+      "default": "all",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "activitiesAction": {
+      "type": "enum",
+      "default": "all",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "all"
+      ]
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

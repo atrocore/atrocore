@@ -18,5 +18,33 @@
         false
       ]
     ]
+  },
+  {
+    "style": "default",
+    "label": "Actions",
+    "rows": [
+      [
+        {
+          "name": "createAction"
+        },
+        {
+          "name": "readAction"
+        }
+      ],
+      [
+        {
+          "name": "editAction"
+        },
+        {
+          "name": "deleteAction"
+        }
+      ],
+      [
+        {
+          "name": "activitiesAction"
+        },
+        false
+      ]
+    ]
   }
 ]

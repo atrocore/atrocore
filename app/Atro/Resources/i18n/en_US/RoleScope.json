@@ -2,6 +2,12 @@
   "fields": {
     "name": "Scope",
     "role": "Role",
-    "hasAccess": "Access"
+    "hasAccess": "Access",
+    "createAction": "Create",
+    "readAction": "Read",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "activitiesAction": "Activities",
+    "fields": "Fields"
   }
 }

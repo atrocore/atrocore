@@ -7,6 +7,21 @@
     "name": "hasAccess"
   },
   {
+    "name": "createAction"
+  },
+  {
+    "name": "readAction"
+  },
+  {
+    "name": "editAction"
+  },
+  {
+    "name": "deleteAction"
+  },
+  {
+    "name": "activitiesAction"
+  },
+  {
     "name": "role"
   }
 ]
