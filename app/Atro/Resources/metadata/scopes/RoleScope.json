@@ -1,0 +1,12 @@
+{
+  "type": "Base",
+  "entity": true,
+  "layouts": false,
+  "tab": true,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "hideFieldTypeFilters": true,
+  "bookmarkDisabled": true,
+  "actionDisabled": true
+}

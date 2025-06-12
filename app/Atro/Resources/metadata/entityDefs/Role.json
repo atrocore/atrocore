@@ -1,57 +1,94 @@
 {
-    "fields": {
-        "name": {
-            "maxLength": 150,
-            "required": true,
-            "type": "varchar",
-            "trim": true
-        },
-        "assignmentPermission": {
-            "type": "enum",
-            "optionsIds": ["not-set", "all", "team", "no"],
-            "options": ["not-set", "all", "team", "no"],
-            "default": "not-set",
-            "tooltip": true,
-            "translation": "Role.options.levelList"
-        },
-        "dataPrivacyPermission": {
-            "type": "enum",
-            "optionsIds": ["not-set", "yes", "no"],
-            "options": ["not-set", "yes", "no"],
-            "default": "not-set",
-            "tooltip": true,
-            "translation": "Role.options.levelList"
-        },
-        "styleControlPermission": {
-            "type": "enum",
-            "optionsIds": ["not-set", "yes", "no"],
-            "options": ["not-set", "yes", "no"],
-            "default": "not-set",
-            "translation": "Role.options.levelList"
-        },
-        "data": {
-            "type": "jsonObject"
-        },
-        "fieldData": {
-            "type": "jsonObject"
-        }
+  "fields": {
+    "name": {
+      "maxLength": 150,
+      "required": true,
+      "type": "varchar",
+      "trim": true
     },
-    "links": {
-        "users": {
-            "type": "hasMany",
-            "entity": "User",
-            "foreign": "roles",
-            "relationName": "RoleUser"
-        },
-        "teams": {
-            "type": "hasMany",
-            "entity": "Team",
-            "foreign": "roles",
-            "relationName": "RoleTeam"
-        }
+    "assignmentPermission": {
+      "type": "enum",
+      "optionsIds": [
+        "not-set",
+        "all",
+        "team",
+        "no"
+      ],
+      "options": [
+        "not-set",
+        "all",
+        "team",
+        "no"
+      ],
+      "default": "not-set",
+      "tooltip": true,
+      "translation": "Role.options.levelList"
     },
-    "collection": {
-        "sortBy": "name",
-        "asc": true
+    "dataPrivacyPermission": {
+      "type": "enum",
+      "optionsIds": [
+        "not-set",
+        "yes",
+        "no"
+      ],
+      "options": [
+        "not-set",
+        "yes",
+        "no"
+      ],
+      "default": "not-set",
+      "tooltip": true,
+      "translation": "Role.options.levelList"
+    },
+    "styleControlPermission": {
+      "type": "enum",
+      "optionsIds": [
+        "not-set",
+        "yes",
+        "no"
+      ],
+      "options": [
+        "not-set",
+        "yes",
+        "no"
+      ],
+      "default": "not-set",
+      "translation": "Role.options.levelList"
+    },
+    "data": {
+      "type": "jsonObject"
+    },
+    "fieldData": {
+      "type": "jsonObject"
+    },
+    "scopes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
+  },
+  "links": {
+    "users": {
+      "type": "hasMany",
+      "entity": "User",
+      "foreign": "roles",
+      "relationName": "RoleUser"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "foreign": "roles",
+      "relationName": "RoleTeam"
+    },
+    "scopes": {
+      "type": "hasMany",
+      "foreign": "role",
+      "entity": "RoleScope"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  }
 }

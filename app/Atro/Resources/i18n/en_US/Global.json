@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "RoleScope": "Role Scope",
     "UserProfile": "User Profile",
     "Background": "Background",
     "Entity": "Entity",
@@ -68,6 +69,7 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "RoleScope": "Role Scopes",
     "UserProfile": "User Profiles",
     "Background": "Backgrounds",
     "Entity": "Entities",
