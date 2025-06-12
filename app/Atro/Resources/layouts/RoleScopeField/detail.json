@@ -1,0 +1,16 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "roleScope"
+        }
+      ]
+    ]
+  }
+]

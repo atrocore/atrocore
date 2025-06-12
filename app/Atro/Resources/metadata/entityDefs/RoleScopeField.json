@@ -2,16 +2,12 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "view": "views/role-scope/fields/name",
+      "view": "views/role-scope-field/fields/name",
       "required": true,
       "trim": true
     },
-    "role": {
+    "roleScope": {
       "type": "link"
-    },
-    "hasAccess": {
-      "type": "bool",
-      "notNull": true
     },
     "createdAt": {
       "type": "datetime",
@@ -30,24 +26,13 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
-    },
-    "fields": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
     }
   },
   "links": {
-    "role": {
+    "roleScope": {
       "type": "belongsTo",
-      "foreign": "scopes",
-      "entity": "Role"
-    },
-    "fields": {
-      "type": "hasMany",
-      "foreign": "roleScope",
-      "entity": "RoleScopeField"
+      "foreign": "fields",
+      "entity": "RoleScope"
     }
   },
   "collection": {
@@ -58,7 +43,7 @@
     "unique": [
       "deleted",
       "name",
-      "role_id"
+      "role_scope_id"
     ]
   }
 }
