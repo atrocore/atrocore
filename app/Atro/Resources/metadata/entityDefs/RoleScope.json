@@ -33,6 +33,7 @@
     },
     "editAction": {
       "type": "enum",
+      "view": "views/role-scope/fields/edit-action",
       "default": "all",
       "prohibitedEmptyValue": true,
       "options": [
@@ -44,6 +45,7 @@
     },
     "deleteAction": {
       "type": "enum",
+      "view": "views/role-scope/fields/delete-action",
       "default": "all",
       "prohibitedEmptyValue": true,
       "options": [
@@ -55,6 +57,7 @@
     },
     "streamAction": {
       "type": "enum",
+      "view": "views/role-scope/fields/stream-action",
       "default": "all",
       "prohibitedEmptyValue": true,
       "options": [
