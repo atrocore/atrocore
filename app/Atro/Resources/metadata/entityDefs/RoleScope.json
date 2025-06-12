@@ -7,7 +7,8 @@
       "trim": true
     },
     "role": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "hasAccess": {
       "type": "bool",

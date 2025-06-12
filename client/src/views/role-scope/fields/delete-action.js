@@ -15,9 +15,15 @@ Espo.define('views/role-scope/fields/delete-action', 'views/fields/enum', Dep =>
         setup() {
             Dep.prototype.setup.call(this);
 
+            this.prepareOptionsList();
             this.listenTo(this.model, 'change:name', () => {
+                this.prepareOptionsList();
                 this.reRender();
             });
+        },
+
+        prepareOptionsList() {
+            this.params.options = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionLevelListMap.delete`) || this.getMetadata().get(`entityDefs.RoleScope.fields.deleteAction.options`);
         },
 
         afterRender() {

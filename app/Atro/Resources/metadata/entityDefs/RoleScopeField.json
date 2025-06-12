@@ -7,7 +7,8 @@
       "trim": true
     },
     "roleScope": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "createdAt": {
       "type": "datetime",
