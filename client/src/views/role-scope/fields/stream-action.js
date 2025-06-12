@@ -23,10 +23,12 @@ Espo.define('views/role-scope/fields/stream-action', 'views/fields/enum', Dep =>
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            const aclActionList = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionList`) || ['stream'];
+            const scope = this.model.get('name');
+
+            const aclActionList = this.getMetadata().get(`scopes.${scope}.aclActionList`) || ['stream'];
 
             this.$el.parent().hide();
-            if (aclActionList.includes('stream')) {
+            if (aclActionList.includes('stream') && !this.getMetadata().get(`scopes.${scope}.streamDisabled`)) {
                 this.$el.parent().show();
             }
         },
