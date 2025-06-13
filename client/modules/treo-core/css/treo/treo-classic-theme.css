@@ -1402,8 +1402,8 @@ body {
     line-height: 1.36;
     color: #333;
     background-color: #ececec;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
@@ -13608,7 +13608,8 @@ ul.dropdown-menu > li.checkbox {
 
 .search-row > div {
     padding-left: 0 !important;
-    padding-right: 0 !important
+    padding-right: 0 !important;
+    margin-bottom: 0;
 }
 
 .search-row > div .search-right-buttons-group {
@@ -14443,7 +14444,7 @@ button.category:focus {
 
 @media screen and (max-width: 767px) {
     #content {
-        min-height: calc(100vh - 80px);
+        min-height: calc(100dvh - 80px);
     }
 
     #main {
