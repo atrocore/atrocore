@@ -55,12 +55,6 @@
       "default": "not-set",
       "translation": "Role.options.levelList"
     },
-    "data": {
-      "type": "jsonObject"
-    },
-    "fieldData": {
-      "type": "jsonObject"
-    },
     "scopes": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
