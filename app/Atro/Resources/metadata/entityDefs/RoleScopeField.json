@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "view": "views/role-scope-field/fields/name",
+      "required": true,
+      "trim": true
+    },
+    "nameLabel": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "roleScope": {
+      "type": "link",
+      "required": true
+    },
+    "readAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "editAction": {
+      "type": "bool",
+      "default": false,
+      "notNull": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "roleScope": {
+      "type": "belongsTo",
+      "foreign": "fields",
+      "entity": "RoleScope"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "name",
+      "role_scope_id"
+    ]
+  }
+}

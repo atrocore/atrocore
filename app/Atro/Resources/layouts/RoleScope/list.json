@@ -1,0 +1,17 @@
+[
+  {
+    "name": "name",
+    "link": true,
+    "width": 20
+  },
+  {
+    "name": "hasAccess",
+    "width": 10
+  },
+  {
+    "name": "accessData"
+  },
+  {
+    "name": "role"
+  }
+]

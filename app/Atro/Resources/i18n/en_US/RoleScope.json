@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Scope",
+    "role": "Role",
+    "hasAccess": "Access",
+    "createAction": "Create",
+    "readAction": "Read",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "streamAction": "Activities",
+    "fields": "Fields",
+    "accessData": "Access Data"
+  },
+  "labels": {
+    "all": "All",
+    "team": "Team",
+    "own": "Own",
+    "no": "No",
+    "yes": "Yes"
+  }
+}

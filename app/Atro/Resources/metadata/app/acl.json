@@ -25,7 +25,9 @@
         "delete": "no",
         "create": "no"
       },
-      "Role": false
+      "Role": false,
+      "RoleScope": false,
+      "RoleScopeField": false
     },
     "fieldLevel": {
     },
