@@ -357,6 +357,10 @@
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
     },
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
+    },
     "extensibleEnumOptions": {
       "type": "hasMany",
       "entity": "ExtensibleEnumOption"
