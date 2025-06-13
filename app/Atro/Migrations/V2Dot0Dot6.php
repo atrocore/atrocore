@@ -33,9 +33,17 @@ class V2Dot0Dot6 extends Base
             $this->exec("CREATE TABLE role_scope_field (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', read_action BOOLEAN DEFAULT 'false' NOT NULL, edit_action BOOLEAN DEFAULT 'false' NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, role_scope_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
             $this->exec("CREATE UNIQUE INDEX IDX_ROLE_SCOPE_FIELD_UNIQUE ON role_scope_field (deleted, name, role_scope_id)");
             $this->exec("CREATE INDEX IDX_ROLE_SCOPE_FIELD_ROLE_SCOPE_ID ON role_scope_field (role_scope_id, deleted)");
+            $this->exec("ALTER TABLE role ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD created_by_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD modified_by_id VARCHAR(36) DEFAULT NULL");
         } else {
             $this->exec("CREATE TABLE role_scope (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', has_access TINYINT(1) DEFAULT '0' NOT NULL, create_action VARCHAR(255) DEFAULT NULL, read_action VARCHAR(255) DEFAULT NULL, edit_action VARCHAR(255) DEFAULT NULL, delete_action VARCHAR(255) DEFAULT NULL, stream_action VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, role_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_ROLE_SCOPE_UNIQUE (deleted, name, role_id), INDEX IDX_ROLE_SCOPE_ROLE_ID (role_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             $this->exec("CREATE TABLE role_scope_field (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', read_action TINYINT(1) DEFAULT '0' NOT NULL, edit_action TINYINT(1) DEFAULT '0' NOT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, role_scope_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_ROLE_SCOPE_FIELD_UNIQUE (deleted, name, role_scope_id), INDEX IDX_ROLE_SCOPE_FIELD_ROLE_SCOPE_ID (role_scope_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("ALTER TABLE role ADD created_at DATETIME DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD modified_at DATETIME DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD created_by_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE role ADD modified_by_id VARCHAR(36) DEFAULT NULL");
         }
 
         $roles = $this->getConnection()->createQueryBuilder()

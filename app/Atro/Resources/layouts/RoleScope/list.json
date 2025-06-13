@@ -1,22 +1,15 @@
 [
   {
     "name": "name",
-    "link": true
+    "link": true,
+    "width": 20
   },
   {
-    "name": "hasAccess"
+    "name": "hasAccess",
+    "width": 10
   },
   {
-    "name": "createAction"
-  },
-  {
-    "name": "readAction"
-  },
-  {
-    "name": "editAction"
-  },
-  {
-    "name": "deleteAction"
+    "name": "accessData"
   },
   {
     "name": "role"

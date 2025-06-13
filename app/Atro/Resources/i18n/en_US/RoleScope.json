@@ -8,7 +8,8 @@
     "editAction": "Edit",
     "deleteAction": "Delete",
     "streamAction": "Activities",
-    "fields": "Fields"
+    "fields": "Fields",
+    "accessData": "Access Data"
   },
   "labels": {
     "all": "All",

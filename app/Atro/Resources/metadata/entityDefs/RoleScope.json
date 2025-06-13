@@ -65,6 +65,17 @@
         "all"
       ]
     },
+    "accessData": {
+      "type": "jsonObject",
+      "view": "views/role-scope/fields/access-data",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

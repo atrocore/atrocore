@@ -16,7 +16,7 @@ Espo.define('views/role-scope/fields/name', 'views/fields/enum', Dep => {
             this.translatedOptions = {};
             $.each(this.getMetadata().get('scopes') || {}, (scope, defs) => {
                 if (defs.acl) {
-                    this.translatedOptions[scope] = this.translate(scope, 'scopeNamesPlural');
+                    this.translatedOptions[scope] = this.translate(scope, 'scopeNames');
                 }
             })
 
