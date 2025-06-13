@@ -118,6 +118,10 @@ class DataManager
             return true;
         }
 
+        if (str_starts_with($name, 'role_acl_')) {
+            return true;
+        }
+
         if (str_starts_with($name, 'cron_')) {
             return true;
         }
