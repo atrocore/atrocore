@@ -50,7 +50,7 @@ class Locale extends ReferenceData
     {
         if (
             $this->getEntityManager()->getRepository('User')->where(['localeId' => $entity->get('id')])->findOne()
-            || $this->getConfig()->get('localeId') === $entity->get('id')
+            || $this->getConfig()->get('locale') === $entity->get('id')
         ) {
             throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
         }
