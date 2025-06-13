@@ -50,25 +50,24 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
         decimalMark: '.',
 
-        searchTypeList: ['equals', 'isNotEmpty', 'isEmpty',  'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
+        searchTypeList: ['equals', 'isNotEmpty', 'isEmpty', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
+            const locales = this.getConfig().get('locales')
+            let localeId = this.getUser()?.user?.localeId
+            if (!localeId || !locales[localeId]) {
+                localeId = this.getConfig().get('locale')
+                if (!locales[localeId]) {
+                    localeId = 'main'
                 }
             }
 
-            if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark');
-            } else {
-                if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark');
-                }
+            const locale = locales[localeId]
+            if (locale) {
+                this.thousandSeparator = locale['thousandSeparator']
+                this.decimalMark = locale['decimalMark']
             }
 
             if (this.params.disableFormatting) {
@@ -318,13 +317,13 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if(rule.operator.type ==='between') {
-                            if((!Array.isArray(value) || value.length !== 2)) {
+                        if (rule.operator.type === 'between') {
+                            if ((!Array.isArray(value) || value.length !== 2)) {
                                 return 'bad between';
                             }
-                            return  true;
+                            return true;
                         }
-                        if(isNaN(value) || value === null) {
+                        if (isNaN(value) || value === null) {
                             return 'bad int';
                         }
                         return true;
