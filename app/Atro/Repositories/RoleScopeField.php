@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
+use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
 class RoleScopeField extends Base
@@ -37,5 +38,35 @@ class RoleScopeField extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        $this
+            ->getAclManager()
+            ->clearAclCache();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this
+            ->getAclManager()
+            ->clearAclCache();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
+    }
+
+    protected function getAclManager(): AclManager
+    {
+        return $this->getInjection('container')->get('aclManager');
     }
 }

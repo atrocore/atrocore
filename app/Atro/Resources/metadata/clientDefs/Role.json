@@ -1,10 +1,4 @@
 {
-  "recordViews": {
-    "detail": "views/role/record/detail",
-    "edit": "views/role/record/edit",
-    "editQuick": "views/role/record/edit",
-    "list": "views/role/record/list"
-  },
   "relationshipPanels": {
     "scopes": {
       "select": false,
@@ -18,8 +12,5 @@
       "create": false,
       "rowActionsView": "views/record/row-actions/relationship-unlink-only"
     }
-  },
-  "views": {
-    "list": "views/role/list"
   }
 }
