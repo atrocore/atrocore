@@ -25,6 +25,8 @@ class RoleScope extends Base
     {
         parent::prepareEntityForOutput($entity);
 
+        $entity->set('nameLabel', $this->getInjection('language')->translate($entity->get('name'), 'scopeNames'));
+
         if ($entity->get('hasAccess')) {
             $role = $this->getRoleRepository()->get($entity->get('roleId'));
             if (!empty($role)) {

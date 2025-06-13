@@ -14,8 +14,16 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
 
 class RoleScopeField extends Base
 {
     protected $mandatorySelectAttributeList = ["roleScopeId", "roleScopeName"];
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $entity->set('nameLabel', $this->getInjection('language')->translate($entity->get('name'), 'fields', $entity->get('roleScopeName')));
+    }
 }

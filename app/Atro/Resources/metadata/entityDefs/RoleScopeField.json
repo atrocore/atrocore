@@ -6,6 +6,16 @@
       "required": true,
       "trim": true
     },
+    "nameLabel": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "roleScope": {
       "type": "link",
       "required": true

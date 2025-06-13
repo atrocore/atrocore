@@ -793,7 +793,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             result.push({
                 url: `${rootUrl}/view/${this.model.id}`,
-                label: this.model.get('name') || this.model.id,
+                label: this.model.get('nameLabel') || this.model.get('name') || this.model.id,
                 className: 'header-title'
             })
 
