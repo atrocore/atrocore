@@ -22,7 +22,7 @@ class RoleScope extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        $actions = ['create', 'read', 'edit', 'delete', 'stream'];
+        $actions = Role::ACTIONS;
 
         if (empty($entity->get('hasAccess'))) {
             foreach ($actions as $action) {

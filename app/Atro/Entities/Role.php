@@ -13,13 +13,8 @@ namespace Atro\Entities;
 
 class Role extends \Espo\Core\ORM\Entity
 {
-    public function getScopesData(): \stdClass
+    public function getAclData(): \stdClass
     {
-        return $this->getEntityManager()->getRepository('Role')->getScopesData($this);
-    }
-
-    public function getScopesFieldsData(): \stdClass
-    {
-        return $this->getEntityManager()->getRepository('Role')->getScopesFieldsData($this);
+        return $this->getEntityManager()->getRepository('Role')->getAclData($this);
     }
 }
