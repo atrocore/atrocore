@@ -9,17 +9,16 @@
             {{{avatar}}}
         </div>
         <div class="stream-head-text-container">
+            <div class="stream-date-container">
+                <span class="text-muted small">{{{createdAt}}}</span>
+            </div>
+
             <span class="text-muted"><span class="{{emailIconClassName}} action icon"></span>
                 {{{message}}}
             </span>
             <a href="javascript:" data-action="expandDetails"><i class="ph ph-caret-down"></i></a>
         </div>
     </div>
-
-    <div class="stream-date-container">
-        <span class="text-muted small">{{{createdAt}}}</span>
-    </div>
-
 <div class="hidden details stream-details-container">
         <div class="panel">
                 <div class="row">

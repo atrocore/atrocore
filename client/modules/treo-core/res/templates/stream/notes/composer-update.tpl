@@ -3,6 +3,10 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
+        <div class="stream-date-container">
+            <span class="text-muted small">{{{createdAt}}}</span>
+        </div>
+
         <span class="text-muted message">{{{message}}}</span>
     </div>
 </div>
@@ -14,10 +18,6 @@
             <p><a class="action" href="javascript:" data-action="showUpdateDetails">{{translate 'viewDetails'}}</a></p>
         </span>
     </span>
-</div>
-
-<div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
 </div>
 
 

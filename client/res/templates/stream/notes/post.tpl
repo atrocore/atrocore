@@ -12,6 +12,10 @@
         </div>
 
         <div class="stream-head-text-container">
+            <div class="stream-date-container">
+                <span class="text-muted small">{{{createdAt}}}</span>
+            </div>
+
             <span class="text-muted message">{{{message}}}</span>
         </div>
     </div>
@@ -27,9 +31,5 @@
         <span class="cell cell-attachments">{{{attachments}}}</span>
     </div>
     {{/if}}
-
-    <div class="stream-date-container">
-        <span class="text-muted small">{{{createdAt}}}</span>
-    </div>
 
 
