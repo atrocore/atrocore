@@ -13,27 +13,35 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\AclManager;
 use Espo\ORM\Entity;
 
-class RoleScopeField extends Base
+class RoleScopeAttribute extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('roleScopeId') || $entity->isAttributeChanged('name')) {
+        if ($entity->isAttributeChanged('attributeId') || $entity->isAttributeChanged('roleScopeId')) {
             $exists = $this
                 ->where([
                     'roleScopeId' => $entity->get('roleScopeId'),
-                    'name'        => $entity->get('name')
+                    'attributeId' => $entity->get('attributeId')
                 ])
                 ->findOne();
 
             if (!empty($exists)) {
-                $fieldName = $this->getLanguage()->translate('name', 'fields', 'RoleScopeField');
+                $fieldName = $this->getLanguage()->translate('attribute', 'fields', 'RoleScopeField');
                 $message = $this->getLanguage()->translate('notUniqueRecordField', 'exceptions');
                 throw new NotUnique(sprintf($message, $fieldName));
+            }
+
+            $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
+            $roleScope = $this->getEntityManager()->getRepository('RoleScope')->get($entity->get('roleScopeId'));
+
+            if ($roleScope->get('name') !== $attribute->get('entityId')) {
+                throw new BadRequest("The Attribute {$attribute->get('name')} could not be chosen for the Scope {$roleScope->get('name')}");
             }
         }
 

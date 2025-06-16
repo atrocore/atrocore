@@ -2,6 +2,7 @@
   "fields": {
     "attribute": {
       "type": "link",
+      "view": "views/role-scope-attribute/fields/attribute",
       "required": true
     },
     "roleScope": {
