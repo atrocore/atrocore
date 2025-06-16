@@ -5,11 +5,6 @@
       "select": false,
       "rowActionsView": "views/record/row-actions/relationship-no-unlink",
       "view": "views/role-scope/record/panels/fields"
-    },
-    "attributes": {
-      "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
-      "view": "views/role-scope/record/panels/attributes"
     }
   },
   "dynamicLogic": {

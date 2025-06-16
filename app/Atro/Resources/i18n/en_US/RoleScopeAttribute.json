@@ -1,8 +1,0 @@
-{
-  "fields": {
-    "attribute": "Attribute",
-    "roleScope": "Scope",
-    "readAction": "Read",
-    "editAction": "Edit"
-  }
-}
