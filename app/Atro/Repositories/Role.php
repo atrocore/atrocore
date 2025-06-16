@@ -57,6 +57,26 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                         $res['fields'][$scopeName][$fieldName]['read'] = !empty($field->get("readAction")) ? 'yes' : 'no';
                         $res['fields'][$scopeName][$fieldName]['edit'] = !empty($field->get("editAction")) ? 'yes' : 'no';
                     }
+
+                    $roleAttributes = $roleScope->get('attributes');
+                    $attributesIds = array_column($roleAttributes->toArray(), 'attributeId');
+
+                    if (!empty($attributesIds)) {
+                        /** @var \Pim\Services\Attribute $attributeService */
+                        $attributeService = $this->getInjection('container')->get('serviceFactory')->create('Attribute');
+
+                        $attributesDefs = $attributeService->getAttributesDefs($scopeName, $attributesIds);
+
+                        foreach ($roleAttributes as $roleAttribute) {
+                            foreach ($attributesDefs as $fieldName => $defs) {
+                                if (empty($defs['attributeId']) || $defs['attributeId'] !== $roleAttribute->get('attributeId')) {
+                                    continue;
+                                }
+                                $res['fields'][$scopeName][$fieldName]['read'] = !empty($roleAttribute->get("readAction")) ? 'yes' : 'no';
+                                $res['fields'][$scopeName][$fieldName]['edit'] = !empty($roleAttribute->get("editAction")) ? 'yes' : 'no';
+                            }
+                        }
+                    }
                 }
             }
 
