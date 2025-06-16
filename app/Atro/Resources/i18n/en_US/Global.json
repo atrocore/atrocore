@@ -2,6 +2,7 @@
   "scopeNames": {
     "RoleScope": "Scope",
     "RoleScopeField": "Field",
+    "RoleScopeAttribute": "Attribute",
     "UserProfile": "User Profile",
     "Background": "Background",
     "Entity": "Entity",
@@ -72,6 +73,7 @@
   "scopeNamesPlural": {
     "RoleScope": "Scopes",
     "RoleScopeField": "Fields",
+    "RoleScopeAttribute": "Attributes",
     "UserProfile": "User Profiles",
     "Background": "Backgrounds",
     "Entity": "Entities",

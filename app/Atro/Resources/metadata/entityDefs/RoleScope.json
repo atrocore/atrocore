@@ -127,6 +127,12 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "attributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -139,6 +145,11 @@
       "type": "hasMany",
       "foreign": "roleScope",
       "entity": "RoleScopeField"
+    },
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeAttribute"
     }
   },
   "collection": {
