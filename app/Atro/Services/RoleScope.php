@@ -89,9 +89,4 @@ class RoleScope extends Base
             $entity->set('accessData', $this->getRoleAccessData($entity));
         }
     }
-
-    protected function getRoleRepository(): RoleRepository
-    {
-        return $this->getEntityManager()->getRepository('Role');
-    }
 }
