@@ -21,6 +21,62 @@ class RoleScope extends Base
 {
     protected $mandatorySelectAttributeList = ['roleId'];
 
+    public function getSelectAttributeList($params)
+    {
+        $res = parent::getSelectAttributeList($params);
+
+        foreach (RoleRepository::ACTIONS as $action) {
+            if (!in_array("{$action}Action", $res)) {
+                $res[] = "{$action}Action";
+            }
+        }
+
+        return $res;
+    }
+
+    public function getRoleAccessData(Entity $entity): array
+    {
+        $accessData = [];
+        foreach (RoleRepository::ACTIONS as $action) {
+            $accessData['scopeData'][$action] = $entity->get("{$action}Action");
+        }
+
+        foreach ($entity->get('fields') ?? [] as $field) {
+            $accessData['fieldsData'][$field->get('name')]['read'] = !empty($field->get("readAction")) ? 'yes' : 'no';
+            $accessData['fieldsData'][$field->get('name')]['edit'] = !empty($field->get("editAction")) ? 'yes' : 'no';
+        }
+
+        foreach ($entity->get('attributePanels') ?? [] as $row) {
+            $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $row->get('attributePanelId'));
+            if (empty($attributePanel)) {
+                continue;
+            }
+            $accessData['attributePanelsData'][$attributePanel->get('id')] = [
+                'name'       => $attributePanel->get('name'),
+                'accessData' => [
+                    'read' => !empty($row->get("readAction")) ? 'yes' : 'no',
+                    'edit' => !empty($row->get("editAction")) ? 'yes' : 'no'
+                ]
+            ];
+        }
+
+        foreach ($entity->get('attributes') ?? [] as $row) {
+            $attribute = $this->getEntityManager()->getEntity('Attribute', $row->get('attributeId'));
+            if (empty($attribute)) {
+                continue;
+            }
+            $accessData['attributesData'][$attribute->get('id')] = [
+                'name'       => $attribute->get('name'),
+                'accessData' => [
+                    'read' => !empty($row->get("readAction")) ? 'yes' : 'no',
+                    'edit' => !empty($row->get("editAction")) ? 'yes' : 'no'
+                ]
+            ];
+        }
+
+        return $accessData;
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
@@ -28,14 +84,7 @@ class RoleScope extends Base
         $entity->set('nameLabel', $this->getInjection('language')->translate($entity->get('name'), 'scopeNames'));
 
         if ($entity->get('hasAccess')) {
-            $role = $this->getRoleRepository()->get($entity->get('roleId'));
-            if (!empty($role)) {
-                $aclData = $this->getRoleRepository()->getAclData($role);
-                $entity->set('accessData', [
-                    'scopeData'  => $aclData->scopes->{$entity->get('name')} ?? null,
-                    'fieldsData' => $aclData->fields->{$entity->get('name')} ?? null
-                ]);
-            }
+            $entity->set('accessData', $this->getRoleAccessData($entity));
         }
     }
 
