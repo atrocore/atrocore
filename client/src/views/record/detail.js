@@ -2156,6 +2156,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         return
                     }
 
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)){
+                        return
+                    }
+
                     // put attribute group item
                     if (attributeGroupId) {
                         if (!addedGroups[panelId]) {
