@@ -38,7 +38,9 @@ class RoleScope extends Base
     {
         $accessData = [];
         foreach (RoleRepository::ACTIONS as $action) {
-            $accessData['scopeData'][$action] = $entity->get("{$action}Action");
+            if ($entity->get("{$action}Action") !== null) {
+                $accessData['scopeData'][$action] = $entity->get("{$action}Action");
+            }
         }
 
         foreach ($entity->get('fields') ?? [] as $field) {
