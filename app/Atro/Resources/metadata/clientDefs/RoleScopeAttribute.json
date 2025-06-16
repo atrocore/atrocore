@@ -7,7 +7,7 @@
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "name"
+              "attribute": "attributeId"
             }
           ]
         }
@@ -17,7 +17,7 @@
           "conditionGroup": [
             {
               "type": "isNotEmpty",
-              "attribute": "name"
+              "attribute": "attributeId"
             }
           ]
         }

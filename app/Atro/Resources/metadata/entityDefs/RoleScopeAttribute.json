@@ -1,19 +1,8 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true
-    },
-    "nameLabel": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "massUpdateDisabled": true,
-      "filterDisabled": true,
-      "exportDisabled": true,
-      "importDisabled": true,
-      "emHidden": true
+    "attribute": {
+      "type": "link",
+      "required": true
     },
     "roleScope": {
       "type": "link",
@@ -49,6 +38,10 @@
     }
   },
   "links": {
+    "attribute": {
+      "type": "belongsTo",
+      "entity": "Attribute"
+    },
     "roleScope": {
       "type": "belongsTo",
       "foreign": "attributes",
@@ -56,13 +49,13 @@
     }
   },
   "collection": {
-    "sortBy": "name",
+    "sortBy": "id",
     "asc": true
   },
   "uniqueIndexes": {
     "unique": [
       "deleted",
-      "name",
+      "attribute_id",
       "role_scope_id"
     ]
   }

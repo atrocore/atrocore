@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/role-scope/record/panels/relationship', 'views/record/panels/relationship', Dep => {
+Espo.define('views/role-scope/record/panels/attributes', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
@@ -24,7 +24,7 @@ Espo.define('views/role-scope/record/panels/relationship', 'views/record/panels/
             Dep.prototype.afterRender.call(this);
 
             this.$el.parent().hide();
-            if (this.model.get('hasAccess')) {
+            if (this.model.get('hasAccess') && this.getMetadata().get(`scopes.${this.model.get('name')}.hasAttribute`)) {
                 this.$el.parent().show();
             }
         },
