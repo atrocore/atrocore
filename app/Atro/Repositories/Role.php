@@ -20,7 +20,15 @@ use Espo\ORM\Entity;
 
 class Role extends \Espo\Core\ORM\Repositories\RDB
 {
-    public const ACTIONS = ['create', 'read', 'edit', 'delete', 'stream', 'createAttributeValue', 'deleteAttributeValue'];
+    public const ACTIONS = [
+        'create',
+        'read',
+        'edit',
+        'delete',
+        'stream',
+        'createAttributeValue',
+        'deleteAttributeValue'
+    ];
 
     public static function createCacheKey(RoleEntity $role): string
     {
@@ -58,23 +66,31 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                         $res['fields'][$scopeName][$fieldName]['edit'] = !empty($field->get("editAction")) ? 'yes' : 'no';
                     }
 
-                    $roleAttributes = $roleScope->get('attributes');
-                    $attributesIds = array_column($roleAttributes->toArray(), 'attributeId');
-
-                    if (!empty($attributesIds)) {
+                    if (class_exists('\\Pim\\Services\\Attribute')) {
                         /** @var \Pim\Services\Attribute $attributeService */
                         $attributeService = $this->getInjection('container')->get('serviceFactory')->create('Attribute');
 
-                        $attributesDefs = $attributeService->getAttributesDefs($scopeName, $attributesIds);
+                        $roleAttributes = $roleScope->get('attributes');
+                        if (!empty($roleAttributes[0])) {
+                            $attributesIds = array_column($roleAttributes->toArray(), 'attributeId');
+                            $attributesDefs = $attributeService->getAttributesDefs($scopeName, $attributesIds);
 
-                        foreach ($roleAttributes as $roleAttribute) {
-                            foreach ($attributesDefs as $fieldName => $defs) {
-                                if (empty($defs['attributeId']) || $defs['attributeId'] !== $roleAttribute->get('attributeId')) {
-                                    continue;
+                            foreach ($roleAttributes as $roleAttribute) {
+                                foreach ($attributesDefs as $fieldName => $defs) {
+                                    if (empty($defs['attributeId']) || $defs['attributeId'] !== $roleAttribute->get('attributeId')) {
+                                        continue;
+                                    }
+                                    $res['fields'][$scopeName][$fieldName]['read'] = !empty($roleAttribute->get("readAction")) ? 'yes' : 'no';
+                                    $res['fields'][$scopeName][$fieldName]['edit'] = !empty($roleAttribute->get("editAction")) ? 'yes' : 'no';
                                 }
-                                $res['fields'][$scopeName][$fieldName]['read'] = !empty($roleAttribute->get("readAction")) ? 'yes' : 'no';
-                                $res['fields'][$scopeName][$fieldName]['edit'] = !empty($roleAttribute->get("editAction")) ? 'yes' : 'no';
                             }
+                        }
+
+                        foreach ($roleScope->get('attributePanels') ?? [] as $roleAttributePanel) {
+                            echo '<pre>';
+                            print_r($roleAttributePanel->get('attributePanelId'));
+                            die();
+
                         }
                     }
                 }
