@@ -615,9 +615,19 @@ class Installer extends HasContainer
             unlink($file);
         }
 
-        $this->getSeederFactory()->create(\Atro\Seeders\LocalizationSeeder::class)->run();
+        $seeders = [
+            \Atro\Seeders\LocalizationSeeder::class,
+            \Atro\Seeders\ScheduledJobSeeder::class,
+            \Atro\Seeders\FileStorageSeeder::class,
+            \Atro\Seeders\NotificationProfileSeeder::class,
+            \Atro\Seeders\HtmlSanitizerSeeder::class,
+            \Atro\Seeders\StyleSeeder::class,
+            \Atro\Seeders\LayoutProfileSeeder::class
+        ];
 
-        $this->getSeederFactory()->create(\Atro\Seeders\ScheduledJobSeeder::class)->run();
+        foreach ($seeders as $seeder) {
+            $this->getSeederFactory()->create($seeder)->run();
+        }
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
             try {
@@ -626,16 +636,6 @@ class Installer extends HasContainer
                 $GLOBALS['log']->error("After Install Module Error: {$e->getMessage()}");
             }
         }
-
-        $this->getSeederFactory()->create(\Atro\Seeders\FileStorageSeeder::class)->run();
-
-        $this->getSeederFactory()->create(\Atro\Seeders\NotificationProfileSeeder::class)->run();
-
-        $this->getSeederFactory()->create(\Atro\Seeders\HtmlSanitizerSeeder::class)->run();
-
-        $this->getSeederFactory()->create(\Atro\Seeders\StyleSeeder::class)->run();
-
-        $this->getSeederFactory()->create(\Atro\Seeders\LayoutProfileSeeder::class)->run();
 
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate lists >/dev/null");
