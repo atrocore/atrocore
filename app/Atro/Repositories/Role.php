@@ -20,7 +20,7 @@ use Espo\ORM\Entity;
 
 class Role extends \Espo\Core\ORM\Repositories\RDB
 {
-    public const ACTIONS = ['create', 'read', 'edit', 'delete', 'stream'];
+    public const ACTIONS = ['create', 'read', 'edit', 'delete', 'stream', 'createAttributeValue', 'deleteAttributeValue'];
 
     public static function createCacheKey(RoleEntity $role): string
     {
