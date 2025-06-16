@@ -40,6 +40,10 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
                     view = child.params.layoutDetailView;
                 }
 
+                if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit') || []).includes(child.name)){
+                    this.model.defs.fields[child.name].readOnly = true;
+                }
+
                 this.createView(child.name, view, {
                     el: `${this.options.el} > .composite-container .field[data-name="${child.name}"]`,
                     name: child.name,
