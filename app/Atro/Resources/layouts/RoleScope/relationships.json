@@ -3,6 +3,9 @@
     "name": "fields"
   },
   {
+    "name": "attributePanels"
+  },
+  {
     "name": "attributes"
   }
 ]
