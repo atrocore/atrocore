@@ -49,6 +49,19 @@
               ]
             }
           ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record",
+                "field"
+              ]
+            }
+          ]
         }
       },
       "inBackground": {
