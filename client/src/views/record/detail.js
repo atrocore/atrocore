@@ -445,7 +445,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && !this.getMetadata().get(`scopes.${this.model.name}.disableAttributeLinking`)) {
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && !this.getMetadata().get(`scopes.${this.model.name}.disableAttributeLinking`) && this.getAcl().check(this.entityType, 'createAttributeValue')) {
                 this.dropdownItemList.push({
                     label: 'addAttribute',
                     name: 'addAttribute'
@@ -1479,7 +1479,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let panelName = $el.parent().data('name');
                     let isAttributeValuePanel = attributePanels.includes(panelName);
 
-                    if (isAttributeValuePanel && this.getMetadata().get(['scopes', this.model.name, 'hasAttribute'])) {
+                    if (isAttributeValuePanel && this.getMetadata().get(['scopes', this.model.name, 'hasAttribute']) && this.getAcl().check(this.model.name, 'createAttributeValue')) {
                         const linkingEnabled = !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
 
                         let html = '<div class="btn-group pull-right">' +
@@ -2153,6 +2153,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (!attributePanels[panelId]) {
                         // skip item when panel do not exist
+                        return
+                    }
+
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)){
                         return
                     }
 

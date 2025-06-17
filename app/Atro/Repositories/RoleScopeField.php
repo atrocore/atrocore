@@ -22,7 +22,7 @@ class RoleScopeField extends Base
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew()) {
+        if ($entity->isAttributeChanged('roleScopeId') || $entity->isAttributeChanged('name')) {
             $exists = $this
                 ->where([
                     'roleScopeId' => $entity->get('roleScopeId'),

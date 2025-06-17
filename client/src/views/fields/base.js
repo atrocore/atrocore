@@ -684,7 +684,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         initRemoveAttributeValue() {
             const fieldName = this.originalName || this.name;
 
-            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit')) {
+            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit') || !this.getAcl().check(this.model.name, 'deleteAttributeValue')) {
                 return;
             }
 

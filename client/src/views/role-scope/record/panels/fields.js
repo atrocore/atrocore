@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/role-scope/record/panels/relationship', 'views/record/panels/relationship', Dep => {
+Espo.define('views/role-scope/record/panels/fields', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
