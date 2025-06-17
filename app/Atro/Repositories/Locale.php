@@ -37,7 +37,7 @@ class Locale extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        if(($entity->isNew() || $entity->isAttributeChanged('code')) && !empty($entity->get('code'))){
+        if (($entity->isNew() || $entity->isAttributeChanged('code')) && !empty($entity->get('code'))) {
             $this->getEntityManager()
                 ->getRepository('NotificationTemplate')
                 ->addUiHandlerForLanguage($entity->get('code'));
@@ -48,9 +48,16 @@ class Locale extends ReferenceData
 
     protected function beforeRemove(Entity $entity, array $options = [])
     {
+        $systemLocale = $this->getConfig()->get('locale');
+        $systemLocales = $this->getConfig()->get('locales');
+
+        if (empty($systemLocale) || !array_key_exists($systemLocale, $systemLocales)) {
+            $systemLocale = array_key_first($systemLocales);
+        }
+
         if (
             $this->getEntityManager()->getRepository('User')->where(['localeId' => $entity->get('id')])->findOne()
-            || $this->getConfig()->get('locale') === $entity->get('id')
+            || $systemLocale === $entity->get('id')
         ) {
             throw new BadRequest($this->getInjection('language')->translate('localeIsUsed', 'exceptions', 'Locale'));
         }
