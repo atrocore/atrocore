@@ -21,6 +21,18 @@ Espo.define('views/role-scope-field/fields/name', 'views/fields/enum', Dep => {
                 this.prepareOptionsList();
                 this.reRender();
             });
+
+            this.listenTo(this.model, 'change:readAction', () => {
+                if (!this.model.get('readAction')) {
+                    this.model.set('editAction', false);
+                }
+            });
+
+            this.listenTo(this.model, 'change:editAction', () => {
+                if (this.model.get('editAction')) {
+                    this.model.set('readAction', true);
+                }
+            });
         },
 
         prepareOptionsList() {
