@@ -85,7 +85,9 @@ class ScheduledJobSeeder extends AbstractSeeder
                 $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
             }
 
-            $qb->executeQuery();
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {}
         }
     }
 }
