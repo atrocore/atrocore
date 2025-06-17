@@ -351,6 +351,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 // set element before reRender
                 this.setElement(this.containerSelector + ' .body');
                 this.reRender();
+                this.$el.find('.modal-header .modal-title').html(this.header);
             }.bind(this));
 
             this.controlNavigationButtons();
