@@ -198,21 +198,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             return this.scope;
         },
 
-        setupHeader(){
-            var model = this.model;
-            var scope = this.getScope();
-
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-
-            if (model.get('name')) {
-                this.header = Handlebars.Utils.escapeExpression(model.get('name'));
-            } else {
-                this.header = this.getLanguage().translate(scope, 'scopeNames');
-            }
-
-            this.header = iconHtml + this.header;
-        },
-
         createRecordView: function (callback) {
             var model = this.model;
             var scope = this.getScope();
