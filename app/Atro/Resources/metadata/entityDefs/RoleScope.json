@@ -24,24 +24,6 @@
       "type": "bool",
       "notNull": true
     },
-    "createAttributeValueAction": {
-      "type": "enum",
-      "view": "views/role-scope/fields/create-attribute-value-action",
-      "prohibitedEmptyValue": true,
-      "options": [
-        "no",
-        "yes"
-      ]
-    },
-    "deleteAttributeValueAction": {
-      "type": "enum",
-      "view": "views/role-scope/fields/create-attribute-value-action",
-      "prohibitedEmptyValue": true,
-      "options": [
-        "no",
-        "yes"
-      ]
-    },
     "createAction": {
       "type": "enum",
       "view": "views/role-scope/fields/create-action",
