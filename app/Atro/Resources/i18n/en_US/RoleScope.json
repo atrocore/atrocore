@@ -9,9 +9,7 @@
     "deleteAction": "Delete",
     "streamAction": "Activities",
     "fields": "Fields",
-    "accessData": "Access Data",
-    "createAttributeValueAction": "Create Attribute Value",
-    "deleteAttributeValueAction": "Delete Attribute Value"
+    "accessData": "Access Data"
   },
   "labels": {
     "all": "All",
