@@ -45,6 +45,14 @@ class RoleScope extends Base
             }
         }
 
+        if ($entity->get('readAction') === 'no') {
+            foreach ($actions as $action) {
+                if ($action !== 'read') {
+                    $entity->set("{$action}Action", 'no');
+                }
+            }
+        }
+
         if ($entity->isNew()) {
             $exists = $this
                 ->where([
