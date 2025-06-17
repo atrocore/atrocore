@@ -85,6 +85,7 @@ class RoleScope extends Base
 
         $entity->set('nameLabel', $this->getInjection('language')->translate($entity->get('name'), 'scopeNames'));
 
+        $entity->set('accessData', null);
         if ($entity->get('hasAccess')) {
             $entity->set('accessData', $this->getRoleAccessData($entity));
         }
