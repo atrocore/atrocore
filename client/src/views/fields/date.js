@@ -420,7 +420,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     'current_year',
                     'last_year',
                     'is_null',
-                    'is_not_null',
+                    'is_not_null'
                 ],
                 input: this.filterInput.bind(this),
                 valueGetter: this.filterValueGetter.bind(this),
