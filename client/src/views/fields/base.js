@@ -1206,11 +1206,11 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         }
 
-                        if(['last_x_days', 'next_x_days'].includes(this.previousType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
 
-                        if(!['last_x_days', 'next_x_days'].includes(this.previousType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if(!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
                     }else{
@@ -1219,7 +1219,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             view.model.set('value', this.defaultFilterValue);
                         }
                     }
-                    this.previousType = rule.operator.type;
+                    this.previousOperatorType = rule.operator.type;
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
@@ -1227,7 +1227,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                let createValueField = (type) => this.getModelFactory().create(null, model => {
                     model.set('value', this.defaultFilterValue);
                     setTimeout(() => {
-                        this.previousType = type ?? rule.operator.type;
+                        this.previousOperatorType = type ?? rule.operator.type;
                         let view =  `views/fields/${this.type}`
 
 
@@ -1235,7 +1235,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             view = 'views/fields/varchar';
                         }
 
-                        if(['last_x_days', 'next_x_days'].includes(this.previousType)) {
+                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
                             view = 'views/fields/int'
                         }
                         this.createView(viewKey, view, {
