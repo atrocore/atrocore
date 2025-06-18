@@ -1062,7 +1062,14 @@
       "query_in": "запит",
       "query_linked_with": "запит",
       "is_attribute_linked": "пов'язано",
-      "is_attribute_not_linked": "не пов'язано"
+      "is_attribute_not_linked": "не пов'язано",
+      "last_x_days": "останні x днів",
+      "next_x_days": "наступні x днів",
+      "current_month": "поточний місяць",
+      "last_month": "минулий місяць",
+      "next_month": "наступний місяць",
+      "current_year": "поточний рік",
+      "last_year": "минулий рік"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

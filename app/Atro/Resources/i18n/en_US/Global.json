@@ -1133,7 +1133,14 @@
       "query_in": "query",
       "query_linked_with": "query",
       "is_attribute_linked": "is linked",
-      "is_attribute_not_linked": "is not linked"
+      "is_attribute_not_linked": "is not linked",
+      "last_x_days": "last x days",
+      "next_x_days": "next x days",
+      "current_month": "current month",
+      "last_month": "last month",
+      "next_month": "next month",
+      "current_year": "current year",
+      "last_year": "last year"
     },
     "errors": {
       "no_filter": "No filter selected",

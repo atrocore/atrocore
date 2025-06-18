@@ -1199,10 +1199,19 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     rule.leftValue = null;
                     let view = this.getView(viewKey);
 
-                    if(!['is_null', 'is_not_null'].includes(rule.operator.type)) {
+
+                    if(!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
                         if(rule.operator.type !== 'between' && view){
                             this.filterValue = view.model.get('value');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        }
+
+                        if(['last_x_days', 'next_x_days'].includes(this.previousType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
+                        }
+
+                        if(!['last_x_days', 'next_x_days'].includes(this.previousType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
                         }
                     }else{
                         rule.value = this.defaultFilterValue;
@@ -1210,18 +1219,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             view.model.set('value', this.defaultFilterValue);
                         }
                     }
-
+                    this.previousType = rule.operator.type;
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
                this.filterValue = this.defaultFilterValue;
-                this.getModelFactory().create(null, model => {
+               let createValueField = (type) => this.getModelFactory().create(null, model => {
                     model.set('value', this.defaultFilterValue);
                     setTimeout(() => {
+                        this.previousType = type ?? rule.operator.type;
                         let view =  `views/fields/${this.type}`
+
 
                         if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
                             view = 'views/fields/varchar';
+                        }
+
+                        if(['last_x_days', 'next_x_days'].includes(this.previousType)) {
+                            view = 'views/fields/int'
                         }
                         this.createView(viewKey, view, {
                             name: 'value',
@@ -1260,6 +1275,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             }
                     });
                 });
+
+               createValueField();
 
             return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
         },
