@@ -117,11 +117,12 @@ class TextType extends AbstractFieldType
                 }
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
-                    'name'           => $lName,
-                    'label'          => $this->getAttributeLabel($row, $language, $languages),
-                    'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
-                    'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
-                    'multilangField' => true
+                    'name'            => $lName,
+                    'label'           => $this->getAttributeLabel($row, $language, $languages),
+                    'tooltip'         => !empty($row[$this->prepareKey('tooltip', $row)]),
+                    'tooltipText'     => $row[$this->prepareKey('tooltip', $row)],
+                    'multilangField'  => $name,
+                    'multilangLocale' => $language,
                 ]);
 
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];

@@ -12,6 +12,8 @@
 namespace Atro\Core;
 
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
+use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
@@ -28,6 +30,7 @@ class AttributeFieldConverter
     protected Metadata $metadata;
     protected Config $config;
     protected Connection $conn;
+    protected Manager $eventManager;
     private Container $container;
     private array $attributes = [];
 
@@ -36,6 +39,7 @@ class AttributeFieldConverter
         $this->metadata = $container->get('metadata');
         $this->config = $container->get('config');
         $this->conn = $container->get('connection');
+        $this->eventManager = $container->get('eventManager');
         $this->container = $container;
     }
 
@@ -299,6 +303,10 @@ class AttributeFieldConverter
             }
             $this->convert($entity, $row, $attributesDefs);
         }
+
+        $attributesDefs = $this->eventManager->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $res, 'attributesDefs' => $attributesDefs]))
+            ->getArgument('attributesDefs');
+
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
