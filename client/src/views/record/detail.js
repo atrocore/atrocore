@@ -2109,7 +2109,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             let attributeGroups = {};
 
             $.each(originalAttributeDefs, (name, defs) => {
-                if (!defs.attributeGroup.id) {
+                if (!defs.attributeGroup?.id) {
                     attributesDefs[name] = defs;
                 } else {
                     attributeGroups[defs.attributeGroup.id] = defs.attributeGroup;
