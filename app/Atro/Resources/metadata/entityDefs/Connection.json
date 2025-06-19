@@ -16,7 +16,8 @@
         "oauth1",
         "otto",
         "cookie",
-        "smtp"
+        "smtp",
+        "vertica"
       ],
       "options": [
         "atrocore",
@@ -30,7 +31,8 @@
         "oauth1",
         "otto",
         "cookie",
-        "smtp"
+        "smtp",
+        "vertica"
       ],
       "default": "atrocore"
     },
