@@ -10,5 +10,6 @@
   "otto": "\\Atro\\ConnectionType\\ConnectionOtto",
   "cookie": "\\Atro\\ConnectionType\\ConnectionCookie",
   "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp",
-  "pdoSql": "\\Atro\\ConnectionType\\ConnectionPdoSql"
+  "pdoSql": "\\Atro\\ConnectionType\\ConnectionPdoSql",
+  "vertica": "\\Atro\\ConnectionType\\ConnectionVertica"
 }
