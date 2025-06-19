@@ -103,6 +103,10 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                             }
                         }
                     }
+                } else {
+                    foreach (self::ACTIONS as $action) {
+                        $res['scopes'][$scopeName][$action] = 'no';
+                    }
                 }
             }
 
