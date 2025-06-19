@@ -28,9 +28,13 @@
         if(e.detail.uniqueKey !== uniqueKey) {
             return;
         }
-        isCollapsed = !isCollapsed;
-        setActiveItem(items.find(item => item.name === 'filter'));
-        storeData('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
+
+        if (activeItem.name === 'filter') {
+            isCollapsed = !isCollapsed;
+            storeData('right-side-view-collapse', scope + 'list', isCollapsed ? 'collapsed' : 'expanded');
+        } else {
+            setActiveItem(items.find(item => item.name === 'filter'));
+        }
     }
     window.addEventListener('right-side-view:toggle-filter', toggleFilter);
 
