@@ -30,6 +30,7 @@ class SavedSearch extends Base
             $cachedData = [];
             foreach ($this->find() as $entity) {
                 if(!$this->getMetadata()->get(['scopes', $entity->get('entityType')])) {
+                    $this->deleteFromDb($entity->get('id'));
                     continue;
                 }
                 $this->cleanDeletedFieldsFromFilterData($entity);
