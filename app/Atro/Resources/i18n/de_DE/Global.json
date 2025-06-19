@@ -1061,7 +1061,14 @@
       "query_in": "abfrage",
       "query_linked_with": "abfrage",
       "is_attribute_linked": "ist verknüpft",
-      "is_attribute_not_linked": "ist nicht verknüpft"
+      "is_attribute_not_linked": "ist nicht verknüpft",
+      "last_x_days": "letzte x Tage",
+      "next_x_days": "nächste x Tage",
+      "current_month": "aktueller Monat",
+      "last_month": "letzter Monat",
+      "next_month": "nächster Monat",
+      "current_year": "aktuelles Jahr",
+      "last_year": "letztes Jahr"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

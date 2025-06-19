@@ -177,7 +177,14 @@
                 {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
                 {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
                 {type: 'is_attribute_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']}
+                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'last_x_days', nb_inputs: 1, apply_to: ['date', 'datetime', 'number']},
+                {type: 'next_x_days', nb_inputs: 1, apply_to: ['date', 'datetime']},
+                {type: 'current_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'last_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'next_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'current_year', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'last_year', nb_inputs: 0, apply_to: ['date', 'datetime']}
             ],
             rules: rules,
             filters: filters,
