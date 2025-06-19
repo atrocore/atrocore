@@ -6,7 +6,8 @@
     "dataPrivacyPermission": "Data Privacy Permission",
     "users": "Users",
     "teams": "Teams",
-    "styleControlPermission": "Style Control"
+    "styleControlPermission": "Style Control",
+    "scopes": "Scopes"
   },
   "tooltips": {
     "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
