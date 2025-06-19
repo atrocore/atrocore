@@ -96,22 +96,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         },
 
         setup: function () {
-            Dep.prototype.setup.call(this);
-
-            if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark');
-            } else {
-                if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark');
-                }
-            }
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
-                }
-            }
+            Int.prototype.setup.call(this);
 
             if (this.measureId) {
                 this.unitFieldName = this.name + 'UnitId';
@@ -156,7 +141,12 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         validateInt: function () {
             var validate = function (name) {
-                if (isNaN(this.model.get(name))) {
+                const value = this.$el.find('[name="' + name + '"]').val();
+                if (!value || value.length === 0) {
+                    return false;
+                }
+
+                if (!Int.prototype.isValueValid.call(this, value)) {
                     var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
                     this.showValidationMessage(msg, '[name="' + name + '"]');
                     return true;
