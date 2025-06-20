@@ -2121,7 +2121,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             $.each(attributeGroups, (id, group) => {
                 let groupItems = {};
                 $.each(originalAttributeDefs, (name, defs) => {
-                    if (defs.attributeGroup.id === id) {
+                    if (defs.attributeGroup?.id === id) {
                         groupItems[name] = defs;
                     }
                 });
