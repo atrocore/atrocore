@@ -394,6 +394,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return;
                 }
 
+                if((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
+                    return;
+                }
+
                 let name = p.name;
 
                 let links = (this.model.defs || {}).links || {};
