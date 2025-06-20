@@ -30,7 +30,6 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
 
             return $result;
         }
-
         return parent::executeQuery($sql, $params, $types);
     }
 
@@ -51,7 +50,6 @@ class LoggingConnection extends \Doctrine\DBAL\Connection
 
             return $result;
         }
-
         return parent::executeStatement($sql, $params, $types);
     }
 }
