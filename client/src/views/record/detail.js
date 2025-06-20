@@ -1493,7 +1493,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             });
                         }
                         $el.find('.close-attribute-panel').click(() => {
-                            this.actionCloseAttributeValuePanel(panelName);
+                            this.confirm({
+                                message: this.translate('closePanelConfirmation', 'messages'),
+                                confirmText: this.translate('Close')
+                            }, () => {
+                                this.actionCloseAttributeValuePanel(panelName);
+                            });
                         });
 
                         $el.find('.panel-title').prepend('<span class="collapser" >\n' +
