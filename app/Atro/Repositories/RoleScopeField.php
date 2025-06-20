@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\Core\AclManager;
@@ -23,6 +24,9 @@ class RoleScopeField extends Base
     public function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('roleScopeId') || $entity->isAttributeChanged('name')) {
+            if (!$entity->isNew()) {
+                throw new BadRequest("Field and Scope can not be changed.");
+            }
             $exists = $this
                 ->where([
                     'roleScopeId' => $entity->get('roleScopeId'),
