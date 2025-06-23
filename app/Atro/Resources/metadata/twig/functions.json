@@ -66,5 +66,8 @@
   },
   "convertMeasureUnit": {
     "handler": "\\Atro\\TwigFunction\\ConvertMeasureUnit"
+  },
+  "getLeafRecords": {
+    "handler": "\\Atro\\TwigFunction\\GetLeafRecords"
   }
 }

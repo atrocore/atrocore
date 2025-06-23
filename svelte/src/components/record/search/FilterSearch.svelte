@@ -278,6 +278,7 @@
         overflow: hidden;
         height: 100%;
         margin: 0 -1px;
+        border-radius: 0;
     }
 
     .has-content  .filter-switcher {
