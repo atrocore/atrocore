@@ -28,7 +28,10 @@ class PreviewTemplate extends Base
             throw new BadRequest();
         }
 
-        return ['htmlPreview' => $this->getRecordService()->getHtmlPreview($request->get('previewTemplateId'), $request->get('entityId'))];
+        return [
+            'htmlPreview' => $this->getRecordService()->getHtmlPreview($request->get('previewTemplateId'), $request->get('entityId')),
+            'hasMultipleLanguages' => true
+        ];
     }
 
 }

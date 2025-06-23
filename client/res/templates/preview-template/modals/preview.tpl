@@ -6,9 +6,7 @@
             </div>
         {{/if}}
         <div class="screen-size-icons" role="group">
-            {{#if hasMultipleLanguages }}
-                <select class="language-selector"></select>
-            {{/if}}
+            <div class="language-container"></div>
             <button class="btn {{#if editorActive}}btn-primary{{else}}btn-default{{/if}} editor-toggle"
                     data-action="toggleEditor"><i class="ph ph-corners-out"></i></button>
             <div class="btn-group" role="group">

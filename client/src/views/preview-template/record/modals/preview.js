@@ -48,6 +48,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         useAutosave: true,
 
+        canChangeLanguage: false,
+
         languages: [],
 
         selectedLanguage: null,
@@ -116,7 +118,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 isMobile: this.profile === 'mobile',
                 isDesktop: this.profile === 'desktop',
                 editorActive: this.editorActive,
-                hasMultipleLanguages: this.languages.length > 1
             };
         },
 
@@ -128,6 +129,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 .sort((x, y) => (x.main === y.main) ? 0 : x.main ? -1 : 1); // main lang should be first
 
             this.selectedLanguage = this.languages[0];
+
+            if (typeof this.options.canChangeLanguage === 'boolean') {
+                this.canChangeLanguage = this.options.canChangeLanguage;
+            }
         },
 
         loadPreviewFrame(afterLoad = null) {
@@ -142,6 +147,27 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.getPreviewRequest().success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
+
+                if (typeof res.hasMultipleLanguages === 'boolean') {
+                    this.canChangeLanguage = res.hasMultipleLanguages;
+                }
+
+                this.$el.find('.language-container').empty();
+
+                if (this.canChangeLanguage && this.languages.length > 1) {
+                    const selector = $('<select class="language-selector"></select>');
+                    this.$el.find('.language-container').append(selector);
+
+                    selector.selectize({
+                        setFirstOptionActive: true,
+                        persist: false,
+                        valueField: "code",
+                        labelField: "name",
+                        searchField: ["name", "code"],
+                        options: this.languages,
+                        items: [this.selectedLanguage.code]
+                    });
+                }
 
                 this.notify(false);
                 this.loadHtmlPage(this.htmlContent);
@@ -301,16 +327,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-
-            this.$el.find('select.language-selector').selectize({
-                setFirstOptionActive: true,
-                persist: false,
-                valueField: "code",
-                labelField: "name",
-                searchField: ["name", "code"],
-                options: this.languages,
-                items: [this.selectedLanguage.code]
-            });
 
             this.frame = document.querySelector('.html-preview iframe');
             this.loadPreviewFrame();
