@@ -5,20 +5,7 @@
     import {LayoutManager} from "../../utils/LayoutManager";
     import {Language} from "../../utils/Language";
 
-    let locales = Config.get('locales') || {}
-    let languages = (Config.get('inputLanguageList') || []).reduce((res, item) => {
-        res[item] = Config.get('referenceData').Language?.[item]
-        return res
-    }, {})
-
-    let locale = UserData.get()?.user?.localeId
-    if (!locale || !locales[locale]) {
-        locale = Config.get('locale')
-        if (!locales[locale]) {
-            locale = 'main'
-        }
-    }
-
+    export let checkConfirmLeaveOut: Function;
     let mainLanguageCode = ''
 
     for (const [code, language] of Object.entries(Config.get('referenceData').Language || {})) {
@@ -27,16 +14,26 @@
         }
     }
 
-    let disabledLanguages = UserData.get()?.user?.disabledLanguages || []
-    let languagesLabel
+    let locales = Config.get('locales') || {}
+    let languages = [mainLanguageCode, ...(Config.get('inputLanguageList') || [])].reduce((res, item) => {
+        res[item] = Config.get('referenceData').Language?.[item]
+        return res
+    }, {})
 
-    if (locale && locale !== mainLanguageCode) {
-        // remove language for selected locale if exists
-        if (locale && locales[locale]?.code && languages[locales[locale].code]) {
-            delete languages[locales[locale].code]
-            // add main locale language
-            languages[mainLanguageCode] = Config.get('referenceData').Language[mainLanguageCode]
+    let locale = UserData.get()?.user?.localeId
+    if (!locale || !locales[locale]) {
+        locale = Config.get('localeId')
+        if (!locales[locale]) {
+            locale = 'main'
         }
+    }
+    console.log(locale, locales)
+
+    let disabledLanguages = UserData.get()?.user?.disabledLanguages || []
+    let defaultLanguageCode = mainLanguageCode
+
+    if (locale && locales[locale]?.code && languages[locales[locale].code]) {
+        defaultLanguageCode = locales[locale].code
     }
 
     disabledLanguages = disabledLanguages.filter(code => !!languages[code])
@@ -48,25 +45,24 @@
 
     let enabledLanguages = Object.keys(languages).filter(item => !disabledLanguages.includes(item))
 
-    $: {
-        if (enabledLanguages.length === 0) {
-            languagesLabel = Language.translate('None', 'labels', 'Global')
-        } else if (enabledLanguages.length === Object.keys(languages).length) {
-            languagesLabel = Language.translate('allLanguages', 'labels', 'Global')
-        } else {
-            languagesLabel = enabledLanguages.map(code => languages[code].name).join(', ')
-        }
-    }
 
-    async function onLocaleChange() {
+    async function onLocaleChange(localeId: string) {
         const userData = UserData.get()
-        await Utils.patchRequest('/UserProfile/' + userData.user.id, {localeId: locale})
-        window.location.reload()
+        const code = locales[localeId]?.code
+        const newDefaultCode = code && languages[code] ? code : mainLanguageCode
+
+        checkConfirmLeaveOut(async () => {
+            await Utils.patchRequest('/UserProfile/' + userData.user.id, {
+                localeId: localeId,
+                disabledLanguages: Object.keys(languages).filter(item => item !== newDefaultCode)
+            })
+            window.location.reload()
+        })
     }
 
     async function onLanguageChange() {
         const userData = UserData.get()
-        const disabledLanguages = Object.keys(languages).filter(item => !enabledLanguages.includes(item));
+        const disabledLanguages = Object.keys(languages).filter(item => item !== defaultLanguageCode && !enabledLanguages.includes(item));
         await Utils.patchRequest('/UserProfile/' + userData.user.id, {
             disabledLanguages: disabledLanguages
         })
@@ -79,26 +75,51 @@
     }
 </script>
 
-<div class="btn-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
-    <select class="form-control locale-switcher" style="max-width: 100px; flex: 1;" bind:value={locale}
-            on:change={onLocaleChange}>
-        {#each Object.entries(locales) as [id, locale] }
-            <option value="{id}">
-                {locale.name}
-            </option>
-        {/each}
-    </select>
-    {#if Object.keys(languages).length > 0}
-        <div class="dropdown">
-            <select data-toggle="dropdown" class="form-control language-switcher"
-                    on:mousedown={event => event.preventDefault()}
-                    style="max-width: 300px; flex: 1;">
-                <option value="" selected>{languagesLabel}</option>
-            </select>
+<div class="btn-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
+    {#if Object.keys(locales).length > 1}
+        <div class="dropdown has-content">
+            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false">
+                <span class="filter-names">
+                    <i class="ph ph-translate"></i>
+                </span>
+                <i class="ph ph-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="disabled"><a
+                        href="javascript:">{Language.translate('Locale', 'scopeNamesPlural', 'Global')}</a></li>
+                {#each Object.entries(locales).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [id, l] }
+                    <li>
+                        <a href="javascript:" on:click={() =>onLocaleChange(id)} class:active={id===locale}>
+                            {l.name}
+                            {#if id === locale}
+                                <i class="ph ph-check"></i>
+                            {/if}
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        </div>
+    {/if}
+    {#if Object.keys(languages).length > 1}
+        <div class="dropdown has-content">
+            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false">
+                <span class="filter-names">
+                    <i class="{`ph ph-${enabledLanguages.length === Object.keys(languages).length - 1 ? 'globe':'globe-simple' }`}"></i>
+                </span>
+                <i class="ph ph-caret-down"></i>
+            </button>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
                 <h5 style="margin-top: 0">{Language.translate('additionalLanguages', 'labels', 'Global')}</h5>
                 <ul style="padding: 0" on:click={event => event.stopPropagation()}>
-                    {#each Object.entries(languages).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [code, language] }
+                    {#if defaultLanguageCode}
+                        <li class="checkbox">
+                            <label style="cursor: not-allowed">
+                                <input type="checkbox" checked disabled>
+                                {languages[defaultLanguageCode]?.name}
+                            </label>
+                        </li>
+                    {/if}
+                    {#each Object.entries(languages).filter(v => v[0] !== defaultLanguageCode).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [code, language] }
                         <li class="checkbox">
                             <label>
                                 <input type="checkbox" bind:group={enabledLanguages} value="{code}"
@@ -108,31 +129,38 @@
                         </li>
                     {/each}
                 </ul>
-                {#if enabledLanguages.length < Object.keys(languages).length }
+                {#if enabledLanguages.length < Object.keys(languages).length - 1 }
                     <a href="javascript:" on:click={setAllLanguages}
                        style="margin-top: 10px">{Language.translate('selectAll', 'labels', 'Global')}</a>
                 {/if}
             </div>
         </div>
-
     {/if}
 </div>
 
 <style>
-    .locale-switcher {
+    .btn {
+        /*background-color: transparent;*/
+        color: var(--nav-font-color);
+        background-color: var(--nav-menu-background); /* rgba(0, 0, 0, 0.05); */
+        border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
+    }
+
+    .btn-group > :first-child > .btn {
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
     }
 
-    .language-switcher {
-        border-left: none;
+    .btn-group > :last-child > .btn {
         border-bottom-right-radius: 5px;
         border-top-right-radius: 5px;
     }
 
-    .language-switcher, .locale-switcher {
-        color: var(--nav-font-color);
-        background-color: var(--nav-menu-background); /* rgba(0, 0, 0, 0.05); */
-        border-color: rgba(var(--nav-font-color-rgb), 0.2);
+    .btn-group > :nth-child(2) > .btn {
+        border-left-width: 0;
+    }
+
+    .dropdown-menu > li > a {
+        padding: 7px 14px;
     }
 </style>
