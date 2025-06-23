@@ -212,7 +212,7 @@
         gap: 10px;
     }
 
-    .button-row :global(.record-actions .btn) {
+    .button-row :global(.record-actions > .btn) {
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
