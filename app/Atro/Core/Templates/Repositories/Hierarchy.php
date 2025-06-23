@@ -347,6 +347,26 @@ class Hierarchy extends Base
         return $ids;
     }
 
+    public function getLeafChildren(string $id): array
+    {
+        $children = $this->getChildrenRecursivelyArray($id);
+        $qb = $this->getConnection()->createQueryBuilder();
+        $query = $qb->select('r.parent_id')
+            ->distinct()
+            ->from($this->hierarchyTableName, 'r')
+            ->leftJoin('r', $this->tableName, 'm', 'r.entity_id = m.id')
+            ->where('r.deleted = :false')
+            ->andWhere('m.deleted = :false')
+            ->andWhere($qb->expr()->in('r.parent_id', ':ids'))
+            ->setParameter('ids', $children, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $parentNodes = $query->fetchFirstColumn();
+
+        return array_diff($children, $parentNodes);
+    }
+
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
