@@ -23,4 +23,18 @@ class Entity extends Base
             'canHasAttributes' => true
         ];
     }
+
+    protected function boolFilterCanHasClassifications(&$result)
+    {
+        $result['whereClause'][] = [
+            'canHasClassifications' => true
+        ];
+    }
+
+    protected function boolFilterCanHasComponents(&$result)
+    {
+        $result['whereClause'][] = [
+            'canHasComponents' => true
+        ];
+    }
 }

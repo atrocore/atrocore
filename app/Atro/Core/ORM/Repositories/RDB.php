@@ -404,6 +404,15 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     )
                 );
             }
+
+            $allowedOptions = $fieldData['allowedOptions'] ?? [];
+            if (!empty($allowedOptions) && !in_array($option['id'], $allowedOptions)) {
+                throw new BadRequest(sprintf(
+                    $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
+                    $option['name'],
+                    $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
+                ));
+            }
         }
     }
 
@@ -414,6 +423,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         }
 
         if ($entity->isAttributeChanged($fieldName) && !empty($ids = $entity->get($fieldName))) {
+            $allowedOptions = $fieldData['allowedOptions'] ?? [];
             $options = $this->getEntityManager()->getRepository('ExtensibleEnumOption')->getPreparedOptions($fieldData['extensibleEnumId'], $ids);
             foreach ($options as $option) {
                 if (!empty($option['notExistingOption'])) {
@@ -423,6 +433,13 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                             $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
                         )
                     );
+                }
+                if (!empty($allowedOptions) && !in_array($option['id'], $allowedOptions)) {
+                    throw new BadRequest(sprintf(
+                        $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
+                        $option['name'],
+                        $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType())
+                    ));
                 }
             }
         }
@@ -840,7 +857,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     }
 
                     if ($entity->has($fieldName)) {
-                        $specifiedIds = $entity->get($fieldName) ?? [];
+                        $specifiedIds = array_unique($entity->get($fieldName) ?? []);
                     } else {
                         $specifiedIds = [];
                         foreach ($entity->get($columnsFieldsName) as $id => $d) {
@@ -924,7 +941,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                                     $data = ['entityType' => $entity->getEntityType()];
                                 }
                                 try {
-                                    $this->relate($entity, $name, $id, $data, $options);
+                                    $this->relate($entity, $name, $id, $data, array_merge($options, ['ignoreDuplicate' => true]));
                                 } catch (NotUnique $e) {
                                 }
                             }

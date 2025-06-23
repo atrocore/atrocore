@@ -28,9 +28,13 @@
         if(e.detail.uniqueKey !== uniqueKey) {
             return;
         }
-        isCollapsed = !isCollapsed;
-        setActiveItem(items.find(item => item.name === 'filter'));
-        storeData('right-side-view-collapse', scope+'list', isCollapsed ? 'collapsed' : 'expanded');
+
+        if (activeItem.name === 'filter') {
+            isCollapsed = !isCollapsed;
+            storeData('right-side-view-collapse', scope + 'list', isCollapsed ? 'collapsed' : 'expanded');
+        } else {
+            setActiveItem(items.find(item => item.name === 'filter'));
+        }
     }
     window.addEventListener('right-side-view:toggle-filter', toggleFilter);
 
@@ -169,12 +173,12 @@
     <div class="content">
         <div class="btn-group">
             {#each items as item}
-                {#if item.name !== activeItem.name}
-                    <a href="javascript:" on:click={()=>setActiveItem(item)}
-                       class="btn btn-link item">
-                        {item.label}
-                    </a>
-                {/if}
+                <a href="javascript:" on:click={()=>setActiveItem(item)}
+                   class="btn btn-link item"
+                   class:active={item.name===activeItem.name}
+                >
+                    {item.label}
+                </a>
             {/each}
         </div>
 
@@ -185,7 +189,7 @@
 
         {#if showFilter}
             <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} parentWidth="{currentWidth}" uniqueKey={uniqueKey}></QueryBuilder>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} uniqueKey={uniqueKey}></QueryBuilder>
             </div>
         {/if}
 
@@ -212,6 +216,10 @@
         padding: 4px 20px 4px 0;
         color: #333;
         text-decoration: underline;
+    }
+
+    .btn-group .item.active {
+        color: #2895ea;
     }
 
     .btn-group .item:hover:not(.active) {

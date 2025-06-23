@@ -13,19 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\SeederFactory;
 use Atro\Core\Templates\Services\HasContainer;
 use Atro\Console\AbstractConsole;
 use Atro\Core\ModuleManager\Manager;
-use Atro\Migrations\V1Dot12Dot1;
-use Atro\Migrations\V1Dot12Dot12;
-use Atro\Migrations\V1Dot13Dot16;
-use Atro\Migrations\V1Dot13Dot41;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
-use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Exceptions;
-use Doctrine\DBAL\ParameterType;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
@@ -620,104 +615,18 @@ class Installer extends HasContainer
             unlink($file);
         }
 
-        @mkdir(ReferenceData::DIR_PATH);
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
-            'en_US' => [
-                'id'                => 'main',
-                'name'              => 'Main',
-                'code'              => 'en_US',
-                'languageCode'      => 'en_US',
-                'dateFormat'        => 'DD.MM.YYYY',
-                'timeZone'          => 'UTC',
-                'weekStart'         => 'monday',
-                'timeFormat'        => 'HH:mm',
-                'thousandSeparator' => '.',
-                'decimalMark'       => ',',
-                'createdAt'         => date('Y-m-d H:i:s')
-            ]
-        ]));
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
-            'en_US' => [
-                'id'        => 'main',
-                'name'      => 'English',
-                'code'      => 'en_US',
-                'role'      => 'main',
-                'createdAt' => date('Y-m-d H:i:s')
-            ]
-        ]));
-        @file_put_contents(
-            ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json',
-            json_encode(\Atro\Migrations\V1Dot11Dot44::getDefaultEmailTemplates())
-        );
-
-        $toInsertRecords = [
-            [
-                'tableName' => 'scheduled_job',
-                'data'      => [
-                    'id'             => 'ComposerAutoUpdate',
-                    'name'           => 'Update system automatically',
-                    'type'           => 'ComposerAutoUpdate',
-                    'is_active'      => true,
-                    'scheduling'     => '0 0 * * SUN',
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'modified_at'    => date('Y-m-d H:i:s'),
-                    'created_by_id'  => 'system',
-                    'modified_by_id' => 'system',
-                ]
-            ],
-            [
-                'tableName' => 'scheduled_job',
-                'data'      => [
-                    'id'             => 'UpdateCurrencyExchangeViaECB',
-                    'name'           => 'Update currency exchange via ECB',
-                    'type'           => 'UpdateCurrencyExchangeViaECB',
-                    'is_active'      => true,
-                    'scheduling'     => '0 2 * * *',
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'modified_at'    => date('Y-m-d H:i:s'),
-                    'created_by_id'  => 'system',
-                    'modified_by_id' => 'system',
-                ]
-            ],
-            [
-                'tableName' => 'scheduled_job',
-                'data'      => [
-                    'id'             => 'ClearEntities',
-                    'name'           => 'Clear deleted data',
-                    'type'           => 'ClearEntities',
-                    'is_active'      => true,
-                    'scheduling'     => '0 2 1 * *',
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'modified_at'    => date('Y-m-d H:i:s'),
-                    'created_by_id'  => 'system',
-                    'modified_by_id' => 'system',
-                ]
-            ],
-            [
-                'tableName' => 'scheduled_job',
-                'data'      => [
-                    'id'             => 'CheckUpdates',
-                    'name'           => 'Check system updates',
-                    'type'           => 'CheckUpdates',
-                    'is_active'      => true,
-                    'scheduling'     => '0 2 * * *',
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'modified_at'    => date('Y-m-d H:i:s'),
-                    'created_by_id'  => 'system',
-                    'modified_by_id' => 'system',
-                ]
-            ]
+        $seeders = [
+            \Atro\Seeders\LocalizationSeeder::class,
+            \Atro\Seeders\ScheduledJobSeeder::class,
+            \Atro\Seeders\FileStorageSeeder::class,
+            \Atro\Seeders\NotificationProfileSeeder::class,
+            \Atro\Seeders\HtmlSanitizerSeeder::class,
+            \Atro\Seeders\StyleSeeder::class,
+            \Atro\Seeders\LayoutProfileSeeder::class
         ];
 
-        $conn = $this->getEntityManager()->getConnection();
-        foreach ($toInsertRecords as $row) {
-            $qb = $conn->createQueryBuilder();
-            $qb->insert($conn->quoteIdentifier($row['tableName']));
-            foreach ($row['data'] as $columnName => $value) {
-                $qb->setValue($columnName, ":$columnName");
-                $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
-            }
-            $qb->executeQuery();
+        foreach ($seeders as $seeder) {
+            $this->getSeederFactory()->create($seeder)->run();
         }
 
         foreach ($this->getModuleManager()->getModulesList() as $name) {
@@ -728,109 +637,10 @@ class Installer extends HasContainer
             }
         }
 
-        \Atro\Migrations\V1Dot10Dot0::createDefaultStorage($this->getEntityManager()->getConnection());
-        \Atro\Migrations\V1Dot10Dot0::createDefaultFileTypes($this->getEntityManager()->getConnection());
-
-        \Atro\Migrations\V1Dot10Dot50::createNotificationDefaultNotificationProfile($this->getEntityManager()->getConnection(), $this->getConfig());
-
-        // create default email templates
-        $emailTemplates = [];
-        foreach (\Atro\Migrations\V1Dot10Dot50::getDefaultRules() as $rule) {
-            if (!empty($rule['templates'])) {
-                $templates = $rule['templates'];
-                foreach ($templates as $type => $template) {
-                    if ($type !== 'email') {
-                        continue;
-                    }
-                    $emailTemplates[$template['id']]['id'] = $template['id'];
-                    $emailTemplates[$template['id']]['code'] = $template['id'];
-                    $emailTemplates[$template['id']]['name'] = $template['name'];
-                    $emailTemplates[$template['id']]['subject'] = $template['data']['field']['subject'] ?? '';
-                    $emailTemplates[$template['id']]['body'] = $template['data']['field']['body'] ?? '';
-                    $emailTemplates[$template['id']]['createdAt'] = date('Y-m-d H:i:s');
-                }
-            }
-        }
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'EmailTemplate.json', json_encode($emailTemplates));
-
-        $standardSanitizer = V1Dot12Dot1::getDefaultHtmlSanitizer();
-        $tableOnlySanitizer = V1Dot13Dot41::getDefaultHtmlSanitizer();
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'HtmlSanitizer.json', json_encode(
-            array_merge([$standardSanitizer['id'] => $standardSanitizer], [$tableOnlySanitizer['id'] => $tableOnlySanitizer])
-        ));
-
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json', json_encode(V1Dot12Dot12::getDefaultStyles()));
-
-        $this->createDefaultLayoutProfile();
-
-        V1Dot13Dot16::setupDefaultFavorites($this->getEntityManager()->getConnection());
-
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php refresh translations >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate lists >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate measures >/dev/null");
         exec(AbstractConsole::getPhpBinPath($this->getConfig()) . " console.php regenerate ui handlers >/dev/null");
-    }
-
-    protected function createDefaultLayoutProfile()
-    {
-        $defaultId = 'default';
-
-        try {
-            $menus = ['Product', 'File'];
-
-            if (class_exists('\Pim\Module')) {
-                $menus = array_merge($menus,  [
-                    'Association',
-                    'Attribute',
-                    'AttributeGroup',
-                    'Brand',
-                    'Category',
-                    'Catalog',
-                    'Channel',
-                    'Classification'
-                ]);
-            }
-
-            if (class_exists('\Export\Module')) {
-                $menus[] = 'ExportFeed';
-            }
-
-            if (class_exists('\Import\Module')) {
-                $menus[] = 'ImportFeed';
-            }
-            // create default profile
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->insert('layout_profile')
-                ->values([
-                    'id'               => ':id',
-                    'name'             => ':name',
-                    'is_active'        => ':true',
-                    'is_default'       => ':true',
-                    'navigation'       => ':navigation',
-                    'dashboard_layout' => ':dashboardLayout',
-                ])->setParameters([
-                    'id'   => $defaultId,
-                    'name' => 'Standard',
-                    'navigation' => json_encode($menus),
-                    'dashboardLayout' => json_encode([
-                        [
-                        'name'   => 'My AtroPIM',
-                        'layout' => []
-                    ]]),
-                ])
-                ->setParameter('true', true, ParameterType::BOOLEAN)
-                ->executeStatement();
-
-            // update layout profile for all users
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->update($this->getEntityManager()->getConnection()->quoteIdentifier('user'))
-                ->set('layout_profile_id', ':id')
-                ->where('id is not null')
-                ->setParameter('id', $defaultId)
-                ->executeStatement();
-        } catch (\Throwable $e) {
-
-        }
     }
 
     /**
@@ -855,5 +665,10 @@ class Installer extends HasContainer
     private function getModuleManager(): Manager
     {
         return $this->getContainer()->get('moduleManager');
+    }
+
+    private function getSeederFactory(): SeederFactory
+    {
+        return $this->getContainer()->get('seederFactory');
     }
 }

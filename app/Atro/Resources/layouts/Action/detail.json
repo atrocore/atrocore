@@ -21,6 +21,12 @@
       ],
       [
         {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
           "name": "usage"
         },
         {
@@ -55,6 +61,12 @@
           "name": "conditions",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "customAction"
+        },
+        false
       ]
     ]
   },

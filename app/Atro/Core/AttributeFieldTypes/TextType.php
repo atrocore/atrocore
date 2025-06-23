@@ -23,7 +23,6 @@ class TextType extends AbstractFieldType
 {
     protected string $type = 'text';
     protected string $column = 'text_value';
-    protected bool $isFullWidth = true;
 
     protected Connection $conn;
 
@@ -34,10 +33,10 @@ class TextType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name] = [
@@ -48,22 +47,41 @@ class TextType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
-        $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
+        }
 
         $entity->entityDefs['fields'][$name] = [
-            'attributeId' => $id,
-            'classificationAttributeId'        => $row['classification_attribute_id'] ?? null,
-            'type'        => $this->type,
-            'required'    => !empty($row['is_required']),
-            'notNull'     => !empty($row['not_null']),
-            'label'       => $row[$this->prepareKey('name', $row)],
-            'tooltip'     => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText' => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'   => $this->isFullWidth ?: !empty($attributeData['fullWidth']),
+            'attributeId'               => $id,
+            'attributeValueId'          => $row['av_id'] ?? null,
+            'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+            'sortOrder'                 => $row['sort_order'] ?? null,
+            'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+            'attributeGroup'            => [
+                'id'        => $row['attribute_group_id'] ?? null,
+                'name'      => $row['attribute_group_name'] ?? null,
+                'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+            ],
+            'channelId'                 => $row['channel_id'] ?? null,
+            'channelName'               => $row['channel_name'] ?? null,
+            'type'                      => $this->type,
+            'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
+            'notNull'                   => !empty($row['not_null']),
+            'label'                     => $row[$this->prepareKey('name', $row)],
+            'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
         ];
 
-        if ($this->type === 'varchar' && !empty($row['pattern'])) {
-            $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
+        if ($this->type === 'varchar') {
+            $entity->entityDefs['fields'][$name]['fullWidth'] = !empty($attributeData['fullWidth']);
+
+            if (!empty($row['pattern'])) {
+                $entity->entityDefs['fields'][$name]['pattern'] = $row['pattern'];
+            }
+        } else {
+            $entity->entityDefs['fields'][$name]['fullWidth'] = $attributeData['fullWidth'] ?? true;
         }
 
         if (!empty($attributeData['maxLength'])) {
@@ -94,14 +112,17 @@ class TextType extends AbstractFieldType
                     'name'   => $lName,
                     'column' => $this->column . "_" . strtolower($language)
                 ]);
-                $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
+                if (empty($skipValueProcessing)) {
+                    $entity->set($lName, $row[$entity->fields[$lName]['column']] ?? null);
+                }
 
                 $entity->entityDefs['fields'][$lName] = array_merge($entity->entityDefs['fields'][$name], [
-                    'name'           => $lName,
-                    'label'          => $this->getAttributeLabel($row, $language, $languages),
-                    'tooltip'        => !empty($row[$this->prepareKey('tooltip', $row)]),
-                    'tooltipText'    => $row[$this->prepareKey('tooltip', $row)],
-                    'multilangField' => true
+                    'name'            => $lName,
+                    'label'           => $this->getAttributeLabel($row, $language, $languages),
+                    'tooltip'         => !empty($row[$this->prepareKey('tooltip', $row)]),
+                    'tooltipText'     => $row[$this->prepareKey('tooltip', $row)],
+                    'multilangField'  => $name,
+                    'multilangLocale' => $language,
                 ]);
 
                 $attributesDefs[$lName] = $entity->entityDefs['fields'][$lName];
@@ -125,7 +146,9 @@ class TextType extends AbstractFieldType
                 'type'        => 'varchar',
                 'notStorable' => true
             ];
-            $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            if (empty($skipValueProcessing)) {
+                $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
+            }
 
             $entity->entityDefs['fields'][$name . 'Unit'] = [
                 "type"                      => "link",
@@ -133,16 +156,32 @@ class TextType extends AbstractFieldType
                 "view"                      => "views/fields/unit-link",
                 "measureId"                 => $row['measure_id'],
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+                'sortOrder'                 => $row['sort_order'] ?? null,
+                'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+                'attributeGroup'            => [
+                    'id'        => $row['attribute_group_id'] ?? null,
+                    'name'      => $row['attribute_group_name'] ?? null,
+                    'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+                ],
+                'channelId'                 => $row['channel_id'] ?? null,
+                'channelName'               => $row['channel_name'] ?? null,
                 "entity"                    => 'Unit',
                 "unitIdField"               => true,
                 "mainField"                 => $name,
                 'required'                  => !empty($row['is_required']),
+                'readOnly'                  => !empty($row['is_read_only']),
                 'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+
+        $entity->entityDefs['fields'][$name . 'UnitId'] = [
+            'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+        ];
     }
 
     public function getAttributeLabel(array $row, string $languageCode, array $languages): string
@@ -173,7 +212,7 @@ class TextType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
 
@@ -194,32 +233,32 @@ class TextType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(str_ends_with($item['attribute'], 'UnitId')) {
+        if (str_ends_with($item['attribute'], 'UnitId')) {
             if ($item['type'] === 'isNull') {
                 $item = [
-                    'type' => 'or',
+                    'type'  => 'or',
                     'value' => [
                         [
-                            'type' => 'equals',
+                            'type'      => 'equals',
                             'attribute' => 'referenceValue',
-                            'value' => ''
+                            'value'     => ''
                         ],
                         [
-                            'type' => 'isNull',
+                            'type'      => 'isNull',
                             'attribute' => 'referenceValue'
                         ],
                     ]
                 ];
             } else {
-                if(!empty($item['subQuery'])) {
+                if (!empty($item['subQuery'])) {
                     $this->convertSubquery($entity, 'Unit', $item);
                 }
                 $item['attribute'] = 'referenceValue';
             }
-        }else{
+        } else {
             $item['attribute'] = Util::toCamelCase($this->column);
 
-            if(!empty($attribute['is_multilang']) && !empty($item['language']) && $item['language'] !== 'main'){
+            if (!empty($attribute['is_multilang']) && !empty($item['language']) && $item['language'] !== 'main') {
                 $item['attribute'] = $item['attribute'] . ucfirst(Util::toCamelCase(strtolower($item['language'])));
             }
         }

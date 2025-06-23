@@ -38,28 +38,24 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
 
         detailTemplate: 'fields/extensible-enum/detail',
 
-        selectBoolFilterList: ['onlyForExtensibleEnum'],
+        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions'],
 
         boolFilterData: {
             onlyForExtensibleEnum() {
                 return this.getExtensibleEnumId();
             },
-            isNot() {
-                return this.disabledOptions
+            onlyAllowedOptions() {
+                return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
             }
         },
-
-        disabledOptions: [],
 
         setup: function () {
             this.idName = this.name;
             this.nameName = this.name + 'Name';
             this.foreignScope = 'ExtensibleEnumOption';
-            this.disabledOptions = [];
-            this.selectBoolFilterList = ['onlyForExtensibleEnum'];
 
             if (this.options.customBoolFilterData) {
-                this.boolFilterData = {...this.boolFilterData, ...this.options.customBoolFilterData}
+                this.boolFilterData = { ...this.boolFilterData, ...this.options.customBoolFilterData }
             }
 
             if (this.options.customSelectBoolFilters) {
@@ -68,10 +64,6 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                         this.selectBoolFilterList.push(item);
                     }
                 });
-            }
-
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
             }
 
             Dep.prototype.setup.call(this);
@@ -106,6 +98,22 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             return extensibleEnumId;
         },
 
+        getExtensibleEnumName() {
+            const extensibleEnumId = this.getExtensibleEnumId()
+            if (!extensibleEnumId) {
+                return null
+            }
+            let key = 'extensible_enum_name_' + extensibleEnumId;
+
+            if (!Espo[key]) {
+                this.ajaxGetRequest(`ExtensibleEnum/${extensibleEnumId}`, {}, { async: false }).then(res => {
+                    Espo[key] = res['name'];
+                });
+            }
+
+            return Espo[key];
+        },
+
         getOptionsData() {
             let res = {};
 
@@ -119,29 +127,18 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                 });
             }
 
-            // console.log(res)
-
             return res;
         },
 
         getCreateAttributes: function () {
             return {
-                "extensibleEnumsIds": [this.getExtensibleEnumId()]
+                "extensibleEnumsIds": [this.getExtensibleEnumId()],
+                "extensibleEnumsNames": {
+                    [this.getExtensibleEnumId()]: this.getExtensibleEnumName()
+                }
             }
         },
 
-        disableOptions(list) {
-            this.disabledOptions = list || []
-            if (this.disabledOptions.length === 0) {
-                if (this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.splice(this.selectBoolFilterList.indexOf('isNot'), 1)
-                }
-            } else {
-                if (!this.selectBoolFilterList.includes('isNot')) {
-                    this.selectBoolFilterList.push('isNot')
-                }
-            }
-        }
     });
 });
 

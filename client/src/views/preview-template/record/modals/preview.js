@@ -110,6 +110,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         data() {
             return {
+                title: this.options.modalTitle,
                 size: this.profiles[this.profile],
                 isTablet: this.profile === 'tablet',
                 isMobile: this.profile === 'mobile',
@@ -139,18 +140,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
-            const options = {};
-            if (this.selectedLanguage && !this.selectedLanguage.main) {
-                options.headers = {
-                    language: this.selectedLanguage.code
-                }
-            }
-
-            this.notify(this.translate('Loading...'));
-            this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
-                previewTemplateId: this.options.htmlTemplateId,
-                entityId: this.options.entityId
-            }, options).success(res => {
+            this.getPreviewRequest().success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
 
                 this.notify(false);
@@ -161,8 +151,26 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             });
         },
 
+        getPreviewRequest() {
+            const options = {};
+            if (this.selectedLanguage && !this.selectedLanguage.main) {
+                options.headers = {
+                    language: this.selectedLanguage.code
+                }
+            }
+
+            return this.ajaxGetRequest('PreviewTemplate/action/getHtmlPreview', {
+                previewTemplateId: this.options.previewTemplateId,
+                entityId: this.options.entityId
+            }, options);
+        },
+
         loadHtmlPage(htmlContent) {
             if (!htmlContent) {
+                return;
+            }
+
+            if (!this.frame) {
                 return;
             }
 
@@ -227,22 +235,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 return;
             }
 
-            const sideEdit = this.getView('sideEdit');
-            if (sideEdit) {
-                sideEdit.remove();
-            }
-
-            let detailLayout = null;
-            if (Array.isArray(fields) && fields.length > 0) {
-                detailLayout = [
-                    {
-                        label: '',
-                        rows: []
-                    }
-                ];
-
-                fields.forEach(field => detailLayout[0].rows.push([{name: field}]));
-            }
+            this.clearView('sideEdit');
 
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
@@ -252,7 +245,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 scope: scope,
                 id: id,
                 autosaveDisabled: !this.useAutosave,
-                detailLayout: detailLayout
+                fields: fields
             }, view => {
                 this.listenToOnce(view, 'cancel', () => {
                     container.classList.remove('active');
@@ -285,7 +278,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             this.htmlContent = null;
             let callback = null;
 
-            // if there was a trigger element, activate it after new render
+            // if there was a trigger element, activate it after a new render
             if (trigger) {
                 const scope = trigger.dataset.editorType;
                 const id = trigger.dataset.editorId;
@@ -306,44 +299,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             this.loadPreviewFrame(callback);
         },
 
-        loadBreadcrumbs() {
-            const breadcrumbs = document.querySelector('#main .header .header-breadcrumbs');
-            const modal = this.$el.get(0);
-            if (!modal || !breadcrumbs || !this.options.modalTitle) {
-                return;
-            }
-
-            const header = modal.querySelector('.header-container');
-            if (!header) {
-                return;
-            }
-
-            const modalBreadcrumbs = breadcrumbs.cloneNode(true);
-            const wrapper = modalBreadcrumbs.querySelector('.breadcrumbs-wrapper');
-            if (!wrapper) {
-                return;
-            }
-
-            modalBreadcrumbs.classList.remove('fixed-header-breadcrumbs');
-
-            try {
-                wrapper.lastChild.classList.add('subsection');
-                wrapper.lastChild.dataset.action = 'close-modal';
-                wrapper.lastChild.innerHTML = `<a href="javascript:">${wrapper.lastChild.textContent}</a>`;
-            } catch (e) {
-            }
-
-            const lastItem = document.createElement('span');
-            lastItem.textContent = this.options.modalTitle;
-
-            wrapper.append(lastItem);
-            header.prepend(modalBreadcrumbs);
-        },
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('.language-selector').selectize({
+            this.$el.find('select.language-selector').selectize({
                 setFirstOptionActive: true,
                 persist: false,
                 valueField: "code",
@@ -355,7 +314,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.frame = document.querySelector('.html-preview iframe');
             this.loadPreviewFrame();
-            this.loadBreadcrumbs();
         }
     })
 );

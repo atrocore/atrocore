@@ -497,6 +497,13 @@ class Hierarchy extends Record
             }
         }
 
+        // inherit all attribute values from parents
+        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
+            /** @var \Pim\Repositories\Attribute $attributeRepo */
+            $attributeRepo = $this->getEntityManager()->getRepository('Attribute');
+            $attributeRepo->inheritAllAttributeValuesFromParents($entity);
+        }
+
         return $entity;
     }
 
@@ -536,7 +543,7 @@ class Hierarchy extends Record
 
             $sortAsc = true;
             if (property_exists($data, '_sortAsc')) {
-                $sortAsc = $data->_sortAsc === 'true';
+                $sortAsc = $data->_sortAsc === true;
             }
             $this->getRepository()->updatePositionInTree((string)$id, (string)$data->_position, (string)$data->_target, (string)$data->parentId, $sortAsc);
             return $this->getEntity($id);
@@ -553,6 +560,7 @@ class Hierarchy extends Record
         $fetchedEntity = $this->getRepository()->get($id);
         if (!empty($fetchedEntity)) {
             $this->getAttributeFieldConverter()->putAttributesToEntity($fetchedEntity);
+            $fetchedEntity->hasAllEntityAttributes = false;
             $entityData = Util::arrayKeysToUnderScore($fetchedEntity->toArray());
         }
 
@@ -1007,6 +1015,9 @@ class Hierarchy extends Record
         $inheritedFields = [];
         foreach ($this->getRepository()->getInheritableFields($child->entityDefs['fields'] ?? null) as $field) {
             $fieldDefs = $child->entityDefs['fields'][$field] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+            if (empty($fieldDefs['type'])) {
+                continue;
+            }
             switch ($fieldDefs['type']) {
                 case 'file':
                 case 'link':

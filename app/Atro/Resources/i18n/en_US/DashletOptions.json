@@ -3,7 +3,6 @@
     "title": "Title",
     "dateFrom": "Date From",
     "dateTo": "Date To",
-    "entityFilter": "Entity Filter",
     "autorefreshInterval": "Auto-refresh Interval",
     "displayRecords": "Display Records",
     "isDoubleHeight": "Height 2x",

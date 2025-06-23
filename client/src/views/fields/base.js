@@ -107,6 +107,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return this.getLabelElement().find('.status-icons');
         },
 
+        getLabelTextContainer: function () {
+            return this.getLabelElement().find('.label-text');
+        },
+
         getInlineActionsContainer: function () {
             return this.getCellElement().children('.inline-actions');
         },
@@ -312,6 +316,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             this.on('after:render', function () {
+                this.initLinkIfAttribute();
                 if (this.hasRequiredMarker()) {
                     this.showRequiredSign();
                 } else {
@@ -541,6 +546,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
+            if (this.getMetadata().get(['scopes', this.model.urlRoot, 'hasAttribute']) && this.getMetadata().get(['scopes', this.model.urlRoot, 'disableAttributeLinking'])) {
+                return;
+            }
+
             if (this.getCellElement().find(`.info-field-icon.classification-attribute[data-name="${this.name}"]`).length === 0) {
                 this.getStatusIconsContainer().append(`<i data-name="${this.name}" class="ph ph-tree-structure info-field-icon classification-attribute" title="${this.translate('classificationAttribute', 'labels', 'ClassificationAttribute')}"></i>`);
             }
@@ -675,7 +684,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         initRemoveAttributeValue() {
             const fieldName = this.originalName || this.name;
 
-            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit')) {
+            if (!this.model.get('attributesDefs') || !fieldName || !this.model.get('attributesDefs')[fieldName] || !this.getAcl().check(this.model.name, 'edit') || !this.getAcl().check(this.model.name, 'deleteAttributeValue')) {
                 return;
             }
 
@@ -685,6 +694,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             if (this.options?.params?.disableAttributeRemove){
+                return;
+            }
+
+            if (this.getMetadata().get(['scopes', this.model.urlRoot, 'hasAttribute']) && this.getMetadata().get(['scopes', this.model.urlRoot, 'disableAttributeLinking'])) {
                 return;
             }
 
@@ -728,7 +741,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             $cell.on('mouseenter', e => {
                 e.stopPropagation();
-                if (this.disabled || this.readOnly) {
+                if (this.disabled) {
                     return;
                 }
                 if (this.mode === 'detail') {
@@ -1185,21 +1198,45 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     rule.rightValue = null;
                     rule.leftValue = null;
                     let view = this.getView(viewKey);
-                    if(rule.operator.type !== 'between' && view){
-                       this.filterValue = view.model.get('value');
-                        rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+
+
+                    if(!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
+                        if(rule.operator.type !== 'between' && view){
+                            this.filterValue = view.model.get('value');
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        }
+
+                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
+                        }
+
+                        if(!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                            createValueField(rule.operator.type)
+                        }
+                    }else{
+                        rule.value = this.defaultFilterValue;
+                        if(view) {
+                            view.model.set('value', this.defaultFilterValue);
+                        }
                     }
+                    this.previousOperatorType = rule.operator.type;
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
-            this.filterValue = this.defaultFilterValue;
-
-                this.getModelFactory().create(null, model => {
+               this.filterValue = this.defaultFilterValue;
+               let createValueField = (type) => this.getModelFactory().create(null, model => {
+                    model.set('value', this.defaultFilterValue);
                     setTimeout(() => {
+                        this.previousOperatorType = type ?? rule.operator.type;
                         let view =  `views/fields/${this.type}`
+
 
                         if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
                             view = 'views/fields/varchar';
+                        }
+
+                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
+                            view = 'views/fields/int'
                         }
                         this.createView(viewKey, view, {
                             name: 'value',
@@ -1211,7 +1248,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             }
                         }, view => {
                             view.render();
-
                             this.listenTo(model, 'change', () => {
                                 if(rule.operator.type === 'between') {
                                     if(inputName.endsWith('value_1')){
@@ -1220,7 +1256,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                                         rule.leftValue = model.get('value')
                                     }
 
-                                    if(rule.rightValue && rule.leftValue) {
+                                    if(rule.rightValue != null && rule.leftValue != null) {
                                         this.filterValue = [rule.leftValue, rule.rightValue];
                                     }
                                 }else{
@@ -1240,11 +1276,23 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     });
                 });
 
+               createValueField();
+
             return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
         },
 
         filterValueGetter(rule) {
             return this.filterValue;
+        },
+
+        initLinkIfAttribute() {
+            let fieldDefs = this.model.defs.fields[this.name] || this.model.defs.fields[this.defs.name ?? ''];
+
+            if (!fieldDefs || !fieldDefs.attributeId || this.getLabelTextContainer().find('a').length) {
+                return;
+            }
+
+            this.getLabelTextContainer().html(`<a href="#/Attribute/view/${fieldDefs.attributeId}" target="_blank"> ${this.getLabelTextContainer().text()}</a>`)
         }
     });
 });

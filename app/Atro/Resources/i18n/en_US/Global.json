@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "RoleScope": "Scope",
+    "RoleScopeField": "Field",
     "UserProfile": "User Profile",
     "Background": "Background",
     "Entity": "Entity",
@@ -68,6 +70,8 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "RoleScope": "Scopes",
+    "RoleScopeField": "Fields",
     "UserProfile": "User Profiles",
     "Background": "Backgrounds",
     "Entity": "Entities",
@@ -124,6 +128,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "_addAttribute": "[Add Attribute]",
     "fieldValueFilters": "Field Value Filters",
     "confirmRemoveAttributeValue": "Are you sure you want to delete the attribute?",
     "UserFollowed": "User Followed",
@@ -166,7 +171,7 @@
     "inherit": "Inherit",
     "unlinkAll": "Unlink All",
     "deleteAll": "Delete All",
-    "setAsInherited": "Set as inherited",
+    "setAsInherited": "Inherit from parent",
     "inherited": "Inherited",
     "notInherited": "Not inherited",
     "inheritedFromParent": "Inherited from parent",
@@ -276,6 +281,7 @@
     "Edit": "Edit",
     "Cancel": "Cancel",
     "Apply": "Apply",
+    "Clear": "Clear",
     "Unlink": "Unlink",
     "Mass Update": "Mass Update",
     "Export": "Export",
@@ -519,7 +525,8 @@
     "fillEmptyFieldBeforeMerging": "Some empty fields are required, please fill them before merging.",
     "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
     "youHaveErrorsInFilter": "The filter have some errors.",
-    "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt."
+    "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt.",
+    "closePanelConfirmation": "Are you sure you want to close the panel?"
   },
   "boolFilters": {
     "onlyActive": "Active",
@@ -558,9 +565,12 @@
     "deletePermanently": "Delete Permanently",
     "massDelete": "Mass Delete",
     "download": "Download",
-    "compare": "Compare"
+    "compare": "Compare",
+    "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "entity": "Entity",
+    "allowedOptions": "Allowed Options",
     "disableActionHistory": "Disable action logging",
     "followers": "Followers",
     "folderPath": "Folder Path",
@@ -1038,6 +1048,7 @@
     "cd": "cd"
   },
   "exceptions": {
+    "notAllowedOption": "Option '%s' is not allowed for '%s'.",
     "suchItemNameCannotBeUsedHere": "A folder/file with such a name already exists in the destination folder. Please choose another folder or change the name and try again.",
     "colorDepthValidationFailed": "Color depth of this file is not allowed.",
     "colorSpaceValidationFailed": "Color space of this file is not allowed.",
@@ -1123,7 +1134,14 @@
       "query_in": "query",
       "query_linked_with": "query",
       "is_attribute_linked": "is linked",
-      "is_attribute_not_linked": "is not linked"
+      "is_attribute_not_linked": "is not linked",
+      "last_x_days": "last x days",
+      "next_x_days": "next x days",
+      "current_month": "current month",
+      "last_month": "last month",
+      "next_month": "next month",
+      "current_year": "current year",
+      "last_year": "last year"
     },
     "errors": {
       "no_filter": "No filter selected",

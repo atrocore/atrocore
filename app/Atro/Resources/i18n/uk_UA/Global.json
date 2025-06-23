@@ -142,7 +142,7 @@
     "inherit": "Успадкувати",
     "unlinkAll": "Прибрати все",
     "deleteAll": "Видалити все",
-    "setAsInherited": "Успадкувати значення",
+    "setAsInherited": "Унаслідувати від батька",
     "inherited": "Успадковується",
     "notInherited": "Не успадковується",
     "resetAllToDefault": "Відновити все за замовчуванням",
@@ -228,6 +228,7 @@
     "View": "Переглянути",
     "Cancel": "Скасувати",
     "Apply": "Застосувати",
+    "Clear": "Очистити",
     "Unlink": "Прибрати посилання",
     "Mass Update": "Масове оновлення",
     "Export": "Експортувати",
@@ -482,7 +483,8 @@
     "fillEmptyFieldBeforeMerging": "Деякі поля є обов'язковими для заповнення, будь ласка, заповніть їх перед злиттям.",
     "unableToDuplicateRecord": "Неможливо продублювати. Запис зі значенням унікального поля вже існує.",
     "youHaveErrorsInFilter": "У фільтрі є деякі помилки.",
-    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
+    "theSavedFilterMightBeCorrupt": "Формат не підтримується, збережений фільтр може бути пошкоджений.",
+    "closePanelConfirmation": "Ви дійсно хочете закрити панель?"
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -522,7 +524,8 @@
     "delete": "Видалити",
     "massDelete": "Масове видалення",
     "download": "Завантажити",
-    "compare": "Порівняйте"
+    "compare": "Порівняйте",
+    "removeAttribute": "Видалити атрибут"
   },
   "fields": {
     "folderPath": "Шлях папки",
@@ -1060,7 +1063,14 @@
       "query_in": "запит",
       "query_linked_with": "запит",
       "is_attribute_linked": "пов'язано",
-      "is_attribute_not_linked": "не пов'язано"
+      "is_attribute_not_linked": "не пов'язано",
+      "last_x_days": "останні x днів",
+      "next_x_days": "наступні x днів",
+      "current_month": "поточний місяць",
+      "last_month": "минулий місяць",
+      "next_month": "наступний місяць",
+      "current_year": "поточний рік",
+      "last_year": "минулий рік"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

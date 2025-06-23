@@ -1,23 +1,28 @@
 [
-    {
-        "rows": [
-            [
-                {"name": "name"},
-                false,
-                false
-            ]
-        ]
-    },
-    {
-        "rows": [
-            [
-                {"name": "assignmentPermission"},
-                {"name": "styleControlPermission"}
-            ],
-            [
-                {"name": "dataPrivacyPermission"},
-                false
-            ]
-        ]
-    }
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "assignmentPermission"
+        },
+        {
+          "name": "styleControlPermission"
+        }
+      ],
+      [
+        {
+          "name": "dataPrivacyPermission"
+        },
+        false
+      ]
+    ]
+  }
 ]

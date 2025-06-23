@@ -46,8 +46,10 @@ class Language
     {
         if ($user) {
             $localeId = $user->get('localeId');
-        } else {
-            $localeId = $config->get('localeId');
+        }
+
+        if (empty($localeId)) {
+            $localeId = $config->get('locale');
         }
 
         return $localeId ?? null;

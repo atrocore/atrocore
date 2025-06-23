@@ -29,9 +29,9 @@ class FileType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->fields[$name . 'Id'] = [
             'type'        => 'varchar',
@@ -51,15 +51,30 @@ class FileType extends AbstractFieldType
             'notStorable' => true
         ];
 
-        $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
-        $entity->set($name . 'Name', $row['file_name'] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+            $entity->set($name . 'Name', $row['file_name'] ?? null);
+        }
+
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+            'sortOrder'                 => $row['sort_order'] ?? null,
+            'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+            'attributeGroup'            => [
+                'id'        => $row['attribute_group_id'] ?? null,
+                'name'      => $row['attribute_group_name'] ?? null,
+                'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+            ],
+            'channelId'                 => $row['channel_id'] ?? null,
+            'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'file',
             'required'                  => !empty($row['is_required']),
+            'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
@@ -69,7 +84,7 @@ class FileType extends AbstractFieldType
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $fileAlias = "{$alias}file";
         $qb->leftJoin($alias, $this->conn->quoteIdentifier('file'), $fileAlias, "{$fileAlias}.id={$alias}.reference_value AND {$fileAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
@@ -80,7 +95,7 @@ class FileType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(!empty($item['subQuery'])) {
+        if (!empty($item['subQuery'])) {
             $this->convertSubquery($entity, 'File', $item);
         }
 

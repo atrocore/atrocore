@@ -13,6 +13,7 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
@@ -27,9 +28,33 @@ abstract class AbstractAction implements TypeInterface
 {
     protected Container $container;
 
+    public static function getTypeLabel(): ?string
+    {
+        return null;
+    }
+
+    public static function getName(): ?string
+    {
+        return null;
+    }
+
+    public static function getDescription(): ?string
+    {
+        return null;
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function executeViaWorkflow(array $workflowData, Event $event): bool
+    {
+        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
+        $input = new \stdClass();
+        $input->entityId = $event->getArgument('entity')->get('id');
+
+        return $this->executeNow($action, $input);
     }
 
     public function useMassActions(Entity $action, \stdClass $input): bool
@@ -39,8 +64,8 @@ abstract class AbstractAction implements TypeInterface
 
     public function canExecute(Entity $action, \stdClass $input): bool
     {
-        $sourceEntity = $this->getSourceEntity($action, $input);
         if ($action->get('conditionsType') === 'basic') {
+            $sourceEntity = $this->getSourceEntity($action, $input);
             if (empty($sourceEntity)) {
                 return true;
             }
@@ -52,12 +77,10 @@ abstract class AbstractAction implements TypeInterface
                 return Condition::isCheck(Condition::prepare($sourceEntity, $conditions));
             }
             return true;
-        }
-
-        if ($action->get('conditionsType') === 'script') {
+        } elseif ($action->get('conditionsType') === 'script') {
             $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
             $templateData = [
-                'entity' => $sourceEntity,
+                'entity' => $this->getSourceEntity($action, $input),
                 'user'   => $this->getEntityManager()->getUser()
             ];
 
@@ -71,7 +94,6 @@ abstract class AbstractAction implements TypeInterface
 
         return true;
     }
-
 
     public function getSourceEntity($action, \stdClass $input): ?Entity
     {

@@ -55,19 +55,6 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 });
             }
 
-            (this.getMetadata().get(['clientDefs', this.model.urlRoot, 'dynamicRecordActions']) || []).forEach(dynamicAction => {
-                if (this.getAcl().check(dynamicAction.acl.scope, dynamicAction.acl.action)) {
-                    list.push({
-                        action: "dynamicAction",
-                        label: dynamicAction.name,
-                        data: {
-                            action_id: dynamicAction.id,
-                            entity_id: this.model.id
-                        },
-                    });
-                }
-            });
-
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
@@ -77,6 +64,15 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                     }
                 });
             }
+
+            list.push({
+                divider: true
+            });
+
+            list.push({
+                preloader: true
+            });
+
             return list;
         }
     });

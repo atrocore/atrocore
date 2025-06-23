@@ -60,15 +60,25 @@ class Download extends AbstractEntryPoint
             $fileSize = @filesize($file->getFilePath());
         }
 
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
         header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
         header("Cache-Control: public");
         header('Content-Type: application/octet-stream');
         header("Content-Length: {$fileSize}");
         header("Content-Disposition: attachment; filename=\"{$file->get('name')}\"");
 
+        set_time_limit(0);
+
         $stream->rewind();
         while (!$stream->eof()) {
             echo $stream->read(4096);
+            flush(); // Force output to browser
+            if (connection_aborted()) {
+                break;
+            }
         }
         $stream->close();
         exit;

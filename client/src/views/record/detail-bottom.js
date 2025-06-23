@@ -94,9 +94,14 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.afterPanelCollapsed($(e.currentTarget), true);
             },
             'click [data-action="closePanel"]': function (e) {
-                let name = $(e.currentTarget).data('panel');
-                this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
-                this.addToClosedPanelPreferences([name])
+                this.confirm({
+                    message: this.translate('closePanelConfirmation', 'messages'),
+                    confirmText: this.translate('Close')
+                }, () => {
+                    let name = $(e.currentTarget).data('panel');
+                    this.$el.find(`.panel[data-name="${name}"]`).addClass('hidden');
+                    this.addToClosedPanelPreferences([name]);
+                });
             },
         },
 
@@ -391,6 +396,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     p = Espo.Utils.clone(item || {});
                 }
                 if (!p.name) {
+                    return;
+                }
+
+                if((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
                     return;
                 }
 

@@ -14,6 +14,9 @@
     let locale = UserData.get()?.user?.localeId
     if (!locale || !locales[locale]) {
         locale = Config.get('locale')
+        if (!locales[locale]) {
+            locale = 'main'
+        }
     }
 
     let mainLanguageCode = ''

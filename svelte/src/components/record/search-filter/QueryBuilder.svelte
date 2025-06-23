@@ -12,11 +12,11 @@
     import {getSavedSearchStore} from "./stores/SavedSearch";
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Config} from "../../../utils/Config";
+    import FilterGroup from "./FilterGroup.svelte";
 
     export let scope: string;
     export let searchManager: any;
     export let createView: Function;
-    export let parentWidth: number;
     export let uniqueKey: string = 'default';
 
     let filters: Array<any> = [];
@@ -31,6 +31,8 @@
 
     let savedFiltersOpened: boolean = true;
 
+    let queryBuilderOpened: boolean = true;
+
     let editingSavedSearch: any = null;
 
     let oldAdvancedFilter: any = null;
@@ -38,6 +40,8 @@
     let showUnsetAll: boolean = false;
 
     let advancedFilterDisabled: boolean;
+
+    let queryBuilderRulesChanged: boolean = false;
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
@@ -61,17 +65,9 @@
         refreshShowUnsetAll();
     });
 
-    $:  {
-        if(uniqueKey) {
-            if(!window.queryBuilderFilters) {
-                window.queryBuilderFilters = {};
-            }
-            window.queryBuilderFilters[uniqueKey] = filters;
-        }
-    }
-
     function updateSearchManager(data: any) {
-        searchManager.update(data);
+        searchManager.update(window.Espo.utils.cloneDeep(data));
+        refreshAdvancedFilterDisabled();
     }
 
     function camelCaseToHyphen(str: string) {
@@ -156,7 +152,7 @@
             ...(filterPerGroups[Language.translate('Fields')] ?? []),
         ]
 
-       $queryBuilder.queryBuilder({
+        $queryBuilder.queryBuilder({
             uniqueKey: uniqueKey,
             allow_empty: true,
             select_placeholder: Language.translate('filterPlaceHolder'),
@@ -181,7 +177,14 @@
                 {type: 'is_linked', nb_inputs: 0, apply_to: ['string']},
                 {type: 'is_not_linked', nb_inputs: 0, apply_to: ['string']},
                 {type: 'is_attribute_linked', nb_inputs: 0, apply_to: ['string']},
-                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']}
+                {type: 'is_attribute_not_linked', nb_inputs: 0, apply_to: ['string']},
+                {type: 'last_x_days', nb_inputs: 1, apply_to: ['date', 'datetime', 'number']},
+                {type: 'next_x_days', nb_inputs: 1, apply_to: ['date', 'datetime']},
+                {type: 'current_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'last_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'next_month', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'current_year', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'last_year', nb_inputs: 0, apply_to: ['date', 'datetime']}
             ],
             rules: rules,
             filters: filters,
@@ -196,7 +199,7 @@
                 remove_group: 'ph ph-x',
             },
             templates: {
-                group: ({ group_id, level, conditions, icons, settings, translate, builder }) => `
+                group: ({group_id, level, conditions, icons, settings, translate, builder}) => `
                     <div id="${group_id}" class="rules-group-container">
                       <div class="rules-group-header">
                         <div class="rules-group-header-icons">
@@ -210,18 +213,18 @@
                             ` : ''}
                         </div>
                         <div class="btn-group float-end group-actions">
-                          <button type="button" class="btn btn-sm btn-success" data-add="rule">
+                          <button type="button" class="btn btn-sm btn-primary" data-add="rule">
                             ${translate("add_rule")}
                           </button>
                           ${settings.allow_groups === -1 || settings.allow_groups >= level ? `
-                            <button type="button" class="btn btn-sm btn-success" data-add="group">
+                            <button type="button" class="btn btn-sm btn-primary" data-add="group">
                               ${translate("add_group")}
                             </button>
                           ` : ''}
                         </div>
                         <div class="btn-group group-conditions">
                           ${conditions.map(condition => `
-                            <label class="btn btn-sm btn-primary">
+                            <label class="btn btn-sm btn-default">
                               <input type="radio" name="${group_id}_cond" value="${condition}"> ${translate("conditions", condition)}
                             </label>
                           `).join('\n')}
@@ -257,26 +260,18 @@
 
         model.trigger('afterInitQueryBuilder');
         $queryBuilder.on('rulesChanged.queryBuilder', async (e, rule) => {
-            advancedFilterChecked = false;
-
             try {
-                const rules = $queryBuilder.queryBuilder('getRules');
-                if (rules) {
-                    updateSearchManager({
-                        queryBuilder: rules,
-                        advanced: []
-                    });
-                    handleAdvancedFilterChecked(false);
-                    if(rules.rules.length === 0) {
-                        updateCollection();
-                    }
-                }
-
-                await tick();
-                $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
-                $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
-            } catch (err) {
+                $queryBuilder.queryBuilder('validate');
+            } catch (e) {
             }
+
+            queryBuilderRulesChanged = true;
+
+            await tick();
+
+            $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
+            $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
+
             model.trigger('rulesChanged', rule);
         });
 
@@ -284,8 +279,43 @@
             model.trigger('afterUpdateRuleOperator', rule);
         });
 
-        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', (e, rule) => {
-            model.trigger('beforeUpdateRuleFilter', rule);
+        $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', function (e, rule, previousFilter) {
+            let qb = window.$(this)[0].queryBuilder;
+            if (qb.settings.uniqueKey !== uniqueKey) {
+                e.preventDefault();
+            }
+
+            if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
+                e.preventDefault();
+                addAttributeFilter((pushed, newFilters) => {
+                    if (pushed) {
+                        qb.setFilters(filters);
+                    }
+                    if (newFilters) {
+                        rule.filter = newFilters[0];
+                        if (newFilters.length > 1) {
+                            for (const newFilter of newFilters) {
+                                if (newFilter.id === rule.filter.id) {
+                                    continue;
+                                }
+
+                                let r = qb.addRule(rule.parent);
+                                r.filter = newFilter;
+                            }
+                        }
+                    }
+                    if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
+                        rule.filter = previousFilter;
+                        previousFilter = null
+                        qb.updateRuleFilter(rule, previousFilter);
+                        rule.$el.find('.rule-filter-container select')[0].selectize.setValue(rule.filter.id);
+                    } else {
+                        qb.updateRuleFilter(rule, previousFilter);
+                    }
+                })
+            } else {
+                model.trigger('beforeUpdateRuleFilter', rule);
+            }
         });
 
         $queryBuilder.on('afterUpdateRuleFilter.queryBuilder', async (e, rule) => {
@@ -294,7 +324,7 @@
                 rule.$el.find('.rule-operator-container select:not(.selectized)').selectize();
             }
 
-            model.trigger('beforeUpdateRuleFilter', rule);
+            model.trigger('afterUpdateRuleFilter', rule);
         });
 
         $queryBuilder.on('afterSetRules.queryBuilder', (e, rule) => {
@@ -343,9 +373,9 @@
             }
 
             const fieldType = camelCaseToHyphen(fieldDefs.type);
-            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view'])  || `views/fields/${fieldType}`;
+            const view = fieldDefs.view || Metadata.get(['fields', fieldDefs.type, 'view']) || `views/fields/${fieldType}`;
             promiseList.push(new Promise(resolve => {
-                createView(field, view, {
+                createView('qb_' + field, view, {
                     name: field,
                     model: model,
                     defs: {
@@ -443,6 +473,7 @@
         });
         window.$(queryBuilderElement).queryBuilder('setRules', []);
         updateCollection();
+        queryBuilderRulesChanged = false;
     }
 
     function updateCollection() {
@@ -468,9 +499,9 @@
             return new Promise((resolve) => {
                 const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
                 let exitingFilter = filters.find(f => f.id === name);
-                if(exitingFilter) {
+                if (exitingFilter) {
                     resolve(exitingFilter);
-                }else{
+                } else {
                     createView(name, view, {
                         name: name,
                         model: model,
@@ -507,7 +538,7 @@
             languages = ['main', ...languages];
             let i = 0;
             for (const language of languages) {
-                if(language === Config.get('mainLanguage')) {
+                if (language === Config.get('mainLanguage')) {
                     continue;
                 }
                 let currentLabel = label;
@@ -535,9 +566,9 @@
         Promise.all(promises).then(newFilters => {
             newFilters.sort((a, b) => a.order - b.order);
             window.currentFilters = filters;
-            if(attribute.isMultilang) {
+            if (attribute.isMultilang) {
                 callback(filterChanged, [newFilters[0]]);
-            }else{
+            } else {
                 callback(filterChanged, newFilters);
             }
         })
@@ -560,6 +591,7 @@
             massRelateEnabled: false,
             allowSelectAllResult: false,
             boolFilterList: ['onlyForEntity'],
+            mandatorySelectAttributeList: ['name', 'type'],
             boolFilterData: {
                 onlyForEntity: scope
             }
@@ -607,15 +639,6 @@
     }
 
     function handleAdvancedFilterChecked(refresh = true) {
-        if (advancedFilterChecked) {
-            let validation = window.$(queryBuilderElement).queryBuilder('validate');
-            if (!validation) {
-                Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
-                advancedFilterChecked = false;
-                return;
-            }
-        }
-
         generalFilterStore.advancedFilterChecked.set(advancedFilterChecked);
 
         updateSearchManager({
@@ -626,7 +649,7 @@
             updateCollection();
         }
 
-        refreshShowUnsetAll()
+        refreshShowUnsetAll();
     }
 
     async function saveSaveSearch(data, id = null): Promise<void> {
@@ -798,14 +821,60 @@
         return rule.rules.length === 0;
     }
 
-    function collapseAll(e: MouseEvent) {
+    function collapseAll(e: MouseEvent): void {
         savedFiltersOpened = false;
         generalFilterOpened = false;
+        queryBuilderOpened = false;
     }
 
-    function expandAll(e: MouseEvent) {
+    function expandAll(e: MouseEvent): void {
         savedFiltersOpened = true;
         generalFilterOpened = true;
+        queryBuilderOpened = true;
+    }
+
+    function handleFilterToggle(e: MouseEvent): void {
+        if (advancedFilterDisabled) {
+            return;
+        }
+
+        advancedFilterChecked = !advancedFilterChecked;
+        if (advancedFilterChecked && queryBuilderRulesChanged) {
+            const rules = searchManager.getQueryBuilder();
+            const $queryBuilder = window.$(queryBuilderElement);
+            $queryBuilder.queryBuilder('setRules', rules ?? []);
+        }
+
+        handleAdvancedFilterChecked();
+    }
+
+    function applyFilter(e: MouseEvent): void {
+        const $queryBuilder = window.$(queryBuilderElement);
+        let validation = $queryBuilder.queryBuilder('validate');
+        if (!validation) {
+            Notifier.notify(Language.translate('youHaveErrorsInFilter', 'messages'), 'error');
+            return;
+        }
+
+        advancedFilterChecked = true;
+
+        try {
+            const rules = $queryBuilder.queryBuilder('getRules');
+            if (rules) {
+                updateSearchManager({
+                    queryBuilder: rules,
+                    advanced: []
+                });
+                handleAdvancedFilterChecked(false);
+                if (rules.rules.length === 0) {
+                    updateCollection();
+                }
+            }
+            queryBuilderRulesChanged = false;
+        } catch (err) {
+        }
+
+        handleAdvancedFilterChecked();
     }
 
     onMount(() => {
@@ -816,7 +885,7 @@
             if (where) {
                 Storage.set('queryBuilderRules', scope, where);
                 window.history.replaceState({}, document.title, window.location.origin + '#' + scope);
-                updateCollection()
+                updateCollection();
             }
         }
 
@@ -824,48 +893,20 @@
         window.$.fn.queryBuilder.regional['main'] = Language.getData().Global.queryBuilderFilter;
         window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
-        // override updateRuleFilter
-
-        if(!window.queryBuilderFilters) {
-            window.queryBuilderFilters = {}
-        }
-        window.queryBuilderFilters[uniqueKey] = filters;
 
         // we override only if it is a new page
-        if(!window.$.fn.queryBuilder.prototype.overridden || uniqueKey === 'default') {
+        if (!window.$.fn.queryBuilder.prototype.overridden) {
             window.$.extend(window.$.fn.queryBuilder.prototype, {
                 overridden: true
             });
             let originalUpdateRuleFilter = window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter;
 
             window.$.fn.queryBuilder.constructor.prototype.updateRuleFilter = function (rule, previousFilter) {
-                this.trigger('beforeUpdateRuleFilter', rule);
-                if (rule.filter && rule.filter.id === 'emptyAttributeRule') {
-                    addAttributeFilter((pushed, newFilters) => {
-                        if (pushed) {
-                            this.setFilters(window.queryBuilderFilters[this.settings.uniqueKey]);
-                        }
-                        if (newFilters) {
-                            rule.filter = newFilters[0];
-                            if (newFilters.length > 1) {
-                                for (const newFilter of newFilters) {
-                                    if (newFilter.id === rule.filter.id) {
-                                        continue;
-                                    }
-
-                                    let r = this.addRule(rule.parent);
-                                    r.filter = newFilter;
-                                }
-                            }
-                        }
-                        if (!rule.filter || rule.filter.id === 'emptyAttributeRule') {
-                            rule.filter = previousFilter;
-                        }
-                        originalUpdateRuleFilter.call(this, rule, previousFilter);
-                    })
-                } else {
-                    originalUpdateRuleFilter.call(this, rule, previousFilter);
+                let e = this.trigger('beforeUpdateRuleFilter', rule, previousFilter);
+                if (e.isDefaultPrevented()) {
+                    return null;
                 }
+                originalUpdateRuleFilter.call(this, rule, previousFilter);
             }
 
             let originalGetFilterById = window.$.fn.queryBuilder.constructor.prototype.getFilterById;
@@ -891,8 +932,6 @@
 
         return () => {
             searchManager.collection.off('filter-state:changed');
-            delete window.queryBuilderFilters[uniqueKey]
-
             selectBoolSub();
             selectSavedSub();
             advancedFilterCheckedSub();
@@ -919,7 +958,7 @@
             </button>
         {/if}
     </div>
-    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey} bind:opened={generalFilterOpened} />
+    <GeneralFilter scope={scope} searchManager={searchManager} uniqueKey={uniqueKey} bind:opened={generalFilterOpened}/>
     {#if Acl.check('SavedSearch', 'read')}
         <SavedSearch
                 scope={scope}
@@ -936,25 +975,45 @@
     {/if}
 
     <div class="advanced-filters">
-        <h5>
-            <input type="checkbox" disabled={advancedFilterDisabled} bind:checked={advancedFilterChecked}
-                   on:change={(e) => handleAdvancedFilterChecked()}>
-            <span>{Language.translate('Apply Advanced Filter')}</span></h5>
-        <div class="query-builder" bind:this={queryBuilderElement}></div>
-        {#if !advancedFilterDisabled}
+        <FilterGroup title={Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
+            <span class="icons-wrapper" slot="icons">
+                <span class="toggle" class:disabled={advancedFilterDisabled} class:active={advancedFilterChecked}
+                      on:click|stopPropagation|preventDefault={handleFilterToggle}
+                >
+                    {#if advancedFilterChecked}
+                        <i class="ph-fill ph-toggle-right"></i>
+                    {:else}
+                        <i class="ph-fill ph-toggle-left"></i>
+                    {/if}
+                </span>
+            </span>
+
+            <div class="query-builder" bind:this={queryBuilderElement}></div>
             <div class="filter-action">
-                <button class="btn btn-sm btn-default filter-button" on:click={resetFilter}>
-                    <i class="ph ph-x"></i>
-                    {Language.translate('Unset')}
-                </button>
-                {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
-                    <button class="btn btn-sm btn-success filter-button" on:click={saveFilter}>
-                        <i class="ph ph-floppy-disk-back"></i>
-                        {Language.translate('Save')}
+                <div style="display:flex; align-items:center; gap: 10px;">
+                    {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
+                        <button class="btn btn-sm btn-primary filter-button" on:click={saveFilter}
+                                disabled={advancedFilterDisabled || queryBuilderRulesChanged}
+                        >
+                            <i class="ph ph-floppy-disk-back"></i>
+                            <span>{Language.translate('Save')}</span>
+                        </button>
+                    {/if}
+
+                    <button class="btn btn-sm btn-default filter-button" on:click={resetFilter}
+                            disabled={advancedFilterDisabled}
+                    >
+                        <i class="ph-fill ph-eraser"></i>
+                        <span>{Language.translate('Clear')}</span>
                     </button>
-                {/if}
+                </div>
+
+                <button class="btn btn-sm btn-primary filter-button" disabled={!queryBuilderRulesChanged}
+                        on:click={applyFilter}>
+                    <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
+                </button>
             </div>
-        {/if}
+        </FilterGroup>
     </div>
 </div>
 
@@ -1002,7 +1061,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1;
+        z-index: 5;
         display: flex;
         justify-content: space-between;
     }
@@ -1012,16 +1071,17 @@
         position: relative;
     }
 
-    .advanced-filters h5 {
-        display: flex;
-        align-items: center;
-        margin: 0 0 15px 0;
+    .advanced-filters .icons-wrapper .toggle.disabled {
+        opacity: .6;
+        cursor: not-allowed;
     }
 
-    .advanced-filters h5 input[type="checkbox"] {
-        margin-top: 0;
-        margin-right: 10px;
-        margin-left: 3px;
+    .advanced-filters .icons-wrapper .toggle.active {
+        color: #06c;
+    }
+
+    .advanced-filters .icons-wrapper .toggle i {
+        font-size: 20px;
     }
 
     :global(.query-builder .input-group-btn .btn) {
@@ -1041,6 +1101,10 @@
         border-radius: 4px;
     }
 
+    .filter-button > .ph:not(:last-child) {
+        margin-right: 3px;
+    }
+
     .query-builder :global(.rules-group-header) {
         display: flex;
         flex-wrap: wrap;
@@ -1054,6 +1118,10 @@
 
     .query-builder :global(.rules-group-header .group-actions) {
         order: 2;
+    }
+
+    .query-builder :global(.rules-group-header .group-actions > .btn-primary:not(:first-child)) {
+        border-left-color: #0057ad;
     }
 
     .query-builder :global(.rules-group-header .group-conditions) {
@@ -1085,6 +1153,7 @@
     .query-builder :global(.rule-container-group .rule-filter-container),
     .query-builder :global(.rule-container-group .rule-value-container) {
         flex-basis: 100%;
+        min-width: 0;
     }
 
     @container (min-width: 400px) {

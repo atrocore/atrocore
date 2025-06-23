@@ -98,7 +98,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
-                this.model.set({ids: this.ids});
+                this.model.set({ ids: this.ids });
                 let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
 
                 this.fields = [];
@@ -172,7 +172,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                allowSelectAllResult: false
+                allowSelectAllResult: false,
+                boolFilterData: {
+                    onlyForEntity: this.scope
+                },
+                boolFilterList: ['onlyForEntity'],
             }, dialog => {
                 dialog.render();
                 this.notify(false);
@@ -313,12 +317,23 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         prepareData() {
-            var attributes = {};
+            const attributes = {};
+            const attributeIds = []
+
             this.fieldList.forEach(function (field) {
                 var view = this.getView(field);
                 _.extend(attributes, view.fetch());
+
+                const attributeId = this.model.defs.fields[field]?.attributeId
+                if (attributeId && !attributeIds.includes(attributeId)) {
+                    attributeIds.push(attributeId)
+                }
             }.bind(this));
 
+            // attribute should be created if they do not exist
+            if (attributeIds.length) {
+                attributes.__attributes = attributeIds
+            }
             return attributes;
         },
 

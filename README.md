@@ -66,7 +66,7 @@ We offer the following native paid integrations:
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
-Please [contact us](https://www.atropim.com/contact), if you want to know more.
+Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 
 ## What Are the Advantages of Using It?
 
@@ -93,7 +93,9 @@ Please [contact us](https://www.atropim.com/contact), if you want to know more.
 
 ## Installation
 
-Installation Guide is available [here](https://help.atrocore.com/installation-and-maintenance/installation).
+Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
+
+Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
 
 ## Demo
 
@@ -110,7 +112,7 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 ## Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
-- Please visit our Help Center: https://help.atrocore.com/
-- Read our Release Notes: https://help.atrocore.com/release-notes/core
-- Please visit our Community: https://community.atrocore.com
-- Сontact us - https://atrocore.com/contact
+- Please visit our Help Center (Documentation) - https://help.atrocore.com/
+- Read our Release Notes - https://help.atrocore.com/release-notes/pim
+- Please visit our Community - https://community.atrocore.com
+- Сontact us - https://www.atrocore.com/contact

@@ -3,6 +3,10 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
+        <div class="stream-date-container">
+            <span class="text-muted small">{{{createdAt}}}</span>
+        </div>
+
         <span class="text-muted message">{{{message}}}</span>
     </div>
 </div>
@@ -13,10 +17,6 @@
             <p>{{package.name}}  {{package.version}}</p>
         </span>
     </span>
-</div>
-
-<div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
 </div>
 
 

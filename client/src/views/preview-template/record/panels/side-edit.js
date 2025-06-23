@@ -26,7 +26,7 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
         timerHandle: null,
 
-        detailLayout: null,
+        fields: null,
 
         buttonList: [
             {
@@ -92,7 +92,7 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 this.autosaveTimeout = this.options.autosaveTimeout;
             }
 
-            this.detailLayout = this.options.detailLayout || null;
+            this.fields = this.options.fields || [];
 
             Dep.prototype.setup.call(this);
         },
@@ -140,6 +140,10 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                     Espo.ui.notify(false);
 
                     this.createRecordView(model, view => {
+                        if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+                            view.putAttributesToModel();
+                        }
+
                         this.listenToOnce(view, 'remove', () => {
                             this.clearView('edit');
                             clearTimeout(this.timerHandle);
@@ -217,13 +221,35 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                 buttonsDisabled: true,
                 sideDisabled: true,
                 bottomDisabled: false,
+                disableRealtimeListener: true,
                 scope: model.name,
                 exit: function () {
                 }
             };
 
-            if (this.detailLayout !== null) {
-                options.detailLayout = this.detailLayout;
+            if (this.fields.length > 0) {
+                const layout = [{
+                    label: '',
+                    rows: []
+                }];
+
+                const attributeDefs = model.get('attributesDefs') || {};
+                this.fields.forEach(field => {
+                    let defs = {};
+                    if (attributeDefs[field]) {
+                        defs = attributeDefs[field];
+                        defs.customLabel = defs.detailViewLabel || defs.label
+                    }
+
+                    layout[0].rows.push([
+                        {
+                            name: field,
+                            ...defs
+                        }
+                    ]);
+                });
+
+                options.detailLayout = layout;
             }
 
             this.createView('edit', viewName, options, callback);

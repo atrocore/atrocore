@@ -343,7 +343,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     return true;
                 }
 
-                if (this.isPanelClosed(panel.name)) {
+                if (this.isPanelClosed(panel)) {
                     return true;
                 }
 
@@ -353,10 +353,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             });
         },
 
-        isPanelClosed(name) {
+        isPanelClosed(panel) {
             let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
             let scopePreferences = preferences[this.scope] ?? []
-            return (scopePreferences['closed'] || []).includes(name)
+            return (scopePreferences[panel.isAttributePanel ? 'closedAttributePanels' : 'closed'] || []).includes(panel.name)
         },
 
         scrollToPanel(name) {
@@ -487,12 +487,20 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 },
                 anchorNavItems: this.getVisiblePanels(),
                 anchorScrollCallback: (name, event) => {
-                    if (this.isPanelClosed(name)) {
-                        const panel = this.panelsList.filter(p => p.name === name)[0];
-                        Backbone.trigger('create-bottom-panel', panel);
-                        this.listenToOnce(Backbone, 'after:create-bottom-panel', function (panel) {
-                            setTimeout(() => this.scrollToPanel(panel.name), 100);
-                        })
+                    const panel = this.panelsList.filter(p => p.name === name)[0];
+                    if (this.isPanelClosed(panel)) {
+                        if (panel.isAttributePanel) {
+                            const recordView = this.getView('record')
+
+                            recordView.showAttributeValuePanel(name, () => {
+                                setTimeout(() => this.scrollToPanel(panel.name), 100);
+                            })
+                        } else {
+                            Backbone.trigger('create-bottom-panel', panel);
+                            this.listenToOnce(Backbone, 'after:create-bottom-panel', function (panel) {
+                                setTimeout(() => this.scrollToPanel(panel.name), 100);
+                            })
+                        }
                     } else {
                         this.scrollToPanel(name);
                     }
@@ -785,7 +793,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             result.push({
                 url: `${rootUrl}/view/${this.model.id}`,
-                label: this.model.get('name') || this.model.id,
+                label: this.model.get('nameLabel') || this.model.get('name') || this.model.id,
                 className: 'header-title'
             })
 
@@ -892,6 +900,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 scope: scope,
                 multiple: type !== 'belongsTo',
                 createButton: false,
+                allowSelectAllResult: !this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.disabledSelectAllResult`),
                 filters: filters,
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,

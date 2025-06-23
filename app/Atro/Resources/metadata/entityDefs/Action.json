@@ -5,8 +5,12 @@
       "required": true,
       "trim": true
     },
+    "description": {
+      "type": "text"
+    },
     "type": {
       "type": "enum",
+      "view": "views/action/fields/type",
       "required": true,
       "prohibitedEmptyValue": false,
       "optionsIds": [],

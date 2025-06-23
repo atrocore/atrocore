@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
@@ -52,8 +53,12 @@ class EntityField extends ReferenceData
 
         $outputType = property_exists($data, 'outputType') ? $data->outputType : 'text';
         $entity = $this->getEntityManager()->getRepository($data->scope)->order('id', 'ASC')->findOne();
+        if ($this->getMetadata()->get("scopes.{$data->scope}.hasAttribute")) {
+            $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+        }
+
         $preview = $this->twig()->renderTemplate($data->script, ['entity' => $entity], $outputType);
-        if (is_string($preview)) {
+        if (is_string($preview) && $outputType !== 'wysiwyg') {
             $outputType = 'text';
         }
 
@@ -156,6 +161,7 @@ class EntityField extends ReferenceData
         $this->addDependency('eventManager');
         $this->addDependency('twig');
         $this->addDependency('dataManager');
+        $this->addDependency(AttributeFieldConverter::class);
     }
 
     protected function getEventManager(): Manager
@@ -166,5 +172,10 @@ class EntityField extends ReferenceData
     protected function twig(): Twig
     {
         return $this->getInjection('twig');
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection(AttributeFieldConverter::class);
     }
 }

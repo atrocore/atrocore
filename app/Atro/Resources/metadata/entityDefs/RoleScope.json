@@ -1,0 +1,137 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "view": "views/role-scope/fields/name",
+      "required": true,
+      "trim": true
+    },
+    "nameLabel": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "role": {
+      "type": "link",
+      "required": true
+    },
+    "hasAccess": {
+      "type": "bool",
+      "notNull": true
+    },
+    "createAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/create-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "yes"
+      ]
+    },
+    "readAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/read-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "editAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/edit-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "deleteAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/delete-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "own",
+        "team",
+        "all"
+      ]
+    },
+    "streamAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/stream-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "all"
+      ]
+    },
+    "accessData": {
+      "type": "jsonObject",
+      "view": "views/role-scope/fields/access-data",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "fields": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    }
+  },
+  "links": {
+    "role": {
+      "type": "belongsTo",
+      "foreign": "scopes",
+      "entity": "Role"
+    },
+    "fields": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeField"
+    }
+  },
+  "collection": {
+    "sortBy": "name",
+    "asc": true
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "name",
+      "role_id"
+    ]
+  }
+}

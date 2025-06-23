@@ -41,12 +41,17 @@
           "conditionGroup": [
             {
               "type": "in",
-              "attribute": "type",
+              "attribute": "usage",
               "value": [
-                "webhook",
-                "set"
+                "entity",
+                "record",
+                "field"
               ]
-            },
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
             {
               "type": "in",
               "attribute": "usage",

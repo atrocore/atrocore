@@ -139,7 +139,7 @@
     "typeAndPressEnter": "Tippen und Eingabetaste drücken um zu suchen ...",
     "allLanguages": "Alle Sprachen",
     "mainLanguage": "Hauptsprache",
-    "setAsInherited": "Als vererbt setzen",
+    "setAsInherited": "Vom Parent vererben",
     "inheritAll": "Alle vererben",
     "inherit": "Vererben",
     "unlinkAll": "Alle Verknüpfungen aufheben",
@@ -261,6 +261,7 @@
     "View": "Ansehen",
     "Cancel": "Abbrechen",
     "Apply": "Anwenden",
+    "Clear": "Leeren",
     "Unlink": "Verknüpfung entfernen",
     "Mass Update": "Massenänderung",
     "Export": "Export",
@@ -484,7 +485,8 @@
     "fillEmptyFieldBeforeMerging": "Einige leere Felder sind erforderlich, bitte füllen Sie sie vor dem Zusammenführen aus.",
     "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
-    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein."
+    "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
+    "closePanelConfirmation": "Sind Sie sicher, dass Sie das Panel schließen wollen?"
   },
   "unit Length": {
     "mm": "mm",
@@ -566,9 +568,12 @@
     "restore": "Wiederherstellen",
     "massRestore": "Massenwiederherstellung",
     "download": "Nachladen",
-    "compare": "Vergleichen Sie"
+    "compare": "Vergleichen Sie",
+    "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "entity": "Entität",
+    "allowedOptions": "Optionen zulassen",
     "disableActionHistory": "Aktionsprotokollierung deaktivieren",
     "followers": "Abonnenten",
     "path": "Ordner Pfad",
@@ -1057,7 +1062,14 @@
       "query_in": "abfrage",
       "query_linked_with": "abfrage",
       "is_attribute_linked": "ist verknüpft",
-      "is_attribute_not_linked": "ist nicht verknüpft"
+      "is_attribute_not_linked": "ist nicht verknüpft",
+      "last_x_days": "letzte x Tage",
+      "next_x_days": "nächste x Tage",
+      "current_month": "aktueller Monat",
+      "last_month": "letzter Monat",
+      "next_month": "nächster Monat",
+      "current_year": "aktuelles Jahr",
+      "last_year": "letztes Jahr"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

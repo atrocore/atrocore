@@ -68,11 +68,12 @@ class ReferenceData extends Repository implements Injectable
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        $this->validateUnique($entity);
-
         if (empty($entity->get('code'))) {
             throw new BadRequest('Code is required.');
         }
+
+        $this->validateCode($entity);
+        $this->validateUnique($entity);
 
         $this->dispatch('beforeSave', $entity, $options);
     }
@@ -80,6 +81,17 @@ class ReferenceData extends Repository implements Injectable
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->dispatch('afterSave', $entity, $options);
+    }
+
+    public function validateCode(Entity $entity): void
+    {
+        if ($entity->isNew()) {
+            foreach ($this->find() as $exist) {
+                if ($exist->get('code') === $entity->get('code')) {
+                    throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), 'code'));
+                }
+            }
+        }
     }
 
     public function validateUnique(Entity $entity): void
@@ -283,6 +295,9 @@ class ReferenceData extends Repository implements Injectable
                 $field = str_replace('*', '', $k);
                 $search = str_replace('%', '', $v);
                 foreach ($items as $item) {
+                    if(!isset($item[$field])){
+                        continue;
+                    }
                     if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
                         $filtered[$item['code']] = $item;
                     }
@@ -295,6 +310,12 @@ class ReferenceData extends Repository implements Injectable
         if (!empty($params['orderBy'])) {
             usort($items, function ($a, $b) use ($params) {
                 $field = $params['orderBy'];
+                if (!array_key_exists($field, $a)) {
+                    $a[$field] = null;
+                }
+                if (!array_key_exists($field, $b)) {
+                    $b[$field] = null;
+                }
                 if (strtolower($params['order']) === 'desc') {
                     return $b[$field] <=> $a[$field];
                 } else {

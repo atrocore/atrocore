@@ -1,4 +1,7 @@
 {
+  "putAttributesToEntity": {
+    "handler": "\\Atro\\TwigFilter\\PutAttributesToEntity"
+  },
   "prepareEntity": {
     "handler": "\\Atro\\TwigFilter\\PrepareEntity"
   },
@@ -22,5 +25,8 @@
   },
   "generateFontColor": {
     "handler": "\\Atro\\TwigFilter\\GenerateFontColor"
+  },
+  "unique": {
+    "handler": "\\Atro\\TwigFilter\\Unique"
   }
 }

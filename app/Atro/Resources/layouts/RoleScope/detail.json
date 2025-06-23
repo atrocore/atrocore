@@ -1,0 +1,50 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "role"
+        }
+      ],
+      [
+        {
+          "name": "hasAccess"
+        },
+        false
+      ]
+    ]
+  },
+  {
+    "style": "default",
+    "label": "Actions",
+    "rows": [
+      [
+        {
+          "name": "createAction"
+        },
+        {
+          "name": "readAction"
+        }
+      ],
+      [
+        {
+          "name": "editAction"
+        },
+        {
+          "name": "deleteAction"
+        }
+      ],
+      [
+        {
+          "name": "streamAction"
+        },
+        false
+      ]
+    ]
+  }
+]

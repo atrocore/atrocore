@@ -170,6 +170,7 @@ class Action extends Base
         $res = [];
 
         $dynamicActions = [];
+        $dynamicPreviewActions = [];
         $actionIds = [];
 
 
@@ -198,8 +199,19 @@ class Action extends Base
                 $data['displayField'] = $action['displayField'] ?? null;
             }
 
-            $dynamicActions[] = $data;
+
+            if($data['type'] === 'previewTemplate') {
+                if(!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope ) {
+                    if(!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id, $action['data']['where'])) {
+                        continue;
+                    }
+                }
+                $dynamicPreviewActions[] = $data;
+                continue;
+            }
+
             $actionIds[] = $action['id'];
+            $dynamicActions[] = $data;
         }
 
         if (!empty($actionIds)) {
@@ -249,7 +261,7 @@ class Action extends Base
             ];
         }
 
-        return $res;
+        return array_merge($dynamicPreviewActions, $res);
     }
 
     protected function getActionManager(): ActionManager

@@ -57,6 +57,26 @@ class Record extends RecordService
         }
     }
 
+    public function massRemoveAttribute(array $attributes, array $params)
+    {
+        $params = $this
+            ->dispatchEvent('beforeMassRemoveAttribute', new Event(['params' => $params, 'service' => $this]))
+            ->getArgument('params');
+
+        $params['action'] = 'removeAttribute';
+        $params['maxCountWithoutJob'] = $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200);
+        $params['maxChunkSize'] = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+        $params['minChunkSize'] = $this->getConfig()->get('massUpdateMinChunkSize', 400);
+        $params['additionalJobData'] = ["attributes" => $attributes];
+
+        list($count, $errors, $sync, $job) = $this->executeMassAction($params);
+
+        return $this
+            ->dispatchEvent('afterMassRemoveAttribute',
+                new Event(['service' => $this, 'result' => ['count' => $count, 'sync' => false, 'jobId' => $job->get('id')]]))
+            ->getArgument('result');
+    }
+
     /**
      * @param array $params
      *
@@ -132,7 +152,7 @@ class Record extends RecordService
         $minChunkSize = $params['minChunkSize'];
         $maxConcurrentJobs = $this->getConfig()->get('maxConcurrentJobs', 6);
 
-        if (!in_array($action, ['restore', 'delete', 'update', 'action', 'download'])) {
+        if (!in_array($action, ['restore', 'delete', 'update', 'action', 'download', 'removeAttribute'])) {
             return [];
         }
 
@@ -164,8 +184,6 @@ class Record extends RecordService
             $total = 0;
         }
 
-        $sync = true;
-
         if ($total <= $maxCountWithoutJob && !empty($actionOperation)) {
             if ($byWhere) {
                 $collection = $repository->find(array_merge($selectParams, ['select' => ['id']]));
@@ -182,6 +200,14 @@ class Record extends RecordService
                     $errors[] = "Error for '$name': {$e->getMessage()}";
                 }
             }
+
+            if (!empty($errors)) {
+                $label = "mass" . ucfirst($action);
+                $label .= count($errors) === count($ids) ? "NoRecordProceed" : "SomeRecordNotProceed";
+                array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
+            }
+
+            return [$total, $errors, true];
         } else {
             if ($total <= ($minChunkSize * $maxConcurrentJobs)) {
                 $chunkSize = $minChunkSize;
@@ -192,9 +218,6 @@ class Record extends RecordService
                     $chunkSize = $maxChunkSize;
                 }
             }
-
-
-            $sync = false;
 
             $jobEntity = $this->getEntityManager()->getEntity('Job');
             $jobEntity->set([
@@ -211,15 +234,9 @@ class Record extends RecordService
                 ]
             ]);
             $this->getEntityManager()->saveEntity($jobEntity);
-        }
 
-        if (!empty($errors)) {
-            $label = "mass" . ucfirst($action);
-            $label .= count($errors) === count($ids) ? "NoRecordProceed" : "SomeRecordNotProceed";
-            array_unshift($errors, $this->getInjection('language')->translate($label, 'exceptions'));
+            return [$total, $errors, false, $jobEntity];
         }
-
-        return [$total, $errors, $sync];
     }
 
     public function getLocalizedNameField(string $scope): ?string
@@ -258,7 +275,7 @@ class Record extends RecordService
             'attribute' => $foreignLink,
         ];
 
-        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
 
         $fields = ['id', 'name'];
         $localizedNameField = $this->getLocalizedNameField($scope);
@@ -433,15 +450,6 @@ class Record extends RecordService
         $this->afterMerge($entity, $sourceList, $attributes);
 
         return true;
-    }
-
-    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
-    {
-        parent::duplicateLinks($entity, $duplicatingEntity);
-
-        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
-            $this->getRepository()->duplicateAttributeValues($entity, $duplicatingEntity);
-        }
     }
 
     protected function getMandatoryLinksToMerge(): array

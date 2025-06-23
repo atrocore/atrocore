@@ -454,7 +454,8 @@
     "deletePermanentlyRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement les enregistrements sélectionnés ?",
     "deletePermanentlyRecordConfirmation": "Êtes-vous sûr de vouloir supprimer définitivement l'enregistrement ?",
     "massUnfollowResultSingle": "L'enregistrement de {count} n'est pas suivi",
-    "massFollowZeroResult": "Rien n'a été suivi"
+    "massFollowZeroResult": "Rien n'a été suivi",
+    "closePanelConfirmation": "Êtes-vous sûr de vouloir fermer le panneau ?"
   },
   "scopeNamesPlural": {
     "LastViewed": "Dernière consultation",

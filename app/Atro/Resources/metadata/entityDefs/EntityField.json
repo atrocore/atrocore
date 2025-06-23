@@ -168,6 +168,10 @@
     "extensibleEnum": {
       "type": "link"
     },
+    "allowedOptions": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/allowed-options"
+    },
     "extensibleEnumOptions": {
       "type": "jsonObject",
       "notStorable": true,
@@ -352,6 +356,14 @@
     "extensibleEnum": {
       "type": "belongsTo",
       "entity": "ExtensibleEnum"
+    },
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
+    },
+    "extensibleEnumOptions": {
+      "type": "hasMany",
+      "entity": "ExtensibleEnumOption"
     },
     "htmlSanitizer": {
       "type": "belongsTo",

@@ -47,13 +47,16 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                 }
             ];
 
-            this.listenTo(this.collection, 'filter-state:changed', (value) => {
-                if(value || this.searchManager.geTextFilter().trim().length > 0) {
-                    this.$el.find('button[data-name="applySearch"]').removeClass('disabled');
-                    this.$el.find('button[data-name="applySearch"]').attr('disabled', false);
-                }else{
-                    this.$el.find('button[data-name="applySearch"]').addClass('disabled');
-                    this.$el.find('button[data-name="applySearch"]').attr('disabled', 'disabled');
+            // listening directly on the collection is not working everytime, so I used backbone instead as a workaround
+            this.listenTo(window.Backbone, 'filter-state:changed', (collection) => {
+                if(collection === this.collection) {
+                    if(this.searchManager.isFilterSet() || this.searchManager.geTextFilter().trim().length > 0) {
+                        this.$el.find('button[data-name="applySearch"]').removeClass('disabled');
+                        this.$el.find('button[data-name="applySearch"]').attr('disabled', false);
+                    }else{
+                        this.$el.find('button[data-name="applySearch"]').addClass('disabled');
+                        this.$el.find('button[data-name="applySearch"]').attr('disabled', 'disabled');
+                    }
                 }
             });
         },

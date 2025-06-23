@@ -31,10 +31,10 @@ class LinkType extends AbstractFieldType
         $this->conn = $container->get('connection');
     }
 
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
         $id = $row['id'];
-        $name = AttributeFieldConverter::prepareFieldName($id);
+        $name = AttributeFieldConverter::prepareFieldName($row);
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
         $entity->fields[$name . 'Id'] = [
@@ -50,36 +50,61 @@ class LinkType extends AbstractFieldType
             'notStorable' => true
         ];
 
-        $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+        if (empty($skipValueProcessing)) {
+            $entity->set($name . 'Id', $row[$entity->fields[$name . 'Id']['column']] ?? null);
+        }
+
 
         if (!empty($attributeData['entityType'])) {
             $entity->entityDefs['fields'][$name] = [
                 'attributeId'               => $id,
+                'attributeValueId'          => $row['av_id'] ?? null,
                 'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+                'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+                'sortOrder'                 => $row['sort_order'] ?? null,
+                'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+                'attributeGroup'            => [
+                    'id'        => $row['attribute_group_id'] ?? null,
+                    'name'      => $row['attribute_group_name'] ?? null,
+                    'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+                ],
+                'channelId'                 => $row['channel_id'] ?? null,
+                'channelName'               => $row['channel_name'] ?? null,
                 'type'                      => 'link',
                 'entity'                    => $attributeData['entityType'],
+                'dropdown'                  => $attributeData['dropdown'] ?? null,
                 'required'                  => !empty($row['is_required']),
+                'readOnly'                  => !empty($row['is_read_only']),
                 'label'                     => $row[$this->prepareKey('name', $row)],
                 'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
             ];
 
-            $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
-            try {
-                $referenceItem = $this->conn->createQueryBuilder()
-                    ->select('id, name')
-                    ->from($referenceTable)
-                    ->where('id=:id')
-                    ->andWhere('deleted=:false')
-                    ->setParameter('id', $row['reference_value'])
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->fetchAssociative();
+            if (!empty($attributeData['dropdown'])) {
+                $entity->entityDefs['fields'][$name]['view'] = 'views/fields/link-dropdown';
+            }
+
+            if (empty($skipValueProcessing)) {
+                $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
+
+                if (!empty($row['reference_value'])) {
+                    try {
+                        $referenceItem = $this->conn->createQueryBuilder()
+                            ->select('id, name')
+                            ->from($referenceTable)
+                            ->where('id=:id')
+                            ->andWhere('deleted=:false')
+                            ->setParameter('id', $row['reference_value'])
+                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                            ->fetchAssociative();
 
 
-                $entity->set($name . 'Name', $referenceItem['name'] ?? null);
-            } catch (\Throwable $e) {
-                // ignore all
+                        $entity->set($name . 'Name', $referenceItem['name'] ?? null);
+                    } catch (\Throwable $e) {
+                        // ignore all
+                    }
+                }
             }
 
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
@@ -93,7 +118,7 @@ class LinkType extends AbstractFieldType
         if (!empty($attributeData['entityType'])) {
             $referenceTable = Util::toUnderScore(lcfirst($attributeData['entityType']));
 
-            $name = AttributeFieldConverter::prepareFieldName($row['id']);
+            $name = AttributeFieldConverter::prepareFieldName($row);
 
             $referenceAlias = "{$alias}{$referenceTable}";
             $qb->leftJoin($alias, $this->conn->quoteIdentifier($referenceTable), $referenceAlias, "{$referenceAlias}.id={$alias}.reference_value AND {$referenceAlias}.deleted=:false AND {$alias}.attribute_id=:{$alias}AttributeId");
@@ -105,10 +130,10 @@ class LinkType extends AbstractFieldType
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
-        if(!empty($item['subQuery'])) {
+        if (!empty($item['subQuery'])) {
             $attributeData = @json_decode($attribute['data'], true)['field'] ?? null;
-            if(!empty($attributeData['entityType'])) {
-                $this->convertSubquery($entity, $attributeData['entityType'] , $item);
+            if (!empty($attributeData['entityType'])) {
+                $this->convertSubquery($entity, $attributeData['entityType'], $item);
             }
         }
 

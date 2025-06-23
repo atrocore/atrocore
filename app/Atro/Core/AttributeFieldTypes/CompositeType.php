@@ -19,13 +19,24 @@ use Espo\ORM\IEntity;
 
 class CompositeType extends AbstractFieldType
 {
-    public function convert(IEntity $entity, array $row, array &$attributesDefs): void
+    public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void
     {
-        $name = AttributeFieldConverter::prepareFieldName($row['id']);
+        $name = AttributeFieldConverter::prepareFieldName($row);
 
         $entity->entityDefs['fields'][$name] = [
             'attributeId'               => $row['id'],
+            'attributeValueId'          => $row['av_id'] ?? null,
             'classificationAttributeId' => $row['classification_attribute_id'] ?? null,
+            'attributePanelId'          => $row['attribute_panel_id'] ?? null,
+            'sortOrder'                 => $row['sort_order'] ?? null,
+            'sortOrderInAttributeGroup' => $row['sort_order_in_attribute_group'] ?? null,
+            'attributeGroup'            => [
+                'id'        => $row['attribute_group_id'] ?? null,
+                'name'      => $row['attribute_group_name'] ?? null,
+                'sortOrder' => $row['attribute_group_sort_order'] ?? null,
+            ],
+            'channelId'                 => $row['channel_id'] ?? null,
+            'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'composite',
             'label'                     => $row[$this->prepareKey('name', $row)],
             'fullWidth'                 => true,

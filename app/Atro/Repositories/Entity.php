@@ -172,9 +172,19 @@ class Entity extends ReferenceData
         $scopeTypes = $params['whereClause'][0]['type'] ?? null;
 
         $canHasAttributes = false;
+        $canHasClassifications = false;
+        $canHasComponents = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
+            }
+
+            if (!empty($item['canHasClassifications'])) {
+                $canHasClassifications = true;
+            }
+
+            if (!empty($item['canHasComponents'])) {
+                $canHasComponents = true;
             }
         }
 
@@ -185,6 +195,14 @@ class Entity extends ReferenceData
             }
 
             if ($canHasAttributes && empty($row['hasAttribute'])) {
+                continue;
+            }
+
+            if ($canHasClassifications && empty($row['hasClassification'])) {
+                continue;
+            }
+
+            if ($canHasComponents && empty($row['hasComponent'])) {
                 continue;
             }
 

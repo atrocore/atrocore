@@ -64,7 +64,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         route: [],
 
-        realtimeInterval: null,
+        realtimeId: null,
 
         buttonList: [
             {
@@ -201,17 +201,25 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
 
-        actionAddAttribute() {
+        actionAddAttribute(panelName) {
+            let boolFilterList = ['onlyForEntity'];
+            let boolFilterData = {
+                onlyForEntity: this.model.name
+            };
+
+            if (typeof panelName === 'string') {
+                boolFilterList.push('onlyForAttributePanel');
+                boolFilterData['onlyForAttributePanel'] = panelName;
+            }
+
             this.notify('Loading...');
             this.createView('dialog', 'views/modals/select-records', {
                 scope: 'Attribute',
                 multiple: true,
                 createButton: false,
                 massRelateEnabled: false,
-                boolFilterList: ['onlyForEntity'],
-                boolFilterData: {
-                    onlyForEntity: this.model.name
-                }
+                boolFilterList: boolFilterList,
+                boolFilterData: boolFilterData
             }, dialog => {
                 dialog.render();
                 this.notify(false);
@@ -437,7 +445,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             }
 
-            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`)) {
+            if (this.getAcl().check(this.entityType, 'edit') && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && !this.getMetadata().get(`scopes.${this.model.name}.disableAttributeLinking`) && this.getAcl().check(this.entityType, 'createAttributeValue')) {
                 this.dropdownItemList.push({
                     label: 'addAttribute',
                     name: 'addAttribute'
@@ -745,7 +753,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         afterRender: function () {
-            this.initRealtimeListener();
+            if (!this.options.disableRealtimeListener) {
+                this.initRealtimeListener();
+            }
 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
@@ -823,19 +833,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 }
             }.bind(this));
-
-            this.$el.find('.panel-heading').each((k, el) => {
-                let $el = $(el);
-                let isAttributeValuePanel = $el.parent().find('.remove-attribute-value').length > 0;
-
-                if (isAttributeValuePanel) {
-                    let html = '<div class="add-attribute-value-container pull-right"><a class="btn-link" style="cursor: pointer"><i class="ph ph-plus cursor-pointer" style="font-size: 1em;"></i></a></div>';
-                    $el.append(html);
-                    $el.find('.add-attribute-value-container').click(() => {
-                        this.actionAddAttribute();
-                    });
-                }
-            });
         },
 
         fetch: function (onlyRelation) {
@@ -1228,12 +1225,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        remove() {
-            Dep.prototype.remove.call(this);
-
-            clearInterval(this.realtimeInterval);
-        },
-
         highlightRequired() {
             let highlight = $('.highlighted-required').length === 0;
             $(`.required-sign`).each((k, el) => {
@@ -1251,32 +1242,37 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        checkRealtimeListener(res) {
+            setTimeout(() => {
+                let id = this.$el.find('.detail').attr('id');
+                if (id && this.realtimeId === this.model.get('id')) {
+                    if (this.mode !== 'edit') {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                            if (data.timestamp !== res.timestamp) {
+                                res.timestamp = data.timestamp;
+                                this.model.fetch();
+                            }
+                        });
+                    }
+                    this.checkRealtimeListener(res);
+                }
+            }, 3000);
+        },
+
         initRealtimeListener() {
-            if (!this.model.get('id')) {
+            if (!this.model.get('id') || this.realtimeId === this.model.get('id')) {
                 return;
             }
 
-            clearInterval(this.realtimeInterval);
+            if (!this.realtimeId || this.realtimeId !== this.model.get('id')) {
+                this.realtimeId = this.model.get('id');
+            }
+
             this.ajaxPostRequest('App/action/startEntityListening', {
                 entityName: this.model.name,
                 entityId: this.model.get('id')
             }).success(res => {
-                let timestamp = res.timestamp;
-
-                this.realtimeInterval = setInterval(() => {
-                    if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true })
-                            .done(data => {
-                                if (data.timestamp !== timestamp) {
-                                    timestamp = data.timestamp;
-                                    this.model.fetch();
-                                }
-                            })
-                            .fail(() => {
-                                clearInterval(this.realtimeInterval);
-                            });
-                    }
-                }, 3000)
+                this.checkRealtimeListener(res);
             });
         },
 
@@ -1470,7 +1466,114 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.render()
                     })
                 }
+
+                // Add buttons on attribute panels
+                let attributePanels = ['attributeValues'];
+                $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                    attributePanels.push(panel.id);
+                })
+
+                this.$el.find('.panel-heading').each((k, el) => {
+                    let $el = $(el);
+                    let $panelBody = $el.parent().find('.panel-body')
+                    let panelName = $el.parent().data('name');
+                    let isAttributeValuePanel = attributePanels.includes(panelName);
+
+                    if (isAttributeValuePanel && this.getMetadata().get(['scopes', this.model.name, 'hasAttribute']) && this.getAcl().check(this.model.name, 'createAttributeValue')) {
+                        const linkingEnabled = !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
+
+                        let html = '<div class="btn-group pull-right">' +
+                            (linkingEnabled ? '<button type="button" class="btn btn-default btn-sm add-attribute-value-container"><i class="ph ph-plus"></i></button>' : '') +
+                            '<button type="button" class="btn btn-default btn-sm close-attribute-panel" ><i class="ph ph-x"></i></button>' +
+                            '</div>';
+                        $el.append(html);
+                        if (linkingEnabled) {
+                            $el.find('.add-attribute-value-container').click(() => {
+                                this.actionAddAttribute(panelName);
+                            });
+                        }
+                        $el.find('.close-attribute-panel').click(() => {
+                            this.confirm({
+                                message: this.translate('closePanelConfirmation', 'messages'),
+                                confirmText: this.translate('Close')
+                            }, () => {
+                                this.actionCloseAttributeValuePanel(panelName);
+                            });
+                        });
+
+                        $el.find('.panel-title').prepend('<span class="collapser" >\n' +
+                            '        <i class="ph ph-caret-up-down"></i>\n' +
+                            '    </span>')
+
+                        $el.find('.collapser').click(() => {
+                            $panelBody.collapse('toggle')
+                        })
+
+                        $panelBody.on('show.bs.collapse', (event) => {
+                            if ($panelBody.is(event.target)) {
+                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
+                                if (collapsedPanels.includes(panelName)) {
+                                    collapsedPanels = collapsedPanels.filter(item => item !== panelName)
+                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                }
+                            }
+                        })
+
+                        $panelBody.on('hide.bs.collapse', (event) => {
+                            if ($panelBody.is(event.target)) {
+                                let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
+                                if (!collapsedPanels.includes(panelName)) {
+                                    collapsedPanels.push(panelName)
+                                    this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                }
+                            }
+                        })
+
+
+                        // apply collapse state
+                        let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
+                        $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in')
+
+                    }
+                });
             });
+        },
+
+        actionCloseAttributeValuePanel: function (name) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closedAttributePanels'] ?? []
+            if (!panels.includes(name)) {
+                panels.push(name)
+            }
+            scopePreferences['closedAttributePanels'] = panels;
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({ patch: true });
+            this.getPreferences().trigger('update');
+
+            this.refreshLayout(true)
+        },
+
+        showAttributeValuePanel: function (name, callback) {
+            let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+            let scopePreferences = preferences[this.scope] ?? {}
+            let panels = scopePreferences['closedAttributePanels'] ?? []
+            scopePreferences['closedAttributePanels'] = panels.filter(item => item !== name);
+
+            preferences[this.scope] = scopePreferences;
+            this.getPreferences().set('closedPanelOptions', preferences);
+            this.getPreferences().save({ patch: true });
+            this.getPreferences().trigger('update');
+
+            if (callback) {
+                this.listenToOnce(this.getView('middle'), 'after:render', () => {
+                    callback()
+                })
+            }
+
+            this.refreshLayout(true)
         },
 
         setIsChanged: function () {
@@ -1739,6 +1842,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 if ('customLabel' in simplifiedLayout[p]) {
                     panel.customLabel = simplifiedLayout[p].customLabel;
                 }
+                if (simplifiedLayout[p].isAttributePanel) {
+                    panel.isAttributePanel = true;
+                }
                 panel.name = simplifiedLayout[p].name || 'panel-' + p.toString();
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
@@ -1910,6 +2016,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this._helper.layoutManager.get(this.model.name, this.layoutName, this.options.layoutRelatedScope ?? null, function (data) {
+                data = Espo.Utils.clone(data)
                 this.prepareLayoutData(data);
                 this.layoutData = data
                 this.gridLayout = {
@@ -1996,31 +2103,106 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        sortBySortOrder(jsonObj) {
+            const sortedEntries = Object.entries(jsonObj).sort(([, a], [, b]) => a.sortOrder - b.sortOrder);
+            return Object.fromEntries(sortedEntries);
+        },
+
+        sortAttributeDefs(originalAttributeDefs) {
+            let attributesDefs = {};
+
+            let attributeGroups = {};
+
+            $.each(originalAttributeDefs, (name, defs) => {
+                if (!defs.attributeGroup?.id) {
+                    attributesDefs[name] = defs;
+                } else {
+                    attributeGroups[defs.attributeGroup.id] = defs.attributeGroup;
+                }
+            })
+
+            attributeGroups = this.sortBySortOrder(attributeGroups);
+
+            $.each(attributeGroups, (id, group) => {
+                let groupItems = {};
+                $.each(originalAttributeDefs, (name, defs) => {
+                    if (defs.attributeGroup?.id === id) {
+                        groupItems[name] = defs;
+                    }
+                });
+                const sortedEntries = Object.entries(groupItems).sort(([, a], [, b]) => a.sortOrderInAttributeGroup - b.sortOrderInAttributeGroup);
+                $.each(Object.fromEntries(sortedEntries), (name, defs) => {
+                    attributesDefs[name] = defs;
+                });
+            })
+
+            return attributesDefs;
+        },
+
         prepareLayoutData(data) {
             if (this.layoutName === 'detail' && this.getMetadata().get(`scopes.${this.model.name}.hasAttribute`) && this.getAcl().check(this.model.name, 'read')) {
-                let layoutRows = [];
-                let layoutRow = [];
+                let attributePanels = {};
+                $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                    attributePanels[panel.id] = panel;
+                    attributePanels[panel.id]['layoutRows'] = [];
+                    attributePanels[panel.id]['layoutRow'] = [];
+                });
+
+                attributePanels = this.sortBySortOrder(attributePanels);
+
+                let addedGroups = {};
 
                 const pushItem = (name, defs) => {
+                    let panelId = defs.attributePanelId;
+                    let attributeGroupId = defs.attributeGroup.id || null;
+
+                    if (!attributePanels[panelId]) {
+                        // skip item when panel do not exist
+                        return
+                    }
+
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)){
+                        return
+                    }
+
+                    // put attribute group item
+                    if (attributeGroupId) {
+                        if (!addedGroups[panelId]) {
+                            addedGroups[panelId] = {};
+                        }
+
+                        if (!addedGroups[panelId][attributeGroupId]) {
+                            addedGroups[panelId][attributeGroupId] = true;
+                            attributePanels[panelId].layoutRow.push({
+                                name: panelId + '_' + attributeGroupId,
+                                customLabel: defs.attributeGroup.name,
+                                view: "pim:views/attribute/fields/attribute-group-layout-item",
+                                fullWidth: true
+                            });
+                            attributePanels[panelId].layoutRows.push(attributePanels[panelId].layoutRow);
+                            attributePanels[panelId].layoutRow = [];
+                        }
+                    }
+
                     let item = {
                         name: name,
                         customLabel: defs.detailViewLabel || defs.label,
-                        fullWidth: defs.fullWidth,
+                        fullWidth: defs.fullWidth
                     }
                     if (defs.layoutDetailView) {
                         item.view = defs.layoutDetailView;
                     }
 
-                    layoutRow.push(item);
-                    if (layoutRow[0]['fullWidth'] || layoutRow[1]) {
-                        layoutRows.push(layoutRow);
-                        layoutRow = [];
+                    attributePanels[panelId].layoutRow.push(item);
+                    if (attributePanels[panelId].layoutRow[0]['fullWidth'] || attributePanels[panelId]['layoutRow'][1]) {
+                        attributePanels[panelId].layoutRows.push(attributePanels[panelId].layoutRow);
+                        attributePanels[panelId].layoutRow = [];
                     }
                 }
 
                 if (!this.model.isNew()) {
                     this.putAttributesToModel();
-                    $.each((this.model.get('attributesDefs') || {}), (name, defs) => {
+                    $.each(this.sortAttributeDefs(this.model.get('attributesDefs') || {}), (name, defs) => {
                         if (!defs.layoutDetailDisabled && !defs.compositedField) {
                             if (defs.multilangField) {
                                 return
@@ -2038,24 +2220,57 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
                 }
 
-                if (layoutRow.length > 0) {
-                    layoutRow.push(false);
-                    layoutRows.push(layoutRow);
-                }
-
-                data.layout.forEach((row, k) => {
-                    if (row.id === 'attributeValues') {
-                        delete data.layout[k];
+                $.each(attributePanels, (id, item) => {
+                    if (item.layoutRow.length > 0) {
+                        attributePanels[id].layoutRow.push(false);
+                        attributePanels[id].layoutRows.push(item.layoutRow);
                     }
                 })
 
-                if (layoutRows.length > 0) {
-                    data.layout.push({
-                        id: 'attributeValues',
-                        label: this.translate('attributeValues'),
-                        rows: layoutRows
-                    });
+                $.each(attributePanels, (id, item) => {
+                    data.layout.forEach((row, k) => {
+                        if (row.id === id) {
+                            delete data.layout[k];
+                        }
+                    })
+                })
+
+                let languageCode = null;
+                $.each((this.getConfig().get('referenceData')?.Locale || {}), (code, item) => {
+                    if (item.id === this.getUser().get('localeId')) {
+                        languageCode = item.languageCode;
+                    }
+                })
+
+                let labelName = 'name';
+                if (languageCode) {
+                    labelName += languageCode.split('_').map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join('');
                 }
+
+                let preferences = this.getPreferences().get('closedPanelOptions') ?? {};
+                let scopePreferences = preferences[this.scope] ?? {}
+                let closedAttributePanels = scopePreferences['closedAttributePanels'] ?? []
+
+                $.each(attributePanels, (id, item) => {
+                    if (item.layoutRows.length > 0) {
+                        const panel = {
+                            id: id,
+                            name: id,
+                            isAttributePanel: true,
+                            label: item[labelName] || item.name,
+                            rows: item.layoutRows
+                        }
+
+                        if (closedAttributePanels.includes(id)) {
+                            panel.rows = []
+                            this.recordHelper.setPanelStateParam(id, 'hidden', true)
+                        } else {
+                            this.recordHelper.setPanelStateParam(id, 'hidden', false)
+                        }
+
+                        data.layout.push(panel);
+                    }
+                })
             }
         },
 
@@ -2150,7 +2365,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let name = panel.label || panel.customLabel;
 
                     if (name) {
-                        middlePanels.push({ title: name, name: panel.name });
+                        middlePanels.push({ title: name, name: panel.name, isAttributePanel: panel.isAttributePanel });
                     }
                 });
             }
@@ -2372,6 +2587,30 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         onTreeResize(width) {
-        }
+        },
+
+        actionDynamicActionPreviewTemplate(data) {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
+            if (!defs) {
+                return;
+            }
+            let path = defs.actionViewPath;
+
+            let o = {
+                previewTemplateId: defs.id,
+                label: defs.name
+            };
+            (defs.optionsToPass || []).forEach((option) => {
+                if (option in this) {
+                    o[option] = this[option];
+                }
+            });
+
+            this.createView(defs.id, path, o, (view) => {
+                if (typeof view[defs.action] === 'function') {
+                    view[defs.action]();
+                }
+            });
+        },
     });
 });

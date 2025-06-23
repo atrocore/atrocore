@@ -553,7 +553,7 @@ class File extends Base
             $file->set('colorSpace', $colorspaceName);
             $image->clear();
         } catch (\ImagickException $e) {
-            $GLOBALS['log']->error('[Unable to get image dimensions] : ' . $e->getMessage());
+//            $GLOBALS['log']->error('[Unable to get image dimensions] : ' . $e->getMessage());
         }
     }
 

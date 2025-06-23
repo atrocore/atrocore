@@ -856,12 +856,10 @@
             <div class="panel-group" style="margin-bottom: 10px; min-height: 26px;">
                 <div class="btn-group">
                     {#each treeItems as treeItem}
-                        {#if treeItem.name !== activeItem.name}
-                            <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                               class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
-                                {treeItem.label}
-                            </a>
-                        {/if}
+                        <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
+                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                            {treeItem.label}
+                        </a>
                     {/each}
                     <span bind:this={layoutEditorElement} class="btn layout-editor-container"></span>
                 </div>

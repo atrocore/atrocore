@@ -401,7 +401,8 @@
     "massRestoreZeroResult": "Nic nie zostało przywrócone",
     "erasePersonalDataConfirmation": "Zaznaczone pola zostaną trwale usunięte. Czy na pewno?",
     "clearAclCacheError": "Pamięć podręczna ACL nie mogła zostać wyczyszczona.",
-    "emptyMultilangOptions": "Lista opcji nie może być pusta przy aktywowanej opcji wielojęzycznej."
+    "emptyMultilangOptions": "Lista opcji nie może być pusta przy aktywowanej opcji wielojęzycznej.",
+    "closePanelConfirmation": "Czy na pewno chcesz zamknąć panel?"
   },
   "boolFilters": {
     "onlyActive": "Aktywne",

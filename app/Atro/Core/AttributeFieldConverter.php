@@ -12,6 +12,8 @@
 namespace Atro\Core;
 
 use Atro\Core\AttributeFieldTypes\AttributeFieldTypeInterface;
+use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Config;
@@ -28,6 +30,7 @@ class AttributeFieldConverter
     protected Metadata $metadata;
     protected Config $config;
     protected Connection $conn;
+    protected Manager $eventManager;
     private Container $container;
     private array $attributes = [];
 
@@ -36,12 +39,22 @@ class AttributeFieldConverter
         $this->metadata = $container->get('metadata');
         $this->config = $container->get('config');
         $this->conn = $container->get('connection');
+        $this->eventManager = $container->get('eventManager');
         $this->container = $container;
     }
 
-    public static function prepareFieldName(string $id): string
+    public static function isValidCode(string $code): bool
     {
-        return $id;
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $code) === 1;
+    }
+
+    public static function prepareFieldName(array $row): string
+    {
+        if (!empty($row['code']) && self::isValidCode($row['code'])) {
+            return $row['code'];
+        }
+
+        return $row['id'];
     }
 
     public static function getAttributeIdFromFieldName(string $name): string
@@ -121,15 +134,24 @@ class AttributeFieldConverter
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
 
             $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper);
-            $this->convert($entity, $attribute, $attributesDefs);
+            $this->convert($entity, $attribute, $attributesDefs, true);
         }
 
         $entity->set('attributesDefs', $attributesDefs);
     }
 
+    public function putAdditionalDataAfterSelect(IEntity $entity, array $attributeIds): void
+    {
+        foreach ($entity->entityDefs['fields'] as $key => $defs) {
+            if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
+                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['mainField'] ?? $key)] ?? null;
+            }
+        }
+    }
+
     public function putAttributesToEntity(IEntity $entity): void
     {
-        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
+        if ($entity->hasAllEntityAttributes || !$this->metadata->get("scopes.{$entity->getEntityType()}.hasAttribute")) {
             return;
         }
 
@@ -137,6 +159,7 @@ class AttributeFieldConverter
 
         $select = [
             'a.*',
+            'av.id as av_id',
             'av.bool_value',
             'av.date_value',
             'av.datetime_value',
@@ -148,7 +171,14 @@ class AttributeFieldConverter
             'av.text_value',
             'av.reference_value',
             'av.json_value',
-            'f.name as file_name'
+            'f.name as file_name',
+            'c.name as channel_name',
+            'eeo.name as extensible_enum_option_name',
+            'ag.id as attribute_group_id',
+            'ag.name as attribute_group_name',
+            'ag.sort_order as attribute_group_sort_order',
+            'a.sort_order as sort_order',
+            'a.attribute_group_sort_order as sort_order_in_attribute_group'
         ];
 
         if (!empty($this->config->get('isMultilangActive'))) {
@@ -161,18 +191,34 @@ class AttributeFieldConverter
         $res = $this->conn->createQueryBuilder()
             ->select(implode(',', $select))
             ->from("{$tableName}_attribute_value", 'av')
-            ->leftJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id')
-            ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType')
+            ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
+            ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false')
+            ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
+            ->leftJoin('av', $this->conn->quoteIdentifier('extensible_enum_option'), 'eeo', 'eeo.id=av.reference_value AND a.type=:eeType AND eeo.deleted=:false')
             ->where('av.deleted=:false')
-            ->andWhere('a.deleted=:false')
             ->andWhere("av.{$tableName}_id=:id")
             ->orderBy('a.sort_order', 'ASC')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $entity->get('id'))
             ->setParameter('fileType', 'file')
+            ->setParameter('eeType', 'extensibleEnum')
             ->fetchAllAssociative();
 
+        foreach ($res as $k => $attribute) {
+            if (!empty($attribute['channel_name'])) {
+                $res[$k]['name'] = $attribute['name'] . ' / ' . $attribute['channel_name'];
+            }
+        }
+
         if (!empty($res) && $this->metadata->get("scopes.{$entity->getEntityType()}.hasClassification")) {
+            $propertyFields = [];
+            foreach ($this->metadata->get('entityDefs.ClassificationAttribute.fields', []) as $f => $fDefs) {
+                if (!empty($fDefs['fieldProperty'])) {
+                    $propertyFields[] = $f;
+                }
+            }
+
             $classificationAttrs = $this->conn->createQueryBuilder()
                 ->select('ca.*')
                 ->from("{$tableName}_classification", 'r')
@@ -196,6 +242,10 @@ class AttributeFieldConverter
                         $attributeData = @json_decode($attribute['data'] ?? '', true);
                         if (empty($attributeData)) {
                             $attributeData = [];
+                        }
+
+                        foreach ($propertyFields as $field) {
+                            $attributeData['field'][$field] = null;
                         }
 
                         $classificationAttributeData = @json_decode($classificationAttribute['data'] ?? '', true);
@@ -242,31 +292,44 @@ class AttributeFieldConverter
             }
         }
 
+        $attributePanelsIds = array_column($this->config->get('referenceData.AttributePanel', []), 'id');
+
         $attributesDefs = [];
 
         foreach ($res as $row) {
+            // set null if attribute-panel does not exist
+            if (!empty($row['attribute_panel_id']) && !in_array($row['attribute_panel_id'], $attributePanelsIds)) {
+                $row['attribute_panel_id'] = null;
+            }
             $this->convert($entity, $row, $attributesDefs);
         }
+
+        $attributesDefs = $this->eventManager->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $res, 'attributesDefs' => $attributesDefs]))
+            ->getArgument('attributesDefs');
+
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
 
         foreach ($entity->_originalInput->__attributes ?? [] as $attributeId) {
-            foreach ($attributesDefs as $name => $defs) {
+            foreach ($entity->fields ?? [] as $name => $defs) {
                 if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeId) {
                     $entity->unsetFetched($name);
                 }
             }
         }
+
+        $entity->hasAllEntityAttributes = true;
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
     {
         return $this->conn->createQueryBuilder()
-            ->select('*')
-            ->from($this->conn->quoteIdentifier('attribute'))
-            ->where('id IN (:ids)')
-            ->andWhere('deleted=:false')
+            ->select('a.*, c.name as channel_name')
+            ->from($this->conn->quoteIdentifier('attribute'), 'a')
+            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
+            ->where('a.id IN (:ids) or a.code IN (:ids)')
+            ->andWhere('a.deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
@@ -274,12 +337,20 @@ class AttributeFieldConverter
 
     public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
     {
+        // Add attribute value id to know if attribute is linked
+        $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias($this->getAttributeValueIdField(AttributeFieldConverter::prepareFieldName($attribute))));
+
         $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
     }
 
-    public function convert(IEntity $entity, array $attribute, array &$attributesDefs): void
+    public function getAttributeValueIdField(string $fieldName): string
     {
-        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs);
+        return $fieldName . 'AvId';
+    }
+
+    public function convert(IEntity $entity, array $attribute, array &$attributesDefs, bool $skipValueProcessing = false): void
+    {
+        $this->getFieldType($attribute['type'])->convert($entity, $attribute, $attributesDefs, $skipValueProcessing);
     }
 
     public function getFieldType(string $type): AttributeFieldTypeInterface

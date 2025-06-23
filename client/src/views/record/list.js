@@ -1161,7 +1161,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             //After investigation,  sometimes listenTo doesn't work so listening directly works, I can't explain why
-            this.collection.on('sync',  (c, r, options) => {
+            this.collection.on('sync', (c, r, options) => {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) return;
                 if (this.noRebuild) {
                     this.noRebuild = null;
@@ -1900,6 +1900,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.checkAllResultMassActionList.push('removeRelation');
                 }
             }
+
+            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute']) && !this.getMetadata().get(['scopes', this.scope, 'disableAttributeLinking'])) {
+                this.massActionList.push('removeAttribute');
+                this.checkAllResultMassActionList.push('removeAttribute');
+            }
         },
 
         isAddRemoveRelationEnabled() {
@@ -1953,6 +1958,91 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     return 'oneToMany';
                 }
             }
+        },
+
+        massActionRemoveAttribute() {
+            this.notify('Loading...');
+            this.createView('dialog', 'views/modals/select-records', {
+                scope: 'Attribute',
+                multiple: true,
+                createButton: false,
+                massRelateEnabled: false,
+                allowSelectAllResult: true,
+                boolFilterData: {
+                    onlyForEntity: this.scope
+                },
+                boolFilterList: ['onlyForEntity'],
+            }, dialog => {
+                dialog.render();
+                this.notify(false);
+                dialog.once('select', models => {
+                    this.notify('Loading...');
+                    let attributes = {
+                        'ids': null,
+                        'where': null
+                    }
+
+                    if (Array.isArray(models)) {
+                        attributes.ids = models.map(m => m.id)
+                    } else if (models.massRelate) {
+                        attributes.where = models.where
+                    }
+
+                    let ids = null;
+                    let where = null;
+                    if (!this.allResultIsChecked) {
+                        ids = this.checkedList;
+                    } else {
+                        where = this.collection.getWhere()
+                    }
+
+                    $.ajax({
+                        url: this.scope + '/action/massRemoveAttribute',
+                        type: 'POST',
+                        data: JSON.stringify({
+                            attributes,
+                            ids: ids,
+                            where: where,
+                            byWhere: this.allResultIsChecked
+                        }),
+                        success: (result) => {
+                            this.notify('A job is created to remove attributes', 'success');
+                            this.checkMassActionJob(result.jobId)
+                        },
+                        error: () => {
+                            this.notify('Error occurred', 'error');
+                        }
+                    });
+                });
+            });
+        },
+
+        checkMassActionJob(jobId) {
+            let iteration = 1
+            const handler = () => {
+                $.ajax({
+                    url: 'Job/action/massActionStatus?id=' + jobId,
+                    type: 'GET',
+                    success: (result) => {
+                        if (result.done) {
+                            if (result.errors) {
+                                this.notify(result.message + '\n' + result.errors, 'error', 6000)
+                            } else {
+                                this.notify(result.message, 'success')
+                            }
+
+                            return
+                        }
+
+                        if (iteration < 3) {
+                            iteration++
+                            setTimeout(handler, 4000)
+                        }
+                    }
+                });
+            }
+
+            setTimeout(handler, 3000)
         },
 
         massActionUpdateRelation(type) {
@@ -2868,6 +2958,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {
                 if (response.inBackground) {
                     this.notify(this.translate('jobAdded', 'messages'), 'success');
+
+                    if (callback) {
+                        callback();
+                    }
                 } else {
                     if (response.success) {
                         this.notify(response.message, 'success');
@@ -2879,7 +2973,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                             return;
                         }
                         if (callback) {
-                            callback()
+                            callback();
                         }
                     } else {
                         this.notify(response.message, 'error');
