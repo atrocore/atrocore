@@ -25,8 +25,14 @@ class GetLeafRecords extends AbstractTwigFunction
     {
     }
 
-    public function run(Entity $entity): array
+    public function run(Entity $entity): ?array
     {
-        return $this->entityManager->getRepository($entity->getEntityType())->getLeafChildren($entity->id);
+        $repository = $this->entityManager->getRepository($entity->getEntityType());
+
+        if (method_exists($repository, 'getLeafChildren')) {
+            return $repository->getLeafChildren($entity->id);
+        }
+
+        return null;
     }
 }
