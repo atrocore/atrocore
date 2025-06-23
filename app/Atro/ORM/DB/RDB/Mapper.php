@@ -526,7 +526,7 @@ class Mapper implements MapperInterface
         $attrs = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
-            if (!empty($entity->fields[$attribute]['column'])) {
+            if (!empty($entity->fields[$attribute]['attributeId'])) {
                 $attrs[$attribute] = $value;
             } else {
                 $dataArr[$attribute] = $value;
@@ -586,7 +586,7 @@ class Mapper implements MapperInterface
                 continue;
             }
 
-            if (!empty($entity->fields[$attribute]['column'])) {
+            if (!empty($entity->fields[$attribute]['attributeId'])) {
                 $attrs[$attribute] = $value;
             } else {
                 $setArr[$attribute] = $this->prepareValueForUpdate($type, $value);
@@ -646,12 +646,22 @@ class Mapper implements MapperInterface
             return;
         }
 
+        /* @var $attributeRepository Attribute */
+        $attributeRepository = $this->em->getRepository('Attribute');
+
         if (!empty($attrs)) {
             foreach ($attrs as $key => $value) {
                 if ($value !== null && $entity->fields[$key]['type'] === 'jsonArray') {
                     $value = json_encode($value);
                 }
-                $this->em->getRepository('Attribute')->upsertAttributeValue($entity, $key, $value);
+
+                if (empty($entity->fields[$key]['column'])) {
+                    if (!$attributeRepository->hasAttributeValue($entity->getEntityType(), $entity->id, $entity->fields[$key]['attributeId'])) {
+                        $attributeRepository->addAttributeValue($entity->getEntityType(), $entity->id, $entity->fields[$key]['attributeId']);
+                    }
+                } else {
+                    $attributeRepository->upsertAttributeValue($entity, $key, $value);
+                }
             }
         }
 
@@ -659,7 +669,7 @@ class Mapper implements MapperInterface
             foreach ($entity->_originalInput->__attributesToRemove as $name) {
                 $attributeId = $entity->entityDefs['fields'][$name]['attributeId'] ?? null;
                 if (!empty($attributeId)) {
-                    $this->em->getRepository('Attribute')->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
+                    $attributeRepository->removeAttributeValue($entity->getEntityType(), $entity->get('id'), $attributeId);
                 }
             }
         }
