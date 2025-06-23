@@ -755,6 +755,7 @@
             try {
                 $queryBuilder.queryBuilder('destroy');
                 initQueryBuilderFilter();
+                advancedFilterChecked = false;
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
