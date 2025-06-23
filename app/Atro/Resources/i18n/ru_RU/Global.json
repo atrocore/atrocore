@@ -369,7 +369,8 @@
     "massFollowResultSingle": "{count} запись сейчас отслеживается",
     "massUnfollowResultSingle": "{count} запись сейчас не отслеживается",
     "clearAclCacheError": "ACL кеш не может быть очищен.",
-    "emptyMultilangOptions": "Список опций не может быть пустым, пока активирована многоязычная опция."
+    "emptyMultilangOptions": "Список опций не может быть пустым, пока активирована многоязычная опция.",
+    "closePanelConfirmation": "Вы уверены, что хотите закрыть панель?"
   },
   "boolFilters": {
     "onlyActive": "Активный",

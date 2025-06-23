@@ -322,7 +322,8 @@
     "streamPostInfo": "Type <strong>@username</strong> to mention users in the post.",
     "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
     "clearAclCacheError": "ACL cache could not be cleared.",
-    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated."
+    "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
+    "closePanelConfirmation": "¿Seguro que quieres cerrar el panel?"
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
