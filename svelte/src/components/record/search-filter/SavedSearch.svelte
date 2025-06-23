@@ -19,6 +19,8 @@
     export let editingItem: any = null;
     export let edit: Function = () => {
     };
+    export let copy: Function = () => {
+    };
     export let rename: Function = () => {
     };
     export let remove: Function = () => {
@@ -101,6 +103,7 @@
                                         <li><a on:click={cancel}>{Language.translate('Cancel Edit')}</a></li>
                                     {:else}
                                         <li><a on:click={() => {edit(item)}}>{Language.translate('Edit')}</a></li>
+                                        <li><a on:click={() => {copy(item)}}>{Language.translate('Copy')}</a></li>
                                     {/if}
                                     <li><a on:click={() => rename(item)}>{Language.translate('Rename')}</a></li>
                                 {/if}

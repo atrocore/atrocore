@@ -384,7 +384,8 @@
     "additionalLanguages": "Zusätzliche Sprachen",
     "collapseAll": "Alles einklappen",
     "expandAll": "Alle erweitern",
-    "fullscreen": "Vollbild"
+    "fullscreen": "Vollbild",
+    "Copy": "Kopieren"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

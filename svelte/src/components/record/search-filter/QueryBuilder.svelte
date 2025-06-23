@@ -748,6 +748,20 @@
         });
     }
 
+    function copySaveSearch(item) {
+        searchManager.update({queryBuilder: item.data});
+        prepareFilters(() => {
+            const $queryBuilder = window.$(queryBuilderElement)
+            try {
+                $queryBuilder.queryBuilder('destroy');
+                initQueryBuilderFilter();
+            } catch (e) {
+                console.error(e);
+                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
+            }
+        });
+    }
+
     function cancelEditSearchQuery() {
         const $queryBuilder = window.$(queryBuilderElement)
         $queryBuilder.queryBuilder('setRules', oldAdvancedFilter ?? []);
@@ -968,6 +982,7 @@
                 remove={removeSaveSearch}
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
+                copy={copySaveSearch}
                 uniqueKey={uniqueKey}
                 hideRowAction={uniqueKey.includes('dialog')}
                 bind:opened={savedFiltersOpened}
