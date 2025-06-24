@@ -97,6 +97,8 @@
     "SystemIcon": "Ikony systemowe"
   },
   "labels": {
+    "selectAll": "Wybierz wszystko",
+    "additionalLanguages": "Języki treści",
     "customizeLayout": "Dostosuj układ",
     "Reupload": "Prześlij ponownie",
     "attachFiles": "Dołączanie plików",
