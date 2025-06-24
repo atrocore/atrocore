@@ -607,31 +607,33 @@ class OpenApiGenerator
                             "schema"   => [
                                 "type" => "string"
                             ]
-                        ],
-                        [
-                            "name"     => "ids",
-                            "in"       => "query",
-                            "required" => true,
-                            "explode"  => false,
-                            "schema"   => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "string",
-                                ],
-                            ]
-                        ],
-                        [
-                            "name"     => "foreignIds",
-                            "in"       => "query",
-                            "required" => true,
-                            "explode"  => false,
-                            "schema"   => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "string",
-                                ],
-                            ]
                         ]
+                    ],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        "ids" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                        "foreignIds" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                    ],
+                                ]
+                            ]
+                        ],
                     ],
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
@@ -650,31 +652,33 @@ class OpenApiGenerator
                             "schema"   => [
                                 "type" => "string"
                             ]
-                        ],
-                        [
-                            "name"     => "ids",
-                            "in"       => "query",
-                            "required" => true,
-                            "explode"  => false,
-                            "schema"   => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "string",
-                                ],
-                            ]
-                        ],
-                        [
-                            "name"     => "foreignIds",
-                            "in"       => "query",
-                            "required" => true,
-                            "explode"  => false,
-                            "schema"   => [
-                                "type"  => "array",
-                                "items" => [
-                                    "type" => "string",
-                                ],
-                            ]
                         ]
+                    ],
+                    'requestBody' => [
+                        'required' => true,
+                        'content'  => [
+                            'application/json' => [
+                                'schema' => [
+                                    "type"       => "object",
+                                    "properties" => [
+                                        "ids" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                        "foreignIds" => [
+                                            "type"    => "array",
+                                            "items"   => [
+                                                "type" => "string"
+                                            ],
+                                            'example' => ["613219736ca7a1c68", "6132197390d69afa5"]
+                                        ],
+                                    ],
+                                ]
+                            ]
+                        ],
                     ],
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
