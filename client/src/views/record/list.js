@@ -2145,8 +2145,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let filteredListLayout = [];
 
             listLayout.forEach(item => {
+                let skip = this.getMetadata().get(`entityDefs.${this.entityType}.fields.${item.name}.listLayoutSkip`);
+
+                if (skip) {
+                    return;
+                }
+
                 if (entityType && this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.type`) === 'belongsTo') {
-                    if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType) {
+                    if (this.getMetadata().get(`entityDefs.${this.entityType}.links.${item.name}.entity`) !== entityType || skip === false) {
                         filteredListLayout.push(item);
                     }
                 } else {
