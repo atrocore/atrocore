@@ -331,21 +331,20 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
         adjustMinHeight: function () {
             if (this.collection.models.length === 0) return;
 
-            var top = this.$listKanban.find('table > tbody').position().top;
-            var bottom = this.$content.position().top + this.$content.outerHeight(true);
+            const top = this.$listKanban.position().top;
+            const bottom = this.$content.outerHeight();
 
-            var height = bottom - top;
+            let height = bottom - top;
 
             height = height - 100;
 
             if (height < 100) {
                 height = 100;
-                this.$listKanban.find('td.group-column > div').css({
-                    minHeight: height + 'px'
-                });
             }
 
-
+            this.$listKanban.find('.kanban-columns tr.kanban-row').css({
+                height: height + 20 + 'px'
+            });
         },
 
         getListLayout: function (callback) {

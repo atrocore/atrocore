@@ -10369,7 +10369,8 @@ div.list-kanban > div.kanban-columns-container > table {
     div.list-kanban > div.kanban-columns-container > table > tbody tr.kanban-row, div.list-kanban > div.kanban-head-container > table > tbody tr.kanban-row, div.list-kanban > div.kanban-columns-container > table > thead tr.kanban-row, div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row {
         display: grid !important;
         grid-column-gap: 10px;
-        grid-auto-columns: 1fr
+        grid-auto-columns: 1fr;
+        grid-auto-rows: 1fr;
     }
 
     div.list-kanban > div.kanban-columns-container > table > tbody tr.kanban-row tbody, div.list-kanban > div.kanban-head-container > table > tbody tr.kanban-row tbody, div.list-kanban > div.kanban-columns-container > table > thead tr.kanban-row tbody, div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row tbody, div.list-kanban > div.kanban-columns-container > table > tbody tr.kanban-row thead, div.list-kanban > div.kanban-head-container > table > tbody tr.kanban-row thead, div.list-kanban > div.kanban-columns-container > table > thead tr.kanban-row thead, div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row thead, div.list-kanban > div.kanban-columns-container > table > tbody tr.kanban-row td, div.list-kanban > div.kanban-head-container > table > tbody tr.kanban-row td, div.list-kanban > div.kanban-columns-container > table > thead tr.kanban-row td, div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row td, div.list-kanban > div.kanban-columns-container > table > tbody tr.kanban-row th, div.list-kanban > div.kanban-head-container > table > tbody tr.kanban-row th, div.list-kanban > div.kanban-columns-container > table > thead tr.kanban-row th, div.list-kanban > div.kanban-head-container > table > thead tr.kanban-row th {
@@ -16383,7 +16384,7 @@ div.list-kanban > div > table td.group-column {
 
 .kanban-columns-container table.kanban-columns {
     height: 100%;
-    padding: 20px 0;
+    padding: 20px 0 0;
 }
 
 .kanban-columns-container table.kanban-columns tbody {
@@ -16402,7 +16403,7 @@ div.list-kanban > div > table td.group-column {
     padding: 5px 5px 5px 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     background-color: #fafafa;
-    height: calc(100vh - 350px);
+    height: 100%;
 }
 
 .list-kanban .kanban-head-container {
