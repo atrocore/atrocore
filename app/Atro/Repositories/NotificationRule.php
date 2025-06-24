@@ -106,7 +106,7 @@ class NotificationRule extends Base
             : $notificationProfileId;
 
         $users = $connection->createQueryBuilder()
-            ->select('id, name, user_name, first_name, last_name, email_address, phone_number')
+            ->select('id, name, user_name, first_name, last_name, email_address, phone_number, is_admin')
             ->from($connection->quoteIdentifier('user'))
             ->where('is_active = :true')
             ->andWhere('deleted = :false')
