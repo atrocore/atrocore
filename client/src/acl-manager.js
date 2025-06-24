@@ -36,13 +36,14 @@
  * }
  */
 
-Espo.define('acl-manager', ['acl'], function (Acl) {
+Espo.define('acl-manager', ['acl', 'metadata'], function (Acl, Metadata) {
 
-    var AclManager = function (user, implementationClassMap) {
+    var AclManager = function (user, implementationClassMap, metadata = null) {
         this.setEmpty();
 
         this.user = user || null;
         this.implementationClassMap = implementationClassMap || {};
+        this.metadata = metadata || new Metadata(null);
     }
 
     _.extend(AclManager.prototype, {
@@ -106,11 +107,39 @@ Espo.define('acl-manager', ['acl'], function (Acl) {
         },
 
         checkScope: function (scope, action, precise) {
-            var data = (this.data.table || {})[scope];
-            if (typeof data === 'undefined') {
-                data = null;
+            let checkScope = (scope, action) => {
+                var data = (this.data.table || {})[scope];
+                if (typeof data === 'undefined') {
+                    data = null;
+                }
+                return this.getImplementation(scope).checkScope(data, action, precise);
+            };
+
+            if(this.metadata.get(['scopes', scope, 'type']) === 'Relation') {
+                let relAction = action === 'read' ? action : 'edit';
+                for (const relationEntity of this.getRelationEntities(scope)) {
+                    if(!checkScope(relationEntity, relAction)) {
+                        return false;
+                    }
+                }
             }
-            return this.getImplementation(scope).checkScope(data, action, precise);
+            return checkScope(scope, action);
+        },
+
+        getRelationEntities(scope) {
+            let result = [];
+            if(this.metadata.get(['scopes', scope, 'type']) !== 'Relation') {
+                return result;
+            }
+            Object.entries(this.metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
+                if(defs['relationField']) {
+                    let relationEntityName = this.metadata.get(['entityDefs', scope, 'links', field, 'entity']);
+                    if(relationEntityName) {
+                        result.push(relationEntityName);
+                    }
+                }
+            });
+            return result;
         },
 
         checkModel: function (model, action, precise) {
