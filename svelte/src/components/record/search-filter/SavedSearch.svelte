@@ -19,6 +19,8 @@
     export let editingItem: any = null;
     export let edit: Function = () => {
     };
+    export let copy: Function = () => {
+    };
     export let rename: Function = () => {
     };
     export let remove: Function = () => {
@@ -90,7 +92,7 @@
                     {#if (Acl.check('SavedSearch', 'edit') ||  Acl.check('SavedSearch', 'delete')) && !hideRowAction}
                         <div class="list-row-buttons btn-group">
                             {#if editingItem?.id === item.id}
-                                <span style="position:absolute; right: 20px"><i class="ph ph-pencil-simple-line"></i></span>
+                                <span on:click={cancel} style="position:absolute; right: 20px; cursor: pointer"><i class="ph ph-pencil-simple-slash"></i></span>
                             {/if}
                             <a style="cursor: pointer; color: var(--action-icon-color)" href="javascript:" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="ph ph-dots-three-vertical"></i>
@@ -101,6 +103,7 @@
                                         <li><a on:click={cancel}>{Language.translate('Cancel Edit')}</a></li>
                                     {:else}
                                         <li><a on:click={() => {edit(item)}}>{Language.translate('Edit')}</a></li>
+                                        <li><a on:click={() => {copy(item)}}>{Language.translate('Copy')}</a></li>
                                     {/if}
                                     <li><a on:click={() => rename(item)}>{Language.translate('Rename')}</a></li>
                                 {/if}
