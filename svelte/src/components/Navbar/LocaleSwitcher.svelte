@@ -46,14 +46,14 @@
     let enabledLanguages = Object.keys(languages).filter(item => !disabledLanguages.includes(item))
 
 
-    async function onLocaleChange(localeId: string) {
+    async function onLocaleChange() {
         const userData = UserData.get()
-        const code = locales[localeId]?.code
+        const code = locales[locale]?.code
         const newDefaultCode = code && languages[code] ? code : mainLanguageCode
 
         checkConfirmLeaveOut(async () => {
             await Utils.patchRequest('/UserProfile/' + userData.user.id, {
-                localeId: localeId,
+                localeId: locale,
                 disabledLanguages: Object.keys(languages).filter(item => item !== newDefaultCode)
             })
             window.location.reload()
@@ -77,36 +77,21 @@
 
 <div class="btn-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     {#if Object.keys(locales).length > 1}
-        <div class="dropdown has-content">
-            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false">
-                <span class="filter-names">
-                    <i class="ph ph-translate"></i>
-                </span>
-                <i class="ph ph-caret-down"></i>
-            </button>
-            <ul class="dropdown-menu">
-                <li class="disabled"><a
-                        href="javascript:">{Language.translate('Locale', 'scopeNamesPlural', 'Global')}</a></li>
-                {#each Object.entries(locales).sort((v1, v2) => v1[1].name.localeCompare(v2[1].name)) as [id, l] }
-                    <li>
-                        <a href="javascript:" on:click={() =>onLocaleChange(id)} class:active={id===locale}>
-                            {l.name}
-                            {#if id === locale}
-                                <i class="ph ph-check"></i>
-                            {/if}
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        </div>
+        <select class="form-control locale-switcher"
+                style="max-width: 100px; flex: 1;padding: 7px 14px;line-height: 17px"
+                bind:value={locale}
+                on:change={onLocaleChange}>
+            {#each Object.entries(locales) as [id, locale] }
+                <option value="{id}">
+                    {locale.name}
+                </option>
+            {/each}
+        </select>
     {/if}
     {#if Object.keys(languages).length > 1}
         <div class="dropdown has-content">
             <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false">
-                <span class="filter-names">
-                    <i class="{`ph ph-${enabledLanguages.length === Object.keys(languages).length - 1 ? 'globe':'globe-simple' }`}"></i>
-                </span>
-                <i class="ph ph-caret-down"></i>
+                <i class="{`ph ph-${enabledLanguages.length === Object.keys(languages).length - 1 ? 'globe':'globe-simple' }`}"></i>
             </button>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
                 <h5 style="margin-top: 0">{Language.translate('additionalLanguages', 'labels', 'Global')}</h5>
@@ -139,28 +124,24 @@
 </div>
 
 <style>
-    .btn {
+    .btn, .locale-switcher {
         /*background-color: transparent;*/
         color: var(--nav-font-color);
         background-color: var(--nav-menu-background); /* rgba(0, 0, 0, 0.05); */
         border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
     }
 
-    .btn-group > :first-child > .btn {
+    .btn-group > :first-child > .btn, .btn-group > .locale-switcher:first-child {
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
     }
 
-    .btn-group > :last-child > .btn {
+    .btn-group > :last-child > .btn, .btn-group > .locale-switcher:last-child {
         border-bottom-right-radius: 5px;
         border-top-right-radius: 5px;
     }
 
     .btn-group > :nth-child(2) > .btn {
         border-left-width: 0;
-    }
-
-    .dropdown-menu > li > a {
-        padding: 7px 14px;
     }
 </style>
