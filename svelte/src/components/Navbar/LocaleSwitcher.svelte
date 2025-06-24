@@ -27,7 +27,6 @@
             locale = 'main'
         }
     }
-    console.log(locale, locales)
 
     let disabledLanguages = UserData.get()?.user?.disabledLanguages || []
     let defaultLanguageCode = mainLanguageCode
