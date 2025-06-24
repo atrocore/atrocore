@@ -129,10 +129,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 .sort((x, y) => (x.main === y.main) ? 0 : x.main ? -1 : 1); // main lang should be first
 
             this.selectedLanguage = this.languages[0];
-
-            if (typeof this.options.canChangeLanguage === 'boolean') {
-                this.canChangeLanguage = this.options.canChangeLanguage;
-            }
         },
 
         loadPreviewFrame(afterLoad = null) {
