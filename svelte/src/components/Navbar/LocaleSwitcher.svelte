@@ -39,7 +39,7 @@
     disabledLanguages = disabledLanguages.filter(code => !!languages[code])
 
     function setAllLanguages(event) {
-        enabledLanguages = Object.keys(languages)
+        enabledLanguages = Object.keys(languages).filter(item => item !== defaultLanguageCode)
         onLanguageChange()
     }
 
