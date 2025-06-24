@@ -329,7 +329,31 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             Dep.prototype.afterRender.call(this);
 
             this.frame = document.querySelector('.html-preview iframe');
-            this.loadPreviewFrame();
+            this.loadPreviewFrame(() => {
+                let selector = null;
+                if (this.options.selectedScope && this.options.selectedId) {
+                    selector = `[data-editor-type="${this.options.selectedScope}"][data-editor-id="${this.options.selectedId}"]`;
+
+                    if (this.options.selectedField) {
+                        selector += `[data-editor-fields*="${this.options.selectedField}"]`;
+                    }
+                }
+
+                if (selector) {
+                    const el = this.frame?.contentDocument?.querySelector(selector);
+                    if (el) {
+                        el.click();
+
+                        setTimeout(() => {
+                            this.frame.contentWindow.scrollTo({
+                                top: el.getBoundingClientRect().top,
+                                left: 0,
+                                behavior: 'smooth'
+                            });
+                        }, 300);
+                    }
+                }
+            });
         }
     })
 );
