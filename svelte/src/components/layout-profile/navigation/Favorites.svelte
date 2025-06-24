@@ -7,6 +7,7 @@
     import type Item from "./interfaces/Item";
     import {Language} from "../../../utils/Language";
     import {Metadata} from "../../../utils/Metadata";
+    import {Acl} from "../../../utils/Acl";
 
 
     export let params: Params;
@@ -39,7 +40,7 @@
         for (let i = 0; i < navigation.length; i++) {
             let item = navigation[i];
             if (typeof item === 'string') {
-                if (Metadata.get(['scopes', item, 'tab'])) {
+                if (Metadata.get(['scopes', item, 'tab']) && Acl.check(item, 'read')) {
                     enabledItems.push({
                         name: item,
                         label: Language.translate(item, 'scopeNamesPlural'),
@@ -51,7 +52,7 @@
         }
 
         Object.entries(Metadata.get(['scopes'])).forEach(([key, value]) => {
-            if (value.disabled || value.emHidden || !value.tab) {
+            if (value.disabled || value.emHidden || !value.tab || !Acl.check(key, 'read')) {
                 return;
             }
 

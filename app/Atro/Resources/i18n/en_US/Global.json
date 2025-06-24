@@ -423,7 +423,8 @@
     "searchResults": "Search Results",
     "collapseAll": "Collapse all",
     "expandAll": "Expand all",
-    "fullscreen": "Full Screen"
+    "fullscreen": "Full Screen",
+    "Copy": "Copy"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

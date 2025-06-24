@@ -26,7 +26,7 @@ class RoleScope extends Base
         $res = parent::getSelectAttributeList($params);
 
         foreach (RoleRepository::ACTIONS as $action) {
-            if (!in_array("{$action}Action", $res)) {
+            if (!in_array("{$action}Action", $res) && !$this->getMetadata()->get("entityDefs.RoleScope.fields.{$action}Action")) {
                 $res[] = "{$action}Action";
             }
         }

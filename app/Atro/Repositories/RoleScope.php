@@ -34,7 +34,7 @@ class RoleScope extends Base
 
             if (is_array($aclActionList)) {
                 foreach ($actions as $action) {
-                    if (!in_array($scope, $aclActionList)) {
+                    if (!in_array($action, $aclActionList)) {
                         $entity->set("{$action}Action", null);
                     }
                 }

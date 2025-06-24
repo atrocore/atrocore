@@ -381,7 +381,8 @@
     "applySearch": "Застосувати пошук",
     "unsetSearch": "Видалити пошук",
     "searchResults": "Результати пошуку",
-    "fullscreen": "На весь екран"
+    "fullscreen": "На весь екран",
+    "Copy": "Копіювати"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
