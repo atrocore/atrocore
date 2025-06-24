@@ -42,7 +42,7 @@ class MassActions extends AbstractController
             throw new BadRequest();
         }
 
-        if (!property_exists($data, 'where') || !property_exists($data ,'foreignWhere') || !isset($params['scope']) || !isset($params['link'])) {
+        if (!isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
@@ -50,10 +50,23 @@ class MassActions extends AbstractController
             throw new Forbidden();
         }
 
-        $where = json_decode(json_encode($data->where), true);
-        $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
-        return $this->getService('MassActions')
-            ->addRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
+        if (property_exists($data, 'where') && property_exists($data ,'foreignWhere')) {
+            $where = json_decode(json_encode($data->where), true);
+            $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
+
+            return $this->getService('MassActions')->addRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
+        } else if (property_exists($data, 'ids') && property_exists($data ,'foreignIds')) {
+            $ids = $data->ids;
+            $foreignIds = $data->foreignIds;
+
+            if (!is_array($ids) || !is_array($foreignIds)) {
+                throw new BadRequest();
+            }
+
+            return $this->getService('MassActions')->addRelation($ids, $foreignIds, $params['scope'], $params['link']);
+        }
+
+        throw new BadRequest();
     }
 
     public function actionRemoveRelation($params, $data, $request): array
@@ -62,7 +75,7 @@ class MassActions extends AbstractController
             throw new BadRequest();
         }
 
-        if (!property_exists($data, 'where') || !property_exists($data ,'foreignWhere') || !isset($params['scope']) || !isset($params['link'])) {
+        if (!isset($params['scope']) || !isset($params['link'])) {
             throw new BadRequest();
         }
 
@@ -70,9 +83,22 @@ class MassActions extends AbstractController
             throw new Forbidden();
         }
 
-        $where = json_decode(json_encode($data->where), true);
-        $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
-        return $this->getService('MassActions')
-            ->removeRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
+        if (property_exists($data, 'where') && property_exists($data ,'foreignWhere')) {
+            $where = json_decode(json_encode($data->where), true);
+            $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
+
+            return $this->getService('MassActions')->removeRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
+        } else if (property_exists($data, 'ids') && property_exists($data ,'foreignIds')) {
+            $ids = $data->ids;
+            $foreignIds = $data->foreignIds;
+
+            if (!is_array($ids) || !is_array($foreignIds)) {
+                throw new BadRequest();
+            }
+
+            return $this->getService('MassActions')->removeRelation($ids, $foreignIds, $params['scope'], $params['link']);
+        }
+
+        throw new BadRequest();
     }
 }

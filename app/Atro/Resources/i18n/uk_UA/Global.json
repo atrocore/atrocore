@@ -112,6 +112,8 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "selectAll": "Вибрати все",
+    "additionalLanguages": "Мови контенту",
     "jobManager": "Менеджер завдань",
     "customizeLayout": "Налаштувати макет",
     "Reupload": "Перезавантажити",
@@ -381,7 +383,8 @@
     "applySearch": "Застосувати пошук",
     "unsetSearch": "Видалити пошук",
     "searchResults": "Результати пошуку",
-    "fullscreen": "На весь екран"
+    "fullscreen": "На весь екран",
+    "Copy": "Копіювати"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

@@ -728,14 +728,14 @@
 
     function editSaveSearchQuery(item) {
         oldAdvancedFilter = oldAdvancedFilter ?? searchManager.getQueryBuilder();
-        searchManager.update({queryBuilder: item.data});
+        searchManager.update({queryBuilder: item.data, queryBuilderApplied: false});
         prepareFilters(() => {
             const $queryBuilder = window.$(queryBuilderElement)
             try {
                 $queryBuilder.queryBuilder('destroy');
-
                 initQueryBuilderFilter();
                 editingSavedSearch = item;
+                advancedFilterChecked = false;
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
@@ -748,11 +748,36 @@
         });
     }
 
+    function copySaveSearch(item) {
+        searchManager.update({queryBuilder: item.data, queryBuilderApplied: false});
+        prepareFilters(() => {
+            const $queryBuilder = window.$(queryBuilderElement)
+            try {
+                $queryBuilder.queryBuilder('destroy');
+                initQueryBuilderFilter();
+                advancedFilterChecked = false;
+            } catch (e) {
+                console.error(e);
+                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
+            }
+        });
+    }
+
     function cancelEditSearchQuery() {
-        const $queryBuilder = window.$(queryBuilderElement)
-        $queryBuilder.queryBuilder('setRules', oldAdvancedFilter ?? []);
-        oldAdvancedFilter = null;
-        editingSavedSearch = null;
+        searchManager.update({queryBuilder: oldAdvancedFilter, queryBuilderApplied: false});
+        prepareFilters(() => {
+            const $queryBuilder = window.$(queryBuilderElement)
+            try {
+                $queryBuilder.queryBuilder('destroy');
+                initQueryBuilderFilter();
+                advancedFilterChecked = false;
+                oldAdvancedFilter = null;
+                editingSavedSearch = null;
+            } catch (e) {
+                console.error(e);
+                Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
+            }
+        });
     }
 
     function refreshAdvancedFilterDisabled() {
@@ -968,6 +993,7 @@
                 remove={removeSaveSearch}
                 edit={editSaveSearchQuery}
                 cancel={cancelEditSearchQuery}
+                copy={copySaveSearch}
                 uniqueKey={uniqueKey}
                 hideRowAction={uniqueKey.includes('dialog')}
                 bind:opened={savedFiltersOpened}
@@ -975,7 +1001,7 @@
     {/if}
 
     <div class="advanced-filters">
-        <FilterGroup title={Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
+        <FilterGroup title={editingSavedSearch ? editingSavedSearch.name : Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
             <span class="icons-wrapper" slot="icons">
                 <span class="toggle" class:disabled={advancedFilterDisabled} class:active={advancedFilterChecked}
                       on:click|stopPropagation|preventDefault={handleFilterToggle}

@@ -391,7 +391,7 @@ Espo.define(
             },
 
             createAclManager: function () {
-                return new AclManager(this.user, null);
+                return new AclManager(this.user, null, this.metadata);
             },
 
             initView: function () {
