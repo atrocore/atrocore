@@ -10,7 +10,7 @@
                 {{#each filterList}}
                 <button class="btn btn-default{{#ifEqual this ../filter}} active{{/ifEqual}}" data-action="selectFilter" data-name="{{./this}}">{{translate this scope='Note' category='filters'}}</button>
                 {{/each}}
-                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}" style="line-height: 0;">&nbsp;&nbsp;<i class="ph ph-arrows-clockwise" style="font-size: 19px;"></i>&nbsp;&nbsp;</button>
+                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotes' category='messages'}}">&nbsp;&nbsp;<i class="ph ph-arrows-clockwise"></i>&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>
