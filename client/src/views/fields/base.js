@@ -233,11 +233,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         getTooltipText() {
-            if (this.model.get('attributesDefs')) {
-                return this.model.get('attributesDefs')[this.name]?.tooltipText;
+            let tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
+
+            if (this.model.get('attributesDefs') && this.model.get('attributesDefs')[this.name]) {
+                tooltipText = this.model.get('attributesDefs')[this.name]?.tooltipText;
             }
 
-            const tooltipText = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipText']);
             const tooltipDefaultTranslate = this.translate(this.name, 'tooltips', this.model.name);
             const tooltipTextTranslate = this.translate(tooltipText, 'tooltips', this.model.name);
             let tooltipTextValue = null;
