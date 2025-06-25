@@ -30,78 +30,26 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/modals/edit', 'views/modal', function (Dep) {
+Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
 
     return Dep.extend({
-
         cssName: 'edit-modal',
-
-        header: false,
-
-        template: 'modals/edit',
-
-        saveDisabled: false,
-
-        fullFormDisabled: false,
 
         editView: null,
 
-        columnCount: 2,
-
         escapeDisabled: true,
 
-        fitHeight: true,
-
-        className: 'dialog dialog-record',
-
-        sideDisabled: false,
-
-        bottomDisabled: false,
+        mode: 'edit',
 
         setup: function () {
-
-            var self = this;
-
-            this.buttonList = [];
-
-            if ('saveDisabled' in this.options) {
-                this.saveDisabled = this.options.saveDisabled;
-            }
-
-            if (!this.saveDisabled) {
-                this.buttonList.push({
-                    name: 'save',
-                    label: 'Save',
-                    style: 'primary',
-                });
-            }
-
-            this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
-
-            this.layoutName = this.options.layoutName || this.layoutName;
-
-            if (!this.fullFormDisabled) {
-                this.buttonList.push({
-                    name: 'fullForm',
-                    label: 'Full Form'
-                });
-            }
-
-            this.buttonList.push({
-                name: 'cancel',
-                label: 'Cancel'
-            });
-
-            this.scope = this.scope || this.options.scope;
             if (this.options.relate) {
                 this.relationScope = Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', this.scope, 'links', this.options.relate.link, 'relationName']))
             }
-            this.id = this.options.id;
 
-            this.sourceModel = this.model;
+            Dep.prototype.setup.call(this)
+        },
 
-            this.waitForView('edit');
-
+        setupModels: function () {
             let preparedNonInheritedFields = [];
             this.getNonInheritedFields().forEach(field => {
                 if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.type`) === 'link') {
@@ -127,6 +75,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                         model.id = this.id;
                     }
                     model.once('sync', function () {
+                        this.setupHeaderAndButtons()
                         this.createRecordView(model);
                     }, this);
                     model.fetch();
@@ -153,37 +102,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                     if (this.options.attributes) {
                         model.set(this.options.attributes);
                     }
+                    this.setupHeaderAndButtons()
                     this.createRecordView(model);
                 }
             })
-
-            if (!this.id) {
-                this.header = `${this.getLanguage().translate(this.scope, 'scopeNames')}: ${this.translate('New')}`;
-            } else {
-                this.header = this.getLanguage().translate('Edit') + ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
-            }
-
-            const iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-
-            this.header = iconHtml + this.header;
-
-            this.listenTo(this.model, 'change', () => {
-                if(this.dialog && this.dialog.$el) {
-                    this.dialog.$el.trigger('shown.bs.modal')
-                }
-            });
-
-            if (!this.model.isNew()) {
-                this.listenTo(this, 'after:render', () => {
-                    if ((this.options.htmlStatusIcons || []).length > 0) {
-                        const iconsContainer = $('<div class="icons-container pull-right"></div>');
-                        this.options.htmlStatusIcons.forEach(icon => iconsContainer.append(icon));
-                        this.$el.find('.modal-body').prepend(iconsContainer);
-                    }
-
-                    this.applyOverviewFilters();
-                });
-            }
         },
 
         getModels(callback) {
@@ -246,7 +168,7 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 'views/record/edit-small';
             var options = {
                 model: model,
-                el: this.containerSelector + ' .edit-container',
+                el: this.containerSelector + ' .record-container',
                 layoutName: this.layoutName,
                 layoutRelatedScope: this.options.layoutRelatedScope,
                 columnCount: this.columnCount,
@@ -257,87 +179,10 @@ Espo.define('views/modals/edit', 'views/modal', function (Dep) {
                 }
             };
             this.handleRecordViewOptions(options);
-            this.createView('edit', viewName, options, callback);
+            this.createView('record', viewName, options, callback);
         },
 
         handleRecordViewOptions: function (options) {
-        },
-
-        actionSave: function () {
-            let editView = this.getView('edit');
-            if (!editView) {
-                return;
-            }
-
-            var model = editView.model;
-            if (this.options.relate && this.options.relate.model) {
-                model.defs['_relationName'] = this.options.relate.model.defs['_relationName'];
-            }
-            editView.once('after:save', function () {
-                this.trigger('after:save', model);
-                this.dialog.close();
-            }, this);
-
-            var $buttons = this.dialog.$el.find('.modal-footer button');
-            $buttons.addClass('disabled').attr('disabled', 'disabled');
-
-            editView.once('cancel:save', function () {
-                $buttons.removeClass('disabled').removeAttr('disabled');
-            }, this);
-
-            editView.save();
-        },
-
-        actionFullForm: function (dialog) {
-            var url;
-            var router = this.getRouter();
-            if (!this.id) {
-                url = '#' + this.scope + '/create';
-
-                var attributes = this.getView('edit').fetch();
-                var model = this.getView('edit').model;
-                attributes = _.extend(attributes, model.getClonedAttributes());
-
-                var options = {
-                    attributes: attributes,
-                    relate: this.options.relate,
-                    returnUrl: this.options.returnUrl || Backbone.history.fragment,
-                    returnDispatchParams: this.options.returnDispatchParams || null,
-                };
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
-                }
-
-                setTimeout(function () {
-                    router.dispatch(this.scope, 'create', options);
-                    router.navigate(url, {trigger: false});
-                }.bind(this), 10);
-            } else {
-                url = '#' + this.scope + '/edit/' + this.id;
-
-                var attributes = this.getView('edit').fetch();
-                var model = this.getView('edit').model;
-                attributes = _.extend(attributes, model.getClonedAttributes());
-
-                var options = {
-                    attributes: attributes,
-                    returnUrl: this.options.returnUrl || Backbone.history.fragment,
-                    returnDispatchParams: this.options.returnDispatchParams || null,
-                    model: this.sourceModel,
-                    id: this.id
-                };
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
-                }
-
-                setTimeout(function () {
-                    router.dispatch(this.scope, 'edit', options);
-                    router.navigate(url, {trigger: false});
-                }.bind(this), 10);
-            }
-
-            this.trigger('leave');
-            this.dialog.close();
         }
     });
 });
