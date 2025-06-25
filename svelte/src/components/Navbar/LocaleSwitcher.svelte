@@ -76,24 +76,28 @@
 
 <div class="btn-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     {#if Object.keys(locales).length > 1}
-        <select class="form-control locale-switcher"
-                style="max-width: 100px; flex: 1;padding: 7px 14px;line-height: 17px"
-                bind:value={locale}
-                on:change={onLocaleChange}>
-            {#each Object.entries(locales) as [id, locale] }
-                <option value="{id}">
-                    {locale.name}
-                </option>
-            {/each}
-        </select>
+        <div>
+            <select class="form-control locale-switcher"
+                    style="max-width: 100px; flex: 1;"
+                    bind:value={locale}
+                    on:change={onLocaleChange}>
+                <optgroup label="{Language.translate('Locale','scopeNamesPlural','Global')}">
+                </optgroup>
+                {#each Object.entries(locales) as [id, locale] }
+                    <option value="{id}">
+                        {locale.name}
+                    </option>
+                {/each}
+            </select>
+        </div>
     {/if}
     {#if Object.keys(languages).length > 1}
         <div class="dropdown has-content">
-            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false">
-                <i class="{`ph ph-${enabledLanguages.length === Object.keys(languages).length - 1 ? 'globe':'globe-simple' }`}"></i>
+            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false" style="padding: 6px 12px">
+                <i class="{`ph ph-${enabledLanguages.length >= Object.keys(languages).length - 1 ? 'globe-simple':'translate' }`}" style="display: block"></i>
             </button>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
-                <h5 style="margin-top: 0">{Language.translate('additionalLanguages', 'labels', 'Global')}</h5>
+                <h5 style="margin-top: 0">{Language.translate('contentLanguages', 'labels', 'Global')}</h5>
                 <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                     {#if defaultLanguageCode}
                         <li class="checkbox">
@@ -130,12 +134,12 @@
         border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
     }
 
-    .btn-group > :first-child > .btn, .btn-group > .locale-switcher:first-child {
+    .btn-group > :first-child > .btn, .btn-group > :first-child > .locale-switcher{
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
     }
 
-    .btn-group > :last-child > .btn, .btn-group > .locale-switcher:last-child {
+    .btn-group > :last-child > .btn, .btn-group > :last-child > .locale-switcher {
         border-bottom-right-radius: 5px;
         border-top-right-radius: 5px;
     }

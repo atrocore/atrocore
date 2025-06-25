@@ -113,7 +113,7 @@
   },
   "labels": {
     "selectAll": "Вибрати все",
-    "additionalLanguages": "Мови контенту",
+    "contentLanguages": "Мови контенту",
     "jobManager": "Менеджер завдань",
     "customizeLayout": "Налаштувати макет",
     "Reupload": "Перезавантажити",

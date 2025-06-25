@@ -136,7 +136,7 @@
   },
   "labels": {
     "selectAll": "Sélectionner tout",
-    "additionalLanguages": "Langues de contenu",
+    "contentLanguages": "Langues de contenu",
     "Access": "Accès",
     "customDownload": "Téléchargement personnalisé",
     "Reupload": "Reupload",
