@@ -66,7 +66,7 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
 
             const locale = locales[localeId]
             if (locale) {
-                this.thousandSeparator = locale['thousandSeparator']
+                this.thousandSeparator = locale['thousandSeparator'] || '';
                 this.decimalMark = locale['decimalMark']
             }
 

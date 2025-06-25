@@ -203,6 +203,7 @@
     },
     "thousandSeparator": {
       "type": "varchar",
+      "default": "",
       "maxLength": 1,
       "view": "views/settings/fields/thousand-separator"
     },
