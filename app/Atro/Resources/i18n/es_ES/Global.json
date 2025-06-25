@@ -68,7 +68,7 @@
   },
   "labels": {
     "selectAll": "Seleccionar todo",
-    "additionalLanguages": "Lenguas de contenido",
+    "contentLanguages": "Lenguas de contenido",
     "customizeLayout": "Personalizar diseño",
     "Merge": "Unir",
     "None": "Ninguno",

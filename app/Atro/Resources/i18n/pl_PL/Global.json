@@ -98,7 +98,7 @@
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
-    "additionalLanguages": "Języki treści",
+    "contentLanguages": "Języki treści",
     "customizeLayout": "Dostosuj układ",
     "Reupload": "Prześlij ponownie",
     "attachFiles": "Dołączanie plików",
