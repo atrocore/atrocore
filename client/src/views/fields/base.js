@@ -176,10 +176,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
          * {jQuery}
          */
         getLabelElement: function () {
-            if (!this.$label || !this.$label.size()) {
-                this.$label = this.$el.parent().children('label');
-            }
-            return this.$label;
+            return this.$el.parent().children('label');
         }, /**
          * Hide field and label. Works only after rendered.
          */
@@ -403,6 +400,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const label = this.getLabelElement();
             if (label.find('.status-icons').size() === 0) {
                 label.append('<sup class="status-icons"></sup>');
+                if (this.name === 'date'){
+                    console.log('1')
+                }
             }
 
             if (this.getCellElement().children('.inline-actions').size() === 0) {
