@@ -67,6 +67,8 @@
     "SystemIcon": "Iconos del sistema"
   },
   "labels": {
+    "selectAll": "Seleccionar todo",
+    "additionalLanguages": "Lenguas de contenido",
     "customizeLayout": "Personalizar diseño",
     "Merge": "Unir",
     "None": "Ninguno",
