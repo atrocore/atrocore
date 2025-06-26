@@ -2632,7 +2632,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 createView: parentView.createView.bind(this),
                 isCollapsed: !['edit', 'detail'].includes(this.mode),
                 loadSummary: () => {
-                    this.createView('rightSideView', parentView.rightSideView, {
+                    parentView.createView('rightSideView', parentView.rightSideView, {
                         el: parentView.options.el + ' .right-side-view .summary',
                         scope: this.scope,
                         mode: this.mode,
@@ -2653,7 +2653,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         });
 
                         if (this.getUser().isAdmin() && this.mode === 'detail') {
-                            this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                            parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
                                 scope: this.scope,
                                 viewType: 'rightSideView',
                                 layoutData: view.layoutData,

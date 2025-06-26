@@ -342,17 +342,25 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (recordView?.sideView && rightContainer) {
                 const props = recordView.getSvelteSideViewProps(this);
-                if (window['SvelteRightSideView' + this.dialog.id]) {
-                    try {
-                        window['SvelteRightSideView' + this.dialog.id].$destroy()
-                    } catch (e) {
-                    }
-                }
+                this.destroySveltePanel()
 
                 window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
                     target: rightContainer,
                     props: props
                 });
+
+                this.dialog.$el.on('hidden.bs.modal', (e) => {
+                    this.destroySveltePanel();
+                });
+            }
+        },
+
+        destroySveltePanel: function () {
+            if (window['SvelteRightSideView' + this.dialog.id]) {
+                try {
+                    window['SvelteRightSideView' + this.dialog.id].$destroy()
+                } catch (e) {
+                }
             }
         },
 
