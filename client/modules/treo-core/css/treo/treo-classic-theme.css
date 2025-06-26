@@ -14323,6 +14323,11 @@ button.category:focus {
         background-color: #ffffff;
     }
 
+    .modal-dialog .edit > .overview,
+    .modal-dialog .detail > .overview {
+        min-height: auto;
+    }
+
     .modal-dialog .edit > .row > .overview.col-sm-12,
     .modal-dialog .detail > .row > .overview.col-sm-12 {
         min-height: unset;

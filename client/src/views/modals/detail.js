@@ -114,7 +114,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
 
             this.buttonList.push({
-                name: 'cancel',
+                name: 'close',
                 label: 'Close'
             });
 
@@ -217,19 +217,12 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, true);
         },
 
-        removeEditButton: function () {
-            this.removeButton('edit');
-        },
 
         addRemoveButton: function () {
             this.addButton({
                 name: 'remove',
                 label: 'Remove'
             }, true);
-        },
-
-        removeRemoveButton: function () {
-            this.removeButton('remove');
         },
 
         getScope: function () {
@@ -260,35 +253,46 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);
-                if (editAccess) {
-                    this.showButton('edit');
-                } else {
-                    this.hideButton('edit');
-                    if (editAccess === null) {
-                        this.listenToOnce(model, 'sync', function () {
-                            if (this.getAcl().check(model, 'edit')) {
-                                this.showButton('edit');
-                            }
-                        }, this);
-                    }
+                if (editAccess === null) {
+                    this.listenToOnce(model, 'sync', function () {
+                        this.controlActionButtons()
+                    }, this);
                 }
             }
 
             if (!this.removeDisabled) {
                 var removeAccess = this.getAcl().check(model, 'delete', true);
-                if (removeAccess) {
-                    this.showButton('remove');
-                } else {
-                    this.hideButton('remove');
-                    if (removeAccess === null) {
-                        this.listenToOnce(model, 'sync', function () {
-                            if (this.getAcl().check(model, 'delete')) {
-                                this.showButton('remove');
-                            }
-                        }, this);
-                    }
+                if (removeAccess === null) {
+                    this.listenToOnce(model, 'sync', function () {
+                        this.controlActionButtons()
+                    }, this);
                 }
             }
+
+            this.controlActionButtons()
+        },
+
+        controlActionButtons: function () {
+            const hiddenButtons = []
+            if (this.mode === 'edit') {
+                hiddenButtons.push('edit', 'close', 'remove', 'next', 'previous');
+            } else {
+                hiddenButtons.push('save', 'cancel');
+                if (!this.getAcl().check(this.model, 'edit', true)) {
+                    hiddenButtons.push('edit');
+                }
+                if (!this.getAcl().check(this.model, 'delete', true)) {
+                    hiddenButtons.push('delete');
+                }
+            }
+
+            this.buttonList.forEach(button => {
+                if (hiddenButtons.includes(button.name)) {
+                    this.hideButton(button.name);
+                } else {
+                    this.showButton(button.name);
+                }
+            })
         },
 
         createRecordView: function (callback) {
@@ -338,21 +342,24 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (recordView?.sideView && rightContainer) {
                 const props = recordView.getSvelteSideViewProps(this);
-                if (!window['SvelteRightSideView' + this.dialog.id]) {
-
-                    window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
-                        target: rightContainer,
-                        props: props
-                    });
-                } else {
-                    window['SvelteRightSideView' + this.dialog.id].$set(props)
+                if (window['SvelteRightSideView' + this.dialog.id]) {
+                    try {
+                        window['SvelteRightSideView' + this.dialog.id].$destroy()
+                    } catch (e) {
+                    }
                 }
+
+                window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
+                    target: rightContainer,
+                    props: props
+                });
             }
         },
 
         getRecordView() {
             return this.getView('record')
         },
+
 
         controlNavigationButtons: function () {
             var recordView = this.getRecordView();
@@ -467,17 +474,15 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionCancel: function () {
-            if (this.mode === 'edit') {
-                this.getRecordView().cancelEdit()
-            } else {
-                this.trigger('cancel');
-                this.dialog.close();
-            }
+            this.getRecordView().cancelEdit()
+            this.mode = 'detail'
+            this.controlActionButtons()
         },
-
 
         setEditMode: function () {
             this.getRecordView().actionEdit();
+            this.mode = 'edit'
+            this.controlActionButtons();
         },
 
         actionSave: function () {

@@ -42,6 +42,8 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
         mode: 'edit',
 
         setup: function () {
+            this.scope = this.scope || this.options.scope;
+
             if (this.options.relate) {
                 this.relationScope = Espo.utils.upperCaseFirst(this.getMetadata().get(['entityDefs', this.scope, 'links', this.options.relate.link, 'relationName']))
             }
@@ -183,7 +185,11 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
         },
 
         handleRecordViewOptions: function (options) {
-        }
+        },
+
+        actionCancel: function () {
+            Dep.prototype.actionClose.call(this);
+        },
     });
 });
 
