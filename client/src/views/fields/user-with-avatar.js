@@ -45,20 +45,14 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
             return o;
         },
 
-        setup() {
-            Dep.prototype.setup.call(this);
-
-            this.listenTo(this.model, 'change:' + this.idName, () => {
-                this.clearView('tooltip');
-            });
-        },
-
         getAvatarHtml: function () {
             return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 28, 'avatar-link');
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            this.clearView('tooltip');
 
             if (this.$el.length) {
                 const streamCode = this.$el.closest('code.was, code.became');
@@ -87,7 +81,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
                         arrow: true,
                         content: '<img height="12" src="client/img/atro-loader.svg">',
                         delay: [700, 0],
-                        hideOnClick: false,
+                        hideOnClick: true,
                         interactive: true,
                         maxWidth: 350,
                         onShow: (instance, event) => {
