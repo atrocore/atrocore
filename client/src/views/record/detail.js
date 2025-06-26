@@ -1482,26 +1482,31 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     let isAttributeValuePanel = attributePanels.includes(panelName);
 
                     if (isAttributeValuePanel && this.getMetadata().get(['scopes', this.model.name, 'hasAttribute']) && this.getAcl().check(this.model.name, 'createAttributeValue')) {
-                        const linkingEnabled = !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
 
-                        let html = '<div class="btn-group pull-right">' +
-                            (linkingEnabled ? '<button type="button" class="btn btn-default btn-sm add-attribute-value-container"><i class="ph ph-plus"></i></button>' : '') +
-                            '<button type="button" class="btn btn-default btn-sm close-attribute-panel" ><i class="ph ph-x"></i></button>' +
-                            '</div>';
-                        $el.append(html);
-                        if (linkingEnabled) {
-                            $el.find('.add-attribute-value-container').click(() => {
-                                this.actionAddAttribute(panelName);
+                        if(!this.isSmall){
+                            const linkingEnabled = !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
+
+                            let html = '<div class="btn-group pull-right">' +
+                                (linkingEnabled ? '<button type="button" class="btn btn-default btn-sm add-attribute-value-container"><i class="ph ph-plus"></i></button>' : '') +
+                                '<button type="button" class="btn btn-default btn-sm close-attribute-panel" ><i class="ph ph-x"></i></button>' +
+                                '</div>';
+                            $el.append(html);
+                            if (linkingEnabled) {
+                                $el.find('.add-attribute-value-container').click(() => {
+                                    this.actionAddAttribute(panelName);
+                                });
+                            }
+                            $el.find('.close-attribute-panel').click(() => {
+                                this.confirm({
+                                    message: this.translate('closePanelConfirmation', 'messages'),
+                                    confirmText: this.translate('Close')
+                                }, () => {
+                                    this.actionCloseAttributeValuePanel(panelName);
+                                });
                             });
                         }
-                        $el.find('.close-attribute-panel').click(() => {
-                            this.confirm({
-                                message: this.translate('closePanelConfirmation', 'messages'),
-                                confirmText: this.translate('Close')
-                            }, () => {
-                                this.actionCloseAttributeValuePanel(panelName);
-                            });
-                        });
+
+
 
                         $el.find('.panel-title').prepend('<span class="collapser" >\n' +
                             '        <i class="ph ph-caret-up-down"></i>\n' +
@@ -2349,7 +2354,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 type: this.type,
                 inlineEditDisabled: this.inlineEditDisabled,
                 recordHelper: this.recordHelper,
-                recordViewObject: this
+                recordViewObject: this,
+                isInSmallView: this.isSmall,
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
                     this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(view.panelList) });

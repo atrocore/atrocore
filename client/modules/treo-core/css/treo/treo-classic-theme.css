@@ -6595,15 +6595,6 @@ button.close {
     padding: 0;
 }
 
-.modal-body .overview .cell,
-.modal-body .side .cell {
-    padding: 0;
-}
-
-.modal-body .list-container {
-    padding: 0 14px;
-}
-
 .modal-body .search-container .search-row .input-group {
     margin: 0;
 }
@@ -6679,14 +6670,6 @@ button.close {
 
     .modal-sm {
         width: 300px
-    }
-
-    .modal-body .overview .cell:not(.hidden-cell):not(.col-sm-12) {
-        padding-right: 16px;
-    }
-
-    .modal-body .overview .cell:not(.hidden-cell) + .cell {
-        padding-right: 0;
     }
 }
 

@@ -2796,6 +2796,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
 
+            if (this.options.openInTab) {
+                window.open(`/#${scope}/view/${id}`, "_blank");
+                return
+            }
+
             if (!this.quickDetailDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
@@ -2880,6 +2885,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var scope = data.scope || model.name || this.scope;
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+            if (this.options.openInTab) {
+                window.open(`/#${scope}/edit/${id}`, "_blank");
+                return
+            }
 
             if (!this.quickEditDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
