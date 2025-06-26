@@ -40,30 +40,66 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         data: function () {
             var o = _.extend({}, Dep.prototype.data.call(this));
-            if (this.mode === 'detail') {
-                o.avatar = this.getAvatarHtml();
-            }
+            o.avatar = this.getAvatarHtml();
+
             return o;
         },
 
         getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 32, 'avatar-link');
+            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 28, 'avatar-link');
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             if (this.$el.length) {
-                let label = this.$el.siblings('.control-label');
-                const inSidePanel = $(this.$el).closest('.side').length === 1
-                if (label.length) {
-                    if (this.model.get(this.idName) && inSidePanel && this.mode !== 'edit') {
-                        label.css({'margin-left': '39px'});
-                    } else {
-                        if (label.css('margin-left')) {
-                            label.css({'margin-left': '0'});
-                        }
-                    }
+                const streamCode = this.$el.closest('code.was, code.became');
+                const avatar = this.$el.find('img.avatar');
+                const link = this.$el.find('.user-link');
+
+                if (streamCode.length && avatar.length) {
+                    avatar.remove();
+                }
+
+                if (!this.getAcl().check('User', 'read')) {
+                    return;
+                }
+
+                let tooltipTrigger = null;
+                if (avatar.length) {
+                    tooltipTrigger = avatar.get(0);
+                } else if (link.length) {
+                    tooltipTrigger = link.get(0);
+                }
+
+                if (tooltipTrigger) {
+                    window.tippy(tooltipTrigger, {
+                        allowHTML: true,
+                        appendTo: () => document.body,
+                        arrow: true,
+                        content: '<img height="12" src="client/img/atro-loader.svg">',
+                        delay: [700, 0],
+                        hideOnClick: false,
+                        interactive: true,
+                        maxWidth: 350,
+                        onShow: (instance, event) => {
+                            if (this.hasView('tooltip')) {
+                                return;
+                            }
+
+                            this.getModelFactory().create('User', (model) => {
+                                model.set('id', this.model.get(this.idName));
+                                model.fetch();
+
+                                this.listenTo(model, 'sync', () => {
+                                    this.createView('tooltip', 'views/fields/user-with-avatar/tooltip', {
+                                        model: model
+                                    }, view => view.getHtml(html => instance.setContent(html)));
+                                })
+                            })
+                        },
+                        trigger: 'mouseenter',
+                    });
                 }
             }
         }
