@@ -4,7 +4,7 @@
             <h3>{{translate 'Notifications'}}</h3>
         </div>
         <div class="col-sm-5">
-            <div class="pull-right btn-group">
+            <div class="pull-right btn-group" style="display: inline-flex;align-items:stretch;">
                 <button class="btn btn-default" data-action="markAllNotificationsRead" title="{{translate 'Mark all read'}}">{{translate 'Mark all read'}}</button>
                 <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotifications' category='messages'}}">&nbsp;&nbsp;<i class="ph ph-arrows-clockwise"></i>&nbsp;&nbsp;</button>
             </div>
