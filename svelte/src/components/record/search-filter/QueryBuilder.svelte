@@ -1003,6 +1003,7 @@
     <div class="advanced-filters">
         <FilterGroup title={editingSavedSearch ? editingSavedSearch.name : Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
             <span class="icons-wrapper" slot="icons">
+                {#if !editingSavedSearch}
                 <span class="toggle" class:disabled={advancedFilterDisabled} class:active={advancedFilterChecked}
                       on:click|stopPropagation|preventDefault={handleFilterToggle}
                 >
@@ -1012,6 +1013,7 @@
                         <i class="ph-fill ph-toggle-left"></i>
                     {/if}
                 </span>
+                {/if}
             </span>
 
             <div class="query-builder" bind:this={queryBuilderElement}></div>
