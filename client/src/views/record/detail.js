@@ -880,7 +880,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
-            this.model.trigger('after:change-mode', 'edit');
+            this.triggerModeChangedOnModel('edit');
         },
 
         setDetailMode: function () {
@@ -899,7 +899,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'detail';
             this.trigger('after:set-detail-mode');
-            this.model.trigger('after:change-mode', 'detail');
+            this.triggerModeChangedOnModel('detail')
+        },
+
+        triggerModeChangedOnModel(mode) {
+            this.model.trigger('after:change-mode', mode);
         },
 
         cancelEdit: function () {
@@ -1205,10 +1209,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenTo(this.model, 'sync', () => {
                     if (this.layoutHasActionFields()) {
                         this.fetchDynamicFieldActions(() => {
-                            this.refreshLayout(true);
+                            if (this.mode !== 'edit') {
+                                this.refreshLayout(true);
+                            }
                         })
                     } else {
-                        this.refreshLayout();
+                        if (this.mode !== 'edit') {
+                            this.refreshLayout();
+                        }
                     }
                 });
 
@@ -1247,7 +1255,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
                             if (data.timestamp !== res.timestamp) {
                                 res.timestamp = data.timestamp;
                                 this.model.fetch();
@@ -2161,7 +2169,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         return
                     }
 
-                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)){
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)) {
                         return
                     }
 
