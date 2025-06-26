@@ -45,6 +45,14 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
             return o;
         },
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:' + this.idName, () => {
+                this.clearView('tooltip');
+            });
+        },
+
         getAvatarHtml: function () {
             return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 28, 'avatar-link');
         },
