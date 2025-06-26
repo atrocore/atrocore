@@ -202,10 +202,16 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.prepareFrameDimensions(this.frame);
 
+            this.loadFrameCssFile('client/css/preview.css');
+
+            this.prepareEditorElements(this.frame.contentDocument);
+        },
+
+        loadFrameCssFile(filename) {
             const link = this.frame.contentDocument.createElement("link");
             link.rel = "stylesheet";
             link.type = "text/css";
-            link.href = "client/css/preview.css";
+            link.href = filename;
 
             if (Espo?.loader?.cacheTimestamp) {
                 link.href += `?cacheTimestamp=${Espo.loader.cacheTimestamp}`;
@@ -213,7 +219,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.frame.contentDocument.head.appendChild(link);
 
-            this.prepareEditorElements(this.frame.contentDocument);
         },
 
         prepareFrameDimensions(iframe) {
