@@ -12,6 +12,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
     Dep => Dep.extend({
         template: 'preview-template/modals/preview',
 
+        sideEditView: 'views/preview-template/record/panels/side-edit',
+
         className: 'full-page-modal',
 
         htmlContent: null,
@@ -272,7 +274,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
 
-            this.createView('sideEdit', 'views/preview-template/record/panels/side-edit', {
+            this.createView('sideEdit', this.sideEditView, {
                 el: '.full-page-modal .html-preview .side-container',
                 scope: scope,
                 id: id,
