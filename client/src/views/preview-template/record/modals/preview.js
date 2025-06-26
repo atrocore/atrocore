@@ -206,6 +206,11 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             link.rel = "stylesheet";
             link.type = "text/css";
             link.href = "client/css/preview.css";
+
+            if (Espo?.loader?.cacheTimestamp) {
+                link.href += `?cacheTimestamp=${Espo.loader.cacheTimestamp}`;
+            }
+
             this.frame.contentDocument.head.appendChild(link);
 
             this.prepareEditorElements(this.frame.contentDocument);
