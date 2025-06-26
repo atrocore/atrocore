@@ -42,7 +42,6 @@ class CreateAction extends AbstractConsole
 namespace CustomActions;
 
 use Atro\ActionTypes\AbstractAction;
-use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
 
 class {{name}} extends AbstractAction
