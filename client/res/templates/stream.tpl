@@ -6,7 +6,7 @@
             {{/if}}
         </div>
         <div class="col-sm-5 col-xs-7">
-            <div class="pull-right btn-group">
+            <div class="pull-right btn-group" style="display: inline-flex;align-items: stretch;">
                 {{#each filterList}}
                 <button class="btn btn-default{{#ifEqual this ../filter}} active{{/ifEqual}}" data-action="selectFilter" data-name="{{./this}}">{{translate this scope='Note' category='filters'}}</button>
                 {{/each}}
