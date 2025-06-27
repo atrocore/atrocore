@@ -166,11 +166,13 @@ Espo.define('view', [], function () {
         },
 
         setPageTitle: function (title) {
-            var prefix = this.getConfig().get('applicationName') || '';
+            let prefix = this.getConfig().get('applicationName') || '';
+
             if (title && prefix) {
-                prefix += ' | '
+                prefix += ' | ';
             }
-            $('head title').text(prefix + title);
+
+            $('head title').text(title ? prefix + title : prefix);
         },
 
         translate: function (label, category, scope) {
