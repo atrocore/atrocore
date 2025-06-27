@@ -659,7 +659,6 @@
                 cancelEditSearchQuery()
             }
             Notifier.notify(Language.translate('Done'), 'success');
-            // updateCollection();
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
             Notifier.notify(false)
