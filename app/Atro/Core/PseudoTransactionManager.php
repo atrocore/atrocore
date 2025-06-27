@@ -39,10 +39,6 @@ class PseudoTransactionManager
     {
         $this->container = $container;
         $this->connection = \Atro\Core\Factories\Connection::createConnection($container->get('config')->get('database'));
-
-        $this->systemContainer = new Container();
-        $auth = new \Espo\Core\Utils\Auth($this->systemContainer);
-        $auth->useNoAuth();
     }
 
     public static function hasJobs(): bool
@@ -349,19 +345,30 @@ class PseudoTransactionManager
         }
     }
 
+    public function getSystemContainer() : Container
+    {
+        if (empty($this->systemContainer)) {
+            $this->systemContainer = new Container();
+            $auth = new \Espo\Core\Utils\Auth($this->systemContainer);
+            $auth->useNoAuth();
+        }
+
+        return $this->systemContainer;
+    }
+
     protected function getServiceFactory(): ServiceFactory
     {
-        return $this->systemContainer->get('serviceFactory');
+        return $this->getSystemContainer()->get('serviceFactory');
     }
 
     protected function setSystemContainerUser(string $userId): void
     {
         /** @var EntityManager $em */
-        $em = $this->systemContainer->get('entityManager');
+        $em = $this->getSystemContainer()->get('entityManager');
 
         $user = $em->getRepository('User')->get($userId);
         $em->setUser($user);
-        $this->systemContainer->setUser($user);
+        $this->getSystemContainer()->setUser($user);
     }
 
     protected function getUser(): User
