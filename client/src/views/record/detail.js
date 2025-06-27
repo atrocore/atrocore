@@ -882,7 +882,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'edit';
             this.trigger('after:set-edit-mode');
-            this.model.trigger('after:change-mode', 'edit');
+            this.triggerModeChangedOnModel('edit');
         },
 
         setDetailMode: function () {
@@ -901,7 +901,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'detail';
             this.trigger('after:set-detail-mode');
-            this.model.trigger('after:change-mode', 'detail');
+            this.triggerModeChangedOnModel('detail')
+        },
+
+        triggerModeChangedOnModel(mode) {
+            this.model.trigger('after:change-mode', mode);
         },
 
         cancelEdit: function () {
@@ -1207,10 +1211,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.listenTo(this.model, 'sync', () => {
                     if (this.layoutHasActionFields()) {
                         this.fetchDynamicFieldActions(() => {
-                            this.refreshLayout(true);
+                            if (this.mode !== 'edit') {
+                                this.refreshLayout(true);
+                            }
                         })
                     } else {
-                        this.refreshLayout();
+                        if (this.mode !== 'edit') {
+                            this.refreshLayout();
+                        }
                     }
                 });
 
