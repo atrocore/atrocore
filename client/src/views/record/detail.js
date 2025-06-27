@@ -144,6 +144,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         layoutData: null,
 
+        mode: 'detail',
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -1247,7 +1249,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
                             if (data.timestamp !== res.timestamp) {
                                 res.timestamp = data.timestamp;
                                 this.model.fetch();
@@ -2161,7 +2163,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         return
                     }
 
-                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)){
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(name)) {
                         return
                     }
 
@@ -2612,5 +2614,77 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             });
         },
+
+        canLoadActivities: function () {
+            let streamAllowed = this.model
+                ? this.getAcl().checkModel(this.model, 'stream', true)
+                : this.getAcl().check(this.scope, 'stream');
+            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
+        },
+
+        getSvelteSideViewProps(parentView) {
+            return {
+                scope: this.scope,
+                model: this.model,
+                mode: this.mode,
+                hasStream: this.canLoadActivities() && !!this.model.id,
+                showSummary: ['edit', 'detail'].includes(this.mode),
+                createView: parentView.createView.bind(this),
+                isCollapsed: !['edit', 'detail'].includes(this.mode),
+                loadSummary: () => {
+                    parentView.createView('rightSideView', parentView.rightSideView, {
+                        el: parentView.options.el + ' .right-side-view .summary',
+                        scope: this.scope,
+                        mode: this.mode,
+                        model: this.model
+                    }, view => {
+                        this.listenTo(view, 'after:render', () => {
+                            if (this.mode === 'edit') {
+                                view.setEditMode();
+                            } else {
+                                view.setDetailMode()
+                            }
+                        });
+
+                        view.render();
+
+                        this.listenTo(this.model, 'sync', () => {
+                            view.reRender();
+                        });
+
+                        if (this.getUser().isAdmin() && this.mode === 'detail') {
+                            parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                scope: this.scope,
+                                viewType: 'rightSideView',
+                                layoutData: view.layoutData,
+                                el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
+                            }, (v) => {
+                                v.on("refresh", () => {
+                                    view.refreshLayout()
+                                })
+                                v.render()
+                            })
+                        }
+
+                    });
+                },
+                loadActivities: (callback) => {
+                    let el = parentView.options.el + ' .right-side-view .activities'
+                    parentView.createView('activities', 'views/record/activities', {
+                        el: el,
+                        model: this.model,
+                        mode: this.mode,
+                        scope: this.scope,
+                        recordHelper: this.recordHelper,
+                        recordViewObject: this.recordViewObject
+                    }, view => {
+                        if (callback) {
+                            callback(view);
+                        }
+                        view.render();
+                    })
+                }
+            }
+        }
     });
 });

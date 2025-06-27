@@ -40,7 +40,7 @@ Espo.define('views/main', 'view', function (Dep) {
 
         menu: null,
 
-        enableMassActions: ['restore','delete','update'],
+        enableMassActions: ['restore', 'delete', 'update'],
 
         events: {
             'click .action': function (e) {
@@ -83,7 +83,7 @@ Espo.define('views/main', 'view', function (Dep) {
             window.languageObservableViews = new Map();
         },
 
-        getHashScope(){
+        getHashScope() {
             let locationHash = window.location.hash;
             return locationHash.split('/').shift().replace('#', '');
         },
@@ -135,7 +135,8 @@ Espo.define('views/main', 'view', function (Dep) {
                 && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
         },
 
-        getHeader: function () {},
+        getHeader: function () {
+        },
 
         buildHeaderHtml: function (arr, isAdmin) {
             let a = [];
@@ -168,7 +169,8 @@ Espo.define('views/main', 'view', function (Dep) {
             var view = data.view;
             if (!view) {
                 return;
-            };
+            }
+            ;
             this.createView('modal', view, {
                 model: this.model,
                 collection: this.collection
@@ -199,13 +201,13 @@ Espo.define('views/main', 'view', function (Dep) {
 
             if (~index && replace) {
                 this.menu[type].splice(index, 1, item);
-            }else{
-                if(~index){
+            } else {
+                if (~index) {
                     this.menu[type].splice(index, 1);
                 }
                 var method = 'push';
                 if (toBeginnig) {
-                    method  = 'unshift';
+                    method = 'unshift';
                 }
                 this.menu[type][method](item);
             }
@@ -220,11 +222,11 @@ Espo.define('views/main', 'view', function (Dep) {
         },
 
         disableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled').attr('disabled');
+            this.$el.find('.header .header-buttons [data-name="' + name + '"]').addClass('disabled').attr('disabled');
         },
 
         enableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('.header .header-buttons [data-name="' + name + '"]').removeClass('disabled').removeAttr('disabled');
         },
 
         removeMenuItem: function (name, doNotReRender) {
@@ -261,7 +263,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     isReturn: true
                 };
                 var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-                this.getRouter().navigate(rootUrl, {trigger: false});
+                this.getRouter().navigate(rootUrl, { trigger: false });
                 this.getRouter().dispatch(this.scope, null, options);
             }, this);
         },
@@ -275,8 +277,8 @@ Espo.define('views/main', 'view', function (Dep) {
                 }, this);
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().addClass('hidden');
-            this.$el.find('.page-header a.action[data-action="'+name+'"]').addClass('hidden');
+            this.$el.find('.page-header li > .action[data-action="' + name + '"]').parent().addClass('hidden');
+            this.$el.find('.page-header a.action[data-action="' + name + '"]').addClass('hidden');
         },
 
         showHeaderActionItem: function (name) {
@@ -288,8 +290,8 @@ Espo.define('views/main', 'view', function (Dep) {
                 }, this);
             }, this);
             if (!this.isRendered()) return;
-            this.$el.find('.page-header li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
-            this.$el.find('.page-header a.action[data-action="'+name+'"]').removeClass('hidden');
+            this.$el.find('.page-header li > .action[data-action="' + name + '"]').parent().removeClass('hidden');
+            this.$el.find('.page-header a.action[data-action="' + name + '"]').removeClass('hidden');
         },
 
         executeAction(action, data, event) {
@@ -303,106 +305,49 @@ Espo.define('views/main', 'view', function (Dep) {
             record?.executeAction(action, data, event);
         },
 
-        getMainRecord: function() {
+        getMainRecord: function () {
             return this.getView('record');
         },
 
-        shouldSetupRightSideView: function() {
+        shouldSetupRightSideView: function () {
             let recordView = this.getMainRecord();
             return recordView && recordView.sideView;
-        },
-
-        canLoadActivities: function () {
-            let streamAllowed = this.model
-                ? this.getAcl().checkModel(this.model, 'stream', true)
-                : this.getAcl().check(this.scope, 'stream');
-            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
         },
 
         getMode: function () {
             return this.mode ?? this.viewMode;
         },
 
-        shouldShowFilter: function() {
-          return false;
+        shouldShowFilter: function () {
+            return false;
         },
 
-        setupRightSideView: function() {
-            if(this.shouldSetupRightSideView()) {
-                if(window.SvelteRightSideView) {
-                    try{
+        setupRightSideView: function () {
+            if (this.shouldSetupRightSideView()) {
+                if (window.SvelteRightSideView) {
+                    try {
                         window.SvelteRightSideView.$destroy();
-                    }catch (e) {
-                        
+                    } catch (e) {
+
                     }
                 }
                 let recordView = this.getMainRecord();
-                window.SvelteRightSideView =  new Svelte.RightSideView({
-                    target:  $(`${this.options.el} .content-wrapper`).get(0),
-                    props: {
-                        scope: this.scope,
-                        model: this.model,
-                        mode: this.getMode(),
-                        hasStream: this.canLoadActivities(),
-                        showSummary: ['edit', 'detail'].includes(this.getMode()),
-                        searchManager: this.searchManager,
-                        showFilter: this.shouldShowFilter(),
-                        createView: this.createView.bind(this),
-                        isCollapsed: !['edit', 'detail'].includes(this.getMode()),
-                        loadSummary: () => {
-                            this.createView('rightSideView', this.rightSideView, {
-                                el: this.options.el + ' .right-side-view .summary',
-                                scope: this.scope,
-                                mode: this.getMode(),
-                                model: this.model
-                            }, view => {
-                                view.render();
-                                this.listenTo(view, 'after:render', () => {
-                                    let mode = this.getMode();
-                                    if (mode === 'edit') {
-                                        view.setEditMode();
-                                    } else {
-                                        view.setDetailMode()
-                                    }
-                                });
+                let props = {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: this.getMode(),
+                    searchManager: this.searchManager,
+                    showFilter: this.shouldShowFilter(),
+                    createView: this.createView.bind(this),
+                    isCollapsed: true,
+                }
+                if (typeof recordView?.getSvelteSideViewProps === 'function') {
+                    props = recordView.getSvelteSideViewProps(this);
+                }
 
-                                this.listenTo(this.model, 'sync', () => {
-                                    view.reRender();
-                                });
-
-                                if (this.getUser().isAdmin() && this.getMode() === 'detail') {
-                                    this.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
-                                        scope: this.scope,
-                                        viewType: 'rightSideView',
-                                        layoutData: view.layoutData,
-                                        el: $(`${this.options.el} .right-side-view .layout-editor-container`).get(0),
-                                    }, (v) => {
-                                        v.on("refresh", () => {
-                                            view.refreshLayout()
-                                        })
-                                        v.render()
-                                    })
-                                }
-
-                            });
-                        },
-                        loadActivities: (callback) => {
-                            let el = this.options.el + ' .right-side-view .activities'
-                            this.createView('activities', 'views/record/activities', {
-                                el: el,
-                                model: this.model,
-                                mode: this.mode ?? this.viewMode,
-                                scope: this.scope,
-                                recordHelper: recordView?.recordHelper,
-                                recordViewObject: recordView?.recordViewObject
-                            }, view => {
-                                if(callback) {
-                                    callback(view);
-                                }
-                                view.render();
-                            })
-                        }
-                    }
+                window.SvelteRightSideView = new Svelte.RightSideView({
+                    target: $(`${this.options.el} .content-wrapper`).get(0),
+                    props: props
                 })
             }
         }

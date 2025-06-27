@@ -14,7 +14,7 @@ Espo.define('views/validation-rule/modals/edit', 'views/modals/edit', function (
 
         fullFormDisabled: true,
 
-        sideDisabled: true,
+        hasRightSideView: false,
 
     });
 });

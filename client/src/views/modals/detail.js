@@ -54,17 +54,29 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         fitHeight: true,
 
-        className: 'dialog dialog-record',
+        className: 'dialog dialog-record full-page-modal',
+
+        rightSideView: 'views/record/right-side-view',
 
         sideDisabled: false,
 
         bottomDisabled: false,
+
+        hasRightSideView: true,
+
+        mode: 'detail',
+
+        saveDisabled: false,
 
         setup: function () {
 
             var self = this;
 
             this.buttonList = [];
+
+            if ('saveDisabled' in this.options) {
+                this.saveDisabled = this.options.saveDisabled;
+            }
 
             if ('editDisabled' in this.options) {
                 this.editDisabled = this.options.editDisabled;
@@ -86,6 +98,14 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.addEditButton();
             }
 
+            if (!this.saveDisabled) {
+                this.buttonList.push({
+                    name: 'save',
+                    label: 'Save',
+                    style: 'primary',
+                });
+            }
+
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
@@ -94,11 +114,16 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
 
             this.buttonList.push({
-                name: 'cancel',
+                name: 'close',
                 label: 'Close'
             });
 
-            if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel'
+            });
+
+            if (this.mode === 'detail' && this.model && this.model.collection && !this.navigateButtonsDisabled) {
                 this.buttonList.push({
                     name: 'previous',
                     html: '<i class="ph ph-caret-left"></i>',
@@ -127,12 +152,40 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.sourceModel = this.model;
 
+            this.setupModels()
+
+            this.listenToOnce(this.getRouter(), 'routed', function () {
+                this.remove();
+            }, this);
+
+            if (!this.model.isNew()) {
+                this.listenTo(this, 'after:render', () => {
+                    if (this.mode === 'edit') {
+                        if ((this.options.htmlStatusIcons || []).length > 0) {
+                            const iconsContainer = $('<div class="icons-container pull-right"></div>');
+                            this.options.htmlStatusIcons.forEach(icon => iconsContainer.append(icon));
+                            this.$el.find('.modal-body').prepend(iconsContainer);
+                        }
+                    }
+                    this.applyOverviewFilters();
+                });
+            }
+
+            this.listenTo(this.model, 'change', () => {
+                if (this.dialog && this.dialog.$el) {
+                    this.dialog.$el.trigger('shown.bs.modal')
+                }
+            });
+        },
+
+        setupModels: function () {
             this.getModelFactory().create(this.scope, function (model) {
                 if (!this.sourceModel) {
                     this.model = model;
                     this.model.id = this.id;
 
                     this.listenToOnce(this.model, 'sync', function () {
+                        this.setupHeaderAndButtons()
                         this.createRecordView();
                     }, this);
                     this.model.fetch();
@@ -150,25 +203,10 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                             this.model.relationModel.fetch()
                         }
                     }, this);
+                    this.setupHeaderAndButtons()
                     this.createRecordView();
                 }
             }, this);
-
-            this.listenToOnce(this.getRouter(), 'routed', function () {
-                this.remove();
-            }, this);
-
-            if (!this.model.isNew()) {
-                this.listenTo(this, 'after:render', () => {
-                    this.applyOverviewFilters();
-                });
-            }
-
-            this.listenTo(this.model, 'change', () => {
-                if (this.dialog && this.dialog.$el) {
-                    this.dialog.$el.trigger('shown.bs.modal')
-                }
-            });
         },
 
         addEditButton: function () {
@@ -179,9 +217,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, true);
         },
 
-        removeEditButton: function () {
-            this.removeButton('edit');
-        },
 
         addRemoveButton: function () {
             this.addButton({
@@ -190,59 +225,78 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, true);
         },
 
-        removeRemoveButton: function () {
-            this.removeButton('remove');
-        },
-
         getScope: function () {
             return this.scope;
         },
 
-        createRecordView: function (callback) {
+        setupHeaderAndButtons: function () {
             var model = this.model;
             var scope = this.getScope();
 
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            if (model.get('name')) {
-                this.header = Handlebars.Utils.escapeExpression(model.get('name'));
+            if (this.mode === 'detail') {
+                if (model.get('name')) {
+                    this.header = Handlebars.Utils.escapeExpression(model.get('name'));
+                } else {
+                    this.header = this.getLanguage().translate(scope, 'scopeNames');
+                }
             } else {
-                this.header = this.getLanguage().translate(scope, 'scopeNames');
+                if (!this.id) {
+                    this.header = `${this.getLanguage().translate(this.scope, 'scopeNames')}: ${this.translate('New')}`;
+                } else {
+                    this.header = this.getLanguage().translate('Edit') + ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
+                }
             }
 
             this.header = iconHtml + this.header;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);
-                if (editAccess) {
-                    this.showButton('edit');
-                } else {
-                    this.hideButton('edit');
-                    if (editAccess === null) {
-                        this.listenToOnce(model, 'sync', function () {
-                            if (this.getAcl().check(model, 'edit')) {
-                                this.showButton('edit');
-                            }
-                        }, this);
-                    }
+                if (editAccess === null) {
+                    this.listenToOnce(model, 'sync', function () {
+                        this.controlActionButtons()
+                    }, this);
                 }
             }
 
             if (!this.removeDisabled) {
                 var removeAccess = this.getAcl().check(model, 'delete', true);
-                if (removeAccess) {
-                    this.showButton('remove');
-                } else {
-                    this.hideButton('remove');
-                    if (removeAccess === null) {
-                        this.listenToOnce(model, 'sync', function () {
-                            if (this.getAcl().check(model, 'delete')) {
-                                this.showButton('remove');
-                            }
-                        }, this);
-                    }
+                if (removeAccess === null) {
+                    this.listenToOnce(model, 'sync', function () {
+                        this.controlActionButtons()
+                    }, this);
                 }
             }
+
+            this.controlActionButtons()
+        },
+
+        controlActionButtons: function () {
+            const hiddenButtons = []
+            if (this.mode === 'edit') {
+                hiddenButtons.push('edit', 'close', 'remove', 'next', 'previous');
+            } else {
+                hiddenButtons.push('save', 'cancel');
+                if (!this.getAcl().check(this.model, 'edit', true)) {
+                    hiddenButtons.push('edit');
+                }
+                if (!this.getAcl().check(this.model, 'delete', true)) {
+                    hiddenButtons.push('delete');
+                }
+            }
+
+            this.buttonList.forEach(button => {
+                if (hiddenButtons.includes(button.name)) {
+                    this.hideButton(button.name);
+                } else {
+                    this.showButton(button.name);
+                }
+            })
+        },
+
+        createRecordView: function (callback) {
+            var model = this.model;
 
             var viewName =
                 this.detailViewName ||
@@ -282,10 +336,41 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.options.htmlStatusIcons.forEach(icon => iconsContainer.append(icon));
                 this.$el.find('.modal-body').prepend(iconsContainer);
             }
+
+            var recordView = this.getRecordView();
+            const rightContainer = document.querySelector('#' + this.dialog.id + ' .modal-dialog .main-content .right-content');
+
+            if (recordView?.sideView && rightContainer) {
+                const props = recordView.getSvelteSideViewProps(this);
+                this.destroySveltePanel()
+
+                window['SvelteRightSideView' + this.dialog.id] = new Svelte.RightSideView({
+                    target: rightContainer,
+                    props: props
+                });
+
+                this.dialog.$el.on('hidden.bs.modal', (e) => {
+                    this.destroySveltePanel();
+                });
+            }
         },
 
+        destroySveltePanel: function () {
+            if (window['SvelteRightSideView' + this.dialog.id]) {
+                try {
+                    window['SvelteRightSideView' + this.dialog.id].$destroy()
+                } catch (e) {
+                }
+            }
+        },
+
+        getRecordView() {
+            return this.getView('record')
+        },
+
+
         controlNavigationButtons: function () {
-            var recordView = this.getView('record');
+            var recordView = this.getRecordView();
             if (!recordView) return;
 
             var indexOfRecord = this.indexOfRecord;
@@ -351,6 +436,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 // set element before reRender
                 this.setElement(this.containerSelector + ' .body');
                 this.reRender();
+                this.setupHeaderAndButtons()
                 this.$el.find('.modal-header .modal-title').html(this.header);
             }.bind(this));
 
@@ -392,43 +478,48 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         actionEdit: function () {
-            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
-            this.createView('quickEdit', viewName, {
-                scope: this.scope,
-                model: this.model,
-                layoutRelatedScope: this.options.layoutRelatedScope,
-                id: this.id,
-                fullFormDisabled: this.fullFormDisabled,
-                htmlStatusIcons: this.options.htmlStatusIcons
-            }, function (view) {
-                view.once('after:render', function () {
-                    Espo.Ui.notify(false);
-                    this.dialog.hide();
-                }, this);
+            this.setEditMode()
+        },
 
-                this.listenToOnce(view, 'remove', function () {
-                    this.dialog.show();
-                }, this);
+        actionCancel: function () {
+            this.getRecordView().cancelEdit()
+            this.mode = 'detail'
+            this.controlActionButtons()
+        },
 
-                this.listenToOnce(view, 'leave', function () {
-                    this.remove();
-                }, this);
+        setEditMode: function () {
+            this.getRecordView().actionEdit();
+            this.mode = 'edit'
+            this.controlActionButtons();
+        },
 
-                this.listenToOnce(view, 'after:save', function (model) {
-                    this.trigger('after:save', model);
+        actionSave: function () {
+            let recordView = this.getRecordView();
+            if (!recordView) {
+                return;
+            }
 
-                    this.model.fetch();
-                    if (this.model.relationModel) {
-                        this.model.relationModel.fetch();
-                    }
-                }, this);
-
-                view.render();
+            var model = recordView.model;
+            if (this.options.relate && this.options.relate.model) {
+                model.defs['_relationName'] = this.options.relate.model.defs['_relationName'];
+            }
+            recordView.once('after:save', function () {
+                this.trigger('after:save', model);
+                this.dialog.close();
             }, this);
+
+            var $buttons = this.dialog.$el.find('.modal-footer button');
+            $buttons.addClass('disabled').attr('disabled', 'disabled');
+
+            recordView.once('cancel:save', function () {
+                $buttons.removeClass('disabled').removeAttr('disabled');
+            }, this);
+
+            recordView.save();
         },
 
         actionRemove: function () {
-            var model = this.getView('record').model;
+            var model = this.getRecordView().model;
 
             this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
@@ -448,29 +539,56 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         actionFullForm: function () {
             var url;
             var router = this.getRouter();
-
-            var scope = this.getScope();
-
-            url = '#' + scope + '/view/' + this.id;
-
-            var attributes = this.getView('record').fetch();
-            var model = this.getView('record').model;
+            var attributes = this.getRecordView().fetch();
+            var model = this.getRecordView().model;
             attributes = _.extend(attributes, model.getClonedAttributes());
-
             var options = {
                 attributes: attributes,
-                returnUrl: Backbone.history.fragment,
-                model: this.sourceModel || this.model,
-                id: this.id
+                returnUrl: this.options.returnUrl || Backbone.history.fragment,
+                returnDispatchParams: this.options.returnDispatchParams || null,
             };
             if (this.options.rootUrl) {
                 options.rootUrl = this.options.rootUrl;
             }
 
-            setTimeout(function () {
-                router.dispatch(scope, 'view', options);
-                router.navigate(url, { trigger: false });
-            }.bind(this), 10);
+            if (!this.id) {
+                url = '#' + this.scope + '/create';
+                options = { ...options, relate: this.options.relate }
+
+                setTimeout(function () {
+                    router.dispatch(this.scope, 'create', options);
+                    router.navigate(url, { trigger: false });
+                }.bind(this), 10);
+            } else {
+                if (this.mode === 'edit') {
+                    url = '#' + this.scope + '/edit/' + this.id;
+
+                    options = {
+                        ...options,
+                        model: this.sourceModel,
+                        id: this.id
+                    };
+
+                    setTimeout(function () {
+                        router.dispatch(this.scope, 'edit', options);
+                        router.navigate(url, { trigger: false });
+                    }.bind(this), 10);
+                } else {
+                    var scope = this.getScope();
+
+                    url = '#' + scope + '/view/' + this.id;
+
+                    options = {
+                        ...options,
+                        id: this.id
+                    };
+
+                    setTimeout(function () {
+                        router.dispatch(scope, 'view', options);
+                        router.navigate(url, { trigger: false });
+                    }.bind(this), 10);
+                }
+            }
 
             this.trigger('leave');
             this.dialog.close();
