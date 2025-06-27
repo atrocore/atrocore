@@ -806,7 +806,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.model.get('name'));
+            this.setPageTitle(this.model.get('name') ?? this.model.id);
         },
 
         updateRelationshipPanel: function (name) {
