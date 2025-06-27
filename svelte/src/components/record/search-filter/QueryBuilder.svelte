@@ -659,6 +659,7 @@
                 cancelEditSearchQuery()
             }
             Notifier.notify(Language.translate('Done'), 'success');
+            // updateCollection();
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
             Notifier.notify(false)
@@ -756,6 +757,7 @@
                 $queryBuilder.queryBuilder('destroy');
                 initQueryBuilderFilter();
                 advancedFilterChecked = false;
+                updateCollection();
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
@@ -773,6 +775,7 @@
                 advancedFilterChecked = false;
                 oldAdvancedFilter = null;
                 editingSavedSearch = null;
+                updateCollection();
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
