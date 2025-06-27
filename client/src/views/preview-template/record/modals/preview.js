@@ -12,6 +12,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
     Dep => Dep.extend({
         template: 'preview-template/modals/preview',
 
+        sideEditView: 'views/preview-template/record/panels/side-edit',
+
         className: 'full-page-modal',
 
         htmlContent: null,
@@ -47,6 +49,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         frame: null,
 
         useAutosave: true,
+
+        canChangeLanguage: false,
 
         languages: [],
 
@@ -116,7 +120,6 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 isMobile: this.profile === 'mobile',
                 isDesktop: this.profile === 'desktop',
                 editorActive: this.editorActive,
-                hasMultipleLanguages: this.languages.length > 1
             };
         },
 
@@ -142,6 +145,27 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.getPreviewRequest().success(res => {
                 this.htmlContent = res.htmlPreview ?? '';
+
+                if (typeof res.hasMultipleLanguages === 'boolean') {
+                    this.canChangeLanguage = res.hasMultipleLanguages;
+                }
+
+                this.$el.find('.language-container').empty();
+
+                if (this.canChangeLanguage && this.languages.length > 1) {
+                    const selector = $('<select class="language-selector"></select>');
+                    this.$el.find('.language-container').append(selector);
+
+                    selector.selectize({
+                        setFirstOptionActive: true,
+                        persist: false,
+                        valueField: "code",
+                        labelField: "name",
+                        searchField: ["name", "code"],
+                        options: this.languages,
+                        items: [this.selectedLanguage.code]
+                    });
+                }
 
                 this.notify(false);
                 this.loadHtmlPage(this.htmlContent);
@@ -180,13 +204,23 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
             this.prepareFrameDimensions(this.frame);
 
+            this.loadFrameCssFile('client/css/preview.css');
+
+            this.prepareEditorElements(this.frame.contentDocument);
+        },
+
+        loadFrameCssFile(filename) {
             const link = this.frame.contentDocument.createElement("link");
             link.rel = "stylesheet";
             link.type = "text/css";
-            link.href = "client/css/preview.css";
+            link.href = filename;
+
+            if (Espo?.loader?.cacheTimestamp) {
+                link.href += `?cacheTimestamp=${Espo.loader.cacheTimestamp}`;
+            }
+
             this.frame.contentDocument.head.appendChild(link);
 
-            this.prepareEditorElements(this.frame.contentDocument);
         },
 
         prepareFrameDimensions(iframe) {
@@ -240,7 +274,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
             container.classList.add('active');
             this.prepareFrameDimensions(this.frame);
 
-            this.createView('sideEdit', 'views/preview-template/record/panels/side-edit', {
+            this.createView('sideEdit', this.sideEditView, {
                 el: '.full-page-modal .html-preview .side-container',
                 scope: scope,
                 id: id,
@@ -302,18 +336,32 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.find('select.language-selector').selectize({
-                setFirstOptionActive: true,
-                persist: false,
-                valueField: "code",
-                labelField: "name",
-                searchField: ["name", "code"],
-                options: this.languages,
-                items: [this.selectedLanguage.code]
-            });
-
             this.frame = document.querySelector('.html-preview iframe');
-            this.loadPreviewFrame();
+            this.loadPreviewFrame(() => {
+                let selector = null;
+                if (this.options.selectedScope && this.options.selectedId) {
+                    selector = `[data-editor-type="${this.options.selectedScope}"][data-editor-id="${this.options.selectedId}"]`;
+
+                    if (this.options.selectedField) {
+                        selector += `[data-editor-fields*="${this.options.selectedField}"]`;
+                    }
+                }
+
+                if (selector) {
+                    const el = this.frame?.contentDocument?.querySelector(selector);
+                    if (el) {
+                        el.click();
+
+                        setTimeout(() => {
+                            this.frame.contentWindow.scrollTo({
+                                top: el.getBoundingClientRect().top,
+                                left: 0,
+                                behavior: 'smooth'
+                            });
+                        }, 300);
+                    }
+                }
+            });
         }
     })
 );

@@ -15394,12 +15394,16 @@ td[data-name="draggableIcon"] {
     border-radius: 3px;
 }
 
-.full-page-modal .html-preview .header-container .screen-size-icons .language-selector ~ .selectize-control {
-    display: inline-flex;
+.full-page-modal .html-preview .header-container .screen-size-icons .language-container {
+    display: inline-block;
     width: 160px;
     margin-right: 15px;
 }
 
+.full-page-modal .html-preview .header-container .screen-size-icons .language-container .selectize-control {
+    display: flex;
+    width: 100%;
+}
 
 .full-page-modal .html-preview iframe {
     display: block;
@@ -15415,7 +15419,7 @@ td[data-name="draggableIcon"] {
 }
 
 @media screen and (max-width: 767px) {
-    .full-page-modal .html-preview .header-container .screen-size-icons .language-selector ~ .selectize-control {
+    .full-page-modal .html-preview .header-container .screen-size-icons .language-container {
         display: block;
         width: auto;
         margin-right: 0;
