@@ -13,6 +13,7 @@
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Config} from "../../../utils/Config";
     import FilterGroup from "./FilterGroup.svelte";
+    import {get} from "svelte/store";
 
     export let scope: string;
     export let searchManager: any;
@@ -756,6 +757,14 @@
                 $queryBuilder.queryBuilder('destroy');
                 initQueryBuilderFilter();
                 advancedFilterChecked = false;
+                let checked = get(savedSearchStore.selectedSavedItemIds);
+                if(checked.includes(item.id)){
+                    savedSearchStore.toggleSavedItemSelection(item.id);
+                    checked = get(savedSearchStore.selectedSavedItemIds);
+                    searchManager.update({
+                        savedFilters: get(savedSearchStore.savedSearchItems).filter(item => checked.includes(item.id))
+                    });
+                }
                 updateCollection();
             } catch (e) {
                 console.error(e);
