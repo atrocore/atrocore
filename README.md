@@ -10,6 +10,11 @@ GitHub mirror: https://github.com/atrocore/atrocore
 
 AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
+### History
+Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
+
+We are now able to confidently assure our customers that their requirements, extending well beyond just PIM, can be fully addressed without compromise. Our software offers a robust, comprehensive, and highly flexible toolbox designed to meet a wide range of business needs.
+
 ### AtroCore Software can be used for:
 
 - Master Data Management
