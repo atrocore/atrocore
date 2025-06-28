@@ -148,7 +148,7 @@ We recommend to use Docker Image to play with the system, and standard installat
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Contributing
-- **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new)
+- **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
 - **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
