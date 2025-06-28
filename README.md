@@ -21,15 +21,27 @@ AtroCore is a open-source Data Platform, Master Data Management and Data Integra
 - Enterprise Content Management (ECM)
 - Digital Asset Management
 - Reference Data Management
-- File Management
-
-## Feature Overview
-![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
 
 ## Enterprise Edition?
+
 There is no Enterprise Edition, only the Core, free modules and paid modules.
 
+
+## Free vs Paid
+
+- The core modules, including AtroCore, PIM, Import, Export, and several others, are open-source and freely available.
+- These free modules are sufficient to meet the needs of the vast majority of users.
+- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through paid modules.
+
+
+## Feature Overview
+
+![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
+
+Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
+
+Please note that you currently need to install the PIM module to use Attribute Management.
 
 ## For Whom Is AtroCore?
 
@@ -44,6 +56,7 @@ AtroCore is the best fit **for businesses**, who want to:
 * Deliver added value and an optimal experience for employees, customers, and partners.
 
 ### Who is our Typical Customer?
+
 Companies whose needs go beyond the limitations of standard software solutions.
 
 
@@ -54,6 +67,7 @@ The following full-fledged software products are already available on the AtroCo
 
 
 ## Technologies
+
 ![Architecture and Technologies](_assets/architecture-and-technologies.svg)
 
 
