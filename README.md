@@ -22,13 +22,12 @@ AtroCore is a open-source Data Platform, Master Data Management and Data Integra
 - Digital Asset Management
 - Reference Data Management
 
-
-## Enterprise Edition?
+### Enterprise Edition?
 
 There is no Enterprise Edition, only the Core, free modules and paid modules.
 
 
-## Free vs Paid
+### Free vs Paid
 
 - The core modules, including AtroCore, PIM, Import, Export, and several others, are open-source and freely available.
 - These free modules are sufficient to meet the needs of the vast majority of users.
@@ -58,7 +57,6 @@ AtroCore is the best fit **for businesses**, who want to:
 ### Who is our Typical Customer?
 
 Companies whose needs go beyond the limitations of standard software solutions.
-
 
 ## Software which extends AtroCore
 
@@ -95,30 +93,42 @@ You can **build your own fully automated integration** with any third-party syst
 
 * API-first development approarch
 * Really quick time-to-market and low implementation costs
-* Highly Configurable
+* Highly configurable 
 * Extensible - you can use our or write your own modules
 * Open source (licensed under GPLv3), free with some enterprise-level paid modules
-* REST API for your custom data model
+* REST API everyhting, incl. your custom configurations
 * Web-based and platform independent
 * Based on modern technologies
 * Good code quality
 * User-friendly and mobile-friendly
-* Easy to maintain and support
+* Easy to install, maintain and support
+
+### Highlights for Developers
+
+- The data model is fully defined using JSON configuration files.
+- You can develop **custom modules** to extend or modify any system functionality.
+- Utilize **Twig scripts** to implement configurations that are not achievable through the user interface.
+- Create and integrate **custom PHP actions** to add your own action buttons.
+- Define **custom data import scenarios** based with pure PHP using Import Feed Type "Code" to achive maximum performance.
+
+Easily customize the UI's appearance, including colors and layout, using your own CSS.
 
 ## Requirements
 
 * Dedicated (virtual) Linux-based server with root permissions. 
 * Ubuntu as Operating System is recommended but not required.
 * PHP 8.1 - 8.4.
-* MySQL 5.5.3 (or above) or PostgreSQL 14.9 (or above).
+* PostgreSQL 14.9 (or above, recommended) or MySQL 5.5.3 (or above).
 
 > Please note, system will definitely NOT work on a usual hosting, a managed server hosting should be checked on a case-by-case basis – with a high probability it will NOT work.
 
-## Installation
+## Installation (Getting Started)
 
 Installation Guide is [here](https://help.atrocore.com/installation-and-maintenance/installation).
 
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+
+We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
 ## Demo
 
