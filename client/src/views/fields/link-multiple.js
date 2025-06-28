@@ -366,10 +366,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getAutocompleteUrl: function (q) {
-            let prepareQueryText = this.prepareAutocompleteQueryText(q);
-            let sortBy = `(name+LIKE+\'%25${q}%25\')`
+            let sortBy = `(name+LIKE+\'${q}%25\')`
 
-            var url = this.foreignScope + '?collectionOnly=true&sortBy='+sortBy+'&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+            var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy='+sortBy+'&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 boolList = this.getSelectBoolFilterList(),
                 where = [];
 
