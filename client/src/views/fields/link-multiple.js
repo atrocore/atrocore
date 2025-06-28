@@ -366,7 +366,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getAutocompleteUrl: function (q) {
-            var url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+            let prepareQueryText = this.prepareAutocompleteQueryText(q);
+            let sortBy = `(name+LIKE+\'%25${q}%25\')`
+
+            var url = this.foreignScope + '?collectionOnly=true&sortBy='+sortBy+'&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 boolList = this.getSelectBoolFilterList(),
                 where = [];
 
@@ -379,13 +382,33 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 url += '&' + $.param({'primaryFilter': primary});
             }
 
-            if (q) {
-                let foreignDefs = this.getMetadata().get(['entityDefs', this.foreignScope, 'fields']);
-
-                if (foreignDefs && typeof foreignDefs === 'object' && foreignDefs.name) {
-                    where.push({type: 'like', attribute: 'name', value: this.prepareAutocompleteQueryText(q)});
-                }
+            let searchWere = {
+                type: 'or',
+                value: [
+                ]
             }
+
+            Object.entries(this.getMetadata().get(['entityDefs', this.foreignScope, 'fields'])).forEach(([field, def]) => {
+              if(['varchar', 'text', 'markdown', 'email', 'url', 'wysiwyg'].includes(def.type) && !def.notStorable && !def.filterDisabled) {
+                  searchWere.value.push({
+                      type: 'like',
+                      attribute: field,
+                      value: prepareQueryText
+                  });
+              }
+                if(!isNaN(q) && (def.type === 'int' || def.type === 'float')) {
+                    searchWere['value'].push({
+                        type: 'equals',
+                        attribute: field,
+                        value: q
+                    })
+                }
+            })
+
+            where.push({'type': 'textFilter', value: 'WITH_NUMERIC:'+q});
+
+
+
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
