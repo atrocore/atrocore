@@ -382,33 +382,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 url += '&' + $.param({'primaryFilter': primary});
             }
 
-            let searchWere = {
-                type: 'or',
-                value: [
-                ]
-            }
-
-            Object.entries(this.getMetadata().get(['entityDefs', this.foreignScope, 'fields'])).forEach(([field, def]) => {
-              if(['varchar', 'text', 'markdown', 'email', 'url', 'wysiwyg'].includes(def.type) && !def.notStorable && !def.filterDisabled) {
-                  searchWere.value.push({
-                      type: 'like',
-                      attribute: field,
-                      value: prepareQueryText
-                  });
-              }
-                if(!isNaN(q) && (def.type === 'int' || def.type === 'float')) {
-                    searchWere['value'].push({
-                        type: 'equals',
-                        attribute: field,
-                        value: q
-                    })
-                }
-            })
-
             where.push({'type': 'textFilter', value: 'WITH_NUMERIC:'+q});
-
-
-
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
