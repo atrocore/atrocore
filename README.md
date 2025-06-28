@@ -26,6 +26,11 @@ AtroCore is a open-source Data Platform, Master Data Management and Data Integra
 ## Feature Overview
 ![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
 
+
+## Enterprise Edition?
+There is no Enterprise Edition, only the Core, free modules and paid modules.
+
+
 ## For Whom Is AtroCore?
 
 AtroCore is the best fit **for businesses**, who want to:
@@ -59,14 +64,18 @@ You can also use import and export functions or use our modules (import feeds an
 
 We offer the following native paid integrations:
 
-- Multichannel tools: Channable, ChannelPilot, ChannelAdvisor and others
-- ERPs: Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
-- Marketplaces: Amazon, Otto
-- E-Commerce Platforms: Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
+- **Multichannel Tools:** Channable, ChannelPilot, ChannelAdvisor and others
+- **ERPs:** Odoo, SAP, SAP Business One, Business Central, Xentral, Infor and others
+- **Marketplaces:** Amazon, Otto
+- **E-Commerce Platforms:** Adobe Commerce (Magento 2), Shopware, Prestashop, WooCommerce, Shopify, Sylius and others.
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
 Please [contact us](https://www.atrocore.com/contact), if you want to know more.
+
+You can **build your own fully automated integration** with any third-party system via its REST / GraphQL API using our free modules: 
+- Import: Http Requests and/or 
+- Export: Http Requests.
 
 ## What Are the Advantages of Using It?
 
@@ -108,6 +117,11 @@ Installation Guide for Docker is [here](https://help.atrocore.com/installation-a
 ## License
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
+
+## Contributing
+- **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new)
+- **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
+- **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
 ## Resources
 
