@@ -277,6 +277,12 @@
                     if (this.getValue() === defaultValue) {
                         this.clear();
                     }
+                },
+
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
+                    }
                 }
             });
             $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
@@ -479,6 +485,11 @@
                 onFocus: function() {
                     if (this.getValue() === defaultValue) {
                         this.clear();
+                    }
+                },
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
                     }
                 }
             });
