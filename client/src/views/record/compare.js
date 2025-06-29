@@ -239,7 +239,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     attributeId: fieldDef['attributeId'],
                     attributePanelId: fieldDef['attributePanelId'],
                     attributeGroup: fieldDef.attributeGroup,
-                    sortOrder: fieldDef.sortOrder ?? 0,
+                    sortOrder: fieldDef.sortOrder ,
                     sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
                 });
             }, this);
@@ -253,6 +253,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         renderFieldsPanels() {
             this.fieldPanels.forEach((panel,index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
+                fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 let fieldListByGroup = {};
                 fieldList.forEach((field) => {
                     let id = field.attributeGroup?.id ?? 'no-group'
@@ -271,7 +272,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 fieldListByGroup = Object.values(fieldListByGroup).sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 for (let fieldListGroup of fieldListByGroup) {
-                    fieldListGroup.fieldListInGroup.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                     if(fieldListGroup.isInGroup) {
                         fieldListGroup.fieldListInGroup.sort((a, b) => a.sortOrderInAttributeGroup < b.sortOrderInAttributeGroup ? -1 : 1);
                     }
