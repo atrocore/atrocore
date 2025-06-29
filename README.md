@@ -109,7 +109,7 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Based on modern technologies
 * Good code quality
 * Modern mobile-friendly UI
-* Easy to install, maintain and support
+* Easy to install, maintain and support.
 
 ### Highlights for Developers
 
