@@ -90,11 +90,12 @@ We offer the following native paid integrations:
 
 Read [this article](https://store.atrocore.com/en/atrocore-integrations-for-erp-ecommerce-marketplaces) to better understand how our integrations work.
 
+You can **build your own fully automated integration** with any third-party system via its REST / GraphQL API using our free modules: 
+- Import: HTTP Requests and/or 
+- Export: HTTP Requests.
+
 Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 
-You can **build your own fully automated integration** with any third-party system via its REST / GraphQL API using our free modules: 
-- Import: Http Requests and/or 
-- Export: Http Requests.
 
 ## What Are the Advantages of Using It?
 
@@ -158,6 +159,6 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
 - Please visit our Help Center (Documentation) - https://help.atrocore.com/
-- Read our Release Notes - https://help.atrocore.com/release-notes/pim
+- Read our Release Notes - https://help.atrocore.com/release-notes/core
 - Please visit our Community - https://community.atrocore.com
 - Сontact us - https://www.atrocore.com/contact
