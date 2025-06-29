@@ -2,9 +2,8 @@
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p><br><br>
 
-This repository is hosted on: https://gitlab.atrocore.com/atrocore/atrocore
-
-GitHub mirror: https://github.com/atrocore/atrocore
+Main Host:       https://gitlab.atrocore.com/atrocore/atrocore
+Mirror (GitHub): https://github.com/atrocore/atrocore
 
 > This repository is hosted by GitLab, we use GitHub to host its mirror. 
 
