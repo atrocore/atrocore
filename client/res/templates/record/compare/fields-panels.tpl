@@ -83,6 +83,10 @@
         color: black;
     }
 
+    a.attribute-group {
+        font-weight: bold;
+    }
+
     .compare-panel th:first-child {
         text-align: left !important;
     }
