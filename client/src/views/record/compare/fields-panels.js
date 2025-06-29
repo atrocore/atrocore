@@ -59,60 +59,63 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
         },
 
         buildFieldViews() {
-            this.fieldList.forEach(fieldData => {
-                let field = fieldData.field;
-                fieldData.fieldValueRows.forEach((row, index) => {
-                    let model = this.models[index];
-                    let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
-                    let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
-                    this.createView(row.key, viewName, {
-                        el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
-                        model: model.clone(),
-                        defs: {
-                            name: field
-                        },
-                        params: {
-                            required: !!model.getFieldParam(field, 'required'),
-                            readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
-                        },
-                        mode: mode,
-                        disabled: fieldData.disabled,
-                        inlineEditDisabled: true,
-                    }, view => {
-                        view.render();
-                        if(view.isRendered()) {
-                            this.handleAllFieldsRendered(row.key)
-                        }
-                        this.listenTo(view, 'after:render', () => {
-                            this.handleAllFieldsRendered(row.key);
-                            if (this.instanceComparison && index !== 0) {
-                                let instance = model.get('_instance');
-                                let localUrl = this.getConfig().get('siteUrl');
-                                let instanceUrl = instance.atrocoreUrl;
-
-                                view.$el.find('a').each((i, el) => {
-                                    let href = $(el).attr('href')
-
-                                    if (href.includes('http') && localUrl) {
-                                        $(el).attr('href', href.replace(localUrl, instanceUrl))
-                                    }
-
-                                    if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')) {
-                                        $(el).attr('href', instanceUrl + href)
-                                    }
-                                    $(el).attr('target', '_blank')
-                                })
-                                view.$el.find('img').each((i, el) => {
-                                    let src = $(el).attr('src')
-                                    if (src.includes('http') && localUrl) {
-                                        $(el).attr('src', src.replace(localUrl, instanceUrl))
-                                    }
-
-                                    if (!src.includes('http')) {
-                                        $(el).attr('src', instanceUrl + '/' + src)
-                                    }
-                                });
+            this.fieldList.forEach(fieldListByGroup => {
+                fieldListByGroup.fieldListInGroup.forEach(fieldData => {
+                    let field = fieldData.field;
+                    fieldData.fieldValueRows.forEach((row, index) => {
+                        let model = this.models[index];
+                        let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
+                        let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
+                        this.createView(row.key, viewName, {
+                            el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
+                            model: model.clone(),
+                            defs: {
+                                name: field
+                            },
+                            params: {
+                                required: !!model.getFieldParam(field, 'required'),
+                                readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
+                                disableAttributeRemove: true
+                            },
+                            mode: mode,
+                            disabled: fieldData.disabled,
+                            inlineEditDisabled: true,
+                        }, view => {
+                            view.render();
+                            if(view.isRendered()) {
+                                this.handleAllFieldsRendered(row.key)
                             }
+                            this.listenTo(view, 'after:render', () => {
+                                this.handleAllFieldsRendered(row.key);
+                                if (this.instanceComparison && index !== 0) {
+                                    let instance = model.get('_instance');
+                                    let localUrl = this.getConfig().get('siteUrl');
+                                    let instanceUrl = instance.atrocoreUrl;
+
+                                    view.$el.find('a').each((i, el) => {
+                                        let href = $(el).attr('href')
+
+                                        if (href.includes('http') && localUrl) {
+                                            $(el).attr('href', href.replace(localUrl, instanceUrl))
+                                        }
+
+                                        if ((!href.includes('http') && !localUrl) || href.startsWith('/#') || href.startsWith('?') || href.startsWith('#')) {
+                                            $(el).attr('href', instanceUrl + href)
+                                        }
+                                        $(el).attr('target', '_blank')
+                                    })
+                                    view.$el.find('img').each((i, el) => {
+                                        let src = $(el).attr('src')
+                                        if (src.includes('http') && localUrl) {
+                                            $(el).attr('src', src.replace(localUrl, instanceUrl))
+                                        }
+
+                                        if (!src.includes('http')) {
+                                            $(el).attr('src', instanceUrl + '/' + src)
+                                        }
+                                    });
+                                }
+                            });
                         });
                     });
                 });

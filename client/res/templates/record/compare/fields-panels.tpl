@@ -39,27 +39,34 @@
         </thead>
         <tbody>
         {{#each fieldList}}
-        <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
-            <td class="cell " title="{{translate label scope=../scope category='fields'}}">
-                {{#if attributeId}}
-                <a href="#Attribute/view/{{attributeId}}" target="_blank">  {{translate label scope=../scope category='fields'}}{{#if required }}*{{/if}} </a>
-                {{else}}
-                {{translate label scope=../scope category='fields'}}{{#if required }}*{{/if}}
-                {{/if}}
-            </td>
-            {{#each fieldValueRows}}
-            {{#if ../../merging}}
-            <td>
-               <div class="center-child" >
-                   <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
-               </div>
-            </td>
-            {{/if}}
-            <td class="cell  {{#unless shouldNotCenter}} text-center {{/unless}}">
-                <div class="{{class}}  field">Loading...</div>
-            </td>
+            {{#if isInGroup }}
+                <tr>
+                    <td colspan="{{rowLength}}"> <a href="#AttributeGroup/view/{{id}}" target="_blank" class="attribute-group">{{name}}</a></td>
+                </tr>
+           {{/if}}
+            {{#each fieldListInGroup }}
+                <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
+                    <td class="cell " title="{{translate label scope=../../scope category='fields'}}">
+                        {{#if attributeId}}
+                        <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
+                        {{else}}
+                        {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}
+                        {{/if}}
+                    </td>
+                    {{#each fieldValueRows}}
+                    {{#if ../../../merging}}
+                    <td>
+                       <div class="center-child" >
+                           <input type="radio" name="{{../../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+                       </div>
+                    </td>
+                    {{/if}}
+                    <td class="cell  {{#unless ../shouldNotCenter}} text-center {{/unless}}">
+                        <div class="{{class}}  field">Loading...</div>
+                    </td>
+                    {{/each}}
+                </tr>
             {{/each}}
-        </tr>
         {{/each}}
         </tbody>
     </table>
@@ -70,6 +77,10 @@
 <style>
     .hidden-cell {
         display: none !important;
+    }
+
+    a.attribute {
+        color: black;
     }
 
     .compare-panel th:first-child {
