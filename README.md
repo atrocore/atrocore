@@ -115,8 +115,8 @@ You can **build your own fully automated integration** with any third-party syst
 - Utilize **Twig scripts** to implement configurations that are not achievable through the user interface.
 - Create and integrate **custom PHP actions** to add your own action buttons.
 - Define **custom data import scenarios** based with pure PHP using Import Feed Type "Code" to achive maximum performance.
+- Easily customize the UI's appearance, including colors and layout, using your own CSS.
 
-Easily customize the UI's appearance, including colors and layout, using your own CSS.
 
 ## Requirements
 
