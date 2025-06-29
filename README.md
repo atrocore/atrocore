@@ -1,4 +1,6 @@
-<img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"><br><br>
+<p align="center">
+<center><img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48"></center>
+</p><br><br>
 
 This repository is hosted on: https://gitlab.atrocore.com/atrocore/atrocore
 
