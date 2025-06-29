@@ -367,8 +367,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         getAutocompleteUrl: function (q) {
             var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
-                boolList = this.getSelectBoolFilterList(),
-                where = [];
+            boolList = this.getSelectBoolFilterList();
+            where = [];
 
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
@@ -379,7 +379,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 url += '&' + $.param({'primaryFilter': primary});
             }
 
-            where.push({'type': 'textFilter', value: 'WITH_NUMERIC:'+q});
+            where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:'+q});
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
