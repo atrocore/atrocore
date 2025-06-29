@@ -1,10 +1,10 @@
 <p align="center" width="100%">
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
-</p><br><br>
+</p>
 
-| Host                  | URL                                             |
-| --------------------- | ----------------------------------------------- |
-| Main Repository  | https://gitlab.atrocore.com/atrocore/atrocore   |
+| Host            | URL                                             |
+| ----------------| ----------------------------------------------- |
+| Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            |
 
 
