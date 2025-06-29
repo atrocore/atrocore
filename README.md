@@ -2,24 +2,20 @@
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p>
 
+AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
+
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            |
 
 
-## What Is AtroCore? 
-
-AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
-
-![Product Detail Page](_assets/product-detail-page.png)
-
-### History
+## History
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
 
 We are now able to confidently assure our customers that their requirements, extending well beyond just PIM, can be fully addressed without compromise. Our software offers a robust, comprehensive, and highly flexible toolbox designed to meet a wide range of business needs.
 
-### AtroCore Software can be used for:
+## Usable for:
 
 - Master Data Management
 - Product Information Management
@@ -140,14 +136,6 @@ Installation Guide for Docker is [here](https://help.atrocore.com/installation-a
 
 We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
-## Demo
-
-- URL: https://demo.atropim.com/
-- Login: admin
-- Password: admin
-> This is a Demo Instance of AtroCore with a PIM module installed (AtroPIM Demo).
-
-
 ## License
 
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
@@ -156,6 +144,18 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
 - **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
+
+## Look and Feel
+
+![Product Detail Page](_assets/product-detail-page.png)
+
+### Public Demo Instance
+
+- URL: https://demo.atropim.com/
+- Login: admin
+- Password: admin
+> This is a Demo Instance of AtroCore with a PIM module installed (AtroPIM Demo).
+
 
 ## Resources
 
