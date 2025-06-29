@@ -277,7 +277,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     }
                 }
 
-                // debugger
                 this.createView(panel.name, this.fieldsPanelsView, {
                     scope: this.scope,
                     model: this.model,
