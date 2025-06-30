@@ -2,7 +2,7 @@
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p>
 
-AtroCore is a open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
+AtroCore is an open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
 
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
@@ -97,12 +97,12 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 
 ## What Are the Advantages of Using It?
 
-* API-first development approarch
+* API-first development approach
 * Really quick time-to-market and low implementation costs
 * Highly configurable 
 * Extensible - you can use our or write your own modules
 * Open source (licensed under GPLv3), free with some enterprise-level paid modules
-* REST API everyhting, incl. your custom configurations
+* REST API everything, incl. your custom configurations
 * Web-based and platform independent
 * Based on modern technologies
 * Good code quality
