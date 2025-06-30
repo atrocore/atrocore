@@ -56,7 +56,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         getFilterList: function () {
-            return  this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
+            return this.getMetadata().get(['scopes', this.scope, 'filterInNote']) || ['posts', 'updates']
         },
 
 
@@ -141,12 +141,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         createCollection: function (callback, context) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
-                if(this.mode === 'detail') {
+                if (this.mode === 'detail') {
                     collection.url = this.model.name + '/' + this.model.id + '/stream';
-                }else{
+                } else {
                     collection.url = 'Stream' + '/' + this.scope
                 }
-                collection.sortBy = 'id';
+
                 collection.asc = false;
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.setFilter(this.filter);
@@ -333,8 +333,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
 
         getStoredFilter: function () {
-            let lists =  this.getStorage().get('state', 'streamPanelFilter') || this.getFilterList();
-            return  lists.filter(v => this.getFilterList().includes(v));
+            let lists = this.getStorage().get('state', 'streamPanelFilter') || this.getFilterList();
+            return lists.filter(v => this.getFilterList().includes(v));
         },
 
         storeFilter: function (filter) {
@@ -353,22 +353,22 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setupFilter: function () {
-          this.createView('streamHeader', this.header,  {
-              el: this.options.el + ' .header',
-              scope: this.scope,
-              model: this.model,
-              mode: this.options.mode,
-              filterList: this.getFilterList(),
-              activeFilters: this.getStoredFilter(),
-              collection: this.collection,
-          }, view => {
-              this.listenTo(view, 'filter-update', (activeFilter) => {
-                  this.storeFilter(activeFilter);
-                  this.setFilter(activeFilter);
-                  this.collection.abortLastFetch();
-                  this.fetchCollection();
-              })
-          })
+            this.createView('streamHeader', this.header, {
+                el: this.options.el + ' .header',
+                scope: this.scope,
+                model: this.model,
+                mode: this.options.mode,
+                filterList: this.getFilterList(),
+                activeFilters: this.getStoredFilter(),
+                collection: this.collection,
+            }, view => {
+                this.listenTo(view, 'filter-update', (activeFilter) => {
+                    this.storeFilter(activeFilter);
+                    this.setFilter(activeFilter);
+                    this.collection.abortLastFetch();
+                    this.fetchCollection();
+                })
+            })
         },
 
         actionRefresh: function () {
@@ -378,10 +378,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         fetchCollection() {
-            if(this.getStoredFilter().length) {
+            if (this.getStoredFilter().length) {
                 this.collection.reset();
                 this.collection.fetch();
-            }else{
+            } else {
                 this.$el.find('.list-container').html('<span >No Data</span>')
             }
         }

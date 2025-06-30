@@ -86,7 +86,6 @@ Espo.define('views/stream', 'view', function (Dep) {
             this.getCollectionFactory().create('Note', function (collection) {
                 this.collection = collection;
                 collection.url = 'Stream';
-
                 this.setFilter(this.filter);
 
                 this.listenToOnce(collection, 'sync', function () {
