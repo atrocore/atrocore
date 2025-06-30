@@ -384,7 +384,8 @@
     "unsetSearch": "Видалити пошук",
     "searchResults": "Результати пошуку",
     "fullscreen": "На весь екран",
-    "Copy": "Копіювати"
+    "Copy": "Копіювати",
+    "applyMainSearchAndFilter": "Застосувати основний пошук і фільтр"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

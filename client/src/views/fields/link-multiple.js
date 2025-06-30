@@ -366,9 +366,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getAutocompleteUrl: function (q) {
-            var url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
-                boolList = this.getSelectBoolFilterList(),
-                where = [];
+            var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+            boolList = this.getSelectBoolFilterList();
+            where = [];
 
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
@@ -379,13 +379,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 url += '&' + $.param({'primaryFilter': primary});
             }
 
-            if (q) {
-                let foreignDefs = this.getMetadata().get(['entityDefs', this.foreignScope, 'fields']);
-
-                if (foreignDefs && typeof foreignDefs === 'object' && foreignDefs.name) {
-                    where.push({type: 'like', attribute: 'name', value: this.prepareAutocompleteQueryText(q)});
-                }
-            }
+            where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:'+q});
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {

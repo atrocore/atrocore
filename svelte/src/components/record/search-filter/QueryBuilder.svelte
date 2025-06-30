@@ -44,6 +44,8 @@
 
     let queryBuilderRulesChanged: boolean = false;
 
+    let defaultValue = "-1";
+
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
     let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
@@ -270,7 +272,19 @@
 
             await tick();
 
-            $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
+            $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize({
+                onFocus: function() {
+                    if (this.getValue() === defaultValue) {
+                        this.clear();
+                    }
+                },
+
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
+                    }
+                }
+            });
             $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
 
             model.trigger('rulesChanged', rule);
@@ -339,7 +353,18 @@
         $queryBuilder.on('afterAddRule.queryBuilder', async (e, rule) => {
             await tick();
             if (rule.$el) {
-                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize();
+                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize({
+                    onFocus: function() {
+                        if (this.getValue() === defaultValue) {
+                            this.clear();
+                        }
+                    },
+                    onBlur: function() {
+                       if(!this.getValue()) {
+                           this.setValue("-1")
+                       }
+                    }
+                });
             }
 
             model.trigger('afterAddRule', rule);
@@ -456,7 +481,18 @@
             callback();
 
             const $queryBuilder = window.$(queryBuilderElement);
-            $queryBuilder.find('.rule-filter-container select').selectize();
+            $queryBuilder.find('.rule-filter-container select').selectize({
+                onFocus: function() {
+                    if (this.getValue() === defaultValue) {
+                        this.clear();
+                    }
+                },
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
+                    }
+                }
+            });
             $queryBuilder.find('.rule-operator-container select').selectize();
         });
     }
