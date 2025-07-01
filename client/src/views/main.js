@@ -322,6 +322,11 @@ Espo.define('views/main', 'view', function (Dep) {
             return false;
         },
 
+        canLoadActivities: function () {
+            return false;
+        },
+
+
         setupRightSideView: function () {
             if (this.shouldSetupRightSideView()) {
                 if (window.SvelteRightSideView) {
@@ -334,13 +339,27 @@ Espo.define('views/main', 'view', function (Dep) {
                 let recordView = this.getMainRecord();
                 let props = {
                     scope: this.scope,
-                    model: this.model,
                     mode: this.getMode(),
+                    hasStream: this.canLoadActivities(),
                     searchManager: this.searchManager,
                     showFilter: this.shouldShowFilter(),
                     createView: this.createView.bind(this),
                     isCollapsed: true,
+                    loadActivities: (callback) => {
+                        let el = this.options.el + ' .right-side-view .activities'
+                        this.createView('activities', 'views/record/activities', {
+                            el: el,
+                            mode: this.mode ?? this.viewMode,
+                            scope: this.scope
+                        }, view => {
+                            if (callback) {
+                                callback(view);
+                            }
+                            view.render();
+                        })
+                    }
                 }
+
                 if (typeof recordView?.getSvelteSideViewProps === 'function') {
                     props = recordView.getSvelteSideViewProps(this);
                 }
