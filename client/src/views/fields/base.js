@@ -1228,9 +1228,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         this.previousOperatorType = type ?? rule.operator.type;
                         let view =  `views/fields/${this.type}`
 
-
-                        if( ['wysiwyg','markdown', 'text'].includes(this.type)) {
+                        if (['wysiwyg', 'markdown', 'text'].includes(this.type)) {
                             view = 'views/fields/varchar';
+                        } else if (this.type === 'autoincrement') {
+                            view = 'views/fields/int';
                         }
 
                         if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
