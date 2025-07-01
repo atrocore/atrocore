@@ -166,22 +166,18 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }];
 
             if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
-                    this.putAttributesToModel();
-                    this.fieldPanels.push( {
-                        name: 'attributeValueOverviews',
-                        title: this.translate('attributeValues'),
-                        filter: (field) => field.attributeId && !field.attributePanelId
-                    });
+                this.putAttributesToModel();
 
                 $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
-
                     this.fieldPanels.push({
                         name: panel.id,
                         title: panel.name,
+                        sortOrder: panel.sortOrder,
                         filter: (field) => field.attributeId && field.attributePanelId === panel.id
                     })
-                });
 
+                    this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1 );
+                });
             }
         },
 
@@ -242,6 +238,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id',
                     attributeId: fieldDef['attributeId'],
                     attributePanelId: fieldDef['attributePanelId'],
+                    attributeGroup: fieldDef.attributeGroup,
+                    sortOrder: fieldDef.sortOrder ,
+                    sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
                 });
             }, this);
 
@@ -253,10 +252,35 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderFieldsPanels() {
             this.fieldPanels.forEach((panel,index) => {
+                let fieldList = this.fieldsArr.filter(panel.filter);
+                fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
+                let fieldListByGroup = {};
+                fieldList.forEach((field) => {
+                    let id = field.attributeGroup?.id ?? 'no-group'
+                    if(!fieldListByGroup[id]) {
+                        fieldListByGroup[id] = {
+                            id: id,
+                            name: field.attributeGroup?.name,
+                            isInGroup: id !== 'no-group',
+                            rowLength: this.getModels().length + 1,
+                            fieldListInGroup: [],
+                            sortOrder: field.attributeGroup?.sortOrder ?? -1,
+                        };
+                    }
+                    fieldListByGroup[id].fieldListInGroup.push(field);
+                });
+
+                fieldListByGroup = Object.values(fieldListByGroup).sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
+                for (let fieldListGroup of fieldListByGroup) {
+                    if(fieldListGroup.isInGroup) {
+                        fieldListGroup.fieldListInGroup.sort((a, b) => a.sortOrderInAttributeGroup < b.sortOrderInAttributeGroup ? -1 : 1);
+                    }
+                }
+
                 this.createView(panel.name, this.fieldsPanelsView, {
                     scope: this.scope,
                     model: this.model,
-                    fieldList: this.fieldsArr.filter(panel.filter),
+                    fieldList: fieldListByGroup,
                     instances: this.instances,
                     columns: this.buildComparisonTableHeaderColumn(),
                     instanceComparison: this.instanceComparison,

@@ -233,13 +233,8 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
                     rows: []
                 }];
 
-                const attributeDefs = model.get('attributesDefs') || {};
                 this.fields.forEach(field => {
-                    let defs = {};
-                    if (attributeDefs[field]) {
-                        defs = attributeDefs[field];
-                        defs.customLabel = defs.detailViewLabel || defs.label
-                    }
+                    const defs = this.prepareFieldDefs(model, field);
 
                     layout[0].rows.push([
                         {
@@ -254,6 +249,18 @@ Espo.define('views/preview-template/record/panels/side-edit', 'view', function (
 
             this.createView('edit', viewName, options, callback);
         },
+
+        prepareFieldDefs(model, field) {
+            let defs = {};
+            const attributeDefs = model.get('attributesDefs') || {};
+
+            if (attributeDefs[field]) {
+                defs = attributeDefs[field];
+                defs.customLabel = defs.detailViewLabel || defs.label
+            }
+
+            return defs;
+        }
     });
 });
 

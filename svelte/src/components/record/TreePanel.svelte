@@ -42,6 +42,7 @@
     let sortAsc = true;
     let sortBy = null;
     let sortFields = [];
+    let applyAdvancedFilter = false;
 
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
@@ -85,7 +86,7 @@
 
     function getWhereData(): [] {
         let whereData = Storage.get('treeWhereData', scope) || [];
-        if (!['_self', '_bookmark'].includes(activeItem.name)) {
+        if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
             whereData = []
         }
         return whereData
@@ -106,13 +107,20 @@
         }
         let $tree = window.$(treeElement);
         let whereData = getWhereData();
-
+        let hasTextFilter = !!searchValue;
+        whereData.forEach((item) => {
+            if(item.type === 'textFilter') {
+                hasTextFilter = true;
+            }
+        })
         if (
-            data === null && searchValue && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            data === null && hasTextFilter && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
             !Metadata.get(['scopes', treeScope, 'hierarchyDisabled'])
         ) {
             treeLoading = true;
-            whereData.push({"type": "textFilter", "value": searchValue});
+            if(searchValue){
+                whereData.push({"type": "textFilter", "value": searchValue});
+            }
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
                 "where": whereData,
                 "scope": scope,
@@ -794,6 +802,19 @@
         }
 
         isPinned = Storage.get('catalog-tree-panel-pin', scope) !== 'not-pinned';
+
+        let treeApplyAdvanced = Storage.get('treeApplyAdvancedFilter', scope);
+        if(treeApplyAdvanced) {
+            applyAdvancedFilter = treeApplyAdvanced === 'on';
+        }else{
+            applyAdvancedFilter = true;
+        }
+
+
+        if(collection) {
+            Storage.set('treeWhereData', scope, collection.where)
+        }
+
         loadLayout(() => {
             if (treeItems.length === 0) {
                 isCollapsed = true
@@ -842,6 +863,12 @@
     function onSidebarPin(e: CustomEvent): void {
         Storage.set('catalog-tree-panel-pin', scope, isPinned ? 'pin' : 'not-pinned');
     }
+
+    function handleFilterToggle(e: MouseEvent): void {
+        applyAdvancedFilter = !applyAdvancedFilter;
+        Storage.set('treeApplyAdvancedFilter', scope, applyAdvancedFilter ? 'on' : 'off' );
+        rebuildTree()
+    }
 </script>
 
 <BaseSidebar className="catalog-tree-panel" position="left" bind:width={currentWidth} bind:isCollapsed={isCollapsed}
@@ -875,6 +902,7 @@
                                on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
                                class="form-control category-search" class:search-enabled={!!searchValue}
                                placeholder={Language.translate('typeToSearch')}>
+
                         <div class="button-container">
                             {#if searchValue}
                                 <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
@@ -884,6 +912,22 @@
                             </button>
                         </div>
                     </div>
+                    {#if activeItem.name === "_self"}
+                        <div style="margin-top:  20px;">
+                             <span class="icons-wrapper" >
+                                <span class="toggle" class:active={applyAdvancedFilter}
+                                      on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                >
+                                    {#if applyAdvancedFilter}
+                                        <i class="ph-fill ph-toggle-right"></i>
+                                    {:else}
+                                        <i class="ph-fill ph-toggle-left"></i>
+                                    {/if}
+                                </span>
+                                 {Language.translate('applyMainSearchAndFilter')}
+                            </span>
+                        </div>
+                    {/if}
                     {#if activeItem.name !== '_admin' }
                         <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
                             <div class="btn-group" style="display:flex; align-items: stretch;">
@@ -1031,5 +1075,13 @@
     :global(ul.jqtree-tree .jqtree_common.disabled > div > span) {
         color: #000;
         font-weight: bold;
+    }
+
+    .category-panel .icons-wrapper .toggle.active {
+        color: #06c;
+    }
+
+    .category-panel .icons-wrapper .toggle i {
+        font-size: 20px;
     }
 </style>

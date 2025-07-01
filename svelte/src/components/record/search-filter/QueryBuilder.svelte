@@ -13,6 +13,7 @@
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Config} from "../../../utils/Config";
     import FilterGroup from "./FilterGroup.svelte";
+    import {get} from "svelte/store";
 
     export let scope: string;
     export let searchManager: any;
@@ -42,6 +43,8 @@
     let advancedFilterDisabled: boolean;
 
     let queryBuilderRulesChanged: boolean = false;
+
+    let defaultValue = "-1";
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
 
@@ -269,7 +272,19 @@
 
             await tick();
 
-            $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize();
+            $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize({
+                onFocus: function() {
+                    if (this.getValue() === defaultValue) {
+                        this.clear();
+                    }
+                },
+
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
+                    }
+                }
+            });
             $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
 
             model.trigger('rulesChanged', rule);
@@ -338,7 +353,18 @@
         $queryBuilder.on('afterAddRule.queryBuilder', async (e, rule) => {
             await tick();
             if (rule.$el) {
-                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize();
+                rule.$el.find('.rule-filter-container select:not(.selectized)').selectize({
+                    onFocus: function() {
+                        if (this.getValue() === defaultValue) {
+                            this.clear();
+                        }
+                    },
+                    onBlur: function() {
+                       if(!this.getValue()) {
+                           this.setValue("-1")
+                       }
+                    }
+                });
             }
 
             model.trigger('afterAddRule', rule);
@@ -455,7 +481,18 @@
             callback();
 
             const $queryBuilder = window.$(queryBuilderElement);
-            $queryBuilder.find('.rule-filter-container select').selectize();
+            $queryBuilder.find('.rule-filter-container select').selectize({
+                onFocus: function() {
+                    if (this.getValue() === defaultValue) {
+                        this.clear();
+                    }
+                },
+                onBlur: function() {
+                    if(!this.getValue()) {
+                        this.setValue("-1")
+                    }
+                }
+            });
             $queryBuilder.find('.rule-operator-container select').selectize();
         });
     }
@@ -756,6 +793,15 @@
                 $queryBuilder.queryBuilder('destroy');
                 initQueryBuilderFilter();
                 advancedFilterChecked = false;
+                let checked = get(savedSearchStore.selectedSavedItemIds);
+                if(checked.includes(item.id)){
+                    savedSearchStore.toggleSavedItemSelection(item.id);
+                    checked = get(savedSearchStore.selectedSavedItemIds);
+                    searchManager.update({
+                        savedFilters: get(savedSearchStore.savedSearchItems).filter(item => checked.includes(item.id))
+                    });
+                }
+                updateCollection();
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
@@ -773,6 +819,7 @@
                 advancedFilterChecked = false;
                 oldAdvancedFilter = null;
                 editingSavedSearch = null;
+                updateCollection();
             } catch (e) {
                 console.error(e);
                 Notifier.notify(Language.translate('theSavedFilterMightBeCorrupt', 'messages'), 'error')
@@ -1003,6 +1050,7 @@
     <div class="advanced-filters">
         <FilterGroup title={editingSavedSearch ? editingSavedSearch.name : Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
             <span class="icons-wrapper" slot="icons">
+                {#if !editingSavedSearch}
                 <span class="toggle" class:disabled={advancedFilterDisabled} class:active={advancedFilterChecked}
                       on:click|stopPropagation|preventDefault={handleFilterToggle}
                 >
@@ -1012,6 +1060,7 @@
                         <i class="ph-fill ph-toggle-left"></i>
                     {/if}
                 </span>
+                {/if}
             </span>
 
             <div class="query-builder" bind:this={queryBuilderElement}></div>

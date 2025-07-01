@@ -1,1 +1,1 @@
-{{#if idValue}}{{{avatar}}}<a href="#{{foreignScope}}/view/{{idValue}}">{{nameValue}}</a>{{else}}{{translate 'None'}}{{/if}}
+{{#if idValue}}{{{avatar}}}<a class="user-link" href="#{{foreignScope}}/view/{{idValue}}">{{nameValue}}</a>{{else}}{{translate 'None'}}{{/if}}

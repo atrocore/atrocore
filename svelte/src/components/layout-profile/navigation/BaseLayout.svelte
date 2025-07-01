@@ -64,3 +64,14 @@
 </div>
 
 <slot></slot>
+
+<style>
+    .button-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .button-container > .btn {
+        border-radius: 3px;
+    }
+</style>

@@ -385,7 +385,8 @@
     "collapseAll": "Alles einklappen",
     "expandAll": "Alle erweitern",
     "fullscreen": "Vollbild",
-    "Copy": "Kopieren"
+    "Copy": "Kopieren",
+    "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",

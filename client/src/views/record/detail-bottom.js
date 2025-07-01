@@ -169,7 +169,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         setupStreamPanel: function () {
-            this.panelList.push({
+            const panel = {
                 name: "stream",
                 label: "Activities",
                 title: this.translate('Activities', 'labels'),
@@ -179,7 +179,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 order: 5,
                 expanded: this.getStorage().get('streamCollapseState', this.scope) === 'expanded',
                 avoidLoadingOnCollapse: true
-            });
+            }
+            if (this.isInSmallView) {
+                panel.expanded = false;
+            }
+            this.panelList.push(panel);
         },
 
         init: function () {
@@ -201,6 +205,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
             if ('canClose' in this.options) {
                 this.canClose = this.options.canClose;
+            }
+
+            if ('isInSmallView' in this.options) {
+                this.isInSmallView = this.options.isInSmallView;
             }
 
             this.panelList = [];
@@ -294,6 +302,12 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     filtered.push(item);
                 }
             }.bind(this));
+
+            if (this.isInSmallView) {
+                filtered = filtered.filter(function (item) {
+                    return item.action === 'refresh';
+                });
+            }
             return filtered;
         },
 
@@ -356,7 +370,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
             preferences[this.scope] = scopePreferences;
             this.getPreferences().set('closedPanelOptions', preferences);
-            this.getPreferences().save({patch: true});
+            this.getPreferences().save({ patch: true });
             this.getPreferences().trigger('update');
         },
 
@@ -377,7 +391,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
             preferences[this.scope] = scopePreferences;
             this.getPreferences().set('closedPanelOptions', preferences);
-            this.getPreferences().save({patch: true});
+            this.getPreferences().save({ patch: true });
             this.getPreferences().trigger('update');
         },
 
@@ -391,7 +405,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             panelList.forEach(function (item) {
                 let p;
                 if (typeof item === 'string' || item instanceof String) {
-                    p = {name: item};
+                    p = { name: item };
                 } else {
                     p = Espo.Utils.clone(item || {});
                 }
@@ -399,7 +413,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     return;
                 }
 
-                if((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
+                if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
                     return;
                 }
 
@@ -460,6 +474,13 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 }
 
                 p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+
+                if (this.isInSmallView) {
+                    p.canClose = false;
+                    p.expanded = false;
+                    p.avoidLoadingOnCollapse = true
+                }
+                p.isInSmallView = this.isInSmallView;
 
                 this.setPanelTitle(p);
 
@@ -611,6 +632,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         savePanelStateToStorage(panelName, hide) {
+            if (this.isInSmallView) {
+                return;
+            }
+
             let states = this.getStorage().get('collapsed-panels', this.scope) || [];
             if (!hide && states.includes(panelName)) {
                 states.splice(states.indexOf(panelName), 1);

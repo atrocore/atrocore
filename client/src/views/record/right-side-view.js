@@ -86,6 +86,11 @@ Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record
                 }
             })
         },
+
+        triggerModeChangedOnModel(mode) {
+
+        },
+
         setupBeforeFinal: function () {
             this.manageAccess();
 
@@ -97,6 +102,7 @@ Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record
 
             this.setupFieldLevelSecurity();
         },
+
         afterRender: function () {
             this.initListenToInlineMode();
         }

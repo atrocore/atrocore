@@ -177,7 +177,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             if (this.defs.select) {
-                var data = {link: this.link};
+                var data = { link: this.link };
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
                 }
@@ -318,6 +318,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         dragableListRows: this.dragableListRows,
                         listRowsOrderSaveUrl: this.listRowsOrderSaveUrl,
                         panelView: this,
+                        openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink
                     }, function (view) {
                         view.getSelectAttributeList(function (selectAttributeList) {
@@ -457,7 +458,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     rules: [
                         {
                             id: foreign + 'Id',
-                            field: foreign +'Id',
+                            field: foreign + 'Id',
                             value: [data.modelId],
                             type: 'string',
                             operator: 'in',
@@ -498,7 +499,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 queryBuilder: queryBuilder
             };
 
-            this.getRouter().navigate(`#${this.scope}`, {trigger: true});
+            this.getRouter().navigate(`#${this.scope}`, { trigger: true });
             this.getRouter().dispatch(this.scope, 'list', params);
         },
 
@@ -630,7 +631,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
 
-            let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
+            let attributes = { _entityFrom: _.extend(this.model.attributes, { _entityName: this.model.name }) };
             if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
                 attributes.ownerUserId = this.getUser().id;
                 attributes.ownerUserName = this.getUser().get('name');
@@ -668,6 +669,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     link: foreignLink,
                     panelName: this.panelName
                 },
+                layoutRelatedScope: this.getLayoutRelatedScope(),
                 attributes: attributes,
             }, view => {
                 view.render();
@@ -907,7 +909,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 view.render();
 
                 view.listenTo(view.model, 'after:file-upload', entity => {
-                    this.ajaxPostRequest(`${this.model.name}/${this.model.get('id')}/${link}`, {ids: [entity.id]}).success(() => {
+                    this.ajaxPostRequest(`${this.model.name}/${this.model.get('id')}/${link}`, { ids: [entity.id] }).success(() => {
                         this.model.trigger('after:relate', link);
                         this.actionRefresh();
                     });
