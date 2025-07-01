@@ -53,11 +53,6 @@
         border-radius: 3px;
     }
 
-    #layout-buttons .button-container {
-        display: flex;
-        gap: 10px;
-    }
-
     #layouts-menu .well {
         border: 1px solid #ededed;
         background-color: #fcfcfc;
