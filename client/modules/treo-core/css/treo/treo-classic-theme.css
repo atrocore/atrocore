@@ -13361,7 +13361,8 @@ input#sn-checkbox-open-in-new-window {
 
 .dashlets .panel-default > .panel-heading,
 .middle > .panel-default > .panel-heading,
-.bottom > .panel-default > .panel-heading {
+.bottom > .panel-default > .panel-heading,
+.modal-body > .panel-default > .panel-heading {
     height: 34px;
 }
 

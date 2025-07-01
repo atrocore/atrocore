@@ -164,4 +164,13 @@
         padding-top: 0 !important;
         overflow: auto !important;
     }
+
+    .button-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .button-container > .btn {
+        border-radius: 3px;
+    }
 </style>
