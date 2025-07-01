@@ -113,6 +113,20 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
+                    mutation.removedNodes.forEach(node => {
+                        if (!(node instanceof HTMLElement)) return;
+                        const withTooltip = node.querySelectorAll?.('[data-tippy]');
+                        withTooltip?.forEach(el => {
+                            if (el._tippy) {
+                                el._tippy.destroy();
+                            }
+                        });
+
+                        if (node.dataset?.tippy && node._tippy) {
+                            node._tippy.destroy();
+                        }
+                    });
+
                     const el = mutation.target;
 
                     if (el.getAttribute('title')) {

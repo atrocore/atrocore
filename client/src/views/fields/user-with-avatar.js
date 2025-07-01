@@ -38,6 +38,8 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         detailTemplate: 'fields/user-with-avatar/detail',
 
+        tooltipInstance: null,
+
         data: function () {
             var o = _.extend({}, Dep.prototype.data.call(this));
             o.avatar = this.getAvatarHtml();
@@ -47,6 +49,18 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
 
         getAvatarHtml: function () {
             return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 28, 'avatar-link');
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.tooltipInstance && this.tooltipInstance.destroy) {
+                    this.tooltipInstance.destroy();
+                }
+
+                this.tooltipInstance = null;
+            })
         },
 
         afterRender: function () {
