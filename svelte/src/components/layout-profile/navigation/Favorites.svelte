@@ -24,6 +24,10 @@
         {name: 'cancel', label: Language.translate('Cancel', 'labels')}
     ];
 
+    if (params.canReset) {
+        buttonList.push({name: 'resetToDefault', label: Language.translate('Reset to Default', 'labels')});
+    }
+
     function refresh(): void {
         key++;
     }
