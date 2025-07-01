@@ -355,7 +355,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 where.push({'type': 'bool', 'data': boolData});
             }
 
-            where.push({'type': 'textFilter', value: 'WITH_NUMERIC:'+q});
+            where.push({'type': 'textFilter', value: 'AUTOCOMPLE:'+q});
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
