@@ -18348,12 +18348,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-weight: bold;
     font-size: 18px;
     line-height: 20px;
+    word-break: break-all;
 }
 
 .user-tooltip-inner > .top .username {
     font-size: 12px;
     color: #7c848b;
     margin-top: 2px;
+    word-break: break-all;
 }
 
 .user-tooltip-inner > table {
@@ -18370,6 +18372,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding: 5px 10px;
     border-left: 1px solid var(--primary-border-color);
     border-top: 1px solid var(--primary-border-color);
+    word-break: break-all;
 }
 
 .user-tooltip-inner > table tr:first-child td {
