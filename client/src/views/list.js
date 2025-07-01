@@ -734,6 +734,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             return this.shouldShowFilter() || this.canLoadActivities();
         },
 
+        canLoadActivities: function () {
+            let streamAllowed = this.getAcl().check(this.scope, 'stream');
+            return !this.getMetadata().get('scopes.' + this.scope + '.streamDisabled') && streamAllowed
+        },
+
         shouldShowFilter() {
             if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
                 return false;
