@@ -58,6 +58,7 @@ Espo.define('views/layout-profile/modals/favorites', 'views/modal',
                                 }
                             });
                         },
+                        canReset: !!this.options.canReset,
                     },
                     inModal: true
                 }

@@ -67,7 +67,7 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
         },
 
         actionEditDashboard() {
-            this.createView('dashboard', 'views/layout-profile/modals/dashboard-layout', {
+            this.createView('dashboard', 'views/user-profile/modals/dashboard-layout', {
                 field: 'dashboardLayout',
                 model: this.model,
             }, view => {
@@ -76,9 +76,13 @@ Espo.define('views/user-profile/record/detail', 'views/record/detail', Dep => {
         },
 
         actionConfigureFavorites() {
-            this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+            this.createView('favoritesEdit', 'views/user-profile/modals/favorites', {
                 field: 'favoritesList',
-                model: this.model
+                model: this.model,
+                canReset: true,
+                afterSave: () => {
+                    this.getPreferences().trigger('favorites:update');
+                }
             }, view => {
                 this.notify(false);
                 view.render();
