@@ -23,9 +23,10 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 },
 
                 'click [data-action="configureFavorites"]': function (e) {
-                    this.createView('favoritesEdit', 'views/layout-profile/modals/favorites', {
+                    this.createView('favoritesEdit', 'views/user-profile/modals/favorites', {
                         field: 'favoritesList',
                         model: this.getPreferences(),
+                        canReset: true,
                         afterSave: () => {
                             this.getPreferences().trigger('favorites:update');
                         },

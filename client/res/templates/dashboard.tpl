@@ -9,7 +9,7 @@
         <div class="col-sm-7 clearfix">
             {{#unless layoutReadOnly}}
             <div class="btn-group pull-right dashboard-buttons">
-                <button class="btn btn-default " data-action="reset" style="margin: 0 10px">{{translate 'Reset'}}</button>
+                <button class="btn btn-default " data-action="reset" style="margin: 0 10px">{{translate 'Reset to Default'}}</button>
                 <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><i class="ph ph-pencil-simple"></i></button>
                 <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><i class="ph ph-plus"></i></button>
             </div>
