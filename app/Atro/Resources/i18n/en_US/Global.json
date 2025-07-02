@@ -128,6 +128,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "phpCode": "PHP Code",
     "_addAttribute": "[Add Attribute]",
     "fieldValueFilters": "Field Value Filters",
     "confirmRemoveAttributeValue": "Are you sure you want to delete the attribute?",
