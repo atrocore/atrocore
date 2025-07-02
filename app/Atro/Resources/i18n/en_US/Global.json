@@ -425,7 +425,8 @@
     "expandAll": "Expand all",
     "fullscreen": "Full Screen",
     "Copy": "Copy",
-    "applyMainSearchAndFilter": "Apply main search and filter"
+    "applyMainSearchAndFilter": "Apply main search and filter",
+    "Reset to Default": "Reset to Default"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",
