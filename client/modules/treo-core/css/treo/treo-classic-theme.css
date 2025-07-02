@@ -17834,6 +17834,10 @@ span[data-img-src]::after {
     text-decoration: none;
 }
 
+.layout-editor-container .dropdown-menu {
+    max-width: 300px;
+}
+
 .sidebar .layout-editor-container .btn-link .ph {
     font-size: 16px;
 }

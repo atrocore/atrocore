@@ -16,7 +16,17 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
 
         alignRight: false,
 
+        cleanup: null,
+
         events: {
+            'click .dropdown-toggle': function (e) {
+                e.currentTarget.parentElement.classList.toggle('open');
+                if (e.currentTarget.parentElement.classList.contains('open')) {
+                    this.updatePosition();
+                } else if (this.cleanup) {
+                    this.cleanup();
+                }
+            },
             'click .layout-editor': function (e) {
                 // open modal view
                 this.showLayoutEditorModal()
@@ -57,6 +67,35 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 linkClass: this.options.linkClass ?? '',
                 alignRight: this.alignRight,
             };
+        },
+
+        // afterRender() {
+        //     Dep.prototype.afterRender.call(this);
+        // },
+
+        updatePosition() {
+            const button = this.$el.find('.dropdown-toggle')[0];
+            const dropdown = this.$el.find('.dropdown-menu')[0];
+
+            if (!button || !dropdown) {
+                return;
+            }
+
+            this.cleanup = window.floatingUi.autoUpdate(button, dropdown, () => {
+                window.floatingUi.computePosition(button, dropdown, {
+                    strategy: 'fixed',
+                    placement: 'bottom-start',
+                    middleware: [window.floatingUi.offset(5), window.floatingUi.flip({
+                        crossAxis: 'alignment',
+                        fallbackAxisSideDirection: 'start'
+                    }), window.floatingUi.shift({mainAxis: true})],
+                }, {animationFrame: true}).then(({x, y}) => {
+                    Object.assign(dropdown.style, {
+                        left: `${x}px`,
+                        top: `${y}px`,
+                    });
+                })
+            });
         },
 
         showLayoutEditorModal() {

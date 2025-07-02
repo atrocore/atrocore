@@ -4,6 +4,7 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/border.css';
 
 import {driver} from 'driver.js'
+import {autoUpdate, autoPlacement, flip, computePosition, shift, offset} from '@floating-ui/dom'
 import tippy from 'tippy.js';
 
 import {Language} from './utils/Language';
@@ -16,7 +17,6 @@ import {Config} from "./utils/Config";
 import {Storage} from "./utils/Storage.ts";
 import {Acl} from "./utils/Acl.ts";
 import {CollectionFactory} from "./utils/CollectionFactory.ts";
-
 
 
 import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
@@ -49,6 +49,14 @@ window.SvelteAcl = Acl;
 window.SvelteCollectionFactory = CollectionFactory;
 window.driver = driver;
 window.tippy = tippy;
+window.floatingUi = {
+    autoPlacement,
+    computePosition,
+    autoUpdate,
+    shift,
+    flip,
+    offset
+};
 
 export {
     Script,
