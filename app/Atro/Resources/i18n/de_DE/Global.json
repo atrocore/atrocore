@@ -386,7 +386,8 @@
     "expandAll": "Alle erweitern",
     "fullscreen": "Vollbild",
     "Copy": "Kopieren",
-    "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden"
+    "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden",
+    "Reset to Default": "Auf Standard zurücksetzen"
   },
   "messages": {
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
