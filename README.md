@@ -7,7 +7,7 @@ AtroCore is an open-source Data Platform, Master Data Management and Data Integr
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
-| Mirror (GitHub) | https://github.com/atrocore/atrocore            |
+| Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
 
 
 ## History
