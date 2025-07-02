@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Console\CreateAction;
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
 use Doctrine\DBAL\ParameterType;
@@ -43,6 +44,11 @@ class Action extends Base
         }
 
         parent::prepareEntityForOutput($entity);
+
+        $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type')) . '.php';
+        if (file_exists($fileName)) {
+            $entity->set('phpCode', file_get_contents($fileName));
+        }
     }
 
     public function executeRecordAction(string $id, string $entityId, string $actionName): array

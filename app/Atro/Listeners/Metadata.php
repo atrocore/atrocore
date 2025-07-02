@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\ActionTypes\AbstractAction;
+use Atro\Console\CreateAction;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Repositories\NotificationRule;
@@ -112,7 +113,7 @@ class Metadata extends AbstractListener
 
     protected function putCustomCodeActions(array &$data): void
     {
-        $dir = 'data/custom-code/CustomActions';
+        $dir = CreateAction::DIR;
         if (!is_dir($dir)) {
             return;
         }

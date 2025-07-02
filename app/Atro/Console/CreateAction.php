@@ -17,6 +17,8 @@ use Atro\Core\Utils\Util;
 
 class CreateAction extends AbstractConsole
 {
+    public const DIR = 'data/custom-code/CustomActions';
+
     public static function getDescription(): string
     {
         return 'The system creates custom Action handler class. You can find the class in data/custom-code/CustomActions/ folder and modify the code.';
@@ -69,10 +71,10 @@ class {{name}} extends AbstractAction
 
 EOD;
 
-        Util::createDir('data/custom-code/CustomActions');
+        Util::createDir(self::DIR);
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
-        self::show("Action handler class 'data/custom-code/CustomActions/{$className}.php' has been created successfully.", self::SUCCESS);
+        self::show("Action handler class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
 
         // refresh ui handlers
         exec('php console.php regenerate ui handlers');
