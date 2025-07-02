@@ -40,8 +40,7 @@ class Layout extends AbstractListener
                 }
 
                 // add _self if entity is hierarchy type
-                if ($this->getMetadata()->get(['scopes', $scope, 'type']) === 'Hierarchy'
-                    && empty($this->getMetadata()->get(['scopes', $scope, 'disableHierarchy'], false))) {
+                if (in_array($this->getMetadata()->get(['scopes', $scope, 'type']), ['Hierarchy', 'Base'])) {
                     $result = $event->getArgument('result');
                     $exists = false;
                     foreach ($result as $item) {
