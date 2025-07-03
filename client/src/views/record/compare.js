@@ -99,12 +99,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 for (const panel of this.fieldPanels) {
                     let fieldsPanels = this.getView(panel.name);
 
-                    if (fieldsPanels.validate() ) {
+                    if (fieldsPanels.validate()) {
                         this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
                         return;
                     }
 
-                    attributes = {...attributes, ...fieldsPanels.fetch()};
+                    attributes = { ...attributes, ...fieldsPanels.fetch() };
                 }
 
 
@@ -150,7 +150,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.setupFieldPanels();
-            
+
             this.prepareFieldsData();
         },
 
@@ -176,7 +176,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         filter: (field) => field.attributeId && field.attributePanelId === panel.id
                     })
 
-                    this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1 );
+                    this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 });
             }
         },
@@ -185,7 +185,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldsArr = [];
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
-            
+
 
             Object.entries(this.model.defs.fields).forEach(function ([field, fieldDef]) {
                 if (this.nonComparableFields.includes(field)) {
@@ -239,7 +239,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     attributeId: fieldDef['attributeId'],
                     attributePanelId: fieldDef['attributePanelId'],
                     attributeGroup: fieldDef.attributeGroup,
-                    sortOrder: fieldDef.sortOrder ,
+                    sortOrder: fieldDef.sortOrder,
                     sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
                 });
             }, this);
@@ -251,13 +251,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         renderFieldsPanels() {
-            this.fieldPanels.forEach((panel,index) => {
+            this.fieldPanels.forEach((panel, index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
                 fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 let fieldListByGroup = {};
                 fieldList.forEach((field) => {
                     let id = field.attributeGroup?.id ?? 'no-group'
-                    if(!fieldListByGroup[id]) {
+                    if (!fieldListByGroup[id]) {
                         fieldListByGroup[id] = {
                             id: id,
                             name: field.attributeGroup?.name,
@@ -272,7 +272,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 fieldListByGroup = Object.values(fieldListByGroup).sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 for (let fieldListGroup of fieldListByGroup) {
-                    if(fieldListGroup.isInGroup) {
+                    if (fieldListGroup.isInGroup) {
                         fieldListGroup.fieldListInGroup.sort((a, b) => a.sortOrderInAttributeGroup < b.sortOrderInAttributeGroup ? -1 : 1);
                     }
                 }
@@ -375,6 +375,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link]);
+                if (!relationDefs) {
+                    return;
+                }
 
                 let relationName = relationDefs['relationName'];
 
@@ -440,12 +443,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
-            if(['rangeFloat', 'rangeInt'].includes(fieldDef['type'] )) {
-                let result = this.areEquals(current, others, field +'From', this.model.defs.fields[field +'From'])
-                    && this.areEquals(current, others, field +'To', this.model.defs.fields[field +'To']);
+            if (['rangeFloat', 'rangeInt'].includes(fieldDef['type'])) {
+                let result = this.areEquals(current, others, field + 'From', this.model.defs.fields[field + 'From'])
+                    && this.areEquals(current, others, field + 'To', this.model.defs.fields[field + 'To']);
 
-                if(fieldDef['measureId']) {
-                    result = result && this.areEquals(current, others, field +'Unit', this.model.defs.fields[field +'Unit']);
+                if (fieldDef['measureId']) {
+                    result = result && this.areEquals(current, others, field + 'Unit', this.model.defs.fields[field + 'Unit']);
                 }
 
                 return result;
@@ -457,11 +460,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let unitIdField = mainField + 'Unit'
                 let unitFieldDef = this.model.defs.fields[unitIdField];
                 let result = this.areEquals(current, others, unitIdField, unitFieldDef);
-                if(mainField !== field) {
-                    return result &&  this.areEquals(current, others, mainField, mainFieldDef);
+                if (mainField !== field) {
+                    return result && this.areEquals(current, others, mainField, mainFieldDef);
                 }
 
-                if(!result) {
+                if (!result) {
                     return false;
                 }
             }
@@ -502,7 +505,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             });
         },
 
@@ -658,7 +661,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getDistantModels() {
-          return null;
+            return null;
         },
 
         renderPanelNavigationView() {
@@ -679,15 +682,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
 
             this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
-            
-            if(this.anchorNavigation !== null) {
-                try{
+
+            if (this.anchorNavigation !== null) {
+                try {
                     this.anchorNavigation.$destroy();
-                }catch (e) {
-                    
+                } catch (e) {
+
                 }
             }
-           this.anchorNavigation = new Svelte.AnchorNavigation({
+            this.anchorNavigation = new Svelte.AnchorNavigation({
                 target: anchorContainer.get(0),
                 props: {
                     items: panelList,
@@ -814,7 +817,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        reRenderFieldsPanels(){
+        reRenderFieldsPanels() {
             let filterButton = $('a[data-action="openOverviewFilter"]');
             if (this.isOverviewFilterApply()) {
                 filterButton.css('color', 'white').addClass('btn-danger').removeClass('btn-default')
@@ -863,7 +866,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let models = [...this.collection.models, this.model];
 
             models.forEach(model => {
-                model.fetch({async: false})
+                model.fetch({ async: false })
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {
                         delete this.model.defs.fields[name];
@@ -889,7 +892,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 models.forEach(model => {
                     $.each(attributesDefs, (name, defs) => {
                         hasAttributeValues = true;
-                        if(!model.defs['fields'][name]) {
+                        if (!model.defs['fields'][name]) {
                             model.defs['fields'][name] = defs;
                         }
                     });
@@ -905,9 +908,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         toggleFieldPanels() {
             this.fieldPanels.forEach(panel => {
                 let view = $(`${this.options.el} [data-name="${panel.name}"]`)
-                if(this.fieldsArr.filter(panel.filter).length > 0) {
+                if (this.fieldsArr.filter(panel.filter).length > 0) {
                     view.parent().show();
-                }else{
+                } else {
                     view.parent().hide();
                 }
             })
