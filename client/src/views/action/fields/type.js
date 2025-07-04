@@ -34,10 +34,10 @@ Espo.define('views/action/fields/type', 'views/fields/enum',
 
         },
 
-        initInlineEdit() {
-            Dep.prototype.initInlineEdit.call(this);
+        initStatusContainer() {
+            Dep.prototype.initStatusContainer.call(this);
 
-            if (this.model.get('phpCode')) {
+            if (this.model.get('typePhpCode')) {
                 this.initShowCodeModal();
             }
         },
@@ -58,7 +58,7 @@ Espo.define('views/action/fields/type', 'views/fields/enum',
 
             $link.on('click', () => {
                 this.notify('Loading...');
-                this.createView('dialog', 'views/modals/php-code', {model: this.model}, dialog => {
+                this.createView('dialog', 'views/modals/php-code', {model: this.model, phpCode: this.model.get('typePhpCode')}, dialog => {
                     dialog.render();
                     this.notify(false);
                 });

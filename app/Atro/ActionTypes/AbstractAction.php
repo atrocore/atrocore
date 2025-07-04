@@ -11,6 +11,7 @@
 
 namespace Atro\ActionTypes;
 
+use Atro\ActionConditionTypes\AbstractActionConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
@@ -20,8 +21,8 @@ use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Condition\Condition;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 abstract class AbstractAction implements TypeInterface
@@ -52,7 +53,7 @@ abstract class AbstractAction implements TypeInterface
     {
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
         $input = new \stdClass();
-        $input->entityId = $event->getArgument('entity')->get('id');
+        $input->triggeredEntity = $event->getArgument('entity');
 
         return $this->executeNow($action, $input);
     }
@@ -80,9 +81,22 @@ abstract class AbstractAction implements TypeInterface
         } elseif ($action->get('conditionsType') === 'script') {
             $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
             $templateData = [
-                'entity' => $this->getSourceEntity($action, $input),
-                'user'   => $this->getEntityManager()->getUser()
+                'entity'          => $this->getSourceEntity($action, $input),
+                'triggeredEntity' => $input->triggeredEntity ?? null,
+                'user'            => $this->getEntityManager()->getUser(),
+                'importJobId'     => $this->container->get('memoryStorage')->get('importJobId')
             ];
+
+            if (
+                empty($templateData['triggeredEntity'])
+                && property_exists($input, 'triggeredEntityType')
+                && property_exists($input, 'triggeredEntityId')
+            ) {
+                $templateData['triggeredEntity'] = $this
+                    ->getEntityManager()
+                    ->getRepository($input->triggeredEntityType)
+                    ->get($input->triggeredEntityId);
+            }
 
             $res = $this->getTwig()->renderTemplate($template, $templateData, 'bool');
             if (is_string($res)) {
@@ -90,6 +104,11 @@ abstract class AbstractAction implements TypeInterface
             }
 
             return $res;
+        }
+
+        $className = $this->getMetadata()->get("app.conditionsTypes.{$action->get('conditionsType')}.className");
+        if ($className && is_a($className, AbstractActionConditionType::class, true)) {
+            return $this->container->get($className)->canExecute($action, $input);
         }
 
         return true;
@@ -100,7 +119,7 @@ abstract class AbstractAction implements TypeInterface
         $sourceEntity = null;
         if (!empty($input->sourceEntity)) {
             $sourceEntity = $input->sourceEntity;
-        } else if (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
+        } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
             $sourceEntity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
         } elseif (!empty($input->triggeredEntity)) {
             $sourceEntity = $input->triggeredEntity;

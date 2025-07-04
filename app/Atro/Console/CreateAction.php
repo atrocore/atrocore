@@ -21,14 +21,14 @@ class CreateAction extends AbstractConsole
 
     public static function getDescription(): string
     {
-        return 'The system creates custom Action handler class. You can find the class in data/custom-code/CustomActions/ folder and modify the code.';
+        return 'The system creates custom Action handler class. You can find the class in ' . self::DIR . '/ folder and modify the code.';
     }
 
     public function run(array $data): void
     {
         $className = $data['className'] ?? null;
 
-        $fileName = "data/custom-code/CustomActions/{$className}.php";
+        $fileName = self::DIR . "/{$className}.php";
 
         if (file_exists($fileName)){
             self::show('Such handler class already exists.', self::ERROR, true);

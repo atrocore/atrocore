@@ -109,6 +109,10 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
             }
 
             return Dep.prototype.fetchSearch.call(this)
+        },
+
+        getFilterName(type = null) {
+            return this.name;
         }
     });
 });

@@ -16,7 +16,18 @@
       "optionsIds": [],
       "options": []
     },
-    "phpCode": {
+    "typePhpCode": {
+      "type": "wysiwyg",
+      "readOnly": true,
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true
+    },
+    "conditionPhpCode": {
       "type": "wysiwyg",
       "readOnly": true,
       "notStorable": true,
@@ -46,9 +57,8 @@
       "view": "views/action/fields/source-entity"
     },
     "conditionsType": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "conditions_type",
-      "dropdown": true
+      "type": "varchar",
+      "view": "views/action/fields/conditions-type"
     },
     "conditions": {
       "type": "wysiwyg",

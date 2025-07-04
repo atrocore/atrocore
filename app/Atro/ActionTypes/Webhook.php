@@ -13,22 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\ActionTypes;
 
-use Atro\Core\Container;
-use Atro\Core\EventManager\Event;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
 class Webhook extends AbstractAction
 {
-
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
-        $input = new \stdClass();
-
-        return $this->executeNow($action, $input);
-    }
-
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         if (!empty($action->get('webhookUrl'))){
