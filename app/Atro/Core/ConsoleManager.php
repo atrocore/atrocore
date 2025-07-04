@@ -113,6 +113,7 @@ class ConsoleManager
             "storages --scan"                           => Console\ScanStorages::class,
             "storage <id> --scan"                       => Console\ScanStorage::class,
             "create action <className>"                 => Console\CreateAction::class,
+            "create action condition type <className>"  => Console\CreateActionConditionType::class,
             "create import processing type <className>" => '\\Import\\Console\\CreateImportProcessingType'
         ];
 
