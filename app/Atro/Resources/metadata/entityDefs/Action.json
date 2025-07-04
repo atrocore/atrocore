@@ -46,9 +46,8 @@
       "view": "views/action/fields/source-entity"
     },
     "conditionsType": {
-      "type": "extensibleEnum",
-      "extensibleEnumId": "conditions_type",
-      "dropdown": true
+      "type": "varchar",
+      "view": "views/action/fields/conditions-type"
     },
     "conditions": {
       "type": "wysiwyg",
