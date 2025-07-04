@@ -128,6 +128,8 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "basic": "Basic",
+    "script": "Script",
     "phpCode": "PHP Code",
     "_addAttribute": "[Add Attribute]",
     "fieldValueFilters": "Field Value Filters",

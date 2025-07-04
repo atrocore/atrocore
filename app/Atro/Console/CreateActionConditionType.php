@@ -15,13 +15,13 @@ namespace Atro\Console;
 
 use Atro\Core\Utils\Util;
 
-class CreateAction extends AbstractConsole
+class CreateActionConditionType extends AbstractConsole
 {
-    public const DIR = 'data/custom-code/CustomActions';
+    public const DIR = 'data/custom-code/CustomActionConditionTypes';
 
     public static function getDescription(): string
     {
-        return 'The system creates custom Action handler class. You can find the class in ' . self::DIR . '/ folder and modify the code.';
+        return 'The system creates custom Action Condition Type class. You can find the class in ' . self::DIR . '/ folder and modify the code.';
     }
 
     public function run(array $data): void
@@ -31,7 +31,7 @@ class CreateAction extends AbstractConsole
         $fileName = self::DIR . "/{$className}.php";
 
         if (file_exists($fileName)){
-            self::show('Such handler class already exists.', self::ERROR, true);
+            self::show('Such class already exists.', self::ERROR, true);
         }
 
         if (!preg_match('/^[A-Z][A-Za-z0-9_]*$/', $className)) {
@@ -41,29 +41,24 @@ class CreateAction extends AbstractConsole
         $content = <<<'EOD'
 <?php
 
-namespace CustomActions;
+namespace CustomActionConditionTypes;
 
-use Atro\ActionTypes\AbstractAction;
+use Atro\ActionConditionTypes\AbstractActionConditionType;
 use Espo\ORM\Entity;
 
-class {{name}} extends AbstractAction
+class {{name}} extends AbstractActionConditionType
 {
-    public static function getTypeLabel(): ?string
+    public static function getTypeLabel(): string
     {
         return '{{name}}';
     }
-
-    public static function getName(): ?string
+    
+    public static function getEntityName(): string
     {
-        return 'Do {{name}}';
+       return 'Product';    
     }
 
-    public static function getDescription(): ?string
-    {
-        return 'Describe {{name}}';
-    }
-
-    public function executeNow(Entity $action, \stdClass $input): bool
+    public function canExecute(Entity $action, \stdClass $input): bool
     {
         return true;
     }
@@ -76,7 +71,7 @@ EOD;
 
         self::show("Action handler class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
 
-        // refresh ui handlers
-        exec('php console.php regenerate ui handlers');
+        // clear cache
+        exec('php console.php clear cache');
     }
 }

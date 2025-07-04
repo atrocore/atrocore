@@ -13,24 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\ActionTypes;
 
-use Atro\Core\Container;
-use Atro\Core\EventManager\Event;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Json;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
 
 class Set extends AbstractAction
 {
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
-        $input = new \stdClass();
-        $input->entityId = $event->getArgument('entity')->get('id');
-
-        return $this->executeNow($action, $input);
-    }
-
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         $linker = $this->getEntityManager()->getRepository('ActionSetLinker')
