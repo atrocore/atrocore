@@ -80,9 +80,21 @@ abstract class AbstractAction implements TypeInterface
         } elseif ($action->get('conditionsType') === 'script') {
             $template = empty($action->get('conditions')) ? '' : (string)$action->get('conditions');
             $templateData = [
-                'entity' => $this->getSourceEntity($action, $input),
-                'user'   => $this->getEntityManager()->getUser()
+                'entity'          => $this->getSourceEntity($action, $input),
+                'triggeredEntity' => $input->triggeredEntity ?? null,
+                'user'            => $this->getEntityManager()->getUser()
             ];
+
+            if (
+                empty($templateData['triggeredEntity'])
+                && property_exists($input, 'triggeredEntityType')
+                && property_exists($input, 'triggeredEntityId')
+            ) {
+                $templateData['triggeredEntity'] = $this
+                    ->getEntityManager()
+                    ->getRepository($input->triggeredEntityType)
+                    ->get($input->triggeredEntityId);
+            }
 
             $res = $this->getTwig()->renderTemplate($template, $templateData, 'bool');
             if (is_string($res)) {
@@ -100,7 +112,7 @@ abstract class AbstractAction implements TypeInterface
         $sourceEntity = null;
         if (!empty($input->sourceEntity)) {
             $sourceEntity = $input->sourceEntity;
-        } else if (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
+        } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
             $sourceEntity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
         } elseif (!empty($input->triggeredEntity)) {
             $sourceEntity = $input->triggeredEntity;
