@@ -24,9 +24,9 @@ abstract class AbstractActionConditionType
         $this->container = $container;
     }
 
-    abstract public static function getTypeLabel(): ?string;
+    abstract public static function getTypeLabel(): string;
 
-    abstract public static function getEntityName(): ?string;
+    abstract public static function getEntityName(): string;
 
     abstract public function canExecute(Entity $action, \stdClass $input): bool;
 

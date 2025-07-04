@@ -48,12 +48,12 @@ use Espo\ORM\Entity;
 
 class {{name}} extends AbstractActionConditionType
 {
-    public static function getTypeLabel(): ?string
+    public static function getTypeLabel(): string
     {
         return '{{name}}';
     }
     
-    public static function getEntityName(): ?string
+    public static function getEntityName(): string
     {
        return 'Product';    
     }
