@@ -16,7 +16,18 @@
       "optionsIds": [],
       "options": []
     },
-    "phpCode": {
+    "typePhpCode": {
+      "type": "wysiwyg",
+      "readOnly": true,
+      "notStorable": true,
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "textFilterDisabled": true
+    },
+    "conditionPhpCode": {
       "type": "wysiwyg",
       "readOnly": true,
       "notStorable": true,

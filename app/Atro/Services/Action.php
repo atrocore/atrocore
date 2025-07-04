@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Console\CreateAction;
+use Atro\Console\CreateActionConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\EventManager\Event;
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Services\Base;
@@ -47,8 +48,15 @@ class Action extends Base
         parent::prepareEntityForOutput($entity);
 
         $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type')) . '.php';
+        $entity->set('typePhpCode', null);
         if (file_exists($fileName)) {
-            $entity->set('phpCode', file_get_contents($fileName));
+            $entity->set('typePhpCode', file_get_contents($fileName));
+        }
+
+        $fileName = CreateActionConditionType::DIR . '/' . $entity->get('conditionsType') . '.php';
+        $entity->set('conditionPhpCode', null);
+        if (file_exists($fileName)) {
+            $entity->set('conditionPhpCode', file_get_contents($fileName));
         }
     }
 
@@ -83,14 +91,16 @@ class Action extends Base
 
         if (!empty($action->get('sourceEntity'))) {
             $dynamicRecordAction = null;
-            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions'], []) as $dra) {
+            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions'],
+                []) as $dra) {
                 if ($dra['id'] == $action->get('id')) {
                     $dynamicRecordAction = $dra;
                     break;
                 }
             }
             if (!empty($dynamicRecordAction['acl'])) {
-                if (!$this->getAcl()->check($dynamicRecordAction['acl']['scope'], $dynamicRecordAction['acl']['action'])) {
+                if (!$this->getAcl()->check($dynamicRecordAction['acl']['scope'],
+                    $dynamicRecordAction['acl']['action'])) {
                     throw new Forbidden();
                 }
             }
@@ -183,7 +193,11 @@ class Action extends Base
         $actionIds = [];
 
 
-        foreach ($this->getMetadata()->get(['clientDefs', $scope, $type === 'field' ? 'dynamicFieldActions' : 'dynamicRecordActions']) ?? [] as $action) {
+        foreach ($this->getMetadata()->get([
+            'clientDefs',
+            $scope,
+            $type === 'field' ? 'dynamicFieldActions' : 'dynamicRecordActions'
+        ]) ?? [] as $action) {
             if (!empty($action['acl']['scope'])) {
                 if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
                     continue;
@@ -209,9 +223,10 @@ class Action extends Base
             }
 
 
-            if($data['type'] === 'previewTemplate') {
-                if(!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope ) {
-                    if(!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id, $action['data']['where'])) {
+            if ($data['type'] === 'previewTemplate') {
+                if (!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope) {
+                    if (!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id,
+                        $action['data']['where'])) {
                         continue;
                     }
                 }

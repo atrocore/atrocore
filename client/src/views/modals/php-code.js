@@ -27,15 +27,18 @@ Espo.define('views/modals/php-code', 'views/modal',
         },
 
         setupFields() {
-            this.createView('phpCode', 'views/fields/script', {
-                el: `${this.options.el} .field[data-name="phpCode"]`,
-                model: this.model,
-                params: {
-                    language: 'php'
-                },
-                name: 'phpCode',
-                mode: 'detail',
-                inlineEditDisabled: true
+            this.getModelFactory().create(this.model.name, model => {
+                model.set('phpCode', this.options.phpCode || this.model.get('phpCode'));
+                this.createView('phpCode', 'views/fields/script', {
+                    el: `${this.options.el} .field[data-name="phpCode"]`,
+                    model: model,
+                    params: {
+                        language: 'php'
+                    },
+                    name: 'phpCode',
+                    mode: 'detail',
+                    inlineEditDisabled: true
+                });
             });
         },
 
