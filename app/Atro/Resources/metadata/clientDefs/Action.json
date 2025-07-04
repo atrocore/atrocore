@@ -177,23 +177,6 @@
             }
           ]
         }
-      },
-      "conditionsType": {
-        "disableOptions": {
-          "disabledOptions": [
-            "basic"
-          ],
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "usage",
-              "value": [
-                "record",
-                "field"
-              ]
-            }
-          ]
-        }
       }
     }
   }
