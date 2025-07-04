@@ -429,12 +429,12 @@
 
         if(['_self','_bookmark'].includes(activeItem.name) ) {
                 whereData = [...whereData, ...getWhereData() ]
-            if (whereData.length > 0) {
-                url += "&";
-                url += window.$.param({"where": whereData});
-            }
         }
 
+        if (whereData.length > 0) {
+            url += "&";
+            url += window.$.param({"where": whereData});
+        }
 
         return url;
     }
