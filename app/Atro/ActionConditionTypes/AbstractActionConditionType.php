@@ -13,6 +13,7 @@ namespace Atro\ActionConditionTypes;
 
 use Atro\Core\Container;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 abstract class AbstractActionConditionType
 {
@@ -28,4 +29,9 @@ abstract class AbstractActionConditionType
     abstract public static function getEntityName(): ?string;
 
     abstract public function canExecute(Entity $action, \stdClass $input): bool;
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
 }

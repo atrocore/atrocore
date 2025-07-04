@@ -16,6 +16,7 @@ namespace Atro\Services;
 use Atro\Console\CreateAction;
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Utils\Language;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
@@ -97,16 +98,13 @@ class Action extends Base
 
         $success = $this->getActionManager()->executeNow($action, $input);
         if ($success) {
-            $message = sprintf($this->getInjection('container')->get('language')->translate('actionExecuted',
-                'messages'), $action->get('name'));
-        } else {
-            $message = 'Something wrong';
+            $message = sprintf($this->getLanguage()->translate('actionExecuted', 'messages'), $action->get('name'));
         }
 
         $result = [
             'inBackground' => $action->get('inBackground'),
             'success'      => $success,
-            'message'      => $message,
+            'message'      => $message ?? null,
         ];
 
         return $this
@@ -153,6 +151,11 @@ class Action extends Base
 
         $this->addDependency('container');
         $this->addDependency('actionManager');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->getInjection('container')->get('language');
     }
 
     protected function getActionType(string $type): TypeInterface
