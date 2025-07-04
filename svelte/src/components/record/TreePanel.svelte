@@ -119,7 +119,7 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null  && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            data === null && whereData.length  && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
             !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && (canUseDataRequest() || hasTextFilter)
         ) {
             treeLoading = true;
@@ -422,15 +422,20 @@
         } else if (model && model.id && [model.urlRoot, 'Bookmark'].includes(treeScope)) {
             url += '&selectedId=' + model.id;
         }
-
-        let whereData = getWhereData();
-        if (searchValue) {
-            whereData = [...whereData, {"type": "textFilter", "value": searchValue}]
+        let whereData = [];
+        if(searchValue) {
+            whereData.push({"type": "textFilter", "value": searchValue});
         }
+
+        if(['_self','_bookmark'].includes(activeItem.name) ) {
+                whereData = [...whereData, ...getWhereData() ]
+        }
+
         if (whereData.length > 0) {
             url += "&";
             url += window.$.param({"where": whereData});
         }
+
         return url;
     }
 
@@ -917,7 +922,7 @@
                             </button>
                         </div>
                     </div>
-                    {#if activeItem.name === "_self"}
+                    {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
                         <div style="margin-top:  20px;">
                              <span class="icons-wrapper" >
                                 <span class="toggle" class:active={applyAdvancedFilter}
