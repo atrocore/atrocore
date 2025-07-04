@@ -11,6 +11,7 @@
 
 namespace Atro\ActionTypes;
 
+use Atro\ActionConditionTypes\AbstractActionConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
@@ -102,6 +103,11 @@ abstract class AbstractAction implements TypeInterface
             }
 
             return $res;
+        }
+
+        $className = $this->getMetadata()->get("app.conditionsTypes.{$action->get('conditionsType')}.className");
+        if ($className && is_a($className, AbstractActionConditionType::class, true)) {
+            return $this->container->get($className)->canExecute($action, $input);
         }
 
         return true;
