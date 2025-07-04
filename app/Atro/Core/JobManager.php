@@ -66,7 +66,7 @@ class JobManager
             $this->container->get($className)->run($job);
         } catch (\Throwable $e) {
             $job->set('status', 'Failed');
-            $job->set('message', $e->getMessage()."\n".$e->getTraceAsString());
+            $job->set('message', $e->getMessage());
             $this->getEntityManager()->saveEntity($job);
             return false;
         }
