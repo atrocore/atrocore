@@ -20,8 +20,8 @@ use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Condition\Condition;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 abstract class AbstractAction implements TypeInterface
@@ -52,7 +52,7 @@ abstract class AbstractAction implements TypeInterface
     {
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
         $input = new \stdClass();
-        $input->entityId = $event->getArgument('entity')->get('id');
+        $input->triggeredEntity = $event->getArgument('entity');
 
         return $this->executeNow($action, $input);
     }
