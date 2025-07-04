@@ -119,7 +119,7 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null  && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            data === null && whereData.length  && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
             !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && (canUseDataRequest() || hasTextFilter)
         ) {
             treeLoading = true;
