@@ -793,11 +793,27 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             result.push({
                 url: `${rootUrl}/view/${this.model.id}`,
-                label: this.model.get('nameLabel') || this.model.get('name') || this.model.id,
+                label: this.getLabel(),
                 className: 'header-title'
             })
 
             return result;
+        },
+
+        getLabel() {
+            if (this.model.get('nameLabel')) {
+                return this.model.get('nameLabel')
+            }
+
+            if (this.getMetadata().get(`entityDefs.${this.scope}.fields.name.isMultilang`) === true) {
+                const [field, userLocaleCode] = this.getLocalizedFieldData(this.scope, 'name')
+
+                if (userLocaleCode) {
+                    return this.model.get(field) || this.translate('None', 'labels', 'Global')
+                }
+            }
+
+            return this.model.get('name') || this.model.id
         },
 
         isHierarchical() {

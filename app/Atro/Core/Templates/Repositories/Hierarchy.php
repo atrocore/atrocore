@@ -15,6 +15,7 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -537,8 +538,10 @@ class Hierarchy extends Base
     public function getHierarchyRoute(string $id): array
     {
         $route = [];
+        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $this->entityType, 'name');
+
         while (!empty($record = $this->getParentRecord($id))) {
-            $route[$record['id']] = $record['name'];
+            $route[$record['id']] = $record[Util::toUnderScore($name)] ?? $record['name'];
             $id = $record['id'];
         }
 
