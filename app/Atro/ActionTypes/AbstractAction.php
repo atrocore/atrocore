@@ -83,7 +83,8 @@ abstract class AbstractAction implements TypeInterface
             $templateData = [
                 'entity'          => $this->getSourceEntity($action, $input),
                 'triggeredEntity' => $input->triggeredEntity ?? null,
-                'user'            => $this->getEntityManager()->getUser()
+                'user'            => $this->getEntityManager()->getUser(),
+                'importJobId'     => $this->container->get('memoryStorage')->get('importJobId')
             ];
 
             if (
