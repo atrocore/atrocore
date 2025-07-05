@@ -2,7 +2,7 @@
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p>
 
-AtroCore is a powerful open-source data platform designed for Master Data Management (MDM) and Data Integration. Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
+AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and Data Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
