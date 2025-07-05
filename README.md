@@ -146,10 +146,15 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
 ## Look and Feel
+|                                                                                          |                                                                                          |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                         |
+| [![Product List](_assets/product-list.png)](_assets/product-list.png)                    | [![Product Cards](_assets/product-cards.png)](_assets/product-cards.png)                 |
+| [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | [![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
+| [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | [![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
 
-![Product Detail Page](_assets/product-detail-page.png)
 
-### Public Demo Instance
+## Public Demo Instance
 
 - URL: https://demo.atropim.com/
 - Login: admin
