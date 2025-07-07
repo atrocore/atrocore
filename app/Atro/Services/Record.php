@@ -258,6 +258,28 @@ class Record extends RecordService
 
     public function getTreeItems(string $link, string $scope, array $params): array
     {
+        if($link === '_self') {
+            $params['select']  = ['id', 'name'];
+
+            $data = $this->findEntities($params);
+            $result = [];
+            foreach ($data['collection'] as $key => $entity) {
+                $result[] = [
+                    'id' => $entity->id,
+                    'name' => $entity->get('name'),
+                    'load_on_demand' => false,
+                    'offset' => ($params['offset']  ?? 0) + $key,
+                    'total' => $data['total']
+                ];
+            }
+
+            return [
+                'list' => $result,
+                'total' => $data['total']
+            ];
+        }
+
+
         $foreignLink = '';
         foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
             if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
