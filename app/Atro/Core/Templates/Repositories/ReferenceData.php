@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Language;
+use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
@@ -39,6 +40,16 @@ class ReferenceData extends Repository implements Injectable
 
     protected string $filePath;
 
+    /**
+     * @var array Parameters to be used in further find operations.
+     */
+    protected array $listParams = [];
+
+    /**
+     * @var array Where clause array. To be used in further find operation.
+     */
+    protected array $whereClause = [];
+
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);
@@ -55,6 +66,42 @@ class ReferenceData extends Repository implements Injectable
 
     public function clearDeletedRecords(): void
     {
+    }
+
+    public function where($param1 = [], $param2 = null): self
+    {
+        if (is_array($param1)) {
+            $this->whereClause = $param1 + $this->whereClause;
+        } else {
+            if (!is_null($param2)) {
+                $this->whereClause[$param1] = $param2;
+            }
+        }
+
+        return $this;
+    }
+
+    public function order(string $field = 'id', string $direction = "ASC"): self
+    {
+        $this->listParams['orderBy'] = $field;
+        $this->listParams['order'] = $direction;
+
+        return $this;
+    }
+
+    public function limit(int $offset, int $limit): self
+    {
+        $this->listParams['offset'] = $offset;
+        $this->listParams['limit'] = $limit;
+
+        return $this;
+    }
+
+    public function select(array $select): self
+    {
+        $this->listParams['select'] = $select;
+
+        return $this;
     }
 
     public function get($id = null)
@@ -275,16 +322,47 @@ class ReferenceData extends Repository implements Injectable
 
     public function find(array $params = [])
     {
+        $params = array_merge($params, $this->listParams);
+
+        if (!empty($this->whereClause)) {
+            $params['whereClause'][] = $this->whereClause;
+        }
+
         $items = $this->getAllItems($params);
         $items = array_values($items);
 
-        // filter by name
         foreach ($params['whereClause'] ?? [] as $row) {
-            if (!empty($row['name*'])) {
-                $search = str_replace('%', '', $row['name*']);
-                $items = array_filter($items, function ($item) use ($search) {
-                    return isset($item['name']) && preg_match('/^' . preg_quote($search, '/') . '/i', $item['name']);
-                });
+            foreach ($row as $field => $value) {
+                // skip if SQL operator
+                if (in_array($field, QueryConverter::$sqlOperators)) {
+                    continue;
+                }
+
+                // filter by * alias
+                if (preg_match('/^(.+)\*$/', $field, $matches)) {
+                    $search = str_replace('%', '', $value);
+                    $items = array_filter($items, function ($item) use ($search, $matches) {
+                        return isset($item[$matches[1]]) && preg_match('/^' . preg_quote($search, '/') . '/i', $item[$matches[1]]);
+                    });
+                    $items = array_values($items);
+                    continue;
+                }
+
+                // skip if comparison operator. It will be allowed later
+                foreach (QueryConverter::$comparisonOperators as $alias => $sqlOperator) {
+                    if (strpos($field, $alias) !== false) {
+                        continue 2;
+                    }
+                }
+
+                $filtered = [];
+                foreach ($items as $item) {
+                    if (array_key_exists($field, $item) && $item[$field] === $value) {
+                        $filtered[] = $item;
+                    }
+                }
+
+                $items = $filtered;
             }
         }
 
@@ -335,8 +413,26 @@ class ReferenceData extends Repository implements Injectable
             $items = $prepared;
         }
 
+        if (!empty($params['select'])) {
+            $select = array_merge(['id', 'code'], $params['select']);
+            $prepared = [];
+            foreach ($items as $item) {
+                $row = [];
+                foreach ($item as $field => $value) {
+                    if (in_array($field, $select)) {
+                        $row[$field] = $value;
+                    }
+                }
+                $prepared[] = $row;
+            }
+            $items = $prepared;
+        }
+
         $collection = new EntityCollection($items, $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
+
+        $this->whereClause = [];
+        $this->listParams = [];
 
         return $collection;
     }
@@ -372,9 +468,11 @@ class ReferenceData extends Repository implements Injectable
         return $collection;
     }
 
-    public function findOne(array $params)
+    public function findOne(array $params = [])
     {
-        throw new BadRequest('The function is not provided for an entity of this type.');
+        $collection = $this->limit(0, 1)->find($params);
+
+        return $collection[0] ?? null;
     }
 
     protected function getAllItems(array $params = []): array
