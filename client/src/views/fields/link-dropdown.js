@@ -76,16 +76,17 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.params.options = [];
             this.translatedOptions = {};
             this.params.optionColors = {};
+            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
             this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
                 maxSize: 300,
-                sortBy: 'name',
+                sortBy: name,
                 where: this.getWhereFilter()
             });
             this.params.linkOptions.forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option.name || option.id;
+                    this.translatedOptions[option.id] = option[name] || option.id;
                     this.params.optionColors[option.id] = option.color || null;
                 }
             })

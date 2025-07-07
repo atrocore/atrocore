@@ -12,10 +12,13 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
+use Atro\Core\DataManager;
 use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Atro\Repositories\Translation as TranslationRepository;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
 class Language
 {
@@ -373,32 +376,57 @@ class Language
         return $this->data[self::DEFAULT_LANGUAGE];
     }
 
+    public static function getLocalizedFieldName(Container $container, string $scope, string $fieldName): string
+    {
+        $user = $container->get('user');
+        $config = $container->get('config');
+
+        if (!empty($user) && !empty($config->get('isMultilangActive')) && !empty($container->get('metadata')->get(['entityDefs', $scope, 'fields', $fieldName, 'isMultilang']))) {
+            $userLanguageCode = self::detectLanguage($config, $user);
+            $mainLanguageCode = $config->get('mainLanguage');
+
+            if (!in_array($userLanguageCode, $config->get('inputLanguageList'))) {
+                $userLanguageCode = null;
+            }
+
+            $field = $fieldName;
+
+            if (!empty($userLanguageCode) && $userLanguageCode !== $mainLanguageCode) {
+                $field .= ucfirst(Util::toCamelCase(strtolower($userLanguageCode)));
+            }
+
+            return $field;
+        }
+
+        return $fieldName;
+    }
+
     protected function unify(string $path): array
     {
         return $this->unifier->unify('i18n', $path, true);
     }
 
-    protected function getEntityManager(): \Espo\ORM\EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
     }
 
-    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
     }
 
-    protected function getEventManager(): \Atro\Core\EventManager\Manager
+    protected function getEventManager(): Manager
     {
         return $this->container->get('eventManager');
     }
 
-    protected function getDataManager(): \Atro\Core\DataManager
+    protected function getDataManager(): DataManager
     {
         return $this->container->get('dataManager');
     }
 
-    protected function getConfig(): \Espo\Core\Utils\Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }

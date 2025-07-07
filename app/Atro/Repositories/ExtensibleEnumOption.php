@@ -222,14 +222,14 @@ class ExtensibleEnumOption extends Base
 
     protected function getOptionName(): string
     {
-        $language = \Espo\Core\Services\Base::getLanguagePrism();
+        $language = \Atro\Core\Templates\Services\Base::getLanguagePrism();
         if (!empty($language) && $language !== 'main') {
             if ($this->getConfig()->get('isMultilangActive') && in_array($language, $this->getConfig()->get('inputLanguageList', []))) {
                 return Util::toCamelCase('name_' . strtolower($language));
             }
         }
 
-        return 'name';
+        return \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

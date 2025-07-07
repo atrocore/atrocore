@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\ORM\DB\RDB\Query;
 
 use Atro\Core\Templates\Repositories\Relation;
+use Atro\Core\Utils\Language;
 use Doctrine\DBAL\Connection;
 use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
@@ -740,16 +741,23 @@ class QueryConverter
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];
                         $foreign = $f['foreign'];
+                        $foreignEntity = $entity->relations[$relationName]['entity'] ?? null;
                         if (is_array($foreign)) {
                             foreach ($foreign as $i => $value) {
                                 if ($value == ' ') {
                                     $foreign[$i] = '\' \'';
                                 } else {
+                                    if (!empty($foreignEntity)) {
+                                        $value = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $value);
+                                    }
                                     $foreign[$i] = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($value);
                                 }
                             }
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign) . '))';
                         } else {
+                            if (!empty($foreignEntity)) {
+                                $foreign = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $foreign);
+                            }
                             $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($foreign);
                         }
                     }
