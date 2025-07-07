@@ -9,9 +9,7 @@
     "display": "Anzeige",
     "actionsSet": "Actions Set",
     "actions": "Aktionen",
-    "executeAs": "Ausführen als",
-    "conditionsType": "Konditionstyp",
-    "conditions": "Konditionen"
+    "executeAs": "Ausführen als"
   },
   "labels": {
     "execute": "Ausführen",
