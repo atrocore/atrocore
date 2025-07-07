@@ -165,6 +165,12 @@
       "layoutListDisabled": true,
       "layoutDetailDisabled": true
     },
+    "optionsIds": {
+      "type": "array",
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true
+    },
     "extensibleEnum": {
       "type": "link"
     },
