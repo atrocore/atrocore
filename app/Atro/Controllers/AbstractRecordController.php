@@ -629,7 +629,6 @@ abstract class AbstractRecordController extends AbstractController
             throw new Forbidden();
         }
 
-
         $params = [
             'where'       => $this->prepareWhereQuery($request->get('where')),
             'asc'         => $request->get('asc', 'true') === 'true',
