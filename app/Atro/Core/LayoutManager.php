@@ -398,6 +398,9 @@ class LayoutManager
         if (empty($data)) {
             $type = $this->getMetadata()->get(['scopes', $scope, 'type']);
             $method = "getDefaultFor{$type}EntityType";
+            if (!empty($this->getMetadata()->get(['scopes', $scope, 'associatesForEntity']))) {
+                $method = "getDefaultForAssociates";
+            }
             if (method_exists($this, $method)) {
                 $data = $this->$method($scope, $name);
             } else {
@@ -432,6 +435,67 @@ class LayoutManager
         // from modules data
         foreach ($this->getMetadata()->getModules() as $module) {
             $module->loadLayouts($scope, $name, $data);
+        }
+
+        return $data;
+    }
+
+
+    protected function getDefaultForAssociates(string $scope, string $name): array
+    {
+        $associateScope = $this->getMetadata()->get(['scopes', $scope, 'associatesForEntity']);
+        $mainField = "main{$associateScope}";
+        $relatedField = "related{$associateScope}";
+
+        $data = [];
+
+        switch ($name) {
+            case 'list':
+                $data = [
+                    [
+                        'name' => 'association'
+                    ],
+                    [
+                        'name' => $mainField
+                    ],
+                    [
+                        'name' => $relatedField
+                    ]
+                ];
+                break;
+            case 'detail':
+                $data = [
+                    [
+                        "label" => "Associate",
+                        "rows"  => [
+                            [
+                                [
+                                    "name" => "association"
+                                ],
+                                [
+                                    "name" => "backwardAssociation"
+                                ]
+                            ],
+                            [
+                                [
+                                    "name" => $mainField
+                                ],
+                                [
+                                    "name" => $relatedField
+                                ]
+                            ],
+                            [
+                                [
+                                    "name" => "sorting"
+                                ],
+                                [
+                                    "name" => "associateEverything"
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+                break;
         }
 
         return $data;

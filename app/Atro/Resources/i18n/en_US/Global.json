@@ -429,9 +429,12 @@
     "fullscreen": "Full Screen",
     "Copy": "Copy",
     "applyMainSearchAndFilter": "Apply main search and filter",
-    "Reset to Default": "Reset to Default"
+    "Reset to Default": "Reset to Default",
+    "associates": "Associates",
+    "associated": "Associated"
   },
   "messages": {
+    "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
     "queryHasErrors": "They are some errors on your query",
     "actionExecuted": "Action \"%s\" was successfully executed",
     "jobAdded": "Job was successfully added to Job Manager",
@@ -656,7 +659,11 @@
     "iconClass": "Icon",
     "isPublic": "Public",
     "created": "Created",
-    "modified": "Modified"
+    "modified": "Modified",
+    "association": "Association",
+    "backwardAssociation": "Backward Association",
+    "sorting": "Sort Order",
+    "associateEverything": "Associate every record with every other record"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."

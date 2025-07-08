@@ -32,7 +32,12 @@
     "disableHierarchy": "Вимкнути ієрархію",
     "fields": "Поля",
     "auditedDisabledFields": "Не логувати як активність в записі для полів",
-    "auditedEnabledRelations": "Реєстрація активності в записі для зв'язків"
+    "auditedEnabledRelations": "Реєстрація активності в записі для зв'язків",
+    "hasAttribute": "Має атрибути",
+    "hasClassification": "Має класифікації",
+    "singleClassification": "Дозволено лише одну класифікацію",
+    "disableAttributeLinking": "Заборонено пряме зв'язування атрибутів",
+    "hasAssociate": "має пов'язані записи"
   },
   "options": {
     "type": {
@@ -49,7 +54,8 @@
     "accessManagement": "Управління доступом",
     "hierarchyManagement": "Управління ієрархією",
     "other": "Інше",
-    "resetToDefault": "Скинути до значень за замовчуванням"
+    "resetToDefault": "Скинути до значень за замовчуванням",
+    "attributes": "Атрибути"
   },
   "confirmations": {
     "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до заводських налаштувань?"
@@ -74,6 +80,8 @@
     "auditedEnabledRelations": "міни в цих зв'язках відображатимуться в панелі Дій."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time"
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
+    "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути.",
+    "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності."
   }
 }

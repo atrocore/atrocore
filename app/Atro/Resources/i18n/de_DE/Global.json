@@ -390,6 +390,7 @@
     "Reset to Default": "Auf Standard zurücksetzen"
   },
   "messages": {
+    "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
     "queryHasErrors": "Es gibt einige Fehler in Ihrer Anfrage",
     "actionExecuted": "Die Aktion \"%s\" wurde erfolgreich ausgeführt",
     "confirmInheritAllForChildren": "Sind Sie sicher, dass alle untergeordneten Elemente Feld- (und Attribut-) Werte sowie auch Beziehungen von diesem übergeordneten Element erben sollen? Vorhandene Werte werden nicht ersetzt.",
@@ -649,7 +650,11 @@
     "isPublic": "Öffentlich",
     "created": "Erstellt",
     "modified": "Geändert",
-    "name": "Name"
+    "name": "Name",
+    "association": "Assoziation",
+    "backwardAssociation": "Umgekehrte Assoziation",
+    "sorting": "Sortierreihenfolge",
+    "associateEverything": "Jeden Datensatz mit jedem anderen Datensatz assoziieren"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."

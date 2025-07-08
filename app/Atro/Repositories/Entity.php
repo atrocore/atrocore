@@ -132,7 +132,7 @@ class Entity extends ReferenceData
 
     protected function prepareItem(string $code, array $row = null): ?array
     {
-        if ($row === null){
+        if ($row === null) {
             $row = $this->getMetadata()->get("scopes.$code");
         }
 
@@ -174,6 +174,7 @@ class Entity extends ReferenceData
         $canHasAttributes = false;
         $canHasClassifications = false;
         $canHasComponents = false;
+        $canHasAssociates = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -185,6 +186,10 @@ class Entity extends ReferenceData
 
             if (!empty($item['canHasComponents'])) {
                 $canHasComponents = true;
+            }
+
+            if (!empty($item['canHasAssociates'])) {
+                $canHasAssociates = true;
             }
         }
 
@@ -203,6 +208,10 @@ class Entity extends ReferenceData
             }
 
             if ($canHasComponents && empty($row['hasComponent'])) {
+                continue;
+            }
+
+            if ($canHasAssociates && empty($row['hasAssociate'])) {
                 continue;
             }
 
@@ -297,7 +306,7 @@ class Entity extends ReferenceData
         $saveLanguage = $isCustom;
 
         foreach ($entity->toArray() as $field => $value) {
-            if($this->getMetadata()->get(['entityDefs', 'Entity', 'fields',  $field, 'notStorable'])) {
+            if ($this->getMetadata()->get(['entityDefs', 'Entity', 'fields', $field, 'notStorable'])) {
                 continue;
             }
 
@@ -345,7 +354,7 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
-            }  else {
+            } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 
                 if ($loadedVal === $entity->get($field)) {
@@ -459,23 +468,23 @@ class Entity extends ReferenceData
 
     protected function afterSave(OrmEntity $entity, array $options = [])
     {
-        if($entity->isAttributeChanged('auditedDisabledFields')) {
+        if ($entity->isAttributeChanged('auditedDisabledFields')) {
             foreach ($entity->get('fields') ?? [] as $field) {
-                if(in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
+                if (in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
                     $field->set('auditableDisabled', true);
-                }else if(!empty($field->get('auditableDisabled'))) {
+                } else if (!empty($field->get('auditableDisabled'))) {
                     $field->set('auditableDisabled', false);
                 }
                 $this->getEntityManager()->getRepository('EntityField')->save($field);
             }
         }
 
-        if($entity->isAttributeChanged('auditedEnabledRelations')) {
+        if ($entity->isAttributeChanged('auditedEnabledRelations')) {
             foreach ($entity->get('fields') ?? [] as $field) {
-                if(in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
+                if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
                     $field->set('auditableEnabled', true);
                     $this->getEntityManager()->getRepository('EntityField')->save($field);
-                }else if(!empty($field->get('auditableEnabled'))){
+                } else if (!empty($field->get('auditableEnabled'))) {
                     $field->set('auditableEnabled', false);
                 }
                 $this->getEntityManager()->getRepository('EntityField')->save($field);
@@ -491,39 +500,39 @@ class Entity extends ReferenceData
         $fields = [];
         $scope = $entity->get('code') ?? $entity->get('name');
         foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
-            if(!empty($fieldDef['auditableDisabled'])) {
+            if (!empty($fieldDef['auditableDisabled'])) {
                 $fields[] = $field;
             }
         }
         $entity->set('auditedDisabledFields', $fields);
 
-        $defaultRelationScopeAudited =  [];
+        $defaultRelationScopeAudited = [];
         foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
-            if(!empty($scopeDefs['defaultRelationAudited'])) {
+            if (!empty($scopeDefs['defaultRelationAudited'])) {
                 $defaultRelationScopeAudited[] = $scopeKey;
             }
         }
         //prepare auditedEnabledRelations
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
-            if($fieldDef['type'] !== 'linkMultiple') {
+            if ($fieldDef['type'] !== 'linkMultiple') {
                 continue;
             }
 
-            if(!empty($fieldDef['auditableEnabled'])) {
+            if (!empty($fieldDef['auditableEnabled'])) {
                 $fields[] = $field;
                 continue;
             }
 
-            if(isset($fieldDef['auditableEnabled'])) {
+            if (isset($fieldDef['auditableEnabled'])) {
                 continue;
             }
 
             $linkDefs = $this->getMetadata()->get(['entityDefs', $scope, 'links', $field]);
-            if(empty($linkDefs['relationName']) || empty($linkDefs['entity']) || $this->getMetadata()->get(['scopes', ucfirst($linkDefs['relationName']), 'type']) !== 'Relation') {
+            if (empty($linkDefs['relationName']) || empty($linkDefs['entity']) || $this->getMetadata()->get(['scopes', ucfirst($linkDefs['relationName']), 'type']) !== 'Relation') {
                 continue;
             }
-            if(in_array($linkDefs['entity'], $defaultRelationScopeAudited)) {
+            if (in_array($linkDefs['entity'], $defaultRelationScopeAudited)) {
                 $fields[] = $field;
             }
         }

@@ -1,0 +1,43 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+namespace Atro\Repositories;
+
+use Atro\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
+
+class Association extends Base
+{
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if ($entity->get('code') === '') {
+            $entity->set('code', null);
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        if ($entity->isAttributeChanged('default') && !empty($entity->get('default'))) {
+            $others = $this->where([
+                'entityId' => $entity->get('entityId'),
+                'id!='     => $entity->get('id'),
+                'default'  => true
+            ])->find() ?? [];
+
+            foreach ($others as $item) {
+                $item->set('default', false);
+                $this->save($item);
+            }
+        }
+    }
+}

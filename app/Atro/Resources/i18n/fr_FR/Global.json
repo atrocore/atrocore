@@ -73,7 +73,10 @@
     "createdAt": "Créé à",
     "users": "Utilisateurs",
     "roles": "Rôles",
-    "team": "L'équipe"
+    "team": "L'équipe",
+    "association": "Association",
+    "backwardAssociation": "Association des arriérés",
+    "sorting": "Ordre de tri"
   },
   "scopeNames": {
     "UiHandler": "Gestionnaire d'interface utilisateur",

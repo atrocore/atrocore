@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "associatedProducts": "Пов'язані продукти",
+    "description": "Опис",
+    "isActive": "Активний",
+    "backwardAssociation": "Зворотній зв'язок",
+    "code": "Код",
+    "default": "За замовчуванням"
+  },
+  "exceptions": {
+    "associationIsLinkedWithProducts": "Асоціація пов'язана з продуктом (-ами). Будь ласка, спочатку відключіть продукт(-и)",
+    "youCanNotDeactivateAssociationWithActiveProducts": "Ви не можете відключити зв'язок з активним продуктом (-ами)"
+  }
+}
