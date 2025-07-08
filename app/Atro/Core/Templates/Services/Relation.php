@@ -312,17 +312,4 @@ class Relation extends Record
         return true;
     }
 
-    public function setEntityType($entityType)
-    {
-        parent::setEntityType($entityType);
-
-//        if($this->isAssociatesRelation()){
-//            $scope = $this->getAssociatesScope();
-//            $this->mandatorySelectAttributeList = array_merge($this->mandatorySelectAttributeList, [
-//                "backwardAssociated{$scope}Id",
-//                "related{$scope}Id",
-//                "related{$scope}Name"
-//            ]);
-//        }
-    }
 }
