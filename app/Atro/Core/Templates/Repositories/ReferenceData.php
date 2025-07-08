@@ -357,7 +357,7 @@ class ReferenceData extends Repository implements Injectable
 
                 $filtered = [];
                 foreach ($items as $item) {
-                    if (array_key_exists($field, $item) && $item[$field] === $value) {
+                    if (!array_key_exists($field, $item) || $item[$field] === $value) {
                         $filtered[] = $item;
                     }
                 }
