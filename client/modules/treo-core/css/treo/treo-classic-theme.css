@@ -3951,6 +3951,7 @@ tbody.collapse.in {
     display: none;
     float: left;
     min-width: 160px;
+    width: fit-content;
     padding: 5px 0;
     margin: 2px 0 0;
     list-style: none;
@@ -17861,6 +17862,7 @@ span[data-img-src]::after {
 
     .layout-editor-container.open {
         display: block !important;
+        z-index: auto !important;
     }
 
     table thead:hover .layout-editor-container {
