@@ -16,17 +16,11 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
 
         alignRight: false,
 
+        dropdown: null,
+
         cleanup: null,
 
         events: {
-            'click .dropdown-toggle': function (e) {
-                e.currentTarget.parentElement.classList.toggle('open');
-                if (e.currentTarget.parentElement.classList.contains('open')) {
-                    this.updatePosition();
-                } else if (this.cleanup) {
-                    this.cleanup();
-                }
-            },
             'click .layout-editor': function (e) {
                 // open modal view
                 this.showLayoutEditorModal()
@@ -69,11 +63,13 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
             };
         },
 
-        // afterRender() {
-        //     Dep.prototype.afterRender.call(this);
-        // },
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
 
-        updatePosition() {
+            if (this.dropdown) {
+                this.dropdown.destroy();
+            }
+
             const button = this.$el.find('.dropdown-toggle')[0];
             const dropdown = this.$el.find('.dropdown-menu')[0];
 
@@ -81,20 +77,25 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 return;
             }
 
-            this.cleanup = window.floatingUi.autoUpdate(button, dropdown, () => {
-                window.floatingUi.computePosition(button, dropdown, {
-                    strategy: 'fixed',
-                    placement: 'bottom-start',
-                    middleware: [window.floatingUi.offset(5), window.floatingUi.flip({
-                        crossAxis: 'alignment',
-                        fallbackAxisSideDirection: 'start'
-                    }), window.floatingUi.shift({mainAxis: true})],
-                }, {animationFrame: true}).then(({x, y}) => {
-                    Object.assign(dropdown.style, {
-                        left: `${x}px`,
-                        top: `${y}px`,
-                    });
-                })
+            this.dropdown = new window.Dropdown(button, dropdown, {
+                placement: 'bottom-start',
+                onDropdownShow: dropdown => {
+                    dropdown.parentElement?.classList.add('open');
+                },
+                onDropdownHide: dropdown => {
+                    dropdown.parentElement?.classList.remove('open');
+                },
+                strategy: 'fixed',
+                offset: {
+                    mainAxis: 5
+                },
+                flip: {
+                    crossAxis: 'alignment',
+                    fallbackAxisSideDirection: 'start'
+                },
+                shift: {
+                    mainAxis: true
+                }
             });
         },
 

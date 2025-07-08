@@ -11,12 +11,12 @@
 export default interface DropdownParams {
     placement?: string;
     strategy?: string;
+    onDropdownShow?: (dropdown: HTMLElement) => void;
+    onDropdownHide?: (dropdown: HTMLElement) => void;
     flip?: boolean|Record<string, any>,
     shift?: boolean|Record<string, any>,
     offset?: boolean|Record<string, any>,
     size?: boolean|Record<string, any>,
-    autoPlacement?: boolean|Record<string, any>,
     arrow?: boolean|Record<string, any>,
     hide?: boolean|Record<string, any>
-    inline?: boolean|Record<string, any>
 }
