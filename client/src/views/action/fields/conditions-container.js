@@ -11,7 +11,11 @@
 Espo.define('views/action/fields/conditions-container', 'views/fields/conditions-container',
     Dep => Dep.extend({
 
-        entityTypeField: 'sourceEntity',
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.entityTypeField = this.model.name === 'Action' ? 'sourceEntity' : 'entityType';
+        },
 
         canShowValueField() {
             return ['basic', 'script'].includes(this.model.get('conditionsType'))
