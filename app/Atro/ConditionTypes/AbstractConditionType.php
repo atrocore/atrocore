@@ -9,13 +9,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\ActionConditionTypes;
+namespace Atro\ConditionTypes;
 
 use Atro\Core\Container;
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-abstract class AbstractActionConditionType
+abstract class AbstractConditionType
 {
     protected Container $container;
 
@@ -28,7 +27,7 @@ abstract class AbstractActionConditionType
 
     abstract public static function getEntityName(): string;
 
-    abstract public function canExecute(Entity $action, \stdClass $input): bool;
+    abstract public function proceed(\stdClass $input): bool;
 
     protected function getEntityManager(): EntityManager
     {
