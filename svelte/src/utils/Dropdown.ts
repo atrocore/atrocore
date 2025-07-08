@@ -19,13 +19,13 @@ import {
 import DropdownParams from "./interfaces/DropdownParams";
 
 export default class Dropdown {
-    referenceEl: HTMLElement;
-    floatingEl: HTMLElement;
-    floatingListElSelector: string = 'li';
-    floatingHandler: Function;
-    params?: DropdownParams;
-    isOpen: boolean = false;
-    autoHide: boolean = true;
+    private readonly referenceEl: HTMLElement;
+    private readonly floatingEl: HTMLElement;
+    private readonly floatingListElSelector: string = 'li';
+    private floatingHandler: Function;
+    private params?: DropdownParams;
+    private isOpen: boolean = false;
+    private readonly autoHide: boolean = true;
 
     constructor(referenceEl: HTMLElement, floatingEl: HTMLElement, params?: DropdownParams) {
         this.referenceEl = referenceEl;
