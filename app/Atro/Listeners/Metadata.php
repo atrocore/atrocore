@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Listeners;
 
-use Atro\ActionConditionTypes\AbstractActionConditionType;
 use Atro\ActionTypes\AbstractAction;
+use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Console\CreateAction;
-use Atro\Console\CreateActionConditionType;
+use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Repositories\NotificationRule;
@@ -95,7 +95,7 @@ class Metadata extends AbstractListener
         }
 
         $this->putCustomCodeActions($data);
-        $this->putCustomCodeActionConditionTypes($data);
+        $this->putCustomCodeConditionTypes($data);
 
         $event->setArgument('data', $data);
     }
@@ -145,13 +145,13 @@ class Metadata extends AbstractListener
         }
     }
 
-    protected function putCustomCodeActionConditionTypes(array &$data): void
+    protected function putCustomCodeConditionTypes(array &$data): void
     {
-        foreach (Util::scanDir(CreateActionConditionType::DIR) as $fileName) {
+        foreach (Util::scanDir(CreateConditionType::DIR) as $fileName) {
             $type = str_replace('.php', '', $fileName);
 
-            $className = "\\CustomActionConditionTypes\\$type";
-            if (is_a($className, AbstractActionConditionType::class, true)) {
+            $className = "\\CustomConditionTypes\\$type";
+            if (is_a($className, AbstractConditionType::class, true)) {
                 $data['app']['conditionsTypes'][$type] = [
                     'label'      => $className::getTypeLabel(),
                     'entityName' => $className::getEntityName(),

@@ -15,13 +15,13 @@ namespace Atro\Console;
 
 use Atro\Core\Utils\Util;
 
-class CreateActionConditionType extends AbstractConsole
+class CreateConditionType extends AbstractConsole
 {
-    public const DIR = 'data/custom-code/CustomActionConditionTypes';
+    public const DIR = 'data/custom-code/CustomConditionTypes';
 
     public static function getDescription(): string
     {
-        return 'The system creates custom Action Condition Type class. You can find the class in ' . self::DIR . '/ folder and modify the code.';
+        return 'The system creates custom Condition Type class. You can find the class in ' . self::DIR . '/ folder and modify the code.';
     }
 
     public function run(array $data): void
@@ -41,12 +41,11 @@ class CreateActionConditionType extends AbstractConsole
         $content = <<<'EOD'
 <?php
 
-namespace CustomActionConditionTypes;
+namespace CustomConditionTypes;
 
-use Atro\ActionConditionTypes\AbstractActionConditionType;
-use Espo\ORM\Entity;
+use Atro\ConditionTypes\AbstractConditionType;
 
-class {{name}} extends AbstractActionConditionType
+class {{name}} extends AbstractConditionType
 {
     public static function getTypeLabel(): string
     {
@@ -58,7 +57,7 @@ class {{name}} extends AbstractActionConditionType
        return 'Product';    
     }
 
-    public function canExecute(Entity $action, \stdClass $input): bool
+    public function proceed(\stdClass $input): bool
     {
         return true;
     }
@@ -69,7 +68,7 @@ EOD;
         Util::createDir(self::DIR);
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
-        self::show("Action handler class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
+        self::show("ConditionType handler class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
 
         // clear cache
         exec('php console.php clear cache');

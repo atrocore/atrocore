@@ -575,6 +575,8 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "conditionsType": "Konditionstyp",
+    "conditions": "Konditionen",
     "entity": "Entität",
     "allowedOptions": "Optionen zulassen",
     "disableActionHistory": "Aktionsprotokollierung deaktivieren",
