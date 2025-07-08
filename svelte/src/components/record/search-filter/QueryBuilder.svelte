@@ -550,6 +550,9 @@
                         let filter = view.createQueryBuilderFilter(attribute.type);
                         if (filter) {
                             filter.label = label;
+                            if(attribute.channelId) {
+                                filter.label += ' / '+ attribute.channelName;
+                            }
                             filter.optgroup = Language.translate('Attributes');
                             filter.order = order;
                             filter.operators.unshift('is_attribute_not_linked');

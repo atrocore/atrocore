@@ -12,10 +12,8 @@
 namespace Atro\Core;
 
 use Atro\ActionTypes\TypeInterface;
-use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
-use Espo\Core\Interfaces\Injectable;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;

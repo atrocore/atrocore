@@ -2,12 +2,12 @@
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p>
 
-AtroCore is an open-source Data Platform, Master Data Management and Data Integration software. Thanks to its configuration possibilities it is an excellent tool for cost-effective and timely application development that comes with the powerful out-of-the-box functionality.
+AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and Data Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
 
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
-| Mirror (GitHub) | https://github.com/atrocore/atrocore            |
+| Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
 
 
 ## History
@@ -146,10 +146,15 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
 ## Look and Feel
+|                                                                                          |                                                                                          |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                         |
+| [![Product List](_assets/product-list.png)](_assets/product-list.png)                    | [![Product Cards](_assets/product-cards.png)](_assets/product-cards.png)                 |
+| [![Product Details 1](_assets/product-details1.png)](_assets/product-details1.png)       | [![Product Details 2](_assets/product-details2.png)](_assets/product-details2.png)       |
+| [![Layout Management 1](_assets/layout-management1.png)](_assets/layout-management1.png) | [![Layout Management 2](_assets/layout-management2.png)](_assets/layout-management2.png) |
 
-![Product Detail Page](_assets/product-detail-page.png)
 
-### Public Demo Instance
+## Public Demo Instance
 
 - URL: https://demo.atropim.com/
 - Login: admin

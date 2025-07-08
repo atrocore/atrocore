@@ -308,7 +308,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         addNewValue() {
             let data = {
                 [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
-                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`${new Date().getTime()}`])
+                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`toUpadate-${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
                 data[name] = (this.selectedComplex[name] || []).concat([""])
@@ -404,6 +404,21 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         }
                     });
                 });
+                data[this.name + 'Ids'].forEach((id, key) => {
+                    if(id.includes('toUpadate')) {
+                        let optionId = data[this.name][key];
+                        let finalOptionId;
+                        // slugify
+                        optionId = optionId.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').replace(/-+/g, '-');
+                        finalOptionId = optionId;
+                        // ensure unique ids
+                        while (data[this.name + 'Ids'].includes(finalOptionId)) {
+                            finalOptionId = `${optionId}-${Math.floor(Math.random() * 9999) + 1}`;
+                        }
+                        data[this.name + 'Ids'][key] = finalOptionId;
+                    }
+                });
+                debugger
                 this.selectedComplex = data;
             } else {
                 Dep.prototype.fetchFromDom.call(this);

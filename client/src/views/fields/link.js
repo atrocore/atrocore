@@ -139,7 +139,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             if ((this.model.get(this.name + 'HasDefaultAttributes') || (fieldDefs && (fieldDefs.defaultAttributes || fieldDefs.defaultId))) && this.mode === 'edit' && !this.model.get('id') && foreignId && this.foreignScope) {
                 this.model.set(this.idName, null);
                 this.model.set(this.nameName, null);
-                this.ajaxGetRequest(this.foreignScope + '/' + foreignId, {silent: true})
+                this.ajaxGetRequest(this.foreignScope + '/' + foreignId, { silent: true })
                     .done(function (response) {
                         this.model.set(this.idName, response.id);
                         this.model.set(this.nameName, response.name);
@@ -237,7 +237,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
-                                    models.where = [{asc: true}]
+                                    models.where = [{ asc: true }]
                                 }
                                 this.addLinkSubQuery(models);
                                 return;
@@ -264,7 +264,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            const foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            let foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            [foreignName] = this.getLocalizedFieldData(this.foreignScope, foreignName);
+
             this.$elementName.attr('value', model.get(foreignName));
             this.$elementName.val(model.get(foreignName));
             this.$elementId.val(model.get('id'));
@@ -337,25 +339,26 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function (q) {
-            let url = this.foreignScope + '?collectionOnly=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
+            let url = this.foreignScope + '?collectionOnly=true&sortBy=' + name + '&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 where = [];
 
             let boolList = this.getSelectBoolFilterList();
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
-                url += '&' + $.param({'boolFilterList': boolList});
+                url += '&' + $.param({ 'boolFilterList': boolList });
             }
 
             let primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                url += '&' + $.param({'primaryFilter': primary});
+                url += '&' + $.param({ 'primaryFilter': primary });
             }
 
             let boolData = this.getBoolFilterData();
             if (boolData && Object.keys(boolData).length > 0) {
-                where.push({'type': 'bool', 'data': boolData});
+                where.push({ 'type': 'bool', 'data': boolData });
             }
 
-            where.push({'type': 'textFilter', value: 'AUTOCOMPLE:'+q});
+            where.push({ 'type': 'textFilter', value: 'AUTOCOMPLETE:' + q });
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
@@ -365,7 +368,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }
 
             if (where.length) {
-                url += '&' + $.param({'where': where});
+                url += '&' + $.param({ 'where': where });
             }
 
             return url;
@@ -429,16 +432,18 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         autoSelectFirst: true,
                         formatResult: function (suggestion) {
                             return Handlebars.Utils.escapeExpression(suggestion.name);
-                        },
+                        }.bind(this),
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
+                            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+
                             response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
-                                    name: item.name,
+                                    name: item[name] ?? '',
                                     data: item.id,
-                                    value: item.name,
+                                    value: item[name],
                                     attributes: item
                                 });
                             }, this);
@@ -477,10 +482,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
+                                const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+
                                 response.list.forEach(function (item) {
                                     list.push({
                                         id: item.id,
-                                        name: item.name,
+                                        name: item[name] ?? '',
                                         data: item.id,
                                         value: item.name
                                     });
@@ -532,7 +539,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                     'value': this.searchData.oneOfIdList
                                 }
                             ];
-                            collection.fetch({data: $.param({silent: true, where: whereCondition})}).then(res => {
+                            collection.fetch({ data: $.param({ silent: true, where: whereCondition }) }).then(res => {
                                 for (const idItem of this.searchData.oneOfIdList) {
                                     const model = collection.get(idItem);
                                     if (model && model.has('name')) {
@@ -548,7 +555,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     if (this.searchData.idValue) {
                         this.getModelFactory().create(this.foreignScope, function (model) {
                             model.set('id', this.searchData.idValue);
-                            model.fetch({data: $.param({silent: true})}).then(() => {
+                            model.fetch({ data: $.param({ silent: true }) }).then(() => {
                                 this.select(model);
                             });
                         }, this);
@@ -824,7 +831,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
-                        view.getSelectFilters  = this.getSelectFilters.bind(this);
+                        view.getSelectFilters = this.getSelectFilters.bind(this);
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
 
@@ -834,29 +841,29 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }
                         }
 
-                        view.getSelectFilters  =  () => {
+                        view.getSelectFilters = () => {
                             let bool = {};
-                            let queryBuilder =  {
+                            let queryBuilder = {
                                 condition: "AND",
                                 rules: [],
                                 valid: true
                             }
                             let subQuery = rule.data?.subQuery || [];
                             subQuery.forEach(item => {
-                                if(item.type === 'bool') {
+                                if (item.type === 'bool') {
                                     item.value.forEach(v => bool[v] = true);
                                 }
 
-                                if(item.condition) {
+                                if (item.condition) {
                                     queryBuilder.rules.push(item);
                                 }
                             });
 
-                            if(queryBuilder.rules.length === 1) {
+                            if (queryBuilder.rules.length === 1) {
                                 queryBuilder = queryBuilder.rules[0];
                             }
 
-                            return {bool, queryBuilder}
+                            return { bool, queryBuilder }
                         }
 
 
@@ -914,7 +921,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             };
 
             this.getModelFactory().create(null, model => {
-                if(!this.setTimeoutFunction) {
+                if (!this.setTimeoutFunction) {
                     this.setTimeoutFunction = {}
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
@@ -927,10 +934,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }
                         view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = {where: rule.data['subQuery']};
+                            let data = { where: rule.data['subQuery'] };
                             view.addLinkSubQuery(data, true);
                         }
-                        if(view) {
+                        if (view) {
                             view.reRender();
                         }
                     }, 200)
@@ -971,11 +978,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         return '';
                     }
 
-                    if(!this.isNotListeningToOperatorChange) {
+                    if (!this.isNotListeningToOperatorChange) {
                         this.isNotListeningToOperatorChange = {}
                     }
 
-                    if(!this.initialOperatorType) {
+                    if (!this.initialOperatorType) {
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
@@ -983,17 +990,17 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createFilterView(rule, inputName, type, true);
                     const callback = function (e) {
                         rule.value = null;
-                        if(rule.data?.nameHash) {
+                        if (rule.data?.nameHash) {
                             rule.data.nameHash = {}
                         }
                         let view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery']) {
                             delete rule.data['subQuery'];
-                            if(view){
+                            if (view) {
                                 view.deleteLinkSubQuery()
                             }
                         }
-                        if(view){
+                        if (view) {
                             view.model.set('valueNames', rule.data?.nameHash);
                             view.model.set('valueIds', rule.value);
                             // view.reRender()
@@ -1001,7 +1008,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         }
                     }.bind(this);
 
-                    if(!this.isNotListeningToOperatorChange[inputName]){
+                    if (!this.isNotListeningToOperatorChange[inputName]) {
                         rule.$el.find('.rule-operator-container select').on('change', callback);
 
                         this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
@@ -1009,7 +1016,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 return;
                             }
 
-                            if(this.getFilterName(type) !== rule.filter.id) {
+                            if (this.getFilterName(type) !== rule.filter.id) {
                                 return;
                             }
 
@@ -1017,7 +1024,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                                 delete rule.data['subQuery'];
                             }
 
-                            if(rule.operator.type === this.initialOperatorType[inputName]) {
+                            if (rule.operator.type === this.initialOperatorType[inputName]) {
                                 this.initialOperatorType[inputName] = null;
                                 return;
                             }

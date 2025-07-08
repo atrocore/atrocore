@@ -10,9 +10,12 @@
 
 Espo.define('views/action/fields/conditions-container', 'views/fields/conditions-container',
     Dep => Dep.extend({
+
         entityTypeField: 'sourceEntity',
+
         canShowValueField() {
-            return this.model.get('conditionsType') && (this.getEntityType() || this.model.get('conditionsType') === 'script')
+            return ['basic', 'script'].includes(this.model.get('conditionsType'))
         },
+
     })
 );

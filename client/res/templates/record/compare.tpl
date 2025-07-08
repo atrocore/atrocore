@@ -62,10 +62,6 @@
         display: inline-block;
     }
 
-    .compare-panel[data-name='relationshipsPanels'] .panel.panel-default, .fields-compare-panel {
-        margin-bottom: 50px;
-    }
-
     .compare-panel {
         background-color: white;
         width: 100%;
@@ -101,7 +97,11 @@
     }
 
     .compare-panel .panel-body {
-        padding: 15px 0 0 0 !important;
+        padding: 14px 0 0 0 !important;
+    }
+
+    .compare-panel .panel-body > div:last-child > .list:last-child {
+        margin-bottom: 0;
     }
 
     .compare-panel .panel-body div.list {
@@ -154,7 +154,7 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        min-width: 0!important;
+        min-width: 0 !important;
     }
 
     .compare-panel table td.cell {

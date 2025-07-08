@@ -322,7 +322,7 @@ Espo.define('view', [], function () {
         getPreparedTourData(type) {
             if (this.preparedTourData && this.preparedTourData[type]) {
                 return this.preparedTourData[type];
-            }else if(!this.preparedTourData){
+            } else if (!this.preparedTourData) {
                 this.preparedTourData = {};
             }
 
@@ -355,7 +355,7 @@ Espo.define('view', [], function () {
                 });
 
                 if ($(key).length && $(key).css('display') !== 'none') {
-                    let elementId   = Math.random().toString(36).substring(2, 10);
+                    let elementId = Math.random().toString(36).substring(2, 10);
                     $(key).attr("driver-id", elementId)
                     driverElement.element = `[driver-id="${elementId}"]`;
                     preparedData.push(driverElement);
@@ -408,14 +408,14 @@ Espo.define('view', [], function () {
             return null;
         },
 
-        getAdminBreadcrumbsItem: function() {
+        getAdminBreadcrumbsItem: function () {
             return {
                 url: '#Admin',
                 label: this.getLanguage().translate('Administration', 'labels')
             };
         },
 
-        addToLanguageObservables: function() {
+        addToLanguageObservables: function () {
             if (!window.languageObservableViews) {
                 window.languageObservableViews = new Map();
             }
@@ -425,6 +425,38 @@ Espo.define('view', [], function () {
             this.once('remove', () => {
                 window.languageObservableViews?.delete(this.cid);
             });
+        },
+
+        getLocalizedFieldData(scope, fieldName) {
+            if (this.getMetadata().get(`entityDefs.${scope}.fields.${fieldName}.isMultilang`) === true) {
+                const user = this.getUser()
+                const locales = this.getConfig().get('locales') || {}
+                let userLocale = locales[user.get('localeId')]
+                if (!userLocale) {
+                    userLocale = locales[this.getConfig().get('locale')]
+                }
+
+                let mainLocaleCode = ''
+                let userLocaleCode = ''
+                let field = fieldName
+
+                for (const [code, language] of Object.entries(this.getConfig().get('referenceData').Language ?? {})) {
+                    if (language.role === 'main') {
+                        mainLocaleCode = code
+                    }
+                    if (code === userLocale?.code) {
+                        userLocaleCode = code
+                    }
+                }
+
+                if (userLocaleCode && userLocaleCode !== mainLocaleCode) {
+                    field += userLocaleCode.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join('')
+                }
+
+                return [field, userLocaleCode]
+            }
+
+            return [fieldName, null]
         }
     });
 

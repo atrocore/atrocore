@@ -34,5 +34,48 @@ Espo.define('views/action/fields/type', 'views/fields/enum',
 
         },
 
+        initStatusContainer() {
+            Dep.prototype.initStatusContainer.call(this);
+
+            if (this.model.get('typePhpCode')) {
+                this.initShowCodeModal();
+            }
+        },
+
+        initShowCodeModal() {
+            const $cell = this.getCellElement();
+            const inlineActions = this.getInlineActionsContainer();
+
+            $cell.find('.show-code').parent().remove();
+
+            const $link = $(`<a href="javascript:" class="code-link hidden" title="${this.translate('phpCode')}"><i class="ph ph-code show-code"></i></a>`);
+
+            if (inlineActions.size()) {
+                inlineActions.prepend($link);
+            } else {
+                $cell.prepend($link);
+            }
+
+            $link.on('click', () => {
+                this.notify('Loading...');
+                this.createView('dialog', 'views/modals/php-code', {model: this.model, phpCode: this.model.get('typePhpCode')}, dialog => {
+                    dialog.render();
+                    this.notify(false);
+                });
+            });
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $link.removeClass('hidden');
+                }
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $link.addClass('hidden');
+                }
+            });
+        },
+
     })
 );

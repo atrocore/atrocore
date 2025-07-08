@@ -65,6 +65,7 @@
     export function handleCollectionSearch(searchedCollection) {
         if (collection && searchedCollection.name === scope) {
             Storage.set('treeWhereData', scope, searchedCollection.where)
+            Storage.set('useDataRequest', scope, searchedCollection.length < 50 ? 'yes' : 'no')
         }
         if (!isCollapsed) {
             rebuildTree()
@@ -87,9 +88,17 @@
     function getWhereData(): [] {
         let whereData = Storage.get('treeWhereData', scope) || [];
         if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
-            whereData = []
+            whereData = [];
         }
+
         return whereData
+    }
+
+    function canUseDataRequest() {
+        if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
+            return true
+        }
+        return  Storage.get('useDataRequest', scope) === 'yes'
     }
 
     function getHashScope() {
@@ -108,14 +117,10 @@
         let $tree = window.$(treeElement);
         let whereData = getWhereData();
         let hasTextFilter = !!searchValue;
-        whereData.forEach((item) => {
-            if(item.type === 'textFilter') {
-                hasTextFilter = true;
-            }
-        })
+
         if (
-            data === null && hasTextFilter && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
-            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled'])
+            data === null   && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && ((canUseDataRequest() && whereData.length) || hasTextFilter)
         ) {
             treeLoading = true;
             if(searchValue){
@@ -417,15 +422,20 @@
         } else if (model && model.id && [model.urlRoot, 'Bookmark'].includes(treeScope)) {
             url += '&selectedId=' + model.id;
         }
-
-        let whereData = getWhereData();
-        if (searchValue) {
-            whereData = [...whereData, {"type": "textFilter", "value": searchValue}]
+        let whereData = [];
+        if(searchValue) {
+            whereData.push({"type": "textFilter", "value": searchValue});
         }
+
+        if(['_self','_bookmark'].includes(activeItem.name) ) {
+                whereData = [...whereData, ...getWhereData() ]
+        }
+
         if (whereData.length > 0) {
             url += "&";
             url += window.$.param({"where": whereData});
         }
+
         return url;
     }
 
@@ -912,7 +922,7 @@
                             </button>
                         </div>
                     </div>
-                    {#if activeItem.name === "_self"}
+                    {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
                         <div style="margin-top:  20px;">
                              <span class="icons-wrapper" >
                                 <span class="toggle" class:active={applyAdvancedFilter}

@@ -81,13 +81,12 @@
             if (!Metadata.get(['scopes', params.scope, 'bookmarkDisabled'])) {
                 fields.push('_bookmark')
             }
-            if (Metadata.get(['scopes', params.scope, 'type']) === 'Hierarchy' && !Metadata.get(['scopes', params.scope, 'disableHierarchy'])) {
+            if (['Hierarchy', 'Base'].includes(Metadata.get(['scopes', params.scope, 'type'])) ) {
                 fields.push('_self')
             }
             if (UserData.get()?.user?.isAdmin) {
                 fields.push('_admin')
             }
-
         }
 
         return fields;

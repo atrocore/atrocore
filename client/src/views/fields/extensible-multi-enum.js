@@ -98,7 +98,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                             backgroundColor: backgroundColor,
                             color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor),
                             border: ColoredEnum.prototype.getBorder.call(this, backgroundColor),
-                            optionName: option.name
+                            optionName: option.preparedName ?? option.name
                         });
                     });
                 }

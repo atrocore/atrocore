@@ -52,18 +52,22 @@ Espo.define('treo-core:views/fields/filtered-link-multiple', 'views/fields/link-
                                 models = [models];
                             }
                             models.forEach(model => {
+                                const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
                                 if (model.where) {
                                     this.notify('Loading...');
-                                    this.ajaxGetRequest(this.foreignScope, {select: "id,name", where: model.where}, {async: false}).then(res => {
+                                    this.ajaxGetRequest(this.foreignScope, {
+                                        select: "id," + name,
+                                        where: model.where
+                                    }, { async: false }).then(res => {
                                         if (res.list) {
                                             res.list.forEach(item => {
-                                                this.addLink(item.id, item.name);
+                                                this.addLink(item.id, item[name] ?? '');
                                             });
                                         }
                                         this.notify(false);
                                     });
                                 } else {
-                                    this.addLink(model.id, model.get('name'));
+                                    this.addLink(model.id, model.get(name));
                                 }
                             });
                         });

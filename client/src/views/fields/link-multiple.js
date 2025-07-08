@@ -240,7 +240,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (models.massRelate) {
                                 if (models.where.length === 0) {
                                     // force subquery if primary filter "all" is used in modal
-                                    models.where = [{asc: true}]
+                                    models.where = [{ asc: true }]
                                 }
                                 this.model.set(this.idsName, null);
                                 this.model.set(this.nameHashName, null);
@@ -256,7 +256,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
                             models.forEach(function (model) {
                                 if (typeof model.get !== "undefined") {
-                                    const foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
+                                    let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
+                                    [foreignName] = self.getLocalizedFieldData(model.urlRoot, foreignName);
                                     self.addLink(model.id, model.get(foreignName) ?? model.get('name'));
                                 } else if (model.name) {
                                     self.addLink(model.id, model.name);
@@ -366,20 +367,21 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getAutocompleteUrl: function (q) {
-            var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy=name&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
-            boolList = this.getSelectBoolFilterList();
+            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
+            var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy=' + name + '&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
+                boolList = this.getSelectBoolFilterList();
             where = [];
 
 
             if (boolList && Array.isArray(boolList) && boolList.length > 0) {
-                url += '&' + $.param({'boolFilterList': boolList});
+                url += '&' + $.param({ 'boolFilterList': boolList });
             }
             var primary = this.getSelectPrimaryFilterName();
             if (primary) {
-                url += '&' + $.param({'primaryFilter': primary});
+                url += '&' + $.param({ 'primaryFilter': primary });
             }
 
-            where.push({'type': 'textFilter', value: 'AUTOCOMPLETE:'+q});
+            where.push({ 'type': 'textFilter', value: 'AUTOCOMPLETE:' + q });
 
             let additionalWhere = this.getAutocompleteAdditionalWhereConditions() || [];
             if (Array.isArray(additionalWhere) && additionalWhere.length) {
@@ -389,7 +391,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             if (where.length) {
-                url += '&' + $.param({'where': where});
+                url += '&' + $.param({ 'where': where });
             }
 
             return url;
@@ -430,10 +432,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
+                            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
                             response.list.forEach(function (item) {
                                 list.push({
                                     id: item.id,
-                                    name: item.name,
+                                    name: item[name] ?? '',
                                     data: item.id,
                                     value: item.name
                                 });
@@ -696,14 +699,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
         },
 
-        getSelectAllByDefault: function() {
+        getSelectAllByDefault: function () {
             return false;
         },
 
         createFilterView(rule, inputName, type, delay = true) {
             const scope = this.model.urlRoot;
             this.filterValue = null;
-            if(!this.setTimeoutFunction) {
+            if (!this.setTimeoutFunction) {
                 this.setTimeoutFunction = {}
             }
             let createViewField = (model) => {
@@ -734,29 +737,29 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     }, view => {
                         view.selectBoolFilterList = this.selectBoolFilterList;
                         view.boolFilterData = {};
-                        view.getSelectFilters  =  () => {
+                        view.getSelectFilters = () => {
                             let bool = {};
-                            let queryBuilder =  {
+                            let queryBuilder = {
                                 condition: "AND",
                                 rules: [],
                                 valid: true
                             }
                             let subQuery = rule.data?.subQuery || [];
                             subQuery.forEach(item => {
-                                if(item.type === 'bool') {
+                                if (item.type === 'bool') {
                                     item.value.forEach(v => bool[v] = true);
                                 }
 
-                                if(item.condition) {
+                                if (item.condition) {
                                     queryBuilder.rules.push(item);
                                 }
                             });
 
-                            if(queryBuilder.rules.length === 1) {
+                            if (queryBuilder.rules.length === 1) {
                                 queryBuilder = queryBuilder.rules[0];
                             }
 
-                            return {bool, queryBuilder, queryBuilderApplied: true}
+                            return { bool, queryBuilder, queryBuilderApplied: true }
                         }
 
                         view.getAutocompleteAdditionalWhereConditions = () => {
@@ -786,7 +789,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
 
                         if (rule.data && rule.data['subQuery']) {
-                            let data = {where: rule.data['subQuery']};
+                            let data = { where: rule.data['subQuery'] };
                             view.addLinkSubQuery(data, true);
                         }
 
@@ -833,10 +836,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                         let view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery'] && view) {
-                            let data = {where: rule.data['subQuery']};
+                            let data = { where: rule.data['subQuery'] };
                             view.addLinkSubQuery(data, true);
                         }
-                        if(view) {
+                        if (view) {
                             view.reRender();
                         }
                     }, 200);
@@ -884,11 +887,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         return '';
                     }
 
-                    if(!this.isNotListeningToOperatorChange) {
+                    if (!this.isNotListeningToOperatorChange) {
                         this.isNotListeningToOperatorChange = {}
                     }
 
-                    if(!this.initialOperatorType) {
+                    if (!this.initialOperatorType) {
                         this.initialOperatorType = {}
                     }
                     this.initialOperatorType[inputName] = rule.operator.type;
@@ -909,41 +912,41 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                     }.bind(this);
 
-                     if(!this.isNotListeningToOperatorChange[inputName]) {
+                    if (!this.isNotListeningToOperatorChange[inputName]) {
                         rule.$el.find('.rule-operator-container select').on('change', callback);
-                         this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
-                             if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
-                                 return;
-                             }
+                        this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
+                            if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
+                                return;
+                            }
 
-                             if(this.name !== rule.filter.id) {
-                                 return;
-                             }
+                            if (this.name !== rule.filter.id) {
+                                return;
+                            }
 
 
-                             if(rule.operator.type === this.initialOperatorType[inputName]) {
-                                 this.initialOperatorType[inputName] = null;
-                                 return;
-                             }
+                            if (rule.operator.type === this.initialOperatorType[inputName]) {
+                                this.initialOperatorType[inputName] = null;
+                                return;
+                            }
 
-                             this.clearView(inputName);
-                             this.createFilterView(rule, inputName, type);
-                         });
-                         this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
-                             if (rule.data && rule.data['subQuery']) {
-                                 delete rule.data['subQuery'];
-                             }
-                         });
+                            this.clearView(inputName);
+                            this.createFilterView(rule, inputName, type);
+                        });
+                        this.listenTo(this.model, 'beforeUpdateRuleFilter', rule => {
+                            if (rule.data && rule.data['subQuery']) {
+                                delete rule.data['subQuery'];
+                            }
+                        });
 
-                         this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
-                             const view = this.getView(inputName);
-                             if (view && rule.data && rule.data.nameHash) {
-                                 view.model.set('valueNames', rule.data.nameHash);
-                             }
-                         });
+                        this.listenTo(this.model, 'afterUpdateRuleFilter', rule => {
+                            const view = this.getView(inputName);
+                            if (view && rule.data && rule.data.nameHash) {
+                                view.model.set('valueNames', rule.data.nameHash);
+                            }
+                        });
 
-                         this.isNotListeningToOperatorChange[inputName] = true;
-                     }
+                        this.isNotListeningToOperatorChange[inputName] = true;
+                    }
 
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },

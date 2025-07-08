@@ -128,6 +128,9 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "basic": "Basic",
+    "script": "Script",
+    "phpCode": "PHP Code",
     "_addAttribute": "[Add Attribute]",
     "fieldValueFilters": "Field Value Filters",
     "confirmRemoveAttributeValue": "Are you sure you want to delete the attribute?",
@@ -425,7 +428,8 @@
     "expandAll": "Expand all",
     "fullscreen": "Full Screen",
     "Copy": "Copy",
-    "applyMainSearchAndFilter": "Apply main search and filter"
+    "applyMainSearchAndFilter": "Apply main search and filter",
+    "Reset to Default": "Reset to Default"
   },
   "messages": {
     "queryHasErrors": "They are some errors on your query",

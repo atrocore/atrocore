@@ -77,8 +77,8 @@
 <div class="btn-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     {#if Object.keys(locales).length > 1}
         <div>
-            <select class="form-control locale-switcher"
-                    style="max-width: 100px; flex: 1;"
+            <select class="form-control locale-switcher" title="{Language.translate('Locale','scopeNamesPlural','Global')}"
+                    style="max-width: 100px; flex: 1;" name="locales"
                     bind:value={locale}
                     on:change={onLocaleChange}>
                 <optgroup label="{Language.translate('Locale','scopeNamesPlural','Global')}">
