@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Console\CreateAction;
-use Atro\Console\CreateActionConditionType;
+use Atro\Console\CreateConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
@@ -53,7 +53,7 @@ class Action extends Base
             $entity->set('typePhpCode', file_get_contents($fileName));
         }
 
-        $fileName = CreateActionConditionType::DIR . '/' . $entity->get('conditionsType') . '.php';
+        $fileName = CreateConditionType::DIR . '/' . $entity->get('conditionsType') . '.php';
         $entity->set('conditionPhpCode', null);
         if (file_exists($fileName)) {
             $entity->set('conditionPhpCode', file_get_contents($fileName));
