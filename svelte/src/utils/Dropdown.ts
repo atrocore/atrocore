@@ -144,8 +144,6 @@ export default class Dropdown {
     }
 
     private onDropdownClick(event: MouseEvent) {
-        console.log('Dropdown click');
-
         if (!this.autoHide) {
             return;
         }
