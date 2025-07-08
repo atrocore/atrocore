@@ -9,6 +9,7 @@
     import {getSavedSearchStore} from "../search-filter/stores/SavedSearch"
     import Rule from "../search-filter/interfaces/Rule";
     import {Metadata} from "../../../utils/Metadata";
+    import Dropdown from "../../../utils/Dropdown";
 
 
     export let scope: string;
@@ -22,6 +23,7 @@
     let advancedFilterChecked: boolean = searchManager.isQueryBuilderApplied();
     let dropdownButton: HTMLElement;
     let dropdownDiv: HTMLElement;
+    let dropdownMenu: HTMLElement;
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
     let savedSearchStore = getSavedSearchStore(scope, uniqueKey, {
@@ -183,12 +185,17 @@
             return exits;
         });
 
+        const dropdown = new Dropdown(dropdownButton, dropdownMenu, {
+            placement: 'bottom-end',
+        })
+
         return () => {
             searchManager.collection.off('filter-state:changed');
             advancedFilterCheckedSub();
             selectSavedSub();
             selectBoolSub();
             advancedFilterDisabledSub();
+            dropdown.destroy();
         }
     });
 </script>
@@ -214,14 +221,13 @@
                 <div bind:this={dropdownDiv} class="dropdown" class:has-content={filterNames !== ""}>
                     <button
                             bind:this={dropdownButton}
-                            data-toggle="dropdown"
                             class="btn btn-default actions-button filter-switcher"
                             on:mousedown={event => event.preventDefault()}
                     >
                         <span class="filter-names">{filterNames}</span>
                         <i class="ph ph-caret-down chevron"></i>
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" bind:this={dropdownMenu}>
                         <GeneralFilter scope={scope} searchManager={searchManager} opened={true} uniqueKey={uniqueKey}/>
                         <SavedSearch scope={scope} searchManager={searchManager} hideRowAction={true} opened={true} uniqueKey={uniqueKey}/>
                         <ul class="advanced-checkbox">
