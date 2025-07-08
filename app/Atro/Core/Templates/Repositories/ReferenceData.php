@@ -357,7 +357,11 @@ class ReferenceData extends Repository implements Injectable
 
                 $filtered = [];
                 foreach ($items as $item) {
-                    if (!array_key_exists($field, $item) || $item[$field] === $value) {
+                    if (
+                        !array_key_exists($field, $item)
+                        || $item[$field] === $value
+                        || (is_array($value) && in_array($item[$field], $value))
+                    ) {
                         $filtered[] = $item;
                     }
                 }
@@ -409,21 +413,6 @@ class ReferenceData extends Repository implements Injectable
                 if ($k >= $params['offset'] && count($prepared) < $params['limit']) {
                     $prepared[] = $item;
                 }
-            }
-            $items = $prepared;
-        }
-
-        if (!empty($params['select'])) {
-            $select = array_merge(['id', 'code'], $params['select']);
-            $prepared = [];
-            foreach ($items as $item) {
-                $row = [];
-                foreach ($item as $field => $value) {
-                    if (in_array($field, $select)) {
-                        $row[$field] = $value;
-                    }
-                }
-                $prepared[] = $row;
             }
             $items = $prepared;
         }
