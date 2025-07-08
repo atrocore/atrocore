@@ -4,7 +4,6 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/border.css';
 
 import {driver} from 'driver.js'
-import {autoUpdate, autoPlacement, flip, computePosition, shift, offset} from '@floating-ui/dom'
 import tippy from 'tippy.js';
 
 import {Language} from './utils/Language';
@@ -50,14 +49,6 @@ window.SvelteCollectionFactory = CollectionFactory;
 window.driver = driver;
 window.tippy = tippy;
 window.Dropdown = Dropdown;
-window.floatingUi = {
-    autoPlacement,
-    computePosition,
-    autoUpdate,
-    shift,
-    flip,
-    offset
-};
 
 export {
     Script,

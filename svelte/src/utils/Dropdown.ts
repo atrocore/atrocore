@@ -21,22 +21,35 @@ import DropdownParams from "./interfaces/DropdownParams";
 export default class Dropdown {
     referenceEl: HTMLElement;
     floatingEl: HTMLElement;
+    floatingListElSelector: string = 'li';
     floatingHandler: Function;
     params?: DropdownParams;
     isOpen: boolean = false;
+    autoHide: boolean = true;
 
     constructor(referenceEl: HTMLElement, floatingEl: HTMLElement, params?: DropdownParams) {
         this.referenceEl = referenceEl;
         this.floatingEl = floatingEl;
         this.params = params;
 
+        if (typeof this.params?.disableAutoHide === 'boolean') {
+            this.autoHide = !this.params.disableAutoHide;
+        }
+
+        if (typeof this.params?.dropdownListElSelector === 'string') {
+            this.floatingListElSelector = this.params.dropdownListElSelector;
+        }
+
         document.addEventListener('click', this.onClickOutside.bind(this));
         referenceEl.addEventListener('click', this.onReferenceElClick.bind(this));
+        this.floatingEl.addEventListener('click', this.onDropdownClick.bind(this));
     }
 
     destroy() {
         this.floatingHandler?.();
         document.removeEventListener('click', this.onClickOutside.bind(this));
+        this.referenceEl.removeEventListener('click', this.onReferenceElClick.bind(this));
+        this.floatingEl.removeEventListener('click', this.onDropdownClick.bind(this));
     }
 
     toggle() {
@@ -101,7 +114,7 @@ export default class Dropdown {
             }
 
             if (positionOptions.middleware.length === 0) {
-                positionOptions.middleware = [offset(4), flip(), shift()];
+                positionOptions.middleware = [offset(5), flip(), shift()];
             }
 
             computePosition(this.referenceEl, this.floatingEl, positionOptions, {animationFrame: true}).then(({x, y}) => {
@@ -130,11 +143,24 @@ export default class Dropdown {
         }
     }
 
-    private onReferenceElClick(event: MouseEvent) {
-        if (this.params?.onReferenceElClick) {
-            this.params.onReferenceElClick(event);
+    private onDropdownClick(event: MouseEvent) {
+        console.log('Dropdown click');
+
+        if (!this.autoHide) {
+            return;
         }
 
+        if (!event.target instanceof HTMLElement) {
+            return;
+        }
+
+        const target = event.target as HTMLElement;
+        if (target.matches(this.floatingListElSelector) || target.closest(this.floatingListElSelector)) {
+            this.close();
+        }
+    }
+
+    private onReferenceElClick(event: MouseEvent) {
         this.toggle();
     }
 }
