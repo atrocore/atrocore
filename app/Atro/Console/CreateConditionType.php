@@ -45,7 +45,7 @@ namespace CustomConditionTypes;
 
 use Atro\ConditionTypes\AbstractConditionType;
 
-class {{name}} extends AbstractActionConditionType
+class {{name}} extends AbstractConditionType
 {
     public static function getTypeLabel(): string
     {
