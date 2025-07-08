@@ -45,6 +45,13 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
             if (this.options.alignRight && typeof this.options.alignRight === 'boolean') {
                 this.alignRight = this.options.alignRight;
             }
+
+            this.once('remove', () => {
+                if (this.dropdown) {
+                    this.dropdown.destroy();
+                    this.dropdown = null;
+                }
+            });
         },
 
         data: function () {

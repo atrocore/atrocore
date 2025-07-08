@@ -17862,7 +17862,6 @@ span[data-img-src]::after {
 
     .layout-editor-container.open {
         display: block !important;
-        z-index: auto !important;
     }
 
     table thead:hover .layout-editor-container {
@@ -17879,6 +17878,7 @@ span[data-img-src]::after {
 
     .sidebar .panel-group:hover .layout-editor-container {
         display: block;
+        z-index: auto;
     }
 
     .sidebar-header:hover .layout-editor-container {
