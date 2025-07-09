@@ -1387,10 +1387,6 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields']['ownerUser']['type'] = 'link';
                 }
 
-                if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['required'])) {
-                    $data['entityDefs'][$scope]['fields']['ownerUser']['required'] = true;
-                }
-
                 if (!isset($data['entityDefs'][$scope]['fields']['ownerUser']['view'])) {
                     $data['entityDefs'][$scope]['fields']['ownerUser']['view'] = 'views/fields/owner-user';
                 }
@@ -1408,10 +1404,6 @@ class Metadata extends AbstractListener
             if (!empty($row['hasAssignedUser'])) {
                 if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['type'])) {
                     $data['entityDefs'][$scope]['fields']['assignedUser']['type'] = 'link';
-                }
-
-                if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['required'])) {
-                    $data['entityDefs'][$scope]['fields']['assignedUser']['required'] = true;
                 }
 
                 if (!isset($data['entityDefs'][$scope]['fields']['assignedUser']['view'])) {
@@ -1485,18 +1477,20 @@ class Metadata extends AbstractListener
             ];
 
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
-                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'link' &&
-                    !empty($data['entityDefs'][$scope]['links'][$field]['entity']) &&
-                    $data['entityDefs'][$scope]['links'][$field]['entity'] === 'User' &&
-                    empty($data['entityDefs'][$scope]['links'][$field]['view'])) {
+                if (
+                    !empty($fieldDefs['type']) && $fieldDefs['type'] === 'link'
+                    && !empty($data['entityDefs'][$scope]['links'][$field]['entity'])
+                    && $data['entityDefs'][$scope]['links'][$field]['entity'] === 'User'
+                    && empty($data['entityDefs'][$scope]['links'][$field]['view'])
+                ) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/user-with-avatar';
                 }
 
-                if (in_array($field, [
-                        'createdAt',
-                        'modifiedAt'
-                    ]) && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser']) &&
-                    empty($data['entityDefs'][$scope]['fields'][$field]['view'])) {
+                if (
+                    in_array($field, ['createdAt', 'modifiedAt'])
+                    && !empty($data['entityDefs'][$scope]['fields'][$field]['showUser'])
+                    && empty($data['entityDefs'][$scope]['fields'][$field]['view'])
+                ) {
                     $data['entityDefs'][$scope]['fields'][$field]['view'] = 'views/fields/datetime-with-user';
                     $data['entityDefs'][$scope]['fields'][$field]['ignoreViewForSearch'] = true;
                 }
