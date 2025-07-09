@@ -24,18 +24,25 @@
 
     $: scopeKey = scope + mode;
 
-    function toggleFilter(e) {
-        if(e.detail.uniqueKey !== uniqueKey) {
+    function toggleFilter(e: CustomEvent) {
+        if (e.detail.uniqueKey !== uniqueKey) {
             return;
         }
 
-        if (activeItem.name === 'filter') {
+        const oldActiveItem = activeItem;
+        setActiveItem(items.find(item => item.name === 'filter'));
+
+        if (oldActiveItem.name === 'filter') {
             isCollapsed = !isCollapsed;
-            storeData('right-side-view-collapse', scope + 'list', isCollapsed ? 'collapsed' : 'expanded');
+        } else if (isCollapsed) {
+            isCollapsed = false;
         } else {
-            setActiveItem(items.find(item => item.name === 'filter'));
+            return;
         }
+
+        storeData('right-side-view-collapse', scope + 'list', isCollapsed ? 'collapsed' : 'expanded');
     }
+
     window.addEventListener('right-side-view:toggle-filter', toggleFilter);
 
     let isPin = true;

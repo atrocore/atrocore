@@ -1087,11 +1087,17 @@
         font-weight: bold;
     }
 
+    .category-panel .icons-wrapper .toggle {
+        cursor: pointer;
+        margin-right: 3px;
+        vertical-align: middle;
+    }
+
     .category-panel .icons-wrapper .toggle.active {
         color: #06c;
     }
 
     .category-panel .icons-wrapper .toggle i {
-        font-size: 20px;
+        font-size: 24px;
     }
 </style>
