@@ -533,6 +533,7 @@
     "removeAttribute": "Видалити атрибут"
   },
   "fields": {
+    "status": "Статус",
     "conditionsType": "Тип умови",
     "conditions": "Умови",
     "folderPath": "Шлях папки",

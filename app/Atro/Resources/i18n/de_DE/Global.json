@@ -575,6 +575,7 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "status": "Status",
     "conditionsType": "Konditionstyp",
     "conditions": "Konditionen",
     "entity": "Entität",

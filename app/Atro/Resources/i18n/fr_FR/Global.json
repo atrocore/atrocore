@@ -1,5 +1,6 @@
 {
   "fields": {
+    "status": "Statut",
     "conditionsType": "Type de conditions",
     "conditions": "Conditions",
     "followers": "Suiveurs",
