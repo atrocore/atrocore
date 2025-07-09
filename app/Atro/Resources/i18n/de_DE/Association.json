@@ -12,7 +12,7 @@
     "default": "Standard"
   },
   "exceptions": {
-    "associationIsLinkedWithProducts": "Die Assoziation ist mit einem Produkt verlinkt. Bitte entfernen Sie zuerst das Produkt.",
-    "youCanNotDeactivateAssociationWithActiveProducts": "Sie können die Assoziation mit einem aktiven Produkt nicht deaktivieren"
+    "associationIsLinkedWithRecords": "Assoziation ist mit Datensatz(en) verknüpft. Bitte heben Sie die Verknüpfung mit dem/den Datensatz/en zuerst auf",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Sie können die Verknüpfung mit aktiven Datensätzen nicht deaktivieren"
   }
 }

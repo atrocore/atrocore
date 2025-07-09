@@ -13,6 +13,7 @@
     "UiHandler": "UI-Handler",
     "Action": "Aktion",
     "ExtensibleEnum": "Liste",
+    "Association": "Assoziation",
     "ExtensibleEnumOption": "Auswahloption",
     "Sharing": "Freigabe",
     "Translation": "Label",
@@ -64,6 +65,7 @@
     "EmailTemplate": "E-Mail-Vorlagen",
     "Storage": "Dateiablagen",
     "Folder": "Ordner",
+    "Association": "Assoziationen",
     "File": "Dateien",
     "FileType": "Datei-Typen",
     "ValidationRule": "Validierungsregel",
@@ -671,6 +673,10 @@
     "entityRemoved": "{user} hat {entityType} {entity} gelöscht"
   },
   "streamMessages": {
+    "createRecordAssociationThis": "{user} hat {relatedRecord} als {association} assoziiert",
+    "deleteRecordAssociationThis": "{user} hat die Assoziation zu {relatedRecord} als {association} entfernt",
+    "createAssociationRecordThis": "{user} hat {mainRecord} mit {relatedRecord} assoziiert",
+    "deleteAssociationRecordThis": "{user} hat die Assoziation von {mainRecord} mit {relatedRecord} entfernt",
     "composerUpdateThis": "{user}",
     "post": "{user} notierte zu {entityType} {entity}",
     "postInList": "{user} notierte zu {entityType}",
@@ -986,6 +992,10 @@
     "list": "Liste"
   },
   "exceptions": {
+    "backwardAssociationError": "Rückwärtsassoziationsfehler: %s",
+    "noSuchAssociation": "Validierung fehlgeschlagen. No such Association exists.",
+    "itselfAssociation": "Datensatz kann nicht mit sich selbst verknüpft werden.",
+    "recordAssociationAlreadyExists": "Eine solche Datensatz-Zuordnung existiert bereits.",
     "suchItemNameCannotBeUsedHere": "Ein(e) Ordner/Datei mit einem solchen Namen existiert bereits im Zielordner. Bitte wählen Sie einen anderen Ordner oder ändern Sie den Namen und versuchen Sie es erneut.",
     "colorDepthValidationFailed": "Die Farbtiefe dieses Dateien ist nicht zulässig.",
     "colorSpaceValidationFailed": "Der Farbraum dieses Dateien ist nicht zulässig.",

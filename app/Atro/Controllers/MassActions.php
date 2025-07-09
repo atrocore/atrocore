@@ -15,6 +15,7 @@ namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
+use Slim\Http\Request;
 
 class MassActions extends AbstractController
 {
@@ -50,12 +51,14 @@ class MassActions extends AbstractController
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'where') && property_exists($data ,'foreignWhere')) {
+        $relationData = json_decode(json_encode($data?->data ?? ''), true);
+
+        if (property_exists($data, 'where') && property_exists($data, 'foreignWhere')) {
             $where = json_decode(json_encode($data->where), true);
             $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
 
-            return $this->getService('MassActions')->addRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
-        } else if (property_exists($data, 'ids') && property_exists($data ,'foreignIds')) {
+            return $this->getService('MassActions')->addRelationByWhere($where, $foreignWhere, $params['scope'], $params['link'], $relationData);
+        } else if (property_exists($data, 'ids') && property_exists($data, 'foreignIds')) {
             $ids = $data->ids;
             $foreignIds = $data->foreignIds;
 
@@ -63,7 +66,7 @@ class MassActions extends AbstractController
                 throw new BadRequest();
             }
 
-            return $this->getService('MassActions')->addRelation($ids, $foreignIds, $params['scope'], $params['link']);
+            return $this->getService('MassActions')->addRelation($ids, $foreignIds, $params['scope'], $params['link'], $relationData);
         }
 
         throw new BadRequest();
@@ -83,12 +86,14 @@ class MassActions extends AbstractController
             throw new Forbidden();
         }
 
-        if (property_exists($data, 'where') && property_exists($data ,'foreignWhere')) {
+        $relationData = json_decode(json_encode($data?->data), true);
+
+        if (property_exists($data, 'where') && property_exists($data, 'foreignWhere')) {
             $where = json_decode(json_encode($data->where), true);
             $foreignWhere = json_decode(json_encode($data->foreignWhere), true);
 
-            return $this->getService('MassActions')->removeRelationByWhere($where, $foreignWhere, $params['scope'], $params['link']);
-        } else if (property_exists($data, 'ids') && property_exists($data ,'foreignIds')) {
+            return $this->getService('MassActions')->removeRelationByWhere($where, $foreignWhere, $params['scope'], $params['link'], $relationData);
+        } else if (property_exists($data, 'ids') && property_exists($data, 'foreignIds')) {
             $ids = $data->ids;
             $foreignIds = $data->foreignIds;
 
@@ -96,7 +101,7 @@ class MassActions extends AbstractController
                 throw new BadRequest();
             }
 
-            return $this->getService('MassActions')->removeRelation($ids, $foreignIds, $params['scope'], $params['link']);
+            return $this->getService('MassActions')->removeRelation($ids, $foreignIds, $params['scope'], $params['link'], $relationData);
         }
 
         throw new BadRequest();

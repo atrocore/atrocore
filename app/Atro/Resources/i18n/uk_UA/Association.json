@@ -8,7 +8,7 @@
     "default": "За замовчуванням"
   },
   "exceptions": {
-    "associationIsLinkedWithProducts": "Асоціація пов'язана з продуктом (-ами). Будь ласка, спочатку відключіть продукт(-и)",
-    "youCanNotDeactivateAssociationWithActiveProducts": "Ви не можете відключити зв'язок з активним продуктом (-ами)"
+    "associationIsLinkedWithRecords": "Асоціація пов'язана із записом(ами). Будь ласка, спочатку від'єднайте запис(и)",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Ви не можете деактивувати асоціацію з активними записами"
   }
 }

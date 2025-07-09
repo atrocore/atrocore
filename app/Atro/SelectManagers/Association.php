@@ -21,20 +21,20 @@ use Espo\Core\SelectManagers\Base;
 class Association extends Base
 {
     /**
-     * Get associated products associations
+     * Get associated record associations
      *
-     * @param string $mainProductId
-     * @param string $relatedProductId
+     * @param string $mainRecordId
+     * @param string $relatedRecordId
      *
      * @return array
      */
-    public function getAssociatedProductAssociations($scope, $mainRecordId, $relatedRecordId = null)
+    public function getAssociatedRecordAssociations(string $scope, string $mainRecordId, ?string $relatedRecordId = null) : array
     {
         $connection = $this->getEntityManager()->getConnection();
 
 
         $qb = $connection->createQueryBuilder()
-            ->select('association_id')
+            ->select('distinct(association_id)')
             ->from(Util::toUnderScore("Associated$scope"))
             ->where(Util::toUnderScore("main{$scope}Id") . ' = :mainRecordId')
             ->andWhere('deleted = :false')
@@ -46,7 +46,7 @@ class Association extends Base
             $qb->setParameter('relatedRecordId', $relatedRecordId, Mapper::getParameterType($relatedRecordId));
         }
 
-        return $qb->fetchAllAssociative();
+        return $qb->fetchFirstColumn();
     }
 
     /**
@@ -54,34 +54,32 @@ class Association extends Base
      *
      * @param array $result
      */
-    protected function boolFilterNotUsedAssociations(&$result)
+    protected function boolFilterNotUsedAssociations(&$result): void
     {
         // prepare data
         $data = (array)$this->getBoolFilterParameter('notUsedAssociations');
 
         if (!empty($data['relatedProductId'])) {
-            $assiciations = $this
-                ->getAssociatedProductAssociations($data['scope'], $data['mainProductId'], $data['relatedProductId']);
-            foreach ($assiciations as $row) {
+            $associationIds = $this
+                ->getAssociatedRecordAssociations($data['scope'], $data['mainRecordId'], $data['relatedRecordId']);
+            foreach ($associationIds as $id) {
                 $result['whereClause'][] = [
-                    'id!=' => (string)$row['association_id']
+                    'id!=' => $id
                 ];
             }
         }
     }
 
-    protected function boolFilterUsedAssociations(&$result)
+    protected function boolFilterUsedAssociations(&$result): void
     {
         // prepare data
         $data = (array)$this->getBoolFilterParameter('usedAssociations');
 
         if (!empty($data['mainRecordId'])) {
-            $associations = $this
-                ->getAssociatedProductAssociations($data['scope'], $data['mainRecordId']);
+            $associationIds = $this
+                ->getAssociatedRecordAssociations($data['scope'], $data['mainRecordId']);
             $result['whereClause'][] = [
-                'id' => array_map(function ($item) {
-                    return (string)$item['association_id'];
-                }, $associations)
+                'id' => $associationIds
             ];
         }
     }

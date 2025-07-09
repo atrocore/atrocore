@@ -20,6 +20,7 @@
     "ExtensibleEnumExtensibleEnumOption": "List (List Option)",
     "Sharing": "Sharing",
     "Locale": "Locale",
+    "Association": "Association",
     "Connection": "Connection",
     "Translation": "Label",
     "Account": "Account",
@@ -82,6 +83,7 @@
     "Storage": "Storages",
     "Folder": "Folders",
     "File": "Files",
+    "Association": "Associations",
     "FileType": "File Types",
     "ValidationRules": "Validation Rules",
     "UiHandler": "UI Handlers",
@@ -679,6 +681,10 @@
     "entityRemoved": "{user} deleted {entityType} {entity}"
   },
   "streamMessages": {
+    "createRecordAssociationThis": "{user} associated {relatedRecord} as {association}",
+    "deleteRecordAssociationThis": "{user} removed association to {relatedRecord} as {association}",
+    "createAssociationRecordThis": "{user} associated {mainRecord} with {relatedRecord}",
+    "deleteAssociationRecordThis": "{user} removed association of {mainRecord} with {relatedRecord}",
     "composerUpdateThis": "{user}",
     "post": "{user} posted on {entityType} {entity}",
     "postInList": "{user} posted on {entityType}",
@@ -1061,6 +1067,10 @@
     "cd": "cd"
   },
   "exceptions": {
+    "backwardAssociationError": "Backward association error: %s",
+    "noSuchAssociation": "Validation failed. No such Association exists.",
+    "itselfAssociation": "Record cannot be associated with itself.",
+    "recordAssociationAlreadyExists": "Such record association exists already.",
     "notAllowedOption": "Option '%s' is not allowed for '%s'.",
     "suchItemNameCannotBeUsedHere": "A folder/file with such a name already exists in the destination folder. Please choose another folder or change the name and try again.",
     "colorDepthValidationFailed": "Color depth of this file is not allowed.",

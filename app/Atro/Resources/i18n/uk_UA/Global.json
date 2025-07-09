@@ -15,6 +15,7 @@
     "Locale": "Локаль",
     "Connection": "З'єднання",
     "User": "Користувач",
+    "Association": "Асоціація",
     "Team": "Група",
     "Role": "Роль",
     "OutboundEmail": "Вихідний ел. лист",
@@ -64,6 +65,7 @@
     "EmailTemplate": "Шаблони електронної пошти",
     "Storage": "Сховища",
     "Folder": "Папки",
+    "Association": "Асоціації",
     "File": "Файли",
     "FileType": "Типи файлів",
     "ValidationRules": "Правила перевірки",
@@ -990,6 +992,10 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "backwardAssociationError": "Помилка зворотної асоціації: %s",
+    "noSuchAssociation": "Перевірка не вдалася. Такої асоціації не існує.",
+    "itselfAssociation": "Запис не може бути асоційований із самим собою.",
+    "recordAssociationAlreadyExists": "Така асоціація запису вже існує.",
     "colorDepthValidationFailed": "Глибина кольору цього ассета неприпустима.",
     "colorSpaceValidationFailed": "Колірний простір цього асета неприпустимий.",
     "fileExtensionValidationFailed": "Використовуйте файли тільки з наступним розширенням: %s.",

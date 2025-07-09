@@ -87,6 +87,7 @@
     "ScheduledJob": "Travail programmé",
     "Storage": "Stockage",
     "File": "Fichier",
+    "Association": "Association",
     "FileType": "Type de fichier",
     "ValidationRule": "Règle de validation",
     "Action": "Action",
@@ -476,6 +477,7 @@
     "Locale": "Localités",
     "Measure": "Mesures",
     "File": "Fichiers",
+    "Association": "Associations",
     "FileType": "Types de fichiers",
     "Account": "Comptes",
     "DocumentFolder": "Dossiers de documents",
@@ -555,6 +557,10 @@
     "assign": "{entityType} {entity} vous a été attribué."
   },
   "streamMessages": {
+    "createRecordAssociationThis": "{utilisateur} a associé {relatedRecord} en tant que {association}",
+    "createAssociationRecordThis": "{user} a associé {mainRecord} à {relatedRecord}",
+    "deleteAssociationRecordThis": "{user} a supprimé l'association de {mainRecord} avec {relatedRecord}",
+    "deleteRecordAssociationThis": "{utilisateur} a supprimé l'association à {relatedRecord} en tant que {association}",
     "composerUpdateThis": "{user}",
     "post": "{user} a posté sur {entityType} {entity}",
     "attach": "{user} attaché à {entityType} {entity}",
@@ -877,6 +883,10 @@
     }
   },
   "exceptions": {
+    "backwardAssociationError" : "Backward association error : %s",
+    "noSuchAssociation" : "Échec de la validation. Aucune association de ce type n'existe",
+    "itselfAssociation" : "L'enregistrement ne peut pas être associé à lui-même.",
+    "recordAssociationAlreadyExists" : "Une telle association d'enregistrements existe déjà",
     "massRestoreNoRecordProceed": "Aucun enregistrement n'a été rétabli.",
     "childsMustBeArchived": "L'élément (parent) ne peut être archivé que si tous les éléments enfants le sont également.",
     "noOptionsDefined": "Les options pour le champ \"%s\" ne sont pas définies.",

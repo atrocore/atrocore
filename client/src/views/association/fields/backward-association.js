@@ -15,7 +15,7 @@ Espo.define('views/association/fields/backward-association', 'views/fields/link'
 
         boolFilterData: {
             onlyForEntity() {
-                return this.model.get('entityId') || null;
+                return this.options.onlyForEntity || this.model.get('entityId')  || null;
             }
         },
     })
