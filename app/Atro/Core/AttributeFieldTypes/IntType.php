@@ -115,6 +115,14 @@ class IntType extends AbstractFieldType
                 'type'        => 'varchar',
                 'notStorable' => true
             ];
+            $entity->fields[$name . 'UnitData'] = [
+                'type'        => 'jsonObject',
+                'notStorable' => true
+            ];
+            $entity->fields[$name . 'AllUnits'] = [
+                'type'        => 'jsonObject',
+                'notStorable' => true
+            ];
 
             if (empty($skipValueProcessing)) {
                 $entity->set($name . 'UnitId', $row[$entity->fields[$name . 'UnitId']['column']] ?? null);
