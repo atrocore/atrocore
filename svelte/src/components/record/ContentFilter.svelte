@@ -4,6 +4,7 @@
     import {Notifier} from "../../utils/Notifier";
     import {Metadata} from "../../utils/Metadata";
     import {Storage} from "../../utils/Storage";
+    import Dropdown from "../../utils/Dropdown";
 
 
     export let scope: string;
@@ -18,6 +19,7 @@
 
     let dropdownButton: HTMLElement;
     let dropdownDiv: HTMLElement;
+    let dropdownMenu: HTMLElement;
 
     function unsetAll() {
         selectedFilters = []
@@ -52,6 +54,15 @@
         selectedFilters = selectedFilters.filter(filter => filters.includes(filter))
     }
 
+    onMount(() => {
+        const dropdown = new Dropdown(dropdownButton, dropdownMenu, {
+            placement: 'bottom-end',
+        });
+
+        return () => {
+            dropdown.destroy();
+        }
+    });
 
 </script>
 
@@ -74,14 +85,13 @@
             <div bind:this={dropdownDiv} class="dropdown" class:has-content={selectedFilters.length>0}>
                 <button
                         bind:this={dropdownButton}
-                        data-toggle="dropdown"
                         class="btn btn-default filter-switcher"
                         on:mousedown={event => event.preventDefault()}
                 >
                     <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
                     <i class="ph ph-caret-down chevron"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-menu" bind:this={dropdownMenu}>
                     <h5 style="margin-top: 0">{Language.translate('fieldValueFilters', 'labels', 'Global')}</h5>
                     <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                         {#each allFilters as filter }

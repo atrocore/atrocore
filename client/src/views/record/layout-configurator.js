@@ -16,6 +16,10 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
 
         alignRight: false,
 
+        dropdown: null,
+
+        cleanup: null,
+
         events: {
             'click .layout-editor': function (e) {
                 // open modal view
@@ -41,6 +45,13 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
             if (this.options.alignRight && typeof this.options.alignRight === 'boolean') {
                 this.alignRight = this.options.alignRight;
             }
+
+            this.once('remove', () => {
+                if (this.dropdown) {
+                    this.dropdown.destroy();
+                    this.dropdown = null;
+                }
+            });
         },
 
         data: function () {
@@ -57,6 +68,42 @@ Espo.define('views/record/layout-configurator', 'view', function (Dep) {
                 linkClass: this.options.linkClass ?? '',
                 alignRight: this.alignRight,
             };
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.dropdown) {
+                this.dropdown.destroy();
+            }
+
+            const button = this.$el.find('.dropdown-toggle')[0];
+            const dropdown = this.$el.find('.dropdown-menu')[0];
+
+            if (!button || !dropdown) {
+                return;
+            }
+
+            this.dropdown = new window.Dropdown(button, dropdown, {
+                placement: 'bottom-start',
+                onDropdownShow: dropdown => {
+                    dropdown.parentElement?.classList.add('open');
+                },
+                onDropdownHide: dropdown => {
+                    dropdown.parentElement?.classList.remove('open');
+                },
+                strategy: 'fixed',
+                offset: {
+                    mainAxis: 5
+                },
+                flip: {
+                    crossAxis: 'alignment',
+                    fallbackAxisSideDirection: 'start'
+                },
+                shift: {
+                    mainAxis: true
+                }
+            });
         },
 
         showLayoutEditorModal() {

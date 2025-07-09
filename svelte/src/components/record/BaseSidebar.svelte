@@ -200,7 +200,6 @@
         overflow-y: auto;
         overflow-x: clip;
         position: relative;
-        z-index: 2;
     }
 
     .sidebar.sidebar-left {
