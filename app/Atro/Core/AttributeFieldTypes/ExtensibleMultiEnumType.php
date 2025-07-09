@@ -38,6 +38,11 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'notStorable' => true
         ];
 
+        $entity->fields[$name . 'OptionsData'] = [
+            'type'        => 'jsonArray',
+            'notStorable' => true
+        ];
+
         if (empty($skipValueProcessing)) {
             $value = $row[$entity->fields[$name]['column']] ?? null;
             if ($value !== null) {
