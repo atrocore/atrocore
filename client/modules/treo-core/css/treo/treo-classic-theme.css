@@ -3951,6 +3951,7 @@ tbody.collapse.in {
     display: none;
     float: left;
     min-width: 160px;
+    width: fit-content;
     padding: 5px 0;
     margin: 2px 0 0;
     list-style: none;
@@ -17834,6 +17835,10 @@ span[data-img-src]::after {
     text-decoration: none;
 }
 
+.layout-editor-container .dropdown-menu {
+    max-width: 300px;
+}
+
 .sidebar .layout-editor-container .btn-link .ph {
     font-size: 16px;
 }
@@ -17873,6 +17878,7 @@ span[data-img-src]::after {
 
     .sidebar .panel-group:hover .layout-editor-container {
         display: block;
+        z-index: auto;
     }
 
     .sidebar-header:hover .layout-editor-container {

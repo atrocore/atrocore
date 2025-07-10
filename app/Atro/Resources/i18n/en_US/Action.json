@@ -11,8 +11,6 @@
     "actions": "Actions",
     "webhookUrl": "URL",
     "executeAs": "Execute As",
-    "conditionsType": "Conditions Type",
-    "conditions": "Conditions",
     "displayField": "Display Field"
   },
   "labels": {

@@ -580,6 +580,9 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "status": "Status",
+    "conditionsType": "Conditions Type",
+    "conditions": "Conditions",
     "entity": "Entity",
     "allowedOptions": "Allowed Options",
     "disableActionHistory": "Disable action logging",

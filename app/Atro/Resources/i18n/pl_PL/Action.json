@@ -6,9 +6,7 @@
 		"inBackground": "Wykonaj w tle",
 		"usage": "Wykorzystanie",
 		"massAction": "Akcja Masowa",
-		"display": "Wyświetlanie",
-		"conditionsType": "Typ warunków",
-		"conditions": "Warunki"
+		"display": "Wyświetlanie"
 	},
 	"labels": {
 		"execute": "Wykonaj"

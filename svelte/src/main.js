@@ -16,8 +16,7 @@ import {Config} from "./utils/Config";
 import {Storage} from "./utils/Storage.ts";
 import {Acl} from "./utils/Acl.ts";
 import {CollectionFactory} from "./utils/CollectionFactory.ts";
-
-
+import Dropdown from "./utils/Dropdown.ts"
 
 import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
@@ -49,6 +48,7 @@ window.SvelteAcl = Acl;
 window.SvelteCollectionFactory = CollectionFactory;
 window.driver = driver;
 window.tippy = tippy;
+window.Dropdown = Dropdown;
 
 export {
     Script,

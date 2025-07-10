@@ -13,11 +13,15 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
 
         return Dep.extend({
 
+            entityTypeField: null,
+
             setup() {
                 Dep.prototype.setup.call(this);
 
+                this.entityTypeField = this.model.name === 'Action' ? 'sourceEntity' : 'entityType';
+
                 this.prepareOptionsList();
-                this.listenTo(this.model, 'change:sourceEntity', () => {
+                this.listenTo(this.model, `change:${this.entityTypeField}`, () => {
                     this.model.set(this.name, null);
                     this.prepareOptionsList();
                     this.reRender();
@@ -32,9 +36,9 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
                     'script': this.translate('script')
                 };
 
-                if (this.model.get('sourceEntity')) {
+                if (this.model.get(this.entityTypeField)) {
                     $.each(this.getMetadata().get('app.conditionsTypes') || {}, (type, item) => {
-                        if (item.entityName === this.model.get('sourceEntity')) {
+                        if (item.entityName === this.model.get(this.entityTypeField)) {
                             this.params.options.push(type);
                             this.translatedOptions[type] = item.label;
                         }

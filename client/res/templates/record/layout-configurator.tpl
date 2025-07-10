@@ -1,8 +1,8 @@
 {{#if showLayoutEditor}}
-    <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer" data-toggle="dropdown">
+    <a class="dropdown-toggle btn-link {{ linkClass }}" style="cursor: pointer; position:relative;">
         <i class="ph ph-gear-six"></i>
     </a>
-    <ul class="dropdown-menu {{#if alignRight}}pull-right{{/if}}">
+    <ul class="dropdown-menu {{#if alignRight}}pull-right{{/if}}" style="position:fixed;">
         {{#each storedProfiles}}
             <li><a href="javascript:" class="layout-profile-item" data-id="{{id}}">{{ name }} {{#if isSelected }}
                 <i class="ph ph-check pull-right"></i>{{/if}}</a></li>

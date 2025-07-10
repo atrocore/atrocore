@@ -78,11 +78,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         data: function () {
             var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
-            if (nameValue === null) {
-                nameValue = this.model.get(this.idName);
-            }
+
             if (this.mode === 'detail' && !nameValue && this.model.get(this.idName)) {
-                nameValue = this.translate(this.foreignScope, 'scopeNames');
+                nameValue = this.translate('None');
+            } else if (nameValue === null) {
+                nameValue = this.model.get(this.idName);
             }
 
             var iconHtml = null;
@@ -268,7 +268,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             [foreignName] = this.getLocalizedFieldData(this.foreignScope, foreignName);
 
             this.$elementName.attr('value', model.get(foreignName));
-            this.$elementName.val(model.get(foreignName));
+            this.$elementName.val(model.get(foreignName) || this.translate('None'));
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');

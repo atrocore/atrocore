@@ -35,6 +35,11 @@ class ExtensibleEnumType extends AbstractFieldType
             'notStorable' => true
         ];
 
+        $entity->fields[$name . 'OptionData'] = [
+            'type'        => 'jsonArray',
+            'notStorable' => true
+        ];
+
         if (empty($skipValueProcessing)) {
             $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
             $entity->set($name . 'Name', $row['extensible_enum_option_name'] ?? null);

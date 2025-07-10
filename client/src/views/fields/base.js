@@ -1074,34 +1074,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return [];
             }
 
-            let key = 'measure_' + measureId;
-
-            if (!Espo[key]) {
-                Espo[key] = [];
-                this.ajaxGetRequest(`Unit`, {
-                    sortBy: "createdAt",
-                    asc: true,
-                    offset: 0,
-                    maxSize: 5000,
-                    where: [
-                        {
-                            type: "equals",
-                            attribute: "measureId",
-                            value: measureId
-                        },
-                        {
-                            type: 'isTrue',
-                            attribute: 'isActive'
-                        }
-                    ]
-                }, {async: false}).then(res => {
-                    if (res.list) {
-                        Espo[key] = res.list;
-                    }
-                });
-            }
-
-            return Espo[key];
+            return this.getMeasureData(measureId)?.units || [];
         },
 
         getMeasureData(measureId) {
@@ -1112,18 +1085,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             let key = 'measure_data_' + measureId;
             if (!Espo[key]) {
                 Espo[key] = {};
-                this.ajaxGetRequest(`Measure`, {
-                    where: [
-                        {
-                            type: "equals",
-                            attribute: "id",
-                            value: measureId
-                        }
-                    ]
-                }, {async: false}).then(res => {
-                    if (res.list && res.list[0]) {
-                        Espo[key] = res.list[0];
-                    }
+                this.ajaxGetRequest(`Measure/action/measureWithUnits`, {id: measureId}, {async: false}).then(res => {
+                    Espo[key] = res;
                 });
             }
 

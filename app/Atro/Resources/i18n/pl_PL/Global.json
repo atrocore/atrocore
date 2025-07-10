@@ -437,6 +437,9 @@
     "download": "Pobierać"
   },
   "fields": {
+    "status": "Status",
+    "conditionsType": "Typ warunków",
+    "conditions": "Warunki",
     "followers": "Obserwujący",
     "connection": "Połączenie",
     "tags": "Tagi",
