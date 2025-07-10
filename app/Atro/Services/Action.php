@@ -47,7 +47,7 @@ class Action extends Base
 
         parent::prepareEntityForOutput($entity);
 
-        $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type')) . '.php';
+        $fileName = CreateAction::DIR . '/' . str_replace('custom', '', $entity->get('type') ?? '') . '.php';
         $entity->set('typePhpCode', null);
         if (file_exists($fileName)) {
             $entity->set('typePhpCode', file_get_contents($fileName));
