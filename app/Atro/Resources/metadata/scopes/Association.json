@@ -10,5 +10,8 @@
   "disabled": false,
   "type": "Base",
   "object": true,
-  "isActiveUnavailable": true
+  "isActiveUnavailable": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
 }
