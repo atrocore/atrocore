@@ -61,6 +61,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "customizable": {
+      "type": "bool",
+      "readOnly": true
+    },
     "isCustom": {
       "type": "bool",
       "readOnly": true

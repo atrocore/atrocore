@@ -55,6 +55,12 @@ class EntityField extends ReferenceData
             return null;
         }
 
+        if (in_array($fieldName, ['id', 'createdAt', 'createdBy', 'modifiedAt', 'modifiedBy', 'followers'])) {
+            $fieldDefs['customizable'] = false;
+        }
+
+        $fieldDefs['customizable'] = $fieldDefs['customizable'] !== false;
+
         if ($this->boolFields === null) {
             $this->boolFields = [];
             foreach ($this->getMetadata()->get(['entityDefs', 'EntityField', 'fields']) as $field => $defs) {

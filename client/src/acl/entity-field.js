@@ -19,6 +19,10 @@ Espo.define('acl/entity-field', 'acl', Dep => {
                 return false;
             }
 
+            if (model.get('customizable') === false){
+                return false;
+            }
+
             return Dep.prototype.checkModel.call(this, model, data, action, precise);
         },
 
