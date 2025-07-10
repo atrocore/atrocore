@@ -26,10 +26,6 @@ use Espo\ORM\EntityCollection;
 
 class Relation extends Base
 {
-    public static function buildVirtualFieldName(string $relationName, string $fieldName): string
-    {
-        return "{$relationName}__{$fieldName}";
-    }
 
     public static function isVirtualRelationField(string $fieldName): array
     {
@@ -161,10 +157,71 @@ class Relation extends Base
         }
     }
 
+    protected function isAssociatesRelation(): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']));
+    }
+
     protected function beforeSave(Entity $entity, array $options = [])
     {
         $this->validateAllowTypesIfRelationWithFile($entity);
         parent::beforeSave($entity, $options);
+
+        if ($this->isAssociatesRelation()) {
+            $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
+
+            if ($entity->get("main{$scope}Id") == $entity->get("related{$scope}Id")) {
+                throw new BadRequest($this->getLanguage()->translate('itselfAssociation', 'exceptions', $scope));
+            }
+
+            if ($entity->isNew() && $entity->get('sorting') === null) {
+                $last = $this->where(["main{$scope}Id" => $entity->get("main{$scope}Id")])->order('sorting', 'DESC')->findOne();
+                $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
+            }
+        }
+    }
+
+    public function removeByRecordId(string $id): void
+    {
+        $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
+
+        $this->where(["main{$scope}Id" => $id])->removeCollection();
+        $this->where(["related{$scope}Id" => $id])->removeCollection();
+    }
+
+    public function updateAssociatesSortOrder(array $ids): void
+    {
+        $collection = $this->where(['id' => $ids])->find();
+        if (count($collection) === 0) {
+            return;
+        }
+
+        foreach ($ids as $k => $id) {
+            $sortOrder = (int)$k * 10;
+            foreach ($collection as $entity) {
+                if ($entity->get('id') !== (string)$id) {
+                    continue;
+                }
+                $entity->set('sorting', $sortOrder);
+                $this->save($entity);
+            }
+        }
+    }
+
+    protected function createNoteInAssociation(string $type, Entity $entity): void
+    {
+        $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => $type,
+            'parentType' => 'Association',
+            'parentId'   => $entity->get('associationId'),
+            'data'       => [
+                "main{$scope}Id"    => $entity->get("main{$scope}Id"),
+                "related{$scope}Id" => $entity->get("related{$scope}Id"),
+            ],
+        ]);
+        $this->getEntityManager()->saveEntity($note);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
@@ -191,6 +248,10 @@ class Relation extends Base
                 ->executeQuery();
         }
 
+        if ($this->isAssociatesRelation()){
+            $this->createNoteInAssociation('CreateAssociationProduct', $entity);
+        }
+
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -198,6 +259,16 @@ class Relation extends Base
         parent::beforeRemove($entity, $options);
 
         $this->deleteAlreadyDeleted($entity);
+        if ($this->isAssociatesRelation()) {
+            /**
+             * Delete backward association
+             */
+            $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
+
+            if (empty($options['skipDeleteBackwardAssociatedProduct']) && !empty($backwardAssociatedProduct = $entity->get("backwardAssociated$scope"))) {
+                $this->remove($backwardAssociatedProduct, ['skipDeleteBackwardAssociatedProduct' => true]);
+            }
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
@@ -207,6 +278,10 @@ class Relation extends Base
         $this->deleteHierarchical($entity);
 
         $this->updateModifiedAtForRelatedEntity($entity);
+
+        if ($this->isAssociatesRelation()){
+            $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
+        }
     }
 
     public function getHierarchicalRelation(): ?string
@@ -384,7 +459,7 @@ class Relation extends Base
                         }
                     }
 
-                    $this->getPseudoTransactionManager()->pushUpdateEntityJob($defs['entity'], $entity->get($link .'Id'), [
+                    $this->getPseudoTransactionManager()->pushUpdateEntityJob($defs['entity'], $entity->get($link . 'Id'), [
                         'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
                         'modifiedById' => $this->getEntityManager()->getUser()->get('id')
                     ]);
@@ -393,31 +468,31 @@ class Relation extends Base
         }
     }
 
-    protected  function validateAllowTypesIfRelationWithFile(Entity $entity): void
+    protected function validateAllowTypesIfRelationWithFile(Entity $entity): void
     {
         $relationFields = $this->getRelationFields();
         if (empty($relationFields[0]) || empty($relationFields[1])) {
             return;
         }
 
-        $linkDefs1  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[0]]);
-        $linkDefs2  = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[1]]);
+        $linkDefs1 = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[0]]);
+        $linkDefs2 = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $relationFields[1]]);
 
-        if(empty($linkDefs1['entity']) || empty($linkDefs2['entity'])) {
+        if (empty($linkDefs1['entity']) || empty($linkDefs2['entity'])) {
             return;
         }
 
-        if($linkDefs1['entity'] !== 'File' && $linkDefs2['entity'] !== 'File') {
+        if ($linkDefs1['entity'] !== 'File' && $linkDefs2['entity'] !== 'File') {
             return;
         }
 
         $linkDefs = $linkDefs1['entity'] === 'File' ? $linkDefs2 : $linkDefs1;
-        $fileField =  $linkDefs1['entity'] === 'File' ? $relationFields[0] : $relationFields[0];
+        $fileField = $linkDefs1['entity'] === 'File' ? $relationFields[0] : $relationFields[0];
 
         foreach ($this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'links']) as $link => $defs) {
-            if(!empty($defs['relationName']) && $defs['entity'] === 'File' && ucfirst($defs['relationName']) === $this->entityType ) {
+            if (!empty($defs['relationName']) && $defs['entity'] === 'File' && ucfirst($defs['relationName']) === $this->entityType) {
                 $allowTypeIds = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'fileTypes'], []);
-                if(!empty($allowTypeIds) && !empty($file = $entity->get($fileField)) && !in_array($file->get('typeId'), $allowTypeIds)) {
+                if (!empty($allowTypeIds) && !empty($file = $entity->get($fileField)) && !in_array($file->get('typeId'), $allowTypeIds)) {
                     $allowTypeNames = $this->getMetadata()->get(['entityDefs', $linkDefs['entity'], 'fields', $link, 'allowFileTypesNames'], []);
                     throw  new BadRequest(sprintf($this->getLanguage()->translate('notAllowToFileWithEntity', 'exceptions', 'File'), $file->get('typeName'), $linkDefs['entity'], join(', ', $allowTypeNames)));
                 }

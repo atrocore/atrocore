@@ -1,0 +1,21 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "shuffle",
+  "boolFilterList": [
+    "onlyMy",
+    "notUsedAssociations",
+    "usedAssociations",
+    "notEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "notUsedAssociations",
+    "usedAssociations",
+    "notEntity"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "recordViews": {
+    "detail": "views/association/record/detail"
+  }
+}

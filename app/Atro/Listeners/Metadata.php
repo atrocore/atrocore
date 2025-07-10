@@ -19,6 +19,7 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -96,6 +97,8 @@ class Metadata extends AbstractListener
 
         $this->putCustomCodeActions($data);
         $this->putCustomCodeConditionTypes($data);
+
+        $this->addAssociateToEntity($data);
 
         $event->setArgument('data', $data);
     }
@@ -736,7 +739,7 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                $ignoredEntity = $entityName === 'AssociatedProduct' || strpos($entityName, 'Hierarchy') !== false;
+                $ignoredEntity = (!empty($data['scopes'][$entityName]['associatesForEntity'])) || strpos($entityName, 'Hierarchy') !== false;
 
                 $additionalFields = [];
                 if (!$ignoredEntity && !empty($data['entityDefs'][$entityName]['fields'])) {
@@ -855,6 +858,32 @@ class Metadata extends AbstractListener
             true);
         $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'),
             true);
+
+        $defaultEntityDefs['fields']['created'] = [
+            'type'                => 'datetime',
+            'view'                => 'views/fields/created-at-with-user',
+            'notStorable'         => true,
+            'readOnly'            => true,
+            'ignoreViewForSearch' => true,
+            "massUpdateDisabled"  => true,
+            "filterDisabled"      => true,
+            "exportDisabled"      => true,
+            "importDisabled"      => true,
+            "emHidden"            => true
+        ];
+
+        $defaultEntityDefs['fields']['modified'] = [
+            'type'                => 'datetime',
+            'view'                => 'views/fields/modified-at-with-user',
+            'notStorable'         => true,
+            'readOnly'            => true,
+            'ignoreViewForSearch' => true,
+            "massUpdateDisabled"  => true,
+            "filterDisabled"      => true,
+            "exportDisabled"      => true,
+            "importDisabled"      => true,
+            "emHidden"            => true
+        ];
 
         foreach ($res as $entityName => $entityDefs) {
             $current = $data['clientDefs'][$entityName] ?? [];
@@ -1006,11 +1035,12 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array &$metadata,
+        array  &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    ) {
+    )
+    {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1503,7 +1533,7 @@ class Metadata extends AbstractListener
     /**
      * Remove field from index
      *
-     * @param array $indexes
+     * @param array  $indexes
      * @param string $fieldName
      *
      * @return array
@@ -1707,6 +1737,216 @@ class Metadata extends AbstractListener
                     "exportDisabled"       => true,
                     "importDisabled"       => true,
                     "emHidden"             => true
+                ];
+            }
+        }
+    }
+
+    protected function addAssociateToEntity(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['hasAssociate'])) {
+                // relation table
+                $relationName = "Associated$scope";
+
+                $data['scopes'][$relationName]['associatesForEntity'] = $scope;
+
+                $defs = [
+                    "fields"        => [
+                        "association"              => [
+                            "type"     => "link",
+                            "required" => true,
+                            "view"     => "views/associated-record/fields/association"
+                        ],
+                        "main$scope"               => [
+                            "required"      => true,
+                            "type"          => "link",
+                            "relationField" => true,
+                            "view"          => "views/associated-record/fields/main-record"
+                        ],
+                        "related$scope"            => [
+                            "required"      => true,
+                            "type"          => "link",
+                            "relationField" => true,
+                            "view"          => "views/associated-record/fields/related-record",
+                        ],
+                        "related{$scope}s"         => [
+                            "type"                      => "linkMultiple",
+                            "entity"                    => $scope,
+                            "view"                      => "views/associated-record/fields/related-records",
+                            "noLoad"                    => true,
+                            "notStorable"               => true,
+                            "layoutListDisabled"        => true,
+                            "layoutListSmallDisabled"   => true,
+                            "layoutDetailDisabled"      => true,
+                            "layoutDetailSmallDisabled" => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "filterDisabled"            => true,
+                            "exportDisabled"            => true,
+                            "importDisabled"            => true,
+                            "emHidden"                  => true
+                        ],
+                        "backwardAssociation"      => [
+                            "type"           => "link",
+                            "notStorable"    => true,
+                            "entity"         => "Association",
+                            "view"           => "views/associated-record/fields/backward-association",
+                            "filterDisabled" => true
+                        ],
+                        "backwardAssociated$scope" => [
+                            "type"                      => "link",
+                            "readOnly"                  => true,
+                            "layoutListDisabled"        => true,
+                            "layoutListSmallDisabled"   => true,
+                            "layoutDetailDisabled"      => true,
+                            "layoutDetailSmallDisabled" => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "filterDisabled"            => true,
+                            "exportDisabled"            => true,
+                            "importDisabled"            => true,
+                            "emHidden"                  => true
+                        ],
+                        "associateEverything"      => [
+                            "type"                      => "bool",
+                            "view"                      => "views/associated-record/fields/associate-everything",
+                            "notStorable"               => true,
+                            "layoutListDisabled"        => true,
+                            "layoutListSmallDisabled"   => true,
+                            "layoutDetailDisabled"      => true,
+                            "layoutDetailSmallDisabled" => true,
+                            "layoutMassUpdateDisabled"  => true,
+                            "filterDisabled"            => true,
+                            "exportDisabled"            => true,
+                            "importDisabled"            => true,
+                            "emHidden"                  => true
+                        ],
+                        "sorting"                  => [
+                            "type" => "int"
+                        ]
+                    ],
+                    "links"         => [
+                        "association"              => [
+                            "type"    => "belongsTo",
+                            "foreign" => "associatedProducts",
+                            "entity"  => "Association"
+                        ],
+                        "main$scope"               => [
+                            "type"    => "belongsTo",
+                            "foreign" => "associatedMain{$scope}s",
+                            "entity"  => $scope
+                        ],
+                        "related$scope"            => [
+                            "type"    => "belongsTo",
+                            "foreign" => "associatedRelated" . ucfirst($scope) . 's',
+                            "entity"  => $scope
+                        ],
+                        "backwardAssociated$scope" => [
+                            "type"   => "belongsTo",
+                            "entity" => $relationName,
+                        ]
+                    ],
+                    "uniqueIndexes" => [
+                        "unique_relation" => [
+                            "deleted",
+                            "association_id",
+                            Util::toUnderScore("main{$scope}Id"),
+                            Util::toUnderScore("related{$scope}Id"),
+                        ]
+                    ]
+                ];
+                $data['entityDefs'][$relationName] = Util::merge($data['entityDefs'][$relationName] ?? [], $defs);
+
+                $data['clientDefs'][$relationName] = array_merge($data['clientDefs'][$relationName] ?? [], [
+                    "quickCreate"           => true,
+                    "modalFullFormDisabled" => true,
+                    "quickCreateOptions"    => [
+                        "fullFormDisabled" => true
+                    ],
+                    "iconClass"             => "package",
+                    "disabledMassActions"   => [
+                        "merge"
+                    ],
+                    "boolFilterList"        => [
+                        "onlyMy"
+                    ],
+                    "recordViews"           => [
+                        'editSmall' => 'views/associated-record/record/edit-small'
+                    ]
+                ]);
+
+                $additionalScopeDefs = [
+                    "fields" => [
+                        "associatedMain{$scope}s"    => [
+                            "type"                      => "linkMultiple",
+                            "layoutDetailDisabled"      => true,
+                            "layoutListDisabled"        => true,
+                            "layoutLeftSidebarDisabled" => true,
+                            "massUpdateDisabled"        => true,
+                            "filterDisabled"            => false,
+                            "noLoad"                    => true,
+                            "importDisabled"            => true,
+                            "exportDisabled"            => false
+                        ],
+                        "associatedRelated{$scope}s" => [
+                            "type"                      => "linkMultiple",
+                            "layoutDetailDisabled"      => true,
+                            "layoutListDisabled"        => true,
+                            "layoutLeftSidebarDisabled" => true,
+                            "massUpdateDisabled"        => true,
+                            "filterDisabled"            => false,
+                            "noLoad"                    => true,
+                            "exportDisabled"            => false,
+                            "importDisabled"            => true
+                        ]
+                    ],
+                    "links"  => [
+                        "associated{$scope}s"        => [
+                            "type"                => "hasMany",
+                            "relationName"        => $relationName,
+                            "entity"              => $scope,
+                            "midKeys"             => [
+                                "main{$scope}Id",
+                                "related{$scope}Id"
+                            ],
+                            "disableMassRelation" => true
+                        ],
+                        "related{$scope}s"           => [
+                            "type"                        => "hasMany",
+                            "relationName"                => $relationName,
+                            "entity"                      => $scope,
+                            "layoutRelationshipsDisabled" => false,
+                            "midKeys"                     => [
+                                "related{$scope}Id",
+                                "main{$scope}Id"
+                            ],
+                            "disableMassRelation"         => true
+                        ],
+                        "associatedMain{$scope}s"    => [
+                            "type"                        => "hasMany",
+                            "foreign"                     => "main$scope",
+                            "entity"                      => $relationName,
+                            "layoutRelationshipsDisabled" => true,
+                            "isMainAssociateRelation"     => true,
+                            "addRelationCustomDefs"       => [
+                                "link"   => Util::pluralize(lcfirst($scope)),
+                                "entity" => $scope
+                            ]
+                        ],
+                        "associatedRelated{$scope}s" => [
+                            "type"                        => "hasMany",
+                            "foreign"                     => "related$scope",
+                            "entity"                      => $relationName,
+                            "layoutRelationshipsDisabled" => true,
+                            "disableMassRelation"         => true
+                        ]
+                    ]
+                ];
+
+                $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
+
+                $data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] = [
+                    "label" => "associated{$scope}s",
+                    "view"  => "views/record/panels/associated-records"
                 ];
             }
         }

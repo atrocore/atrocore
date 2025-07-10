@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "associatedProducts": "Produits associés",
+    "description": "Description",
+    "isActive": "Actif",
+    "backwardAssociation": "Association des arriérés",
+    "code": "Code"
+  },
+  "exceptions": {
+    "associationIsLinkedWithRecords": "L'association est liée à un ou plusieurs enregistrements. Please, unlink record(s) first",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Vous ne pouvez pas désactiver l'association avec le(s) enregistrement(s) actif(s)"
+  }
+}

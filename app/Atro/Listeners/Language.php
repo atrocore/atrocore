@@ -44,6 +44,37 @@ class Language extends AbstractListener
                 if (empty($entityDefs['fields'])) {
                     continue 1;
                 }
+
+                // Associations
+                $associateEntity = $this->getMetadata()->get(['scopes', $entity, 'associatesForEntity']);
+                if (!empty($associateEntity)) {
+                    if (!isset($data[$locale][$entity]['fields']["main$associateEntity"])) {
+                        if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
+                            $data[$locale][$entity]['fields']["main$associateEntity"] = "Main " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
+                        }
+                    }
+
+                    if (!isset($data[$locale][$entity]['fields']["related$associateEntity"])) {
+                        if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
+                            $data[$locale][$entity]['fields']["related$associateEntity"] = "Related " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
+                        }
+                    }
+
+                    if (!isset($data[$locale][$entity]['fields']["related{$associateEntity}s"])) {
+                        if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
+                            $data[$locale][$entity]['fields']["related{$associateEntity}s"] = "Related " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                        }
+                    }
+
+                    if (!isset($data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['labels']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associates', 'labels');
+                    }
+
+                    if (!isset($data[$locale]['Global']['scopeNames'][$entity])) {
+                        $data[$locale]['Global']['scopeNames'][$entity] = $this->getLabel($data, $locale, 'Global', 'associated', 'labels') . ' ' . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
+                    }
+                }
+
                 foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                     if (empty($fieldDefs['type'])) {
                         continue;

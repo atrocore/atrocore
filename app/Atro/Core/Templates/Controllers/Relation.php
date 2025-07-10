@@ -33,4 +33,18 @@ class Relation extends AbstractRecordController
 
         return $entity->toArray();
     }
+
+    public function actionRemoveAssociates($params, $data, $request)
+    {
+        if (!$request->isPost() && !property_exists($data, 'mainRecordId')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->check($this->name, 'delete')) {
+            throw new Forbidden();
+        }
+
+        $associationId = property_exists($data, 'associationId') ? (string)$data->associationId : '';
+        return $this->getRecordService()->removeAssociates((string)$data->mainRecordId, $associationId);
+    }
 }

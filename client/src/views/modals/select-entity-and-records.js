@@ -79,6 +79,11 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             this.waitForView('selectedLink');
             this.createSelectedLinkView();
 
+            if (this.getMetadata().get(`scopes.${this.model.get('mainEntity')}.hasAssociate`)) {
+                this.waitForView('association');
+                this.createAssociationSelectView();
+            }
+
             this.listenTo(this.model, 'change:selectedLink', model => {
                 this.reloadList(model.get('selectedLink'));
             });
@@ -121,6 +126,13 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             });
         },
 
+        data: function () {
+            return {
+                ...Dep.prototype.data.call(this),
+                'hasAssociate': this.getMetadata().get(`scopes.${this.model.get('mainEntity')}.hasAssociate`)
+            };
+        },
+
         getDataForUpdateRelation(foreign, viewModel) {
             let data = {};
 
@@ -147,6 +159,12 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
                 }];
             } else if (typeof foreign === 'object' && 'where' in foreign) {
                 data.foreignWhere = foreign.where;
+            }
+
+            if (this.model.get('selectedLink') === this.getAssociationLink()) {
+                data.data = {
+                    associationId: viewModel.get('associationId')
+                };
             }
 
             return data;
@@ -185,10 +203,6 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             } else {
                 callback();
             }
-        },
-
-        loadSearch() {
-            this.updateBoolParams(() => Dep.prototype.loadSearch.call(this));
         },
 
         loadList() {
@@ -247,6 +261,44 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             });
         },
 
+        createAssociationSelectView() {
+            this.createView('association', 'views/association/fields/backward-association', {
+                el: `${this.options.el} .entity-container .field[data-name="association"]`,
+                model: this.model,
+                name: 'association',
+                foreignScope: 'Association',
+                inlineEditDisabled: true,
+                mode: 'edit',
+                onlyForEntity: this.model.get('mainEntity'),
+                defs: {
+                    params: {
+                        required: true
+                    }
+                },
+                labelText: this.translate('association', 'fields')
+            }, view => {
+                view.listenTo(view, 'after:render', () => {
+                    this.checkScopeForAssociation();
+                });
+            });
+        },
+
+        getAssociationLink() {
+            return `associatedMain${this.model.get('mainEntity')}s`
+        },
+
+        checkScopeForAssociation() {
+            if (this.model.get('selectedLink') === this.getAssociationLink()) {
+                this.getView('association').show();
+            } else {
+                this.getView('association').hide();
+                this.model.set({
+                    associationId: null,
+                    associationName: null
+                });
+            }
+        },
+
         getEntityFromSelectedLink() {
             let selectedLink = this.model.get('selectedLink');
             let entityDefs = (this.model.get('foreignEntities') || []).find(item => item.link === selectedLink) || {};
@@ -267,8 +319,8 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             this.collection.asc = collectionDefs.asc;
             this.getModelFactory().getSeed(entity, seed => this.collection.model = seed);
 
-            this.loadSearch();
             this.loadList();
+            this.checkScopeForAssociation();
         },
 
         validate: function () {
@@ -285,7 +337,11 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         },
 
         getFieldViews() {
-            return {};
+            let fields = {};
+            if (this.hasView('association') && this.model.get('selectedLink') === this.getAssociationLink()) {
+                fields['association'] = this.getView('association');
+            }
+            return fields;
         },
 
         close() {

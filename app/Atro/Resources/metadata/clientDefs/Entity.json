@@ -24,11 +24,13 @@
   },
   "boolFilterList": [
     "canHasAttributes",
-    "canHasClassifications"
+    "canHasClassifications",
+    "canHasAssociates"
   ],
   "hiddenBoolFilterList": [
     "canHasAttributes",
-    "canHasClassifications"
+    "canHasClassifications",
+    "canHasAssociates"
   ],
   "dynamicLogic": {
     "fields": {

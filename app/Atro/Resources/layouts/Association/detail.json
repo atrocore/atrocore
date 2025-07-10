@@ -1,0 +1,38 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "backwardAssociation"
+        },
+        {
+          "name": "default"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

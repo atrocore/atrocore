@@ -19,8 +19,10 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 
 class MassActions extends HasContainer
 {
@@ -178,8 +180,11 @@ class MassActions extends HasContainer
      *
      * @return array
      */
-    public function addRelation(array $ids, array $foreignIds, string $entityType, string $link): array
+    public function addRelation(array $ids, array $foreignIds, string $entityType, string $link, ?array $relationData = null): array
     {
+        if (!empty($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'isMainAssociateRelation']))) {
+            return $this->addAssociateRecords($ids, $foreignIds, $entityType, $relationData);
+        }
         // prepare service
         $service = $this->getService($entityType);
         $methodName = 'massRelate' . ucfirst($link);
@@ -246,8 +251,12 @@ class MassActions extends HasContainer
      *
      * @return array
      */
-    public function removeRelation(array $ids, array $foreignIds, string $entityType, string $link): array
+    public function removeRelation(array $ids, array $foreignIds, string $entityType, string $link, ?array $relationData = null): array
     {
+        if (!empty($this->getMetadata()->get(['entityDefs', $entityType, 'links', $link, 'isMainAssociateRelation']))) {
+            return $this->removeAssociateRecords($ids, $foreignIds, $entityType, $relationData);
+        }
+
         // prepare service
         $service = $this->getService($entityType);
         $methodName = 'massUnrelate' . ucfirst($link);
@@ -302,7 +311,7 @@ class MassActions extends HasContainer
         return ['message' => $this->createRelationMessage($unRelated, $notUnRelated, $entityType, $foreignEntityType, false)];
     }
 
-    public function addRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link): array
+    public function addRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link, ?array $relationData = null): array
     {
         $ids = $this->handleIdsFromWhereCondition($entityType, $where);
 
@@ -313,10 +322,10 @@ class MassActions extends HasContainer
 
         $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
 
-        return $this->addRelation($ids, $foreignIds, $entityType, $link);
+        return $this->addRelation($ids, $foreignIds, $entityType, $link, $relationData);
     }
 
-    public function removeRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link): array
+    public function removeRelationByWhere(array $where, array $foreignWhere, string $entityType, string $link, ?array $relationData = null): array
     {
         $ids = $this->handleIdsFromWhereCondition($entityType, $where);
 
@@ -327,7 +336,7 @@ class MassActions extends HasContainer
 
         $foreignIds = $this->handleIdsFromWhereCondition($foreignEntityType, $foreignWhere);
 
-        return $this->removeRelation($ids, $foreignIds, $entityType, $link);
+        return $this->removeRelation($ids, $foreignIds, $entityType, $link, $relationData);
     }
 
     /**
@@ -345,6 +354,102 @@ class MassActions extends HasContainer
         return array_column($collection->toArray(), 'id');
     }
 
+
+    public function addAssociateRecords(array $ids, array $foreignIds, string $entityType, ?array $relationData = null): array
+    {
+        if (empty($this->getMetadata()->get(['scopes', $entityType, 'hasAssociate']))) {
+            throw new BadRequest("Associate is not set on " . $entityType);
+        }
+
+        // input data validation
+        if (empty($relationData['associationId'])) {
+            throw new BadRequest($this->getLanguage()->translate('wrongInputData', 'exceptions'));
+        }
+
+        /** @var Entity $association */
+        $association = $this->getEntityManager()->getEntity("Association", $relationData['associationId']);
+        if (empty($association)) {
+            throw new BadRequest($this->getLanguage()->translate('noSuchAssociation', 'exceptions'));
+        }
+
+        /**
+         * Collect entities for saving
+         */
+        $toSave = [];
+        foreach ($ids as $mainRecordId) {
+            foreach ($foreignIds as $relatedRecordId) {
+                $attachment = new \stdClass();
+                $attachment->associationId = $relationData['associationId'];
+                $attachment->{"main{$entityType}Id"} = $mainRecordId;
+                $attachment->{"related{$entityType}Id"} = $relatedRecordId;
+                if (!empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
+                    $attachment->backwardAssociationId = $backwardAssociationId;
+                }
+
+                $toSave[] = $attachment;
+            }
+        }
+
+        $associatedRecordService = $this->getService("Associated$entityType");
+
+        $error = [];
+        foreach ($toSave as $attachment) {
+            try {
+                $associatedRecordService->createEntity($attachment);
+            } catch (\Exception $e) {
+                $error[] = [
+                    'id'          => $attachment->{"main{$entityType}Id"},
+                    'name'        => $this->getEntityManager()->getEntity($entityType, $attachment->{"main{$entityType}Id"})->get('name'),
+                    'foreignId'   => $attachment->{"related{$entityType}Id"},
+                    'foreignName' => $this->getEntityManager()->getEntity($entityType, $attachment->{"related{$entityType}Id"})->get('name'),
+                    'message'     => utf8_encode($e->getMessage())
+                ];
+            }
+        }
+
+        return ['message' => $this->createRelationMessage(count($toSave) - count($error), $error, $entityType, $entityType)];
+    }
+
+    public function removeAssociateRecords(array $ids, array $foreignIds, string $entityType, ?array $relationData = null): array
+    {
+        if (empty($this->getMetadata()->get(['scopes', $entityType, 'hasAssociate']))) {
+            throw new BadRequest("Associate is not set on " . $entityType);
+        }
+
+        $where = [
+            "main{$entityType}Id"    => $ids,
+            "related{$entityType}Id" => $foreignIds
+        ];
+
+        if (!empty($relationData['associationId'])) {
+            $where['associationId'] = $relationData['associationId'];
+        }
+
+        $associatedRecords = $this
+            ->getEntityManager()
+            ->getRepository("Associated$entityType")
+            ->where($where)
+            ->find();
+
+        $success = 0;
+        $error = [];
+        foreach ($associatedRecords as $associatedRecord) {
+            try {
+                $this->getEntityManager()->removeEntity($associatedRecord);
+                $success++;
+            } catch (\Exception $e) {
+                $error[] = [
+                    'id'          => $associatedRecord->get("main{$entityType}Id"),
+                    'name'        => $associatedRecord->get("main{$entityType}")->get('name'),
+                    'foreignId'   => $associatedRecord->get("related{$entityType}Id"),
+                    'foreignName' => $associatedRecord->get("related{$entityType}")->get('name'),
+                    'message'     => utf8_encode($e->getMessage())
+                ];
+            }
+        }
+
+        return ['message' => $this->createRelationMessage($success, $error, $entityType, $entityType, false)];
+    }
 
     protected function getSelectManagerFactory()
     {
@@ -376,7 +481,12 @@ class MassActions extends HasContainer
             foreach ($errors as $item) {
                 $message .= "<span style=\"margin-left: 10px; color: #000\"><a target=\"_blank\" href=\"#{$entityType}/view/{$item['id']}\">{$item['name']}</a> &#8594; <a target=\"_blank\" href=\"#{$foreignEntityType}/view/{$item['foreignId']}\">{$item['foreignName']}</a>: {$item['message']}</span><br>";
             }
+        } else {
+            if ($success === 0) {
+                $message .= "<span>" . $this->translate('Done') . "</span>";
+            }
         }
+
 
         return $message;
     }

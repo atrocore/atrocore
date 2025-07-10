@@ -13,6 +13,10 @@
     "installModule": "treo-core:views/stream/notes/install-module",
     "deleteModule": "treo-core:views/stream/notes/delete-module",
     "composerUpdate": "treo-core:views/stream/notes/composer-update",
-    "updateModuleActivation": "treo-core:views/stream/notes/update-module-activation"
+    "updateModuleActivation": "treo-core:views/stream/notes/update-module-activation",
+    "CreateRecordAssociation": "views/stream/notes/create-record-association",
+    "DeleteRecordAssociation": "views/stream/notes/delete-record-association",
+    "CreateAssociationRecord": "views/stream/notes/create-association-record",
+    "DeleteAssociationRecord": "views/stream/notes/delete-association-record"
   }
 }

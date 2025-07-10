@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "entity"
+  },
+  {
+    "name": "backwardAssociation"
+  },
+  {
+    "name": "isActive"
+  },
+  {
+    "name": "default"
+  }
+]

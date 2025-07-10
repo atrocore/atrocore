@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Controllers;
 
 use Atro\Controllers\AbstractRecordController;
-use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Forbidden;
 
 class Base extends AbstractRecordController
 {

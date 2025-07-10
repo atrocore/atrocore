@@ -17,4 +17,5 @@ use Atro\Services\Record;
 
 class Base extends Record
 {
+
 }

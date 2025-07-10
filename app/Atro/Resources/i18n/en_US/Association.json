@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "associatedProducts": "Associated products",
+    "description": "Description",
+    "isActive": "Active",
+    "backwardAssociation": "Backward Association",
+    "code": "Code",
+    "default": "Default"
+  },
+  "exceptions": {
+    "associationIsLinkedWithRecords": "Association is linked with record(s). Please, unlink record(s) first",
+    "youCanNotDeactivateAssociationWithActiveRecords": "You can not deactivate association with active record(s)"
+  }
+}

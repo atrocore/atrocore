@@ -186,6 +186,9 @@
       "view": "views/admin/entity-manager/fields/audited-enabled-relations",
       "notStorable": true,
       "tooltip": true
+    },
+    "hasAssociate": {
+      "type": "bool"
     }
   },
   "links": {

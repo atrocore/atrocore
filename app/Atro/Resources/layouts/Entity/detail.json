@@ -113,7 +113,7 @@
           "name": "nonComparableFields"
         },
         false
-      ]  ,
+      ],
       [
         {
           "name": "auditedDisabledFields"
@@ -121,6 +121,12 @@
         {
           "name": "auditedEnabledRelations"
         }
+      ],
+      [
+        {
+          "name": "hasAssociate"
+        },
+        false
       ]
     ]
   },

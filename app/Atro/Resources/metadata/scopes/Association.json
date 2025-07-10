@@ -1,0 +1,17 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "customizable": true,
+  "streamDisabled": true,
+  "importable": true,
+  "notifications": true,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
+  "isActiveUnavailable": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
+}

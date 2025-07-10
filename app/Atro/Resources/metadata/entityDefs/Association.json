@@ -1,0 +1,138 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "views/association/fields/entity"
+    },
+    "default": {
+      "type": "bool"
+    },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "rowsMax": 4,
+      "lengthOfCut": 400,
+      "seeMoreDisabled": false,
+      "readOnly": false,
+      "tooltip": false,
+      "isMultilang": true
+    },
+    "isActive": {
+      "notNull": true,
+      "type": "bool",
+      "default": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "ownerUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/owner-user"
+    },
+    "assignedUser": {
+      "type": "link",
+      "required": true,
+      "view": "views/fields/assigned-user"
+    },
+    "teams": {
+      "type": "linkMultiple",
+      "view": "views/fields/teams"
+    },
+    "associatedRecords": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": false,
+      "noLoad": true,
+      "importDisabled": true
+    },
+    "backwardAssociation": {
+      "type": "link",
+      "view": "views/association/fields/backward-association"
+    },
+    "associations": {
+      "type": "linkMultiple",
+      "filterDisabled": false,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "ownerUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "assignedUser": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "teams": {
+      "type": "hasMany",
+      "entity": "Team",
+      "relationName": "EntityTeam",
+      "layoutRelationshipsDisabled": true
+    },
+    "backwardAssociation": {
+      "type": "belongsTo",
+      "foreign": "associations",
+      "entity": "Association"
+    },
+    "associations": {
+      "type": "hasMany",
+      "foreign": "backwardAssociation",
+      "entity": "Association",
+      "layoutRelationshipsDisabled": true
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  }
+}
