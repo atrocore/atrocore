@@ -206,9 +206,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     model.id = id;
 
                     this.showLoadingNotification();
-                    this.listenToOnce(model, 'sync', function () {
-                        createView(model);
-                    }, this);
+                    createView(model);
                     model.fetch({
                         main: true,
                         headers: {

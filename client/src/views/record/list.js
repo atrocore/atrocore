@@ -103,18 +103,16 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                 var scope = this.getModelScope(id);
 
-                model.fetch().success(() => {
-                    var options = {
-                        id: id,
-                        model: model
-                    };
-                    if (this.options.keepCurrentRootUrl) {
-                        options.rootUrl = this.getRouter().getCurrentUrl();
-                    }
+                var options = {
+                    id: id,
+                    model: model
+                };
+                if (this.options.keepCurrentRootUrl) {
+                    options.rootUrl = this.getRouter().getCurrentUrl();
+                }
 
-                    this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: false });
-                    this.getRouter().dispatch(scope, 'view', options);
-                });
+                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: false });
+                this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="showMore"]': function () {
                 this.showMoreRecords();
