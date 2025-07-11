@@ -14,7 +14,7 @@ AtroCore is a powerful, multi-layered system designed by developers who care abo
 To tackle complex and long-running tasks, AtroCore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks. AtroCore offers dynamic actions, flexible workflows, and real-time UI customization.
 
 We believe you’ll find Atrocore not only solid and flexible, but exciting to work with.  
-Dive into the [Developer Docs](https://help.atrocore.com/developer-guide) to set up, debug, work with the API, and reshape the system using a wide range of tools.
+Dive into the [Developer Guide](https://help.atrocore.com/developer-guide) to set up, debug, work with the API, and reshape the system using a wide range of tools.
 
 ## History
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
