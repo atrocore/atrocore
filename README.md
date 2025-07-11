@@ -109,7 +109,7 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Modern mobile-friendly UI
 * Easy to install, maintain and support.
 
-##№ 🔧 Highlights for Developers
+### 🔧 Highlights for Developers
 
 Atrocore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks — for example, we use Doctrine DBAL for database interaction.
 
