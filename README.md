@@ -9,6 +9,12 @@ AtroCore is a powerful open-source data platform designed for [Master Data Manag
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
 
+AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks – for example, we use Doctrine DBAL for database interaction. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. 
+
+To tackle complex and long-running tasks, AtroCore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks. AtroCore offers dynamic actions, flexible workflows, and real-time UI customization.
+
+We believe you’ll find Atrocore not only solid and flexible, but exciting to work with.  
+Dive into the [Developer Docs](https://help.atrocore.com/developer-guide) to set up, debug, work with the API, and reshape the system using a wide range of tools.
 
 ## History
 Our software has been in active development since 2018. It all began with a simple idea: to create a better open-source PIM solution for our customers.
@@ -108,25 +114,6 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Good code quality
 * Modern mobile-friendly UI
 * Easy to install, maintain and support.
-
-### 🔧 Highlights for Developers
-
-Atrocore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks — for example, we use Doctrine DBAL for database interaction.
-
-The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. In certain cases, we also utilize ClickHouse as a secondary database solution for handling specific types of data processing.
-
-To tackle complex and long-running tasks, Atrocore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks.
-
-On the frontend, you’ll find a combination of Svelte and BackboneJS — we’re actively migrating to Svelte to bring the UI fully in line with modern standards.
-
-Beyond these, Atrocore offers dynamic actions, flexible workflows, and real-time UI customization — in short, a system built to be powerful, adaptable, and genuinely exciting to work with.
-
-Atrocore is built and tested exclusively on Linux, with Ubuntu (latest LTS) as our recommended environment. While it may run on other distributions, Ubuntu ensures full compatibility and best performance.
-
-We believe you’ll find Atrocore not only solid and flexible, but exciting to work with.  
-👉 Jump into the [Developer Documentation](https://help.atrocore.com/developer-guide) to learn how to set up the system, debug effectively, work with the API, and create custom modules to partially or completely redefine how the system behaves.
-
-
 
 ## Requirements
 
