@@ -380,7 +380,7 @@ class Application
                     ->process($controllerName, $actionName, $params, $data, $slim->request(), $slim->response());
                 $output->render($result);
             } catch (\Exception $e) {
-                $output->processError($e->getMessage(), $e->getCode(), false, $e);
+                $output->processError($e->getMessage().''.$e->getTraceAsString(), $e->getCode(), false, $e);
             }
         });
 

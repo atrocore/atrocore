@@ -361,7 +361,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 if (relationDefs['isAssociateRelation']) {
                     Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'links'])).forEach(([name, defs]) => {
-                        if (defs['isAssociateRelation'] && link !== name) {
+                        if (defs?.relationName === relationName && link !== name) {
                             panelData.foreign = name;
                         }
                     })

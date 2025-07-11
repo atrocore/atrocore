@@ -1916,7 +1916,6 @@ class Metadata extends AbstractListener
                             "relationName"                => $relationName,
                             "entity"                      => $scope,
                             "layoutRelationshipsDisabled" => false,
-                            "isAssociateRelation" => true,
                             "midKeys"                     => [
                                 "related{$scope}Id",
                                 "main{$scope}Id"
