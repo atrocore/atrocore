@@ -113,7 +113,13 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 
 Atrocore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks — for example, we use Doctrine DBAL for database interaction.
 
-The backend supports PostgreSQL, MySQL, and MariaDB. On the frontend, you’ll find a combination of Svelte and BackboneJS — we’re actively migrating to Svelte to bring the UI fully in line with modern standards.
+The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. In certain cases, we also utilize ClickHouse as a secondary database solution for handling specific types of data processing.
+
+To tackle complex and long-running tasks, Atrocore includes a robust Job Manager. This allows you to control the number of workers based on your server’s capacity, ensuring efficient processing without overload. Complementing this, the Scheduled Jobs feature provides a convenient way to configure recurring tasks.
+
+On the frontend, you’ll find a combination of Svelte and BackboneJS — we’re actively migrating to Svelte to bring the UI fully in line with modern standards.
+
+Beyond these, Atrocore offers dynamic actions, flexible workflows, and real-time UI customization — in short, a system built to be powerful, adaptable, and genuinely exciting to work with.
 
 Atrocore is built and tested exclusively on Linux, with Ubuntu (latest LTS) as our recommended environment. While it may run on other distributions, Ubuntu ensures full compatibility and best performance.
 
