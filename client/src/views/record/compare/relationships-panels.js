@@ -69,19 +69,19 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                     }
 
                     this.createView(panelData.name, relationshipView, o, view => {
-                          view.render();
-                          if(view.deferRendering) {
-                              this.listenTo(view, 'all-fields-rendered', () => {
-                                  this.handlePanelRendering(panelData.name);
-                              });
-                          }else{
-                              if(view.isRendered()) {
-                                  this.handlePanelRendering(panelData.name);
-                              }
-                              view.once('after:render', () => {
-                                  this.handlePanelRendering(panelData.name);
-                              });
-                          }
+                        view.render();
+                        if (view.deferRendering) {
+                            this.listenTo(view, 'all-fields-rendered', () => {
+                                this.handlePanelRendering(panelData.name);
+                            });
+                        } else {
+                            if (view.isRendered()) {
+                                this.handlePanelRendering(panelData.name);
+                            }
+                            view.once('after:render', () => {
+                                this.handlePanelRendering(panelData.name);
+                            });
+                        }
 
                     }, false);
                 })
@@ -107,7 +107,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             let attributes = {}
             this.relationshipsPanels.forEach(panelData => {
                 let view = this.getView(panelData.name);
-                if(!view){
+                if (!view) {
                     return;
                 }
                 if (!attributes[panelData.link]) {
@@ -128,7 +128,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
             let validate = false;
             this.relationshipsPanels.forEach(panelData => {
                 let view = this.getView(panelData.name);
-                if(!view){
+                if (!view) {
                     return;
                 }
 
@@ -140,7 +140,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
 
         handlePanelRendering(name) {
             this.renderedPanels.push(name);
-            if(this.renderedPanels.length === this.relationshipsPanels.length) {
+            if (this.renderedPanels.length === this.relationshipsPanels.length) {
                 this.trigger('all-panels-rendered');
                 this.renderedPanels = [];
             }
@@ -149,11 +149,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
         changeViewMode(mode) {
             this.relationshipsPanels.forEach(panelData => {
                 let view = this.getView(panelData.name);
-                if(!view){
+                if (!view) {
                     return;
                 }
 
-               view.changeViewMode(mode);
+                view.changeViewMode(mode);
             });
         }
     })

@@ -331,15 +331,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             for (let link in this.model.defs.links) {
 
-                if (!this.isLinkEnabled(this.model, link)) {
-                    continue;
-                }
-
-                if (this.nonComparableFields.includes(link)) {
-                    continue;
-                }
-
-                if (!this.isComparableLink(link)) {
+                if (!this.isLinkEnabled(this.model, link) || this.nonComparableFields.includes(link) ||
+                    !this.isComparableLink(link)) {
                     continue;
                 }
 
@@ -365,6 +358,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     defs: {},
                     link: link
                 };
+
+                if (relationDefs['isAssociateRelation']) {
+                    Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'links'])).forEach(([name, defs]) => {
+                        if (defs['isAssociateRelation'] && link !== name) {
+                            panelData.foreign = name;
+                        }
+                    })
+                }
 
                 relationshipsPanels.push(panelData);
             }
@@ -615,6 +616,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         isComparableLink(link) {
             let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+
+            if (relationDefs['isAssociateRelation']) {
+                return true;
+            }
+
             let relationScope = relationDefs['entity'];
 
             let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);

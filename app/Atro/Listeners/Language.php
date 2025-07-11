@@ -50,24 +50,40 @@ class Language extends AbstractListener
                 if (!empty($associateEntity)) {
                     if (!isset($data[$locale][$entity]['fields']["main$associateEntity"])) {
                         if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
-                            $data[$locale][$entity]['fields']["main$associateEntity"] = "Main " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
+                            $data[$locale][$entity]['fields']["main$associateEntity"] = $this->getLabel($data, $locale, 'Global', 'Main') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
                         }
                     }
 
                     if (!isset($data[$locale][$entity]['fields']["related$associateEntity"])) {
                         if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
-                            $data[$locale][$entity]['fields']["related$associateEntity"] = "Related " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
+                            $data[$locale][$entity]['fields']["related$associateEntity"] = $this->getLabel($data, $locale, 'Global', 'Related') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNames');
                         }
                     }
 
                     if (!isset($data[$locale][$entity]['fields']["related{$associateEntity}s"])) {
                         if (isset($data[$locale]['Global']['scopeNames'][$associateEntity])) {
-                            $data[$locale][$entity]['fields']["related{$associateEntity}s"] = "Related " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                            $data[$locale][$entity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Related') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
                         }
                     }
 
-                    if (!isset($data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"])) {
+                    if (!isset($data[$locale][$associateEntity]['labels']["associated{$associateEntity}s"])) {
                         $data[$locale][$associateEntity]['labels']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associates', 'labels');
+                    }
+
+                    if (!isset($data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                    }
+
+                    if (!isset($data[$locale][$associateEntity]['fields']["related{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Related') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                    }
+
+                    if (!isset($data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated Main') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                    }
+
+                    if (!isset($data[$locale][$associateEntity]['fields']["associatedRelated{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['fields']["associatedRelated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated Related') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
                     }
 
                     if (!isset($data[$locale]['Global']['scopeNames'][$entity])) {

@@ -1904,6 +1904,7 @@ class Metadata extends AbstractListener
                             "type"                => "hasMany",
                             "relationName"        => $relationName,
                             "entity"              => $scope,
+                            "isAssociateRelation" => true,
                             "midKeys"             => [
                                 "main{$scope}Id",
                                 "related{$scope}Id"
@@ -1915,6 +1916,7 @@ class Metadata extends AbstractListener
                             "relationName"                => $relationName,
                             "entity"                      => $scope,
                             "layoutRelationshipsDisabled" => false,
+                            "isAssociateRelation" => true,
                             "midKeys"                     => [
                                 "related{$scope}Id",
                                 "main{$scope}Id"
@@ -1937,6 +1939,7 @@ class Metadata extends AbstractListener
                             "foreign"                     => "related$scope",
                             "entity"                      => $relationName,
                             "layoutRelationshipsDisabled" => true,
+                            "isRelatedAssociateRelation"  => true,
                             "disableMassRelation"         => true
                         ]
                     ]
@@ -1944,10 +1947,10 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
-                $data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] = [
+                $data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] ?? [], [
                     "label" => "associated{$scope}s",
                     "view"  => "views/record/panels/associated-records"
-                ];
+                ]);
             }
         }
     }

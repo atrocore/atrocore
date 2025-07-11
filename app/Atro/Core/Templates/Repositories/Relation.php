@@ -208,22 +208,6 @@ class Relation extends Base
         }
     }
 
-    protected function createNoteInAssociation(string $type, Entity $entity): void
-    {
-        $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
-        $note = $this->getEntityManager()->getEntity('Note');
-        $note->set([
-            'type'       => $type,
-            'parentType' => 'Association',
-            'parentId'   => $entity->get('associationId'),
-            'data'       => [
-                "main{$scope}Id"    => $entity->get("main{$scope}Id"),
-                "related{$scope}Id" => $entity->get("related{$scope}Id"),
-            ],
-        ]);
-        $this->getEntityManager()->saveEntity($note);
-    }
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
@@ -247,11 +231,6 @@ class Relation extends Base
                 ->setParameter('parentId', $entity->get('parentId'))
                 ->executeQuery();
         }
-
-        if ($this->isAssociatesRelation()){
-            $this->createNoteInAssociation('CreateAssociationProduct', $entity);
-        }
-
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -278,10 +257,6 @@ class Relation extends Base
         $this->deleteHierarchical($entity);
 
         $this->updateModifiedAtForRelatedEntity($entity);
-
-        if ($this->isAssociatesRelation()){
-            $this->createNoteInAssociation('DeleteAssociationProduct', $entity);
-        }
     }
 
     public function getHierarchicalRelation(): ?string

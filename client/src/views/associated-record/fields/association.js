@@ -45,7 +45,7 @@ Espo.define('views/associated-record/fields/association', 'views/fields/link',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (!this.model.id && !!this.getRecordView()) {
+            if (!this.model.id && !!this.getRecordView() && this.mode === 'edit') {
                 // fetch default
                 const data = {
                     where: [
