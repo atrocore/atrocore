@@ -109,14 +109,17 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Modern mobile-friendly UI
 * Easy to install, maintain and support.
 
-### Highlights for Developers
+##№ 🔧 Highlights for Developers
 
-- The data model is fully defined using JSON configuration files.
-- You can develop **custom modules** to extend or modify any system functionality.
-- Utilize **Twig scripts** to implement configurations that are not achievable through the user interface.
-- Create and integrate **custom PHP actions** to add your own action buttons.
-- Define **custom data import scenarios** based with pure PHP using Import Feed Type "Code" to achive maximum performance.
-- Easily customize the UI's appearance, including colors and layout, using your own CSS.
+Atrocore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks — for example, we use Doctrine DBAL for database interaction.
+
+The backend supports PostgreSQL, MySQL, and MariaDB. On the frontend, you’ll find a combination of Svelte and BackboneJS — we’re actively migrating to Svelte to bring the UI fully in line with modern standards.
+
+Atrocore is built and tested exclusively on Linux, with Ubuntu (latest LTS) as our recommended environment. While it may run on other distributions, Ubuntu ensures full compatibility and best performance.
+
+We believe you’ll find Atrocore not only solid and flexible, but exciting to work with.  
+👉 Jump into the [Developer Documentation](https://help.atrocore.com/developer-guide) to learn how to set up the system, debug effectively, work with the API, and create custom modules to partially or completely redefine how the system behaves.
+
 
 
 ## Requirements
