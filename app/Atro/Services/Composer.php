@@ -146,11 +146,14 @@ class Composer extends HasContainer
             throw new BadRequest("Invalid server response code: " . $httpCode);
         }
 
+        $result = '';
         $parts = explode('<article id="body-inner">', $output);
         if (isset($parts[1])) {
             $parts = explode('</article>', $parts[1]);
-            $result = $parts[0];
-        } else {
+            $result = $parts[0] ?? '';
+        }
+
+        if (empty($result)) {
             $result = "<p>You can find the release notes here: <br /><a href=\"$url\" target=\"_blank\">$url</a></p>";
         }
 
