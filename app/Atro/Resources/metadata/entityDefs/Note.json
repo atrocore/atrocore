@@ -29,11 +29,8 @@
             "options": [
               "Post",
               "Relate",
-              "UnRelate",
-              "CreateRecordAssociation",
-              "DeleteRecordAssociation",
-              "CreateAssociationRecord",
-              "DeleteAssociationRecord"]
+              "UnRelate"
+      ]
         },
         "parent": {
             "type": "linkParent",

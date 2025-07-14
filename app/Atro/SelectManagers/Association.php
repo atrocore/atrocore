@@ -28,16 +28,18 @@ class Association extends Base
      *
      * @return array
      */
-    public function getAssociatedRecordAssociations(string $scope, string $mainRecordId, ?string $relatedRecordId = null) : array
+    public function getAssociatedRecordAssociations(string $scope, string $mainRecordId, ?string $relatedRecordId = null): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
+        $relatedColumn = Util::toUnderScore("related{$scope}Id");
 
         $qb = $connection->createQueryBuilder()
             ->select('distinct(association_id)')
-            ->from(Util::toUnderScore("Associated$scope"))
+            ->from(Util::toUnderScore("Associated$scope"), 'a1')
             ->where(Util::toUnderScore("main{$scope}Id") . ' = :mainRecordId')
-            ->andWhere('deleted = :false')
+            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.$relatedColumn and t1.deleted = :false")
+            ->andWhere('a1.deleted = :false')
             ->setParameter('mainRecordId', $mainRecordId, Mapper::getParameterType($mainRecordId))
             ->setParameter('false', false, Mapper::getParameterType(false));
 

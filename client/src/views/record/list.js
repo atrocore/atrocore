@@ -1295,7 +1295,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
-            if (this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
+            if (this.getParentView() && this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
                 this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
             }
 
