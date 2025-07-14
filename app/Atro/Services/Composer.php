@@ -145,7 +145,16 @@ class Composer extends HasContainer
         if ($httpCode != 200) {
             throw new BadRequest("Invalid server response code: " . $httpCode);
         }
-        return $output;
+
+        $parts = explode('<article id="body-inner">', $output);
+        if (isset($parts[1])) {
+            $parts = explode('</article>', $parts[1]);
+            $result = $parts[0];
+        } else {
+            $result = "<p>You can find the release notes here: <br /><a href=\"$url\" target=\"_blank\">$url</a></p>";
+        }
+
+        return $result;
     }
 
     public function checkUpdate(): array
