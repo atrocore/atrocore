@@ -101,6 +101,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
             this.notify('Saving...');
             model.save(attrs, {
                 success: function () {
+                    model._updatedById = self.getUser().id;
                     self.trigger('after:save');
                     model.trigger('after:save');
                     self.notify('Saved', 'success');

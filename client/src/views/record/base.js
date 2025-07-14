@@ -666,6 +666,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 model.set(res);
 
                 this.attributes = model.getClonedAttributes();
+                model._updatedById = self.getUser().id;
                 self.afterSave();
                 self.trigger('after:save');
                 model.trigger('after:save');
