@@ -40,7 +40,7 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                     isNull: 'is_null',
                     isNotNull: 'is_not_null',
                     isLinked: 'in',
-                    linkedWith: 'in',
+                    linkedWith: 'linked_with',
                     notLinkedWith: 'not_in',
                     isNotLinked: 'not_in',
                     arrayAnyOf: 'array_any_of',
