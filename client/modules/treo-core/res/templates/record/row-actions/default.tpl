@@ -1,9 +1,9 @@
 {{#if actionList.length}}
-<div class="list-row-buttons btn-group pull-right">
-    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+<div class="list-row-buttons btn-group">
+    <button type="button" class="btn btn-link dropdown-toggle">
         <i class="ph ph-dots-three-vertical"></i>
     </button>
-    <ul class="dropdown-menu pull-right">
+    <ul class="dropdown-menu">
     {{#each actionList}}
         {{#if divider}}
             <li class="divider"></li>
