@@ -147,9 +147,9 @@ class Composer extends HasContainer
         }
 
         $result = '';
-        $parts = explode('<article id="body-inner">', $output);
+        $parts = explode('<div class="page-content">', $output);
         if (isset($parts[1])) {
-            $parts = explode('</article>', $parts[1]);
+            $parts = explode('</div>', $parts[1]);
             $result = $parts[0] ?? '';
         }
 
