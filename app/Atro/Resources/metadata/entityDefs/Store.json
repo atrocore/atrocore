@@ -45,6 +45,18 @@
       "default": "buyable",
       "readOnly": true
     },
+    "inStoreLink": {
+      "type": "url",
+      "readOnly": true
+    },
+    "purchasePrice": {
+      "type": "float",
+      "readOnly": true
+    },
+    "rentalPrice": {
+      "type": "float",
+      "readOnly": true
+    },
     "currentVersion": {
       "type": "varchar",
       "readOnly": true
