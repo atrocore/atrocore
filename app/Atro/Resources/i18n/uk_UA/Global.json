@@ -388,7 +388,10 @@
     "fullscreen": "На весь екран",
     "Copy": "Копіювати",
     "applyMainSearchAndFilter": "Застосувати основний пошук і фільтр",
-    "Reset to Default": "Відновити стандартні значення"
+    "Reset to Default": "Відновити стандартні значення",
+    "associatingItem": "Асоціюючі елементи",
+    "associatedItem": "Асоційовані елементи",
+    "associatedItems": "Асоційовані елементи"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -609,7 +612,7 @@
     "created": "Створено",
     "modified": "Змінено",
     "association": "Зв'язок",
-    "backwardAssociation": "Зворотній зв'язок",
+    "backwardAssociation": "Зворотня асоціація",
     "sorting": "Порядок сортування",
     "associateEverything": "Пов'язати кожен запис з кожним іншим записом"
   },

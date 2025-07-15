@@ -2783,6 +2783,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             model.defs['_relationName'] = this.relationName;
 
+            if (this.options.useRelationModelOnEdit){
+                model = model.relationModel
+            }
+
             var scope = data.scope || model.name || this.scope;
 
             var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';

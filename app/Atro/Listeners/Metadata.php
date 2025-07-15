@@ -1947,8 +1947,12 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] ?? [], [
-                    "label" => "associated{$scope}s",
-                    "view"  => "views/record/panels/associated-records"
+                    "view" => "views/record/panels/associated-records"
+                ]);
+
+                $data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] ?? [], [
+                    "view"   => "views/record/panels/related-records",
+                    "create" => false,
                 ]);
             }
         }

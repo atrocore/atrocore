@@ -21,6 +21,8 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
 
         disableCollectionFetch: true,
 
+        unlinkGroup: true,
+
         getCreateLink() {
             return `associatedMain${this.scope}s`;
         },
@@ -35,6 +37,13 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
             this.listenTo(this, 'groups-rendered', () => {
                 setTimeout(() => this.regulateTableSizes(), 500)
             });
+        },
+
+        data() {
+            return {
+                ...Dep.prototype.data.call(this),
+                unlinkGroup: this.unlinkGroup
+            }
         },
 
         getModel(data, evt) {
@@ -60,8 +69,18 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
             this.trigger('after-groupPanels-rendered')
         },
 
+        getLayoutLink() {
+            return `${this.scope}.associated${this.scope}s`
+        },
+
+        getAdditionalListOptions() {
+            return {
+                useRelationModelOnEdit: true
+            }
+        },
+
         initGroupCollection(group, groupCollection, callback) {
-            this.getHelper().layoutManager.get(this.scope, this.layoutName, `${this.scope}.associated${this.scope}s`, null, data => {
+            this.getHelper().layoutManager.get(this.scope, this.layoutName, this.getLayoutLink(), null, data => {
                 groupCollection.url = this.model.name + '/' + this.model.id + '/' + this.link;
                 groupCollection.collectionOnly = true;
                 groupCollection.maxSize = 999

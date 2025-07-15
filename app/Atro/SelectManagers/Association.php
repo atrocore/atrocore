@@ -51,6 +51,25 @@ class Association extends Base
         return $qb->fetchFirstColumn();
     }
 
+    public function getRelatedRecordAssociations(string $scope, string $relatedRecordId): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $relatedColumn = Util::toUnderScore("main{$scope}Id");
+
+        $qb = $connection->createQueryBuilder()
+            ->select('distinct(association_id)')
+            ->from(Util::toUnderScore("Associated$scope"), 'a1')
+            ->where(Util::toUnderScore("related{$scope}Id") . ' = :relatedRecordId')
+            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.$relatedColumn and t1.deleted = :false")
+            ->andWhere('a1.deleted = :false')
+            ->setParameter('relatedRecordId', $relatedRecordId, Mapper::getParameterType($relatedRecordId))
+            ->setParameter('false', false, Mapper::getParameterType(false));
+
+        return $qb->fetchFirstColumn();
+    }
+
+
     /**
      * NotUsedAssociations filter
      *
@@ -80,6 +99,20 @@ class Association extends Base
         if (!empty($data['mainRecordId'])) {
             $associationIds = $this
                 ->getAssociatedRecordAssociations($data['scope'], $data['mainRecordId']);
+            $result['whereClause'][] = [
+                'id' => $associationIds
+            ];
+        }
+    }
+
+    protected function boolFilterRelatedAssociations(&$result): void
+    {
+        // prepare data
+        $data = (array)$this->getBoolFilterParameter('relatedAssociations');
+
+        if (!empty($data['relatedRecordId'])) {
+            $associationIds = $this
+                ->getRelatedRecordAssociations($data['scope'], $data['relatedRecordId']);
             $result['whereClause'][] = [
                 'id' => $associationIds
             ];

@@ -1,9 +1,8 @@
 {
   "fields": {
-    "associatedProducts": "Associated products",
     "description": "Description",
     "isActive": "Active",
-    "backwardAssociation": "Backward Association",
+    "backwardAssociation": "Reverse Association",
     "code": "Code",
     "default": "Default"
   },
