@@ -11,30 +11,28 @@
 Espo.define('treo-core:views/composer/record/row-actions/store', 'views/record/row-actions/default',
     Dep => Dep.extend({
 
-        disableActions: false,
+        afterRender() {
+            if (this.model.get('inStoreLink')) {
+                this.model.set('status', 'buyable');
+            }
 
-        setup() {
-            Dep.prototype.setup.call(this);
+            if (this.model.get('status') === 'buyable') {
+                let storeLink = this.model.get('inStoreLink') || 'https://store.atrocore.com';
+                storeLink += '?instanceId=' + this.getConfig().get('appId');
 
-            this.listenTo(this.model.collection, 'disableActions', (disableActions) => {
-                this.disableActions = disableActions;
-                this.reRender();
-            });
+                const titleStr = this.model.get('purchasePrice') ? `${this.translate('Purchase price:')} €${this.model.get('purchasePrice')}` : this.translate('Сlick to purchase!');
+                const rentalPriceStr = this.model.get('rentalPrice') ? `€${this.model.get('rentalPrice')}/mo` : this.translate('Purchase');
+
+                this.$el.html(`<a role="button" href="${storeLink}" target="_blank" title="${titleStr}" class="btn btn-sm btn-default" style="padding:4px 8px;border-radius:4px"><i class="ph ph-wallet"></i> <span>${rentalPriceStr}</span></a>`);
+            } else if (this.model.get('status') === 'available') {
+                this.$el.html(`<button class="btn btn-sm btn-default" style="padding:4px 8px;border-radius:4px"><i class="ph-fill ph-download-simple"></i> <span>${this.translate('Install')}</span></button>`);
+            }
+
+            this.$el.css('text-align', 'right').css('vertical-align', 'middle');
         },
 
         getActionList() {
-            let list = [];
-            let versions = this.model.get('versions');
-            if (!this.disableActions && versions && versions.length && this.model.get('status') === 'available') {
-                list.push({
-                    action: 'installModule',
-                    label: 'installModule',
-                    data: {
-                        id: this.model.id
-                    }
-                });
-            }
-            return list;
+            return [];
         },
 
     })
