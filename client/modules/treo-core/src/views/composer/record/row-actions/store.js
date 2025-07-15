@@ -31,20 +31,22 @@ Espo.define('treo-core:views/composer/record/row-actions/store', 'views/record/r
         },
 
         afterRender() {
-            if (this.model.get('inStoreLink')) {
-                this.model.set('status', 'buyable');
-            }
-
             if (this.model.get('status') === 'buyable') {
                 let storeLink = this.model.get('inStoreLink') || 'https://store.atrocore.com';
                 storeLink += '?instanceId=' + this.getConfig().get('appId');
 
-                const titleStr = this.model.get('purchasePrice') ? `${this.translate('Purchase price:')} €${this.formatNumber(this.model.get('purchasePrice'))}` : this.translate('Click to purchase!');
-                const rentalPriceStr = this.model.get('rentalPrice') ? `€${this.formatNumber(this.model.get('rentalPrice'))}/mo` : this.translate('Purchase');
+                const titleStr = this.model.get('purchasePrice') ? `Shown price is the rental price for 3 months. Purchase price is €${this.formatNumber(this.model.get('purchasePrice'))}.` : this.translate('Click to purchase!');
+                const rentalPriceStr = this.model.get('rentalPrice') ? `€${this.formatNumber(this.model.get('rentalPrice'))}` : this.translate('Purchase');
 
                 this.$el.html(`<a role="button" href="${storeLink}" target="_blank" title="${titleStr}" class="btn btn-sm btn-default" style="padding:4px 8px;border-radius:4px"><i class="ph ph-wallet"></i> <span>${rentalPriceStr}</span></a>`);
             } else if (this.model.get('status') === 'available') {
-                this.$el.html(`<button class="btn btn-sm btn-default" style="padding:4px 8px;border-radius:4px"><i class="ph-fill ph-download-simple"></i> <span>${this.translate('Install')}</span></button>`);
+                const $button = $(`<button class="btn btn-sm btn-default" style="padding:4px 8px;border-radius:4px"><i class="ph-fill ph-download-simple"></i> <span>${this.translate('Install')}</span></button>`);
+                this.$el.html($button);
+                $button.on('click', () => {
+                    const listView = this.getParentView().getParentView().getParentView();
+                    $button.addClass('disabled')
+                    listView.actionInstallModule({id: this.model.id});
+                });
             }
 
             this.$el.css('text-align', 'right').css('vertical-align', 'middle');
