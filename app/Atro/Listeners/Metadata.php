@@ -1950,7 +1950,7 @@ class Metadata extends AbstractListener
                     "view" => "views/record/panels/associated-records"
                 ]);
 
-                $data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] ?? [], [
+                $data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] ?? [], [
                     "view"   => "views/record/panels/related-records",
                     "create" => false,
                 ]);
