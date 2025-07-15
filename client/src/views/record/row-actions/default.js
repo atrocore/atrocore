@@ -43,24 +43,33 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
+            this.dropdown?.destroy();
 
-            var isChecked = false;
-            $dd.on('show.bs.dropdown', function () {
-                this.loadDynamicActions()
+            const button = this.$el.find('.dropdown-toggle')[0];
+            const dropdown = this.$el.find('.dropdown-menu')[0];
 
-                var $el = this.$el.closest('.list-row');
-                isChecked = false;
-                if ($el.hasClass('active')) {
-                    isChecked = true;
-                }
-                $el.addClass('active');
-            }.bind(this));
-            $dd.on('hide.bs.dropdown', function () {
-                if (!isChecked) {
+            if (!button || !dropdown) {
+                return;
+            }
+
+            dropdown.style.position = 'fixed';
+
+            this.dropdown = new window.Dropdown(button, dropdown, {
+                placement: 'bottom-end',
+                strategy: 'fixed',
+                onDropdownShow: dropdown => {
+                    this.loadDynamicActions();
+
+                    dropdown.parentElement?.classList.add('open');
+
+                    this.$el.closest('.list-row').addClass('active');
+                },
+                onDropdownHide: dropdown => {
+                    dropdown.parentElement?.classList.remove('open');
+
                     this.$el.closest('.list-row').removeClass('active');
-                }
-            }.bind(this));
+                },
+            });
         },
 
         isInheritingRelation: function () {

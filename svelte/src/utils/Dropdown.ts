@@ -40,9 +40,7 @@ export default class Dropdown {
             this.floatingListElSelector = this.params.dropdownListElSelector;
         }
 
-        document.addEventListener('click', this.onClickOutside.bind(this));
         referenceEl.addEventListener('click', this.onReferenceElClick.bind(this));
-        this.floatingEl.addEventListener('click', this.onDropdownClick.bind(this));
     }
 
     destroy() {
@@ -124,6 +122,9 @@ export default class Dropdown {
                 });
             });
         });
+
+        document.addEventListener('click', this.onClickOutside.bind(this));
+        this.floatingEl.addEventListener('click', this.onDropdownClick.bind(this));
     }
 
     private hideDropdown() {
@@ -133,10 +134,16 @@ export default class Dropdown {
             this.params.onDropdownHide(this.floatingEl);
         }
 
-        if (this.floatingHandler) this.floatingHandler();
+        this.floatingHandler?.();
+        document.removeEventListener('click', this.onClickOutside.bind(this));
+        this.floatingEl.removeEventListener('click', this.onDropdownClick.bind(this));
     }
 
     private onClickOutside(event: MouseEvent) {
+        if (!this.isOpen) {
+            return;
+        }
+
         if (!this.floatingEl.parentElement?.contains(event.target as Node)) {
             this.isOpen = false;
             this.updateDropdown();

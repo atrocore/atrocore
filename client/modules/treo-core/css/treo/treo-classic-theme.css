@@ -10410,6 +10410,7 @@ table.table > thead th > div > a {
     padding-right: 2px;
     min-width: auto;
     width: 100%;
+    justify-content: end;
 }
 
 #main main > .list-container > .list > table td:first-child, #main main > .list-container > .list > table th:first-child {
@@ -10456,7 +10457,6 @@ table.table > thead th > div > a {
 
     .panel .list > table.table.full-table td.cell[data-name="buttons"]:not(.fixed-button) {
         padding-right: 10px;
-        right: -20px;
     }
 
     #main main > .list-container > .list > .table thead th > .layout-editor-container {
@@ -10978,8 +10978,7 @@ select[multiple].input-sm {
 
 .panel-body > div > .list,
 .panel-body .group .list {
-    display: grid;
-    overflow-x: clip;
+    overflow-x: auto;
 }
 
 .panel-body > div > .list > table td:first-child,
@@ -11249,7 +11248,7 @@ table.no-margin {
 }
 
 .panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
-    padding-right: 0;
+    padding-right: 10px;
     right: 0;
 }
 
@@ -11784,10 +11783,6 @@ h4.panel-title span.color-icon {
 
     .panel-scroll {
         margin-top: 14px;
-    }
-
-    .panel .list > .table .dropdown-menu {
-        position: absolute !important;
     }
 }
 
@@ -12542,10 +12537,6 @@ pre > code {
 
     .categories-container > .list {
         margin: 14px 0
-    }
-
-    .list > .table .dropdown-menu {
-        position: absolute !important
     }
 
     .list > .table .pull-right.open > .btn {
@@ -13363,10 +13354,12 @@ input#sn-checkbox-open-in-new-window {
 .dashlets .panel-default > .panel-heading,
 .middle > .panel-default > .panel-heading,
 .bottom > .panel-default > .panel-heading,
+.composer .panel-default > .panel-heading,
 .modal-body > .panel-default > .panel-heading {
     height: 34px;
 }
 
+.composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
 .middle .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
 .bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group {
     display: inline-flex;
@@ -13456,6 +13449,8 @@ input#sn-checkbox-open-in-new-window {
 
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
     width: auto;
+    position: sticky;
+    left: 20px;
 }
 
 .show-more {
@@ -13979,10 +13974,14 @@ ul.dropdown-menu > li.checkbox {
     .table > tbody > tr:not(:first-child) {
         border-top: 1px solid #e8eced;
     }
+}
 
-    .table > tbody > tr.active {
-        background: #e8eced;
-    }
+.table > tbody > tr.active {
+    background: #e8eced;
+}
+
+.table > tbody > tr.active {
+    z-index: 1;
 }
 
 #main .category-tree button.catalog-link {
@@ -14375,11 +14374,13 @@ button.category:focus {
     }
 }
 
+.composer .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
 .detail .middle .panel-default > .panel-heading:not(.note-toolbar),
 .detail .bottom .panel-default > .panel-heading:not(.note-toolbar) {
     position: relative
 }
 
+.composer .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
 .detail .middle .panel-default > .panel-heading > .btn-group:not(.note-btn-group),
 .detail .bottom .panel-default > .panel-heading > .btn-group:not(.note-btn-group) {
     top: 0;

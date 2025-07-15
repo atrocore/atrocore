@@ -1295,10 +1295,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
-            if (this.getParentView() && this.getParentView().$el.hasClass('panel-body') && this.$el.find('.list > .panel-scroll').length === 0) {
-                this.$el.find('.list').append('<div class="panel-scroll hidden"><div></div></div>');
-            }
-
             this.fullTableScroll();
 
             if (this.enabledFixedHeader) {
@@ -1657,7 +1653,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         'left': posLeftTable,
                         'top': navBarHeight - 1,
                         'right': 0,
-                        'z-index': 1
+                        'z-index': 2
                     });
                 },
                 setWidth = () => {
@@ -1675,7 +1671,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         fixedTable.find('th').eq(i).css('width', width);
                     });
 
-                    fixedScroll.width(list.width()).children('div').height(1).width(list[0].scrollWidth);
+                    fixedScroll.width(list.width()).children('div').height(1).width(list[0]?.scrollWidth);
                 },
                 toggleClass = () => {
                     let showPosition = fullTable.offset().top;
@@ -1789,99 +1785,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                         prevScrollLeft = list.scrollLeft();
                     });
-
-                    if (this.hasHorizontalScroll() && scroll.length) {
-                        // custom scroll for relationship panels
-                        scroll.removeClass('hidden');
-
-                        scroll.find('div').css('width', fullTable.width());
-
-                        this.listenTo(this.collection, 'sync', function () {
-                            if (!this.hasHorizontalScroll()) {
-                                scroll.addClass('hidden');
-                            }
-                        }.bind(this));
-
-                        scroll.on('scroll', () => {
-                            fullTable.css('left', -1 * scroll.scrollLeft());
-                        });
-
-                        let touchStartPosition = 0,
-                            touchFinalPosition = 0,
-                            currentScroll = 0,
-                            velocity = 0,
-                            lastPosition = 0,
-                            lastTime = 0,
-                            isScrolling = false;
-
-                        list.on('touchstart', function (e) {
-                            touchStartPosition = e.originalEvent.targetTouches[0].pageX;
-                            currentScroll = scroll.scrollLeft();
-                            velocity = 0;
-                            lastPosition = touchStartPosition;
-                            lastTime = Date.now();
-                            isScrolling = true;
-                        }.bind(this));
-
-                        list.on('touchmove', function (e) {
-                            touchFinalPosition = e.originalEvent.targetTouches[0].pageX;
-
-                            const deltaPosition = touchFinalPosition - touchStartPosition;
-                            const newScroll = currentScroll - deltaPosition;
-                            scroll.scrollLeft(newScroll);
-
-                            const now = Date.now();
-                            const deltaTime = now - lastTime;
-
-                            if (deltaTime > 0) {
-                                velocity = (touchFinalPosition - lastPosition) / deltaTime;
-                            }
-
-                            lastPosition = touchFinalPosition;
-                            lastTime = now;
-                        }.bind(this));
-
-                        list.on('touchend', function () {
-                            isScrolling = false;
-
-                            const inertiaDuration = 1000;
-                            const friction = 0.95;
-                            let momentumScroll = scroll.scrollLeft();
-                            let animationFrame;
-
-                            function applyInertia() {
-                                if (!isScrolling) {
-                                    velocity *= friction;
-                                    momentumScroll -= velocity * 16;
-                                    scroll.scrollLeft(momentumScroll);
-
-                                    if (Math.abs(velocity) > 0.1) {
-                                        animationFrame = requestAnimationFrame(applyInertia);
-                                    } else {
-                                        cancelAnimationFrame(animationFrame);
-                                    }
-                                }
-                            }
-
-                            applyInertia();
-                        }.bind(this));
-
-                        list.on('wheel', function (e) {
-                            if (e.shiftKey) {
-                                e.preventDefault();
-                                const delta = e.originalEvent.deltaY;
-                                currentScroll = scroll.scrollLeft(scroll.scrollLeft() + delta);
-                            }
-                        });
-                    } else {
-                        list.on('wheel', function (e) {
-                            if (e.shiftKey) {
-                                e.preventDefault();
-                                const delta = e.originalEvent.deltaY;
-                                $bar.scrollLeft($bar.scrollLeft() + delta);
-                            }
-                        });
-                    }
                 }
             }
         },
