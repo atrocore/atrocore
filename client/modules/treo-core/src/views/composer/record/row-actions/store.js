@@ -17,13 +17,13 @@ Espo.define('treo-core:views/composer/record/row-actions/store', 'views/record/r
             const locales = this.getConfig().get('locales');
             let localeId = this.getUser()?.user?.localeId;
             if (!localeId || !locales[localeId]) {
-                localeId = this.getConfig().get('locale')
+                localeId = this.getConfig().get('locale');
                 if (!locales[localeId]) {
-                    localeId = 'main'
+                    localeId = 'main';
                 }
             }
 
-            const locale = locales[localeId]
+            const locale = locales[localeId];
             if (locale) {
                 this.thousandSeparator = locale['thousandSeparator'] || '';
                 this.decimalMark = locale['decimalMark']
