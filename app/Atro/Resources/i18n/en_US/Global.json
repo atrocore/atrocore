@@ -433,7 +433,11 @@
     "applyMainSearchAndFilter": "Apply main search and filter",
     "Reset to Default": "Reset to Default",
     "relatedAssociates": "Backward Associations",
-    "associated": "Associated"
+    "Associated": "Associated",
+    "Associating": "Associating",
+    "associatingItem": "Associating Item",
+    "associatedItem": "Associated Item",
+    "associatedItems": "Associated Items"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

@@ -389,7 +389,10 @@
     "fullscreen": "Vollbild",
     "Copy": "Kopieren",
     "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden",
-    "Reset to Default": "Auf Standard zurücksetzen"
+    "Reset to Default": "Auf Standard zurücksetzen",
+    "associatingItem": "Assoziierendes Element",
+    "associatedItem": "Assoziiertes Element",
+    "associatedItems": "Assoziierte Elemente"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
