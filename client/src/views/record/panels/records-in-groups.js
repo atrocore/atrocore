@@ -56,7 +56,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                 this.filter = this.getStoredFilter();
             }
 
-            if (this.checkAclAction('create')) {
+            if (!this.createDisabled && this.checkAclAction('create')) {
                 this.buttonList.push({
                     title: 'Create',
                     action: this.defs.createAction || 'createRelated',
@@ -72,7 +72,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             }
 
             if (!this.disableSelect && this.checkAclAction('create')) {
-                var data = {link: this.defs.name};
+                var data = { link: this.defs.name };
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
                 }
@@ -217,6 +217,10 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             });
         },
 
+        getAdditionalListOptions(){
+            return {}
+        },
+
         buildGroups() {
             this.collection.reset()
             if (!this.groups || this.groups.length < 1) {
@@ -245,6 +249,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             disableSorting: true,
                             disableRefreshLayout: true,
                             disableRefreshOnLanguageChange: true,
+                            ...this.getAdditionalListOptions()
                         };
 
                         this.createView(group.key, viewName, options, view => {

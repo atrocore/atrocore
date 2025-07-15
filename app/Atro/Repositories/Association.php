@@ -73,7 +73,7 @@ class Association extends Base
         $table = Util::toUnderScore($scope);
 
         $qb = $connection->createQueryBuilder()
-            ->select('id')
+            ->select('ar.id')
             ->from(Util::toUnderScore("Associated$scope"), 'ar')
             ->innerJoin('ar', $connection->quoteIdentifier($table), 'rm', "rm.id = ar.main_{$table}_id AND rm.deleted = :false")
             ->innerJoin('ar', $connection->quoteIdentifier($table), 'rr', "rr.id = ar.related_{$table}_id AND rr.deleted = :false")

@@ -66,8 +66,8 @@ class Language extends AbstractListener
                         }
                     }
 
-                    if (!isset($data[$locale][$associateEntity]['labels']["associated{$associateEntity}s"])) {
-                        $data[$locale][$associateEntity]['labels']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associates', 'labels');
+                    if (!isset($data[$locale][$associateEntity]['labels']["related{$associateEntity}s"])) {
+                        $data[$locale][$associateEntity]['labels']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'relatedAssociates', 'labels');
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"])) {

@@ -432,7 +432,7 @@
     "Copy": "Copy",
     "applyMainSearchAndFilter": "Apply main search and filter",
     "Reset to Default": "Reset to Default",
-    "associates": "Associates",
+    "relatedAssociates": "Backward Associations",
     "associated": "Associated"
   },
   "messages": {
@@ -666,7 +666,7 @@
     "created": "Created",
     "modified": "Modified",
     "association": "Association",
-    "backwardAssociation": "Backward Association",
+    "backwardAssociation": "Reverse Association",
     "sorting": "Sort Order",
     "associateEverything": "Associate every record with every other record"
   },

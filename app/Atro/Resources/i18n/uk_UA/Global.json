@@ -609,7 +609,7 @@
     "created": "Створено",
     "modified": "Змінено",
     "association": "Зв'язок",
-    "backwardAssociation": "Зворотній зв'язок",
+    "backwardAssociation": "Зворотня асоціація",
     "sorting": "Порядок сортування",
     "associateEverything": "Пов'язати кожен запис з кожним іншим записом"
   },

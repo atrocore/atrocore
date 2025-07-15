@@ -1,11 +1,10 @@
 {
   "fields": {
-    "associatedProducts": "Associated products",
     "description": "Description",
     "isActive": "Active",
-    "backwardAssociation": "Backward Association",
+    "backwardAssociation": "Reverse Association",
     "code": "Code",
-    "default": "Default"
+    "default": "Default 0"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "Association is linked with record(s). Please, unlink record(s) first",
