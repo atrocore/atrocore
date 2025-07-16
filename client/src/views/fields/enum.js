@@ -677,9 +677,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        console.log(value);
-                        if(!Array.isArray(value) || value === null) {
-                            return 'bad float';
+                        if(!Array.isArray(value) || value.length === 0) {
+                            return 'bad enums';
                         }
 
                         return true;
