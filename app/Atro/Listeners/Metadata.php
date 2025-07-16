@@ -1930,7 +1930,7 @@ class Metadata extends AbstractListener
                             "layoutRelationshipsDisabled" => true,
                             "isMainAssociateRelation"     => true,
                             "addRelationCustomDefs"       => [
-                                "link"   => Util::pluralize(lcfirst($scope)),
+                                "link"   => "associated{$scope}s",
                                 "entity" => $scope
                             ]
                         ],

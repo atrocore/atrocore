@@ -73,11 +73,11 @@ class Language extends AbstractListener
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"])) {
-                        $data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated Main') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                        $data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatingItems', 'labels') . " (" . $this->getLabel($data, $locale, 'Global', 'Relation') . ")";
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["associatedRelated{$associateEntity}s"])) {
-                        $data[$locale][$associateEntity]['fields']["associatedRelated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated Related') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                        $data[$locale][$associateEntity]['fields']["associatedRelated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatedItems', 'labels') . " (" . $this->getLabel($data, $locale, 'Global', 'Relation') . ")";
                     }
 
                     if (!isset($data[$locale]['Global']['scopeNames'][$entity])) {

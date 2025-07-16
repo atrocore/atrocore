@@ -10,16 +10,12 @@
 
 Espo.define('views/record/panels/related-records', ['views/record/panels/associated-records'], (Dep) => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-view-and-edit',
-
-        unlinkGroup: false,
-
-        disableDeleteAll: true,
-
-        createDisabled: true,
-
         getLayoutLink() {
             return `${this.scope}.related${this.scope}s`
+        },
+
+        getCreateLink() {
+            return `associatedRelated${this.scope}s`;
         },
 
         fetchCollectionGroups(callback) {
@@ -46,5 +42,9 @@ Espo.define('views/record/panels/related-records', ['views/record/panels/associa
         getAssociationLabel(association) {
             return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
         },
+
+        getDeleteData() {
+            return { relatedRecordId: this.model.id }
+        }
     })
 );

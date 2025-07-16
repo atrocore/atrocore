@@ -296,15 +296,21 @@ class Relation extends Record
         }
     }
 
-    public function removeAssociates(string $mainRecordId, ?string $associationId)
+    public function removeAssociates(string $mainRecordId, string $relatedRecordId, ?string $associationId)
     {
-        if (empty($mainRecordId)) {
+        if (empty($mainRecordId) && empty($relatedRecordId)) {
             throw new NotFound();
         }
         $scope = $this->getAssociatesScope();
 
         $repository = $this->getRepository();
-        $where = ["main{$scope}Id" => $mainRecordId];
+        $where = [];
+        if (!empty($mainRecordId)) {
+            $where["main{$scope}Id"] = $mainRecordId;
+        }
+        if (!empty($relatedRecordId)) {
+            $where["related{$scope}Id"] = $relatedRecordId;
+        }
         if (!empty($associationId)) {
             $where['associationId'] = $associationId;
         }
