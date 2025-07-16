@@ -139,9 +139,13 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
                 ]
             }
             this.ajaxGetRequest('Association', data).then(data => {
-                this.groups = data.list.map(row => ({ id: row.id, key: row.id, label: row.name }));
+                this.groups = data.list.map(row => ({ id: row.id, key: row.id, label: this.getAssociationLabel(row) }));
                 callback();
             });
+        },
+
+        getAssociationLabel(association) {
+            return this.translate('associatingTitle', 'labels', this.scope).replace(':name', association.name)
         },
 
         deleteEntities(groupId) {
