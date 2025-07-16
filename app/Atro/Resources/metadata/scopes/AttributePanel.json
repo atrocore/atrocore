@@ -1,0 +1,13 @@
+{
+  "type": "ReferenceData",
+  "entity": true,
+  "object": true,
+  "layouts": false,
+  "tab": true,
+  "acl": false,
+  "customizable": false,
+  "importable": false,
+  "notifications": false,
+  "streamDisabled": true,
+  "disabled": false
+}

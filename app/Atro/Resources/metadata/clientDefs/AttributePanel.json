@@ -1,0 +1,26 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "rows",
+  "boolFilterList": [
+    "onlyForEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "onlyForEntity"
+  ],
+  "relationshipPanels": {
+    "attributes": {
+      "create": false,
+      "disabledSelectAllResult": true,
+      "view": "views/attribute-panel/record/panels/attributes",
+      "selectBoolFilterList": [
+        "onlyForEntity"
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "sortOrder"
+      },
+      "sortBy": "sortOrder",
+      "asc": true
+    }
+  }
+}

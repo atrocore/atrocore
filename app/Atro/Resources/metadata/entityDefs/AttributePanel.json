@@ -1,0 +1,74 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "code": {
+      "type": "varchar",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "rowsMax": 4,
+      "lengthOfCut": 400
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "views/attribute-panel/fields/entity"
+    },
+    "default": {
+      "type": "bool"
+    },
+    "sortOrder": {
+      "type": "float",
+      "required": true,
+      "view": "views/attribute-panel/fields/sort-order"
+    },
+    "attributes": {
+      "type": "linkMultiple"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "attributePanel",
+      "entity": "Attribute"
+    }
+  },
+  "collection": {
+    "sortBy": "sortOrder",
+    "asc": true
+  }
+}
