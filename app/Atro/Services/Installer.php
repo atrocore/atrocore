@@ -622,7 +622,8 @@ class Installer extends HasContainer
             \Atro\Seeders\NotificationProfileSeeder::class,
             \Atro\Seeders\HtmlSanitizerSeeder::class,
             \Atro\Seeders\StyleSeeder::class,
-            \Atro\Seeders\LayoutProfileSeeder::class
+            \Atro\Seeders\LayoutProfileSeeder::class,
+            \Atro\Seeders\AttributePanelSeeder::class
         ];
 
         foreach ($seeders as $seeder) {

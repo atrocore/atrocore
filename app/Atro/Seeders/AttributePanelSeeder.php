@@ -9,33 +9,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\Seeders;
 
-namespace Atro\Migrations;
-
-use Atro\Core\Migration\Base;
-
-class V2Dot0Dot13 extends Base
+class AttributePanelSeeder extends AbstractSeeder
 {
-    public function getMigrationDateTime(): ?\DateTime
-    {
-        return new \DateTime('2025-07-17 15:00:00');
-    }
-
-    public function up(): void
-    {
-        $this->createDefaultAttributePanel();
-    }
-
-    protected function exec(string $sql): void
-    {
-        try {
-            $this->getPDO()->exec($sql);
-        } catch (\Throwable $e) {
-        }
-    }
-
-    private function createDefaultAttributePanel(): void
+    public function run(): void
     {
         @mkdir('data/reference-data');
 
