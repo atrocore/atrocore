@@ -513,8 +513,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                        if(!Array.isArray(value) || value === null) {
-                            return 'bad float';
+                        if(!Array.isArray(value) || value.length === 0) {
+                            return 'bad array';
                         }
 
                         return true;
