@@ -44,7 +44,7 @@ Espo.define('views/record/panels/related-records', ['views/record/panels/associa
         },
 
         getAssociationLabel(association) {
-            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', association.name)
+            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
         },
     })
 );

@@ -145,7 +145,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         getAssociationLabel(association) {
-            return this.translate('associatingTitle', 'labels', this.scope).replace(':name', association.name)
+            return this.translate('associatingTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
         },
 
         deleteEntities(groupId) {
