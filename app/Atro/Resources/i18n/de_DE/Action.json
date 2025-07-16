@@ -38,7 +38,8 @@
       "single": "Einzeln"
     },
     "type": {
-      "set": "Aktionsset"
+      "set": "Aktionsset",
+      "email": "E-Mail senden"
     },
     "executeAs": {
       "system": "System",
