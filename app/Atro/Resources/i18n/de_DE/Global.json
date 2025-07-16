@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "AttributePanel": "Attribut-Panel",
     "UserProfile": "User Profile",
     "Entity": "Entität",
     "EntityField": "Entitätsfeld",
@@ -58,6 +59,7 @@
     "SystemIcon": "System-Symbol"
   },
   "scopeNamesPlural": {
+    "AttributePanel": "Attribut-Panels",
     "UserProfile": "User Profiles",
     "Entity": "Entitäten",
     "EntityField": "Entitätsfelder",

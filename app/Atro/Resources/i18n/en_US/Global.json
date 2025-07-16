@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "AttributePanel": "Attribute Panel",
     "RoleScope": "Scope",
     "RoleScopeField": "Field",
     "UserProfile": "User Profile",
@@ -71,6 +72,7 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "AttributePanel": "Attribute Panels",
     "RoleScope": "Scopes",
     "RoleScopeField": "Fields",
     "UserProfile": "User Profiles",

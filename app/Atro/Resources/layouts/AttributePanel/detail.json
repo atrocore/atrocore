@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "sortOrder"
+        }
+      ],
+      [
+        {
+          "name": "default"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
