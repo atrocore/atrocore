@@ -391,7 +391,9 @@
     "Reset to Default": "Відновити стандартні значення",
     "associatingItem": "Асоціюючі елементи",
     "associatedItem": "Асоційовані елементи",
-    "associatedItems": "Асоційовані елементи"
+    "associatedItems": "Асоційовані елементи",
+    "emailTo": "Email To",
+    "emailCc": "Email CC"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

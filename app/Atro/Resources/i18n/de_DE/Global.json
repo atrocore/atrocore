@@ -392,7 +392,9 @@
     "Reset to Default": "Auf Standard zurücksetzen",
     "associatingItem": "Assoziierendes Element",
     "associatedItem": "Assoziiertes Element",
-    "associatedItems": "Assoziierte Elemente"
+    "associatedItems": "Assoziierte Elemente",
+    "emailTo": "E-Mail an",
+    "emailCc": "E-Mail CC"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

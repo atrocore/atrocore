@@ -437,7 +437,9 @@
     "Associating": "Associating",
     "associatingItem": "Associating Item",
     "associatedItem": "Associated Item",
-    "associatedItems": "Associated Items"
+    "associatedItems": "Associated Items",
+    "emailTo": "Email To",
+    "emailCc": "Email CC"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
