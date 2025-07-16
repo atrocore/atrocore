@@ -10,7 +10,7 @@
 
 Espo.define('views/record/panels/related-records', ['views/record/panels/associated-records'], (Dep) => Dep.extend({
 
-        rowActionsView: 'views/record/row-actions/relationship-view-only',
+        rowActionsView: 'views/record/row-actions/relationship-view-and-edit',
 
         unlinkGroup: false,
 
@@ -38,9 +38,13 @@ Espo.define('views/record/panels/related-records', ['views/record/panels/associa
                 ]
             }
             this.ajaxGetRequest('Association', data).then(data => {
-                this.groups = data.list.map(row => ({ id: row.id, key: row.id, label: row.name }));
+                this.groups = data.list.map(row => ({ id: row.id, key: row.id, label: this.getAssociationLabel(row) }));
                 callback();
             });
-        }
+        },
+
+        getAssociationLabel(association) {
+            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
+        },
     })
 );

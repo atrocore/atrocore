@@ -391,8 +391,12 @@
     "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden",
     "Reset to Default": "Auf Standard zurücksetzen",
     "associatingItem": "Assoziierendes Element",
+    "associatingItems": "Assoziierende Elemente",
     "associatedItem": "Assoziiertes Element",
-    "associatedItems": "Assoziierte Elemente"
+    "associatedItems": "Assoziierte Elemente",
+    "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
+    "associatingTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
+    "associatedTitle": "Mit aktuellem Element als :name verlinkt:"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
