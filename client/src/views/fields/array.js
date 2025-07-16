@@ -514,7 +514,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 validation: {
                     callback: function (value, rule) {
                         if(!Array.isArray(value) || value.length === 0) {
-                            return 'bad float';
+                            return 'bad array';
                         }
 
                         return true;
