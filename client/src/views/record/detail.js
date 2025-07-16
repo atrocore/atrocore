@@ -204,9 +204,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionAddAttribute(panelName) {
-            let boolFilterList = ['onlyForEntity'];
+            let boolFilterList = ['onlyForEntity', 'notForbiddenForEditFields'];
             let boolFilterData = {
-                onlyForEntity: this.model.name
+                onlyForEntity: this.model.name,
+                notForbiddenForEditFields: {
+                    entityName: this.model.name,
+                    entityId: this.model.get('id')
+                }
             };
 
             if (typeof panelName === 'string') {

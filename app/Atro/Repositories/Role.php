@@ -83,6 +83,7 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                             foreach ($attributesDefs as $fieldName => $defs) {
                                 $res['fields'][$scopeName][$fieldName]['read'] = !empty($roleAttributePanel->get("readAction")) ? 'yes' : 'no';
                                 $res['fields'][$scopeName][$fieldName]['edit'] = !empty($roleAttributePanel->get("editAction")) ? 'yes' : 'no';
+                                $res['attributes'][$scopeName][$fieldName] = $defs['attributeId'];
                             }
                         }
 
@@ -99,6 +100,7 @@ class Role extends \Espo\Core\ORM\Repositories\RDB
                                     }
                                     $res['fields'][$scopeName][$fieldName]['read'] = !empty($roleAttribute->get("readAction")) ? 'yes' : 'no';
                                     $res['fields'][$scopeName][$fieldName]['edit'] = !empty($roleAttribute->get("editAction")) ? 'yes' : 'no';
+                                    $res['attributes'][$scopeName][$fieldName] = $defs['attributeId'];
                                 }
                             }
                         }

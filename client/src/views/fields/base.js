@@ -686,6 +686,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
+            if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit') || []).includes(this.name)) {
+                return;
+            }
+
             let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
             if (!attributeId) {
                 return;
