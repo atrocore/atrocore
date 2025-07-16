@@ -73,6 +73,7 @@ class FileType extends AbstractFieldType
             'channelId'                 => $row['channel_id'] ?? null,
             'channelName'               => $row['channel_name'] ?? null,
             'type'                      => 'file',
+            "fileTypeId"                => $row['file_type_id'] ?? null,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
             'label'                     => $row[$this->prepareKey('name', $row)],
