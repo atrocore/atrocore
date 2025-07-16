@@ -53,19 +53,23 @@ class Language extends AbstractListener
                     }
 
                     if (!isset($data[$locale][$entity]['fields']["related$associateEntity"])) {
-                        $data[$locale][$entity]['fields']["related$associateEntity"] = $this->getLabel($data, $locale, 'Global', 'associatedItem','labels');
+                        $data[$locale][$entity]['fields']["related$associateEntity"] = $this->getLabel($data, $locale, 'Global', 'associatedItem', 'labels');
                     }
 
                     if (!isset($data[$locale][$entity]['fields']["related{$associateEntity}s"])) {
-                        $data[$locale][$entity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatedItems','labels');
+                        $data[$locale][$entity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatedItems', 'labels');
+                    }
+
+                    if (!isset($data[$locale][$entity]['tooltips']["association"])) {
+                        $data[$locale][$entity]['tooltips']["association"] = $this->getLabel($data, $locale, 'Global', 'associationTooltip', 'labels');
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"])) {
-                        $data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associating') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                        $data[$locale][$associateEntity]['fields']["associated{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatingItems', 'labels');
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["related{$associateEntity}s"])) {
-                        $data[$locale][$associateEntity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'Associated') . " " . $this->getLabel($data, $locale, 'Global', $associateEntity, 'scopeNamesPlural');
+                        $data[$locale][$associateEntity]['fields']["related{$associateEntity}s"] = $this->getLabel($data, $locale, 'Global', 'associatedItems', 'labels');
                     }
 
                     if (!isset($data[$locale][$associateEntity]['fields']["associatedMain{$associateEntity}s"])) {

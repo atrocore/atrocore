@@ -416,6 +416,16 @@ class LayoutManager
             }
         }
 
+        if ($name === 'relationships' && !empty($this->getMetadata()->get(['scopes', $scope, 'hasAssociate']))) {
+            $data = $data ?? [];
+
+            $strData = json_encode($data);
+            if (!str_contains($strData, "associated{$scope}s") && !str_contains($strData, "related{$scope}s")) {
+                $data[] = ['name' => "associated{$scope}s"];
+                $data[] = ['name' => "related{$scope}s"];
+            }
+        }
+
         return [$data, null];
     }
 

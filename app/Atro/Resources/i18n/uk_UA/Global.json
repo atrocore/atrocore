@@ -390,10 +390,14 @@
     "applyMainSearchAndFilter": "Застосувати основний пошук і фільтр",
     "Reset to Default": "Відновити стандартні значення",
     "associatingItem": "Асоціюючі елементи",
+    "associatingItems": "Асоціюючі елементи",
     "associatedItem": "Асоційовані елементи",
     "associatedItems": "Асоційовані елементи",
     "emailTo": "Email To",
-    "emailCc": "Email CC"
+    "emailCc": "Email CC",
+    "associationTooltip": "Оберіть як Асоціюючий елемент пов'язаний з Асоційованим елементом",
+    "associatingTitle": "Поточний елемент пов'язаний як :name з:",
+    "associatedTitle": "Пов'язані з поточним елементом як :name:"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

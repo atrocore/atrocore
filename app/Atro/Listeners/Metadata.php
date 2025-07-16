@@ -1756,7 +1756,8 @@ class Metadata extends AbstractListener
                         "association"              => [
                             "type"     => "link",
                             "required" => true,
-                            "view"     => "views/associated-record/fields/association"
+                            "view"     => "views/associated-record/fields/association",
+                            "tooltip"  => true,
                         ],
                         "main$scope"               => [
                             "required"      => true,
