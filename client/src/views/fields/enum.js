@@ -674,7 +674,17 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     });
                     return `<div class="field-container"></div><input type="hidden" name="${inputName}" />`;
                 },
-                valueGetter: this.filterValueGetter.bind(this)
+                valueGetter: this.filterValueGetter.bind(this),
+                validation: {
+                    callback: function (value, rule) {
+                        console.log(value);
+                        if(!Array.isArray(value) || value === null) {
+                            return 'bad float';
+                        }
+
+                        return true;
+                    }.bind(this),
+                }
             };
         },
 
