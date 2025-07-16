@@ -26,8 +26,10 @@ class V2Dot0Dot13 extends Base
     {
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE action ADD connection_id VARCHAR(36) DEFAULT NULL");
+            $this->exec("ALTER TABLE action ADD target_entity VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_ACTION_CONNECTION_ID ON action (connection_id, deleted)");
         } else {
+            $this->exec("ALTER TABLE action ADD target_entity VARCHAR(255) DEFAULT NULL");
             $this->exec("ALTER TABLE action ADD connection_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_ACTION_CONNECTION_ID ON action (connection_id, deleted)");
         }
