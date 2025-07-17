@@ -22,8 +22,8 @@ Espo.define('views/associated-record/fields/association', 'views/fields/link',
                 const scope = this.getAssociationScope()
                 return {
                     scope: scope,
-                    mainRecordId: this.model.get(`main${scope}Id`),
-                    relatedRecordId: this.model.get(`related${scope}Id`)
+                    mainRecordId: this.model.get('associatingItemId'),
+                    relatedRecordId: this.model.get('associatedItemId')
                 };
             },
             onlyForEntity() {
@@ -34,10 +34,10 @@ Espo.define('views/associated-record/fields/association', 'views/fields/link',
         select(model) {
             Dep.prototype.select.call(this, model);
 
-            if (model.get('backwardAssociationId') && !this.model.get('backwardAssociationId')) {
+            if (model.get('reverseAssociationId') && !this.model.get('reverseAssociationId')) {
                 this.model.set({
-                    backwardAssociationId: model.get('backwardAssociationId'),
-                    backwardAssociationName: model.get('backwardAssociationName')
+                    reverseAssociationId: model.get('reverseAssociationId'),
+                    reverseAssociationName: model.get('reverseAssociationName')
                 });
             }
         },
@@ -66,8 +66,8 @@ Espo.define('views/associated-record/fields/association', 'views/fields/link',
                         this.model.set({
                             associationId: association.id,
                             associationName: association.name,
-                            backwardAssociationId: association.backwardAssociationId,
-                            backwardAssociationName: association.backwardAssociationName
+                            reverseAssociationId: association.reverseAssociationId,
+                            reverseAssociationName: association.reverseAssociationName
                         })
                     }
                 });

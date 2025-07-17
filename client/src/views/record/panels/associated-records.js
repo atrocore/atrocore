@@ -24,7 +24,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         unlinkGroup: true,
 
         getCreateLink() {
-            return `associatedMain${this.scope}s`;
+            return 'associatedItemRelations';
         },
 
         setup() {
@@ -70,7 +70,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         getLayoutLink() {
-            return `${this.scope}.associated${this.scope}s`
+            return `${this.scope}.associatedItems`
         },
 
         getAdditionalListOptions() {
@@ -145,11 +145,15 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         getAssociationLabel(association) {
-            return this.translate('associatingTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
+            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
+        },
+
+        getDeleteData() {
+            return { mainRecordId: this.model.id }
         },
 
         deleteEntities(groupId) {
-            const data = { mainRecordId: this.model.id }
+            const data = this.getDeleteData()
             if (groupId) data.associationId = groupId
             this.ajaxPostRequest(`Associated${this.scope}/action/RemoveAssociates`, data)
                 .done(response => {

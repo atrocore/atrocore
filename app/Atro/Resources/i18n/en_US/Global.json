@@ -440,8 +440,8 @@
     "associatedItem": "Associated Item",
     "associatedItems": "Associated Items",
     "associationTooltip": "Defined how Associating Item is linked to Associated Item",
-    "associatingTitle": "Сurrent Item is linked as :name from:",
-    "associatedTitle": "Linked to current item as :name:"
+    "associatedTitle": "Сurrent item is linked as :name from:",
+    "associatingTitle": "Linked to current item as :name:"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
@@ -674,7 +674,7 @@
     "created": "Created",
     "modified": "Modified",
     "association": "Association",
-    "backwardAssociation": "Reverse Association",
+    "reverseAssociation": "Reverse Association",
     "sorting": "Sort Order",
     "associateEverything": "Associate every record with every other record"
   },
@@ -1078,7 +1078,7 @@
     "cd": "cd"
   },
   "exceptions": {
-    "backwardAssociationError": "Backward association error: %s",
+    "reverseAssociationError": "Backward association error: %s",
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Record cannot be associated with itself.",
     "recordAssociationAlreadyExists": "Such record association exists already.",

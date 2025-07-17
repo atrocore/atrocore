@@ -380,10 +380,10 @@ class MassActions extends HasContainer
             foreach ($foreignIds as $relatedRecordId) {
                 $attachment = new \stdClass();
                 $attachment->associationId = $relationData['associationId'];
-                $attachment->{"main{$entityType}Id"} = $mainRecordId;
-                $attachment->{"related{$entityType}Id"} = $relatedRecordId;
-                if (!empty($backwardAssociationId = $association->get('backwardAssociationId'))) {
-                    $attachment->backwardAssociationId = $backwardAssociationId;
+                $attachment->associatingItemId = $mainRecordId;
+                $attachment->associatedItemId = $relatedRecordId;
+                if (!empty($reverseAssociationId = $association->get('reverseAssociationId'))) {
+                    $attachment->reverseAssociationId = $reverseAssociationId;
                 }
 
                 $toSave[] = $attachment;
@@ -398,10 +398,10 @@ class MassActions extends HasContainer
                 $associatedRecordService->createEntity($attachment);
             } catch (\Exception $e) {
                 $error[] = [
-                    'id'          => $attachment->{"main{$entityType}Id"},
-                    'name'        => $this->getEntityManager()->getEntity($entityType, $attachment->{"main{$entityType}Id"})->get('name'),
-                    'foreignId'   => $attachment->{"related{$entityType}Id"},
-                    'foreignName' => $this->getEntityManager()->getEntity($entityType, $attachment->{"related{$entityType}Id"})->get('name'),
+                    'id'          => $attachment->associatingItemId,
+                    'name'        => $this->getEntityManager()->getEntity($entityType, $attachment->associatingItemId)->get('name'),
+                    'foreignId'   => $attachment->associatedItemId,
+                    'foreignName' => $this->getEntityManager()->getEntity($entityType, $attachment->associatedItemId)->get('name'),
                     'message'     => utf8_encode($e->getMessage())
                 ];
             }
@@ -417,8 +417,8 @@ class MassActions extends HasContainer
         }
 
         $where = [
-            "main{$entityType}Id"    => $ids,
-            "related{$entityType}Id" => $foreignIds
+            "associatingItemId" => $ids,
+            "associatedItemId"  => $foreignIds
         ];
 
         if (!empty($relationData['associationId'])) {
@@ -439,10 +439,10 @@ class MassActions extends HasContainer
                 $success++;
             } catch (\Exception $e) {
                 $error[] = [
-                    'id'          => $associatedRecord->get("main{$entityType}Id"),
-                    'name'        => $associatedRecord->get("main{$entityType}")->get('name'),
-                    'foreignId'   => $associatedRecord->get("related{$entityType}Id"),
-                    'foreignName' => $associatedRecord->get("related{$entityType}")->get('name'),
+                    'id'          => $associatedRecord->get("associatingItemId"),
+                    'name'        => $associatedRecord->get("associatingItem")->get('name'),
+                    'foreignId'   => $associatedRecord->get("associatedItemId"),
+                    'foreignName' => $associatedRecord->get("associatedItem")->get('name'),
                     'message'     => utf8_encode($e->getMessage())
                 ];
             }
