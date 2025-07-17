@@ -72,7 +72,9 @@
         {
           "name": "targetEntity"
         },
-        false
+        {
+          "name": "showEmailPreview"
+        }
       ]
     ]
   },
