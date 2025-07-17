@@ -499,7 +499,7 @@ class Hierarchy extends Record
 
         // inherit all attribute values from parents
         if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.hasAttribute")) {
-            /** @var \Pim\Repositories\Attribute $attributeRepo */
+            /** @var \Atro\Repositories\Attribute $attributeRepo */
             $attributeRepo = $this->getEntityManager()->getRepository('Attribute');
             $attributeRepo->inheritAllAttributeValuesFromParents($entity);
         }

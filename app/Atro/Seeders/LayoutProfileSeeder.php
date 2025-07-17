@@ -85,11 +85,7 @@ class LayoutProfileSeeder extends AbstractSeeder
 
     private function getFavorites(): array
     {
-        $favList = ['Product', 'File'];
-
-        if (class_exists('\Pim\Module')) {
-            $favList = array_merge(['Classification'], $favList);
-        }
+        $favList = ['Product', 'File', 'Classification'];
 
         if (class_exists('\Import\Module')) {
             $favList[] = 'ImportFeed';
