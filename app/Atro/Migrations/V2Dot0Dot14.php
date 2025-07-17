@@ -15,18 +15,18 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V2Dot0Dot13 extends Base
+class V2Dot0Dot14 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-07-17 15:00:00');
+        return new \DateTime('2025-07-18 15:00:00');
     }
 
     public function up(): void
     {
         $this->createDefaultAttributePanel();
 
-        // create Attribute table
+        // create Attribute, AttributeGroup, Classification, ClassificationAttribute
     }
 
     protected function exec(string $sql): void

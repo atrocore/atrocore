@@ -1,6 +1,7 @@
 {
   "scopeNames": {
     "Attribute": "Attribut",
+    "AttributeGroup": "Attributgruppe",
     "AttributePanel": "Attribut-Panel",
     "UserProfile": "User Profile",
     "Entity": "Entität",
@@ -61,6 +62,7 @@
   },
   "scopeNamesPlural": {
     "Attribute": "Attribute",
+    "AttributeGroup": "Attribut-Gruppen",
     "AttributePanel": "Attribut-Panels",
     "UserProfile": "User Profiles",
     "Entity": "Entitäten",

@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "Nom du groupe",
+    "description": "Description",
+    "code": "Code",
+    "isActive": "Actif",
+    "attributes": "Attributs",
+    "sortOrder": "Ordre de tri"
+  },
+  "messages": {
+    "unlinkAttributeGroupConfirmation": "Êtes-vous sûr de vouloir dissocier tous les attributs du groupe d'attributs ?"
+  },
+  "exceptions": {
+    "attributeGroupSsLinkedWithAttributes": "Le groupe d'attributs est lié à un ou plusieurs attributs. Veuillez d'abord dissocier le(s) attribut(s)."
+  }
+}

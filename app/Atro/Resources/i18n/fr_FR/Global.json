@@ -83,6 +83,7 @@
   },
   "scopeNames": {
     "Attribute": "Attribut",
+    "AttributeGroup": "Groupe d'attributs",
     "UiHandler": "Gestionnaire d'interface utilisateur",
     "Folder": "Dossier",
     "Team": "L'équipe",
@@ -469,6 +470,7 @@
   },
   "scopeNamesPlural": {
     "Attribute": "Attributs",
+    "AttributeGroup": "Groupes d'attributs",
     "LastViewed": "Dernière consultation",
     "ActionHistoryRecord": "Historique de l'action",
     "AuthToken": "Jetons d'authentification",

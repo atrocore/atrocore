@@ -1,6 +1,7 @@
 {
   "scopeNames": {
     "Attribute": "Attribute",
+    "AttributeGroup": "Attribute Group",
     "AttributePanel": "Attribute Panel",
     "RoleScope": "Scope",
     "RoleScopeField": "Field",
@@ -74,6 +75,7 @@
   },
   "scopeNamesPlural": {
     "Attribute": "Attributes",
+    "AttributeGroup": "Attribute Groups",
     "AttributePanel": "Attribute Panels",
     "RoleScope": "Scopes",
     "RoleScopeField": "Fields",

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Group Name",
+    "description": "Description",
+    "code": "Code",
+    "isActive": "Active",
+    "attributes": "Attributes",
+    "sortOrder": "Sort Order"
+  },
+  "messages": {
+    "unlinkAttributeGroupConfirmation": "Are you sure you want to unlink all Attribute Group's Attributes?"
+  },
+  "exceptions": {
+    "attributeGroupSsLinkedWithAttributes": "Attribute group is linked with attribute(s). Please, unlink attribute(s) first",
+    "entityIsUsed": "Attribute Group cannot be deleted because it used in several Attributes."
+  }
+}

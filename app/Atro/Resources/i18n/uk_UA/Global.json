@@ -1,6 +1,7 @@
 {
   "scopeNames": {
     "Attribute": "Атрибут",
+    "AttributeGroup": "Група атрибута",
     "EmailTemplate": "Шаблон електронної пошти",
     "Storage": "Сховище",
     "Folder": "Папка",
@@ -64,6 +65,7 @@
   },
   "scopeNamesPlural": {
     "Attribute": "Атрибути",
+    "AttributeGroup": "Групи атрибутів",
     "EmailTemplate": "Шаблони електронної пошти",
     "Storage": "Сховища",
     "Folder": "Папки",
