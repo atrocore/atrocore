@@ -1316,7 +1316,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         setupBeforeFinal: function () {
             this.manageAccess();
-
+            this.initUiHandler();
             this.attributes = this.model.getClonedAttributes();
 
             if (this.options.attributes) {
@@ -1337,11 +1337,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDependancy();
 
             this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            this.initUiHandler();
 
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
+
+            this.listenToOnce(this.model, 'sync', function () {
+                this.initUiHandler();
+            }, this);
         },
 
         initDynamicHandler: function () {
