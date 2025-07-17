@@ -21,7 +21,7 @@
       ],
       [
         {
-          "name": "backwardAssociation"
+          "name": "reverseAssociation"
         },
         {
           "name": "default"

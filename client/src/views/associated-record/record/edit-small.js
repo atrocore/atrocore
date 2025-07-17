@@ -16,8 +16,8 @@ Espo.define('views/associated-record/record/edit-small', 'views/record/edit-smal
 
         prepareLayoutData(data) {
             const scope = this.getAssociationScope()
-            if (!this.model.id && !this.model.get(`related${scope}Id`)) {
-                data.layout = JSON.parse(JSON.stringify(data.layout).replace(`"related${scope}"`, `"related${scope}s"`));
+            if (!this.model.id && !this.model.get('associatedItemId')) {
+                data.layout = JSON.parse(JSON.stringify(data.layout).replace(`"associatedItem"`, `"associatedItems"`));
             }
 
             Dep.prototype.prepareLayoutData.call(this, data);

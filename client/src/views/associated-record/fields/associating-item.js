@@ -8,15 +8,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/association/fields/backward-association', 'views/fields/link',
+Espo.define('views/associated-record/fields/associating-item', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['onlyActive', 'onlyForEntity'],
+        selectBoolFilterList: ['notEntity'],
 
         boolFilterData: {
-            onlyForEntity() {
-                return this.options.onlyForEntity || this.model.get('entityId')  || null;
+            notEntity() {
+                return this.model.get('associatedItemId');
             }
         },
+
     })
 );

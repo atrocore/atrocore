@@ -11,11 +11,11 @@
 Espo.define('views/record/panels/related-records', ['views/record/panels/associated-records'], (Dep) => Dep.extend({
 
         getLayoutLink() {
-            return `${this.scope}.related${this.scope}s`
+            return `${this.scope}.associatingItems`
         },
 
         getCreateLink() {
-            return `associatedRelated${this.scope}s`;
+            return 'associatingItemRelations';
         },
 
         fetchCollectionGroups(callback) {
@@ -40,7 +40,7 @@ Espo.define('views/record/panels/related-records', ['views/record/panels/associa
         },
 
         getAssociationLabel(association) {
-            return this.translate('associatedTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
+            return this.translate('associatingTitle', 'labels', this.scope).replace(':name', `<a href="#Association/view/${association.id}"><strong>${association.name}</strong></a>`)
         },
 
         getDeleteData() {

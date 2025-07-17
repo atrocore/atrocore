@@ -1753,28 +1753,28 @@ class Metadata extends AbstractListener
 
                 $defs = [
                     "fields"        => [
-                        "association"              => [
+                        "association"             => [
                             "type"     => "link",
                             "required" => true,
                             "view"     => "views/associated-record/fields/association",
                             "tooltip"  => true,
                         ],
-                        "main$scope"               => [
+                        "associatingItem"         => [
                             "required"      => true,
                             "type"          => "link",
                             "relationField" => true,
-                            "view"          => "views/associated-record/fields/main-record"
+                            "view"          => "views/associated-record/fields/associating-item"
                         ],
-                        "related$scope"            => [
+                        "associatedItem"          => [
                             "required"      => true,
                             "type"          => "link",
                             "relationField" => true,
-                            "view"          => "views/associated-record/fields/related-record",
+                            "view"          => "views/associated-record/fields/associated-item",
                         ],
-                        "related{$scope}s"         => [
+                        "associatedItems"         => [
                             "type"                      => "linkMultiple",
                             "entity"                    => $scope,
-                            "view"                      => "views/associated-record/fields/related-records",
+                            "view"                      => "views/associated-record/fields/associated-items",
                             "noLoad"                    => true,
                             "notStorable"               => true,
                             "layoutListDisabled"        => true,
@@ -1787,14 +1787,14 @@ class Metadata extends AbstractListener
                             "importDisabled"            => true,
                             "emHidden"                  => true
                         ],
-                        "backwardAssociation"      => [
+                        "reverseAssociation"      => [
                             "type"           => "link",
                             "notStorable"    => true,
                             "entity"         => "Association",
-                            "view"           => "views/associated-record/fields/backward-association",
+                            "view"           => "views/associated-record/fields/reverse-association",
                             "filterDisabled" => true
                         ],
-                        "backwardAssociated$scope" => [
+                        "reverseAssociated$scope" => [
                             "type"                      => "link",
                             "readOnly"                  => true,
                             "layoutListDisabled"        => true,
@@ -1807,7 +1807,7 @@ class Metadata extends AbstractListener
                             "importDisabled"            => true,
                             "emHidden"                  => true
                         ],
-                        "associateEverything"      => [
+                        "associateEverything"     => [
                             "type"                      => "bool",
                             "view"                      => "views/associated-record/fields/associate-everything",
                             "notStorable"               => true,
@@ -1821,27 +1821,26 @@ class Metadata extends AbstractListener
                             "importDisabled"            => true,
                             "emHidden"                  => true
                         ],
-                        "sorting"                  => [
+                        "sorting"                 => [
                             "type" => "int"
                         ]
                     ],
                     "links"         => [
-                        "association"              => [
-                            "type"    => "belongsTo",
-                            "foreign" => "associatedProducts",
-                            "entity"  => "Association"
+                        "association"             => [
+                            "type"   => "belongsTo",
+                            "entity" => "Association"
                         ],
-                        "main$scope"               => [
+                        "associatingItem"         => [
                             "type"    => "belongsTo",
-                            "foreign" => "associatedMain{$scope}s",
+                            "foreign" => "associatedItemRelation",
                             "entity"  => $scope
                         ],
-                        "related$scope"            => [
+                        "associatedItem"          => [
                             "type"    => "belongsTo",
-                            "foreign" => "associatedRelated" . ucfirst($scope) . 's',
+                            "foreign" => "associatingItemRelation",
                             "entity"  => $scope
                         ],
-                        "backwardAssociated$scope" => [
+                        "reverseAssociated$scope" => [
                             "type"   => "belongsTo",
                             "entity" => $relationName,
                         ]
@@ -1850,8 +1849,8 @@ class Metadata extends AbstractListener
                         "unique_relation" => [
                             "deleted",
                             "association_id",
-                            Util::toUnderScore("main{$scope}Id"),
-                            Util::toUnderScore("related{$scope}Id"),
+                            "associating_item_id",
+                            "associated_item_id"
                         ]
                     ]
                 ];
@@ -1877,7 +1876,7 @@ class Metadata extends AbstractListener
 
                 $additionalScopeDefs = [
                     "fields" => [
-                        "associatedMain{$scope}s"    => [
+                        "associatedItemRelations"  => [
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
@@ -1888,7 +1887,7 @@ class Metadata extends AbstractListener
                             "importDisabled"            => true,
                             "exportDisabled"            => false
                         ],
-                        "associatedRelated{$scope}s" => [
+                        "associatingItemRelations" => [
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
@@ -1901,42 +1900,42 @@ class Metadata extends AbstractListener
                         ]
                     ],
                     "links"  => [
-                        "associated{$scope}s"        => [
+                        "associatedItems"          => [
                             "type"                => "hasMany",
                             "relationName"        => $relationName,
                             "entity"              => $scope,
                             "isAssociateRelation" => true,
                             "midKeys"             => [
-                                "main{$scope}Id",
-                                "related{$scope}Id"
+                                "associatingItemId",
+                                "associatedItemId"
                             ],
                             "disableMassRelation" => true
                         ],
-                        "related{$scope}s"           => [
+                        "associatingItems"         => [
                             "type"                        => "hasMany",
                             "relationName"                => $relationName,
                             "entity"                      => $scope,
                             "layoutRelationshipsDisabled" => false,
                             "midKeys"                     => [
-                                "related{$scope}Id",
-                                "main{$scope}Id"
+                                "associatedItemId",
+                                "associatingItemId"
                             ],
                             "disableMassRelation"         => true
                         ],
-                        "associatedMain{$scope}s"    => [
+                        "associatedItemRelations"  => [
                             "type"                        => "hasMany",
-                            "foreign"                     => "main$scope",
+                            "foreign"                     => "associatingItem",
                             "entity"                      => $relationName,
                             "layoutRelationshipsDisabled" => true,
                             "isMainAssociateRelation"     => true,
                             "addRelationCustomDefs"       => [
-                                "link"   => "associated{$scope}s",
+                                "link"   => "associatedItems",
                                 "entity" => $scope
                             ]
                         ],
-                        "associatedRelated{$scope}s" => [
+                        "associatingItemRelations" => [
                             "type"                        => "hasMany",
-                            "foreign"                     => "related$scope",
+                            "foreign"                     => "associatedItem",
                             "entity"                      => $relationName,
                             "layoutRelationshipsDisabled" => true,
                             "isRelatedAssociateRelation"  => true,
@@ -1947,11 +1946,11 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
-                $data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associated{$scope}s"] ?? [], [
+                $data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] ?? [], [
                     "view" => "views/record/panels/associated-records"
                 ]);
 
-                $data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["related{$scope}s"] ?? [], [
+                $data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] ?? [], [
                     "view"   => "views/record/panels/related-records",
                     "create" => false,
                 ]);

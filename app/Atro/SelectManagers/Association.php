@@ -32,19 +32,17 @@ class Association extends Base
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        $relatedColumn = Util::toUnderScore("related{$scope}Id");
-
         $qb = $connection->createQueryBuilder()
             ->select('distinct(association_id)')
             ->from(Util::toUnderScore("Associated$scope"), 'a1')
-            ->where(Util::toUnderScore("main{$scope}Id") . ' = :mainRecordId')
-            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.$relatedColumn and t1.deleted = :false")
+            ->where('associating_item_id = :mainRecordId')
+            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.associated_item_id and t1.deleted = :false")
             ->andWhere('a1.deleted = :false')
             ->setParameter('mainRecordId', $mainRecordId, Mapper::getParameterType($mainRecordId))
             ->setParameter('false', false, Mapper::getParameterType(false));
 
-        if (!empty($relatedProductId)) {
-            $qb->andWhere(Util::toUnderScore("related{$scope}Id") . ' = :relatedRecordId');
+        if (!empty($relatedRecordId)) {
+            $qb->andWhere('associated_item_id = :relatedRecordId');
             $qb->setParameter('relatedRecordId', $relatedRecordId, Mapper::getParameterType($relatedRecordId));
         }
 
@@ -55,13 +53,11 @@ class Association extends Base
     {
         $connection = $this->getEntityManager()->getConnection();
 
-        $relatedColumn = Util::toUnderScore("main{$scope}Id");
-
         $qb = $connection->createQueryBuilder()
             ->select('distinct(association_id)')
             ->from(Util::toUnderScore("Associated$scope"), 'a1')
-            ->where(Util::toUnderScore("related{$scope}Id") . ' = :relatedRecordId')
-            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.$relatedColumn and t1.deleted = :false")
+            ->where( 'associated_item_id = :relatedRecordId')
+            ->innerJoin('a1', Util::toUnderScore($scope), 't1', "t1.id = a1.associating_item_id and t1.deleted = :false")
             ->andWhere('a1.deleted = :false')
             ->setParameter('relatedRecordId', $relatedRecordId, Mapper::getParameterType($relatedRecordId))
             ->setParameter('false', false, Mapper::getParameterType(false));

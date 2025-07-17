@@ -3,7 +3,7 @@
     "associatedProducts": "Пов'язані продукти",
     "description": "Опис",
     "isActive": "Активний",
-    "backwardAssociation": "Зворотня асоціація",
+    "reverseAssociation": "Зворотня асоціація",
     "code": "Код",
     "default": "За замовчуванням"
   },

@@ -78,9 +78,9 @@
       "noLoad": true,
       "importDisabled": true
     },
-    "backwardAssociation": {
+    "reverseAssociation": {
       "type": "link",
-      "view": "views/association/fields/backward-association"
+      "view": "views/association/fields/reverse-association"
     },
     "associations": {
       "type": "linkMultiple",
@@ -115,14 +115,14 @@
       "relationName": "EntityTeam",
       "layoutRelationshipsDisabled": true
     },
-    "backwardAssociation": {
+    "reverseAssociation": {
       "type": "belongsTo",
       "foreign": "associations",
       "entity": "Association"
     },
     "associations": {
       "type": "hasMany",
-      "foreign": "backwardAssociation",
+      "foreign": "reverseAssociation",
       "entity": "Association",
       "layoutRelationshipsDisabled": true
     }
