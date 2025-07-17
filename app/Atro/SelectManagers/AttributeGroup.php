@@ -9,14 +9,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Pim\SelectManagers;
+namespace Atro\SelectManagers;
 
-use Pim\Core\SelectManagers\AbstractSelectManager;
+use Espo\Core\SelectManagers\Base;
 
-/**
- * Class of AttributeGroup
- */
-class AttributeGroup extends AbstractSelectManager
+class AttributeGroup extends Base
 {
     /**
      * @param array $result
@@ -29,7 +26,7 @@ class AttributeGroup extends AbstractSelectManager
             ->getRepository('ClassificationAttribute')
             ->select(['attributeId'])
             ->where([
-                'classificationId' => (string)$this->getSelectCondition('withNotLinkedAttributesToClassification'),
+                'classificationId' => (string)$this->getBoolFilterParameter('withNotLinkedAttributesToClassification'),
                 'channelId' => ''
             ])
             ->find()
@@ -77,7 +74,7 @@ class AttributeGroup extends AbstractSelectManager
 
     protected function boolFilterOnlyForEntity(array &$result): void
     {
-        $entityName = (string)$this->getSelectCondition('onlyForEntity');
+        $entityName = (string)$this->getBoolFilterParameter('onlyForEntity');
         if (!empty($entityName)) {
             $result['whereClause'][] = [
                 'entityId' => $entityName
