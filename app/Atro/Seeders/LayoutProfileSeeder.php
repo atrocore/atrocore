@@ -60,18 +60,15 @@ class LayoutProfileSeeder extends AbstractSeeder
 
     private function getDefaultMenu(): array
     {
-        $menus = ['Product', 'File'];
+        $menus = ['Product', 'File', 'Attribute', 'AttributePanel', 'AttributeGroup', 'Classification'];
 
         if (class_exists('\Pim\Module')) {
             $menus = array_merge($menus, [
                 'Association',
-                'Attribute',
-                'AttributeGroup',
                 'Brand',
                 'Category',
                 'Catalog',
-                'Channel',
-                'Classification'
+                'Channel'
             ]);
         }
 
