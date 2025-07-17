@@ -1,0 +1,6 @@
+{
+  "type": "extensibleEnum",
+  "convert": {
+    "extensibleMultiEnum": "\\Pim\\AttributeConverters\\ToExtensibleMultiEnum"
+  }
+}

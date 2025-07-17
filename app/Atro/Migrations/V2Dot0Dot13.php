@@ -25,6 +25,8 @@ class V2Dot0Dot13 extends Base
     public function up(): void
     {
         $this->createDefaultAttributePanel();
+
+        // create Attribute table
     }
 
     protected function exec(string $sql): void

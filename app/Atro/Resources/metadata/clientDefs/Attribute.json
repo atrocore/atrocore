@@ -1,0 +1,331 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "check-fat",
+  "boolFilterList": [
+    "onlyMy",
+    "fromAttributesTab",
+    "notParentCompositeAttribute",
+    "notChildCompositeAttribute",
+    "onlyCompositeAttributes",
+    "notLinkedWithCurrent",
+    "onlyForEntity",
+    "onlyForAttributePanel",
+    "notForbiddenForEditFields"
+  ],
+  "hiddenBoolFilterList": [
+    "fromAttributesTab",
+    "notParentCompositeAttribute",
+    "notChildCompositeAttribute",
+    "onlyCompositeAttributes",
+    "notLinkedWithCurrent",
+    "onlyForEntity",
+    "onlyForAttributePanel",
+    "notForbiddenForEditFields"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "recordViews": {
+    "detail": "views/attribute/record/detail",
+    "editSmall": "views/attribute/record/edit-small",
+    "list": "views/attribute/record/list"
+  },
+  "modalViews": {
+    "select": "views/attribute/modals/select-records"
+  },
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "extensibleEnumOptions",
+        "label": "extensibleEnumOptions",
+        "view": "views/attribute/record/panels/extensible-enum-options"
+      }
+    ]
+  },
+  "relationshipPanels": {
+    "classificationAttributes": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "layout": "listInAttribute"
+    },
+    "nestedAttributes": {
+      "selectBoolFilterList": [
+        "notParentCompositeAttribute",
+        "notLinkedWithCurrent",
+        "onlyForEntity"
+      ],
+      "view": "views/attribute/record/panels/nested-attributes"
+    }
+  },
+  "dynamicLogic": {
+    "fields": {
+      "entity": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      },
+      "fullWidth": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["composite"]
+            }
+          ]
+        }
+      },
+      "dropdown": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        }
+      },
+      "extensibleEnum": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        }
+      },
+      "maxLength": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "text",
+                "wysiwyg",
+                "markdown"
+              ]
+            }
+          ]
+        }
+      },
+      "countBytesInsteadOfCharacters": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "text",
+                "wysiwyg",
+                "markdown"
+              ]
+            }
+          ]
+        }
+      },
+      "min": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      },
+      "max": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      },
+      "measure": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "int",
+                "float",
+                "rangeInt",
+                "rangeFloat",
+                "varchar"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "isMultilang"
+            }
+          ]
+        }
+      },
+      "fileType": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "file"
+            }
+          ]
+        }
+      },
+      "pattern": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "varchar"
+            }
+          ]
+        }
+      },
+      "prohibitedEmptyValue": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "extensibleEnum"
+              ]
+            }
+          ]
+        }
+      },
+      "amountOfDigitsAfterComma": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "float",
+                "rangeFloat"
+              ]
+            }
+          ]
+        }
+      },
+      "useDisabledTextareaInViewMode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "text",
+                "varchar",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      },
+      "defaultDate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "date",
+                "datetime"
+              ]
+            }
+          ]
+        }
+      },
+      "notNull": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "bool",
+                "text",
+                "markdown",
+                "wysiwyg",
+                "url",
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      },
+      "trim": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar"
+              ]
+            }
+          ]
+        }
+      },
+      "htmlSanitizer": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
