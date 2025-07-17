@@ -1,0 +1,97 @@
+{
+  "fields": {
+    "entity": "Entity",
+    "compositeAttribute": "Composite Attribute",
+    "nestedAttributes": "Nested Attributes",
+    "attributeGroup": "Attribute Group",
+    "attributePanel": "Attribute Panel",
+    "type": "Attribute Type",
+    "code": "Code",
+    "name": "Attribute Name",
+    "products": "Products",
+    "isMultilang": "Multilingual",
+    "fileType": "File Type",
+    "pattern": "Regex Pattern",
+    "prohibitedEmptyValue": "Disable empty value",
+    "measure": "Measure",
+    "defaultUnit": "Default Unit",
+    "defaultDate": "Default Date",
+    "isRequired": "Required",
+    "isReadOnly": "Read-only",
+    "tooltip": "Tooltip",
+    "maxLength": "Max Length",
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
+    "useDisabledTextareaInViewMode": "Use disabled text area in view mode",
+    "amountOfDigitsAfterComma": "Amount of digits after comma",
+    "description": "Description",
+    "classifications": "Classifications",
+    "extensibleEnum": "List",
+    "min": "Min",
+    "max": "Max",
+    "notNull": "Disable Null Value",
+    "trim": "Remove leading and trailing whitespaces",
+    "classificationAttributes": "Classification Attributes",
+    "preparedName": "Name",
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "Full Width",
+    "channel": "Channel",
+    "variantSpecificProducts": "Variant Specific Products",
+    "attributeGroupSortOrder": "Sort Order in Attribute Group"
+  },
+  "labels": {
+    "Classification": "Classification",
+    "addNewValue": "Add new value",
+    "extensibleEnumOptions": "List Options"
+  },
+  "options": {
+    "type": {
+      "array": "Array",
+      "bool": "Boolean",
+      "composite": "Composite",
+      "date": "Date",
+      "datetime": "Date-time",
+      "extensibleEnum": "List",
+      "float": "Float",
+      "int": "Integer",
+      "extensibleMultiEnum": "Multi-value list",
+      "text": "Text",
+      "markdown": "Markdown",
+      "url": "Url",
+      "varchar": "String",
+      "wysiwyg": "HTML",
+      "rangeInt": "Integer Range",
+      "rangeFloat": "Float Range",
+      "file": "File"
+    }
+  },
+  "messages": {
+    "sameNumberOptions": "You must set the same number of options",
+    "productsCountWithAttribute": "Count of products where this attribute is set: <strong>{count}</strong>",
+    "removeAttribute(s)": "All values for this(these) attribute(s) are also deleted. Do you really want to delete this(these) attribute(s)?"
+  },
+  "filterLabels": {
+    "All": "All"
+  },
+  "tooltips": {
+    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
+    "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
+    "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
+  },
+  "exceptions": {
+    "wrongAttributeEntity": "Not allowed Entity has been chosen. Entity needs to be the same with Attribute Panel and Attribute Group.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Attribute Entity must be same as in Composite Attribute",
+    "attributeNotBelongToEntity": "Attribute does not belong to this Entity.",
+    "entityCannotBeChanged": "Entity cannot be changed.",
+    "compositeAttributeNotFound": "Composite attribute not found.",
+    "compositeAttributeCannotBeChild": "Composite attribute cannot be child.",
+    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the Attribute '%s'.",
+    "maxLessThanMin": "Min should be less than Max.",
+    "noAttributeConverterFound": "Attribute converting from type '%s' to '%s' is impossible.",
+    "attributeValueIsInUse": "Attribute value is in use and can not be deleted.",
+    "youCantChangeFieldOfTypeInAttribute": "You can't change Attribute type.",
+    "attributeWithSuchCodeAlreadyExist": "Attribute with such code already exist.",
+    "attributeIsUsedInProducts": "Attribute is used in products. Please, update products first.",
+    "attributeIsUsedInClassifications": "Attribute is used in classifications. Please, update classifications first.",
+    "invalidType": "The attribute type '{type}' is invalid"
+  }
+}

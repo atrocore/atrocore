@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "parents": "Пов'язуючі атрибути",
+    "children": "Пов'язані атрибути",
+    "attributeGroup": "Група атрибутів",
+    "attributePanel": "Панель атрибутів",
+    "type": "Тип атрибута",
+    "code": "Код",
+    "name": "Назва атрибута",
+    "products": "Продукти",
+    "isMultilang": "Багатомовність",
+    "fileType": "Тип файлу",
+    "pattern": "Regex Pattern",
+    "prohibitedEmptyValue": "Заборонити порожні значення",
+    "measure": "Міра",
+    "defaultUnit": "Одиниця виміру за замовченням",
+    "defaultDate": "Дата за замовченням",
+    "isRequired": "Обов'язково",
+    "tooltip": "Текст підказки",
+    "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "amountOfDigitsAfterComma": "Кількість цифр після коми",
+    "useDisabledTextareaInViewMode": "Використовуйте відключену текстову область у режимі перегляду",
+    "description": "Опис",
+    "extensibleEnum": "Список",
+    "min": "Мінімальне значення",
+    "max": "Максимальне значення",
+    "notNull": "Вимкнути Нульове значення",
+    "trim": "Видалення початкових і кінцевих пробілів",
+    "classificationAttributes": "Класифікаційні атрибути",
+    "preparedName": "Ім'я",
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "На всю ширину"
+  },
+  "labels": {
+    "classification": "Класифікація",
+    "addNewValue": "Додати нове значення",
+    "extensibleEnumOptions": "Опції списку"
+  },
+  "messages": {
+     "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
+     "productsCountWithAttribute": "Кількість продуктів, які мають заданий атрибут: <strong>{count}</strong>",
+     "removeAttribute(s)": "Усі значення для цього(цих) атрибуту(ів) також видаляються. Ви дійсно хочете видалити цей(ці) атрибут(и)?"
+   },
+   "filterLabels": {
+     "All": "All"
+   },
+   "tooltips": {
+     "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"\/^[A-Z]{1,10}$\/\"",
+     "defaultDate": "Модифікатор значення атрибута (наприклад, +5 days, -3 months)",
+     "dropdown": "Не використовуйте випадаючий список, якщо в ньому більше 300 варіантів"
+   },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в атрибуті '%s'.",
+    "maxLessThanMin": "Мінімальне значення повинно бути менше за максимальне значення.",
+    "noAttributeConverterFound": "Конвертація атрибуту '%s' в '%s' неможлива.",
+    "attributeValueIsInUse": "Значення атрибута використовується і не може бути видалене.",
+    "youCantChangeFieldOfTypeInAttribute": "Ви не можете змінити тип атрибута.",
+    "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
+    "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
+    "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
+    "invalidType": "Тип атрибута '{type}' недійсний"
+  }
+}

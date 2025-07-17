@@ -82,6 +82,7 @@
     "sorting": "Ordre de tri"
   },
   "scopeNames": {
+    "Attribute": "Attribut",
     "UiHandler": "Gestionnaire d'interface utilisateur",
     "Folder": "Dossier",
     "Team": "L'équipe",
@@ -467,6 +468,7 @@
     "closePanelConfirmation": "Êtes-vous sûr de vouloir fermer le panneau ?"
   },
   "scopeNamesPlural": {
+    "Attribute": "Attributs",
     "LastViewed": "Dernière consultation",
     "ActionHistoryRecord": "Historique de l'action",
     "AuthToken": "Jetons d'authentification",

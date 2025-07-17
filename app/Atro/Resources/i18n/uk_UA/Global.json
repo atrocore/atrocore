@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Attribute": "Атрибут",
     "EmailTemplate": "Шаблон електронної пошти",
     "Storage": "Сховище",
     "Folder": "Папка",
@@ -62,6 +63,7 @@
     "SystemIcon": "Системний значок"
   },
   "scopeNamesPlural": {
+    "Attribute": "Атрибути",
     "EmailTemplate": "Шаблони електронної пошти",
     "Storage": "Сховища",
     "Folder": "Папки",

@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Attribute": "Attribute",
     "AttributePanel": "Attribute Panel",
     "RoleScope": "Scope",
     "RoleScopeField": "Field",
@@ -72,6 +73,7 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "Attribute": "Attributes",
     "AttributePanel": "Attribute Panels",
     "RoleScope": "Scopes",
     "RoleScopeField": "Fields",

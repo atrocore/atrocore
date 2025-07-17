@@ -942,5 +942,13 @@
       "id": ":id",
       "link": ":link"
     }
+  },
+  {
+    "route": "/Attribute/action/getAttributesIdsFilter",
+    "method": "get",
+    "params": {
+      "controller": "Attribute",
+      "action": "getAttributesIdsFilter"
+    }
   }
 ]

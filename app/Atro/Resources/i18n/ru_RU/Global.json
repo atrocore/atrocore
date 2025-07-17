@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Attribute": "Атрибут",
     "Storage": "Хранилище",
     "Folder": "Папка",
     "File": "Файл",
@@ -49,6 +50,7 @@
     "Store": "Магазин"
   },
   "scopeNamesPlural": {
+    "Attribute": "Атрибуты",
     "Storage": "Хранилища",
     "Folder": "Папки",
     "File": "Файлы",
