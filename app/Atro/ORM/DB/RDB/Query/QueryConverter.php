@@ -1143,8 +1143,15 @@ class QueryConverter
                 $operator = 'NOT IN';
             }
             if (count($arr)) {
-                $sql .= " " . $operator . " (:{$parameterName})";
-                $this->parameters[$parameterName] = $arr;
+                if (!isset($right['innerSql']['sql'])) {
+                    $sql .= " " . $operator . " (:{$parameterName})";
+                    $this->parameters[$parameterName] = $arr;
+                } else {
+                    $sql .= " " . $operator . " ({$right['innerSql']['sql']})";
+                    foreach ($right['innerSql']['parameters'] as $p => $v) {
+                        $this->parameters[$p] = $v;
+                    }
+                }
             } else {
                 if ($operator === 'IN') {
                     $sql .= " IS NULL";
