@@ -100,6 +100,8 @@ class Metadata extends AbstractListener
 
         $this->addAssociateToEntity($data);
 
+        $this->prepareMultilingualAttributes($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -115,6 +117,25 @@ class Metadata extends AbstractListener
         }
 
         $event->setArgument('data', $data);
+    }
+
+    protected function prepareMultilingualAttributes(array &$data): void
+    {
+        // find multilingual attributes
+        $multilingualAttributes = [];
+        foreach ($data['attributes'] as $attribute => $attributeDefs) {
+            if (!empty($attributeDefs['multilingual'])) {
+                $multilingualAttributes[] = $attribute;
+            }
+        }
+
+        $data['clientDefs']['Attribute']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'] = [
+            [
+                "type"      => "in",
+                "attribute" => "type",
+                "value"     => $multilingualAttributes
+            ]
+        ];
     }
 
     protected function putCustomCodeActions(array &$data): void
