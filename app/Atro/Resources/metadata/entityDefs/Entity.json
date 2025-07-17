@@ -189,6 +189,20 @@
     },
     "hasAssociate": {
       "type": "bool"
+    },
+    "hasAttribute": {
+      "type": "bool",
+      "view": "views/entity/fields/has-attribute"
+    },
+    "hasClassification": {
+      "type": "bool",
+      "view": "views/entity/fields/has-classification"
+    },
+    "singleClassification": {
+      "type": "bool"
+    },
+    "disableAttributeLinking": {
+      "type": "bool"
     }
   },
   "links": {
