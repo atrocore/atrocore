@@ -1148,8 +1148,11 @@ class QueryConverter
                     $this->parameters[$parameterName] = $arr;
                 } else {
                     $sql .= " " . $operator . " ({$right['innerSql']['sql']})";
-                    foreach ($right['innerSql']['parameters'] as $p => $v) {
-                        $this->parameters[$p] = $v;
+
+                    if (isset($right['innerSql']['parameters']) && is_array($right['innerSql']['parameters'])) {
+                        foreach ($right['innerSql']['parameters'] as $p => $v) {
+                            $this->parameters[$p] = $v;
+                        }
                     }
                 }
             } else {
