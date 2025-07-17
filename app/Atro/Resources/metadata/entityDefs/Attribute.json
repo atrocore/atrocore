@@ -246,20 +246,9 @@
       "default": false,
       "emHidden": true,
       "view": "views/attribute/fields/full-width"
-    },
-    "channel": {
-      "type": "link"
-    },
-    "variantSpecificProducts": {
-      "type": "linkMultiple"
     }
   },
   "links": {
-    "channel": {
-      "type": "belongsTo",
-      "entity": "Channel",
-      "foreign": "attributes"
-    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -301,12 +290,6 @@
       "type": "hasMany",
       "foreign": "attribute",
       "entity": "ClassificationAttribute"
-    },
-    "variantSpecificProducts": {
-      "type": "hasMany",
-      "foreign": "variantSpecificAttributes",
-      "relationName": "VariantSpecificProductAttribute",
-      "entity": "Product"
     }
   },
   "collection": {
