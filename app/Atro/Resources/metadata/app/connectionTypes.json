@@ -11,5 +11,6 @@
   "cookie": "\\Atro\\ConnectionType\\ConnectionCookie",
   "smtp": "\\Atro\\ConnectionType\\ConnectionSmtp",
   "pdoSql": "\\Atro\\ConnectionType\\ConnectionPdoSql",
-  "vertica": "\\Atro\\ConnectionType\\ConnectionVertica"
+  "vertica": "\\Atro\\ConnectionType\\ConnectionVertica",
+  "tokenAuthApi": "\\Atro\\ConnectionType\\ConnectionTokenAuthApi"
 }

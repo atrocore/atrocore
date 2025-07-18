@@ -1355,7 +1355,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDynamicHandler();
 
             this.listenToOnce(this.model, 'sync', function () {
-                this.initUiHandler();
+                this.processUiHandler('onLoad', this.name);
             }, this);
         },
 

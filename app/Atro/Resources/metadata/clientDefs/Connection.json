@@ -177,7 +177,8 @@
                 "sftp",
                 "cookie",
                 "pdoSql",
-                "vertica"
+                "vertica",
+                "tokenAuthApi"
               ]
             }
           ]
@@ -473,7 +474,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "cookie"
+                "cookie",
+                "tokenAuthApi"
               ]
             }
           ]
@@ -486,7 +488,8 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "cookie"
+                "cookie",
+                "tokenAuthApi"
               ]
             }
           ]
@@ -911,6 +914,19 @@
               "attribute": "type",
               "value": [
                 "smtp"
+              ]
+            }
+          ]
+        }
+      },
+      "headers": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "tokenAuthApi"
               ]
             }
           ]
