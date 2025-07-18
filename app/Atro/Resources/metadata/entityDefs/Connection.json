@@ -17,7 +17,8 @@
         "otto",
         "cookie",
         "smtp",
-        "vertica"
+        "vertica",
+        "tokenAuthApi"
       ],
       "options": [
         "atrocore",
@@ -32,7 +33,8 @@
         "otto",
         "cookie",
         "smtp",
-        "vertica"
+        "vertica",
+        "tokenAuthApi"
       ],
       "default": "atrocore"
     },
@@ -407,6 +409,14 @@
         "psql",
         "msql"
       ]
+    },
+    "headers": {
+      "type": "text",
+      "view": "views/fields/script",
+      "default": "{#  [\"Authorization: Bearer {{ response['token'] }}\" ] #}",
+      "notStorable": true,
+      "dataField": true,
+      "required": false
     }
   },
   "links": {

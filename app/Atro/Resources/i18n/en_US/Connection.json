@@ -43,7 +43,8 @@
     "smtpClientSecret": "Client Secret",
     "smtpAuthType": "Auth Type",
     "dsn": "Dsn",
-    "server": "Server"
+    "server": "Server",
+    "headers": "Headers"
   },
   "labels": {
     "connectionSuccess": "Connection is successfully established",
@@ -69,7 +70,8 @@
     "oauth1": "Oauth 1.0",
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
-    "vertica": "Vertica DB"
+    "vertica": "Vertica DB",
+    "tokenAuthApi": "Token Auth API"
   },
   "options": {
     "smtpAuthType": {
