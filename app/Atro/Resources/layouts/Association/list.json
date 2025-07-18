@@ -10,7 +10,7 @@
     "name": "entity"
   },
   {
-    "name": "backwardAssociation"
+    "name": "reverseAssociation"
   },
   {
     "name": "isActive"

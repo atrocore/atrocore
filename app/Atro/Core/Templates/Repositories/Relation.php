@@ -170,23 +170,15 @@ class Relation extends Base
         if ($this->isAssociatesRelation()) {
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
 
-            if ($entity->get("main{$scope}Id") == $entity->get("related{$scope}Id")) {
+            if ($entity->get("associatingItemId") == $entity->get("associatedItemId")) {
                 throw new BadRequest($this->getLanguage()->translate('itselfAssociation', 'exceptions', $scope));
             }
 
             if ($entity->isNew() && $entity->get('sorting') === null) {
-                $last = $this->where(["main{$scope}Id" => $entity->get("main{$scope}Id")])->order('sorting', 'DESC')->findOne();
+                $last = $this->where(["associatingItemId" => $entity->get("associatingItemId")])->order('sorting', 'DESC')->findOne();
                 $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
             }
         }
-    }
-
-    public function removeByRecordId(string $id): void
-    {
-        $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
-
-        $this->where(["main{$scope}Id" => $id])->removeCollection();
-        $this->where(["related{$scope}Id" => $id])->removeCollection();
     }
 
     public function updateAssociatesSortOrder(array $ids): void
@@ -240,12 +232,12 @@ class Relation extends Base
         $this->deleteAlreadyDeleted($entity);
         if ($this->isAssociatesRelation()) {
             /**
-             * Delete backward association
+             * Delete reverse relation
              */
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
 
-            if (empty($options['skipDeleteBackwardAssociatedProduct']) && !empty($backwardAssociatedProduct = $entity->get("backwardAssociated$scope"))) {
-                $this->remove($backwardAssociatedProduct, ['skipDeleteBackwardAssociatedProduct' => true]);
+            if (empty($options['skipDeleteReverseAssociatedItem']) && !empty($reverseAssociatedItem = $entity->get("reverseAssociated$scope"))) {
+                $this->remove($reverseAssociatedItem, ['skipDeleteReverseAssociatedItem' => true]);
             }
         }
     }

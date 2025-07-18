@@ -22,8 +22,8 @@ Espo.define('pim:views/associated-record/fields/related-association', 'views/fie
                 const scope = this.getAssociationScope()
                 return {
                     scope: scope,
-                    mainRecordId: this.model.get(`main${scope}Id`),
-                    relatedRecordId: this.model.get(`related${scope}Id`)
+                    mainRecordId: this.model.get('associatingItemId'),
+                    relatedRecordId: this.model.get('associatedItemId')
                 };
             },
             onlyForEntity() {

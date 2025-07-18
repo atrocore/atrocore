@@ -36,7 +36,7 @@ class Relation extends AbstractRecordController
 
     public function actionRemoveAssociates($params, $data, $request)
     {
-        if (!$request->isPost() && !property_exists($data, 'mainRecordId')) {
+        if (!$request->isPost() && !property_exists($data, 'mainRecordId') && !property_exists($data, 'relatedRecordId')) {
             throw new BadRequest();
         }
 
@@ -45,6 +45,6 @@ class Relation extends AbstractRecordController
         }
 
         $associationId = property_exists($data, 'associationId') ? (string)$data->associationId : '';
-        return $this->getRecordService()->removeAssociates((string)$data->mainRecordId, $associationId);
+        return $this->getRecordService()->removeAssociates((string)$data->mainRecordId, (string)$data->relatedRecordId, $associationId);
     }
 }

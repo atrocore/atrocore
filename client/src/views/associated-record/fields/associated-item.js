@@ -8,24 +8,18 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/associated-record/fields/related-record', 'views/fields/link',
+Espo.define('views/associated-record/fields/associated-item', 'views/fields/link',
     Dep => Dep.extend({
 
         selectBoolFilterList: ['notAssociatedRecords', 'notEntity'],
 
-        getAssociationScope() {
-            return this.getMetadata().get(`scopes.${this.model.name}.associatesForEntity`)
-        },
-
         boolFilterData: {
             notEntity() {
-                const scope = this.getAssociationScope()
-                return this.model.get(`main${scope}Id`);
+                return this.model.get('associatingItemId');
             },
             notAssociatedRecords() {
-                const scope = this.getAssociationScope()
                 return {
-                    mainRecordId: this.model.get(`main${scope}Id`),
+                    mainRecordId: this.model.get('associatingItemId'),
                     associationId: this.model.get('associationId')
                 };
             }

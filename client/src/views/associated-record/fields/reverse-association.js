@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/associated-record/fields/backward-association', 'views/fields/link',
+Espo.define('views/associated-record/fields/reverse-association', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList:  ['onlyActive', 'notUsedAssociations','onlyForEntity'],
+        selectBoolFilterList: ['onlyActive', 'notUsedAssociations', 'onlyForEntity'],
 
         getAssociationScope() {
             return this.getMetadata().get(`scopes.${this.model.name}.associatesForEntity`)
@@ -22,8 +22,8 @@ Espo.define('views/associated-record/fields/backward-association', 'views/fields
                 const scope = this.getAssociationScope()
                 return {
                     scope: scope,
-                    mainRecordId: this.model.get(`main${scope}Id`),
-                    relatedRecordId: this.model.get(`related${scope}Id`)
+                    mainRecordId: this.model.get('associatingItemId'),
+                    relatedRecordId: this.model.get('associatedItemId')
                 };
             },
             onlyForEntity() {

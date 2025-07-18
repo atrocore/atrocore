@@ -11,26 +11,20 @@
 Espo.define('views/associated-record/fields/associate-everything', 'views/fields/bool',
     Dep => Dep.extend({
 
-        getAssociationScope() {
-            return this.getMetadata().get(`scopes.${this.model.name}.associatesForEntity`)
-        },
-
         setup: function () {
             Dep.prototype.setup.call(this)
-            const scope = this.getAssociationScope()
 
-            this.listenTo(this.model, `change:associationId change:backwardAssociationId change:related${scope}sIds`, () => {
+            this.listenTo(this.model, `change:associationId change:reverseAssociationId change:associatedItemsIds`, () => {
                 this.reRender()
             })
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
-            const scope = this.getAssociationScope()
 
             if (this.model.get('associationId') &&
-                (this.model.get('associationId') === this.model.get('backwardAssociationId')) &&
-                (this.model.get(`related${scope}sIds`) || []).length > 1) {
+                (this.model.get('associationId') === this.model.get('reverseAssociationId')) &&
+                (this.model.get('associatedItemsIds') || []).length > 1) {
                 this.show()
             } else {
                 this.hide()

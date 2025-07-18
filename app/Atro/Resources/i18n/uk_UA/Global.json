@@ -396,8 +396,8 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "associationTooltip": "Оберіть як Асоціюючий елемент пов'язаний з Асоційованим елементом",
-    "associatingTitle": "Поточний елемент пов'язаний як :name з:",
-    "associatedTitle": "Пов'язані з поточним елементом як :name:"
+    "associatedTitle": "Поточний елемент пов'язаний як :name з:",
+    "associatingTitle": "Пов'язані з поточним елементом як :name:"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -618,7 +618,7 @@
     "created": "Створено",
     "modified": "Змінено",
     "association": "Зв'язок",
-    "backwardAssociation": "Зворотня асоціація",
+    "reverseAssociation": "Зворотня асоціація",
     "sorting": "Порядок сортування",
     "associateEverything": "Пов'язати кожен запис з кожним іншим записом"
   },
@@ -1004,7 +1004,7 @@
     "cd": "Кд"
   },
   "exceptions": {
-    "backwardAssociationError": "Помилка зворотної асоціації: %s",
+    "reverseAssociationError": "Помилка зворотної асоціації: %s",
     "noSuchAssociation": "Перевірка не вдалася. Такої асоціації не існує.",
     "itselfAssociation": "Запис не може бути асоційований із самим собою.",
     "recordAssociationAlreadyExists": "Така асоціація запису вже існує.",

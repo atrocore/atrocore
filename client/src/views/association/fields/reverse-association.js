@@ -8,21 +8,15 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/associated-record/fields/main-record', 'views/fields/link',
+Espo.define('views/association/fields/reverse-association', 'views/fields/link',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['notEntity'],
-
-        getAssociationScope() {
-            return this.getMetadata().get(`scopes.${this.model.name}.associatesForEntity`)
-        },
+        selectBoolFilterList: ['onlyActive', 'onlyForEntity'],
 
         boolFilterData: {
-            notEntity() {
-                const scope = this.getAssociationScope()
-                return this.model.get(`related${scope}Id`);
+            onlyForEntity() {
+                return this.options.onlyForEntity || this.model.get('entityId')  || null;
             }
         },
-
     })
 );
