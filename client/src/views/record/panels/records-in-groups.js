@@ -155,7 +155,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                 this.setFilter(this.filter);
 
                 this.listenTo(this.model, 'change:classificationId update-all after:relate after:unrelate', link => {
-                    if (!link || link === this.link || link === this.getCreateLink()) {
+                    if (!link || this.getLinksForRefresh().includes(link)) {
                         this.getCollectionFactory().create(this.scope, collection => {
                             this.collection = collection;
                             this.actionRefresh();
@@ -196,6 +196,10 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             }
         },
 
+        getLinksForRefresh() {
+            return [this.link, this.getCreateLink()]
+        },
+
         fetchCollectionGroups(callback) {
             this.groups = []
             callback()
@@ -217,7 +221,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             });
         },
 
-        getAdditionalListOptions(){
+        getAdditionalListOptions() {
             return {}
         },
 

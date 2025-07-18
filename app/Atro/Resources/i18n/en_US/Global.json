@@ -440,7 +440,7 @@
     "associatedItem": "Associated Item",
     "associatedItems": "Associated Items",
     "associationTooltip": "Defined how Associating Item is linked to Associated Item",
-    "associatedTitle": "Сurrent item is linked as :name from:",
+    "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:"
   },
   "messages": {

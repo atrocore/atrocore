@@ -232,7 +232,7 @@ class Relation extends Base
         $this->deleteAlreadyDeleted($entity);
         if ($this->isAssociatesRelation()) {
             /**
-             * Delete backward association
+             * Delete reverse relation
              */
             $scope = $this->getMetadata()->get(['scopes', $this->entityType, 'associatesForEntity']);
 
