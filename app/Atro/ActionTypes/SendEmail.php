@@ -1,0 +1,181 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
+
+namespace Atro\ActionTypes;
+
+use Atro\ActionTypes\AbstractAction;
+use Atro\Core\EventManager\Event;
+use Atro\Core\Mail\Sender;
+use Atro\Core\Twig\Twig;
+use Atro\Core\Utils\Note as NoteUtil;
+use Atro\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
+
+class SendEmail extends AbstractAction
+{
+    public function executeEmailPreview(Entity $action, string $entityId): array
+    {
+        $entity = $this->getEntityManager()->getEntity($action->get('sourceEntity'), $entityId);
+
+        return $this->getEmailData($action, $entity);
+    }
+
+    public function executeViaWorkflow(array $workflowData, Event $event): bool
+    {
+        $action = $this->getActionById($workflowData['id']);
+
+        $input = new \stdClass();
+        $input->triggeredEntity = $event->getArgument('entity');
+        $input->triggeredEntityType = $event->getArgument('entity')->getEntityType();
+        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
+
+        return $this->getActionManager()->executeNow($action, $input);
+    }
+
+    public function executeNow(Entity $action, \stdClass $input): bool
+    {
+        $entity = $this->getSourceEntity($action, $input);
+
+        if (property_exists($input, 'subject')
+            && property_exists($input, 'body')
+            && property_exists($input, 'emailTo')
+        ) {
+            $emailData = [
+                'emailTo' => $input->emailTo,
+                'subject' => $input->subject,
+                'body'    => $input->body,
+            ];
+            if (property_exists($input, 'emailCc')) {
+                $emailData['emailCc'] = $input->emailCc;
+            }
+        } else {
+            $emailData = $this->getEmailData($action, $entity);
+        }
+
+        $data = [
+            'subject' => $emailData['subject'],
+            'body'    => $emailData['body'],
+            'to'      => implode(';', $emailData['emailTo']),
+            'isHtml'  => !empty($this->getEmailTemplate($emailData['emailTemplateId'])->get('isHtml'))
+        ];
+
+        if (!empty($emailData['emailCc'])) {
+            $data['cc'] = implode(';', $emailData['emailCc']);
+        }
+
+        if (!empty($data['to'])) {
+            $this->container->get(Sender::class)->send($data, $action->get('connection'));
+            if (!empty($entity)) {
+                $this->createNote($entity, $emailData);
+            }
+        }
+
+        return true;
+    }
+
+    public function getEmailData(Entity $action, ?Entity $sourceEntity): array
+    {
+        $templateData = [
+            'entity'     => $sourceEntity,
+            'collection' => null
+        ];
+
+        $targetEntity = $action->get('targetEntity');
+        if (!empty($targetEntity)) {
+            $where = [];
+            if (!empty($action->get('data')->where)) {
+                $whereJson = json_encode($action->get('data')->where);
+                $whereJson = $this->container->get('twig')->renderTemplate($whereJson, $templateData);
+                $where = @json_decode($whereJson, true);
+            }
+
+            /** @var \Espo\Core\SelectManagers\Base $selectManager */
+            $selectManager = $this->container->get('selectManagerFactory')->create($targetEntity);
+
+            /** @var \Atro\Core\Templates\Repositories\Base $repository */
+            $repository = $this->getEntityManager()->getRepository($targetEntity);
+
+            $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
+            $repository->handleSelectParams($selectParams);
+
+            $templateData['collection'] = $repository->find($selectParams);
+        }
+
+        /** @var Twig $twig */
+        $twig = $this->container->get('twig');
+
+        $emailTemplateId = $action->get('emailTemplateId');
+        $emailTo = $action->get('emailTo');
+        $emailCc = $action->get('emailCc') ?? [];
+        if ($action->get('mode') === 'script') {
+            $script = "{% set emailTo=[] %}{% set emailCc=[] %}{% set emailTemplateId=null %}";
+            $script .= $action->get('emailScript');
+            $script .= " {% set data = {'emailTemplateId': emailTemplateId, 'emailTo': emailTo, 'emailCc': emailCc} %} PREPARED_SCRIPT_START=`{{data|json_encode|raw}}`PREPARED_SCRIPT_END";
+
+            $res = $twig->renderTemplate($script, $templateData);
+            if (preg_match_all("/PREPARED_SCRIPT_START=`(.*)`PREPARED_SCRIPT_END$/", $res, $matches)) {
+                if (isset($matches[1][0])) {
+                    $scriptData = @json_decode($matches[1][0], true);
+                    if (!empty($scriptData)) {
+                        $emailTemplateId = $scriptData['emailTemplateId'];
+                        $emailTo = $scriptData['emailTo'];
+                        $emailCc = $scriptData['emailCc'];
+                    }
+                }
+            }
+        }
+
+        $emailTemplate = $this->getEmailTemplate($emailTemplateId);
+
+        $data = [
+            'subject'         => $twig->renderTemplate($emailTemplate->get('subject'), $templateData),
+            'body'            => $twig->renderTemplate($emailTemplate->get('body'), $templateData),
+            'emailTo'         => $emailTo,
+            'emailCc'         => $emailCc,
+            'emailTemplateId' => $emailTemplateId
+        ];
+
+        return $data;
+    }
+
+    public function createNote(Entity $entity, array $data)
+    {
+        $noteUtil = $this->container->get(NoteUtil::class);
+        if (!$noteUtil->streamEnabled($entity->getEntityType())) {
+            return;
+        }
+
+        $note = $this->getEntityManager()->getEntity('Note');
+        $note->set([
+            'type'       => 'EmailSent',
+            'parentType' => $entity->getEntityType(),
+            'parentId'   => $entity->get('id'),
+            'data'       => @json_encode($data),
+        ]);
+        $this->getEntityManager()->saveEntity($note);
+    }
+
+    protected function getEmailTemplate(?string $emailTemplateId): Entity
+    {
+        if (empty($emailTemplateId)) {
+            throw new BadRequest("Email Template ID is required.");
+        }
+
+        $emailTemplate = $this->getEntityManager()->getEntity('EmailTemplate', $emailTemplateId);
+        if (empty($emailTemplate)) {
+            throw new BadRequest("Email Template '$emailTemplateId' not found.");
+        }
+
+        return $emailTemplate;
+    }
+}

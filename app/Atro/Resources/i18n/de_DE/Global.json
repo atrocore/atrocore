@@ -393,6 +393,8 @@
     "associatingItem": "Assoziierendes Element",
     "associatingItems": "Assoziierende Elemente",
     "associatedItem": "Assoziiertes Element",
+    "emailTo": "E-Mail an",
+    "emailCc": "E-Mail CC",
     "associatedItems": "Assoziierte Elemente",
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",

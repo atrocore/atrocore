@@ -124,6 +124,93 @@
         "single"
       ]
     },
+    "targetEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/target-entity"
+    },
+    "showEmailPreview": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "emailTemplate": {
+      "type": "link",
+      "entity": "EmailTemplate",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "emailTemplateId": {
+      "type": "varchar",
+      "notStorable": true,
+      "virtualField": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "emailTemplateName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "connection": {
+      "type": "link"
+    },
+    "emailTo": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "emailCc": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "emailScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "default": "{% set emailTo = ['email1@somedomain.com', 'email2@somedomain.com'] %}\n{% set emailCc = [] %}\n{% set emailTemplateId = 'some-id' %}",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "mode": {
+      "type": "enum",
+      "notStorable": true,
+      "options": [
+        "basic",
+        "script"
+      ],
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -183,6 +270,10 @@
         "actionId",
         "setId"
       ]
+    },
+    "connection": {
+      "type": "belongsTo",
+      "entity": "Connection"
     }
   },
   "collection": {

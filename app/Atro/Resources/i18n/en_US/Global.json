@@ -439,7 +439,9 @@
     "associatingItems": "Associating Items",
     "associatedItem": "Associated Item",
     "associatedItems": "Associated Items",
-    "associationTooltip": "Defines how Associating Item is linked to Associated Item",
+    "emailTo": "Email To",
+    "emailCc": "Email CC",
+    "associationTooltip": "Defined how Associating Item is linked to Associated Item",
     "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:"
   },

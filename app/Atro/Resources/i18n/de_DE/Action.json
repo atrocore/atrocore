@@ -9,7 +9,14 @@
     "display": "Anzeige",
     "actionsSet": "Actions Set",
     "actions": "Aktionen",
-    "executeAs": "Ausführen als"
+    "executeAs": "Ausführen als",
+    "targetEntity": "Ziel-Entität",
+    "mode": "Modus",
+    "emailScript": "Script",
+    "showEmailPreview": "Vorschau vor dem Senden",
+    "emailTemplate": "E-Mail-Vorlage",
+    "emailTo": "E-Mail an",
+    "emailCc": "E-Mail CC"
   },
   "labels": {
     "execute": "Ausführen",
@@ -31,7 +38,8 @@
       "single": "Einzeln"
     },
     "type": {
-      "set": "Aktionsset"
+      "set": "Aktionsset",
+      "email": "E-Mail senden"
     },
     "executeAs": {
       "system": "System",

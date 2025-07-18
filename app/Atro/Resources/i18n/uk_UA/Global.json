@@ -393,6 +393,8 @@
     "associatingItems": "Асоціюючі елементи",
     "associatedItem": "Асоційовані елементи",
     "associatedItems": "Асоційовані елементи",
+    "emailTo": "Email To",
+    "emailCc": "Email CC",
     "associationTooltip": "Оберіть як Асоціюючий елемент пов'язаний з Асоційованим елементом",
     "associatedTitle": "Поточний елемент пов'язаний як :name з:",
     "associatingTitle": "Пов'язані з поточним елементом як :name:"

@@ -11,7 +11,14 @@
     "actions": "Actions",
     "webhookUrl": "URL",
     "executeAs": "Execute As",
-    "displayField": "Display Field"
+    "displayField": "Display Field",
+    "targetEntity": "Target Entity",
+    "mode": "Mode",
+    "emailScript": "Script",
+    "showEmailPreview": "Preview before sending",
+    "emailTemplate": "Email Template",
+    "emailTo": "Email To",
+    "emailCc": "Email CC"
   },
   "labels": {
     "execute": "Execute",
@@ -36,7 +43,8 @@
     "type": {
       "set": "Action Set",
       "webhook": "Webhook",
-      "customCode": "Custom Code"
+      "customCode": "Custom Code",
+      "email": "Send E-mail"
     },
     "executeAs": {
       "system": "System",

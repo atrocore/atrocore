@@ -26,6 +26,203 @@
   },
   "dynamicLogic": {
     "fields": {
+      "mode": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
+      "emailTo": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      },
+      "emailCc": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
+      "connection": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
+      "emailTemplate": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      },
+      "emailScript": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "script"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
+      "showEmailPreview": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            }
+          ]
+        }
+      },
+      "targetEntity": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
       "type": {
         "readOnly": {
           "conditionGroup": [
