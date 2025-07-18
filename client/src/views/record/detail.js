@@ -1237,6 +1237,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'sync', () => {
                 this.putAttributesToModel();
             });
+
+            if (this.getMetadata().get(`scopes.${this.model.name}.hasClassification`)) {
+                this.listenTo(this.model, 'after:save', () => {
+                    if (this.model.changed.classificationsIds) {
+                        this.model.fetch();
+                    }
+                });
+            }
         },
 
         highlightRequired() {
@@ -1342,6 +1350,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
+
+            this.listenToOnce(this.model, 'sync', function () {
+                this.initUiHandler();
+            }, this);
         },
 
         initDynamicHandler: function () {
