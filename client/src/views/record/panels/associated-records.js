@@ -28,7 +28,7 @@ Espo.define('views/record/panels/associated-records', ['views/record/panels/reco
         },
 
         getLinksForRefresh() {
-            return ['associatedItemRelations', 'associatingItemRelation', 'associatedItems', 'associatingItems']
+            return ['associatedItemRelations', 'associatingItemRelations', 'associatedItems', 'associatingItems']
         },
 
         setup() {
