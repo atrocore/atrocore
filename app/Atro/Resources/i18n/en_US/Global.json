@@ -439,7 +439,7 @@
     "associatingItems": "Associating Items",
     "associatedItem": "Associated Item",
     "associatedItems": "Associated Items",
-    "associationTooltip": "Defined how Associating Item is linked to Associated Item",
+    "associationTooltip": "Defines how Associating Item is linked to Associated Item",
     "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:"
   },
