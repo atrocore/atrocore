@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Classification": "Класифікація",
+    "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
     "AttributeGroup": "Група атрибута",
     "EmailTemplate": "Шаблон електронної пошти",
@@ -64,6 +66,8 @@
     "SystemIcon": "Системний значок"
   },
   "scopeNamesPlural": {
+    "Classification": "Класифікації",
+    "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
     "AttributeGroup": "Групи атрибутів",
     "EmailTemplate": "Шаблони електронної пошти",
@@ -519,7 +523,8 @@
     "onlyFollowed": "Ви підписані",
     "onlyMyTeams": "Мої команди",
     "onlyBookmarked": "Додати в закладки",
-    "onlyDeleted": "Видалено"
+    "onlyDeleted": "Видалено",
+    "multipleClassifications": "Декілька класифікацій"
   },
   "presetFilters": {
     "all": "Усі"
@@ -548,6 +553,8 @@
     "removeAttribute": "Видалити атрибут"
   },
   "fields": {
+    "classifications": "Класифікації",
+    "classification": "Класифікація",
     "status": "Статус",
     "conditionsType": "Тип умови",
     "conditions": "Умови",
@@ -1008,6 +1015,8 @@
     "cd": "Кд"
   },
   "exceptions": {
+    "singleClassificationAllowed": "Дозволено встановлювати лише одну класифікацію",
+    "moreThanOneClassification": "Деякі записи мають більше ніж одну класифікацію.",
     "reverseAssociationError": "Помилка зворотної асоціації: %s",
     "noSuchAssociation": "Перевірка не вдалася. Такої асоціації не існує.",
     "itselfAssociation": "Запис не може бути асоційований із самим собою.",
