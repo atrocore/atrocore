@@ -573,23 +573,21 @@
             ['From', 'To'].forEach((v, key) => {
                 promises.push(createFieldView(name + v, type, label + ' ' + Language.translate(v), params, key));
             })
-        } else if (attribute.isMultilang) {
-            let languages: string[] = Config.get('inputLanguageList') ?? [];
-            languages = ['main', ...languages];
-            let i = 0;
-            for (const language of languages) {
-                if (language === Config.get('mainLanguage')) {
-                    continue;
-                }
-                let currentLabel = label;
-                let currentName = name + '_' + underscoreToCamelCase(language.toLowerCase());
-                if (language !== 'main') {
-                    currentLabel = currentLabel + ' / ' + language
-                }
-                promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
-                i++;
+        } else if (attribute.isMultilang && (Config.get('inputLanguageList') ?? []).length > 0) {
+            let referenceData = Config.get('referenceData');
+            if (referenceData && referenceData['Language']) {
+                let languages = referenceData['Language'] || {};
+                let i = 0;
+                Object.keys(languages || {}).forEach((lang) => {
+                   i++;
+                    let currentLabel = label;
+                    let currentName = name + '_' + underscoreToCamelCase(lang.toLowerCase());
+                    if (languages[lang]['role'] !== 'main' ) {
+                        currentLabel = currentLabel + ' / ' + languages[lang]['name']
+                    }
+                    promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
+                });
             }
-
         } else {
             promises.push(createFieldView(name, fieldType, label, params));
         }

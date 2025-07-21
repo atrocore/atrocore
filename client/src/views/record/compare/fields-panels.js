@@ -42,7 +42,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.fieldList = this.options.fieldList;
             this.renderedFields = [];
             this.listenTo(this.model, 'select-model', (modelId) => {
-                this.fieldList.forEach(fieldData => this.updateFieldState(fieldData.field, modelId));
+                this.updateFieldState(null, modelId)
             });
 
         },
@@ -142,34 +142,41 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
         },
 
         updateFieldState(field, modelId) {
-
             let selectedIndex = this.models.findIndex(model => model.id === modelId);
+            this.fieldList.forEach(fieldListByGroup => {
+                fieldListByGroup.fieldListInGroup.forEach(fieldData => {
 
-            let fieldData = this.fieldList.find(el => el.field === field);
+                    if(field && fieldData.field !== field) {
+                        return;
+                    }
 
-            if(fieldData.disabled) {
-                return;
-            }
+                    if(fieldData.disabled) {
+                        return;
+                    }
 
-            fieldData.fieldValueRows.forEach((row, index) => {
-                const view = this.getView(row.key);
-                if (!view) {
-                    return;
-                }
+                    fieldData.fieldValueRows.forEach((row, index) => {
+                        const view = this.getView(row.key);
+                        if (!view) {
+                            return;
+                        }
 
-                const mode = view.mode;
+                        const mode = view.mode;
 
-                if (selectedIndex === index) {
-                    view.setMode('edit');
-                } else {
-                    view.setMode('detail');
-                }
+                        if (selectedIndex === index) {
+                            view.setMode('edit');
+                        } else {
+                            view.setMode('detail');
+                        }
 
-                if (mode !== view.mode) {
-                    view.model = this.models[index].clone();
-                    view.reRender();
-                }
+                        if (mode !== view.mode) {
+                            view.model = this.models[index].clone();
+                            view.reRender();
+                        }
+                    });
+
+                })
             });
+
         },
 
         fetch() {

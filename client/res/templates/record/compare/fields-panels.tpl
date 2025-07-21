@@ -57,7 +57,7 @@
                     {{#if ../../../merging}}
                     <td>
                        <div class="center-child" >
-                           <input type="radio" name="{{../../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+                           <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
                        </div>
                     </td>
                     {{/if}}
