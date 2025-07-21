@@ -68,6 +68,11 @@ class RoleScope extends Base
             }
         }
 
+        if (empty($this->getMetadata()->get("scopes.{$entity->get('name')}.hasAttribute"))) {
+            $entity->set('createAttributeValueAction', null);
+            $entity->set('deleteAttributeValueAction', null);
+        }
+
         parent::beforeSave($entity, $options);
     }
 
