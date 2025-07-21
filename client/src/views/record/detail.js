@@ -1272,7 +1272,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
                             if (data.timestamp !== res.timestamp) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
@@ -1347,16 +1347,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this.initDependancy();
 
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            this.initUiHandler();
-
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
 
-            this.listenToOnce(this.model, 'sync', function () {
-                this.processUiHandler('onLoad', this.name);
-            }, this);
+            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
+            const modelIsSynced = !!this.model.attributes?.id;
+
+            if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
+                this.initUiHandler();
+            } else {
+                this.listenToOnce(this.model, 'sync', () => {
+                    this.initUiHandler();
+                });
+            }
         },
 
         initDynamicHandler: function () {
@@ -1513,7 +1517,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     if (isAttributeValuePanel && this.getMetadata().get(['scopes', this.model.name, 'hasAttribute']) && this.getAcl().check(this.model.name, 'createAttributeValue')) {
 
-                        if(!this.isSmall){
+                        if (!this.isSmall) {
                             const linkingEnabled = !this.getMetadata().get(['scopes', this.model.name, 'disableAttributeLinking'])
 
                             let html = '<div class="btn-group pull-right">' +
@@ -1535,7 +1539,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 });
                             });
                         }
-
 
 
                         $el.find('.panel-title').prepend('<span class="collapser" >\n' +
