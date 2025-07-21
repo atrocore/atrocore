@@ -73,7 +73,10 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             let data = Dep.prototype.data.call(this);
 
             if (['list', 'detail', 'edit'].includes(this.mode)) {
-                const optionData = this.model.get(this.name + 'OptionData') || this.getOptionsData();
+                let optionData = this.model.get(this.name + 'OptionData')
+                if (!optionData || this.model.get(this.name) !== optionData.id) {
+                    optionData = this.getOptionsData()
+                }
                 const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                 if (optionData.preparedName) {
                     data.nameValue = optionData.preparedName;
