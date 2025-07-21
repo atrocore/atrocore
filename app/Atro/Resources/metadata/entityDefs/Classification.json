@@ -1,0 +1,130 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": false,
+      "trim": true,
+      "isMultilang": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "rowsMax": 4,
+      "lengthOfCut": 400,
+      "seeMoreDisabled": false,
+      "readOnly": false,
+      "tooltip": false,
+      "isMultilang": true
+    },
+    "release": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "synonyms": {
+      "type": "array",
+      "isMultilang": true
+    },
+    "code": {
+      "type": "varchar",
+      "trim": true
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "views/classification/fields/entity"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "classificationAttributes": {
+      "type": "linkMultiple",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "type": {
+      "type": "enum",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "general"
+      ],
+      "optionsIds": [
+        "general"
+      ],
+      "default": "general"
+    },
+    "channel": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "classificationAttributes": {
+      "type": "hasMany",
+      "foreign": "classification",
+      "entity": "ClassificationAttribute"
+    },
+    "channel": {
+      "type": "belongsTo",
+      "entity": "Channel",
+      "foreign": "classifications"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  },
+  "uniqueIndexes": {
+    "unique_classification": [
+      "deleted",
+      "release",
+      "code"
+    ]
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    }
+  }
+}

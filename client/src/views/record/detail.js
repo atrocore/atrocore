@@ -2213,7 +2213,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             attributePanels[panelId].layoutRow.push({
                                 name: panelId + '_' + attributeGroupId,
                                 customLabel: defs.attributeGroup.name,
-                                view: "pim:views/attribute/fields/attribute-group-layout-item",
+                                view: "views/attribute/fields/attribute-group-layout-item",
                                 fullWidth: true
                             });
                             attributePanels[panelId].layoutRows.push(attributePanels[panelId].layoutRow);

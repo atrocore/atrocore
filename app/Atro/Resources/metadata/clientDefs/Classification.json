@@ -1,0 +1,50 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "shapes",
+  "boolFilterList": [
+    "onlyMy",
+    "notEntity",
+    "onlyForEntity",
+    "onlyForChannel"
+  ],
+  "hiddenBoolFilterList": [
+    "notEntity",
+    "onlyForEntity",
+    "onlyForChannel"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "relationshipPanels": {
+    "classificationAttributes": {
+      "selectAction": "selectRelatedEntity",
+      "view": "views/classification/record/panels/classification-attributes",
+      "rowActionsView": "views/classification/record/row-actions/classification-attribute",
+      "aclScopesList": [
+        "Attribute",
+        "AttributeGroup",
+        "ClassificationAttribute"
+      ],
+      "compareRecordsView": "views/classification/record/compare/classification-attributes",
+      "compareInstanceRecordsView": "views/classification/record/compare/classification-attributes"
+    }
+  },
+  "recordViews": {
+    "compare": "views/classification/record/compare",
+    "compareInstance": "views/classification/record/compare-instance"
+  },
+  "dynamicLogic": {
+    "fields": {
+      "entity": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

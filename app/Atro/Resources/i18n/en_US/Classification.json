@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "Entity",
+    "description": "Description",
+    "release": "Release",
+    "synonyms": "Synonyms",
+    "code": "Code",
+    "isActive": "Active",
+    "classifications": "Classifications",
+    "classificationAttributes": "Classification Attributes",
+    "type": "Type"
+  },
+  "options": {
+    "type": {
+      "general": "General"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Select Attribute Group"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "Entity cannot be changed.",
+    "classificationForToAnotherEntity": "Classification cannot be linked with this record, because it is used for another Entity.",
+    "classificationHasRecords": "Classification with related records cannot be deleted."
+  }
+}

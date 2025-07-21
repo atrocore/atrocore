@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "entity"
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "channel"
+  },
+  {
+    "name": "parents"
+  },
+  {
+    "name": "isActive"
+  }
+]

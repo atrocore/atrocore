@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "isMultiChannel": "ist Multichannel",
+    "isRequired": "erforderlich",
+    "classification": "Klassifikation",
+    "attribute": "Attribute",
+    "maxLength": "Maximallänge",
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "value": "Standardwert",
+    "valueFrom": "Standardwert von",
+    "valueTo": "Standardwert auf",
+    "varcharValue": "Standardwert: Einzeiliger Text",
+    "referenceValue": "Standardwert: Referenz",
+    "textValue": "Standardwert: Text",
+    "intValue": "Standardwert: Ganzzahl",
+    "floatValue": "Standardwert: Float",
+    "dateValue": "Standardwert: Datum",
+    "datetimeValue": "Standardwert: Datum-Uhrzeit",
+    "boolValue": "Standardwert: Boolesch",
+    "min": "Min",
+    "max": "Max"
+  },
+  "labels": {
+    "classificationAttribute": "Attribut aus Klassifikation",
+    "unlinkRelatedAttribute": "Löschen und für Datensätze aufbewahren",
+    "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
+  },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Kanal"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Attribut '%s' wurde nicht für alle ausgewählten Kanäle verknüpft."
+  }
+}

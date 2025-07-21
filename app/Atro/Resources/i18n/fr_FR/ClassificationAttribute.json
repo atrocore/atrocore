@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "classification": "Classification",
+    "attribute": "Attribut",
+    "isRequired": "Exigée",
+    "maxLength": "Longueur maximale",
+    "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
+    "value": "Valeur par défaut",
+    "valueFrom": "Valeur par défaut De",
+    "valueTo": "Valeur par défaut A",
+    "varcharValue": "Valeur par défaut : Chaîne",
+    "referenceValue": "Valeur par défaut : Référence",
+    "textValue": "Valeur par défaut : Texte",
+    "intValue": "Valeur par défaut : Entier",
+    "floatValue": "Valeur par défaut : Flottant",
+    "dateValue": "Valeur par défaut : Date",
+    "datetimeValue": "Valeur par défaut : Date-heure",
+    "boolValue": "Valeur par défaut : Booléen",
+    "min": "Min",
+    "max": "Max"
+  },
+  "labels": {
+    "Create ClassificationAttribute": "Créer un attribut de classification",
+    "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
+    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
+  },
+  "options": {
+    "scope": {
+      "Global": "Mondial",
+      "Channel": "Canal"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis."
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "isActive"
+        },
+        {
+          "name": "parents"
+        }
+      ],
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "synonyms"
+        },
+        false
+      ]
+    ]
+  }
+]

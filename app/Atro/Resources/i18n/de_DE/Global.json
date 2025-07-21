@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Classification": "Klassifikation",
+    "ClassificationAttribute": "Klassifikationsattribut",
     "Attribute": "Attribut",
     "AttributeGroup": "Attributgruppe",
     "AttributePanel": "Attribut-Panel",
@@ -61,6 +63,8 @@
     "SystemIcon": "System-Symbol"
   },
   "scopeNamesPlural": {
+    "Classification": "Klassifikationen",
+    "ClassificationAttribute": "Klassifikationsattribute",
     "Attribute": "Attribute",
     "AttributeGroup": "Attribut-Gruppen",
     "AttributePanel": "Attribut-Panels",
@@ -562,7 +566,8 @@
     "onlyFollowed": "Abonniert",
     "onlyMyTeams": "Meine Teams",
     "onlyBookmarked": "Lesezeichen",
-    "onlyDeleted": "Gelöscht"
+    "onlyDeleted": "Gelöscht",
+    "multipleClassifications": "Mehrere Klassifizierungen"
   },
   "presetFilters": {
     "all": "Alle"
@@ -593,6 +598,8 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "classification": "Klassifikation",
+    "classifications": "Klassifikationen",
     "status": "Status",
     "conditionsType": "Konditionstyp",
     "conditions": "Konditionen",
@@ -1010,6 +1017,8 @@
     "list": "Liste"
   },
   "exceptions": {
+    "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
+    "moreThanOneClassification": "Einige Datensätze haben mehr als eine Klassifizierung.",
     "reverseAssociationError": "Rückwärtsassoziationsfehler: %s",
     "noSuchAssociation": "Validierung fehlgeschlagen. No such Association exists.",
     "itselfAssociation": "Datensatz kann nicht mit sich selbst verknüpft werden.",

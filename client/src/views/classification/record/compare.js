@@ -8,9 +8,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/attribute-panel/fields/entity', 'views/attribute/fields/entity',
-    Dep => Dep.extend({
 
-    })
-);
+Espo.define('views/classification/record/compare', 'views/record/compare', function (Dep) {
 
+    return Dep.extend({
+
+        isComparableLink(link) {
+            if(['classificationAttributes'].includes(link)) {
+                return true;
+            }
+
+            return Dep.prototype.isComparableLink.call(this, link);
+        }
+    });
+});

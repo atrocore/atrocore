@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('pim:views/associated-record/fields/related-association', 'views/fields/link',
+Espo.define('views/associated-record/fields/related-association', 'views/fields/link',
     Dep => Dep.extend({
 
         selectBoolFilterList:  ['onlyActive', 'notUsedAssociations','onlyForEntity'],

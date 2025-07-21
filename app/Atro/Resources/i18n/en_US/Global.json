@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Classification": "Classification",
+    "ClassificationAttribute": "Classification Attribute",
     "Attribute": "Attribute",
     "AttributeGroup": "Attribute Group",
     "AttributePanel": "Attribute Panel",
@@ -74,6 +76,8 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "Classification": "Classifications",
+    "ClassificationAttribute": "Classification Attributes",
     "Attribute": "Attributes",
     "AttributeGroup": "Attribute Groups",
     "AttributePanel": "Attribute Panels",
@@ -567,7 +571,8 @@
     "onlyDeleted": "Deleted",
     "onlyFollowed": "Followed",
     "onlyMyTeams": "My Teams",
-    "onlyBookmarked": "Bookmarked"
+    "onlyBookmarked": "Bookmarked",
+    "multipleClassifications": "Multiple Classifications"
   },
   "presetFilters": {
     "all": "All"
@@ -596,6 +601,8 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "classification": "Classification",
+    "classifications": "Classifications",
     "status": "Status",
     "conditionsType": "Conditions Type",
     "conditions": "Conditions",
@@ -1086,6 +1093,8 @@
     "cd": "cd"
   },
   "exceptions": {
+    "singleClassificationAllowed": "Only one classification is allowed",
+    "moreThanOneClassification": "Some records have more than one classification.",
     "reverseAssociationError": "Backward association error: %s",
     "noSuchAssociation": "Validation failed. No such Association exists.",
     "itselfAssociation": "Record cannot be associated with itself.",

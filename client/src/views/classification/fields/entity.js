@@ -8,8 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/attribute-panel/fields/entity', 'views/attribute/fields/entity',
+Espo.define('views/classification/fields/entity', 'views/attribute/fields/entity',
     Dep => Dep.extend({
+
+        selectBoolFilterList: ['canHasAttributes', 'canHasClassifications'],
 
     })
 );

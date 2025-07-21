@@ -1,0 +1,466 @@
+{
+  "fields": {
+    "classification": {
+      "type": "link",
+      "required": true
+    },
+    "attribute": {
+      "type": "link",
+      "required": true,
+      "view": "views/classification-attribute/fields/attribute"
+    },
+    "isRequired": {
+      "type": "bool",
+      "default": false
+    },
+    "isInherited": {
+      "type": "bool",
+      "notStorable": true,
+      "readOnly": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeGroupId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeFileTypeId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeNotNull": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeIsMultilang": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeGroupName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "value": {
+      "type": "text",
+      "notStorable": true,
+      "aclFieldDisabled": false,
+      "filterDisabled": true,
+      "rowsMax": 4,
+      "lengthOfCut": 400,
+      "view": "views/classification-attribute/fields/value-container",
+      "massUpdateDisabled": true
+    },
+    "valueFrom": {
+      "type": "float",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueTo": {
+      "type": "float",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueCurrency": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueUnitId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueUnit": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueAllUnits": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueUnitData": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueName": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueOptionData": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valuePathsData": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueIds": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": false,
+      "importDisabled": false,
+      "emHidden": true
+    },
+    "valueNames": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "valueOptionsData": {
+      "type": "jsonArray",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeType": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeEntityType": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeMeasureId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "attributeExtensibleEnumId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "allowedOptions": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/allowed-options",
+      "notStorable": true,
+      "virtualField": true,
+      "fieldProperty": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "min": {
+      "type": "float",
+      "notStorable": true,
+      "virtualField": true,
+      "fieldProperty": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "notStorable": true,
+      "virtualField": true,
+      "fieldProperty": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "maxLength": {
+      "type": "int",
+      "notStorable": true,
+      "virtualField": true,
+      "fieldProperty": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "default": false,
+      "notStorable": true,
+      "virtualField": true,
+      "fieldProperty": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "classification": {
+      "type": "belongsTo",
+      "foreign": "classificationAttributes",
+      "entity": "Classification"
+    },
+    "attribute": {
+      "type": "belongsTo",
+      "foreign": "classificationAttributes",
+      "entity": "Attribute"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false
+  },
+  "uniqueIndexes": {
+    "unique_relationship": [
+      "deleted",
+      "classification_id",
+      "attribute_id"
+    ]
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}
