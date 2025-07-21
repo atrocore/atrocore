@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "RoleScopeAttribute": "Attribute",
+    "RoleScopeAttributePanel": "Attribute Panel",
     "Classification": "Classification",
     "ClassificationAttribute": "Classification Attribute",
     "Attribute": "Attribute",
@@ -76,6 +78,8 @@
     "ProductHierarchy": "Product Hierarchy"
   },
   "scopeNamesPlural": {
+    "RoleScopeAttribute": "Attributes",
+    "RoleScopeAttributePanel": "Attribute Panels",
     "Classification": "Classifications",
     "ClassificationAttribute": "Classification Attributes",
     "Attribute": "Attributes",

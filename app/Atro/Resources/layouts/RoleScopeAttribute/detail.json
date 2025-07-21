@@ -1,0 +1,30 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "attribute"
+        },
+        {
+          "name": "roleScope"
+        }
+      ]
+    ]
+  },
+  {
+    "style": "default",
+    "label": "Actions",
+    "rows": [
+      [
+        {
+          "name": "readAction"
+        },
+        {
+          "name": "editAction"
+        }
+      ]
+    ]
+  }
+]
