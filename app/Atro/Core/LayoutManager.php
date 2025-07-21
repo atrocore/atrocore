@@ -663,13 +663,7 @@ class LayoutManager
 
     public static function getSystemMainLocaleCode(Config $config)
     {
-        foreach ($config->get('languages') ?? [] as $language) {
-            if ($language['role'] === 'main') {
-                return $language['code'];
-            }
-        }
-
-        return 'en_US';
+        return $config->get('mainLanguage') ?? 'en_US';
     }
 
     public static function getUserLanguages(User $user, EntityManager $entityManager, Config $config): array
