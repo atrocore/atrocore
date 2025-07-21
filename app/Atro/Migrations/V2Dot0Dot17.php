@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V2Dot0Dot14 extends Base
+class V2Dot0Dot17 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -26,7 +26,11 @@ class V2Dot0Dot14 extends Base
     {
         $this->createDefaultAttributePanel();
 
-        // create Attribute, AttributeGroup, Classification, ClassificationAttribute
+        if ($this->isPgSQL()) {
+
+        } else {
+
+        }
     }
 
     protected function exec(string $sql): void
