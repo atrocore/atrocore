@@ -399,10 +399,12 @@
     "associatingItem": "Assoziierendes Element",
     "associatingItems": "Assoziierende Elemente",
     "associatedItem": "Assoziiertes Element",
+    "emailTo": "E-Mail an",
+    "emailCc": "E-Mail CC",
     "associatedItems": "Assoziierte Elemente",
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
-    "associatingTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
-    "associatedTitle": "Mit aktuellem Element als :name verlinkt:"
+    "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
+    "associatingTitle": "Mit aktuellem Element als :name verlinkt:"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -670,7 +672,7 @@
     "modified": "Geändert",
     "name": "Name",
     "association": "Assoziation",
-    "backwardAssociation": "Umgekehrte Assoziation",
+    "reverseAssociation": "Umgekehrte Assoziation",
     "sorting": "Sortierreihenfolge",
     "associateEverything": "Jeden Datensatz mit jedem anderen Datensatz assoziieren"
   },
@@ -1008,7 +1010,7 @@
     "list": "Liste"
   },
   "exceptions": {
-    "backwardAssociationError": "Rückwärtsassoziationsfehler: %s",
+    "reverseAssociationError": "Rückwärtsassoziationsfehler: %s",
     "noSuchAssociation": "Validierung fehlgeschlagen. No such Association exists.",
     "itselfAssociation": "Datensatz kann nicht mit sich selbst verknüpft werden.",
     "recordAssociationAlreadyExists": "Eine solche Datensatz-Zuordnung existiert bereits.",

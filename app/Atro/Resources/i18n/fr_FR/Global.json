@@ -78,7 +78,7 @@
     "roles": "Rôles",
     "team": "L'équipe",
     "association": "Association",
-    "backwardAssociation": "Association des arriérés",
+    "reverseAssociation": "Association des arriérés",
     "sorting": "Ordre de tri"
   },
   "scopeNames": {
@@ -890,7 +890,7 @@
     }
   },
   "exceptions": {
-    "backwardAssociationError" : "Backward association error : %s",
+    "reverseAssociationError" : "Reverse association error : %s",
     "noSuchAssociation" : "Échec de la validation. Aucune association de ce type n'existe",
     "itselfAssociation" : "L'enregistrement ne peut pas être associé à lui-même.",
     "recordAssociationAlreadyExists" : "Une telle association d'enregistrements existe déjà",

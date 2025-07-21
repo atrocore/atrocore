@@ -345,6 +345,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                             return;
                         }
+
+                        window.dispatchEvent(new Event('record:actions-reload'));
+
                         if (callback) {
                             callback()
                         }
@@ -1350,6 +1353,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
+
+            this.listenToOnce(this.model, 'sync', function () {
+                this.processUiHandler('onLoad', this.name);
+            }, this);
         },
 
         initDynamicHandler: function () {

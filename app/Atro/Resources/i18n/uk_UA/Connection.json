@@ -14,14 +14,16 @@
     "outboundEmailFromName": "Ім'я відправника",
     "outboundEmailFromAddress": "Адреса відправника",
     "dsn": "Dsn",
-    "server": "Сервер"
+    "server": "Сервер",
+    "headers": "Заголовок"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
     "testConnection": "Перевірити з'єднання",
     "sendTestEmail": "Надіслати тестовий електронний лист",
     "smtp": "SMTP",
-    "pdoSql": "PDO SQL"
+    "pdoSql": "PDO SQL",
+    "tokenAuthApi": "API автентифікації токенів"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",

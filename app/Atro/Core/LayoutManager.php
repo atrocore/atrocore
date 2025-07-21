@@ -420,9 +420,9 @@ class LayoutManager
             $data = $data ?? [];
 
             $strData = json_encode($data);
-            if (!str_contains($strData, "associated{$scope}s") && !str_contains($strData, "related{$scope}s")) {
-                $data[] = ['name' => "associated{$scope}s"];
-                $data[] = ['name' => "related{$scope}s"];
+            if (!str_contains($strData, "associatedItems") && !str_contains($strData, "associatingItems")) {
+                $data[] = ['name' => "associatedItems"];
+                $data[] = ['name' => "associatingItems"];
             }
         }
 
@@ -453,9 +453,8 @@ class LayoutManager
 
     protected function getDefaultForAssociates(string $scope, string $name): array
     {
-        $associateScope = $this->getMetadata()->get(['scopes', $scope, 'associatesForEntity']);
-        $mainField = "main{$associateScope}";
-        $relatedField = "related{$associateScope}";
+        $mainField = "associatingItem";
+        $relatedField = "associatedItem";
 
         $data = [];
 
@@ -483,7 +482,7 @@ class LayoutManager
                                     "name" => "association"
                                 ],
                                 [
-                                    "name" => "backwardAssociation"
+                                    "name" => "reverseAssociation"
                                 ]
                             ],
                             [

@@ -3,7 +3,7 @@
     "associatedProducts": "Produits associés",
     "description": "Description",
     "isActive": "Actif",
-    "backwardAssociation": "Association des arriérés",
+    "reverseAssociation": "Association des arriérés",
     "code": "Code"
   },
   "exceptions": {

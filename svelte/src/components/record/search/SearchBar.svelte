@@ -64,6 +64,7 @@
                         class="btn btn-default" class:has-search-value={hasSearchValue}
                         title={Language.translate("Search")}
                         aria-expanded="false"
+                        disabled={searchValue.trim().length === 0}
                         on:click={search}
                 >
                     {#if hasSearchValue}

@@ -7,7 +7,7 @@
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",
     "associations": "Assoziationen",
-    "backwardAssociation": "Umgekehrte Assoziation",
+    "reverseAssociation": "Umgekehrte Assoziation",
     "code": "Code",
     "default": "Standard"
   },

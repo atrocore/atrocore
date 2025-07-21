@@ -115,9 +115,7 @@
         {
           "name": "loginUrl"
         },
-        {
-          "name": "payload"
-        }
+        false
       ],
       [
         {
@@ -186,6 +184,18 @@
         {
           "name": "outboundEmailFromName"
         }
+      ],
+      [
+        {
+          "name": "payload"
+        },
+        false
+      ],
+      [
+        {
+          "name": "headers"
+        },
+        false
       ]
     ]
   }

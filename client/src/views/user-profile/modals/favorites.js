@@ -14,8 +14,9 @@ Espo.define('views/user-profile/modals/favorites', 'views/layout-profile/modals/
             this.notify('Saving...');
 
             this.getPreferences().save({
+                _skipIsEntityUpdated: true,
                 favoritesList: null
-            }, {patch: true}).then(() => {
+            }, { patch: true }).then(() => {
                 this.notify('Saved', 'success');
                 this.close();
                 this.getPreferences().trigger('favorites:update');

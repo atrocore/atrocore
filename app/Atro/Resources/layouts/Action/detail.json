@@ -67,6 +67,14 @@
           "name": "customAction"
         },
         false
+      ],
+      [
+        {
+          "name": "targetEntity"
+        },
+        {
+          "name": "showEmailPreview"
+        }
       ]
     ]
   },
@@ -79,6 +87,38 @@
           "name": "webhookUrl"
         },
         false
+      ],
+      [
+        {
+          "name": "mode"
+        },
+        false
+      ],
+      [
+        {
+          "name": "connection"
+        },
+        false
+      ],
+      [
+        {
+          "name": "emailTemplate"
+        },
+        false
+      ],
+      [
+        {
+          "name": "emailTo"
+        },
+        {
+          "name": "emailCc"
+        }
+      ],
+      [
+        {
+          "name": "emailScript",
+          "fullWidth": true
+        }
       ]
     ]
   }

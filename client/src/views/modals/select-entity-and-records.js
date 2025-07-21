@@ -262,7 +262,7 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         },
 
         createAssociationSelectView() {
-            this.createView('association', 'views/association/fields/backward-association', {
+            this.createView('association', 'views/association/fields/reverse-association', {
                 el: `${this.options.el} .entity-container .field[data-name="association"]`,
                 model: this.model,
                 name: 'association',
@@ -284,7 +284,7 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
         },
 
         getAssociationLink() {
-            return `associatedMain${this.model.get('mainEntity')}s`
+            return 'associatedItemRelations'
         },
 
         checkScopeForAssociation() {

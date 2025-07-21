@@ -97,13 +97,13 @@ class Relation extends Record
             }
 
             $attachments = [];
-            if (!empty($attachment?->{"related{$scope}sIds"})) {
-                $ids = array_unique(array_values($attachment->{"related{$scope}sIds"}));
-                unset($attachment->{"related{$scope}sIds"});
+            if (!empty($attachment?->{"associatedItemsIds"})) {
+                $ids = array_unique(array_values($attachment->{"associatedItemsIds"}));
+                unset($attachment->{"associatedItemsIds"});
 
                 foreach ($ids as $id) {
                     $newAttachment = clone $attachment;
-                    $newAttachment->{"related{$scope}Id"} = $id;
+                    $newAttachment->associatedItemId = $id;
                     $attachments[] = $newAttachment;
                 }
 
@@ -112,8 +112,8 @@ class Relation extends Record
                         $mainId = array_shift($ids);
                         foreach ($ids as $id) {
                             $newAttachment = clone $attachment;
-                            $newAttachment->{"main{$scope}Id"} = $mainId;
-                            $newAttachment->{"related{$scope}Id"} = $id;
+                            $newAttachment->associatingItemId = $mainId;
+                            $newAttachment->associatedItemId = $id;
                             $attachments[] = $newAttachment;
                         }
                     }
@@ -125,19 +125,19 @@ class Relation extends Record
             try {
                 foreach ($attachments as $attachment) {
                     $entity = parent::createEntity($attachment);
-                    if (property_exists($attachment, 'backwardAssociationId') && !empty($attachment->backwardAssociationId)) {
+                    if (property_exists($attachment, 'reverseAssociationId') && !empty($attachment->reverseAssociationId)) {
                         try {
-                            $backwardAttachment = new \stdClass();
-                            $backwardAttachment->{"main{$scope}Id"} = $attachment->{"related{$scope}Id"};
-                            $backwardAttachment->{"related{$scope}Id"} = $attachment->{"main{$scope}Id"};
-                            $backwardAttachment->associationId = $attachment->backwardAssociationId;
-                            $backwardAttachment->{"backwardAssociated{$scope}Id"} = $entity->get('id');
-                            $backwardEntity = parent::createEntity($backwardAttachment);
-                            $entity->set("backwardAssociated{$scope}Id", $backwardEntity->get('id'));
+                            $reverseAttachment = new \stdClass();
+                            $reverseAttachment->associatingItemId = $attachment->associatedItemId;
+                            $reverseAttachment->associatedItemId = $attachment->associatingItemId;
+                            $reverseAttachment->associationId = $attachment->reverseAssociationId;
+                            $reverseAttachment->{"reverseAssociated{$scope}Id"} = $entity->get('id');
+                            $reverseEntity = parent::createEntity($reverseAttachment);
+                            $entity->set("reverseAssociated{$scope}Id", $reverseEntity->get('id'));
                             $this->getRepository()->save($entity, ['skipAll' => true]);
                         } catch (\Throwable $e) {
                             $classname = get_class($e);
-                            throw new $classname(sprintf($this->getInjection('language')->translate('backwardAssociationError', 'exceptions', $scope), $e->getMessage()));
+                            throw new $classname(sprintf($this->getInjection('language')->translate('reverseAssociationError', 'exceptions', $scope), $e->getMessage()));
                         }
                     }
                 }
@@ -175,11 +175,14 @@ class Relation extends Record
 
             try {
                 $entity = parent::updateEntity($id, $data);
-                try {
-                    $this->updateBackwardAssociation($entity, $data);
-                } catch (\Throwable $e) {
-                    $classname = get_class($e);
-                    throw new $classname(sprintf($this->getInjection('language')->translate('backwardAssociationError', 'exceptions', $this->getAssociatesScope()), $e->getMessage()));
+
+                if (!property_exists($data, '__skipUpdateReverse')) {
+                    try {
+                        $this->updateReverseAssociation($entity, $data);
+                    } catch (\Throwable $e) {
+                        $classname = get_class($e);
+                        throw new $classname(sprintf($this->getInjection('language')->translate('reverseAssociationError', 'exceptions', $this->getAssociatesScope()), $e->getMessage()));
+                    }
                 }
 
                 if (!empty($inTransaction)) {
@@ -201,7 +204,7 @@ class Relation extends Record
     protected function isEntityUpdated(Entity $entity, \stdClass $data): bool
     {
         if ($this->isAssociatesRelation()) {
-            $this->prepareBackwardAssociation($entity);
+            $this->prepareReverseAssociation($entity);
         }
 
         return parent::isEntityUpdated($entity, $data);
@@ -222,67 +225,68 @@ class Relation extends Record
         return Parent::storeEntity($entity);
     }
 
-    public function updateBackwardAssociation(Entity $entity, \stdClass $data): void
+    public function updateReverseAssociation(Entity $entity, \stdClass $data): void
     {
         $scope = $this->getAssociatesScope();
-        $backwardAttachment = new \stdClass();
-        $backwardIdField = "backwardAssociated{$scope}Id";
+        $reverseAttachment = new \stdClass();
+        $reverseIdField = "reverseAssociated{$scope}Id";
 
-        if (property_exists($data, $backwardIdField) && !Entity::areValuesEqual('varchar', $entity->get($backwardIdField), $data->{$backwardIdField})) {
-            if (!empty($entity->get($backwardIdField)) && empty($data->backwardAssociationId)) {
-                // delete backward association
-                $this->getRepository()->deleteFromDb($entity->get($backwardIdField));
-                $entity->set($backwardIdField, null);
-                $this->getRepository()->save($entity, ['skipAll' => true]);
-                return;
-            } elseif (empty($entity->get($backwardIdField)) && !empty($data->backwardAssociationId)) {
-                // create backward association
-                $backwardAttachment->{"main{$scope}Id"} = $entity->get("related{$scope}Id");
-                $backwardAttachment->{"related{$scope}Id"} = $entity->get("main{$scope}Id");
-                $backwardAttachment->associationId = $data->backwardAssociationId;
-                $backwardAttachment->{$backwardIdField} = $entity->get('id');
-                $backwardEntity = parent::createEntity($backwardAttachment);
-                $entity->set($backwardIdField, $backwardEntity->get('id'));
-                $this->getRepository()->save($entity, ['skipAll' => true]);
-                return;
-            } else {
-                // update backward association
-                $backwardAttachment->associationId = $data->backwardAssociationId;
-            }
-        }
-        if (empty($entity->get($backwardIdField))) {
+        if (!empty($entity->get($reverseIdField)) && $entity->isAttributeChanged('reverseAssociationId') && empty($data->reverseAssociationId)) {
+            // delete reverse association
+            $this->getRepository()->deleteFromDb($entity->get($reverseIdField));
+            $entity->set($reverseIdField, null);
+            $this->getRepository()->save($entity, ['skipAll' => true]);
+            return;
+        } elseif (empty($entity->get($reverseIdField)) && $entity->isAttributeChanged('reverseAssociationId') && !empty($data->reverseAssociationId)) {
+            // create reverse association
+            $reverseAttachment->associatingItemId = $entity->get("associatedItemId");
+            $reverseAttachment->associatedItemId = $entity->get("associatingItemId");
+            $reverseAttachment->associationId = $data->reverseAssociationId;
+            $reverseAttachment->{$reverseIdField} = $entity->get('id');
+            $reverseEntity = parent::createEntity($reverseAttachment);
+            $entity->set($reverseIdField, $reverseEntity->get('id'));
+            $this->getRepository()->save($entity, ['skipAll' => true]);
             return;
         }
 
-        if (property_exists($data, "main{$scope}Id")) {
-            $backwardAttachment->{"related{$scope}Id"} = $data->{"main{$scope}Id"};
+        if (empty($entity->get($reverseIdField))) {
+            return;
         }
 
-        if (property_exists($data, "related{$scope}Id")) {
-            $backwardAttachment->{"main{$scope}Id"} = $data->{"related{$scope}Id"};
+        if (property_exists($data, 'reverseAssociationId')) {
+            $reverseAttachment->associationId = $data->reverseAssociationId;
         }
 
-        if (!empty((array)$backwardAttachment)) {
-            parent::updateEntity($entity->get($backwardIdField), $backwardAttachment);
+        if (property_exists($data, "associatingItemId")) {
+            $reverseAttachment->associatedItemId = $data->associatingItemId;
+        }
+
+        if (property_exists($data, "associatedItemId")) {
+            $reverseAttachment->associatingItemId = $data->associatedItemId;
+        }
+
+        if (!empty((array)$reverseAttachment)) {
+            $reverseAttachment->__skipUpdateReverse = true;
+            parent::updateEntity($entity->get($reverseIdField), $reverseAttachment);
         }
     }
 
-    public function prepareBackwardAssociation(Entity $entity): void
+    public function prepareReverseAssociation(Entity $entity): void
     {
         $scope = $this->getAssociatesScope();
 
-        $entity->set('backwardAssociationId', null);
-        $entity->set('backwardAssociationName', null);
+        $entity->set('reverseAssociationId', null);
+        $entity->set('reverseAssociationName', null);
 
-        if (!empty($entity->get("backwardAssociated{$scope}Id"))) {
-            $backwardAssociatedRecord = $this->getRepository()
+        if (!empty($entity->get("reverseAssociated{$scope}Id"))) {
+            $reverseAssociatedRecord = $this->getRepository()
                 ->select(['id', 'associationId', 'associationName'])
-                ->where(['id' => $entity->get("backwardAssociated{$scope}Id")])
+                ->where(['id' => $entity->get("reverseAssociated{$scope}Id")])
                 ->findOne();
 
-            if (!empty($backwardAssociatedRecord)) {
-                $entity->set('backwardAssociationId', $backwardAssociatedRecord->get('associationId'));
-                $entity->set('backwardAssociationName', $backwardAssociatedRecord->get('associationName'));
+            if (!empty($reverseAssociatedRecord)) {
+                $entity->set('reverseAssociationId', $reverseAssociatedRecord->get('associationId'));
+                $entity->set('reverseAssociationName', $reverseAssociatedRecord->get('associationName'));
             }
         }
     }
@@ -292,19 +296,24 @@ class Relation extends Record
         parent::prepareEntityForOutput($entity);
 
         if ($this->isAssociatesRelation()) {
-            $this->prepareBackwardAssociation($entity);
+            $this->prepareReverseAssociation($entity);
         }
     }
 
-    public function removeAssociates(string $mainRecordId, ?string $associationId)
+    public function removeAssociates(string $mainRecordId, string $relatedRecordId, ?string $associationId)
     {
-        if (empty($mainRecordId)) {
+        if (empty($mainRecordId) && empty($relatedRecordId)) {
             throw new NotFound();
         }
-        $scope = $this->getAssociatesScope();
 
         $repository = $this->getRepository();
-        $where = ["main{$scope}Id" => $mainRecordId];
+        $where = [];
+        if (!empty($mainRecordId)) {
+            $where["associatingItemId"] = $mainRecordId;
+        }
+        if (!empty($relatedRecordId)) {
+            $where["associatedItemId"] = $relatedRecordId;
+        }
         if (!empty($associationId)) {
             $where['associationId'] = $associationId;
         }

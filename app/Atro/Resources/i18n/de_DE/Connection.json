@@ -14,7 +14,8 @@
     "smtpPassword": "Passwort",
     "outboundEmailFromName": "Absendername",
     "outboundEmailFromAddress": "Absenderadresse",
-    "server": "Server"
+    "server": "Server",
+    "headers": "Header"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
@@ -22,7 +23,8 @@
     "sendTestEmail": "Test-E-Mail senden",
     "cookie": "Cookie-Sitzung",
     "smtp": "SMTP",
-    "pdoSql": "PDO SQL"
+    "pdoSql": "PDO SQL",
+    "tokenAuthApi": "Token-Authentifizierungs-API"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",

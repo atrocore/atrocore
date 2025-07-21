@@ -1,3 +1,4 @@
 {
-  "webhook": "\\Atro\\ActionTypes\\Webhook"
+  "webhook": "\\Atro\\ActionTypes\\Webhook",
+  "email": "\\Atro\\ActionTypes\\SendEmail"
 }
