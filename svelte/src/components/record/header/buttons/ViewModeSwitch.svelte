@@ -68,10 +68,10 @@
 {#if viewTypes.length > 1}
     <div class="btn-group view-mode-switch">
         {#each viewTypes as view}
-            <a role="button" href={view.link} class="btn action" class:btn-default={view.name !== mode}
-               class:btn-primary={view.name === mode} data-name={view.name} data-action="List" on:click={changeView}>
+            <button class="btn action" class:btn-default={view.name !== mode} class:btn-primary={view.name === mode}
+                    data-name={view.name} data-action="List" on:click={changeView}>
                 {@html view.icon}
-            </a>
+            </button>
         {/each}
     </div>
 {/if}
