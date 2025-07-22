@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "description": "Beschreibung",
+    "isActive": "Aktiv",
+    "classifications": "Klassifikationen",
+    "classificationAttributes": "Klassifikationsattribute",
+    "products": "Produkte",
+    "synonyms": "Synonyme",
+    "release": "Freigeben",
+    "code": "Code",
+    "type": "Typ",
+    "attributes": "Attribute"
+  },
+  "options": {
+    "type": {
+      "general": "Allgemein"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Attributgruppe auswählen"
+  },
+  "exceptions": {
+    "classificationHasRecords": "Klassifizierungen mit Bezugsdatensätzen können nicht gelöscht werden."
+  }
+}

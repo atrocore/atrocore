@@ -109,6 +109,36 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "createAttributeValueAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/create-attribute-value-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "yes"
+      ]
+    },
+    "deleteAttributeValueAction": {
+      "type": "enum",
+      "view": "views/role-scope/fields/create-attribute-value-action",
+      "prohibitedEmptyValue": true,
+      "options": [
+        "no",
+        "yes"
+      ]
+    },
+    "attributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
+    "attributePanels": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -121,6 +151,16 @@
       "type": "hasMany",
       "foreign": "roleScope",
       "entity": "RoleScopeField"
+    },
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeAttribute"
+    },
+    "attributePanels": {
+      "type": "hasMany",
+      "foreign": "roleScope",
+      "entity": "RoleScopeAttributePanel"
     }
   },
   "collection": {

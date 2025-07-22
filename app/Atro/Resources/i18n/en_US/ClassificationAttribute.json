@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "classification": "Classification",
+    "attribute": "Attribute",
+    "isRequired": "Required",
+    "maxLength": "Max Length",
+    "countBytesInsteadOfCharacters": "Count Bytes instead of Characters",
+    "value": "Default Value",
+    "valueFrom": "Default Value From",
+    "valueTo": "Default Value To",
+    "varcharValue": "Default Value: String",
+    "referenceValue": "Default Value: Reference",
+    "textValue": "Default Value: Text",
+    "intValue": "Default Value: Integer",
+    "floatValue": "Default Value: Float",
+    "dateValue": "Default Value: Date",
+    "datetimeValue": "Default Value: Date-time",
+    "boolValue": "Default Value: Boolean",
+    "min": "Min",
+    "max": "Max"
+  },
+  "labels": {
+    "classificationAttribute": "Attribute from Classification",
+    "unlinkRelatedAttribute": "Delete and retain for records",
+    "cascadeUnlinkRelatedAttribute": "Delete and from records"
+  },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Channel"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Attribute '%s' was linked not for all chosen channels.",
+    "unlinkRelatedAttribute": "Are you sure you want to delete the selected Attribute from the selected Classification? All related records will retain this Attribute.",
+    "cascadeUnlinkRelatedAttribute": "Are you sure you want to delete the selected attribute from the selected Classification and their related records? All related Attribute Values will be also removed.",
+    "removeRelatedAttributeGroup": "Are you sure you want to delete all Attributes for the selected Attribute Group from the selected Classification? All related records will retain these Attributes.",
+    "removeRelatedAttributeGroupCascade": "Are you sure you want to delete all attributes for the selected Attribute Group from the selected Classification and their related records? All related Attribute Values will be also removed."
+  }
+}

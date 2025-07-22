@@ -1,5 +1,6 @@
 {
   "fields": {
+    "classifications": "Classification",
     "status": "Statut",
     "conditionsType": "Type de conditions",
     "conditions": "Conditions",
@@ -82,6 +83,10 @@
     "sorting": "Ordre de tri"
   },
   "scopeNames": {
+    "Classification": "Classification",
+    "ClassificationAttribute": "Attribut de classification",
+    "Attribute": "Attribut",
+    "AttributeGroup": "Groupe d'attributs",
     "UiHandler": "Gestionnaire d'interface utilisateur",
     "Folder": "Dossier",
     "Team": "L'équipe",
@@ -467,6 +472,10 @@
     "closePanelConfirmation": "Êtes-vous sûr de vouloir fermer le panneau ?"
   },
   "scopeNamesPlural": {
+    "Classification": "Classification",
+    "ClassificationAttribute": "Attributs de la classification",
+    "Attribute": "Attributs",
+    "AttributeGroup": "Groupes d'attributs",
     "LastViewed": "Dernière consultation",
     "ActionHistoryRecord": "Historique de l'action",
     "AuthToken": "Jetons d'authentification",

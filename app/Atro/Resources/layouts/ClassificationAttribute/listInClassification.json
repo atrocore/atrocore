@@ -1,0 +1,12 @@
+[
+  {
+    "name": "attribute",
+    "notSortable": true
+  },
+  {
+    "name": "isRequired"
+  },
+  {
+    "name": "value"
+  }
+]

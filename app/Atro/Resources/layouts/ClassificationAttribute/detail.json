@@ -1,0 +1,50 @@
+[
+  {
+    "rows": [
+      [
+        {
+          "name": "classification"
+        },
+        {
+          "name": "attribute"
+        }
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        {
+          "name": "countBytesInsteadOfCharacters"
+        }
+      ],
+      [
+        {
+          "name": "allowedOptions"
+        },
+        false
+      ],
+      [
+        {
+          "name": "value"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": "Details"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "entity": true,
+  "layouts": false,
+  "tab": true,
+  "acl": true,
+  "customizable": false,
+  "importable": true,
+  "notifications": true,
+  "disabled": false,
+  "streamDisabled": true,
+  "type": "Base",
+  "multiParents": true,
+  "dragAndDrop": true,
+  "object": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "nonComparableFields": [
+    "classificationAttributes"
+  ],
+  "attributesDisabled": true
+}

@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "products": "Produits",
+    "description": "Description",
+    "release": "Libération",
+    "synonyms": "Synonymes",
+    "code": "Code",
+    "isActive": "Actif",
+    "classifications": "Classification",
+    "classificationAttributes": "Attributs de la classification"
+  },
+  "labels": {
+    "selectAttributeGroup": "Sélectionnez le groupe d'attributs"
+  }
+}

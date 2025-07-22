@@ -1,0 +1,33 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "list-checks",
+  "boolFilterList": [
+    "onlyMy",
+    "withNotLinkedAttributesToClassification",
+    "withNotLinkedAttributesToProduct",
+    "onlyForEntity"
+  ],
+  "hiddenBoolFilterList": [
+    "withNotLinkedAttributesToClassification",
+    "withNotLinkedAttributesToProduct",
+    "onlyForEntity"
+  ],
+  "disabledMassActions": [
+    "merge"
+  ],
+  "relationshipPanels": {
+    "attributes": {
+      "create": false,
+      "view": "views/attribute-group/record/panels/attributes",
+      "selectBoolFilterList": [
+        "onlyForEntity"
+      ],
+      "dragDrop": {
+        "isActive": true,
+        "sortField": "attributeGroupSortOrder"
+      },
+      "sortBy": "attributeGroupSortOrder",
+      "asc": true
+    }
+  }
+}

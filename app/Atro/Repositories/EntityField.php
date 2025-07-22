@@ -194,6 +194,19 @@ class EntityField extends ReferenceData
     {
         parent::beforeSave($entity, $options);
 
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")) {
+            $attribute = $this->getEntityManager()->getRepository('Attribute')
+                ->where([
+                    'entityId' => $entity->get('entityId'),
+                    'code'     => $entity->get('code')
+                ])
+                ->findOne();
+
+            if (!empty($attribute)) {
+                throw new BadRequest("Attribute with such code exists for the {$entity->get('entityId')}.");
+            }
+        }
+
         if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.multilangField")) {
             throw new Forbidden();
         }

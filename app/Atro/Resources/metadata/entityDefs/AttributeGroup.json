@@ -1,0 +1,91 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "rowsMax": 4,
+      "lengthOfCut": 400,
+      "seeMoreDisabled": false,
+      "readOnly": false,
+      "tooltip": false,
+      "isMultilang": true
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "views/attribute-group/fields/entity"
+    },
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
+    "isActive": {
+      "default": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "attributes": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "layoutListDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    },
+    "sortOrder": {
+      "type": "int",
+      "required": false,
+      "default": 0,
+      "disableFormatting": false,
+      "readOnly": false,
+      "tooltip": false
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "attributes": {
+      "type": "hasMany",
+      "foreign": "attributeGroup",
+      "entity": "Attribute"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  }
+}

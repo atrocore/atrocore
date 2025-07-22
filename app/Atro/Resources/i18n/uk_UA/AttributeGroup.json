@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "name": "Назва групи",
+        "description": "Опис",
+        "code": "Код",
+        "isActive": "Активний",
+        "attributes": "Атрибути",
+        "sortOrder": "Порядок сортування"
+    },
+    "messages": {
+        "unlinkAttributeGroupConfirmation": "Ви дійсно хочете відключити всі атрибути групи атрибутів?"
+    },
+    "exceptions": {
+        "attributeGroupSsLinkedWithAttributes": "Група атрибутів пов'язана з атрибутом(ами). Будь ласка, спочатку вимкніть атрибут(и)"
+    }
+}

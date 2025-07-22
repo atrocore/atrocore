@@ -1,0 +1,4 @@
+{
+  "extensibleEnum": "views/fields/extensible-enum-dropdown",
+  "extensibleMultiEnum": "views/fields/extensible-multi-enum-dropdown"
+}

@@ -1,0 +1,83 @@
+{
+  "fields": {
+    "parents": "Assoziierende Attribute",
+    "children": "Assoziierte Attribute",
+    "products": "Produkte",
+    "type": "Typ",
+    "attributeGroup": "Attributgruppe",
+    "attributePanel": "Attribut-Panel",
+    "code": "Code",
+    "isMultilang": "Mehrsprachig",
+    "fileType": "Datei-Typ",
+    "name": "Attributname",
+    "pattern": "Regex Pattern",
+    "prohibitedEmptyValue": "Leeren Wert deaktivieren",
+    "measure": "Maß",
+    "defaultUnit": "Standard Maßeinheit",
+    "defaultDate": "Standard Datum",
+    "isRequired": "erforderlich",
+    "tooltip": "Kurzinfo",
+    "maxLength": "Maximallänge",
+    "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
+    "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
+    "useDisabledTextareaInViewMode": "Deaktivierte Textarea im Ansichtsmodus verwenden",
+    "description": "Beschreibung",
+    "extensibleEnum": "Liste",
+    "min": "Min",
+    "max": "Max",
+    "notNull": "Deaktivieren Nullwert",
+    "trim": "Führende und nachfolgende Whitespaces entfernen",
+    "classificationAttributes": "Klassifikationsattribute",
+    "preparedName": "Name",
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "Volle Breite"
+  },
+  "labels": {
+    "classification": "Klassifikation",
+    "addNewValue": "Neuen Wert hinzufügen",
+    "extensibleEnumOptions": "Auswahloptionen"
+  },
+  "options": {
+    "type": {
+      "array": "Anordnung",
+      "bool": "Boolesch",
+      "date": "Datum",
+      "datetime": "Datum-Uhrzeit",
+      "extensibleEnum": "Liste",
+      "float": "Kommazahl",
+      "int": "Ganzzahl",
+      "extensibleMultiEnum": "Liste mit Mehrfachauswahl",
+      "text": "Text",
+      "markdown": "Markdown",
+      "url": "Url",
+      "varchar": "Einzeiliger Text",
+      "wysiwyg": "HTML",
+      "file": "Datei"
+    }
+  },
+  "messages": {
+    "allLingualAttrsWillDeleted": "Wenn das mehrsprachige Attribut als einsprachig festgelegt ist, werden alle Attributwerte für zusätzliche Sprachen gelöscht. Möchten Sie fortfahren?",
+    "sameNumberOptions": "Die gleiche Anzahl von Optionen",
+    "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>",
+    "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"
+  },
+  "filterLabels": {
+    "All": "Alle"
+  },
+  "tooltips": {
+    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
+    "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)",
+    "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Der Datensatz kann nicht gelöscht werden, da er in dem Attribut \"%s\" verwendet wird.",
+    "maxLessThanMin": "Min sollte kleiner als Max sein.",
+    "noAttributeConverterFound": "Attributkonvertierung vom Typ '%s' in '%s' ist nicht möglich.",
+    "attributeValueIsInUse": "Attributwert wird verwendet und kann nicht gelöscht werden.",
+    "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifikationen verwendet. Bitte aktualisieren Sie zuerst die Klassifikationen.",
+    "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
+    "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
+    "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
+    "invalidType": "Der Attributtyp „{type}“ ist ungültig"
+  }
+}

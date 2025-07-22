@@ -74,7 +74,7 @@ Espo.define('views/record/panels/search', ['views/record/panels/bottom', 'search
 
                 let searchView = 'views/record/search';
                 if (this.scope === 'Product') {
-                    searchView = 'pim:views/product/record/search';
+                    searchView = 'views/product/record/search';
                 }
 
                 this.createView('search', searchView, {

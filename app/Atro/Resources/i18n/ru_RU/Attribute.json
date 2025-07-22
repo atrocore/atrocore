@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "parents": "Связывающие атрибуты",
+    "children": "Связанные атрибуты",
+    "attributeGroup": "Группа атрибутов",
+    "type": "Тип атрибута",
+    "code": "Код",
+    "name": "Название атрибута",
+    "products": "Продукты",
+    "isMultilang": "Многоязычность",
+    "fileType": "Тип файла",
+    "pattern": "Regex Pattern",
+    "prohibitedEmptyValue": "Запретить пустые значения",
+    "measure": "Мера",
+    "isRequired": "Обязательно",
+    "tooltip": "Текст подсказки",
+    "maxLength": "Максимальная длина"
+  },
+  "labels": {
+    "addNewValue": "Добавить новое значение"
+  },
+  "messages": {
+    "sameNumberOptions": "Вы должны установить такое же количество опций",
+    "productsCountWithAttribute": "Количество продуктов, у которых задан данный атрибут: <strong>{count}</strong>",
+    "removeAttribute(s)": "Все значения для этого(этих) атрибута(ов) также удаляются. Вы действительно хотите удалить этот(эти) атрибут(ы)?"
+  },
+  "filterLabels": {
+    "All": "All"
+  },
+  "tooltips": {
+    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\""
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Запись не может быть удалена, так как она используется в атрибуте '%s'.",
+    "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
+    "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
+    "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты."
+  }
+}

@@ -41,6 +41,14 @@
       ],
       [
         {
+          "name": "createAttributeValueAction"
+        },
+        {
+          "name": "deleteAttributeValueAction"
+        }
+      ],
+      [
+        {
           "name": "streamAction"
         },
         false

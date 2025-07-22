@@ -1,0 +1,24 @@
+{
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "acl": true,
+  "customizable": true,
+  "importable": true,
+  "notifications": true,
+  "streamDisabled": true,
+  "disabled": false,
+  "type": "Base",
+  "object": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hasActive": true,
+  "duplicatableRelations": [
+    "classificationAttributes"
+  ],
+  "inheritedRelations": [
+    "classificationAttributes"
+  ],
+  "attributesDisabled": true
+}

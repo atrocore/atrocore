@@ -33,6 +33,56 @@
     "canHasAssociates"
   ],
   "dynamicLogic": {
+    "singleClassification": {
+      "visible": {
+        "conditionGroup": [
+          {
+            "type": "isNotEmpty",
+            "attribute": "id"
+          },
+          {
+            "type": "equals",
+            "attribute": "hasClassification",
+            "value": true
+          },
+          {
+            "type": "equals",
+            "attribute": "hasAttribute",
+            "value": true
+          },
+          {
+            "type": "notEquals",
+            "attribute": "id",
+            "value": "Listing"
+          }
+        ]
+      }
+    },
+    "disableAttributeLinking": {
+      "visible": {
+        "conditionGroup": [
+          {
+            "type": "isNotEmpty",
+            "attribute": "id"
+          },
+          {
+            "type": "equals",
+            "attribute": "hasClassification",
+            "value": true
+          },
+          {
+            "type": "equals",
+            "attribute": "hasAttribute",
+            "value": true
+          },
+          {
+            "type": "notEquals",
+            "attribute": "id",
+            "value": "Listing"
+          }
+        ]
+      }
+    },
     "fields": {
       "type": {
         "readOnly": {

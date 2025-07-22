@@ -1,0 +1,15 @@
+[
+  {
+    "name": "attribute",
+    "link": true
+  },
+  {
+    "name": "readAction"
+  },
+  {
+    "name": "editAction"
+  },
+  {
+    "name": "roleScope"
+  }
+]

@@ -1,0 +1,310 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "isMultilang": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "attributeGroup": {
+      "type": "link",
+      "view": "views/attribute/fields/attribute-group",
+      "required": false,
+      "readOnly": false,
+      "tooltip": false
+    },
+    "attributePanel": {
+      "type": "link",
+      "entity": "AttributePanel",
+      "view": "views/attribute/fields/attribute-panel",
+      "required": true
+    },
+    "extensibleEnum": {
+      "type": "link"
+    },
+    "allowedOptions": {
+      "type": "array",
+      "view": "views/admin/field-manager/fields/allowed-options",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "entity": {
+      "type": "link",
+      "entity": "Entity",
+      "required": true,
+      "view": "views/attribute/fields/entity"
+    },
+    "code": {
+      "type": "varchar"
+    },
+    "type": {
+      "type": "varchar",
+      "required": true,
+      "default": "text",
+      "massUpdateDisabled": true,
+      "isSorted": false,
+      "readOnly": false,
+      "tooltip": false,
+      "view": "views/attribute/fields/type"
+    },
+    "compositeAttribute": {
+      "type": "link",
+      "view": "views/attribute/fields/composite-attribute"
+    },
+    "nestedAttributes": {
+      "type": "linkMultiple"
+    },
+    "fileType": {
+      "type": "link",
+      "required": false,
+      "default": null
+    },
+    "isMultilang": {
+      "type": "bool",
+      "hideMultilang": true,
+      "layoutDetailDisabled": true
+    },
+    "classificationAttributes": {
+      "type": "linkMultiple",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    },
+    "pattern": {
+      "type": "varchar",
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "filterDisabled": true,
+      "tooltip": true
+    },
+    "prohibitedEmptyValue": {
+      "type": "bool",
+      "default": false
+    },
+    "min": {
+      "type": "float",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "max": {
+      "type": "float",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "maxLength": {
+      "type": "int",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "emHidden": true
+    },
+    "countBytesInsteadOfCharacters": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "default": false,
+      "emHidden": true
+    },
+    "data": {
+      "type": "jsonObject",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "measure": {
+      "type": "link"
+    },
+    "defaultUnit": {
+      "type": "varchar",
+      "view": "views/admin/field-manager/fields/default-unit",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true
+    },
+    "defaultDate": {
+      "type": "varchar",
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true,
+      "tooltip": true
+    },
+    "isRequired": {
+      "type": "bool",
+      "default": false,
+      "view": "views/attribute/fields/required"
+    },
+    "isReadOnly": {
+      "type": "bool",
+      "default": false
+    },
+    "sortOrder": {
+      "type": "int",
+      "default": null
+    },
+    "attributeGroupSortOrder": {
+      "type": "int",
+      "default": null
+    },
+    "tooltip": {
+      "type": "text",
+      "isMultilang": true,
+      "trim": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true
+    },
+    "description": {
+      "type": "text",
+      "rowsMax": 4,
+      "lengthOfCut": 400,
+      "isMultilang": true
+    },
+    "amountOfDigitsAfterComma": {
+      "type": "int",
+      "min": 0
+    },
+    "useDisabledTextareaInViewMode": {
+      "type": "bool",
+      "default": false
+    },
+    "dropdown": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "default": false,
+      "emHidden": true,
+      "tooltip": true
+    },
+    "notNull": {
+      "type": "bool",
+      "default": false
+    },
+    "trim": {
+      "type": "bool",
+      "default": false
+    },
+    "listMultilingual": {
+      "type": "bool",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "htmlSanitizer": {
+      "type": "link",
+      "entity": "HtmlSanitizer",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true
+    },
+    "fullWidth": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "layoutListDisabled": true,
+      "default": false,
+      "emHidden": true,
+      "view": "views/attribute/fields/full-width"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "fileType": {
+      "type": "belongsTo",
+      "entity": "FileType"
+    },
+    "compositeAttribute": {
+      "type": "belongsTo",
+      "foreign": "nestedAttributes",
+      "entity": "Attribute"
+    },
+    "nestedAttributes": {
+      "type": "hasMany",
+      "foreign": "compositeAttribute",
+      "entity": "Attribute"
+    },
+    "attributeGroup": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "AttributeGroup"
+    },
+    "extensibleEnum": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "ExtensibleEnum"
+    },
+    "measure": {
+      "type": "belongsTo",
+      "foreign": "attributes",
+      "entity": "Measure"
+    },
+    "classificationAttributes": {
+      "type": "hasMany",
+      "foreign": "attribute",
+      "entity": "ClassificationAttribute"
+    }
+  },
+  "collection": {
+    "sortBy": "createdAt",
+    "asc": false,
+    "textFilterFields": [
+      "name",
+      "code"
+    ]
+  },
+  "uniqueIndexes": {
+    "unique_code": [
+      "deleted",
+      "entity_id",
+      "code"
+    ]
+  }
+}

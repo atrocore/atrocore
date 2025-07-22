@@ -1,0 +1,27 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "entity"
+  },
+  {
+    "name": "channel"
+  },
+  {
+    "name": "attributePanel"
+  },
+  {
+    "name": "attributeGroup"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "isMultilang"
+  }
+]

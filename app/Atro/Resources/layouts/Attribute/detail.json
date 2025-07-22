@@ -1,0 +1,170 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "fileType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "channel"
+        },
+        false
+      ],
+      [
+        {
+          "name": "code"
+        },
+        false
+      ],
+      [
+        {
+          "name": "attributePanel"
+        },
+        {
+          "name": "attributeGroup"
+        }
+      ],
+      [
+        {
+          "name": "pattern"
+        },
+        false
+      ],
+      [
+        {
+          "name": "prohibitedEmptyValue"
+        },
+        false
+      ],
+      [
+        {
+          "name": "measure"
+        },
+        {
+          "name": "defaultUnit"
+        }
+      ],
+      [
+        {
+          "name": "defaultDate"
+        },
+        false
+      ],
+      [
+        {
+          "name": "notNull"
+        },
+        false
+      ],
+      [
+        {
+          "name": "isRequired"
+        },
+        {
+          "name": "isReadOnly"
+        }
+      ],
+      [
+        {
+          "name": "trim"
+        },
+        false
+      ],
+      [
+        {
+          "name": "sortOrder"
+        },
+        {
+          "name": "attributeGroupSortOrder"
+        }
+      ],
+      [
+        {
+          "name": "tooltip"
+        },
+        false
+      ],
+      [
+        {
+          "name": "maxLength"
+        },
+        {
+          "name": "countBytesInsteadOfCharacters"
+        }
+      ],
+      [
+        {
+          "name": "min"
+        },
+        {
+          "name": "max"
+        }
+      ],
+      [
+        {
+          "name": "amountOfDigitsAfterComma"
+        },
+        false
+      ],
+      [
+        {
+          "name": "useDisabledTextareaInViewMode"
+        },
+        {
+          "name": "fullWidth"
+        }
+      ],
+      [
+        {
+          "name": "extensibleEnum"
+        },
+        {
+          "name": "dropdown"
+        }
+      ],
+      [
+        {
+          "name": "allowedOptions"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description"
+        },
+        false
+      ],
+      [
+        {
+          "name": "htmlSanitizer"
+        },
+        false
+      ],
+      [
+        {
+          "name": "compositeAttribute"
+        },
+        false
+      ]
+    ]
+  }
+]

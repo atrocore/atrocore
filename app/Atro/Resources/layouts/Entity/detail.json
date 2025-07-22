@@ -124,6 +124,22 @@
       ],
       [
         {
+          "name": "hasAttribute"
+        },
+        {
+          "name": "hasClassification"
+        }
+      ],
+      [
+        {
+          "name": "disableAttributeLinking"
+        },
+        {
+          "name": "singleClassification"
+        }
+      ],
+      [
+        {
           "name": "hasAssociate"
         },
         false
