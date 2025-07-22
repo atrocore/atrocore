@@ -507,6 +507,11 @@ class ReferenceData extends Repository implements Injectable
         return !is_bool(file_put_contents($this->filePath, json_encode($data)));
     }
 
+    public function getCacheKey(string $id): string
+    {
+        return "entity_{$this->entityType}_{$id}";
+    }
+
     protected function init()
     {
         $this->addDependency('config');

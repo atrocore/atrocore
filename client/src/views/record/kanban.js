@@ -241,6 +241,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
 
+            try {
+                this.svelteFilter?.$destroy();
+            } catch (e) {}
+
             const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
             if (target && this.options.searchManager && (this.options.showSearch || this.options.showFilter)) {
                 const props = {
@@ -254,7 +258,7 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                     props.uniqueKey = this.options.searchUniqueKey;
                 }
 
-                new Svelte.FilterSearchBar({
+                this.svelteFilter = new Svelte.FilterSearchBar({
                     target: target,
                     props: props
                 })
