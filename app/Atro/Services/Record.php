@@ -258,44 +258,23 @@ class Record extends RecordService
 
     public function getTreeItems(string $link, string $scope, array $params): array
     {
-        if($link === '_self') {
-            $params['select']  = ['id', 'name'];
-
-            $data = $this->findEntities($params);
-            $result = [];
-            foreach ($data['collection'] as $key => $entity) {
-                $result[] = [
-                    'id' => $entity->id,
-                    'name' => $entity->get('name'),
-                    'load_on_demand' => false,
-                    'offset' => ($params['offset']  ?? 0) + $key,
-                    'total' => $data['total']
-                ];
+        if ($link !=='_self') {
+            $foreignLink = '';
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
+                if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+                    $foreignLink = $linkName;
+                }
             }
-
-            return [
-                'list' => $result,
-                'total' => $data['total']
+            if (empty($foreignLink)) {
+                throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
+            }
+            $params['where'][] = [
+                'type'      => 'isLinked',
+                'attribute' => $foreignLink,
             ];
         }
 
-
-        $foreignLink = '';
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-            if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
-                $foreignLink = $linkName;
-            }
-        }
-        if (empty($foreignLink)) {
-            throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
-        }
-
         $repository = $this->getRepository();
-
-        $params['where'][] = [
-            'type'      => 'isLinked',
-            'attribute' => $foreignLink,
-        ];
 
         $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
 
