@@ -610,6 +610,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $cell.prepend($editLink);
             }
 
+            this.$el.parent().one('dblclick.inlineEditOnce', () => {
+                this.inlineEdit();
+            });
+
             $editLink.on('click', function () {
                 this.inlineEdit();
             }.bind(this));
@@ -894,6 +898,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (!dontReset) {
                 this.model.set(this.initialAttributes);
             }
+
+            this.$el.parent().off('dblclick.inlineEditOnce');
 
             this.reRender(true);
         },

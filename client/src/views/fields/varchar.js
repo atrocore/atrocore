@@ -59,27 +59,27 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             'focusin input': function () {
                 this.applyDefaultValue()
             },
-            'keydown': function(e){
+            'keydown': function (e) {
                 let value = this.$el.find('input.main-element').val();
                 let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
-                if(e.keyCode === 8){
+                if (e.keyCode === 8) {
                     // backspace
-                    if(value === ""  && !isNullValue){
+                    if (value === "" && !isNullValue) {
                         e.preventDefault()
                         this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
                         this.isEmptyValue = true;
                     }
-                    if(!this.notNull && value === "" && !isNullValue){
+                    if (!this.notNull && value === "" && !isNullValue) {
                         e.preventDefault()
-                        this.$el.find('input.main-element').attr('placeholder','Null')
+                        this.$el.find('input.main-element').attr('placeholder', 'Null')
                     }
-                }else if(e.keyCode === 32){
+                } else if (e.keyCode === 32) {
                     // space
-                    if(value === "" && isNullValue){
+                    if (value === "" && isNullValue) {
                         e.preventDefault()
                         this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
                     }
-                }else if(value === ""){
+                } else if (value === "" && ![17, 18].includes(e.keyCode) && !(e.ctrlKey && e.key === 's')) {
                     this.$el.find('input.main-element').attr('placeholder', this.translate('None'))
                 }
             }

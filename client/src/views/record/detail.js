@@ -1184,12 +1184,17 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }, this);
             }
 
-            $(window).on('keydown', e => {
+            $(window).off('keydown.actions').on('keydown.actions', e => {
                 if (e.keyCode === 69 && e.ctrlKey && !$('body').hasClass('modal-open')) {
                     this.hotKeyEdit(e);
                 }
                 if (e.keyCode === 83 && e.ctrlKey && !$('body').hasClass('modal-open')) {
                     this.hotKeySave(e);
+                }
+
+                if (e.key === "Escape") {
+                    $('.inline-cancel-link').click();
+                    $('button[data-name="cancelEdit"]').click();
                 }
             });
 
