@@ -267,7 +267,10 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     viewMode: this.viewMode,
                     isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
                     onViewModeChange: (mode) => {
-                        this.switchViewMode(mode);
+                        if (mode) {
+                            this.getRouter().navigate(`${this.scope}/${mode}`, {trigger: false});
+                            this.switchViewMode(mode);
+                        }
                     }
                 }
             });
