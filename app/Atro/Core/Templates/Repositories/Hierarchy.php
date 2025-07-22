@@ -437,7 +437,7 @@ class Hierarchy extends Base
         if (!empty($parentId)) {
             $qb->setParameter('parentId', $parentId);
         }
-        $GLOBALS['log']->error($qb->getSQL());
+
         return Util::arrayKeysToCamelCase($qb->fetchAllAssociative());
     }
 
