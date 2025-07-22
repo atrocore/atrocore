@@ -128,21 +128,13 @@ class ControllerManager
             $request
         );
 
-        $ignoredControllers = [
-            'ActionHistoryRecord',
-            'App',
-            'Metadata',
-            'Layout',
-            'I18n',
-            'Settings'
-        ];
-
         if (
             $this->getConfig()->get('isInstalled')
             && empty($this->getConfig()->get('disableActionHistory'))
             && empty($this->getUser()->get('disableActionHistory'))
             && $this->getUser()->id !== 'system'
-            && !in_array($controllerName, $ignoredControllers)
+            && !in_array($controllerName, ['ActionHistoryRecord', 'App', 'Metadata'])
+            && !(in_array($controllerName, ['Layout', 'I18n', 'Settings']) && $request->getMethod() === 'GET')
             && empty($this->getMetadata()->get("scopes.{$controllerName}.disableActionHistory"))
         ) {
             $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
