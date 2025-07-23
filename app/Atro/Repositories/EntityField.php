@@ -59,7 +59,7 @@ class EntityField extends ReferenceData
             $fieldDefs['customizable'] = false;
         }
 
-        $fieldDefs['customizable'] = $fieldDefs['customizable'] !== false;
+        $fieldDefs['customizable'] = !empty($fieldDefs['customizable']);
 
         if ($this->boolFields === null) {
             $this->boolFields = [];
