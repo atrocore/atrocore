@@ -4789,6 +4789,43 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     margin-left: 10px;
 }
 
+.navbar .panel-default {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.navbar .panel-default > .panel-heading {
+    padding: 10px 15px 10px 20px;
+}
+
+.navbar .panel-default .btn {
+    border-radius: 3px;
+}
+
+.navbar .panel-default .btn i:not(:last-child) {
+    margin-inline-end: 5px;
+}
+
+.navbar .panel-default .btn-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+    margin: -10px -20px 10px;
+}
+
+.navbar .panel-default .panel-body > .list-container {
+    min-height: 25px;
+}
+
+.navbar .panel-default .panel-body:has(> .btn-container) {
+    padding-top: 0;
+}
+
 .navbar-right .panel-default > .panel-heading,
 .navbar-right .dropdown-header {
     color: #000;
@@ -9942,25 +9979,9 @@ body > #header .navbar-brand span.home-icon {
         overflow-y: auto;
     }
 
-    #header .navbar-right .menu-container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 34px
-    }
-
     #header .navbar-right > li > a {
         color: var(--nav-font-color);
         padding: 5px 10px;
-        width: 40px;
-        text-align: right;
-    }
-
-    #header .navbar-right .notifications-badge-container {
-        position: fixed;
-        top: 0;
-        right: 68px;
-        width: 34px
     }
 
     #header ul.tabs li > a {
@@ -13317,18 +13338,8 @@ input#sn-checkbox-open-in-new-window {
     font-size: 16px;
 }
 
-.navbar-nav.navbar-right > li .ph,
-.navbar-nav.navbar-right > li .ph-fill {
+.navbar-nav.navbar-right > li > a > i {
     font-size: 20px;
-}
-
-.record .stick-sub.button-container {
-    background-color: #fff !important;
-}
-
-.stick-sub.button-container {
-    padding: 18px 15px 0 15px;
-    border-bottom: 1px solid #dedede
 }
 
 .header-breadcrumbs .subsection a, .page-header .breadcrumb-separator {
