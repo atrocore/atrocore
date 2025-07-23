@@ -907,6 +907,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEdit: function () {
+            if (this.readOnly) {
+                return false;
+            }
+
             var self = this;
 
             this.trigger('edit', this);
