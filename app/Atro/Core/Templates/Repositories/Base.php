@@ -13,13 +13,50 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
+use Espo\ORM\EntityCollection;
 
 class Base extends RDB
 {
+    public function find(array $params = [])
+    {
+        $collection = parent::find($params);
+
+        if ($this->getMetadata()->get("scopes.{$this->entityName}.hasAttribute")) {
+            $this->prepareAttributesForOutput($collection, $params);
+        }
+
+        return $collection;
+    }
+
+    public function prepareAttributesForOutput(EntityCollection $collection, array $params): void
+    {
+        if (empty($params['attributesIds']) && empty($params['allAttributes'])) {
+            return;
+        }
+
+        if (!empty($params['allAttributes'])) {
+            foreach ($collection as $entity) {
+                $this->getAttributeFieldConverter()->putAttributesToEntity($entity);
+            }
+        }
+
+        foreach ($collection as $entity) {
+            if (!empty($entity->get('attributesDefs'))) {
+                $attributesDefs = [];
+                foreach ($entity->get('attributesDefs') as $field => $defs) {
+                    $attributesDefs[$field]['attributeId'] = $defs['attributeId'];
+                    $attributesDefs[$field]['type'] = $defs['type'];
+                }
+                $entity->set('attributesDefs', $attributesDefs);
+            }
+        }
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {
@@ -147,5 +184,17 @@ class Base extends RDB
                     ->executeQuery();
             }
         }
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency(AttributeFieldConverter::class);
+    }
+
+    protected function getAttributeFieldConverter(): AttributeFieldConverter
+    {
+        return $this->getInjection(AttributeFieldConverter::class);
     }
 }
