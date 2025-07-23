@@ -17,17 +17,16 @@ use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Atro\ORM\DB\RDB\QueryCallbacks\JoinManyToMany;
+use Atro\Core\Utils\Util;
+use Atro\Core\Utils\Metadata;
+use Atro\Repositories\Attribute;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Atro\Core\Utils\Util;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\EntityManager;
 use Espo\ORM\IEntity;
-use Atro\Core\Utils\Metadata;
-use Pim\Repositories\Attribute;
 
 class Mapper implements MapperInterface
 {
@@ -642,10 +641,6 @@ class Mapper implements MapperInterface
 
     protected function upsertAttributes(array $attrs, IEntity $entity): void
     {
-        if (!class_exists(Attribute::class)) {
-            return;
-        }
-
         /* @var $attributeRepository Attribute */
         $attributeRepository = $this->em->getRepository('Attribute');
 
