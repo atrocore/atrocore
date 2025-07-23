@@ -118,6 +118,10 @@ abstract class AbstractRecordController extends AbstractController
             $params['attributesIds'] = explode(',', $request->get('attributes'));
         }
 
+        if ($request->get('allAttributes') === 'true' || $request->get('allAttributes') === '1') {
+            $params['allAttributes'] = true;
+        }
+
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findEntities($params);
