@@ -206,11 +206,11 @@ class AttributeFieldConverter
             ->setParameter('fileType', 'file')
             ->setParameter('eeType', 'extensibleEnum');
 
-        $res = $qb->fetchAllAssociative();
-
         if (class_exists("\\Pim\\Module")) {
             $qb->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false');
         }
+
+        $res = $qb->fetchAllAssociative();
 
         foreach ($res as $k => $attribute) {
             if (!empty($attribute['channel_name'])) {

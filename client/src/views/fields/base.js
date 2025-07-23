@@ -611,7 +611,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             this.$el.parent().one('dblclick.inlineEditOnce', () => {
-                this.inlineEdit();
+                if (this.mode === 'detail') {
+                    this.inlineEdit();
+                }
             });
 
             $editLink.on('click', function () {
