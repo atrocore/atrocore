@@ -292,9 +292,7 @@
                 "text",
                 "markdown",
                 "wysiwyg",
-                "url",
-                "int",
-                "float"
+                "url"
               ]
             }
           ]
