@@ -48,7 +48,7 @@ class Attribute extends Base
                 ->select('a.*, c.id as channel_id, c.name as channel_name')
                 ->from($conn->quoteIdentifier('attribute'), 'a')
                 ->where('a.id IN (:ids)')
-                ->andWhere('deleted=:false')
+                ->andWhere('a.deleted=:false')
                 ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false')
                 ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
