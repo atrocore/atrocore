@@ -43,11 +43,23 @@ class Attribute extends Base
     {
         $conn = $this->getConnection();
 
+        if (class_exists("\\Pim\\Module")) {
+            return $conn->createQueryBuilder()
+                ->select('a.*, c.id as channel_id, c.name as channel_name')
+                ->from($conn->quoteIdentifier('attribute'), 'a')
+                ->where('a.id IN (:ids)')
+                ->andWhere('deleted=:false')
+                ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false')
+                ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        }
+
         return $conn->createQueryBuilder()
-            ->select('a.*, c.id as channel_id, c.name as channel_name')
-            ->from($conn->quoteIdentifier('attribute'), 'a')
-            ->where('a.id IN (:ids)')
-            ->leftJoin('a', $conn->quoteIdentifier('channel'), 'c', 'a.channel_id=c.id AND c.deleted=:false')
+            ->select('*')
+            ->from($conn->quoteIdentifier('attribute'))
+            ->where('id IN (:ids)')
+            ->andWhere('deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();

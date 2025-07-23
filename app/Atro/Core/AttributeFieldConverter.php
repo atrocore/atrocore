@@ -172,7 +172,6 @@ class AttributeFieldConverter
             'av.reference_value',
             'av.json_value',
             'f.name as file_name',
-            'c.name as channel_name',
             'eeo.name as extensible_enum_option_name',
             'ag.id as attribute_group_id',
             'ag.name as attribute_group_name',
@@ -181,6 +180,10 @@ class AttributeFieldConverter
             'a.attribute_group_sort_order as sort_order_in_attribute_group'
         ];
 
+        if (class_exists("\\Pim\\Module")) {
+            $select[] = 'c.name as channel_name';
+        }
+
         if (!empty($this->config->get('isMultilangActive'))) {
             foreach ($this->config->get('inputLanguageList', []) as $code) {
                 $select[] = 'av.varchar_value_' . strtolower($code);
@@ -188,12 +191,11 @@ class AttributeFieldConverter
             }
         }
 
-        $res = $this->conn->createQueryBuilder()
+        $qb = $this->conn->createQueryBuilder()
             ->select(implode(',', $select))
             ->from("{$tableName}_attribute_value", 'av')
             ->innerJoin('av', $this->conn->quoteIdentifier('attribute'), 'a', 'a.id=av.attribute_id AND a.deleted=:false')
             ->leftJoin('a', 'attribute_group', 'ag', 'ag.id=a.attribute_group_id AND ag.deleted=:false')
-            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('file'), 'f', 'f.id=av.reference_value AND a.type=:fileType AND f.deleted=:false')
             ->leftJoin('av', $this->conn->quoteIdentifier('extensible_enum_option'), 'eeo', 'eeo.id=av.reference_value AND a.type=:eeType AND eeo.deleted=:false')
             ->where('av.deleted=:false')
@@ -202,8 +204,13 @@ class AttributeFieldConverter
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $entity->get('id'))
             ->setParameter('fileType', 'file')
-            ->setParameter('eeType', 'extensibleEnum')
-            ->fetchAllAssociative();
+            ->setParameter('eeType', 'extensibleEnum');
+
+        $res = $qb->fetchAllAssociative();
+
+        if (class_exists("\\Pim\\Module")) {
+            $qb->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id=a.channel_id AND c.deleted=:false');
+        }
 
         foreach ($res as $k => $attribute) {
             if (!empty($attribute['channel_name'])) {
@@ -324,12 +331,23 @@ class AttributeFieldConverter
 
     public function getAttributesRowsByIds(array $attributesIds): array
     {
+        if (class_exists("\\Pim\\Module")) {
+            return $this->conn->createQueryBuilder()
+                ->select('a.*, c.name as channel_name')
+                ->from($this->conn->quoteIdentifier('attribute'), 'a')
+                ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
+                ->where('a.id IN (:ids) or a.code IN (:ids)')
+                ->andWhere('a.deleted=:false')
+                ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        }
+
         return $this->conn->createQueryBuilder()
-            ->select('a.*, c.name as channel_name')
-            ->from($this->conn->quoteIdentifier('attribute'), 'a')
-            ->leftJoin('a', $this->conn->quoteIdentifier('channel'), 'c', 'c.id = a.channel_id AND c.deleted=:false')
-            ->where('a.id IN (:ids) or a.code IN (:ids)')
-            ->andWhere('a.deleted=:false')
+            ->select('*')
+            ->from($this->conn->quoteIdentifier('attribute'))
+            ->where('id IN (:ids) or code IN (:ids)')
+            ->andWhere('deleted=:false')
             ->setParameter('ids', $attributesIds, Connection::PARAM_STR_ARRAY)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
