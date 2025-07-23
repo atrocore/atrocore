@@ -278,6 +278,14 @@ class AttributeFieldConverter
                 }
             }
 
+            if (!empty($entity->_originalInput->attributesDefs)) {
+                foreach ($entity->_originalInput->attributesDefs as $defs) {
+                    if (!in_array($defs->attributeId, $attributesIds)) {
+                        $attributesIds[] = $defs->attributeId;
+                    }
+                }
+            }
+
             $preparedAttributesIds = [];
             foreach ($attributesIds as $attributeId) {
                 if (!in_array($attributeId, array_column($res, 'id'))) {
@@ -313,7 +321,6 @@ class AttributeFieldConverter
 
         $attributesDefs = $this->eventManager->dispatch('AttributeFieldConverter', 'afterPutAttributesToEntity', new Event(['entity' => $entity, 'attributes' => $res, 'attributesDefs' => $attributesDefs]))
             ->getArgument('attributesDefs');
-
 
         $entity->set('attributesDefs', $attributesDefs);
         $entity->setAsFetched();
