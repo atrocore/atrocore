@@ -67,18 +67,20 @@
                 <span class="pull-right">
                     <a href="/" class="close" on:click={event=>{event.preventDefault();close();}}><span
                             aria-hidden="true">×</span></a>
-                    {#if qmPaused}
-                    <a href="/" title="{Language.translate('Start')}" class="qm-button"
-                       on:click={event=>{event.preventDefault();startStopQm(false);}}>{Language.translate('Start')}</a>
-                    {:else}
-                    <a href="/" title="{Language.translate('Pause')}" class="qm-button"
-                       on:click={event=>{event.preventDefault();startStopQm(true);}}>{Language.translate('Pause')}</a>
-                    {/if}
-                    <a href="#Job" title="{Language.translate('View List')}"
-                       class="qp-view-list">{Language.translate('View List')}</a>
                </span>
             </div>
             <div class="panel-body">
+                <div class="btn-container">
+                    <a role="button" href="#Job" title="{Language.translate('View List')}"
+                       class="btn btn-primary outline"><i class="ph ph-list"></i><span>{Language.translate('View List')}</span></a>
+                    {#if qmPaused}
+                        <a role="button" href="/" title="{Language.translate('Start')}" class="btn btn-primary outline"
+                           on:click={event=>{event.preventDefault();startStopQm(false);}}><i class="ph ph-play"></i><span>{Language.translate('Start')}</span></a>
+                    {:else}
+                        <a role="button" href="/" title="{Language.translate('Pause')}" class="btn btn-primary outline"
+                           on:click={event=>{event.preventDefault();startStopQm(true);}}><i class="ph ph-pause"></i><span>{Language.translate('Pause')}</span></a>
+                    {/if}
+                </div>
                 <div class="list-container">{Language.translate('Loading...')}</div>
             </div>
         </div>
@@ -86,10 +88,6 @@
 {/if}
 
 <style>
-    .qp-view-list {
-        margin-left: 5px
-    }
-
     .close {
         margin-left: 10px;
     }
