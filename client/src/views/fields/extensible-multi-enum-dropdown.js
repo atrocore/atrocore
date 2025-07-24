@@ -7,8 +7,6 @@
  * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
-
-
 Espo.define('views/fields/extensible-multi-enum-dropdown', 'views/fields/link-multiple-dropdown', function (Dep) {
     return Dep.extend({
         setup: function () {
