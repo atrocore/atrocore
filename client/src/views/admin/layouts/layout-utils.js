@@ -62,6 +62,11 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                 }, this);
                             }.bind(this));
                         },
+                        actionAddAttributes: ()=>{
+                            console.log('actionAddAttributes')
+
+                        }
+
                     }
                 }
             });
