@@ -39,7 +39,7 @@
            <FilterSearch bind:this={filter} searchManager={searchManager} scope={scope} uniqueKey={uniqueKey}/>
        </div>
     {/if}
-    <button class="btn btn-default refresh" disabled={refreshDisabled} title={Language.translate('Refresh')} on:click={onRefreshClick}><i class="ph ph-arrows-clockwise"></i></button>
+    <button class="refresh" disabled={refreshDisabled} title={Language.translate('Refresh')} on:click={onRefreshClick}><i class="ph ph-arrows-clockwise"></i></button>
 </div>
 
 <style>
@@ -47,9 +47,5 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-    }
-
-    .btn.refresh {
-        border-radius: 3px;
     }
 </style>

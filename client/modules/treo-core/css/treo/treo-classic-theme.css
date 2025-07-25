@@ -3730,21 +3730,12 @@ button.large,
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.3333333;
-    border-radius: 0
 }
 
-.btn-sm, .btn-group-sm > .btn {
+.btn-sm {
     padding: 4px 8px;
     font-size: 12px;
     line-height: 14px;
-    border-radius: 0;
-}
-
-.btn-xs, .btn-group-xs > .btn {
-    padding: 1px 5px;
-    font-size: 12px;
-    line-height: 14px;
-    border-radius: 0;
 }
 
 .btn-block {
@@ -3968,23 +3959,29 @@ tbody.collapse.in {
     }
 }
 
-.btn-group, .btn-group-vertical {
+.btn-group,
+.button-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: stretch;
     position: relative;
-    display: inline-block;
-    vertical-align: middle
 }
 
-.btn-group > .btn, .btn-group-vertical > .btn {
+.btn-group > .btn,
+.button-group > button {
     position: relative;
-    float: left
+    border-radius: 0;
 }
 
-.btn-group > .btn:hover, .btn-group-vertical > .btn:hover, .btn-group > .btn:focus, .btn-group-vertical > .btn:focus, .btn-group > .btn:active, .btn-group-vertical > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn.active {
-    z-index: 2
+.btn-group > .btn:hover,
+.btn-group > .btn:focus,
+.btn-group > .btn:active,
+.btn-group > .btn.active {
+    z-index: 2;
 }
 
 .btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group {
-    margin-left: -1px
+    margin-left: -1px;
 }
 
 .btn-toolbar {
@@ -10626,6 +10623,10 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .field .link-container {
     margin-bottom: 0
+}
+
+.field .link-container:not(:empty) + .input-group .btn:last-child {
+    border-top-right-radius: 0;
 }
 
 .list-group-item {
@@ -17699,6 +17700,7 @@ span[data-img-src]::after {
     position: relative;
     text-align: center;
     line-height: 0;
+    border: 0;
 }
 
 .layout-editor-container .btn-link {
