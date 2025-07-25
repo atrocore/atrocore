@@ -25,6 +25,11 @@ class Association extends Base
             $entity->set('code', null);
         }
 
+        $entityId = $entity->get('entityId');
+        if (empty($this->getMetadata()->get(['scopes', $entityId, 'hasAssociate']))) {
+            throw new BadRequest("Associate is not activated for entity {$entityId}.");
+        }
+
         if (empty($entity->get('isActive')) && $this->hasRecords($entity, true)) {
             throw new BadRequest($this->getLanguage()->translate('youCanNotDeactivateAssociationWithActiveRecords', 'exceptions', 'Association'));
         }
