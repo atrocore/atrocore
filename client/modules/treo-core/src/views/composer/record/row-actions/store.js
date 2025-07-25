@@ -15,7 +15,7 @@ Espo.define('treo-core:views/composer/record/row-actions/store', 'views/record/r
             Dep.prototype.setup.call(this);
 
             const locales = this.getConfig().get('locales');
-            let localeId = this.getUser()?.user?.localeId;
+            let localeId = this.getUser() ? this.getUser().get('localeId') : null;
             if (!localeId || !locales[localeId]) {
                 localeId = this.getConfig().get('locale');
                 if (!locales[localeId]) {
