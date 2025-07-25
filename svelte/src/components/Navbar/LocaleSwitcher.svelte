@@ -22,7 +22,7 @@
 
     let locale = UserData.get()?.user?.localeId
     if (!locale || !locales[locale]) {
-        locale = Config.get('localeId')
+        locale = Config.get('locale')
         if (!locales[locale]) {
             locale = 'main'
         }
