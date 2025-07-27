@@ -54,8 +54,9 @@ abstract class AbstractAction implements TypeInterface
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
         $input = new \stdClass();
         $input->triggeredEntity = $event->getArgument('entity');
+        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
 
-        return $this->executeNow($action, $input);
+        return $this->getActionManager()->executeNow($action, $input);
     }
 
     public function useMassActions(Entity $action, \stdClass $input): bool
