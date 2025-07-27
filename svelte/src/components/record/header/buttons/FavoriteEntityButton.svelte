@@ -8,11 +8,11 @@
     export let active: boolean = false;
 
     let params: ActionParams;
-    let style: string = 'default';
+    let style: string = '';
     let iconStyle: string;
 
     $: {
-        style = active ? 'primary outline' : 'default';
+        style = active ? 'primary outline' : '';
         iconStyle = active ? 'ph-fill' : 'ph';
         params = {
             action: "favorite",
@@ -30,10 +30,10 @@
     }
 </script>
 
-<ActionButton {params} on:execute={execute} className="btn-favorite"/>
+<ActionButton {params} on:execute={execute} className="button-favorite"/>
 
 <style>
-    :global(.btn-favorite) {
+    :global(.button-favorite) {
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;

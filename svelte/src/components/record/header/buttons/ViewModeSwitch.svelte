@@ -66,28 +66,11 @@
 </script>
 
 {#if viewTypes.length > 1}
-    <div class="btn-group view-mode-switch">
+    <div class="button-group view-mode-switch">
         {#each viewTypes as view}
-            <button class="btn action" class:btn-default={view.name !== mode} class:btn-primary={view.name === mode}
-                    data-name={view.name} data-action="List" on:click={changeView}>
+            <button class="primary action" class:outline={view.name !== mode} data-name={view.name} data-action="List" on:click={changeView}>
                 {@html view.icon}
             </button>
         {/each}
     </div>
 {/if}
-
-<style>
-    .btn:first-child {
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-    }
-
-    .btn:last-child {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-    }
-
-    .btn.btn-primary {
-        z-index: 1;
-    }
-</style>

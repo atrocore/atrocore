@@ -47,21 +47,15 @@
                     on:keyup={(e) => {e.key === 'Enter' ? search() : e}}
                     tabindex="1"
             >
-            <div class="input-group-btn">
+            <div class="button-group">
                 {#if hasSearchValue}
-                    <button
-                            type="button"
-                            class="btn btn-default"
-                            aria-expanded="false"
-                            data-button-id="search-reset"
-                            on:click={reset}
-                    >
+                    <button type="button" aria-expanded="false" data-button-id="search-reset" on:click={reset}>
                         <i class="ph ph-x"></i>
                     </button>
                 {/if}
                 <button
                         type="button"
-                        class="btn btn-default" class:has-search-value={hasSearchValue}
+                        class:has-search-value={hasSearchValue}
                         title={Language.translate("Search")}
                         aria-expanded="false"
                         disabled={searchValue.trim().length === 0}
@@ -91,7 +85,7 @@
 
     .search-row .search input {
         background: transparent;
-        border: 1px solid #eee;
+        border: 1px solid #e0e0e0;
         border-right: 0;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
@@ -101,20 +95,20 @@
         border: 0;
     }
 
-    .search-row .input-group-btn button {
-        border: 1px solid #eee;
-        background-color: transparent;
-    }
-
-    .search-row .input-group-btn:last-child button:last-child {
-        border-radius: 0 3px 3px 0;
-    }
-
     .search-row .form-group {
         display: flex;
     }
 
-    .btn.has-search-value {
+    .search-row .button-group {
+        flex-wrap: nowrap;
+    }
+
+    .search-row .button-group > button:first-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    button.has-search-value {
         color: #06c;
     }
 </style>

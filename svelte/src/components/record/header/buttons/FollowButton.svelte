@@ -19,7 +19,7 @@
     $: {
         const userId = UserData.get()?.user.id ?? null;
         isFollowed = userId ? !!followers[userId] : false;
-        style = isFollowed ? 'primary outline' : 'default';
+        style = isFollowed ? 'primary outline' : '';
         iconStyle = isFollowed ? 'ph-fill ph-bell-simple-ringing' : 'ph ph-bell-simple';
         params = {
             name: 'following',

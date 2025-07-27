@@ -940,8 +940,8 @@
                     {/if}
                     {#if activeItem.name !== '_admin' }
                         <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
-                            <div class="btn-group" style="display:flex; align-items: stretch;">
-                                <button type="button" class="btn btn-default sort-btn" data-tippy="true"
+                            <div class="button-group" style="display:flex; align-items: stretch;">
+                                <button type="button" class="sort-btn" data-tippy="true"
                                         title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
                                         on:click={onSortAscChange}>
                                     <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>

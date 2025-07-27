@@ -33,7 +33,7 @@
     const downloadActionParams: ActionParams = {
         style: 'default',
         size: 'small',
-        html: `<i class="ph ph-download-simple"></i>${Language.translate('Download')}`,
+        html: `<i class="ph ph-download-simple"></i><span>${Language.translate('Download')}</span>`,
         action: 'download'
     } as ActionParams;
 
@@ -46,7 +46,7 @@
 
     let isLoadingMore: boolean = false;
     let isZoomActive: boolean = false;
-    $: zoomActionParams.html = (isZoomActive ? `<i class="ph ph-magnifying-glass-minus"></i>` : `<i class="ph ph-magnifying-glass-plus"></i>`) + Language.translate('galleryZoom');
+    $: zoomActionParams.html = (isZoomActive ? `<i class="ph ph-magnifying-glass-minus"></i>` : `<i class="ph ph-magnifying-glass-plus"></i>`) + `<span>${Language.translate('galleryZoom')}</span>`;
 
     let currentIndex: number = 0;
     let currentMedia: GalleryMedia;
@@ -59,7 +59,7 @@
         action: 'toggleAlpha',
     } as ActionParams;
     $: {
-        transparentActionParams.html = (showTransparentBackground ? `<i class="ph ph-checkerboard"></i>` : `<i class="ph ph-square"></i>`) + Language.translate('galleryBackground');
+        transparentActionParams.html = (showTransparentBackground ? `<i class="ph ph-checkerboard"></i>` : `<i class="ph ph-square"></i>`) + `<span>${Language.translate('galleryBackground')}</span>`;
         transparentActionParams.disabled = !['png', 'svg', 'tiff', 'webp'].includes(currentMedia.name.split('.').pop() || '');
     }
 
@@ -286,14 +286,6 @@
         align-items: center;
         gap: 10px;
         margin: 0;
-    }
-
-    .gallery-header > .buttons-container > :global(.btn) {
-        border-radius: 3px;
-    }
-
-    .gallery-header > .buttons-container > :global(.btn i) {
-        margin-right: 5px;
     }
 
     .gallery-header > a {
