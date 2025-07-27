@@ -79,7 +79,16 @@ class ExtensibleEnumOption extends Base
 
                 foreach ($records as $item) {
                     $row = Util::arrayKeysToCamelCase($item);
-                    $row['preparedName'] = !empty($row['multilingual']) ? $row[$this->getOptionName()] : $row['name'];
+                    if (!empty($row['multilingual'])) {
+                        $localizedName = \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
+                        if ($localizedName !== 'name' && !empty($row[$localizedName])) {
+                            $row['preparedName'] = $row[$localizedName];
+                        } else {
+                            $row['preparedName'] = $row[$this->getOptionName()];
+                        }
+                    } else {
+                        $row['preparedName'] = $row['name'];
+                    }
                     $this->cachedOptions[$row['id']] = $row;
 
                     if ($id == $row['id']) {
@@ -229,7 +238,7 @@ class ExtensibleEnumOption extends Base
             }
         }
 
-        return \Atro\Core\Utils\Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), 'ExtensibleEnumOption', 'name');
+        return 'name';
     }
 
     protected function afterRemove(Entity $entity, array $options = [])

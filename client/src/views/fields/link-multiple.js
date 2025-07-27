@@ -257,8 +257,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             models.forEach(function (model) {
                                 if (typeof model.get !== "undefined") {
                                     let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
-                                    [foreignName] = self.getLocalizedFieldData(model.urlRoot, foreignName);
-                                    self.addLink(model.id, model.get(foreignName) ?? model.get('name'));
+                                    self.addLink(model.id, self.getLocalizedFieldValue(model, foreignName));
                                 } else if (model.name) {
                                     self.addLink(model.id, model.name);
                                 } else {
@@ -432,13 +431,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
+                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name')
                             response.list.forEach(function (item) {
+                                const value = item[localizedName] || item.name;
                                 list.push({
                                     id: item.id,
-                                    name: item[name] ?? '',
+                                    name: value ?? '',
                                     data: item.id,
-                                    value: item.name
+                                    value: value
                                 });
                             }, this);
                             return {

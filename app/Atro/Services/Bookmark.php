@@ -155,9 +155,10 @@ class Bookmark extends Base
             $result = [];
 
             foreach ($collection as $key => $item) {
+                $value = $this->getLocalizedNameValue($item, $scope);
                 $result[] = [
                     'id'             => $item->get('id'),
-                    'name'           => (!empty($localizedNameField) ? $item->get($localizedNameField) : null) ?? $item->get('name') ?? $item->get('id'),
+                    'name'           => !empty($value) ? $value : $item->get('id'),
                     'offset'         => $offset + $key,
                     'total'          => $total,
                     'disabled'       => false,

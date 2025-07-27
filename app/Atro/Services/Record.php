@@ -256,9 +256,23 @@ class Record extends RecordService
         return null;
     }
 
+    public function getLocalizedNameValue($record, string $scope): ?string
+    {
+        $localizedName = $this->getLocalizedNameField($scope);
+
+        if (!empty($localizedName)) {
+            $value = is_array($record) ? $record[$localizedName] : $record->get($localizedName);
+            if (!empty($value)) {
+                return $value;
+            }
+        }
+
+        return is_array($record) ? $record['name'] : $record->get('name');
+    }
+
     public function getTreeItems(string $link, string $scope, array $params): array
     {
-        if ($link !=='_self') {
+        if ($link !== '_self') {
             $foreignLink = '';
             foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
                 if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
@@ -294,9 +308,10 @@ class Record extends RecordService
         $result = [];
 
         foreach ($collection as $key => $item) {
+            $value = $this->getLocalizedNameValue($item, $scope);
             $result[] = [
                 'id'             => $item->get('id'),
-                'name'           => (!empty($localizedNameField) ? $item->get($localizedNameField) : null) ?? $item->get('name') ?? $item->get('id'),
+                'name'           => !empty($value) ? $value : $item->get('id'),
                 'offset'         => $offset + $key,
                 'total'          => $total,
                 'disabled'       => false,

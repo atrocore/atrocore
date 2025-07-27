@@ -389,37 +389,6 @@ class Attribute extends Base
         return (!empty($config['multilangFields'])) ? array_keys($config['multilangFields']) : [];
     }
 
-    public function findEntities($params)
-    {
-        if (!empty(\Atro\Services\AbstractService::getLanguagePrism())) {
-            return parent::findEntities($params);
-        }
-
-        $shouldUseLanguagePrism = true;
-
-        if (!empty($params['select']) && $this->getConfig()->get('isMultilangActive')) {
-            $userLanguage = $this->getInjection('user')->getLanguage();
-            if (!empty($userLanguage) && in_array($userLanguage, $this->getConfig()->get('inputLanguageList'))) {
-                foreach ($this->getConfig()->get('inputLanguageList') as $language) {
-                    if ($language === 'main' || $language == $this->getConfig()->get('mainLanguage')) {
-                        continue;
-                    }
-                    if (in_array(Util::toCamelCase('name_' . strtolower($language)), $params['select'])) {
-                        $shouldUseLanguagePrism = false;
-                    }
-                }
-            } else {
-                $shouldUseLanguagePrism = false;
-            }
-
-            if ($shouldUseLanguagePrism) {
-                $GLOBALS['languagePrism'] = $userLanguage;
-            }
-        }
-
-        return parent::findEntities($params);
-    }
-
     protected function checkFieldsWithPattern(Entity $entity): void
     {
         $attributeList = array_keys($this->getInjection('metadata')->get(['attributes']));

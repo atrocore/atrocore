@@ -265,10 +265,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         select: function (model) {
             let foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
-            [foreignName] = this.getLocalizedFieldData(this.foreignScope, foreignName);
+            const nameValue = this.getLocalizedFieldValue(model, foreignName);
 
-            this.$elementName.attr('value', model.get(foreignName));
-            this.$elementName.val(model.get(foreignName) || this.translate('None'));
+            this.$elementName.attr('value', nameValue);
+            this.$elementName.val(nameValue || this.translate('None'));
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
@@ -436,14 +436,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
                             response.list.forEach(function (item) {
+                                const value = item[localizedName] || item['name']
                                 list.push({
                                     id: item.id,
-                                    name: item[name] ?? '',
+                                    name: value || '',
                                     data: item.id,
-                                    value: item[name],
+                                    value: value,
                                     attributes: item
                                 });
                             }, this);
@@ -482,14 +483,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
-                                const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
                                 response.list.forEach(function (item) {
+                                    const value = item[localizedName] || item['name'];
                                     list.push({
                                         id: item.id,
-                                        name: item[name] ?? '',
+                                        name: value ?? '',
                                         data: item.id,
-                                        value: item.name
+                                        value: value
                                     });
                                 }, this);
                                 return {
