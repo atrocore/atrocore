@@ -830,10 +830,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             } else {
                 filterButton.css('color', 'black').addClass('btn-default').removeClass('btn-danger')
             }
+
             this.prepareFieldsData();
             this.renderFieldsPanels();
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
+            if(this.merging) {
+                this.handleRadioButtonsDisableState(false)
+            }
         },
 
         afterRender() {
