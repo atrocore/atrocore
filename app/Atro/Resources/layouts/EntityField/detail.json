@@ -234,7 +234,9 @@
         {
           "name": "default"
         },
-        false
+        {
+          "name": "defaultValueType"
+        }
       ],
       [
         {

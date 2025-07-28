@@ -39,6 +39,14 @@
       "tooltip": true
     },
     {
+      "name": "default",
+      "type": "markdown"
+    },
+    {
+      "name": "defaultValueType",
+      "type": "enum"
+    },
+    {
       "name": "readOnly",
       "type": "bool"
     },

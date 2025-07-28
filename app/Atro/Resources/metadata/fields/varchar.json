@@ -29,6 +29,14 @@
       "default": true
     },
     {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "defaultValueType",
+      "type": "enum"
+    },
+    {
       "name": "readOnly",
       "type": "bool"
     },
