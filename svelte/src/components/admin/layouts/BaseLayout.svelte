@@ -48,9 +48,14 @@
             buttonList.unshift({name: 'save', label: Language.translate('Save', 'labels'), style: 'primary'})
         }
 
+        const canReset = layoutData?.storedProfile && layoutData.storedProfile.id === params.layoutProfileId && layoutData.canEdit
 
-        if (layoutData && layoutData.storedProfile && layoutData.storedProfile.id === params.layoutProfileId && layoutData.canEdit) {
-            buttonList.push({name: 'reset', label: Language.translate('reset', 'labels', 'LayoutManager')})
+        if (!params.inModal || canReset) {
+            buttonList.push({
+                name: 'reset',
+                disabled: !canReset,
+                label: Language.translate('reset', 'labels', 'LayoutManager')
+            })
         }
     }
 
@@ -149,7 +154,7 @@
     {#each buttonList as button}
         <button on:click={()=>onClick(button)}
                 data-action="{button.name}"
-                disabled={disabled}
+                disabled={disabled||button.disabled}
                 type="button"
                 class={`action ${button.style ?? ''}`}>
             {button.label}
