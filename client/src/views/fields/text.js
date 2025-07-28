@@ -85,6 +85,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (this.params.rowsMax < this.params.rowsMin) {
                 this.params.rowsMin = this.params.rowsMax;
             }
+
+            this.setScriptDefaultValue();
         },
 
         setupSearch: function () {

@@ -12,6 +12,7 @@
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\RealtimeManager;
 
 class App extends \Espo\Controllers\App
@@ -23,6 +24,37 @@ class App extends \Espo\Controllers\App
         }
 
         return $this->getRealtimeManager()->startEntityListening($data->entityName, $data->entityId);
+    }
+
+    public function actionDefaultValueForScriptType($params, $data, $request)
+    {
+        if (!$request->isGet()) {
+            throw new NotFound();
+        }
+
+        if (empty($request->get('entityName')) || empty($request->get('field'))) {
+            throw new BadRequest("'entityName' and 'field' params are required.");
+        }
+
+        $default = null;
+
+        $defaultValueType = $this
+            ->getMetadata()
+            ->get("entityDefs.{$request->get('entityName')}.fields.{$request->get('field')}.defaultValueType");
+
+        if ($defaultValueType === 'script') {
+            $script = $this
+                ->getMetadata()
+                ->get("entityDefs.{$request->get('entityName')}.fields.{$request->get('field')}.default");
+
+            if (!empty($script)) {
+                $default = $this->getContainer()->get('twig')->renderTemplate((string)$script, []);
+            }
+        }
+
+        return [
+            "default" => $default
+        ];
     }
 
     protected function getRealtimeManager(): RealtimeManager
