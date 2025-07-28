@@ -232,11 +232,15 @@
       ],
       [
         {
+          "name": "defaultValueType"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
-        {
-          "name": "defaultValueType"
-        }
+        false
       ],
       [
         {
