@@ -420,6 +420,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             this.uiHandler = new UiHandler(this.uiHandlerDefs, this, Twig);
 
             this.processUiHandler('onLoad', this.name);
+            this.listenTo(this.model, 'sync', () => {
+                this.processUiHandler('onLoad', this.name);
+            });
             this.listenTo(this.model, 'changeField', fieldName => {
                 this.processUiHandler('onChange', fieldName);
             });
