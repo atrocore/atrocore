@@ -1283,7 +1283,9 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     entityName: this.model.name,
                     field: this.name
                 }).success(res => {
-                    this.model.set(this.name, res.default);
+                    if (this.model.get(this.name) === null) {
+                        this.model.set(this.name, res.default);
+                    }
                 });
             }
         },
