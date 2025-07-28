@@ -4057,7 +4057,9 @@ tbody.collapse.in {
 .btn-group.open .dropdown-toggle.btn-link {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
-    box-shadow: none
+    box-shadow: none;
+    border-color: transparent;
+    background-color: transparent;
 }
 
 .btn .caret {
@@ -13668,6 +13670,7 @@ ul.dropdown-menu > li.checkbox {
     }
 }
 
+.table > tbody > tr.active-dropdown,
 .table > tbody > tr.active {
     background: #e8eced;
 }
