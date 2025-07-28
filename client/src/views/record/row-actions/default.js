@@ -62,12 +62,12 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
                     dropdown.parentElement?.classList.add('open');
 
-                    this.$el.closest('.list-row').addClass('active').addClass('active-dropdown');
+                    this.$el.closest('.list-row').addClass('active-dropdown');
                 },
                 onDropdownHide: dropdown => {
                     dropdown.parentElement?.classList.remove('open');
 
-                    this.$el.closest('.list-row').removeClass('active').removeClass('active-dropdown');
+                    this.$el.closest('.list-row').removeClass('active-dropdown');
                 },
             });
         },

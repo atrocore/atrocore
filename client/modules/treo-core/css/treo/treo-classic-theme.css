@@ -13668,6 +13668,7 @@ ul.dropdown-menu > li.checkbox {
     }
 }
 
+.table > tbody > tr.active-dropdown,
 .table > tbody > tr.active {
     background: #e8eced;
 }
