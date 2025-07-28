@@ -38,12 +38,12 @@ Espo.define('views/fields/measure-dropdown', 'views/fields/extensible-enum-dropd
             this.params.options = [''];
             this.translatedOptions = { '': '' };
 
-            const [name] = this.getLocalizedFieldData('Unit', 'name');
+            const [localizedName] = this.getLocalizedFieldData('Unit', 'name');
             const measureId = this.getMeasureId()
             if (measureId) {
                 this.getMeasureUnits(measureId).forEach(option => {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option[name] ?? option.name ?? ' ';
+                    this.translatedOptions[option.id] = option[localizedName] || option.name || ' ';
                 });
             }
         },

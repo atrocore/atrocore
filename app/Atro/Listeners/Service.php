@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\Utils\Language;
 
 class Service extends AbstractListener
 {
@@ -26,7 +27,8 @@ class Service extends AbstractListener
                 $referenceEntity = $this->getEntityManager()->getEntity($defs['entity'], $entity->get($field . 'Id'));
 
                 if (!empty($referenceEntity)) {
-                    $entity->set($field . 'Name', $referenceEntity->get('name'));
+                    $localizedName = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $referenceEntity->getEntityType(), 'name');
+                    $entity->set($field . 'Name', !empty($referenceEntity->get($localizedName)) ? $referenceEntity->get($localizedName) : $referenceEntity->get('name'));
                 }
             }
         }

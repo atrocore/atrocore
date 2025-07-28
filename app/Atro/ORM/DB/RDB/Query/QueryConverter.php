@@ -747,18 +747,12 @@ class QueryConverter
                                 if ($value == ' ') {
                                     $foreign[$i] = '\' \'';
                                 } else {
-                                    if (!empty($foreignEntity)) {
-                                        $value = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $value);
-                                    }
-                                    $foreign[$i] = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($value);
+                                    $foreign[$i] = $this->getLocalizedFieldPath($entity, $relationName, $foreignEntity, $value);
                                 }
                             }
                             $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign) . '))';
                         } else {
-                            if (!empty($foreignEntity)) {
-                                $foreign = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $foreign);
-                            }
-                            $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($foreign);
+                            $fieldPath = $this->getLocalizedFieldPath($entity, $relationName, $foreignEntity, $foreign);
                         }
                     }
                     break;
@@ -770,6 +764,23 @@ class QueryConverter
         }
 
         return false;
+    }
+
+    public function getLocalizedFieldPath(IEntity $entity, string $relationName, ?string $foreignEntity, string $field): string
+    {
+        $fieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($field);
+        if (empty($foreignEntity)) {
+            return $fieldPath;
+        }
+
+        $localizedField = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $field);
+
+        if ($localizedField !== $field) {
+            $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
+            $fieldPath = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
+        }
+
+        return $fieldPath;
     }
 
     public function getWhere(IEntity $entity, $whereClause, $sqlOp = 'AND', &$params = array(), $level = 0)
