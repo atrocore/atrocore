@@ -55,6 +55,44 @@ Espo.define('views/classification-attribute/fields/attribute', 'views/fields/lin
             }
         },
 
+        addCustomDataToView: function(view, rule) {
+            view.getSelectFilters = this.getSelectFilters.bind(this);
+            view.selectBoolFilterList = [];
+            view.boolFilterData = {};
+
+            view.getSelectFilters = () => {
+                let bool = {};
+                let queryBuilder = {
+                    condition: "AND",
+                    rules: [],
+                    valid: true
+                }
+                let subQuery = rule.data?.subQuery || [];
+                subQuery.forEach(item => {
+                    if (item.type === 'bool') {
+                        item.value.forEach(v => bool[v] = true);
+                    }
+
+                    if (item.condition) {
+                        queryBuilder.rules.push(item);
+                    }
+                });
+
+                if (queryBuilder.rules.length === 1) {
+                    queryBuilder = queryBuilder.rules[0];
+                }
+
+                return { bool, queryBuilder }
+            }
+
+            view.linkMultiple = this.chooseMultipleOnSearch();
+
+            view.getSelectAllByDefault = () => {
+                let subQuery = rule.data?.subQuery || [];
+                return subQuery.length > 0;
+            }
+        }
+
     })
 );
 
