@@ -833,62 +833,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
-                        view.getSelectFilters = this.getSelectFilters.bind(this);
-                        view.selectBoolFilterList = this.selectBoolFilterList;
-                        view.boolFilterData = {};
+                        this.addCustomDataToView(view, rule);
 
-                        for (const key in this.boolFilterData) {
-                            if (typeof this.boolFilterData[key] === 'function') {
-                                view.boolFilterData[key] = this.boolFilterData[key].bind(this);
-                            }
-                        }
-
-                        view.getSelectFilters = () => {
-                            let bool = {};
-                            let queryBuilder = {
-                                condition: "AND",
-                                rules: [],
-                                valid: true
-                            }
-                            let subQuery = rule.data?.subQuery || [];
-                            subQuery.forEach(item => {
-                                if (item.type === 'bool') {
-                                    item.value.forEach(v => bool[v] = true);
-                                }
-
-                                if (item.condition) {
-                                    queryBuilder.rules.push(item);
-                                }
-                            });
-
-                            if (queryBuilder.rules.length === 1) {
-                                queryBuilder = queryBuilder.rules[0];
-                            }
-
-                            return { bool, queryBuilder }
-                        }
-
-
-                        view.getAutocompleteAdditionalWhereConditions = () => {
-                            let boolData = this.getBoolFilterData();
-                            if (boolData) {
-                                return [
-                                    {
-                                        'type': 'bool',
-                                        'data': boolData
-                                    }
-                                ];
-                            }
-
-                            return [];
-                        }
-
-                        view.linkMultiple = this.chooseMultipleOnSearch();
-
-                        view.getSelectAllByDefault = () => {
-                            let subQuery = rule.data?.subQuery || [];
-                            return subQuery.length > 0;
-                        }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
@@ -1076,6 +1022,65 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 name = this.name + 'Id'
             }
             return name;
+        },
+
+        addCustomDataToView: function(view, rule) {
+            view.getSelectFilters = this.getSelectFilters.bind(this);
+            view.selectBoolFilterList = this.selectBoolFilterList;
+            view.boolFilterData = {};
+
+            for (const key in this.boolFilterData) {
+                if (typeof this.boolFilterData[key] === 'function') {
+                    view.boolFilterData[key] = this.boolFilterData[key].bind(this);
+                }
+            }
+
+            view.getSelectFilters = () => {
+                let bool = {};
+                let queryBuilder = {
+                    condition: "AND",
+                    rules: [],
+                    valid: true
+                }
+                let subQuery = rule.data?.subQuery || [];
+                subQuery.forEach(item => {
+                    if (item.type === 'bool') {
+                        item.value.forEach(v => bool[v] = true);
+                    }
+
+                    if (item.condition) {
+                        queryBuilder.rules.push(item);
+                    }
+                });
+
+                if (queryBuilder.rules.length === 1) {
+                    queryBuilder = queryBuilder.rules[0];
+                }
+
+                return { bool, queryBuilder }
+            }
+
+
+            view.getAutocompleteAdditionalWhereConditions = () => {
+                let boolData = this.getBoolFilterData();
+                if (boolData) {
+                    return [
+                        {
+                            'type': 'bool',
+                            'data': boolData
+                        }
+                    ];
+                }
+
+                return [];
+            }
+
+            view.linkMultiple = this.chooseMultipleOnSearch();
+
+            view.getSelectAllByDefault = () => {
+                let subQuery = rule.data?.subQuery || [];
+                return subQuery.length > 0;
+            }
         }
 
     });
