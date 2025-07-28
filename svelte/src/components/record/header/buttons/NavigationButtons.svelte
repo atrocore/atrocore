@@ -35,7 +35,7 @@
     };
 </script>
 
-<div class="btn-group">
+<div class="button-group">
     {#each paramsList as params}
         <ActionButton {params} on:execute={execute} />
     {/each}

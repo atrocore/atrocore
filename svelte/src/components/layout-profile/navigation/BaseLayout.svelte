@@ -57,7 +57,7 @@
                 disabled={disabled}
                 type="button"
                 style="{button.cssStyle}"
-                class={`btn action btn-${button.style ?? 'default'}`}>
+                class={`action ${button.style ?? ''}`}>
             {button.label}
         </button>
     {/each}
@@ -69,9 +69,5 @@
     .button-container {
         display: flex;
         gap: 10px;
-    }
-
-    .button-container > .btn {
-        border-radius: 3px;
     }
 </style>

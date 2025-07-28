@@ -24,17 +24,17 @@
     }
 </script>
 
-<div class="btn-group {className}">
+<div class="button-group {className}">
     {#each actions as action}
         <ActionButton params={action} on:execute={executeAction} />
     {/each}
 
     {#if hasMoreButton && (dropdownActions.length > 0 || dynamicActionsDropdown.length > 0)}
-        <button type="button" class="btn btn-default dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true" >
+        <button type="button" class="dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true" >
             {Language.translate('More')} <i class="ph ph-caret-down"></i>
         </button>
     {:else if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
+        <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
             <span class="caret"></span>
         </button>
     {/if}
@@ -67,16 +67,6 @@
 </div>
 
 <style>
-    .btn-group {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: stretch;
-    }
-
-    .btn-group > .btn:not(:first-child) {
-        margin-left: -1px;
-    }
-
     .more-button i {
         font-size: 14px;
     }

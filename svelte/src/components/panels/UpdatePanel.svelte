@@ -94,11 +94,11 @@
             </section>
             <section class="logs-section">
                 <div class="buttons">
-                    <button class="btn btn-default" disabled={!fullLogs} on:click={showLogsButtonHandler}>
+                    <button disabled={!fullLogs} on:click={showLogsButtonHandler}>
                         <i class="ph ph-list"></i><span>{showLogs ? 'Hide' : 'Show'} logs</span>
                     </button>
                     {#if restoreLink}
-                        <a href={restoreLink} target="_blank" class="btn btn-default" role="button"
+                        <a href={restoreLink} target="_blank" role="button"
                            style="float: right;"><i class="ph ph-clock-counter-clockwise"></i> <span>Recovery Instructions</span></a>
                     {/if}
                 </div>
@@ -121,8 +121,8 @@
         font-weight: 400;
     }
 
-    .btn > i {
-        margin-right: .5em;
+    button > i {
+        margin-right: .3em;
     }
 
     .logs-container {

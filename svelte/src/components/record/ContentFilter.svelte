@@ -68,10 +68,10 @@
 
 <div class="search-row" style="padding-bottom: 0;margin-left: 20px !important;">
     <div class="form-group">
-        <div class="btn-group input-group filter-group">
+        <div class="button-group input-group filter-group">
             <button
                     type="button"
-                    class="btn btn-default filter"
+                    class="filter"
                     title={Language.translate('Filter')}
                     aria-expanded="false"
                     class:active={selectedFilters.length>0}
@@ -85,10 +85,12 @@
             <div bind:this={dropdownDiv} class="dropdown" class:has-content={selectedFilters.length>0}>
                 <button
                         bind:this={dropdownButton}
-                        class="btn btn-default filter-switcher"
+                        class="filter-switcher"
                         on:mousedown={event => event.preventDefault()}
                 >
-                    <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
+                    {#if selectedFilters.length > 0}
+                        <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
+                    {/if}
                     <i class="ph ph-caret-down chevron"></i>
                 </button>
                 <div class="dropdown-menu" bind:this={dropdownMenu}>
@@ -109,7 +111,7 @@
             </div>
             {#if selectedFilters.length > 0 }
                 <button type="button"
-                        class="btn btn-default reset"
+                        class="reset"
                         title={Language.translate('Reset Filter')}
                         aria-expanded="false"
                         on:click={unsetAll}
@@ -125,10 +127,6 @@
 <style>
     .search-row .input-group {
         border: 0;
-    }
-
-    .search-row .btn {
-        border: 1px solid #eee;
     }
 
     .search-row .form-group {
@@ -176,17 +174,11 @@
         overflow-x: clip;
     }
 
-    .advanced-checkbox label {
-        font-weight: bold;
-        margin-top: 9px;
-        margin-bottom: 9px;
-    }
-
     .dropdown ul {
         padding: 0;
     }
 
-    .dropdown:last-child .btn:last-of-type {
+    .dropdown:last-child button:last-of-type {
         border-radius: 0 3px 3px 0;
     }
 

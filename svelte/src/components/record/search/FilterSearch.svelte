@@ -202,10 +202,10 @@
 
 <div class="search-row" style="padding-bottom: 0">
     <div class="form-group">
-            <div class="btn-group input-group filter-group">
+            <div class="button-group input-group filter-group">
                 <button
                         type="button"
-                        class="btn btn-default filter"
+                        class="filter"
                         title={Language.translate('Filter')}
                         aria-expanded="false"
                         on:click={openFilter}
@@ -221,10 +221,12 @@
                 <div bind:this={dropdownDiv} class="dropdown" class:has-content={filterNames !== ""}>
                     <button
                             bind:this={dropdownButton}
-                            class="btn btn-default actions-button filter-switcher"
+                            class="actions-button filter-switcher"
                             on:mousedown={event => event.preventDefault()}
                     >
-                        <span class="filter-names">{filterNames}</span>
+                        {#if filterNames !== ""}
+                            <span class="filter-names">{filterNames}</span>
+                        {/if}
                         <i class="ph ph-caret-down chevron"></i>
                     </button>
                     <div class="dropdown-menu" bind:this={dropdownMenu}>
@@ -245,7 +247,7 @@
                     <button
                             type="button"
                             disabled={!showUnsetAll}
-                            class="btn btn-default reset"
+                            class="reset"
                             title={Language.translate('Reset Filter')}
                             aria-expanded="false"
                             on:click={unsetAll}
@@ -261,10 +263,6 @@
 <style>
     .search-row .input-group {
         border: 0;
-    }
-
-    .search-row .btn {
-        border: 1px solid #eee;
     }
 
     .search-row .form-group {
@@ -332,7 +330,7 @@
         padding-left: 3px;
     }
 
-    .dropdown:last-child .btn:last-of-type {
+    .dropdown:last-child button:last-of-type {
         border-radius: 0 3px 3px 0;
     }
 

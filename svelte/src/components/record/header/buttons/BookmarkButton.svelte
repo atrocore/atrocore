@@ -15,7 +15,7 @@
     let params: ActionParams;
 
     $: {
-        style = bookmarkId ? 'primary outline' : 'default';
+        style = bookmarkId ? 'primary outline' : '';
         iconStyle = bookmarkId ? 'ph-fill' : 'ph';
         params = {
             name: 'bookmarking',
