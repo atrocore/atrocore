@@ -29,12 +29,27 @@ Espo.define('views/admin/entity-manager/record/detail', 'views/record/detail', D
         actionResetToDefault: function () {
             this.confirm(this.translate('resetToDefault', 'confirmations', 'Entity'), () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest('Entity/action/resetToDefault', {scope: this.model.get('code')}).then(() => {
+                this.ajaxPostRequest('Entity/action/resetToDefault', { scope: this.model.get('code') }).then(() => {
                     this.model.fetch().then(() => {
                         this.notify('Done', 'success');
                     });
                 });
             });
+        },
+
+        setupFieldLevelSecurity: function () {
+            const list = this.getMetadata().get('scopes.' + this.model.id + '.onlyEditableEmFields')
+
+            if (Array.isArray(list) && list.length > 0) {
+                let fieldsList = Object.keys(this.getMetadata().get('entityDefs.Entity.fields') || {})
+                fieldsList.forEach((field) => {
+                    if (!list.includes(field)) {
+                        this.setFieldReadOnly(field, true);
+                    }
+                });
+            }
+
+            Dep.prototype.setupFieldLevelSecurity.call(this)
         }
     });
 });
