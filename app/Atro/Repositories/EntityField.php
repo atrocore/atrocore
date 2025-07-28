@@ -51,6 +51,10 @@ class EntityField extends ReferenceData
             $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
         }
 
+        if(empty($fieldDefs)) {
+            return null;
+        }
+
         if (!empty($fieldDefs['emHidden'])) {
             return null;
         }
@@ -59,7 +63,8 @@ class EntityField extends ReferenceData
             $fieldDefs['customizable'] = false;
         }
 
-        $fieldDefs['customizable'] = !(array_key_exists('customizable', $fieldDefs) && $fieldDefs['customizable'] === false);
+
+        $fieldDefs['customizable'] = !( array_key_exists('customizable', $fieldDefs) && $fieldDefs['customizable'] === false);
 
         if ($this->boolFields === null) {
             $this->boolFields = [];
