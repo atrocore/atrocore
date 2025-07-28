@@ -13676,6 +13676,10 @@ ul.dropdown-menu > li.checkbox {
     z-index: 1;
 }
 
+.table > tbody > tr.active-dropdown {
+    z-index: 2;
+}
+
 #main .category-tree button.catalog-link {
     position: relative;
     border-bottom: 1px solid;
