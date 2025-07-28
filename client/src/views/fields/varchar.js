@@ -107,6 +107,8 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             let patternString = this.model.getFieldParam(this.name, 'pattern') || this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'pattern']) || null;
 
             this.validationPattern = this.convertStrToRegex(patternString);
+
+            this.setScriptDefaultValue();
         },
 
         setupSearch: function () {

@@ -232,6 +232,12 @@
       ],
       [
         {
+          "name": "defaultValueType"
+        },
+        false
+      ],
+      [
+        {
           "name": "default"
         },
         false

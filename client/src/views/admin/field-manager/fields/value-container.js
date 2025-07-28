@@ -36,6 +36,10 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     this.reRender();
                 }
             });
+
+            this.listenTo(this.model, 'change:defaultValueType', () => {
+                this.reRender();
+            });
         },
 
         afterRender() {
@@ -63,7 +67,10 @@ Espo.define('views/admin/field-manager/fields/value-container', 'views/fields/ba
                     enum: "views/admin/field-manager/fields/enum-default",
                 }
 
-                const fieldView = types[type] ?? this.getFieldManager().getViewName(type);
+                let fieldView = types[type] ?? this.getFieldManager().getViewName(type);
+                if (this.model.get('defaultValueType') === 'script') {
+                    fieldView = "views/fields/script";
+                }
 
                 let params = {
                     required: false,
