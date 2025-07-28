@@ -835,6 +835,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderFieldsPanels();
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
+
             if(this.merging) {
                 this.handleRadioButtonsDisableState(false)
             }
