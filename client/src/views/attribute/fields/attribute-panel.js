@@ -27,7 +27,7 @@ Espo.define('views/attribute/fields/attribute-panel', 'views/fields/link',
                     $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (id, panel) => {
                         if (panel.entityId === this.model.get('entityId') && panel.default) {
                             this.model.set('attributePanelId', panel.id);
-                            this.model.set('attributePanelName', panel.name);
+                            this.model.set('attributePanelName', panel[this.getLocalizedFieldData('AttributePanel', 'name')[0]]);
                         }
                     });
                 }

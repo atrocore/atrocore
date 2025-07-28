@@ -928,7 +928,29 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        model.set('valueNames', rule.data?.nameHash);
+                        let nameHash = rule.data?.nameHash
+                        if (nameHash?._localeId &&
+                            nameHash?._localeId !== this.getUser().get('localeId') &&
+                            (rule.value || []).length > 0) {
+                            const resp = this.ajaxGetRequest(this.foreignScope, {
+                                where: [
+                                    {
+                                        type: 'in',
+                                        attribute: 'id',
+                                        value: rule.value
+                                    }
+                                ]
+                            }, { async: false })
+
+                            nameHash = { '_localeId': this.getUser().get('localeId') }
+                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']) ?? 'name';
+                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                            resp.responseJSON.list.forEach(record => {
+                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                            })
+                        }
+
+                        model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
 
                         if (type === 'extensibleEnum') {

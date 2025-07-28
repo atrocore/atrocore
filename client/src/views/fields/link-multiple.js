@@ -201,10 +201,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.nameHash = Espo.Utils.clone(this.searchParams.nameHash) || {};
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
             }
+            this.nameHash._localeId = this.getUser().get('localeId')
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
                 this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
+                this.nameHash._localeId = this.getUser().get('localeId')
             }, this);
 
             this.sortable = this.sortable || this.params.sortable;
@@ -829,7 +831,28 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.getModelFactory().create(null, model => {
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        model.set('valueNames', rule.data?.nameHash);
+                        let nameHash = rule.data?.nameHash
+                        if (nameHash?._localeId &&
+                            nameHash?._localeId !== this.getUser().get('localeId') &&
+                            (rule.value || []).length > 0) {
+                            const resp = this.ajaxGetRequest(this.foreignScope, {
+                                where: [
+                                    {
+                                        type: 'in',
+                                        attribute: 'id',
+                                        value: rule.value
+                                    }
+                                ]
+                            }, { async: false })
+
+                            nameHash = { '_localeId': this.getUser().get('localeId') }
+                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']) ?? 'name';
+                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                            resp.responseJSON.list.forEach(record => {
+                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                            })
+                        }
+                        model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
                         if (type === 'extensibleMultiEnum') {
                             model.set('value', rule.value);
