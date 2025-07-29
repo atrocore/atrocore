@@ -771,7 +771,7 @@ class LayoutManager
                     break;
                 case 'list':
                     foreach ($data as $key => $row) {
-                        if (isset($row['name']) && !in_array($row['name'], $fields)) {
+                        if (isset($row['name']) && !in_array($row['name'], $fields) && empty($row['attributeId'])) {
                             array_splice($data, $key, 1);
                         }
                     }
