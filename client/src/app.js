@@ -116,7 +116,6 @@ Espo.define(
             this.setupAjax();
 
             this.settings = new Settings(null);
-            debugger
             this.language = new Language(this.cache);
             this.metadata = new Metadata(this.cache);
             this.fieldManager = new FieldManager();
