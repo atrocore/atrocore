@@ -103,7 +103,7 @@
         gap: 10px;
     }
 
-    .buttons-container :global(.entity-actions .btn) {
+    .buttons-container :global(.entity-actions button) {
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;

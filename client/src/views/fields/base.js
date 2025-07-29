@@ -1271,6 +1271,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }
 
             this.getLabelTextContainer().html(`<a href="#/Attribute/view/${fieldDefs.attributeId}" target="_blank"> ${this.getLabelTextContainer().text()}</a>`)
-        }
+        },
+
+        setScriptDefaultValue() {
+            if (
+                this.model.isNew()
+                && this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.defaultValueType`) === 'script'
+            ) {
+                this.model.set(this.name, null);
+                this.ajaxGetRequest('App/action/defaultValueForScriptType', {
+                    entityName: this.model.name,
+                    field: this.name
+                }).success(res => {
+                    if (this.model.get(this.name) === null) {
+                        this.model.set(this.name, res.default);
+                    }
+                });
+            }
+        },
+
     });
 });

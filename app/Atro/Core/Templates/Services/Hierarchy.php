@@ -208,10 +208,10 @@ class Hierarchy extends Record
 
     protected function prepareTreeNode($entity, array &$tree, array $ids): void
     {
-        $localizedNameField = $this->getLocalizedNameField($this->entityName);
+        $value = $this->getLocalizedNameValue($entity, $this->entityName);
 
         $tree[$entity->get('id')]['id'] = $entity->get('id');
-        $tree[$entity->get('id')]['name'] = (!empty($localizedNameField) ? $entity->get($localizedNameField) : null) ?? $entity->get('name');
+        $tree[$entity->get('id')]['name'] = $value;
         $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
@@ -421,7 +421,6 @@ class Hierarchy extends Record
     {
         $result = [];
         $selectParams = $this->getSelectParams($params);
-        $localizedNameField = $this->getLocalizedNameField($this->entityName);
 
         $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
         if (empty($records)) {
@@ -438,9 +437,10 @@ class Hierarchy extends Record
         }
 
         foreach ($records as $k => $record) {
+            $value = $this->getLocalizedNameValue($record, $this->entityName);
             $result[] = [
                 'id'             => $record['id'],
-                'name'           => (!empty($localizedNameField) ? $record[$localizedNameField] : null) ?? $record['name'],
+                'name'           => $value,
                 'offset'         => $offset + $k,
                 'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),

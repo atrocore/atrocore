@@ -1782,6 +1782,7 @@ class Metadata extends AbstractListener
                             "required" => true,
                             "view"     => "views/associated-record/fields/association",
                             "tooltip"  => true,
+                            "additionalField"=> true,
                         ],
                         "associatingItem"         => [
                             "required"      => true,
@@ -1846,7 +1847,8 @@ class Metadata extends AbstractListener
                             "emHidden"                  => true
                         ],
                         "sorting"                 => [
-                            "type" => "int"
+                            "type" => "int",
+                            "additionalField"=> true
                         ]
                     ],
                     "links"         => [
@@ -1912,6 +1914,28 @@ class Metadata extends AbstractListener
                             "exportDisabled"            => false
                         ],
                         "associatingItemRelations" => [
+                            "type"                      => "linkMultiple",
+                            "layoutDetailDisabled"      => true,
+                            "layoutListDisabled"        => true,
+                            "layoutLeftSidebarDisabled" => true,
+                            "massUpdateDisabled"        => true,
+                            "filterDisabled"            => false,
+                            "noLoad"                    => true,
+                            "exportDisabled"            => false,
+                            "importDisabled"            => true
+                        ],
+                        "associatedItems"  => [
+                            "type"                      => "linkMultiple",
+                            "layoutDetailDisabled"      => true,
+                            "layoutListDisabled"        => true,
+                            "layoutLeftSidebarDisabled" => true,
+                            "massUpdateDisabled"        => true,
+                            "filterDisabled"            => false,
+                            "noLoad"                    => true,
+                            "importDisabled"            => true,
+                            "exportDisabled"            => false
+                        ],
+                        "associatingItems" => [
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,

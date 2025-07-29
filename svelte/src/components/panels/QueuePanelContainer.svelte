@@ -72,12 +72,12 @@
             <div class="panel-body">
                 <div class="btn-container">
                     <a role="button" href="#Job" title="{Language.translate('View List')}"
-                       class="btn btn-primary outline"><i class="ph ph-list"></i><span>{Language.translate('View List')}</span></a>
+                       class="primary outline"><i class="ph ph-list"></i><span>{Language.translate('View List')}</span></a>
                     {#if qmPaused}
-                        <a role="button" href="/" title="{Language.translate('Start')}" class="btn btn-primary outline"
+                        <a role="button" href="/" title="{Language.translate('Start')}" class="primary outline"
                            on:click={event=>{event.preventDefault();startStopQm(false);}}><i class="ph ph-play"></i><span>{Language.translate('Start')}</span></a>
                     {:else}
-                        <a role="button" href="/" title="{Language.translate('Pause')}" class="btn btn-primary outline"
+                        <a role="button" href="/" title="{Language.translate('Pause')}" class="primary outline"
                            on:click={event=>{event.preventDefault();startStopQm(true);}}><i class="ph ph-pause"></i><span>{Language.translate('Pause')}</span></a>
                     {/if}
                 </div>

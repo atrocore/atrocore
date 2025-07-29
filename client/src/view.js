@@ -457,6 +457,15 @@ Espo.define('view', [], function () {
             }
 
             return [fieldName, null]
+        },
+
+        getLocalizedFieldValue(model, fieldName) {
+            let [localizedFieldName] = this.getLocalizedFieldData(model.name, fieldName);
+            if (localizedFieldName !== fieldName) {
+                return model.get(localizedFieldName) || model.get(fieldName);
+            }
+
+            return model.get(fieldName);
         }
     });
 

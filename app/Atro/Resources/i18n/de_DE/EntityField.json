@@ -15,6 +15,7 @@
     "pattern": "Regex-Muster",
     "defaultUnit": "Standard-Einheit",
     "default": "Standard",
+    "defaultValueType": "Typ des Standardwertes",
     "tooltipText": "Tooltip-Text",
     "tooltipLink": "Tooltip-Link",
     "noEmptyString": "Leere Zeichenfolgen sind nicht zulässig",

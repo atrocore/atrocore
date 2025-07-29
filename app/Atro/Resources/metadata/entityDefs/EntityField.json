@@ -105,6 +105,16 @@
       "view": "views/admin/field-manager/fields/value-container",
       "tooltip": true
     },
+    "defaultValueType": {
+      "type": "enum",
+      "required": false,
+      "prohibitedEmptyValue": true,
+      "default": "basic",
+      "options": [
+        "basic",
+        "script"
+      ]
+    },
     "defaultName": {
       "type": "varchar",
       "notStorable": true,

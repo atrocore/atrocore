@@ -53,6 +53,7 @@
     "sku": {
       "type": "varchar",
       "trim": true,
+      "index": true,
       "massUpdateDisabled": true
     },
     "price": {

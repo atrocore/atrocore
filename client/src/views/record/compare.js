@@ -681,13 +681,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             panelList = this.getPanelWithFields().concat(panelList);
 
-            let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
-            if (!anchorContainer.length) {
-                anchorContainer = $('<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>')
-                this.getParentView().$el.find('.modal-footer').append(anchorContainer)
-            }
-
-            this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
 
             if (this.anchorNavigation !== null) {
                 try {
@@ -696,24 +689,37 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 }
             }
-            this.anchorNavigation = new Svelte.AnchorNavigation({
-                target: anchorContainer.get(0),
-                props: {
-                    items: panelList,
-                    scrollCallback: (name) => {
-                        let panel = this.$el.find(`.panel[data-name="${name}"]`);
-                        if (panel.size() > 0) {
-                            panel = panel.get(0);
-                            let content = this.getParentView().$el.find('.modal-body').get(0);
-                            const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
-                            content.scrollTo({
-                                top: window.screen.width < 768 ? panelOffset : panelOffset,
-                                behavior: "smooth"
-                            });
+
+            let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
+            if (!anchorContainer.length) {
+                let id = Math.floor(Math.random() * 10000);
+                anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>`)
+                this.getParentView().$el.find('.modal-footer').append(anchorContainer)
+            }
+
+            this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
+
+            setTimeout(() => {
+                this.anchorNavigation = new Svelte.AnchorNavigation({
+                    target: anchorContainer.get(0),
+                    props: {
+                        items: panelList,
+                        scrollCallback: (name) => {
+                            let panel = this.$el.find(`.panel[data-name="${name}"]`);
+                            if (panel.size() > 0) {
+                                panel = panel.get(0);
+                                let content = this.getParentView().$el.find('.modal-body').get(0);
+                                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                                content.scrollTo({
+                                    top: window.screen.width < 768 ? panelOffset : panelOffset,
+                                    behavior: "smooth"
+                                });
+                            }
                         }
                     }
-                }
-            });
+                });
+            }, 100 )
+
         },
 
         getOverviewFiltersList: function () {
@@ -830,10 +836,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             } else {
                 filterButton.css('color', 'black').addClass('btn-default').removeClass('btn-danger')
             }
+
             this.prepareFieldsData();
             this.renderFieldsPanels();
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
+
+            if(this.merging) {
+                this.handleRadioButtonsDisableState(false)
+            }
         },
 
         afterRender() {

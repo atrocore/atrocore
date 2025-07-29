@@ -216,11 +216,11 @@
                             ` : ''}
                         </div>
                         <div class="btn-group float-end group-actions">
-                          <button type="button" class="btn btn-sm btn-primary" data-add="rule">
+                          <button type="button" class="btn btn-sm btn-primary outline" data-add="rule">
                             ${translate("add_rule")}
                           </button>
                           ${settings.allow_groups === -1 || settings.allow_groups >= level ? `
-                            <button type="button" class="btn btn-sm btn-primary" data-add="group">
+                            <button type="button" class="btn btn-sm btn-primary outline" data-add="group">
                               ${translate("add_group")}
                             </button>
                           ` : ''}
@@ -1014,18 +1014,18 @@
 
 <div class="query-builder-container">
     <div class="filters-top-buttons">
-        <div class="btn-group">
-            <button class="btn btn-sm btn-default filter-button" data-action="collapseAll"
+        <div class="button-group">
+            <button class="small filter-button" data-action="collapseAll"
                     title={Language.translate('collapseAll')} on:click={collapseAll}>
                 <i class="ph ph-caret-line-up"></i>
             </button>
-            <button class="btn btn-sm btn-default filter-button" data-action="expandAll"
+            <button class="small filter-button" data-action="expandAll"
                     title={Language.translate('expandAll')} on:click={expandAll}>
                 <i class="ph ph-caret-line-down"></i>
             </button>
         </div>
         {#if showUnsetAll}
-            <button class="btn btn-sm btn-default filter-button" data-action="filter" on:click={unsetAll}>
+            <button class="small filter-button" data-action="filter" on:click={unsetAll}>
                 <i class="ph ph-x"></i>
                 {Language.translate('Unset All')}
             </button>
@@ -1068,7 +1068,7 @@
             <div class="filter-action">
                 <div style="display:flex; align-items:center; gap: 10px;">
                     {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
-                        <button class="btn btn-sm btn-primary filter-button" on:click={saveFilter}
+                        <button class="primary small filter-button" on:click={saveFilter}
                                 disabled={advancedFilterDisabled || queryBuilderRulesChanged}
                         >
                             <i class="ph ph-floppy-disk-back"></i>
@@ -1076,7 +1076,7 @@
                         </button>
                     {/if}
 
-                    <button class="btn btn-sm btn-default filter-button" on:click={resetFilter}
+                    <button class="small filter-button" on:click={resetFilter}
                             disabled={advancedFilterDisabled}
                     >
                         <i class="ph-fill ph-eraser"></i>
@@ -1084,7 +1084,7 @@
                     </button>
                 </div>
 
-                <button class="btn btn-sm btn-primary filter-button" disabled={!queryBuilderRulesChanged}
+                <button class="primary small filter-button" disabled={!queryBuilderRulesChanged}
                         on:click={applyFilter}>
                     <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
                 </button>
@@ -1098,11 +1098,7 @@
         margin-bottom: 10px;
     }
 
-    .btn-sm {
-        padding: 4px 8px;
-    }
-
-    .btn-sm i {
+    button.small i {
         font-size: 14px;
     }
 
@@ -1112,20 +1108,6 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-    }
-
-    .filters-top-buttons .btn-group .filter-button {
-        border-radius: 0;
-    }
-
-    .filters-top-buttons .btn-group .filter-button:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-    }
-
-    .filters-top-buttons .btn-group .filter-button:last-child {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
     }
 
     .filter-action {
@@ -1171,14 +1153,6 @@
         background-color: transparent;
         float: right;
         margin-left: auto;
-    }
-
-    .filter-button {
-        border-radius: 4px;
-    }
-
-    .filter-button > .ph:not(:last-child) {
-        margin-right: 3px;
     }
 
     .query-builder :global(.rules-group-header) {

@@ -157,7 +157,7 @@
             {/each}
 
             {#if loadingActions}
-                <button class="btn preloader additional-button">
+                <button class="preloader additional-button">
                     <Preloader heightPx={12}/>
                 </button>
             {/if}
@@ -212,22 +212,26 @@
         gap: 10px;
     }
 
-    .button-row :global(.record-actions > .btn) {
+    .button-row :global(.record-actions > button) {
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
     }
 
-    .button-row :global(.btn-group > .additional-button:first-of-type) {
+    .button-row :global(.button-group > .additional-button:first-of-type) {
         margin-left: 10px;
     }
 
-    .button-row .header-buttons :global(.header-items) {
-        gap: 10px
+    .button-row .header-buttons .header-items {
+        display: flex;
+        flex-direction: row;
+        white-space: nowrap;
+        gap: 10px;
     }
 
     .preloader {
         background-color: transparent;
         pointer-events: none;
+        border: 0;
     }
 </style>

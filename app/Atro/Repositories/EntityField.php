@@ -51,6 +51,10 @@ class EntityField extends ReferenceData
             $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
         }
 
+        if(empty($fieldDefs)) {
+            return null;
+        }
+
         if (!empty($fieldDefs['emHidden'])) {
             return null;
         }
@@ -224,7 +228,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        if ($entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
+        if (!$entity->isNew() && $entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
             $connection = $this->getEntityManager()->getConnection();
             $entityName = $entity->get('entityId');
             $type = $this->getMetadata()->get("scopes.{$entityName}.type");
@@ -370,9 +374,9 @@ class EntityField extends ReferenceData
                     $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                         'links' => [
                             $entity->get('code') => [
-                                'type' => 'belongsTo',
+                                'type'    => 'belongsTo',
                                 'foreign' => $entity->get('foreignCode'),
-                                'entity' => $entity->get('foreignEntityId'),
+                                'entity'  => $entity->get('foreignEntityId'),
                             ]
                         ]
                     ]);

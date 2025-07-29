@@ -22,7 +22,7 @@
 
     let locale = UserData.get()?.user?.localeId
     if (!locale || !locales[locale]) {
-        locale = Config.get('localeId')
+        locale = Config.get('locale')
         if (!locales[locale]) {
             locale = 'main'
         }
@@ -74,11 +74,11 @@
     }
 </script>
 
-<div class="btn-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
+<div class="button-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     {#if Object.keys(locales).length > 1}
         <div>
             <select class="form-control locale-switcher" title="{Language.translate('Locale','scopeNamesPlural','Global')}"
-                    style="max-width: 100px; flex: 1;" name="locales"
+                    style="max-width: 100px;" name="locales"
                     bind:value={locale}
                     on:change={onLocaleChange}>
                 <optgroup label="{Language.translate('Locale','scopeNamesPlural','Global')}">
@@ -93,7 +93,7 @@
     {/if}
     {#if Object.keys(languages).length > 1}
         <div class="dropdown has-content">
-            <button data-toggle="dropdown" class="btn btn-default filter-switcher" aria-expanded="false" style="padding: 6px 12px">
+            <button data-toggle="dropdown" class="filter-switcher" aria-expanded="false" style="padding: 6px 12px">
                 <i class="{`ph ph-${enabledLanguages.length >= Object.keys(languages).length - 1 ? 'globe-simple':'translate' }`}" style="display: block"></i>
             </button>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
@@ -127,24 +127,32 @@
 </div>
 
 <style>
-    .btn, .locale-switcher {
-        /*background-color: transparent;*/
+    button, .locale-switcher {
         color: var(--nav-font-color);
-        background-color: var(--nav-menu-background); /* rgba(0, 0, 0, 0.05); */
+        background-color: var(--nav-menu-background);
         border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
+        cursor: pointer;
     }
 
-    .btn-group > :first-child > .btn, .btn-group > :first-child > .locale-switcher{
+    button:hover, .locale-switcher:hover, button:focus, .locale-switcher:focus {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    button:active, .locale-switcher:active {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .button-group > :first-child > button, .button-group > :first-child > .locale-switcher {
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
     }
 
-    .btn-group > :last-child > .btn, .btn-group > :last-child > .locale-switcher {
+    .button-group > :last-child > button, .button-group > :last-child > .locale-switcher {
         border-bottom-right-radius: 5px;
         border-top-right-radius: 5px;
     }
 
-    .btn-group > :nth-child(2) > .btn {
+    .button-group > :nth-child(2) > button {
         border-left-width: 0;
     }
 </style>

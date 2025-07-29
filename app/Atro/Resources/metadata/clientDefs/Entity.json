@@ -4,7 +4,8 @@
   "limit": 2000,
   "recordViews": {
     "list": "views/admin/entity-manager/record/list",
-    "detail": "views/admin/entity-manager/record/detail"
+    "detail": "views/admin/entity-manager/record/detail",
+    "edit": "views/admin/entity-manager/record/edit"
   },
   "relationshipPanels": {
     "fields": {

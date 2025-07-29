@@ -269,7 +269,7 @@
         padding: 0;
         outline: 0;
         border: 0;
-        line-height: 0;
+        line-height: 1;
         color: var(--sidebar-icon-color, #999);
     }
 

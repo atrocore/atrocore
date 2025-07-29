@@ -265,10 +265,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         select: function (model) {
             let foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
-            [foreignName] = this.getLocalizedFieldData(this.foreignScope, foreignName);
+            const nameValue = this.getLocalizedFieldValue(model, foreignName);
 
-            this.$elementName.attr('value', model.get(foreignName));
-            this.$elementName.val(model.get(foreignName) || this.translate('None'));
+            this.$elementName.attr('value', nameValue);
+            this.$elementName.val(nameValue || this.translate('None'));
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
@@ -436,14 +436,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
                             response.list.forEach(function (item) {
+                                const value = item[localizedName] || item['name']
                                 list.push({
                                     id: item.id,
-                                    name: item[name] ?? '',
+                                    name: value || '',
                                     data: item.id,
-                                    value: item[name],
+                                    value: value,
                                     attributes: item
                                 });
                             }, this);
@@ -482,14 +483,15 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
-                                const [name] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
                                 response.list.forEach(function (item) {
+                                    const value = item[localizedName] || item['name'];
                                     list.push({
                                         id: item.id,
-                                        name: item[name] ?? '',
+                                        name: value ?? '',
                                         data: item.id,
-                                        value: item.name
+                                        value: value
                                     });
                                 }, this);
                                 return {
@@ -831,62 +833,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         hideSearchType: true,
                         params: this.defs.params
                     }, view => {
-                        view.getSelectFilters = this.getSelectFilters.bind(this);
-                        view.selectBoolFilterList = this.selectBoolFilterList;
-                        view.boolFilterData = {};
+                        this.addCustomDataToView(view, rule);
 
-                        for (const key in this.boolFilterData) {
-                            if (typeof this.boolFilterData[key] === 'function') {
-                                view.boolFilterData[key] = this.boolFilterData[key].bind(this);
-                            }
-                        }
-
-                        view.getSelectFilters = () => {
-                            let bool = {};
-                            let queryBuilder = {
-                                condition: "AND",
-                                rules: [],
-                                valid: true
-                            }
-                            let subQuery = rule.data?.subQuery || [];
-                            subQuery.forEach(item => {
-                                if (item.type === 'bool') {
-                                    item.value.forEach(v => bool[v] = true);
-                                }
-
-                                if (item.condition) {
-                                    queryBuilder.rules.push(item);
-                                }
-                            });
-
-                            if (queryBuilder.rules.length === 1) {
-                                queryBuilder = queryBuilder.rules[0];
-                            }
-
-                            return { bool, queryBuilder }
-                        }
-
-
-                        view.getAutocompleteAdditionalWhereConditions = () => {
-                            let boolData = this.getBoolFilterData();
-                            if (boolData) {
-                                return [
-                                    {
-                                        'type': 'bool',
-                                        'data': boolData
-                                    }
-                                ];
-                            }
-
-                            return [];
-                        }
-
-                        view.linkMultiple = this.chooseMultipleOnSearch();
-
-                        view.getSelectAllByDefault = () => {
-                            let subQuery = rule.data?.subQuery || [];
-                            return subQuery.length > 0;
-                        }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
                             this.filterValue = rule.value ?? [];
@@ -926,7 +874,29 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     setTimeout(() => {
-                        model.set('valueNames', rule.data?.nameHash);
+                        let nameHash = rule.data?.nameHash
+                        if (nameHash?._localeId &&
+                            nameHash?._localeId !== this.getUser().get('localeId') &&
+                            (rule.value || []).length > 0) {
+                            const resp = this.ajaxGetRequest(this.foreignScope, {
+                                where: [
+                                    {
+                                        type: 'in',
+                                        attribute: 'id',
+                                        value: rule.value
+                                    }
+                                ]
+                            }, { async: false })
+
+                            nameHash = { '_localeId': this.getUser().get('localeId') }
+                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']) ?? 'name';
+                            const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
+                            resp.responseJSON.list.forEach(record => {
+                                nameHash[record.id] = record[localizedForeignName] || record[foreignName]
+                            })
+                        }
+
+                        model.set('valueNames', nameHash);
                         model.set('valueIds', rule.value);
 
                         if (type === 'extensibleEnum') {
@@ -1074,6 +1044,65 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 name = this.name + 'Id'
             }
             return name;
+        },
+
+        addCustomDataToView: function(view, rule) {
+            view.getSelectFilters = this.getSelectFilters.bind(this);
+            view.selectBoolFilterList = this.selectBoolFilterList;
+            view.boolFilterData = {};
+
+            for (const key in this.boolFilterData) {
+                if (typeof this.boolFilterData[key] === 'function') {
+                    view.boolFilterData[key] = this.boolFilterData[key].bind(this);
+                }
+            }
+
+            view.getSelectFilters = () => {
+                let bool = {};
+                let queryBuilder = {
+                    condition: "AND",
+                    rules: [],
+                    valid: true
+                }
+                let subQuery = rule.data?.subQuery || [];
+                subQuery.forEach(item => {
+                    if (item.type === 'bool') {
+                        item.value.forEach(v => bool[v] = true);
+                    }
+
+                    if (item.condition) {
+                        queryBuilder.rules.push(item);
+                    }
+                });
+
+                if (queryBuilder.rules.length === 1) {
+                    queryBuilder = queryBuilder.rules[0];
+                }
+
+                return { bool, queryBuilder }
+            }
+
+
+            view.getAutocompleteAdditionalWhereConditions = () => {
+                let boolData = this.getBoolFilterData();
+                if (boolData) {
+                    return [
+                        {
+                            'type': 'bool',
+                            'data': boolData
+                        }
+                    ];
+                }
+
+                return [];
+            }
+
+            view.linkMultiple = this.chooseMultipleOnSearch();
+
+            view.getSelectAllByDefault = () => {
+                let subQuery = rule.data?.subQuery || [];
+                return subQuery.length > 0;
+            }
         }
 
     });
