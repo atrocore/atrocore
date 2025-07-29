@@ -166,7 +166,7 @@
                 let attribute = {
                     id: field.name,
                     name: field.name,
-                    label: field.label,
+                    label: field.detailViewLabel || field.label,
                     attributeId: field.attributeId
                 };
 
