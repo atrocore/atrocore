@@ -772,10 +772,12 @@ class LayoutManager
                 case 'list':
                     $attributesIds = [];
                     foreach ($data as $key => $row) {
+                        // delete unexisting fields
                         if (isset($row['name']) && !in_array($row['name'], $fields) && empty($row['attributeId'])) {
                             array_splice($data, $key, 1);
                         }
 
+                        // collect all attributes
                         if (!empty($row['attributeId'])) {
                             $attributesIds[] = $row['attributeId'];
                         }
@@ -792,7 +794,16 @@ class LayoutManager
                             foreach ($data as $key => $row) {
                                 if ($row['name'] === $attrField) {
                                     $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
+                                    $data[$key]['customLabel'] = $data[$key]['label'];
+                                    $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
                                 }
+                            }
+                        }
+
+                        foreach ($data as $key => $row) {
+                            if (!empty($row['attributeId']) && !isset($row['label'])) {
+                                // delete unexisting attributes
+                                array_splice($data, $key, 1);
                             }
                         }
                     }
