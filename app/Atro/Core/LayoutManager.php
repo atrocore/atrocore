@@ -770,11 +770,33 @@ class LayoutManager
                     }
                     break;
                 case 'list':
+                    $attributesIds = [];
                     foreach ($data as $key => $row) {
                         if (isset($row['name']) && !in_array($row['name'], $fields) && empty($row['attributeId'])) {
                             array_splice($data, $key, 1);
                         }
+
+                        if (!empty($row['attributeId'])) {
+                            $attributesIds[] = $row['attributeId'];
+                        }
                     }
+
+                    if (!empty($attributesIds)) {
+                        $attributesDefs = $this
+                            ->container
+                            ->get('serviceFactory')
+                            ->create('Attribute')
+                            ->getAttributesDefs($scope, $attributesIds);
+
+                        foreach ($attributesDefs as $attrField => $attributeDefs) {
+                            foreach ($data as $key => $row) {
+                                if ($row['name'] === $attrField) {
+                                    $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
+                                }
+                            }
+                        }
+                    }
+
                     break;
             }
         }
