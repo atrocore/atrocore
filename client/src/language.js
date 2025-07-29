@@ -35,7 +35,9 @@ Espo.define('language', ['ajax'], function (Ajax) {
     var Language = function (cache) {
         this.cache = cache || null;
         this.data = {};
+        this.fallbackData = {}
         this.name = 'default';
+        this.fallbackName=null;
     };
 
     _.extend(Language.prototype, {
@@ -57,10 +59,14 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         get: function (scope, category, name) {
-            if (scope in this.data) {
-                if (category in this.data[scope]) {
-                    if (name in this.data[scope][category]) {
-                        return this.data[scope][category][name];
+            let data = this.data;
+            if(this.fallbackData && !this.has(name, category, scope)) {
+                data = this.fallbackData;
+            }
+            if (scope in data) {
+                if (category in data[scope]) {
+                    if (name in data[scope][category]) {
+                        return data[scope][category][name];
                     }
                 }
             }
@@ -88,20 +94,8 @@ Espo.define('language', ['ajax'], function (Ajax) {
             return translation[value] || value;
         },
 
-        loadFromCache: function (loadDefault) {
-            var name = this.name;
-            if (loadDefault) {
-                name = 'default';
-            }
-            if (this.cache) {
-                var cached = this.cache.get('app', 'language-' + name);
-                if (cached) {
-                    this.data = cached;
-                    window.SvelteLanguage.setTranslations(cached);
-                    return true;
-                }
-            }
-            return null;
+        loadFromCache: function (loadDefault, isFallback = false) {
+            var name = isFallback ? this.fallbackName : this.name;if (loadDefault) {name = 'default';}if (this.cache) {var cached = this.cache.get('app', 'language-' + name);if (cached) {if(isFallback) {this.data = cached;window.SvelteLanguage.setTranslations(cached);}else{this.fallbackData = cached;window.SvelteLanguage.setFallbackTranslations(cached);}return true;}}return null;
         },
 
         clearCache: function () {
@@ -110,25 +104,20 @@ Espo.define('language', ['ajax'], function (Ajax) {
             }
         },
 
-        storeToCache: function (loadDefault) {
-            var name = this.name;
+        storeToCache: function (loadDefault, isFallback = false) {
+            var name = isFallback ? this.fallbackName: this.name;
             if (loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
-                this.cache.set('app', 'language-' + name, this.data);
+                this.cache.set('app', 'language-' + name, isFallback ? this.fallbackData: this.data);
             }
         },
 
         load: function (callback, disableCache, loadDefault) {
             this.once('sync', callback);
 
-            if (!disableCache) {
-                if (this.loadFromCache(loadDefault)) {
-                    this.trigger('sync');
-                    return;
-                }
-            }
+            if (!disableCache){if (this.loadFromCache(loadDefault)) {this.trigger('sync');return;}if(this.fallbackName) {this.loadFromCache(loadDefault, true)}}
 
             this.fetch(disableCache, loadDefault);
         },
@@ -142,6 +131,8 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 }
                 this.trigger('sync');
             }.bind(this));
+
+            if(this.fallbackName) {Ajax.getRequest(this.url, {locale: this.fallbackName}).then(function (data) {this.fallbackData = data;window.SvelteLanguage.setFallbackTranslations(data);if (!disableCache) {this.storeToCache(loadDefault, true);}this.trigger('sync');}.bind(this));}
         },
 
         sortFieldList: function (scope, fieldList) {
