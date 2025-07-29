@@ -7364,7 +7364,7 @@ button.close {
     color: inherit;
     text-decoration: none;
     display: inline-block;
-    padding: 3px;
+    padding: 5px 3px 3px;
     margin: 0 3px;
     border-radius: 2px;
     box-sizing: border-box;
@@ -7689,6 +7689,9 @@ button.close {
     padding-left: 7px;
     padding-right: 14px;
     border-radius: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
 }
 
 .form-control.selectize-control {
