@@ -44,25 +44,25 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                this.setColors();
-                this.$element?.on('change', this.setColors.bind(this));
-                this.$element[0]?.selectize?.on('dropdown_open', this.setSelectizeColors.bind(this));
-                this.$element[0]?.selectize?.on('change', this.setSelectizeColors.bind(this));
+                // this.setColors();
+                // this.$element?.on('change', this.setColors.bind(this));
+                // this.$element[0]?.selectize?.on('dropdown_open', this.setSelectizeColors.bind(this));
+                // this.$element[0]?.selectize?.on('change', this.setSelectizeColors.bind(this));
             }
         },
 
-        setSelectizeColors() {
-            window.setTimeout(() => {
-                let values = [];
-                if (this.$element[0].selectize.currentResults) {
-                    values = this.$element[0].selectize.currentResults.items || [];
-                }
-                values.forEach(item => {
-                    let internalValue = item.id.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
-                    this.$element[0].selectize.$dropdown_content.find(`.option[data-value='${item.id}']`).css(this.getFieldStyles(internalValue));
-                });
-            }, 10);
-        },
+        // setSelectizeColors() {
+        //     window.setTimeout(() => {
+        //         let values = [];
+        //         if (this.$element[0].selectize.currentResults) {
+        //             values = this.$element[0].selectize.currentResults.items || [];
+        //         }
+        //         values.forEach(item => {
+        //             let internalValue = item.id.replace(/-quote-/g, '"').replace(/-backslash-/g, '\\');
+        //             this.$element[0].selectize.$dropdown_content.find(`.option[data-value='${item.id}']`).css(this.getFieldStyles(internalValue));
+        //         });
+        //     }, 10);
+        // },
 
         data() {
             let data = Dep.prototype.data.call(this);
