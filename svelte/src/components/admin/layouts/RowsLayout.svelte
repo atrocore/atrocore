@@ -161,37 +161,38 @@
     }
 
     function addAttribute() {
-        let attribute = {
-            id: "test1",
-            name: "test1",
-            label: "Test 1",
-            attributeId: "attr_111"
-        };
+        params.openAddAttributesDialog(params.scope, fields => {
+            fields.forEach(field => {
+                let attribute = {
+                    id: field.name,
+                    name: field.name,
+                    label: field.label,
+                    attributeId: field.attributeId
+                };
 
-        let exists = false;
-
-        selectedFields.forEach(item => {
-            if (item.name === attribute.name) {
-                exists = true;
-            }
-        });
-
-        if (!exists) {
-            availableGroups.forEach(group => {
-                group.fields.forEach(item => {
+                let exists = false;
+                selectedFields.forEach(item => {
                     if (item.name === attribute.name) {
                         exists = true;
                     }
-                })
+                });
+                if (!exists) {
+                    availableGroups.forEach(group => {
+                        group.fields.forEach(item => {
+                            if (item.name === attribute.name) {
+                                exists = true;
+                            }
+                        })
+                    })
+                }
+                if (!exists) {
+                    selectedFields = [
+                        ...selectedFields,
+                        attribute
+                    ];
+                }
             })
-        }
-
-        if (!exists) {
-            selectedFields = [
-                ...selectedFields,
-                attribute
-            ];
-        }
+        });
     }
 </script>
 

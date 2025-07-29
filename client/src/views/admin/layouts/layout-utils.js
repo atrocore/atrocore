@@ -62,9 +62,56 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                 }, this);
                             }.bind(this));
                         },
-                        actionAddAttributes: ()=>{
-                            console.log('actionAddAttributes')
+                        openAddAttributesDialog: (entity, callback) => {
+                            const scope = 'Attribute';
+                            const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'select']) || 'views/modals/select-records';
 
+                            this.notify('Loading...');
+                            this.createView('dialog', viewName, {
+                                scope: scope,
+                                multiple: true,
+                                createButton: false,
+                                massRelateEnabled: false,
+                                boolFilterList: ['onlyForEntity'],
+                                boolFilterData: {
+                                    onlyForEntity: entity
+                                },
+                                allowSelectAllResult: false,
+                            }, dialog => {
+                                dialog.render();
+                                this.notify(false);
+                                dialog.once('select', models => {
+                                    let ids = [];
+                                    models.forEach(model => {
+                                        ids.push(model.id);
+                                    })
+
+                                    this.wait(true);
+                                    this.notify('Loading...');
+                                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                                        entityName: entity,
+                                        attributesIds: ids
+                                    }, {async: false}).success(res => {
+                                        let fields = [];
+                                        $.each(res, (field, fieldDefs) => {
+                                            this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+                                            this.getLanguage().data[entity].fields[field] = fieldDefs.label;
+
+                                            fieldDefs.name = field;
+                                            fields.push(fieldDefs);
+                                        });
+
+                                        this.wait(false);
+                                        this.notify(false);
+
+                                        this.clearView('dialog');
+
+                                        this.notify('Added', 'success');
+
+                                        callback(fields);
+                                    })
+                                });
+                            });
                         }
 
                     }
