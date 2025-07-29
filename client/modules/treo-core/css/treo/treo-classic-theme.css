@@ -17525,8 +17525,9 @@ span[data-img-src]::after {
 .layout-editor-container {
     position: relative;
     text-align: center;
-    line-height: 0;
+    line-height: 1;
     border: 0;
+    background-color: transparent;
 }
 
 .layout-editor-container .btn-link {
