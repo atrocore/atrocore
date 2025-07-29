@@ -37,7 +37,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
         this.data = {};
         this.fallbackData = {}
         this.name = 'default';
-        this.fallbackName=null;
+        this.fallbackName = null;
     };
 
     _.extend(Language.prototype, {
@@ -60,7 +60,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         get: function (scope, category, name) {
             let data = this.data;
-            if(this.fallbackData && !this.has(name, category, scope)) {
+            if (this.fallbackData && !this.has(name, category, scope)) {
                 data = this.fallbackData;
             }
             if (scope in data) {
@@ -95,7 +95,24 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         loadFromCache: function (loadDefault, isFallback = false) {
-            var name = isFallback ? this.fallbackName : this.name;if (loadDefault) {name = 'default';}if (this.cache) {var cached = this.cache.get('app', 'language-' + name);if (cached) {if(isFallback) {this.data = cached;window.SvelteLanguage.setTranslations(cached);}else{this.fallbackData = cached;window.SvelteLanguage.setFallbackTranslations(cached);}return true;}}return null;
+            var name = isFallback ? this.fallbackName : this.name;
+            if (loadDefault) {
+                name = 'default';
+            }
+            if (this.cache) {
+                var cached = this.cache.get('app', 'language-' + name);
+                if (cached) {
+                    if (isFallback) {
+                        this.data = cached;
+                        window.SvelteLanguage.setTranslations(cached);
+                    } else {
+                        this.fallbackData = cached;
+                        window.SvelteLanguage.setFallbackTranslations(cached);
+                    }
+                    return true;
+                }
+            }
+            return null;
         },
 
         clearCache: function () {
@@ -105,19 +122,27 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         storeToCache: function (loadDefault, isFallback = false) {
-            var name = isFallback ? this.fallbackName: this.name;
+            var name = isFallback ? this.fallbackName : this.name;
             if (loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
-                this.cache.set('app', 'language-' + name, isFallback ? this.fallbackData: this.data);
+                this.cache.set('app', 'language-' + name, isFallback ? this.fallbackData : this.data);
             }
         },
 
         load: function (callback, disableCache, loadDefault) {
             this.once('sync', callback);
 
-            if (!disableCache){if (this.loadFromCache(loadDefault)) {this.trigger('sync');return;}if(this.fallbackName) {this.loadFromCache(loadDefault, true)}}
+            if (!disableCache) {
+                if (this.loadFromCache(loadDefault)) {
+                    this.trigger('sync');
+                    return;
+                }
+                if (this.fallbackName) {
+                    this.loadFromCache(loadDefault, true)
+                }
+            }
 
             this.fetch(disableCache, loadDefault);
         },
@@ -132,12 +157,21 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 this.trigger('sync');
             }.bind(this));
 
-            if(this.fallbackName) {Ajax.getRequest(this.url, {locale: this.fallbackName}).then(function (data) {this.fallbackData = data;window.SvelteLanguage.setFallbackTranslations(data);if (!disableCache) {this.storeToCache(loadDefault, true);}this.trigger('sync');}.bind(this));}
+            if (this.fallbackName) {
+                Ajax.getRequest(this.url, {locale: this.fallbackName}).then(function (data) {
+                    this.fallbackData = data;
+                    window.SvelteLanguage.setFallbackTranslations(data);
+                    if (!disableCache) {
+                        this.storeToCache(loadDefault, true);
+                    }
+                    this.trigger('sync');
+                }.bind(this));
+            }
         },
 
         sortFieldList: function (scope, fieldList) {
             return fieldList.sort(function (v1, v2) {
-                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
             }.bind(this));
         },
 
@@ -147,7 +181,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 category += 'Plural';
             }
             return entityList.sort(function (v1, v2) {
-                 return this.translate(v1, category).localeCompare(this.translate(v2, category));
+                return this.translate(v1, category).localeCompare(this.translate(v2, category));
             }.bind(this));
         }
 
