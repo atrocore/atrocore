@@ -1357,15 +1357,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDynamicHandler();
 
             this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            const modelIsSynced = !!this.model.attributes?.id;
 
-            if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
+            this.onModelReady(() => {
                 this.initUiHandler();
-            } else {
-                this.listenToOnce(this.model, 'sync', () => {
-                    this.initUiHandler();
-                });
-            }
+            })
         },
 
         initDynamicHandler: function () {
