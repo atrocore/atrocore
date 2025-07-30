@@ -784,7 +784,7 @@ class LayoutManager
                                 if ($row['name'] === $attrField) {
                                     $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
                                     $data[$key]['customLabel'] = $data[$key]['label'];
-                                    $data[$key]['notSortable'] = !empty($attributeDefs['importDisabled']);
+                                    $data[$key]['notSortable'] = !empty($attributeDefs['notSortable']);
                                     $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
                                 }
                             }
