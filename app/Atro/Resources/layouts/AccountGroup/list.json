@@ -2,5 +2,14 @@
   {
     "name": "name",
     "link": true
+  },
+  {
+    "name": "code"
+  },
+  {
+    "name": "discountPercentage"
+  },
+  {
+    "name": "description"
   }
 ]

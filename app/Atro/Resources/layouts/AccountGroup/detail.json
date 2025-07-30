@@ -6,7 +6,21 @@
         {
           "name": "name"
         },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "discountPercentage"
+        },
         false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
       ]
     ]
   }

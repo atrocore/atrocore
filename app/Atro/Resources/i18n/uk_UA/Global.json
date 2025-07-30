@@ -63,7 +63,9 @@
     "NotificationRule": "Правило сповіщення",
     "HtmlSanitizer": "HTML Sanitizer",
     "Bookmark": "Додати в закладки",
-    "SystemIcon": "Системний значок"
+    "SystemIcon": "Системний значок",
+    "AccountGroup": "Група рахунків",
+    "ProductGroup": "Група продуктів"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -116,7 +118,9 @@
     "Country": "Країни",
     "HtmlSanitizer": "HTML Sanitizers",
     "Bookmark": "Закладки",
-    "SystemIcon": "Системні значки"
+    "SystemIcon": "Системні значки",
+    "AccountGroup": "Групи рахунків",
+    "ProductGroup": "Групи товарів"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"

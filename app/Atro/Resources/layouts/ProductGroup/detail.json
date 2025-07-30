@@ -6,7 +6,21 @@
         {
           "name": "name"
         },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "itemType"
+        },
         false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
       ]
     ]
   }

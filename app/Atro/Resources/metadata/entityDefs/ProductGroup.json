@@ -27,47 +27,21 @@
       "view": "views/fields/user"
     },
     "code": {
-      "tooltip": false,
       "type": "varchar",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
-      "required": false,
-      "notNull": false,
-      "countBytesInsteadOfCharacters": false,
       "trim": true,
       "defaultValueType": "basic",
-      "readOnly": false,
       "unique": true,
-      "index": true,
-      "isMultilang": false
+      "index": true
     },
     "itemType": {
-      "tooltip": false,
       "type": "extensibleEnum",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
-      "required": false,
-      "readOnly": false,
       "prohibitedEmptyValue": false,
       "dropdown": true,
-      "extensibleEnumId": "a01k1d5aqveed4vvgxcns67swaw",
-      "allowedOptions": []
+      "extensibleEnumId": "product_group_item_type"
     },
     "products": {
-      "tooltip": false,
       "type": "linkMultiple",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
       "foreignName": "name",
-      "required": false,
-      "dropdown": false,
-      "readOnly": false,
       "noLoad": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true

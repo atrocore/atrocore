@@ -27,47 +27,17 @@
       "view": "views/fields/user"
     },
     "code": {
-      "tooltip": false,
       "type": "varchar",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
-      "required": false,
-      "notNull": false,
-      "countBytesInsteadOfCharacters": false,
       "trim": true,
-      "defaultValueType": "basic",
-      "readOnly": false,
       "unique": true,
-      "index": true,
-      "isMultilang": false
+      "index": true
     },
     "discountPercentage": {
-      "tooltip": false,
-      "type": "float",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
-      "required": false,
-      "notNull": false,
-      "defaultUnit": "",
-      "readOnly": false,
-      "unique": false,
-      "index": false
+      "type": "float"
     },
     "accounts": {
-      "tooltip": false,
       "type": "linkMultiple",
-      "auditableEnabled": false,
-      "auditableDisabled": false,
-      "isCustom": true,
-      "modifiedExtendedDisabled": false,
       "foreignName": "name",
-      "required": false,
-      "dropdown": false,
-      "readOnly": false,
       "noLoad": true,
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true
