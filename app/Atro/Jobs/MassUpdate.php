@@ -29,10 +29,9 @@ class MassUpdate extends AbstractJob implements JobInterface
 
         foreach ($data['ids'] as $id) {
             $input = json_decode(json_encode($data['input']));
-            $input->_isMassUpdate = true;
 
             try {
-                $service->updateEntity($id, $input);
+                $service->setValidateRequiredFields(false)->updateEntity($id, $input);
             } catch (NotModified $e) {
             } catch (\Throwable $e) {
                 $message = "Update {$data['entityType']} '$id' failed: {$e->getMessage()}";
