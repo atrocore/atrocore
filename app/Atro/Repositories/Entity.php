@@ -386,7 +386,8 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
-        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
+        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false &&
+            empty($this->getMetadata()->get("scopes.{$entity->get('code')}.onlyEditableEmFields"))) {
             throw new Forbidden();
         }
 
