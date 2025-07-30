@@ -7360,7 +7360,7 @@ button.close {
 .selectize-control.plugin-remove_button [data-value] .remove {
     text-align: center;
     font-weight: bold;
-    font-size: 9px;
+    font-size: 10px;
     color: inherit;
     text-decoration: none;
     display: inline-block;
