@@ -606,7 +606,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
                 if (names.length) {
-                    return '<span>' + names.join('</span><br/><span>') + '</span>';
+                    return '<span>' + names.join('</span>, <span>') + '</span>';
                 }
                 return;
             }
