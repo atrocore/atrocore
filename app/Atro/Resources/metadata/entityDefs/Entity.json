@@ -187,6 +187,10 @@
       "notStorable": true,
       "tooltip": true
     },
+    "onlyEditableEmFields": {
+      "type": "array",
+      "notStorable": true
+    },
     "hasAssociate": {
       "type": "bool"
     },
