@@ -11635,11 +11635,6 @@ h4.panel-title span.color-icon {
     vertical-align: text-top;
 }
 
-.selectize-input .label.colored-enum,
-.selectize-input .label.colored-multi-enum {
-    margin-right: 5px;
-}
-
 .label.colored-enum > i,
 .label.colored-multi-enum > i {
     margin-inline-end: 5px;
