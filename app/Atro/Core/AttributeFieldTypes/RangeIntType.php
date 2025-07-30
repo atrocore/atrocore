@@ -57,6 +57,7 @@ class RangeIntType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'view'                      => "views/fields/range-{$this->type}",
             'importDisabled'            => true,
+            'notSortable'               => true,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
@@ -214,7 +215,7 @@ class RangeIntType extends AbstractFieldType
         ];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
@@ -224,6 +225,18 @@ class RangeIntType extends AbstractFieldType
         $qb->addSelect("{$alias}.{$this->type}_value1 as " . $mapper->getQueryConverter()->fieldToAlias($name . 'To'));
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
         $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+
+        switch ($params['orderBy']) {
+            case "{$name}From":
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}From") . ' ' . $params['order']);
+                break;
+            case "{$name}To":
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}To") . ' ' . $params['order']);
+                break;
+            case "{$name}Unit":
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
+                break;
+        }
     }
 
 
