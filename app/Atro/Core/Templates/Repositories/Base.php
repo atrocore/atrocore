@@ -18,15 +18,29 @@ use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class Base extends RDB
 {
     public function find(array $params = [])
     {
+        /** @var EntityCollection $collection */
         $collection = parent::find($params);
 
-        if ($this->getMetadata()->get("scopes.{$this->entityName}.hasAttribute")) {
+        if ($this->getMetadata()->get("scopes.{$collection->getEntityName()}.hasAttribute")) {
+            $this->prepareAttributesForOutput($collection, $params);
+        }
+
+        return $collection;
+    }
+
+    public function findRelated(Entity $entity, $relationName, array $params = [])
+    {
+        /** @var EntityCollection $collection */
+        $collection = parent::findRelated($entity, $relationName, $params);
+
+        if ($this->getMetadata()->get("scopes.{$collection->getEntityName()}.hasAttribute")) {
             $this->prepareAttributesForOutput($collection, $params);
         }
 
