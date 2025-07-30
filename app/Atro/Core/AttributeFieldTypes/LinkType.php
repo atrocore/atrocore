@@ -111,7 +111,7 @@ class LinkType extends AbstractFieldType
         }
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
 
@@ -125,6 +125,10 @@ class LinkType extends AbstractFieldType
 
             $qb->addSelect("{$referenceAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
             $qb->addSelect("{$referenceAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
+
+            if ($name === $params['orderBy']) {
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name . 'Name') . ' ' . $params['order']);
+            }
         }
     }
 
