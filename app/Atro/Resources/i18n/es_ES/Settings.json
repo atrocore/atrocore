@@ -28,7 +28,6 @@
     "activitiesEntityList": "Lista de entidades de actividades",
     "historyEntityList": "Lista de entidades de historia",
     "aclStrictMode": "ACL en modo estricto",
-    "followCreatedEntities": "Seguir los registros creados",
     "adminNotifications": "Notificaciones del sistema en el panel de administración",
     "appId": "ID",
     "assignmentNotifications": "Notifications upon assignment",
@@ -62,7 +61,6 @@
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
     "recordsPerPageSmall": "Número de registros a mostrar inicialmente en los paneles relacionados",
-    "followCreatedEntities": "Los usuarios seguirán automáticamente los registros que ellos crearon.",
     "authTokenLifetime": "Define cuanto tiempo de vida tienen los tokens.\n0 - significa que no caduca.",
     "authTokenMaxIdleTime": "Define cuándo caduca el Token luego del último acceso.\n0 - significa que no caduca.",
     "userThemesDisabled": "Si está marcado, los usuarios no podrán seleccionar otro tema.",
