@@ -2194,7 +2194,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 const pushItem = (name, defs) => {
                     let panelId = defs.attributePanelId;
-                    let attributeGroupId = defs.attributeGroup.id || null;
+                    let attributeGroupId = defs.attributeGroup?.id || null;
 
                     if (!attributePanels[panelId]) {
                         // skip item when panel do not exist
