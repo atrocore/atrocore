@@ -128,6 +128,25 @@
         });
     }
 
+    function removeField(item) {
+        // remove item from available list
+        selectedFields.splice(selectedFields.indexOf(item), 1)
+        selectedFields = [...selectedFields]
+
+        // find group of item
+        let itemGroup = availableGroups.find(group => !group.prefix)
+        availableGroups.forEach(group => {
+            if (group.prefix) {
+                if (item.name.startsWith(group.prefix)) {
+                    itemGroup = group
+                }
+            }
+        })
+
+        itemGroup.fields.unshift(item)
+        availableGroups = [...availableGroups]
+    }
+
     export let fetch = () => {
         return selectedFields;
     }
@@ -184,6 +203,10 @@
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editField(item)}>
                                             <i class="ph ph-pencil-simple"></i>
+                                        </a>
+                                        <a href="javascript:" class="remove-field"
+                                           on:click={()=>removeField(item)}>
+                                            <i class="ph ph-x"></i>
                                         </a>
                                     </div>
                                 {/if}
@@ -262,12 +285,12 @@
         font-weight: normal;
     }
 
-    .enabled li a.edit-field {
+    .enabled li a.edit-field, .enabled li a.remove-field {
         display: none;
     }
 
-    .enabled li:hover a.edit-field {
-        display: block;
+    .enabled li:hover a.edit-field, .enabled li:hover a.remove-field {
+        display: inline;
     }
 
     .well {
