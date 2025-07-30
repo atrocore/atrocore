@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "accounts": "Рахунки",
+    "code": "Код",
+    "discount": "Знижка, %",
+    "discountPercentage": "Знижка, %"
+  }
+}

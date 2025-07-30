@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "accounts": "Accounts",
+    "code": "Code",
+    "discount": "Discount, %",
+    "discountPercentage": "Discount, %"
+  }
+}

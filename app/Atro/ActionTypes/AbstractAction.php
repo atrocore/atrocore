@@ -52,9 +52,12 @@ abstract class AbstractAction implements TypeInterface
     public function executeViaWorkflow(array $workflowData, Event $event): bool
     {
         $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
+        $action->set('sourceEntity', $event->getArgument('entity')->getEntityType());
+
         $input = new \stdClass();
         $input->triggeredEntity = $event->getArgument('entity');
         $input->triggeredEntityId = $event->getArgument('entity')->get('id');
+        $input->entityId = $event->getArgument('entity')->get('id');
 
         return $this->getActionManager()->executeNow($action, $input);
     }

@@ -770,8 +770,29 @@ class LayoutManager
                     }
                     break;
                 case 'list':
+                    $attributesIds = array_column($data, 'attributeId');
+                    if (!empty($attributesIds)) {
+                        $attributesDefs = $this
+                            ->container
+                            ->get('serviceFactory')
+                            ->create('Attribute')
+                            ->getAttributesDefs($scope, $attributesIds);
+
+                        foreach ($attributesDefs as $attrField => $attributeDefs) {
+                            $fields[] = $attrField;
+                            foreach ($data as $key => $row) {
+                                if ($row['name'] === $attrField) {
+                                    $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
+                                    $data[$key]['customLabel'] = $data[$key]['label'];
+                                    $data[$key]['notSortable'] = !empty($attributeDefs['notSortable']);
+                                    $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
+                                }
+                            }
+                        }
+                    }
+
                     foreach ($data as $key => $row) {
-                        if (isset($row['name']) && !in_array($row['name'], $fields)) {
+                        if (isset($row['name']) && !in_array($row['name'], $fields) && empty($row['attributeId'])) {
                             array_splice($data, $key, 1);
                         }
                     }

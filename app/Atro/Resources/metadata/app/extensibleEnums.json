@@ -43,5 +43,10 @@
     "id": "team_position",
     "name": "Team Position",
     "multilingual": false
+  },
+  {
+    "id": "product_group_item_type",
+    "name": "Product Group Item Type",
+    "multilingual": false
   }
 ]

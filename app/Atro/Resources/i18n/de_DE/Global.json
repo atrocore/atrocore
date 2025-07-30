@@ -60,7 +60,9 @@
     "scopeFilter": "Kanal",
     "editGroup": "Gruppe bearbeiten",
     "addGroup": "Gruppen beginnen / beenden",
-    "SystemIcon": "System-Symbol"
+    "SystemIcon": "System-Symbol",
+    "AccountGroup": "Kontogruppe",
+    "ProductGroup": "Produktgruppe"
   },
   "scopeNamesPlural": {
     "Classification": "Klassifikationen",
@@ -113,7 +115,9 @@
     "Country": "Länder",
     "HtmlSanitizer": "HTML Sanitizers",
     "Bookmark": "Lesezeichen",
-    "SystemIcon": "System-Symbole"
+    "SystemIcon": "System-Symbole",
+    "AccountGroup": "Kontogruppen",
+    "ProductGroup": "Produktgruppen"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -239,6 +243,7 @@
     "Add Dashlet": "Dashlet hinzufügen",
     "Edit Dashboard": "Dashboard bearbeiten",
     "Add": "Hinzufügen",
+    "Added": "Hinzugefügt",
     "Add Item": "Eintrag hinzufügen",
     "Reset": "Zurücksetzen",
     "Menu": "Menü",
@@ -1056,7 +1061,6 @@
     "dontMatchToPattern": "ert des Feldes \"{field}\" entspricht nicht dem Pattern \"{pattern}\".",
     "notUniqueValue": "Der Datensatz kann aufgrund von Datenbankeinschränkungen nicht erstellt/aktualisiert werden.",
     "notUniqueCreatedValue": "Diese Beziehung(en) bestehen bereits und können daher nicht hinzugefügt werden.",
-    "fieldDoesNotExist": "Das Feld \"{field}\" existiert nicht in der entität \"{entityType}\".",
     "optionIsDisabled": "Das Element '%s' ist für das Feld '%s' deaktiviert.",
     "someCouldNotDuplicatedAndLinked": "Einige Datensätze konnten nicht dupliziert und verknüpft werden",
     "someCouldNotLinked": "Einige Datensätze konnten nicht verknüpft werden",

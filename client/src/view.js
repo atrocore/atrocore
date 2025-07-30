@@ -466,6 +466,18 @@ Espo.define('view', [], function () {
             }
 
             return model.get(fieldName);
+        },
+
+        onModelReady(callback) {
+            const modelIsSynced = !!this.model.attributes?.id;
+
+            if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
+                callback();
+            } else {
+                this.listenToOnce(this.model, 'sync', () => {
+                    callback(true);
+                });
+            }
         }
     });
 
