@@ -21,10 +21,15 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, `change:${this.entityTypeField} change:conditionsType`, () => {
-                this.clearValue();
-                this.reRender();
-            });
+            this.wait(true)
+            this.onModelReady((onSync) => {
+                this.listenTo(this.model, `change:${this.entityTypeField} change:conditionsType`, () => {
+                    this.clearValue();
+                    this.reRender();
+                });
+
+                this.wait(false)
+            })
         },
 
         clearValue() {
@@ -50,7 +55,7 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
 
 
         afterRender() {
-            Dep.prototype.setup.call(this);
+            Dep.prototype.afterRender.call(this);
 
             this.hide();
             if (this.canShowValueField()) {
@@ -81,6 +86,7 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                 this.createView('valueField', view, options, view => {
                     view.render();
                 });
+
             }
         },
 
