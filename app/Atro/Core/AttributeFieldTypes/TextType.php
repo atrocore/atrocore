@@ -218,16 +218,24 @@ class TextType extends AbstractFieldType
         return $res;
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.{$this->column} as " . $mapper->getQueryConverter()->fieldToAlias($name));
 
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
+        }
+
         if (!empty($this->config->get('isMultilangActive')) && !empty($row['is_multilang'])) {
             foreach ($this->config->get('inputLanguageList', []) as $code) {
                 $lName = $name . ucfirst(Util::toCamelCase(strtolower($code)));
                 $qb->addSelect("{$alias}.{$this->column}_" . strtolower($code) . " as " . $mapper->getQueryConverter()->fieldToAlias($lName));
+
+                if ($lName === $params['orderBy']) {
+                    $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($lName) . ' ' . $params['order']);
+                }
             }
         }
 
@@ -236,6 +244,10 @@ class TextType extends AbstractFieldType
 
             $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
             $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+
+            if ("{$name}Unit" === $params['orderBy']) {
+                $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName") . ' ' . $params['order']);
+            }
         }
     }
 

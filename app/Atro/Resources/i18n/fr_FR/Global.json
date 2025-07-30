@@ -932,7 +932,6 @@
     "notDashletService": "Le service %s doit implémenter l'interface Dashlet",
     "dontMatchToPattern": "La valeur du champ \"{field}\" ne correspond pas au motif \"{pattern}\".",
     "notUniqueValue": "L'enregistrement ne peut pas être créé/mis à jour en raison de contraintes liées à la base de données.",
-    "fieldDoesNotExist": "Le champ \"{field}\" n'existe pas sur l'entité \"{entityType}\".",
     "optionIsDisabled": "L'élément \"%s\" est désactivé pour le champ \"%s\".",
     "someCouldNotLinked": "Certains enregistrements n'ont pas pu être reliés",
     "massUpdateNoRecordProceed": "Aucun enregistrement n'a été mis à jour.",
