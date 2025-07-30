@@ -68,11 +68,15 @@ class BoolType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.bool_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
+
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
+        }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array

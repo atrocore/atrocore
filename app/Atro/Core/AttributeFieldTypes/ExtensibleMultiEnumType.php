@@ -90,7 +90,8 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
             'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
-            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)]
+            'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'notSortable'               => true,
         ];
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
@@ -99,7 +100,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 

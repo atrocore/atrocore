@@ -71,7 +71,7 @@ class ExtensibleEnumType extends AbstractFieldType
             'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'fullWidth'                 => !empty($attributeData['fullWidth'])
+            'fullWidth'                 => !empty($attributeData['fullWidth']),
         ];
 
         if (!empty($attributeData['dropdown'])) {
@@ -81,11 +81,15 @@ class ExtensibleEnumType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
+
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
+        }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array

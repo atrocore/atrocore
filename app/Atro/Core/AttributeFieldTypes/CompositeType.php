@@ -40,6 +40,7 @@ class CompositeType extends AbstractFieldType
             'type'                      => 'composite',
             'label'                     => $row[$this->prepareKey('name', $row)],
             'fullWidth'                 => true,
+            'notSortable'               => true,
         ];
 
         $entity->entityDefs['fields'][$name]['childrenIds'] = $this->em->getConnection()->createQueryBuilder()
@@ -54,7 +55,7 @@ class CompositeType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
     }
 }
