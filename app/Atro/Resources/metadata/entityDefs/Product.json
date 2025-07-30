@@ -69,6 +69,9 @@
       "type": "float",
       "min": 0,
       "default": 0
+    },
+    "productGroup": {
+      "type": "link"
     }
   },
   "links": {
@@ -106,6 +109,11 @@
       "type": "belongsTo",
       "entity": "File",
       "skipOrmDefs": true
+    },
+    "productGroup": {
+      "type": "belongsTo",
+      "foreign": "products",
+      "entity": "ProductGroup"
     }
   },
   "collection": {
