@@ -43,6 +43,30 @@ class Entity extends ReferenceData
         return [];
     }
 
+    protected function filterInput($data, string $id = null)
+    {
+        parent::filterInput($data, $id);
+
+        if (!is_object($data)) {
+            return;
+        }
+
+        $fields = $this->getMetadata()->get(['scopes', $id, 'onlyEditableEmFields']);
+        if (!empty($fields)) {
+            foreach ($data as $field => $value) {
+                $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field]);
+                if (empty($fieldDefs['type'])) {
+                    continue;
+                }
+
+                if (!in_array($field, $fields)) {
+                    unset($data->$field);
+                }
+            }
+        }
+
+    }
+
     protected function init()
     {
         parent::init();
