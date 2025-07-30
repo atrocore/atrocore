@@ -14,7 +14,11 @@ Espo.define('acl/entity', 'acl', Dep => {
 
         checkModel(model, data, action, precise) {
             if (model.get('customizable') === false) {
-                return false;
+                const list = model.get('onlyEditableEmFields')
+
+                if (!list || list.length === 0) {
+                    return false;
+                }
             }
 
             return Dep.prototype.checkModel.call(this, model, data, action, precise);

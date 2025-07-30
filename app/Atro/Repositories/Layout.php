@@ -62,6 +62,7 @@ class Layout extends Base
                             'cssStyle'    => $item['cssStyle'] ?? null,
                             'editable'    => $item['editable'] ?? false,
                             'sortOrder'   => $index,
+                            'attributeId' => $item['attributeId'] ?? null,
                         ]);
 
                         $this->getEntityManager()->saveEntity($listItemEntity);

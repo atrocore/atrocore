@@ -133,7 +133,7 @@ class AttributeFieldConverter
             $qb->setParameter("{$attributeAlias}AttributeId", $attribute['id']);
             $qb->setParameter('false', false, ParameterType::BOOLEAN);
 
-            $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper);
+            $this->prepareSelect($attribute, $attributeAlias, $qb, $mapper, $params);
             $this->convert($entity, $attribute, $attributesDefs, true);
         }
 
@@ -360,12 +360,12 @@ class AttributeFieldConverter
             ->fetchAllAssociative();
     }
 
-    public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function prepareSelect(array $attribute, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         // Add attribute value id to know if attribute is linked
         $qb->addSelect("$alias.id as " . $mapper->getQueryConverter()->fieldToAlias($this->getAttributeValueIdField(AttributeFieldConverter::prepareFieldName($attribute))));
 
-        $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper);
+        $this->getFieldType($attribute['type'])->select($attribute, $alias, $qb, $mapper, $params);
     }
 
     public function getAttributeValueIdField(string $fieldName): string

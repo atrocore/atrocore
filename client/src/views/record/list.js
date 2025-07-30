@@ -2096,6 +2096,28 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }.bind(this));
         },
 
+        putAttributesToSelect() {
+            let attributesIds = [];
+            (this.listLayout || []).forEach(item => {
+                if (item.attributeDefs) {
+                    // console.log(this.collection.models)
+                    // this.collection.models.forEach((model, k) => {
+                    //     console.log(this.collection.models)
+                    //     // model.defs.fields[item.attributeDefs.name] = item.attributeDefs;
+                    // })
+                    // console.log(this.collection)
+                }
+
+                if (item.attributeId && !attributesIds.includes(item.attributeId)) {
+                    attributesIds.push(item.attributeId);
+                }
+            })
+
+            if (attributesIds) {
+                this.collection.data.attributes = attributesIds.join(',');
+            }
+        },
+
         getSelectAttributeList: function (callback) {
             if (this.scope == null || this.rowHasOwnLayout) {
                 callback(null);
@@ -2104,12 +2126,14 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (this.listLayout) {
                 var attributeList = this.fetchAttributeListFromLayout();
+                this.putAttributesToSelect();
                 callback(attributeList);
                 return;
             } else {
                 this._loadListLayout(function (listLayout) {
                     this.listLayout = listLayout;
                     var attributeList = this.fetchAttributeListFromLayout();
+                    this.putAttributesToSelect();
                     callback(attributeList);
                 }.bind(this));
                 return;
@@ -2242,6 +2266,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
                 let item;
 
+                // put defs to model if it's attribute
+                if (col.attributeDefs) {
+                    model.defs['fields'][col.attributeDefs.name] = col.attributeDefs;
+                    if (col.attributeDefs.layoutDetailView) {
+                        model.defs['fields'][col.attributeDefs.name]['view'] = col.attributeDefs.layoutDetailView;
+                    }
+                }
 
                 if (this.isRelationField(col.name)) {
                     const name = col.name.split('__')[1]
@@ -2249,7 +2280,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     item = {
                         columnName: col.name,
                         name: col.name + 'Field',
-                        view: col.view || this.getMetadata().get(['entityDefs', this.relationScope, 'fields', name, 'view']) || this.getFieldManager().getViewName(type),
+                        view: col.view || model.getFieldParam(col.name, 'view') || this.getMetadata().get(['entityDefs', this.relationScope, 'fields', name, 'view']) || this.getFieldManager().getViewName(type),
                         options: {
                             useRelationModel: true,
                             defs: {

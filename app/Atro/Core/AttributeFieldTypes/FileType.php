@@ -83,7 +83,7 @@ class FileType extends AbstractFieldType
         ];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
@@ -92,6 +92,10 @@ class FileType extends AbstractFieldType
 
         $qb->addSelect("{$fileAlias}.id as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Id'));
         $qb->addSelect("{$fileAlias}.name as " . $mapper->getQueryConverter()->fieldToAlias($name . 'Name'));
+
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name . 'Name') . ' ' . $params['order']);
+        }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array

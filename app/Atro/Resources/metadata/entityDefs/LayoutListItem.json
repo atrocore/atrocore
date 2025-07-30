@@ -20,6 +20,9 @@
     "cssStyle": {
       "type": "varchar"
     },
+    "attributeId": {
+      "type": "varchar"
+    },
     "notSortable": {
       "type": "bool"
     },

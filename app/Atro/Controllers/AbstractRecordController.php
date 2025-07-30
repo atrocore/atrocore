@@ -237,6 +237,14 @@ abstract class AbstractRecordController extends AbstractController
             'collectionOnly' => $collectionOnly
         );
 
+        if (!empty($request->get('attributes'))) {
+            $params['attributesIds'] = explode(',', $request->get('attributes'));
+        }
+
+        if ($request->get('allAttributes') === 'true' || $request->get('allAttributes') === '1') {
+            $params['allAttributes'] = true;
+        }
+
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $result = $this->getRecordService()->findLinkedEntities($id, $link, $params);
