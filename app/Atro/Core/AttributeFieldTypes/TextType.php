@@ -108,7 +108,7 @@ class TextType extends AbstractFieldType
         if (!empty($row['is_multilang'])) {
             foreach ($languages as $language => $languageName) {
                 $lName = $name . ucfirst(Util::toCamelCase(strtolower($language)));
-                $entity->fields[$lName] = array_merge($entity->entityDefs['fields'][$name], [
+                $entity->fields[$lName] = array_merge($entity->fields[$name], [
                     'name'   => $lName,
                     'column' => $this->column . "_" . strtolower($language)
                 ]);

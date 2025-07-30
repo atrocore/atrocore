@@ -144,7 +144,7 @@ class AttributeFieldConverter
     {
         foreach ($entity->entityDefs['fields'] as $key => $defs) {
             if (!empty($defs['attributeId']) && in_array($defs['attributeId'], $attributeIds)) {
-                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['mainField'] ?? $key)] ?? null;
+                $entity->entityDefs['fields'][$key]['attributeValueId'] = $entity->rowData[$this->getAttributeValueIdField($defs['mainField'] ?? $defs['multilangField'] ?? $key)] ?? null;
             }
         }
     }
