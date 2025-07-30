@@ -3045,7 +3045,7 @@ output {
     padding: 6px 10px;
     font-size: 14px;
     line-height: 16px;
-    color: #555;
+    color: #000;
     background-color: #fff;
     background-image: none;
     border: 1px solid #d1d5d6;
@@ -3056,10 +3056,6 @@ output {
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-    -webkit-transition: all border-color ease-in-out .15s, box-shadow ease-in-out .15s ease-out;
-    -moz-transition: all border-color ease-in-out .15s, box-shadow ease-in-out .15s ease-out;
-    -o-transition: all border-color ease-in-out .15s, box-shadow ease-in-out .15s ease-out;
-    transition: all border-color ease-in-out .15s, box-shadow ease-in-out .15s ease-out
 }
 
 .query-builder .d-none {
@@ -7371,20 +7367,8 @@ button.close {
     line-height: 1;
 }
 
-.selectize-control.plugin-remove_button [data-value] .remove:hover {
-    background: rgba(0, 0, 0, 0.05)
-}
-
-.selectize-control.plugin-remove_button [data-value].active .remove {
-    border-left-color: rgba(0, 0, 0, 0)
-}
-
 .selectize-control.plugin-remove_button .disabled [data-value] .remove:hover {
     background: 0
-}
-
-.selectize-control.plugin-remove_button .disabled [data-value] .remove {
-    border-left-color: rgba(77, 77, 77, 0)
 }
 
 .selectize-control {
@@ -7467,7 +7451,7 @@ button.close {
 
 .selectize-control.multi .selectize-input > div:hover {
     border-color: #ccc;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .selectize-input > input {
