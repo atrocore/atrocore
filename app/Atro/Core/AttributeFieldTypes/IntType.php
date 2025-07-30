@@ -163,7 +163,7 @@ class IntType extends AbstractFieldType
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void
     {
         $name = AttributeFieldConverter::prepareFieldName($row);
 
@@ -172,6 +172,10 @@ class IntType extends AbstractFieldType
         $qb->addSelect("{$alias}.{$this->type}_value as " . $mapper->getQueryConverter()->fieldToAlias($name));
         $qb->addSelect("{$alias}.reference_value as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitId"));
         $qb->addSelect("{$alias}_unit.name as " . $mapper->getQueryConverter()->fieldToAlias("{$name}UnitName"));
+
+        if ($name === $params['orderBy']) {
+            $qb->add('orderBy', $mapper->getQueryConverter()->fieldToAlias($name) . ' ' . $params['order']);
+        }
     }
 
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
