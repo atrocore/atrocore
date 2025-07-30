@@ -7461,8 +7461,13 @@ button.close {
 .selectize-control.multi .selectize-input > div {
     cursor: grab;
     border-radius: 3px;
-    padding: 2px 4px;
-    background-color: #f3f3f3;
+    padding: 1px 4px;
+    border: 1px solid transparent;
+}
+
+.selectize-control.multi .selectize-input > div:hover {
+    border-color: #ccc;
+    background-color: #fff;
 }
 
 .selectize-input > input {
@@ -7691,7 +7696,6 @@ button.close {
     border-radius: 2px;
     display: flex;
     flex-wrap: wrap;
-    gap: 3px;
 }
 
 .form-control.selectize-control {
@@ -10458,7 +10462,8 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .cell > .field {
     overflow-wrap: break-word;
-    word-wrap: break-word
+    word-wrap: break-word;
+    line-height: 22px;
 }
 
 .cell > .field > a,
