@@ -60,7 +60,9 @@
     "scopeFilter": "Kanal",
     "editGroup": "Gruppe bearbeiten",
     "addGroup": "Gruppen beginnen / beenden",
-    "SystemIcon": "System-Symbol"
+    "SystemIcon": "System-Symbol",
+    "AccountGroup": "Kontogruppe",
+    "ProductGroup": "Produktgruppe"
   },
   "scopeNamesPlural": {
     "Classification": "Klassifikationen",
@@ -113,7 +115,9 @@
     "Country": "Länder",
     "HtmlSanitizer": "HTML Sanitizers",
     "Bookmark": "Lesezeichen",
-    "SystemIcon": "System-Symbole"
+    "SystemIcon": "System-Symbole",
+    "AccountGroup": "Kontogruppen",
+    "ProductGroup": "Produktgruppen"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"

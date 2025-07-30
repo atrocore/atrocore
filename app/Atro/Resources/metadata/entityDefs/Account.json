@@ -80,6 +80,9 @@
     "number": {
       "type": "varchar",
       "unique": true
+    },
+    "accountGroup": {
+      "type": "link"
     }
   },
   "links": {
@@ -112,6 +115,11 @@
       "foreign": "accounts",
       "entity": "Address",
       "relationName": "AddressAccount"
+    },
+    "accountGroup": {
+      "type": "belongsTo",
+      "foreign": "accounts",
+      "entity": "AccountGroup"
     }
   },
   "collection": {

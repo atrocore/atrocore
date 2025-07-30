@@ -75,7 +75,9 @@
     "HtmlSanitizer": "HTML Sanitizer",
     "Bookmark": "Bookmark",
     "SystemIcon": "System Icon",
-    "ProductHierarchy": "Product Hierarchy"
+    "ProductHierarchy": "Product Hierarchy",
+    "AccountGroup": "Account Group",
+    "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
     "RoleScopeAttribute": "Attributes",
@@ -138,7 +140,9 @@
     "Country": "Countries",
     "HtmlSanitizer": "HTML Sanitizers",
     "Bookmark": "Bookmarks",
-    "SystemIcon": "System Icons"
+    "SystemIcon": "System Icons",
+    "AccountGroup": "Account Groups",
+    "ProductGroup": "Product Groups"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
