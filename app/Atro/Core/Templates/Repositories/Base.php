@@ -28,7 +28,8 @@ class Base extends RDB
         /** @var EntityCollection $collection */
         $collection = parent::find($params);
 
-        if ($this->getMetadata()->get("scopes.{$collection->getEntityName()}.hasAttribute")) {
+        $firstEntity = $collection[0] ?? null;
+        if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {
             $this->prepareAttributesForOutput($collection, $params);
         }
 
@@ -40,7 +41,8 @@ class Base extends RDB
         /** @var EntityCollection $collection */
         $collection = parent::findRelated($entity, $relationName, $params);
 
-        if ($this->getMetadata()->get("scopes.{$collection->getEntityName()}.hasAttribute")) {
+        $firstEntity = $collection[0] ?? null;
+        if (!empty($firstEntity) && $this->getMetadata()->get("scopes.{$firstEntity->getEntityName()}.hasAttribute")) {
             $this->prepareAttributesForOutput($collection, $params);
         }
 
