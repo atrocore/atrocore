@@ -103,11 +103,11 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 var cached = this.cache.get('app', 'language-' + name);
                 if (cached) {
                     if (isFallback) {
-                        this.data = cached;
-                        window.SvelteLanguage.setTranslations(cached);
-                    } else {
                         this.fallbackData = cached;
                         window.SvelteLanguage.setFallbackTranslations(cached);
+                    } else {
+                        this.data = cached;
+                        window.SvelteLanguage.setTranslations(cached);
                     }
                     return true;
                 }

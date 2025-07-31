@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\ORM\DB\RDB\Mapper;
+use Atro\Core\Utils\Util;
 
-class V2Dot0Dot22 extends Base
+class V2Dot0Dot23 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -24,6 +26,8 @@ class V2Dot0Dot22 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE layout_list_item ADD attribute_id VARCHAR(255) DEFAULT NULL");
+
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
@@ -149,6 +153,75 @@ class V2Dot0Dot22 extends Base
 
         foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
             $this->exec($sql);
+        }
+
+        /* Create list options */
+        $options = [
+            [
+                "id"                => "physical_goods",
+                "extensibleEnumId"  => "product_group_item_type",
+                "name"              => "Physical goods",
+                "code"              => "physical_goods",
+                "sortOrder"         => 0
+            ],
+            [
+                "id"                => "services",
+                "extensibleEnumId"  => "product_group_item_type",
+                "name"              => "Services",
+                "code"              => "services",
+                "sortOrder"         => 10
+            ],
+            [
+                "id"                => "digital_products",
+                "extensibleEnumId"  => "product_group_item_type",
+                "name"              => "Digital products",
+                "code"              => "digital_products",
+                "sortOrder"         => 20
+            ],
+            [
+                "id"                => "legal_rights",
+                "extensibleEnumId"  => "product_group_item_type",
+                "name"              => "Legal rights",
+                "code"              => "legal_rights",
+                "sortOrder"         => 30
+            ]
+        ];
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete('extensible_enum_extensible_enum_option')
+            ->where('extensible_enum_id = :id')
+            ->setParameter('id', 'product_group_item_type')
+            ->executeStatement();
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete('extensible_enum_option')
+            ->where('id IN (:ids)')
+            ->setParameter('ids', array_column($options, 'id'), Mapper::getParameterType(array_column($options, 'id')))
+            ->executeStatement();
+
+        foreach ($options as $option) {
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->insert('extensible_enum_option')
+                ->setValue('id', ':id')
+                ->setValue('name', ':name')
+                ->setValue('code', ':code')
+                ->setValue('sort_order', ':sortOrder')
+                ->setParameters($option);
+
+            $qb2 = $this->getConnection()->createQueryBuilder()
+                ->insert('extensible_enum_extensible_enum_option')
+                ->setValue('id', ':id')
+                ->setValue('extensible_enum_id', ':enumId')
+                ->setValue('extensible_enum_option_id', ':optionId')
+                ->setParameter('id', Util::generateId())
+                ->setParameter('enumId', $option['extensibleEnumId'])
+                ->setParameter('optionId', $option['id']);
+
+            try {
+                $qb->executeQuery();
+                $qb2->executeQuery();
+            } catch (\Throwable $e) {
+            }
         }
     }
 

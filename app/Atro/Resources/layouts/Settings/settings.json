@@ -20,18 +20,10 @@
       ],
       [
         {
-          "name": "followCreatedEntities"
-        },
-        {
           "name": "globalSearchEntityList"
-        }
-      ],
-      [
+        },
         {
           "name": "textFilterUseContainsForVarchar"
-        },
-        {
-          "name": "reportingEnabled"
         }
       ],
       [
@@ -39,7 +31,7 @@
           "name": "locale"
         },
         {
-          "name": "disableActionHistory"
+          "name": "reportingEnabled"
         }
       ],
       [
@@ -47,8 +39,14 @@
           "name": "fileNameRegexPattern"
         },
         {
-          "name": "onlyStableReleases"
+          "name": "disableActionHistory"
         }
+      ],
+      [
+        {
+          "name": "onlyStableReleases"
+        },
+        false
       ]
     ]
   },

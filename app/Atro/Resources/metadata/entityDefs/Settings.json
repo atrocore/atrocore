@@ -77,11 +77,6 @@
       "type": "bool",
       "default": false
     },
-    "followCreatedEntities": {
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
     "adminPanelIframeUrl": {
       "type": "varchar"
     },

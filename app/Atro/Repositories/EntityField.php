@@ -245,29 +245,39 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!empty($entity->get('default')) && !empty($entity->get('allowedOptions'))) {
-            switch ($entity->get('type')) {
-                case 'extensibleEnum':
-                    if (!in_array($entity->get('default'), $entity->get('allowedOptions'))) {
-                        throw new BadRequest(sprintf(
-                            $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                            $entity->get('defaultName') ?? $entity->get('default'),
-                            $this->getLanguage()->translate('default', 'fields', 'EntityField')
-                        ));
-                    }
-                    break;
-                case 'extensibleMultiEnum':
-                    foreach ($entity->get('default') as $optionId) {
-                        if (!in_array($optionId, $entity->get('allowedOptions'))) {
-                            $defaultNames = $entity->get('defaultNames') ?? new \stdClass();
+        if (!empty($entity->get('default'))) {
+            if ($entity->get('type') === 'varchar') {
+                $maxLength = $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.len", 255);
+
+                if (strlen($entity->get('default')) > $maxLength) {
+                    throw new BadRequest("Default value is to long. Maximum length is {$maxLength}.");
+                }
+            }
+
+            if (!empty($entity->get('allowedOptions'))) {
+                switch ($entity->get('type')) {
+                    case 'extensibleEnum':
+                        if (!in_array($entity->get('default'), $entity->get('allowedOptions'))) {
                             throw new BadRequest(sprintf(
                                 $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
-                                $defaultNames->{$optionId} ?? $optionId,
+                                $entity->get('defaultName') ?? $entity->get('default'),
                                 $this->getLanguage()->translate('default', 'fields', 'EntityField')
                             ));
                         }
-                    }
-                    break;
+                        break;
+                    case 'extensibleMultiEnum':
+                        foreach ($entity->get('default') as $optionId) {
+                            if (!in_array($optionId, $entity->get('allowedOptions'))) {
+                                $defaultNames = $entity->get('defaultNames') ?? new \stdClass();
+                                throw new BadRequest(sprintf(
+                                    $this->getLanguage()->translate('notAllowedOption', 'exceptions'),
+                                    $defaultNames->{$optionId} ?? $optionId,
+                                    $this->getLanguage()->translate('default', 'fields', 'EntityField')
+                                ));
+                            }
+                        }
+                        break;
+                }
             }
         }
     }

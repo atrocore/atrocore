@@ -33,8 +33,8 @@
     "layoutProfile": "Layout Profile",
     "locale": "Locale",
     "style": "User Interface Style",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
     "followCreatedEntities": "Auto-follow created records",
+    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
     "receiveNotifications": "Receive Notifications",
     "notificationProfile": "Notification Profile"
   },
@@ -58,8 +58,7 @@
     "isAdmin": "Admin user can access everything.",
     "isActive": "If unchecked then user won't be able to login.",
     "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
-    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
-    "followCreatedEntities": "When creating new records, they will automatically be followed, even if assigned to a different user."
+    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore User Access Info",
