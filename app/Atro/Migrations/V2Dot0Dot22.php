@@ -24,6 +24,8 @@ class V2Dot0Dot22 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE layout_list_item ADD attribute_id VARCHAR(255) DEFAULT NULL");
+
         $fromSchema = $this->getCurrentSchema();
         $toSchema = clone $fromSchema;
 
