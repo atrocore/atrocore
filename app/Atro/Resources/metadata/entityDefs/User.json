@@ -120,8 +120,7 @@
     "teams": {
       "type": "linkMultiple",
       "tooltip": true,
-      "view": "views/user/fields/teams",
-      "default": "javascript: return {teamsIds: []}"
+      "view": "views/user/fields/teams"
     },
     "roles": {
       "type": "linkMultiple",
