@@ -33,6 +33,7 @@
     "layoutProfile": "Layout Profile",
     "locale": "Locale",
     "style": "User Interface Style",
+    "followCreatedEntities": "Auto-follow created records",
     "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
     "receiveNotifications": "Receive Notifications",
     "notificationProfile": "Notification Profile"
