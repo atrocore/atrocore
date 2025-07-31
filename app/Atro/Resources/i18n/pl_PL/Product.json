@@ -1,6 +1,6 @@
 {
 	"fields": {
-		"sku": "SKU",
+		"number": "Numer",
 		"isActive": "Aktywny",
 		"image": "Obraz",
 		"price": "Cena",

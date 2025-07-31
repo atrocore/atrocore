@@ -16,6 +16,20 @@
     "eu": {
       "type": "bool",
       "default": false
+    },
+    "products": {
+      "type": "linkMultiple",
+      "foreignName": "name",
+      "noLoad": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
+    }
+  },
+  "links": {
+    "products": {
+      "type": "hasMany",
+      "foreign": "countryOfOrigin",
+      "entity": "Product"
     }
   },
   "collection": {
