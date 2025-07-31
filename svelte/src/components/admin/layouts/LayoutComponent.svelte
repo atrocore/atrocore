@@ -1,6 +1,5 @@
 <script lang="ts">
     import ListLayout from './ListLayout.svelte';
-    import SideDetailLayout from "./SideDetailLayout.svelte";
     import RelationShipsLayout from "./RelationShipsLayout.svelte";
     import Params from "./interfaces/Params"
     import GridLayout from "./GridLayout.svelte";
