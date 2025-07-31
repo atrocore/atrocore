@@ -792,6 +792,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.defaultUnit = this.params.defaultUnit;
             }
 
+            // @todo hotfix. For some reasons model does not contain correct data.
+            this.listenTo(this.model, 'sync', (model, data) => {
+                if (data[this.name] && data[this.name] !== model.get(this.name)) {
+                    console.log(this.name)
+                    this.model.set(this.name, data[this.name]);
+                }
+            });
+
             this.listenTo(this.model, 'after:save', () => {
                 this.afterModelSave();
                 this.reRender();
