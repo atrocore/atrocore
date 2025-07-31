@@ -96,5 +96,33 @@
     "name": "Script",
     "code": "script",
     "sortOrder": 10
+  },
+  {
+    "id": "physical_goods",
+    "extensibleEnumId": "product_group_item_type",
+    "name": "Physical goods",
+    "code": "physical_goods",
+    "sortOrder": 0
+  },
+  {
+    "id": "services",
+    "extensibleEnumId": "product_group_item_type",
+    "name": "Services",
+    "code": "services",
+    "sortOrder": 10
+  },
+  {
+    "id": "digital_products",
+    "extensibleEnumId": "product_group_item_type",
+    "name": "Digital products",
+    "code": "digital_products",
+    "sortOrder": 20
+  },
+  {
+    "id": "legal_rights",
+    "extensibleEnumId": "product_group_item_type",
+    "name": "Legal rights",
+    "code": "legal_rights",
+    "sortOrder": 30
   }
 ]

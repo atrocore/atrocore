@@ -1276,6 +1276,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         setScriptDefaultValue() {
             if (
                 this.model.isNew()
+                && !this.model.get('_duplicatingEntityId')
                 && this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.defaultValueType`) === 'script'
             ) {
                 this.model.set(this.name, null);

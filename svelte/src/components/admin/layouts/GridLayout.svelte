@@ -571,8 +571,7 @@
     <div id="layout" class="row">
         <div class="col-md-8">
             <div class="well">
-                <header>{Language.translate('Layout', 'LayoutManager')}</header>
-                <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'Admin')}</a>
+                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'Admin')}</a></header>
                 <div class="rows-wrapper">
                     <ul class="panels">
                         {#each panels as panel (panel.number)}
@@ -643,7 +642,7 @@
         </div>
         <div class="col-md-4">
             <div class="well available-fields">
-                <header>{Language.translate('Available Fields', 'Admin')}</header>
+                <header><h5>{Language.translate('Available Fields', 'Admin')}</h5></header>
                 <div class="rows-wrapper">
                     {#each availableGroups as group (group.name)}
                         <div class:group={availableGroups.length>1}>
@@ -757,7 +756,13 @@
     }
 
     #layout header {
-        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #layout header h5 {
+        margin-top: 0;
     }
 
     #layout .panel-layout header label {
@@ -857,9 +862,5 @@
 
     #layout > * {
         height: 100%;
-    }
-
-    #layout .available-fields .rows-wrapper {
-        margin-top: 29px;
     }
 </style>

@@ -19,7 +19,7 @@ interface AttributeFieldTypeInterface
 {
     public function convert(IEntity $entity, array $row, array &$attributesDefs, bool $skipValueProcessing = false): void;
 
-    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper): void;
+    public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void;
 
     public function getWherePart(IEntity $entity, array $attribute, array &$item): void;
 }

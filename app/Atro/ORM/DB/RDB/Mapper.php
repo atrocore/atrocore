@@ -77,6 +77,7 @@ class Mapper implements MapperInterface
 
         $result = [];
         foreach ($rows as $k => $row) {
+            $result[$k]['__seed'] = $entity;
             foreach ($row as $field => $value) {
                 $result[$k][$this->getQueryConverter()->aliasToField($field)] = $value;
             }

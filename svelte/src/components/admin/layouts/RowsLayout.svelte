@@ -8,6 +8,7 @@
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";
+    import {Metadata} from "../../../utils/Metadata";
 
     let layoutElement: HTMLElement
 
@@ -20,6 +21,7 @@
     export let loadLayout: Function;
 
     let baseLayout: BaseLayout;
+    let hasAttributes = Metadata.get(['scopes', params.scope, 'hasAttribute']);
 
     onDestroy(() => {
         if (sortableEnabled) sortableEnabled.destroy();
@@ -157,6 +159,41 @@
         })
         return dataAttributes;
     }
+
+    function addAttribute() {
+        params.openAddAttributesDialog(params.scope, fields => {
+            fields.forEach(field => {
+                let attribute = {
+                    id: field.name,
+                    name: field.name,
+                    label: field.detailViewLabel || field.label,
+                    attributeId: field.attributeId
+                };
+
+                let exists = false;
+                selectedFields.forEach(item => {
+                    if (item.name === attribute.name) {
+                        exists = true;
+                    }
+                });
+                if (!exists) {
+                    availableGroups.forEach(group => {
+                        group.fields.forEach(item => {
+                            if (item.name === attribute.name) {
+                                exists = true;
+                            }
+                        })
+                    })
+                }
+                if (!exists) {
+                    selectedFields = [
+                        ...selectedFields,
+                        attribute
+                    ];
+                }
+            })
+        });
+    }
 </script>
 
 <BaseLayout
@@ -171,13 +208,13 @@
     <div id="layout" class="row" bind:this={layoutElement}>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
+                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> {#if hasAttributes}<a href="#" on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>{/if}</header>
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
                         {#each selectedFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
                             <li {...getDataAttributeProps(item)}>
                                 <div class="left">
-                                    <label>{item.label}</label>
+                                    <label style={item.attributeId ? 'font-style: italic' : ''}>{item.label}</label>
                                 </div>
                                 {#if params.editable}
                                     <div class="right">
@@ -196,7 +233,7 @@
         <div class="col-sm-1" style="width: 35px"></div>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Available', 'labels', 'Admin')}</header>
+                <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <div class="rows-wrapper">
                     {#each availableGroups as group (group.name)}
                         <div class:group={availableGroups.length>1}>
@@ -207,7 +244,7 @@
                                 {#each group.fields as field (field.name)}
                                     <li {...getDataAttributeProps(field)}>
                                         <div class="left">
-                                            <label>{field.label}</label>
+                                            <label style={field.attributeId ? 'font-style: italic' : ''}>{field.label}</label>
                                         </div>
                                     </li>
                                 {/each}
@@ -301,5 +338,19 @@
 
     #layout > * {
         height: 100%;
+    }
+
+    #layout header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #layout header h5 {
+        margin-top: 0;
+    }
+
+    #layout header a {
+        font-weight: normal;
     }
 </style>

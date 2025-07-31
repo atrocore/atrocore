@@ -230,7 +230,7 @@
     <div id="layout" class="row" bind:this={layoutElement}>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Selected', 'labels', 'Admin')}</header>
+                <header>{Language.translate('Current Layout', 'LayoutManager')}</header>
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
                         {#each enabledItems.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
@@ -264,7 +264,7 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Available', 'labels', 'Admin')}</header>
+                <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <div class="rows-wrapper">
                     <ul class="disabled connected">
                         {#each disabledItems as item (item.name)}

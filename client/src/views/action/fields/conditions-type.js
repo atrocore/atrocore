@@ -21,11 +21,13 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
                 this.entityTypeField = this.model.name === 'Action' ? 'sourceEntity' : 'entityType';
 
                 this.prepareOptionsList();
-                this.listenTo(this.model, `change:${this.entityTypeField}`, () => {
-                    this.model.set(this.name, null);
-                    this.prepareOptionsList();
-                    this.reRender();
-                });
+                this.onModelReady(() => {
+                    this.listenTo(this.model, `change:${this.entityTypeField}`, () => {
+                        this.model.set(this.name, null);
+                        this.prepareOptionsList();
+                        this.reRender();
+                    });
+                })
             },
 
             prepareOptionsList() {
@@ -70,7 +72,10 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
 
                 $link.on('click', () => {
                     this.notify('Loading...');
-                    this.createView('dialog', 'views/modals/php-code', {model: this.model, phpCode: this.model.get('conditionPhpCode')}, dialog => {
+                    this.createView('dialog', 'views/modals/php-code', {
+                        model: this.model,
+                        phpCode: this.model.get('conditionPhpCode')
+                    }, dialog => {
                         dialog.render();
                         this.notify(false);
                     });

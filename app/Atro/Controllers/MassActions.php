@@ -50,7 +50,7 @@ class MassActions extends AbstractController
             throw new Forbidden();
         }
 
-        $relationData = json_decode(json_encode($data?->data ?? ''), true);
+        $relationData = json_decode(json_encode($data?->data ?? []), true);
 
         if (property_exists($data, 'where') && property_exists($data, 'foreignWhere')) {
             $where = json_decode(json_encode($data->where), true);
