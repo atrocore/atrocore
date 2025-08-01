@@ -68,7 +68,7 @@ abstract class AbstractController
         return $this->container->get('aclManager');
     }
 
-    protected function getConfig(): \Atro\Core\Utils\Conf
+    protected function getConfig(): \Atro\Core\Utils\Config
     {
         return $this->container->get('config');
     }
