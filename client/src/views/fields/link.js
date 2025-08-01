@@ -940,7 +940,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             operators = operators.concat(['is_null', 'is_not_null']);
 
-
             return {
                 id: this.getFilterName(type),
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),

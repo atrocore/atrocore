@@ -901,10 +901,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     operators = operators.concat(['is_me', 'is_not_me', 'is_team_member', 'include_me', 'exclude_me'])
                 }
 
-                if(this.getForeignScope() === 'Team') {
-                    operators =  operators.concat(['is_my_team', 'is_not_my_team'])
-                }
-
                 operators = operators.concat(['is_not_linked', 'is_linked']);
             }
 

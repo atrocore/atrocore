@@ -1200,7 +1200,14 @@
       "last_month": "last month",
       "next_month": "next month",
       "current_year": "current year",
-      "last_year": "last year"
+      "last_year": "last year",
+      "is_me": "is me",
+      "is_not_me": "is not me",
+      "is_team_member": "is member of my teams",
+      "include_me": "include me",
+      "exclude_me": "exclude me",
+      "is_my_team": "is my team",
+      "is_not_my_team": "is not my team"
     },
     "errors": {
       "no_filter": "No filter selected",
