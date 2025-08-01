@@ -15,7 +15,7 @@ namespace Atro\Core\Twig;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Container;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 

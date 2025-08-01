@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Utils;
 
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 
 class PDFLib
 {

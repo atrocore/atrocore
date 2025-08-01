@@ -16,7 +16,7 @@ use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\ORM\Entity;
 
 class ActionManager

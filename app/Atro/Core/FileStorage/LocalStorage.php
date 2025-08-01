@@ -26,7 +26,7 @@ use Atro\EntryPoints\Image;
 use Doctrine\DBAL\Connection;
 use Espo\Core\FilePathBuilder;
 use Atro\Core\Utils\FileManager;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Util;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;

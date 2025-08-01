@@ -17,7 +17,7 @@ use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Language;
 use Espo\Core\ServiceFactory;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Entity;

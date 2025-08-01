@@ -17,7 +17,7 @@ use Atro\Core\Container;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Entities\File as FileEntity;
 use Espo\Core\ORM\EntityManager;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Atro\Core\Utils\Metadata;
 use Gumlet\ImageResize;

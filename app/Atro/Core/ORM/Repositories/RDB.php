@@ -17,7 +17,7 @@ use Atro\ORM\DB\RDB\Mapper;
 use Atro\Core\EventManager\Event;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;

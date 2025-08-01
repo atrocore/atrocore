@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 use Atro\Core\Utils\Util;

@@ -20,7 +20,7 @@ use Atro\NotificationTransport\NotificationOccurrence;
 use Atro\Repositories\NotificationRule;
 use Espo\Core\Factories\AclManager as AclManagerFactory;
 use Espo\ORM\Entity;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Espo\Entities\User;

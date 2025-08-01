@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Container;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 
 /**

@@ -15,7 +15,7 @@ use Atro\Core\Container;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\ClientManager;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;

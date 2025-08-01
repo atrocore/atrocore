@@ -16,7 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Espo\Entities\User;

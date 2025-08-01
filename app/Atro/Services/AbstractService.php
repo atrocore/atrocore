@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\StorageInterface;
 use Atro\Core\Utils\NotificationManager;
 use Espo\Core\Interfaces\Injectable;
-use Atro\Core\Utils\Conf;
+use Atro\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
