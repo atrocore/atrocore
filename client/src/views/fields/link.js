@@ -815,10 +815,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 let operator = rule.operator.type;
                 if (['in', 'not_in'].includes(operator)) {
                     const attribute = this.defs.params.attribute ?? null;
-                    let foreignScope = this.defs.params.foreignScope
-                        ?? this.foreignScope
-                        ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
-                        ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
+                    let foreignScope = this.getForeignScope();
 
                     if (attribute && attribute.entityType && attribute.entityType.length) {
                         foreignScope = attribute.entityType;
@@ -932,17 +929,24 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         createQueryBuilderFilter(type = null) {
+            let operators = ['in', 'not_in'];
+            if(this.getForeignScope() === 'User') {
+               operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
+            }
+
+            if(this.getForeignScope() === 'Team') {
+               operators =  operators.concat(['is_my_team', 'is_not_my_team'])
+            }
+
+            operators = operators.concat(['is_null', 'is_not_null']);
+
+
             return {
                 id: this.getFilterName(type),
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: [
-                    'in',
-                    'not_in',
-                    'is_null',
-                    'is_not_null'
-                ],
+                operators: operators,
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
                         return '';
@@ -1103,6 +1107,13 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 let subQuery = rule.data?.subQuery || [];
                 return subQuery.length > 0;
             }
+        },
+
+        getForeignScope: function () {
+            return this.defs.params.foreignScope
+                ?? this.foreignScope
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
+                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
         }
 
     });

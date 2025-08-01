@@ -468,7 +468,8 @@ Espo.define('view', [], function () {
             return model.get(fieldName);
         },
 
-        onModelReady(callback) {
+        onModelReady(callback, model) {
+            model = model ?? this.model;
             const modelIsSynced = !!this.model.attributes?.id;
 
             if (this.model.isNew() || !this.model.hasField('id') || modelIsSynced) {
@@ -478,6 +479,20 @@ Espo.define('view', [], function () {
                     callback(true);
                 });
             }
+        },
+
+        listenTo(object, event, callback,) {
+            if(object instanceof Backbone.Model && typeof  event === 'string' ) {
+                let events =  event.split(' ');
+                if(events.length === 1 && events[0].includes('change') ){
+                   this.onModelReady(() => {
+                       return Backbone.Model.prototype.listenTo.call(this, object, events, callback)
+                   }, object)
+                    return this;
+                }
+            }
+
+            return Backbone.Model.prototype.listenTo.call(this, object, event, callback)
         }
     });
 
