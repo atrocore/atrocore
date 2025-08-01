@@ -99,8 +99,8 @@ Espo.define('language', ['ajax'], function (Ajax) {
             if(!isFallback && loadDefault) {
                 name = 'default';
             }
-            var cached = this.cache.get('app', 'language-' + name);
             if (this.cache) {
+                var cached = this.cache.get('app', 'language-' + name);
                 if (cached) {
                     if (isFallback) {
                         this.fallbackData = cached;
@@ -135,18 +135,19 @@ Espo.define('language', ['ajax'], function (Ajax) {
         load: function (callback, disableCache, loadDefault, fallback = null) {
             this.once('sync', callback);
             if (!disableCache) {
-                if(this.loadFromCache(false, true)) {
-                    this.trigger('sync')
-                }else{
-                    this.fetchFallback(disableCache, fallback);
-                }
-
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
                     return;
                 }else{
                     this.fetch(disableCache, loadDefault, fallback);
                 }
+                if(this.loadFromCache(false, true)) {
+                    this.trigger('sync')
+                }else{
+                    this.fetchFallback(disableCache, fallback);
+                }
+
+
             }
 
         },
