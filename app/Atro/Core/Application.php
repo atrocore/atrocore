@@ -21,7 +21,6 @@ use Espo\Core\Utils\Auth;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
 use Atro\Services\Composer;
 
 class Application
