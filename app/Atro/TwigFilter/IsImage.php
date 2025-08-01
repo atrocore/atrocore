@@ -16,7 +16,7 @@ namespace Atro\TwigFilter;
 use Atro\Core\Twig\AbstractTwigFilter;
 
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 
 class IsImage extends AbstractTwigFilter
 {

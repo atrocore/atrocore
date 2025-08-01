@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Console;
 use Atro\Console\AbstractConsole;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 
 class ConsoleManager
 {
@@ -56,7 +56,7 @@ class ConsoleManager
         // prepare result
         $result = [];
 
-        foreach ($this->getMetadata()->get("app.consoleCommands") as $route => $handler) {
+        foreach ($this->getCommands() as $route => $handler) {
             if ($route == $command) {
                 $result = [
                     'handler' => $handler,
@@ -89,13 +89,22 @@ class ConsoleManager
         return $result;
     }
 
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
+    public function getCommands(): array
+    {
+        if (!$this->getConfig()->get('isInstalled')) {
+            return [];
+        }
+
+        return $this->getMetadata()->get("app.consoleCommands");
+    }
+
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }

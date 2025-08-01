@@ -1,19 +1,17 @@
 <?php
 /**
- * AtroCore Software
- *
- * This source file is available under GNU General Public License version 3 (GPLv3).
- * Full copyright and license information is available in LICENSE.txt, located in the root directory.
- *
- * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
- * @license    GPLv3 (https://www.gnu.org/licenses/)
- */
+* AtroCore Software
+*
+* This source file is available under GNU General Public License version 3 (GPLv3).
+* Full copyright and license information is available in LICENSE.txt, located in the root directory.
+*
+*  @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+*  @license    GPLv3 (https://www.gnu.org/licenses/)
+*/
 
 declare(strict_types=1);
 
 namespace Atro\Console;
-
-use Atro\Core\ConsoleManager;
 
 /**
  * ListCommand console
@@ -37,7 +35,7 @@ class ListCommand extends AbstractConsole
      */
     public function run(array $data): void
     {
-        foreach ($this->getMetadata()->get("app.consoleCommands") as $command => $class) {
+        foreach ($this->getCommands() as $command => $class) {
             if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
                 $data[$command] = [$command, $class::getDescription()];
             }
@@ -53,5 +51,13 @@ class ListCommand extends AbstractConsole
         // render
         self::show('Available commands:', self::INFO);
         echo self::arrayToTable($result);
+    }
+
+    protected function getCommands(): array
+    {
+        return $this
+            ->getContainer()
+            ->get('consoleManager')
+            ->getCommands();
     }
 }

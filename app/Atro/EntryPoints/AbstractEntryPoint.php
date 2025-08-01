@@ -15,10 +15,10 @@ use Atro\Core\Container;
 use Espo\Core\Acl;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\ClientManager;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Conf;
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 

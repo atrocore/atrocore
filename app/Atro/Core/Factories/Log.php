@@ -16,7 +16,7 @@ namespace Atro\Core\Factories;
 use Atro\Core\Container;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\Monolog\Handler\ReportingHandler;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Conf;
 use Monolog\ErrorHandler;
 use Monolog\Logger;
 use Monolog\Level;

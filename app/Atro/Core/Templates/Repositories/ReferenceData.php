@@ -22,7 +22,7 @@ use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
 use Espo\Core\Interfaces\Injectable;
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\IEntity;

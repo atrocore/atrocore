@@ -813,7 +813,7 @@ class LayoutManager
         return $this->container->get('fileManager');
     }
 
-    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    protected function getMetadata(): \Atro\Core\Utils\Metadata
     {
         return $this->container->get('metadata');
     }

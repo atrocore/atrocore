@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema as DoctrineSchema;
 use Doctrine\DBAL\Schema\Comparator;
 use Espo\Services\App;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Conf;
 
 class Base
 {
