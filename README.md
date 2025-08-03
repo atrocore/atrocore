@@ -35,8 +35,8 @@ We are now able to confidently assure our customers that their requirements, ext
 
 ### Enterprise Edition?
 
-There is no Enterprise Edition, only the Core (which is AtroCore), free modules and premium modules. 
-We also offer SaaS Editions, which includes some or all premium modules.
+From small businesses to large enterprises, every user use the same core platform – AtroCore. This core can be extended with additional free and premium modules as needed.
+We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
 
 ### Free vs Paid
