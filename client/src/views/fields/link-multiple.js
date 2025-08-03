@@ -457,7 +457,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                     },
                     onChange: (value) => {
-                        const items = value.split(':,:');
+                        const items = value.split(':,:').filter(item => !!item?.trim());
                         this.ids = Espo.Utils.clone(items);
                         this.trigger('change');
                     },
@@ -505,7 +505,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.$element.selectize(selectizeOptions);
 
                 if (this.mode === 'search') {
-                    console.log(this.searchData);
                     this.addLinkSubQueryHtml(this.searchData.subQuery);
                     const type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
