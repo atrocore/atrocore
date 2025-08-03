@@ -1142,11 +1142,6 @@
         font-size: 20px;
     }
 
-    :global(.query-builder .input-group-btn .btn) {
-        height: 32px;
-        padding: 0;
-    }
-
     :global(.query-builder .btn.rule-delete) {
         border: 0;
         padding: 0;
