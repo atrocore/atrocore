@@ -4180,7 +4180,9 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 .input-group-btn {
     position: relative;
     font-size: 0;
-    white-space: nowrap
+    white-space: nowrap;
+    display: flex;
+    align-items: stretch;
 }
 
 .input-group-btn > .btn {
