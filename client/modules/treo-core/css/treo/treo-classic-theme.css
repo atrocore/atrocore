@@ -3000,15 +3000,11 @@ label {
 }
 
 input[type="search"] {
-    -ms-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 input[type="radio"], input[type="checkbox"] {
     margin: 4px 0 0;
-    margin-top: 1px \9;
     line-height: normal
 }
 
@@ -7356,7 +7352,7 @@ button.close {
 .selectize-control.plugin-remove_button [data-value] .remove {
     text-align: center;
     font-weight: bold;
-    font-size: 10px;
+    font-size: 12px;
     color: inherit;
     text-decoration: none;
     display: inline-block;
@@ -7392,19 +7388,19 @@ button.close {
 .selectize-input {
     border: 1px solid #eeeeee;
     padding: 6px 10px;
-    display: inline-block;
     width: 100%;
     overflow: hidden;
     position: relative;
     z-index: 1;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
-    border-radius: 0
+    border-radius: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .selectize-control.multi .selectize-input.has-items {
@@ -7605,12 +7601,12 @@ button.close {
     z-index: 1000;
     background: #fff;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.15);
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    position: absolute;
 }
 
 .selectize-dropdown .optgroup-header {
@@ -7642,7 +7638,8 @@ button.close {
 }
 
 .selectize-input {
-    min-height: 33px
+    min-height: 33px;
+    height: 100%;
 }
 
 .selectize-input.dropdown-active {
@@ -7680,6 +7677,7 @@ button.close {
     border-radius: 2px;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .form-control.selectize-control {
@@ -7691,7 +7689,9 @@ button.close {
     box-shadow: none;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
-    border-radius: 0
+    border-radius: 0;
+    min-width: 160px;
+    max-width: 100%;
 }
 
 .note-editor {
@@ -10069,10 +10069,6 @@ div.list-kanban > div > table .item .panel .form-group .field {
     font-size: 14px
 }
 
-div.list-kanban > div > table .item .panel .form-group .field span.label {
-    line-height: 24px;
-}
-
 div.list-kanban > div > table .item .panel .form-group .field.field-large {
     font-size: 18px;
     color: #555
@@ -11607,7 +11603,7 @@ h4.panel-title span.color-icon {
 
 .label.colored-enum,
 .label.colored-multi-enum {
-    padding: 0;
+    padding: 2px 5px;
     color: var(--primary-font-color);
     font-weight: 400;
     font-size: 14px;
@@ -11621,6 +11617,7 @@ h4.panel-title span.color-icon {
 
 .label.colored-enum > i,
 .label.colored-multi-enum > i {
+    margin-inline-start: -5px;
     margin-inline-end: 5px;
     width: 14px;
     height: 14px;
@@ -11629,10 +11626,25 @@ h4.panel-title span.color-icon {
     background-color: #eee;
 }
 
+.label.colored-enum > *:last-child,
+.label.colored-multi-enum > *:last-child {
+    margin-inline-end: -5px;
+}
+
 .label.colored-enum + .separator,
 .label.colored-multi-enum + .separator {
     user-select: none;
     margin-inline-end: 5px;
+}
+
+.selectize-control.multi .selectize-input .label.colored-enum > *:last-child,
+.selectize-control.multi .selectize-input .label.colored-multi-enum > *:last-child {
+    margin-inline-end: 0;
+}
+
+.selectize-control.multi .selectize-input .label.colored-enum > i,
+.selectize-control.multi .selectize-input  .label.colored-multi-enum > i {
+    margin-inline-start: 0;
 }
 
 .expanded-row span.label {
