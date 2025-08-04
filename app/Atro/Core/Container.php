@@ -18,7 +18,6 @@ use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Core\Utils;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 

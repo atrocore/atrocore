@@ -7,7 +7,7 @@
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Acl} from "../../../utils/Acl";
     import FilterGroup from "./FilterGroup.svelte";
-
+    import {Storage} from "../../../utils/Storage";
 
     export let searchManager: any;
 
@@ -30,6 +30,15 @@
             return;
         }
         selectedBoolFilters = value;
+
+        // needs for reports module
+        let listQueryBuilder = Storage.get('listQueryBuilder', scope);
+        if (!selectedBoolFilters.includes('reportSpecific') && listQueryBuilder && listQueryBuilder?.boolData?.reportSpecific) {
+            delete listQueryBuilder.bool.reportSpecific;
+            delete listQueryBuilder.boolData.reportSpecific;
+            Storage.set('listQueryBuilder', scope, listQueryBuilder);
+            boolFilterList.splice(boolFilterList.indexOf("reportSpecific"), 1);
+        }
     })
 
     function updateCollection() {
@@ -63,6 +72,11 @@
             }
             return true;
         }).forEach(function (item) {
+            // needs for reports module
+            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope).bool.reportSpecific) {
+                return;
+            }
+
             if (boolFilterList.includes(item)) {
                 return;
             }
@@ -75,8 +89,6 @@
                 boolFilterList.push(item.name);
             }
         });
-
-
 
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
 

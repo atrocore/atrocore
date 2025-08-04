@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
-use Atro\Console;
 use Atro\Console\AbstractConsole;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 
 class ConsoleManager
 {
@@ -56,7 +56,7 @@ class ConsoleManager
         // prepare result
         $result = [];
 
-        foreach (self::loadRoutes() as $route => $handler) {
+        foreach ($this->getCommands() as $route => $handler) {
             if ($route == $command) {
                 $result = [
                     'handler' => $handler,
@@ -89,50 +89,22 @@ class ConsoleManager
         return $result;
     }
 
-    public static function loadRoutes(): array
+    public function getCommands(): array
     {
-        $res = [
-            "regenerate lists"                          => Console\RegenerateExtensibleEnums::class,
-            "regenerate measures"                       => Console\RegenerateMeasures::class,
-            "regenerate ui handlers"                    => Console\RegenerateUiHandlers::class,
-            "refresh translations"                      => Console\RefreshTranslations::class,
-            "list"                                      => Console\ListCommand::class,
-            "install demo-project"                      => Console\InstallDemoProject::class,
-            "clear cache"                               => Console\ClearCache::class,
-            "sql diff --show"                           => Console\SqlDiff::class,
-            "sql diff --run"                            => Console\SqlDiffRun::class,
-            "cron"                                      => Console\Cron::class,
-            "migrate <module> <from> <to>"              => Console\Migrate::class,
-            "job <id> --run"                            => Console\Job::class,
-            "notifications --refresh"                   => Console\Notification::class,
-            "kill daemons"                              => Console\KillDaemons::class,
-            "daemon <name> <id>"                        => Console\Daemon::class,
-            "check updates"                             => Console\CheckUpdates::class,
-            "pt --run"                                  => Console\PseudoTransactionManager::class,
-            "storages --refresh-items"                  => Console\RefreshStoragesItems::class,
-            "storages --scan"                           => Console\ScanStorages::class,
-            "storage <id> --scan"                       => Console\ScanStorage::class,
-            "create action <className>"                 => Console\CreateAction::class,
-            "create condition type <className>"         => Console\CreateConditionType::class,
-            "create import processing type <className>" => '\\Import\\Console\\CreateImportProcessingType'
-        ];
-
-        foreach ($res as $k => $className) {
-            if (!class_exists($className)) {
-                unset($res[$k]);
-            }
+        if (!$this->getConfig()->get('isInstalled')) {
+            return [];
         }
 
-        return $res;
+        return $this->getMetadata()->get("app.consoleCommands");
     }
 
-    /**
-     * Get metadata
-     *
-     * @return Metadata
-     */
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }

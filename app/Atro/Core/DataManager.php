@@ -17,7 +17,7 @@ use Atro\Core\Utils\Util;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Atro\Core\Utils\Database\Schema\Schema;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 
 class DataManager
 {

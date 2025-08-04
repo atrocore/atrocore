@@ -21,7 +21,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\HasContainer;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class MassActions extends HasContainer

@@ -15,7 +15,7 @@ use Atro\Core\Container;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\Core\Utils\Metadata\OrmMetadata;
 use Atro\Core\Utils\Util;
 

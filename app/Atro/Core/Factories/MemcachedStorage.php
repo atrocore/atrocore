@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Factories;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 
 class MemcachedStorage implements FactoryInterface
 {

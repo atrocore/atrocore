@@ -16,7 +16,7 @@ namespace Atro\Core\Templates\Services;
 use Atro\Core\Container;
 use Atro\Core\EventManager\Event;
 use Espo\Core\Services\Base;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
