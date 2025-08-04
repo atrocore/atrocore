@@ -220,7 +220,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode !== 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         boolFilterData: this.getBoolFilterData(),
@@ -415,74 +415,98 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.$element = this.$el.find('input.main-element');
 
-                var $element = this.$element;
+                const data = [];
+                this.ids.forEach(function (id) {
+                    data.push({
+                        id: id,
+                        name: this.nameHash[id] ?? id
+                    });
+                }, this);
+
+                this.$element.val(this.ids.join(':,:'));
+
+                const selectizeOptions = {
+                    delimiter: ':,:',
+                    options: data,
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    create: false,
+                    maxItems: null,
+                    preload: false,
+                    persist: false,
+                    loadThrottle: 300,
+                    plugins: {
+                        remove_button: {
+                            label: '&#x2715;'
+                        }
+                    },
+                    onItemAdd: (value, item) => {
+                        if (item && item.size() > 0) {
+                            this.addLink(value, item.find('span').text());
+                        }
+                    },
+                    onItemRemove: (value) => {
+                        if (value === 'subquery') {
+                            this.deleteLinkSubQuery();
+                        } else {
+                            this.deleteLink(value);
+                        }
+                    },
+                    onChange: (value) => {
+                        const items = value.split(':,:').filter(item => !!item?.trim());
+                        this.ids = Espo.Utils.clone(items);
+                        this.trigger('change');
+                    },
+                    render: {
+                        item: (data, escape) => {
+                            return `<div class="item"><span>${escape(data.name)}</span></div>`;
+                        },
+                    }
+                };
 
                 if (!this.autocompleteDisabled) {
-                    this.$element.autocomplete({
-                        serviceUrl: function (q) {
-                            return this.getAutocompleteUrl(q);
-                        }.bind(this),
-                        minChars: 1,
-                        ignoreParams: true,
-                        formatResult: function (suggestion) {
-                            return Handlebars.Utils.escapeExpression(suggestion.name);
-                        },
-                        transformResult: function (response) {
-                            var response = JSON.parse(response);
-                            var list = [];
-                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name')
-                            response.list.forEach(function (item) {
-                                const value = item[localizedName] || item.name;
-                                list.push({
-                                    id: item.id,
-                                    name: value ?? '',
-                                    data: item.id,
-                                    value: value
-                                });
-                            }, this);
-                            return {
-                                suggestions: list
-                            };
-                        }.bind(this),
-                        onSelect: function (s) {
-                            this.addLink(s.id, s.name);
-                            this.$element.val('');
-                        }.bind(this)
-                    });
+                    selectizeOptions.load = (query, callback) => {
+                        if (!query.length) return callback();
 
+                        this.ajaxGetRequest(this.getAutocompleteUrl(query))
+                            .success(function (res) {
+                                if (!res.list || res.list.length === 0) {
+                                    callback();
+                                }
 
-                    this.once('render', function () {
-                        $element.autocomplete('dispose');
-                    }, this);
+                                const list = [];
+                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name')
+                                res.list.forEach(function (item) {
+                                    const value = item[localizedName] || item.name;
+                                    list.push({
+                                        id: item.id,
+                                        name: value ?? '',
+                                        data: item.id,
+                                        value: value
+                                    });
+                                }, this);
 
-                    this.once('remove', function () {
-                        $element.autocomplete('dispose');
-                    }, this);
+                                callback(list);
+                            })
+                            .error(() => callback());
+                    };
                 }
 
-                $element.on('change', function () {
-                    $element.val('');
-                });
-
-                this.renderLinks();
-
-                if (this.mode == 'edit') {
+                if (this.mode === 'edit') {
                     if (this.sortable) {
-                        this.$el.find('.link-container').sortable({
-                            stop: function () {
-                                this.fetchFromDom();
-                                this.trigger('change');
-                            }.bind(this)
-                        });
+                        selectizeOptions.plugins.drag_drop = {};
                     }
                 }
 
-                if (this.mode == 'search') {
+                this.$element.selectize(selectizeOptions);
+
+                if (this.mode === 'search') {
                     this.addLinkSubQueryHtml(this.searchData.subQuery);
-                    var type = this.$el.find('select.search-type').val();
+                    const type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
                 }
             }
@@ -544,11 +568,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         deleteLinkHtml: function (id) {
-            this.$el.find('.link-' + id).remove();
+            if (this.$element.size() > 0) {
+                const selectize = this.$element[0].selectize;
+                selectize.removeOption(id);
+            }
         },
 
         deleteLinkSubQueryHtml: function () {
-            this.$el.find('.link-container .link-subquery').remove();
+            this.deleteLink('subquery');
         },
 
         addLinkSubQueryHtml: function (subQuery) {
@@ -557,24 +584,26 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
 
             this.deleteLinkSubQueryHtml();
-
-            var $container = this.$el.find('.link-container');
-            var $el = $('<div />').addClass('link-subquery').addClass('list-group-item');
-            $el.html('(Subquery) &nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-action="clearLinkSubQuery"><i class="ph ph-x"></i></a>');
-            $container.append($el);
-
-            return $el;
+            this.addLinkHtml('subquery', '(Subquery)');
         },
 
         addLinkHtml: function (id, name) {
-            var $container = this.$el.find('.link-container');
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
-            $el.html(Handlebars.Utils.escapeExpression(name || id) + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><i class="ph ph-x"></i></a>');
-            $container.append($el);
+            if (this.$element.size() > 0) {
+                const selectize = this.$element[0].selectize;
+                selectize.registerOption({
+                    id, name
+                });
 
-            return $el;
+                let value = selectize.getValue();
+                if (Array.isArray(value)) {
+                    value.push(id);
+                } else {
+                    value = value?.split(':,:') ?? [];
+                    value.push(id);
+                }
+
+                selectize.setValue(value);
+            }
         },
 
         getIconHtml: function (id) {
@@ -606,7 +635,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
                 if (names.length) {
-                    return '<span>' + names.join('</span><br/><span>') + '</span>';
+                    return '<span>' + names.join('</span>, <span>') + '</span>';
                 }
                 return;
             }

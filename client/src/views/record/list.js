@@ -2099,21 +2099,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
         putAttributesToSelect() {
             let attributesIds = [];
             (this.listLayout || []).forEach(item => {
-                if (item.attributeDefs) {
-                    // console.log(this.collection.models)
-                    // this.collection.models.forEach((model, k) => {
-                    //     console.log(this.collection.models)
-                    //     // model.defs.fields[item.attributeDefs.name] = item.attributeDefs;
-                    // })
-                    // console.log(this.collection)
-                }
-
                 if (item.attributeId && !attributesIds.includes(item.attributeId)) {
                     attributesIds.push(item.attributeId);
                 }
             })
 
-            if (attributesIds) {
+            if (attributesIds.length > 0) {
                 this.collection.data.attributes = attributesIds.join(',');
             }
         },
