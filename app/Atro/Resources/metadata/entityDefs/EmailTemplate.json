@@ -9,7 +9,8 @@
       "type": "varchar",
       "required": true,
       "unique": true,
-      "trim": true
+      "trim": true,
+      "customizable": false
     },
     "subject": {
       "type": "text",
