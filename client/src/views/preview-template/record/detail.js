@@ -11,8 +11,8 @@
 
 Espo.define('views/preview-template/record/detail', ['views/record/detail', 'views/search/search-filter-opener'],
     (Dep, SearchFilterOpener) => Dep.extend({
-        setup() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
             let filterButton = {
                 tooltip: this.translate('openSearchFilter'),

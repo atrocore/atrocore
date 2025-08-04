@@ -436,12 +436,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return
             }
 
-            this.additionalButtons = [];
-            this.dropdownItemList = [{
-                name: 'delete',
-                label: 'Remove'
-            }];
-
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
@@ -1168,6 +1162,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     return item.name !== 'saveAndCreate'
                 })
             }
+
+            this.additionalButtons = [];
+            this.dropdownItemList = [{
+                name: 'delete',
+                label: 'Remove'
+            }];
 
             this.listenToOnce(this.model, 'sync', () => {
                 this.setupActionItems();
