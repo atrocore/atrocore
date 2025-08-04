@@ -1111,10 +1111,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         getForeignScope: function () {
             return this.defs.params.foreignScope
                 ?? this.foreignScope
-                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
-                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
+                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
         }
-
     });
 });
 

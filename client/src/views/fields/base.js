@@ -905,7 +905,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             }, this);
 
             if (!dontReset) {
-                debugger
                 this.model.set(this.initialAttributes);
             }
 

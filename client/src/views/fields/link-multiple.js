@@ -929,10 +929,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 if(this.getForeignScope() === 'User') {
                     operators = operators.concat(['is_me', 'is_not_me', 'is_team_member', 'include_me', 'exclude_me'])
                 }
-
                 operators = operators.concat(['is_not_linked', 'is_linked']);
             }
-
 
             return {
                 id: this.name,
@@ -1024,10 +1022,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         getForeignScope: function () {
             return this.defs.params.foreignScope
                 ?? this.foreignScope
-                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity'])
-                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity']);
+                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
         }
-
     });
 });
 
