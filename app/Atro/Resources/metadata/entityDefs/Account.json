@@ -83,6 +83,13 @@
     },
     "accountGroup": {
       "type": "link"
+    },
+    "products": {
+      "type": "linkMultiple",
+      "foreignName": "name",
+      "noLoad": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "links": {
@@ -120,6 +127,11 @@
       "type": "belongsTo",
       "foreign": "accounts",
       "entity": "AccountGroup"
+    },
+    "products": {
+      "type": "hasMany",
+      "foreign": "defaultSupplier",
+      "entity": "Product"
     }
   },
   "collection": {

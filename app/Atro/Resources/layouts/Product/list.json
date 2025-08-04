@@ -7,7 +7,7 @@
         "link": true
     },
     {
-        "name": "sku"
+        "name": "number"
     },
     {
         "name": "unitPrice"

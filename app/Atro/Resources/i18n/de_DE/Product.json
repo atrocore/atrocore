@@ -1,12 +1,22 @@
 {
   "fields": {
-    "sku": "SKU",
+    "number": "Nummer",
     "isActive": "Aktiv",
     "image": "Image",
     "price": "Preis",
+    "description": "Kurze Beschreibung",
     "longDescription": "Lange Beschreibung",
     "children": "Kinderprodukte",
     "parents": "Elternprodukte",
-    "quantity": "Menge"
+    "quantity": "Menge",
+    "mpn": "Herstellernummer (MPN)",
+    "customsNumber": "Zolltarifnummer",
+    "countryOfOrigin": "Herkunftsland",
+    "defaultSupplier": "Standardlieferant",
+    "note": "Notiz"
+  },
+  "labels": {
+    "manufacturer": "Hersteller",
+    "other": "Andere"
   }
 }

@@ -173,6 +173,13 @@
                 {type: 'not_in'},
                 {type: 'is_null'},
                 {type: 'is_not_null'},
+                {type: 'is_me', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_not_me', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_team_member', nb_inputs: 0, apply_to: ['string']},
+                {type: 'include_me', nb_inputs: 0, apply_to: ['string']},
+                {type: 'exclude_me', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_my_team', nb_inputs: 0, apply_to: ['string']},
+                {type: 'is_not_my_team', nb_inputs: 0, apply_to: ['string']},
                 {type: 'linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'not_linked_with', nb_inputs: 1, multiple: true, apply_to: ['string']},
                 {type: 'array_any_of', nb_inputs: 1, multiple: true, apply_to: ['string']},
@@ -1119,7 +1126,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 5;
+        z-index: 1;
         display: flex;
         justify-content: space-between;
     }
@@ -1140,11 +1147,6 @@
 
     .advanced-filters .icons-wrapper .toggle i {
         font-size: 20px;
-    }
-
-    :global(.query-builder .input-group-btn .btn) {
-        height: 32px;
-        padding: 0;
     }
 
     :global(.query-builder .btn.rule-delete) {

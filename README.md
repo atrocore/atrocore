@@ -35,14 +35,15 @@ We are now able to confidently assure our customers that their requirements, ext
 
 ### Enterprise Edition?
 
-There is no Enterprise Edition, only the Core, free modules and paid modules.
+From small businesses to large enterprises, every user use the same core platform – AtroCore. This core can be extended with additional free and premium modules as needed.
+We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
 
 ### Free vs Paid
 
-- The core modules, including AtroCore, PIM, Import, Export, and several others, are open-source and freely available.
+- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available.
 - These free modules are sufficient to meet the needs of the vast majority of users.
-- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through paid modules.
+- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
 
 
 ## Feature Overview
@@ -107,7 +108,7 @@ Please [contact us](https://www.atrocore.com/contact), if you want to know more.
 * Really quick time-to-market and low implementation costs
 * Highly configurable 
 * Extensible - you can use our or write your own modules
-* Open source (licensed under GPLv3), free with some enterprise-level paid modules
+* Open source (licensed under GPLv3), free with some Premium Modules
 * REST API everything, incl. your custom configurations
 * Web-based and platform independent
 * Based on modern technologies
