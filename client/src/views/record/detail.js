@@ -436,6 +436,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 return
             }
 
+            this.additionalButtons = [];
+            this.dropdownItemList = [{
+                name: 'delete',
+                label: 'Remove'
+            }];
+
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
@@ -1163,14 +1169,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 })
             }
 
-            this.additionalButtons = [];
-            this.dropdownItemList = [{
-                name: 'delete',
-                label: 'Remove'
-            }];
-
-            this.setupActionItems();
-            this.setupBeforeFinal();
+            this.listenToOnce(this.model, 'sync', () => {
+                this.setupActionItems();
+                this.setupBeforeFinal();
+                window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
+            });
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
