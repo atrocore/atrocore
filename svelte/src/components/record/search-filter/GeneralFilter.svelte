@@ -7,7 +7,7 @@
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Acl} from "../../../utils/Acl";
     import FilterGroup from "./FilterGroup.svelte";
-
+    import {Storage} from "../../../utils/Storage";
 
     export let searchManager: any;
 
@@ -49,6 +49,12 @@
         searchManager.update({bool});
 
         updateCollection();
+
+        // needs for reports module
+        if (filter === 'reportSpecific' && !selectedBoolFilters.includes(filter)) {
+            Storage.clear('listQueryBuilder', scope);
+            initBoolFilter();
+        }
     }
 
     function initBoolFilter() {
@@ -63,6 +69,11 @@
             }
             return true;
         }).forEach(function (item) {
+            // needs for reports module
+            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope)) {
+                return;
+            }
+
             if (boolFilterList.includes(item)) {
                 return;
             }
@@ -75,8 +86,6 @@
                 boolFilterList.push(item.name);
             }
         });
-
-
 
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
 
