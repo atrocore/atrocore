@@ -916,8 +916,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             let operators = [
                 'linked_with',
                 'not_linked_with',
-                'is_not_linked',
-                'is_linked'
             ];
 
             if (type === 'extensibleMultiEnum') {
@@ -927,7 +925,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     'is_null',
                     'is_not_null'
                 ];
+            }else{
+                if(this.getForeignScope() === 'User') {
+                    operators = operators.concat(['is_me', 'is_not_me', 'is_team_member', 'include_me', 'exclude_me'])
+                }
+                operators = operators.concat(['is_not_linked', 'is_linked']);
             }
+
             return {
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
@@ -1015,6 +1019,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             };
         },
 
+        getForeignScope: function () {
+            return this.defs.params.foreignScope
+                ?? this.foreignScope
+                ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
+                ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
+        }
     });
 });
 

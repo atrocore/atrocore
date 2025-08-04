@@ -1118,7 +1118,14 @@
       "last_month": "letzter Monat",
       "next_month": "nächster Monat",
       "current_year": "aktuelles Jahr",
-      "last_year": "letztes Jahr"
+      "last_year": "letztes Jahr",
+      "is_me": "bin ich",
+      "is_not_me": "bin ich nicht",
+      "is_team_member": "ist Mitglied meiner Teams",
+      "include_me": "schließen mich ein",
+      "exclude_me": "schließen mich aus",
+      "is_my_team": "ist mein Team",
+      "is_not_my_team": "ist nicht mein Team"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",
