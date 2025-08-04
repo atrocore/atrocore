@@ -30,6 +30,15 @@
             return;
         }
         selectedBoolFilters = value;
+
+        // needs for reports module
+        let listQueryBuilder = Storage.get('listQueryBuilder', scope);
+        if (!selectedBoolFilters.includes('reportSpecific') && listQueryBuilder && listQueryBuilder?.boolData?.reportSpecific) {
+            delete listQueryBuilder.bool.reportSpecific;
+            delete listQueryBuilder.boolData.reportSpecific;
+            Storage.set('listQueryBuilder', scope, listQueryBuilder);
+            boolFilterList.splice(boolFilterList.indexOf("reportSpecific"), 1);
+        }
     })
 
     function updateCollection() {
@@ -49,12 +58,6 @@
         searchManager.update({bool});
 
         updateCollection();
-
-        // needs for reports module
-        if (filter === 'reportSpecific' && !selectedBoolFilters.includes(filter)) {
-            Storage.clear('listQueryBuilder', scope);
-            initBoolFilter();
-        }
     }
 
     function initBoolFilter() {
@@ -70,7 +73,7 @@
             return true;
         }).forEach(function (item) {
             // needs for reports module
-            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope)) {
+            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope).bool.reportSpecific) {
                 return;
             }
 
