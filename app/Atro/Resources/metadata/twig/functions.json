@@ -23,8 +23,14 @@
   "findEntity": {
     "handler": "\\Atro\\TwigFunction\\FindEntity"
   },
+  "findEntityById": {
+    "handler": "\\Atro\\TwigFunction\\FindEntityById"
+  },
   "findRecord": {
     "handler": "\\Atro\\TwigFunction\\FindEntity"
+  },
+  "findRecordById": {
+    "handler": "\\Atro\\TwigFunction\\FindEntityById"
   },
   "findEntities": {
     "handler": "\\Atro\\TwigFunction\\FindEntities",

@@ -96,7 +96,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         loadFromCache: function (loadDefault, isFallback = false) {
             var name = isFallback ? this.fallbackName : this.name;
-            if (loadDefault) {
+            if(!isFallback && loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
@@ -118,12 +118,13 @@ Espo.define('language', ['ajax'], function (Ajax) {
         clearCache: function () {
             if (this.cache) {
                 this.cache.clear('app', 'language-' + this.name);
+                this.cache.clear('app', 'language-' + this.fallbackName);
             }
         },
 
         storeToCache: function (loadDefault, isFallback = false) {
             var name = isFallback ? this.fallbackName : this.name;
-            if (loadDefault) {
+            if(!isFallback && loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
@@ -131,23 +132,27 @@ Espo.define('language', ['ajax'], function (Ajax) {
             }
         },
 
-        load: function (callback, disableCache, loadDefault) {
+        load: function (callback, disableCache, loadDefault, fallback = null) {
             this.once('sync', callback);
-
             if (!disableCache) {
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
                     return;
+                }else{
+                    this.fetch(disableCache, loadDefault, fallback);
                 }
-                if (this.fallbackName) {
-                    this.loadFromCache(loadDefault, true)
+                if(this.loadFromCache(false, true)) {
+                    this.trigger('sync')
+                }else{
+                    this.fetchFallback(disableCache, fallback);
                 }
+
+
             }
 
-            this.fetch(disableCache, loadDefault);
         },
 
-        fetch: function (disableCache, loadDefault) {
+        fetch: function (disableCache, loadDefault, fallback = null) {
             Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
                 this.data = data;
                 window.SvelteLanguage.setTranslations(data);
@@ -157,12 +162,15 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 this.trigger('sync');
             }.bind(this));
 
+        },
+
+        fetchFallback: function (disableCache) {
             if (this.fallbackName) {
                 Ajax.getRequest(this.url, {locale: this.fallbackName}).then(function (data) {
                     this.fallbackData = data;
                     window.SvelteLanguage.setFallbackTranslations(data);
                     if (!disableCache) {
-                        this.storeToCache(loadDefault, true);
+                        this.storeToCache(false, true);
                     }
                     this.trigger('sync');
                 }.bind(this));

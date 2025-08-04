@@ -246,7 +246,7 @@ class EntityField extends ReferenceData
         }
 
         if (!empty($entity->get('default'))) {
-            if ($entity->get('type') === 'varchar') {
+            if ($entity->get('type') === 'varchar' && $entity->get('defaultValueType') !== 'script') {
                 $maxLength = $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.len", 255);
 
                 if (strlen($entity->get('default')) > $maxLength) {

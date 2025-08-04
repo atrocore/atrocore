@@ -459,6 +459,27 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.listenTo(this.model, 'change:' + this.name, (model, value) => {
                     this.updateLanguagesFields(model, value);
                 });
+
+                this.$el.find('select').selectize({
+                    render: {
+                        item: (item, escape) => {
+                            let icon = '';
+                            if (this.getBackgroundColor) {
+                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            }
+
+                            return `<div class="label colored-enum">${icon}<span>${escape(item.text)}</span></div>`;
+                        },
+                        option: (item, escape) => {
+                            let icon = '';
+                            if (this.getBackgroundColor) {
+                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            }
+
+                            return `<div class="option"><span class="label colored-enum">${icon}<span>${escape(item.text)}</span></span></div>`;
+                        },
+                    }
+                });
             }
 
             if (this.mode == 'search') {
