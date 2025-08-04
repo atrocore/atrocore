@@ -1119,7 +1119,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 5;
+        z-index: 1;
         display: flex;
         justify-content: space-between;
     }
@@ -1140,11 +1140,6 @@
 
     .advanced-filters .icons-wrapper .toggle i {
         font-size: 20px;
-    }
-
-    :global(.query-builder .input-group-btn .btn) {
-        height: 32px;
-        padding: 0;
     }
 
     :global(.query-builder .btn.rule-delete) {

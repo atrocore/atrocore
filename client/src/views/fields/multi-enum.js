@@ -169,9 +169,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
                 data.forEach(item => item.value = item.value.replace(/"/g, '-quote-').replace(/\\/g, '-backslash-'));
 
-                let plugins = ['remove_button'];
+                let plugins = {remove_button: {
+                    label: '&#x2715;'
+                }};
                 if (this.dragDrop) {
-                    plugins.push('drag_drop');
+                    plugins.drag_drop = {};
                 }
 
                 let maxItems = this.options.maxItems || this.model.getFieldParam(this.name, 'maxItems')
@@ -198,7 +200,25 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             }
                             return 0;
                         };
-                    }
+                    },
+                    render: {
+                        item: (item, escape) => {
+                            let icon = '';
+                            if (this.getBackgroundColor) {
+                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            }
+
+                            return `<div class="label colored-multi-enum">${icon}<span>${escape(item.label)}</span></div>`;
+                        },
+                        option: (item, escape) => {
+                            let icon = '';
+                            if (this.getBackgroundColor) {
+                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            }
+
+                            return `<div class="option"><span class="label colored-multi-enum">${icon}<span>${escape(item.label)}</span></span></div>`;
+                        }
+                    },
                 };
 
                 if (!(this.params.options || []).length && !this.params.disableCreate) {
@@ -209,10 +229,9 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             label: input
                         }
                     };
-                    selectizeOptions.render = {
-                        option_create: function (data, escape) {
-                            return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
-                        }
+
+                    selectizeOptions.render.option_create = function (data, escape) {
+                        return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     };
                 }
 

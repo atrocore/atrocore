@@ -59,7 +59,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
             return _.extend({
                 selected: this.selected,
                 translatedOptions: this.translatedOptions,
-                hasOptions: this.params.options ? true : false,
+                hasOptions: !!this.params.options,
                 itemHtmlList: itemHtmlList,
                 isEmpty: (this.selected || []).length === 0,
                 valueIsSet: this.model.has(this.name),
@@ -68,10 +68,6 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         events: {
-            'click [data-action="removeValue"]': function (e) {
-                var value = $(e.currentTarget).data('value').toString();
-                this.removeValue(value);
-            },
             'click [data-action="showAddModal"]': function () {
                 var options = [];
 
@@ -235,30 +231,41 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
-                this.$list = this.$el.find('.list-group');
+            if (this.mode === 'edit') {
                 var $select = this.$select = this.$el.find('.select');
+                $select.val(this.selected.join(':,:'));
 
-                if (!this.params.options) {
-                    $select.on('keypress', function (e) {
-                        if (e.keyCode == 13) {
-                            var value = $select.val().toString();
-                            if (this.noEmptyString) {
-                                if (value == '') {
-                                    return;
-                                }
-                            }
-                            this.addValue(value);
-                            $select.val('');
+                var data = [];
+
+                (this.selected || []).forEach(i => {
+                    let label = this.getLanguage().translateOption(i, this.name, this.scope);
+                    if (this.translatedOptions) {
+                        if (value in this.translatedOptions) {
+                            label = this.translatedOptions[i];
                         }
-                    }.bind(this));
-                }
+                    }
+                    data.push({
+                        value: i,
+                        label: label
+                    });
+                });
 
-                this.$list.sortable({
-                    stop: function () {
-                        this.fetchFromDom();
-                        this.trigger('change');
-                    }.bind(this)
+                $select.selectize({
+                    create: true,
+                    plugins: {
+                        remove_button: {
+                            label: '&#x2715;'
+                        },
+                        drag_drop: {}
+                    },
+                    options: data,
+                    delimiter: ':,:',
+                    labelField: 'label',
+                    valueField: 'value',
+                    onChange: value => {
+                        const items = value.split(':,:');
+                        this.selected = Espo.Utils.clone(items);
+                    }
                 });
             }
 
