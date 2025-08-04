@@ -335,7 +335,7 @@ class Metadata extends AbstractListener
                     }
                 }
 
-                if ($fieldDefs['type'] === 'enum' && empty($fieldDefs['optionColors']) && empty($fieldDefs['view'])) {
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'enum' && empty($fieldDefs['optionColors']) && empty($fieldDefs['view'])) {
                     $data['entityDefs'][$entityType]['fields'][$field]['view'] = "views/fields/enum";
                 }
             }
