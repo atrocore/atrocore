@@ -6,6 +6,11 @@
       "trim": true,
       "isMultilang": true
     },
+    "description": {
+      "type": "text",
+      "trim": true,
+      "isMultilang": true
+    },
     "longDescription": {
       "type": "wysiwyg",
       "trim": true,
@@ -50,7 +55,7 @@
       "fileTypeId": "a_image",
       "previewSize": "medium"
     },
-    "sku": {
+    "number": {
       "type": "varchar",
       "trim": true,
       "index": true,
@@ -72,6 +77,24 @@
     },
     "productGroup": {
       "type": "link"
+    },
+    "customsNumber": {
+      "type": "varchar",
+      "len": 16
+    },
+    "countryOfOrigin": {
+      "type": "link"
+    },
+    "defaultSupplier": {
+      "type": "link"
+    },
+    "mpn": {
+      "type": "varchar",
+      "trim": true,
+      "index": true
+    },
+    "note": {
+      "type": "text"
     }
   },
   "links": {
@@ -114,6 +137,16 @@
       "type": "belongsTo",
       "foreign": "products",
       "entity": "ProductGroup"
+    },
+    "countryOfOrigin": {
+      "type": "belongsTo",
+      "foreign": "products",
+      "entity": "Country"
+    },
+    "defaultSupplier": {
+      "type": "belongsTo",
+      "foreign": "products",
+      "entity": "Account"
     }
   },
   "collection": {

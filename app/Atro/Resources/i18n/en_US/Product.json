@@ -1,12 +1,22 @@
 {
   "fields": {
-    "sku": "SKU",
+    "number": "Number",
     "isActive": "Active",
     "image": "Image",
     "price": "Price",
+    "description": "Short Description",
     "longDescription": "Long Description",
     "children": "Child Products",
     "parents": "Parent Products",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "mpn": "Manufacturer number (MPN)",
+    "customsNumber": "Customs Number",
+    "countryOfOrigin": "Country of Origin",
+    "defaultSupplier": "Default Supplier",
+    "note": "Note"
+  },
+  "labels": {
+    "manufacturer": "Manufacturer",
+    "other": "Other"
   }
 }
