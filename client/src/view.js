@@ -444,7 +444,7 @@ Espo.define('view', [], function () {
                     if (language.role === 'main') {
                         mainLocaleCode = code
                     }
-                    if (code === userLocale?.code) {
+                    if (code === userLocale?.language) {
                         userLocaleCode = code
                     }
                 }
