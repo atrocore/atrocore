@@ -2097,8 +2097,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             systemLanguages.push(mainLocaleCode)
             let languages = systemLanguages.filter(item => disabledLanguages.indexOf(item) === -1);
 
-            if (userLocale && systemLanguages.includes(userLocale.code)) {
-                languages.unshift(userLocale.code)
+            if (userLocale && systemLanguages.includes(userLocale.language)) {
+                languages.unshift(userLocale.language)
             } else {
                 languages.unshift(mainLocaleCode)
             }

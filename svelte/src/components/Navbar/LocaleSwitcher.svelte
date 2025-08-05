@@ -31,8 +31,8 @@
     let disabledLanguages = UserData.get()?.user?.disabledLanguages || []
     let defaultLanguageCode = mainLanguageCode
 
-    if (locale && locales[locale]?.code && languages[locales[locale].code]) {
-        defaultLanguageCode = locales[locale].code
+    if (locale && locales[locale]?.language && languages[locales[locale].language]) {
+        defaultLanguageCode = locales[locale].language
     }
 
     disabledLanguages = disabledLanguages.filter(code => !!languages[code])
@@ -47,7 +47,7 @@
 
     async function onLocaleChange() {
         const userData = UserData.get()
-        const code = locales[locale]?.code
+        const code = locales[locale]?.language
         const newDefaultCode = code && languages[code] ? code : mainLanguageCode
 
         checkConfirmLeaveOut(async () => {

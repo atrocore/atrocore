@@ -685,8 +685,8 @@ class LayoutManager
 
         $locales = array_diff($systemLocales, $disabledLanguages);
 
-        if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
-            array_unshift($locales, $userLocale->get('code'));
+        if (!empty($userLocale) && in_array($userLocale->get('languageCode'), $systemLocales)) {
+            array_unshift($locales, $userLocale->get('languageCode'));
         } else {
             array_unshift($locales, $mainLocaleCode);
         }
