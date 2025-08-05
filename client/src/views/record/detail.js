@@ -1583,7 +1583,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         // apply collapse state
                         let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
                         $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in')
-                        debugger
                         this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }
                 });
