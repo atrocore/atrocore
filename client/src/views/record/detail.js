@@ -1169,9 +1169,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 label: 'Remove'
             }];
 
+            this.setupBeforeFinal();
+
             this.listenToOnce(this.model, 'sync', () => {
                 this.setupActionItems();
-                this.setupBeforeFinal();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             });
 
