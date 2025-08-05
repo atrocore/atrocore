@@ -14,7 +14,8 @@
       "view": "views/locale/fields/code",
       "required": true,
       "trim": true,
-      "unique": true
+      "unique": true,
+      "customizable": false
     },
     "languageCode": {
       "type": "enum",

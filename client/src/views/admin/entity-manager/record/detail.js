@@ -12,9 +12,8 @@ Espo.define('views/admin/entity-manager/record/detail', 'views/record/detail', D
 
     return Dep.extend({
 
-        setup: function () {
-
-            Dep.prototype.setup.call(this);
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
 
             if (!this.model.get('isCustom')) {
                 this.removeButton('delete');

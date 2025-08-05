@@ -8,7 +8,8 @@
     },
     "code": {
       "type": "varchar",
-      "required": true
+      "required": true,
+      "customizable": false
     },
     "description": {
       "type": "text",

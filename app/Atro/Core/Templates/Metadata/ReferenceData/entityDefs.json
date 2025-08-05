@@ -9,7 +9,8 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "unique": true
+      "unique": true,
+      "customizable": false
     },
     "createdAt": {
       "type": "datetime",
