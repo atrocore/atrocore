@@ -286,7 +286,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             if (this.dragableListRows) {
-                // this.listenTo(this.collection, 'listSorted', () => this.collection.fetch());
+                this.listenTo(this.collection, 'listSorted', () => this.collection.fetch());
             }
         },
 
