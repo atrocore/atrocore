@@ -145,6 +145,40 @@ class Hierarchy extends Base
         return (int)$position;
     }
 
+    public function clearDeletedRecords(): void
+    {
+        if (empty($this->seed)) {
+            return;
+        }
+
+        parent::clearDeletedRecords();
+
+        $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
+
+        foreach (['entity_id', 'parent_id'] as $column) {
+            while (true) {
+                $ids = $this->getConnection()->createQueryBuilder()
+                    ->select('h.id')
+                    ->from("{$tableName}_hierarchy", 'h')
+                    ->leftJoin('h', $tableName, 't', "t.id=h.$column")
+                    ->where("t.id IS NULL")
+                    ->setFirstResult(0)
+                    ->setMaxResults(10000)
+                    ->fetchFirstColumn();
+
+                if (empty($ids)) {
+                    break;
+                }
+
+                $this->getConnection()->createQueryBuilder()
+                    ->delete("{$tableName}_hierarchy")
+                    ->where('id IN (:ids)')
+                    ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
+                    ->executeQuery();
+            }
+        }
+    }
+
     public function getInheritableFields(array $fieldsDefs = null): array
     {
         $unInheritableFields = $this->getUnInheritableFields();
