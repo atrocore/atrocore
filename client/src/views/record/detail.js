@@ -190,7 +190,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.getGridLayout((layout) => {
                 this.notify(false)
                 const middle = this.getView('middle')
-                if (middle) {
+                let reRenderMiddle = (middle) => {
                     middle._layout = layout
                     middle._loadNestedViews(() => {
                         if (middleOnly) {
@@ -198,6 +198,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         } else {
                             this.reRender();
                         }
+                    })
+                }
+                if (middle) {
+                    reRenderMiddle(middle)
+                }else{
+                    this.listenToOnce(this, 'after:render', () => {
+                        reRenderMiddle(this.getView('middle'))
                     })
                 }
             })
@@ -766,10 +773,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.initRealtimeListener();
             }
 
-            this.listenTo(this.model, 'after:save', () => {
-                window.dispatchEvent(new Event('record:actions-reload'));
-            });
-
             window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
 
             var $container = this.$el.find('.detail-button-container');
@@ -1257,6 +1260,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     }
                 });
             }
+
+            this.listenTo(this.model, 'after:save', () => {
+                window.dispatchEvent(new Event('record:actions-reload'));
+            });
         },
 
         highlightRequired() {
@@ -1577,7 +1584,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         // apply collapse state
                         let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
                         $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in')
-
+                        this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }
                 });
             });
