@@ -7374,17 +7374,15 @@ button.close {
 }
 
 .selectize-dropdown, .selectize-input, .selectize-input input {
-    color: #333;
+    color: #000;
     font-family: inherit;
     font-size: inherit;
-    line-height: 19px;
-    -webkit-font-smoothing: inherit
+    -webkit-font-smoothing: inherit;
 }
 
 .selectize-input, .selectize-control.single .selectize-input.input-active {
     background: #fff;
     cursor: text;
-    display: inline-block
 }
 
 .selectize-input {
