@@ -1172,6 +1172,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 label: 'Remove'
             }];
 
+            this.isNew = this.model.isNew()
+
             this.setupBeforeFinal();
 
             this.listenToOnce(this.model, 'sync', () => {
