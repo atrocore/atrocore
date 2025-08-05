@@ -544,6 +544,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->set($fieldName, '');
         }
 
+        if(!empty($fieldData['len'])) {
+            $fieldData['maxLength'] = (int)$fieldData['len'];
+        }
+
         $this->validateText($entity, $fieldName, $fieldData);
 
         if (!empty($fieldData['unitIdField']) && !empty($fieldData['measureId'])) {
