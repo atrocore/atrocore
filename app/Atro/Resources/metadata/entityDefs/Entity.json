@@ -207,6 +207,10 @@
     },
     "disableAttributeLinking": {
       "type": "bool"
+    },
+    "textFilterFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/text-filter-fields"
     }
   },
   "links": {

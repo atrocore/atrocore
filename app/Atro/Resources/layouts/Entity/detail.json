@@ -178,6 +178,12 @@
         {
           "name": "unInheritedRelations"
         }
+      ],
+      [
+        {
+          "name": "textFilterFields"
+        },
+        false
       ]
     ]
   },
