@@ -1167,14 +1167,6 @@ class Metadata extends AbstractListener
                             if (!empty($mParams['options' . $preparedLocale])) {
                                 $mParams['options'] = $mParams['options' . $preparedLocale];
                             }
-                            if ($mParams['type'] == 'enum' && !empty($params['options'])) {
-                                $index = array_key_exists('default', $params) ? array_search($params['default'],
-                                    $params['options']) : false;
-                                $mParams['default'] = $index !== false ? $mParams['options'][$index] : null;
-                            } else {
-                                $mParams['default'] = null;
-                            }
-
                             $mParams['emHidden'] = true;
                         }
                         if ($mParams['type'] == 'script' && isset($mParams['script' . $preparedLocale])) {
@@ -1184,6 +1176,12 @@ class Metadata extends AbstractListener
                         if (isset($data['entityDefs'][$scope]['fields'][$mField])) {
                             $mParams = array_merge($mParams, $data['entityDefs'][$scope]['fields'][$mField]);
                             $toSkip[] = $mField;
+                        }
+
+                        foreach (['default', 'defaultValueType'] as $key) {
+                            if (array_key_exists($key, $mParams)) {
+                                unset($mParams[$key]);
+                            }
                         }
 
                         $newFields[$mField] = $mParams;
