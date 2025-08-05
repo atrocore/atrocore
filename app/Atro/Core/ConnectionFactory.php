@@ -16,7 +16,7 @@ namespace Atro\Core;
 use Atro\ConnectionType\ConnectionInterface;
 use Atro\Core\Exceptions\Error;
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 
 class ConnectionFactory
 {

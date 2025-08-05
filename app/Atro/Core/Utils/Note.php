@@ -16,7 +16,7 @@ namespace Atro\Core\Utils;
 use Atro\Core\Container;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\Services\Stream as StreamService;
 use Espo\Entities\User;

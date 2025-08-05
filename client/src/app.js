@@ -560,7 +560,8 @@ Espo.define(
                     }.bind(this))
                 ]).then(function () {
                     (new Promise(function (resolve) {
-                        this.language.name = options.language;
+                        this.language.name = options.preferences.language;
+                        this.language.fallbackName = options.preferences.fallbackLanguage;
                         this.language.load(function () {
                             resolve();
                         }.bind(this));

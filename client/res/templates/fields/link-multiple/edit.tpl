@@ -1,5 +1,3 @@
-<div class="link-container list-group"></div>
-
 <div class="input-group add-team">
     <input class="main-element form-control" type="text" name="" value="" autocomplete="off" placeholder="{{placeholder}}">
     <span class="input-group-btn">

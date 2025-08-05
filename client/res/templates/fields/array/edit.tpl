@@ -1,8 +1,3 @@
-<div class="link-container list-group">
-{{#each itemHtmlList}}
-    {{{./this}}}
-{{/each}}
-</div>
 <div class="array-control-container">
 {{#if hasOptions}}
 <button class="btn btn-default btn-block" type="button" data-action="showAddModal">{{translate 'Add'}}</button>

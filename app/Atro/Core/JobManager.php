@@ -12,7 +12,7 @@
 namespace Atro\Core;
 
 use Atro\Jobs\JobInterface;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\Core\Utils\System;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;

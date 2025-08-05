@@ -10,7 +10,8 @@
       "type": "varchar",
       "required": true,
       "unique": true,
-      "trim": true
+      "trim": true,
+      "customizable": false
     },
     "customStylesheetPath": {
       "type": "varchar",

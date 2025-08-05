@@ -783,9 +783,12 @@ class LayoutManager
                             foreach ($data as $key => $row) {
                                 if ($row['name'] === $attrField) {
                                     $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
-                                    $data[$key]['customLabel'] = $data[$key]['label'];
                                     $data[$key]['notSortable'] = !empty($attributeDefs['notSortable']);
                                     $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
+                                    if (!empty($attributeDefs['channelName'])) {
+                                        $data[$key]['label'] .= ' / ' . $attributeDefs['channelName'];
+                                    }
+                                    $data[$key]['customLabel'] = $data[$key]['label'];
                                 }
                             }
                         }
@@ -813,7 +816,7 @@ class LayoutManager
         return $this->container->get('fileManager');
     }
 
-    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    protected function getMetadata(): \Atro\Core\Utils\Metadata
     {
         return $this->container->get('metadata');
     }

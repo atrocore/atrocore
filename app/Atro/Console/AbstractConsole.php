@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Atro\Console;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 
 /**
  * AbtractConsole class

@@ -9,6 +9,7 @@
       "type": "enum",
       "required": true,
       "unique": true,
+      "customizable": false,
       "maxLength": 6,
       "len": 6,
       "options": [

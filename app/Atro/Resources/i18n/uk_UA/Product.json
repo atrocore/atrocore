@@ -1,12 +1,22 @@
 {
   "fields": {
-    "sku": "Артикул",
+    "number": "Номер",
     "isActive": "Активний",
     "image": "відображення",
     "price": "вартість",
+    "description": "Короткий опис",
     "longDescription": "Довгий опис",
     "children": "Дочірні продукти",
     "parents": "Батьківські продукти",
-    "quantity": "величина"
+    "quantity": "величина",
+    "mpn": "Номер виробника (MPN)",
+    "customsNumber": "Митний номер",
+    "countryOfOrigin": "Країна походження",
+    "defaultSupplier": "Постачальник за замовчуванням",
+    "note": "Нотатка"
+  },
+  "labels": {
+    "manufacturer": "Виробник",
+    "other": "Інше"
   }
 }

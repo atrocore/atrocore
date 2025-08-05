@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Atro\Console;
 
-use Atro\Core\ConsoleManager;
-
 /**
  * ListCommand console
  */
@@ -37,11 +35,7 @@ class ListCommand extends AbstractConsole
      */
     public function run(array $data): void
     {
-        // get console config
-        $config = $this->getConsoleConfig();
-
-        // prepare data
-        foreach ($config as $command => $class) {
+        foreach ($this->getCommands() as $command => $class) {
             if (method_exists($class, 'getDescription') && empty($class::$isHidden)) {
                 $data[$command] = [$command, $class::getDescription()];
             }
@@ -59,13 +53,11 @@ class ListCommand extends AbstractConsole
         echo self::arrayToTable($result);
     }
 
-    /**
-     * Get console config
-     *
-     * @return array
-     */
-    protected function getConsoleConfig(): array
+    protected function getCommands(): array
     {
-        return ConsoleManager::loadRoutes();
+        return $this
+            ->getContainer()
+            ->get('consoleManager')
+            ->getCommands();
     }
 }

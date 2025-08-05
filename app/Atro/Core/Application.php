@@ -18,10 +18,9 @@ use Atro\Services\Installer;
 use Espo\Core\EntryPointManager;
 use Espo\Core\Utils\Api\Auth as ApiAuth;
 use Espo\Core\Utils\Auth;
-use Espo\Core\Utils\Config;
+use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
+use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 
 class Application

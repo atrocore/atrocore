@@ -68,12 +68,12 @@ abstract class AbstractController
         return $this->container->get('aclManager');
     }
 
-    protected function getConfig(): \Espo\Core\Utils\Config
+    protected function getConfig()
     {
         return $this->container->get('config');
     }
 
-    protected function getMetadata(): \Espo\Core\Utils\Metadata
+    protected function getMetadata(): \Atro\Core\Utils\Metadata
     {
         return $this->container->get('metadata');
     }

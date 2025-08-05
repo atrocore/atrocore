@@ -12,7 +12,7 @@
 namespace Atro\Core\Utils;
 
 use Atro\Core\Container;
-use Espo\Core\Utils\Metadata;
+use Atro\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 class FieldManager
