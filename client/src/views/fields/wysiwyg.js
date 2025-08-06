@@ -647,6 +647,10 @@ Espo.define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], fun
             this.$summernote.summernote('disable')
         },
 
+        inlineEditFocusing(){
+            this.$el.find('.note-editable').focus();
+        },
+
         createQueryBuilderFilter() {
             return {
                 id: this.name,

@@ -84,7 +84,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         defaultFilterValue: null,
 
-
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -610,11 +609,34 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $cell.prepend($editLink);
             }
 
-            this.$el.parent().one('dblclick.inlineEditOnce', () => {
-                if (this.mode === 'detail') {
-                    this.inlineEdit();
-                }
-            });
+            // let clickTimeout;
+            //
+            // $(document).off(`click.anywhere-by-${this.name}`);
+            // $(document).on(`click.anywhere-by-${this.name}`, e => {
+            //     let $target = $(e.target);
+            //
+            //     if (this.mode === 'detail' && this.name === $target.parents('.cell').data('name')) {
+            //         console.log('click.inline-edit', this.name, e.target)
+            //         clickTimeout = setTimeout(() => {
+            //             const selection = window.getSelection();
+            //             const selectedText = selection ? selection.toString() : '';
+            //             if (!selectedText) {
+            //                 this.inlineEdit();
+            //             }
+            //         }, 200);
+            //     }
+            //
+            //     if (
+            //         this.mode === 'edit'
+            //         && this.name !== $target.parents('.cell').data('name')
+            //         && !$target.is('button')
+            //         && !$target.is('a')
+            //         && !$target.is('.inline-edit')
+            //     ) {
+            //         console.log('save', this.name, e.target)
+            //         this.inlineEditSave();
+            //     }
+            // });
 
             $editLink.on('click', function () {
                 this.inlineEdit();
@@ -908,8 +930,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.model.set(this.initialAttributes);
             }
 
-            this.$el.parent().off('dblclick.inlineEditOnce');
-
             this.reRender(true);
         },
 
@@ -918,20 +938,29 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return false;
             }
 
-            var self = this;
-
             this.trigger('edit', this);
             this.setMode('edit');
 
             this.initialAttributes = this.model.getClonedAttributes();
 
             this.once('after:render', function () {
+                this.inlineEditFocusing();
                 this.addInlineEditLinks();
             }, this);
 
             this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
+        },
+
+        inlineEditFocusing() {
+            const $input = this.$el.find('input').first();
+
+            $input.focus();
+            if ($input[0] && $input[0].type === 'text') {
+                const val = $input.val();
+                $input[0].setSelectionRange(val.length, val.length);
+            }
         },
 
         showValidationMessage: function (message, target) {
