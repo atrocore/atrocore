@@ -435,9 +435,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
-            var data = [];
+            const data = [];
             (this.params.options || []).forEach(function (value) {
-                var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                let label = this.getLanguage().translateOption(value, this.name, this.scope);
                 if (this.translatedOptions) {
                     if (value in this.translatedOptions) {
                         label = this.translatedOptions[value];
@@ -461,6 +461,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 });
 
                 this.$el.find('select').selectize({
+                    selectOnTab: true,
+                    allowEmptyOption: true,
+                    showEmptyOptionInDropdown: true,
+                    emptyOptionLabel: '',
                     render: {
                         item: (item, escape) => {
                             let icon = '';

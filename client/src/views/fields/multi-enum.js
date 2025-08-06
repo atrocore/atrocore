@@ -155,12 +155,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             label = this.translatedOptions[value];
                         }
                     }
-                    if (value === '') {
-                        value = '__emptystring__';
-                    }
+
                     if (label === '') {
-                        label = this.translate('None');
+                        return;
                     }
+
                     data.push({
                         value: value,
                         label: label
@@ -170,7 +169,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 data.forEach(item => item.value = item.value.replace(/"/g, '-quote-').replace(/\\/g, '-backslash-'));
 
                 let plugins = {remove_button: {
-                    label: '&#x2715;'
+                    label: ''
                 }};
                 if (this.dragDrop) {
                     plugins.drag_drop = {};

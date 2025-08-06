@@ -38,19 +38,7 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
 
         detailTemplate: 'fields/colored-enum/detail',
 
-        editTemplate: 'fields/colored-enum/edit',
-
         defaultBackgroundColor: 'ececec',
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'edit') {
-                this.$el.find(`select[name="${this.name}"]`).on('change', function () {
-                    this.$element.css(this.getFieldStyles(this.$element.val()));
-                }.bind(this));
-            }
-        },
 
         data() {
             let data = Dep.prototype.data.call(this);

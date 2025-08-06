@@ -254,7 +254,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     create: true,
                     plugins: {
                         remove_button: {
-                            label: '&#x2715;'
+                            label: ''
                         },
                         drag_drop: {}
                     },
