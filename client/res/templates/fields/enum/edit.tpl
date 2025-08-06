@@ -1,4 +1,5 @@
 <select name="{{name}}" class="form-control main-element">
+    <option value=""></option>
     {{#if hasGroups }}
         {{groupedOptions groupOptions value scope=scope field=name translatedGroups=translatedGroups
                          prohibitedEmptyValue=prohibitedEmptyValue translatedOptions=translatedOptions}}

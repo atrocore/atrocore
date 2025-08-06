@@ -38,19 +38,7 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
 
         detailTemplate: 'fields/colored-enum/detail',
 
-        editTemplate: 'fields/colored-enum/edit',
-
         defaultBackgroundColor: 'ececec',
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'edit') {
-                this.$el.find(`select[name="${this.name}"]`).on('change', function () {
-                    this.$element.css(this.getFieldStyles(this.$element.val()));
-                }.bind(this));
-            }
-        },
 
         data() {
             let data = Dep.prototype.data.call(this);
@@ -63,6 +51,37 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
             data = _.extend(this.getFieldStyles(data.value), data);
 
             return data;
+        },
+
+        getBackgroundColor(fieldValue) {
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
+            let key = 0;
+
+            if (typeof optionColors !== 'object') {
+                optionColors = [];
+            }
+
+            if (!Array.isArray(optionColors)) {
+                key = fieldValue
+            } else {
+                options.forEach(function (item, k) {
+                    if (fieldValue === item) {
+                        key = k;
+                    }
+                });
+            }
+
+            let result = optionColors[key];
+            if (!result) {
+                return;
+            }
+
+            if (result.indexOf('#') < 0) {
+                result = '#' + result;
+            }
+
+            return result;
         },
 
         getBorder(col) {
@@ -101,7 +120,7 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
         },
 
         getFieldStyles(fieldValue) {
-            const backgroundColor = this.getBackgroundColor(fieldValue);
+            const backgroundColor = this.getBackgroundColor(fieldValue) || '#' + this.defaultBackgroundColor;
             const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
             let data = {
@@ -116,34 +135,6 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
             }
 
             return data;
-        },
-
-        getBackgroundColor(fieldValue) {
-            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
-            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
-            let key = 0;
-
-            if (typeof optionColors !== 'object') {
-                optionColors = [];
-            }
-
-            if (!Array.isArray(optionColors)) {
-                key = fieldValue
-            } else {
-                options.forEach(function (item, k) {
-                    if (fieldValue === item) {
-                        key = k;
-                    }
-                });
-            }
-
-
-            let result = (optionColors[key] || this.defaultBackgroundColor);
-            if (result.indexOf('#') < 0) {
-                result = '#' + result;
-            }
-
-            return result;
         },
 
         getFontColor(backgroundColor) {
