@@ -64,6 +64,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
 
             if (!attrs) {
                 this.inlineEditClose();
+                model.trigger('after:inlineEditClose');
                 return;
             }
 
@@ -104,6 +105,7 @@ Espo.define('treo-core:views/fields/base', 'class-replace!treo-core:views/fields
                     model._updatedById = self.getUser().id;
                     self.trigger('after:save');
                     model.trigger('after:save');
+                    model.trigger('after:inlineEditSave');
                     self.notify('Saved', 'success');
                     self.inlineEditClose(true);
                 },

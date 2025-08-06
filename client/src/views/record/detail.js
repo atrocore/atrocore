@@ -1207,6 +1207,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             });
 
+            this.initOnClickInlineEditing();
+
             if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && !this.isSmall) {
                 this.listenTo(this, 'after:render', () => {
                     this.applyOverviewFilters();
@@ -1265,6 +1267,60 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
+            });
+        },
+
+        initOnClickInlineEditing(){
+            let $clickCellName;
+            this.listenTo(this.model, 'after:inlineEditClose after:inlineEditSave', () => {
+                if ($clickCellName) {
+                    setTimeout(() => {
+                        this.getView('middle').getView($clickCellName).inlineEdit();
+                        $clickCellName = null;
+                    }, 250);
+                }
+            });
+
+            $(document).off(`click.anywhere`);
+            $(document).on(`click.anywhere`, e => {
+                const $target = $(e.target);
+                const $cell = $target.parents('.cell');
+
+                const inlineEditSelector = '.inline-edit-link';
+                const inlineSaveSelector = '.inline-save-link';
+
+                const $saveLink = $(inlineSaveSelector);
+
+                if (
+                    $cell.data('name')
+                    && !$target.is(inlineEditSelector)
+                    && $cell.find(inlineSaveSelector).length === 0
+                    && $cell.find(inlineEditSelector).length > 0
+                ) {
+                    let $editLink = $target.parents('.cell').find(inlineEditSelector);
+
+                    if ($saveLink.length === 0) {
+                        setTimeout(() => {
+                            const selection = window.getSelection();
+                            const selectedText = selection ? selection.toString() : '';
+                            if (!selectedText) {
+                                $editLink.click();
+                            }
+                        }, 200);
+                    } else {
+                        $clickCellName = $(e.target).parents('.cell').data('name');
+                    }
+                }
+
+                if (
+                    $saveLink.length > 0
+                    && $saveLink.parents('.cell').data('name') !== $cell.data('name')
+                    && !$target.is('button')
+                    && !$target.is('a')
+                    && !$target.is('.inline-edit')
+                ) {
+                    $saveLink.click();
+                }
             });
         },
 
