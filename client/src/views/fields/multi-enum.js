@@ -48,7 +48,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         data: function () {
             return _.extend({
-                optionList: this.params.options || []
+                optionList: this.params.options || [],
             }, Dep.prototype.data.call(this));
         },
 
@@ -203,8 +203,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     render: {
                         item: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (item.value) {
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    icon = `<i style="background-color: ${color};"></i>`;
+                                }
                             }
 
                             return `<div class="label colored-multi-enum">${icon}<span>${escape(item.label)}</span></div>`;
@@ -429,6 +432,38 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 }
             };
         },
+
+        getBackgroundColor(fieldValue) {
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
+
+            let key = 0;
+            if (!Array.isArray(optionColors)) {
+                key = fieldValue
+            } else {
+                options.forEach(function (item, k) {
+                    if (fieldValue === item) {
+                        key = k;
+                        if (typeof options[0] !== 'undefined' && options[0] === '') {
+                            key--;
+                        }
+                    }
+                });
+            }
+
+
+            let color = optionColors[key];
+            if (!color) {
+                return;
+            }
+
+            if (color.indexOf('#') < 0) {
+                color = '#' + color;
+            }
+
+            return color;
+        },
+
 
     });
 });

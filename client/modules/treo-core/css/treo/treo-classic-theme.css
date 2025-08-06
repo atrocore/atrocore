@@ -11632,6 +11632,18 @@ h4.panel-title span.color-icon {
     border-radius: 50%;
     display: block;
     background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.field > .label.colored-enum,
+.field > .label.colored-multi-enum {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.field > .label.colored-enum > *:first-child,
+.field > .label.colored-multi-enum > *:first-child {
+    margin-inline-start: -5px;
 }
 
 .label.colored-enum > *:last-child,
@@ -11642,7 +11654,12 @@ h4.panel-title span.color-icon {
 .label.colored-enum + .separator,
 .label.colored-multi-enum + .separator {
     user-select: none;
-    margin-inline-end: 5px;
+    margin-inline-end: 3px;
+}
+
+.selectize-dropdown-content .option:not([selectize-dropdown-emptyoptionlabel]) .label.colored-enum > i,
+.selectize-dropdown-content .option .label.colored-multi-enum > i {
+    border-color: #ccc;
 }
 
 .selectize-control.multi .selectize-input .label.colored-enum > *:last-child,

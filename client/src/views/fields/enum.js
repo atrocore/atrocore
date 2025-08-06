@@ -69,6 +69,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 data.groupOptions = this.getActiveGroups()
             }
 
+            data.hasBackground = !!this.getBackgroundColor(data.value);
+
             var value = this.model.get(this.name);
 
             if (this.model.has(this.name + 'OptionId')) {
@@ -461,26 +463,31 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 });
 
                 this.$el.find('select').selectize({
-                    selectOnTab: true,
                     allowEmptyOption: true,
                     showEmptyOptionInDropdown: true,
                     emptyOptionLabel: '',
                     render: {
                         item: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (item.value) {
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    icon = `<i style="background-color: ${color};"></i>`;
+                                }
                             }
 
                             return `<div class="label colored-enum">${icon}<span>${escape(item.text)}</span></div>`;
                         },
                         option: (item, escape) => {
-                            let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            let style = '';
+                            if (item.value) {
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    style = `style="background-color: ${color};"`;
+                                }
                             }
 
-                            return `<div class="option"><span class="label colored-enum">${icon}<span>${escape(item.text)}</span></span></div>`;
+                            return `<div class="option" ${(item.value === '' ? 'selectize-dropdown-emptyoptionlabel' : '')}><span class="label colored-enum"><i ${style}></i><span>${escape(item.text)}</span></span></div>`;
                         },
                     }
                 });
@@ -712,6 +719,36 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             };
         },
 
+        getBackgroundColor(fieldValue) {
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
+            let key = 0;
+
+            if (typeof optionColors !== 'object') {
+                optionColors = [];
+            }
+
+            if (!Array.isArray(optionColors)) {
+                key = fieldValue
+            } else {
+                options.forEach(function (item, k) {
+                    if (fieldValue === item) {
+                        key = k;
+                    }
+                });
+            }
+
+            let result = optionColors[key];
+            if (!result) {
+                return;
+            }
+
+            if (result.indexOf('#') < 0) {
+                result = '#' + result;
+            }
+
+            return result;
+        },
     });
 });
 

@@ -202,6 +202,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
             }
             this.nameHash._localeId = this.getUser().get('localeId')
+            this.model.set(this.nameHashName, this.nameHash, {silent: true});
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
@@ -248,7 +249,6 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 this.model.set(this.nameHashName, null);
                                 this.ids = [];
                                 this.nameHash = [];
-                                this.reRender();
                                 this.addLinkSubQuery(models);
                                 this.trigger('change')
                                 return;
@@ -441,7 +441,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     loadThrottle: 300,
                     plugins: {
                         remove_button: {
-                            label: '&#x2715;'
+                            label: ''
                         }
                     },
                     onItemAdd: (value, item) => {
