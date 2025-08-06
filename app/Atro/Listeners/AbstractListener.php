@@ -72,4 +72,9 @@ abstract class AbstractListener
     {
         return $this->getContainer()->get('user');
     }
+
+    public function getConnection()
+    {
+        return $this->getContainer()->get('connection');
+    }
 }

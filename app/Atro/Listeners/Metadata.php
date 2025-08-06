@@ -352,7 +352,7 @@ class Metadata extends AbstractListener
 
         $actions = $dataManager->getCacheData('dynamic_action');
         if ($actions === null) {
-            $connection = $this->getEntityManager()->getConnection();
+            $connection = $this->getConnection();
             try {
                 $actions = $connection->createQueryBuilder()
                     ->select('t.*')
@@ -1589,7 +1589,7 @@ class Metadata extends AbstractListener
         $previewTemplates = $dataManager->getCacheData(PreviewTemplate::CACHE_NAME);
         if ($previewTemplates === null) {
             try {
-                $previewTemplates = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                $previewTemplates = $this->getConnection()->createQueryBuilder()
                     ->select('id, name, entity_type, data')
                     ->from('preview_template')
                     ->where('is_active = :true')
@@ -1673,7 +1673,7 @@ class Metadata extends AbstractListener
         $cachedData = $dataManager->getCacheData(NotificationRule::CACHE_NAME);
         if (!isset($cachedData['notificationRules']) || !isset($cachedData['users']) || !isset($cachedData['notificationProfilesIds'])) {
             $notificationProfilesIds = [];
-            $connection = $this->getEntityManager()->getConnection();
+            $connection = $this->getConnection();
             try {
                 $notificationRules = $connection->createQueryBuilder()
                     ->select('nr.*')
@@ -1697,14 +1697,12 @@ class Metadata extends AbstractListener
 
                 if (!isset($users[$notificationProfileId])) {
                     try {
-                        $users[$notificationProfileId] = $this->getEntityManager()
-                            ->getRepository('NotificationRule')
-                            ->getNotificationProfileUsers($notificationProfileId);
+                        $users[$notificationProfileId] = NotificationRule::getNotificationProfileUsers($notificationProfileId,
+                        $this->getConfig(), $this->getConnection());
 
                         if (!empty($users[$notificationProfileId])) {
                             $notificationProfilesIds[] = $notificationProfileId;
                         }
-
                     } catch (\Throwable $e) {
                         $users[$notificationProfileId] = [];
                     }
@@ -1780,11 +1778,11 @@ class Metadata extends AbstractListener
                 $defs = [
                     "fields"        => [
                         "association"             => [
-                            "type"     => "link",
-                            "required" => true,
-                            "view"     => "views/associated-record/fields/association",
-                            "tooltip"  => true,
-                            "additionalField"=> true,
+                            "type"            => "link",
+                            "required"        => true,
+                            "view"            => "views/associated-record/fields/association",
+                            "tooltip"         => true,
+                            "additionalField" => true,
                         ],
                         "associatingItem"         => [
                             "required"      => true,
@@ -1849,8 +1847,8 @@ class Metadata extends AbstractListener
                             "emHidden"                  => true
                         ],
                         "sorting"                 => [
-                            "type" => "int",
-                            "additionalField"=> true
+                            "type"            => "int",
+                            "additionalField" => true
                         ]
                     ],
                     "links"         => [
@@ -1926,7 +1924,7 @@ class Metadata extends AbstractListener
                             "exportDisabled"            => false,
                             "importDisabled"            => true
                         ],
-                        "associatedItems"  => [
+                        "associatedItems"          => [
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
@@ -1937,7 +1935,7 @@ class Metadata extends AbstractListener
                             "importDisabled"            => true,
                             "exportDisabled"            => false
                         ],
-                        "associatingItems" => [
+                        "associatingItems"         => [
                             "type"                      => "linkMultiple",
                             "layoutDetailDisabled"      => true,
                             "layoutListDisabled"        => true,
