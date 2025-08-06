@@ -483,7 +483,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                             if (item.value) {
                                 const color = this.getBackgroundColor(item.value);
                                 if (color) {
-                                    style = `style="background-color: ${color};"`;
+                                    style = `style="background-color: ${color}; border-color: ${color};"`;
                                 }
                             }
 
