@@ -1344,7 +1344,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupBeforeFinal: function () {
-            this.manageAccess();
+            this.listenToOnce(this.model, 'sync', function () {
+                this.manageAccess();
+            });
 
             this.attributes = this.model.getClonedAttributes();
 
