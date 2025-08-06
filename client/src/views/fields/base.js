@@ -609,35 +609,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $cell.prepend($editLink);
             }
 
-            // let clickTimeout;
-            //
-            // $(document).off(`click.anywhere-by-${this.name}`);
-            // $(document).on(`click.anywhere-by-${this.name}`, e => {
-            //     let $target = $(e.target);
-            //
-            //     if (this.mode === 'detail' && this.name === $target.parents('.cell').data('name')) {
-            //         console.log('click.inline-edit', this.name, e.target)
-            //         clickTimeout = setTimeout(() => {
-            //             const selection = window.getSelection();
-            //             const selectedText = selection ? selection.toString() : '';
-            //             if (!selectedText) {
-            //                 this.inlineEdit();
-            //             }
-            //         }, 200);
-            //     }
-            //
-            //     if (
-            //         this.mode === 'edit'
-            //         && this.name !== $target.parents('.cell').data('name')
-            //         && !$target.is('button')
-            //         && !$target.is('a')
-            //         && !$target.is('.inline-edit')
-            //     ) {
-            //         console.log('save', this.name, e.target)
-            //         this.inlineEditSave();
-            //     }
-            // });
-
             $editLink.on('click', function () {
                 this.inlineEdit();
             }.bind(this));
