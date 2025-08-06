@@ -195,7 +195,7 @@ class Base extends RDB
                 }
                 $this->getConnection()->createQueryBuilder()
                     ->delete("{$name}_attribute_value")
-                    ->where('ids IN (:ids)')
+                    ->where('id IN (:ids)')
                     ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
                     ->executeQuery();
             }

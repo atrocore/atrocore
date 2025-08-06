@@ -16,7 +16,6 @@ namespace Atro\Core\Templates\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\PseudoTransactionManager;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
@@ -26,6 +25,73 @@ use Espo\ORM\EntityCollection;
 
 class Relation extends Base
 {
+    public function hasDeletedRecordsToClear(): bool
+    {
+        if (empty($this->seed)) {
+            return false;
+        }
+
+        $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
+
+        foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationField'])) {
+                $alias = Util::generateId();
+                $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
+                $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
+
+                $res = $this->getConnection()->createQueryBuilder()
+                    ->select('t.id')
+                    ->from($this->getConnection()->quoteIdentifier($tableName), 't')
+                    ->leftJoin('t', $relTable, $alias, "$alias.id=t.{$relTable}_id")
+                    ->where("$alias.id IS NULL")
+                    ->fetchOne();
+
+                if (!empty($res)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function clearDeletedRecords(): void
+    {
+        if (empty($this->seed)) {
+            return;
+        }
+
+        $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
+
+        foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
+            if (!empty($fieldDefs['relationField'])) {
+                $alias = Util::generateId();
+                $relEntity = $this->getMetadata()->get("entityDefs.$this->entityName.links.$field.entity");
+                $relTable = $this->getEntityManager()->getMapper()->toDb($relEntity);
+
+                while (true) {
+                    $ids = $this->getConnection()->createQueryBuilder()
+                        ->select('t.id')
+                        ->from($this->getConnection()->quoteIdentifier($tableName), 't')
+                        ->leftJoin('t', $relTable, $alias, "$alias.id=t.{$relTable}_id")
+                        ->where("$alias.id IS NULL")
+                        ->setFirstResult(0)
+                        ->setMaxResults(10000)
+                        ->fetchFirstColumn();
+
+                    if (empty($ids)) {
+                        break;
+                    }
+
+                    $this->getConnection()->createQueryBuilder()
+                        ->delete($this->getConnection()->quoteIdentifier($tableName))
+                        ->where('id IN (:ids)')
+                        ->setParameter('ids', $ids, $this->getConnection()::PARAM_STR_ARRAY)
+                        ->executeQuery();
+                }
+            }
+        }
+    }
 
     public static function isVirtualRelationField(string $fieldName): array
     {

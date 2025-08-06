@@ -12,8 +12,8 @@ Espo.define('views/connection/record/detail', 'views/record/detail', function (D
 
     return Dep.extend({
 
-        setup() {
-            Dep.prototype.setup.call(this);
+        setupActionItems() {
+            Dep.prototype.setupActionItems.call(this);
 
             this.additionalButtons = [
                 {

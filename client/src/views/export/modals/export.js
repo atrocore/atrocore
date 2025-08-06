@@ -73,7 +73,7 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                         value: `%"entity":"${this.scope}"%`
                     }
                 ]
-            }, {async: false}).then(function (data) {
+            }, { async: false }).then(function (data) {
                 this.createView('record', 'views/export/record/record', {
                     scope: this.scope,
                     model: this.model,
@@ -94,10 +94,13 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 return
             }
 
-            let fieldDefs = {};
-            this.model.get('fieldList').forEach(field => {
-                fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
-            })
+            let fieldDefs = null;
+            if (!this.model.get('exportAllField') && this.model.get('fieldList')) {
+                fieldDefs = {}
+                this.model.get('fieldList').forEach(field => {
+                    fieldDefs[field] = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`);
+                })
+            }
 
             let data = {
                 id: this.model.get('exportFeed'),

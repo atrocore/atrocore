@@ -7,7 +7,8 @@
     "code": {
       "type": "varchar",
       "trim": true,
-      "unique": true
+      "unique": true,
+      "customizable": false
     },
     "configuration": {
       "type": "text",

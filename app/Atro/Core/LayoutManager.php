@@ -685,8 +685,8 @@ class LayoutManager
 
         $locales = array_diff($systemLocales, $disabledLanguages);
 
-        if (!empty($userLocale) && in_array($userLocale->get('code'), $systemLocales)) {
-            array_unshift($locales, $userLocale->get('code'));
+        if (!empty($userLocale) && in_array($userLocale->get('languageCode'), $systemLocales)) {
+            array_unshift($locales, $userLocale->get('languageCode'));
         } else {
             array_unshift($locales, $mainLocaleCode);
         }
@@ -783,9 +783,12 @@ class LayoutManager
                             foreach ($data as $key => $row) {
                                 if ($row['name'] === $attrField) {
                                     $data[$key]['label'] = $attributeDefs['detailViewLabel'] ?? $attributeDefs['label'];
-                                    $data[$key]['customLabel'] = $data[$key]['label'];
                                     $data[$key]['notSortable'] = !empty($attributeDefs['notSortable']);
                                     $data[$key]['attributeDefs'] = array_merge($attributeDefs, ['name' => $attrField]);
+                                    if (!empty($attributeDefs['channelName'])) {
+                                        $data[$key]['label'] .= ' / ' . $attributeDefs['channelName'];
+                                    }
+                                    $data[$key]['customLabel'] = $data[$key]['label'];
                                 }
                             }
                         }

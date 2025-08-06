@@ -208,6 +208,10 @@
                     attributeId: field.attributeId
                 };
 
+                if (field.channelName) {
+                    attribute.label += ` / ${field.channelName}`;
+                }
+
                 let exists = false;
                 selectedFields.forEach(item => {
                     if (item.name === attribute.name) {

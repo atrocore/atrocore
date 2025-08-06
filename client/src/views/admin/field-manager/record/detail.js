@@ -11,20 +11,19 @@
 Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', Dep => {
 
     return Dep.extend({
+        setupActionItems: function () {
+            Dep.prototype.setupActionItems.call(this);
 
-        setup: function () {
             if (
                 !this.getMetadata().get(`scopes.${this.model.get('entityId')}.isCustom`)
                 && !this.model.get('isCustom')
             ) {
-                this.buttonList.push({
+                this.buttonList.shift({
                     name: "resetToDefault",
                     label: this.translate("resetToDefault", "labels", "EntityField"),
                     action: "resetToDefault"
                 });
             }
-
-            Dep.prototype.setup.call(this);
 
             if (!this.model.get('isCustom')) {
                 this.removeButton('delete');

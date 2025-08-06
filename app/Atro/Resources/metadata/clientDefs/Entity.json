@@ -226,9 +226,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -237,9 +240,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
