@@ -10,6 +10,8 @@
     import Group from "./interfaces/Group";
     import {Utils} from "../../../utils/Utils.js";
     import Field from "./interfaces/Field";
+    import {Acl} from "../../../utils/Acl";
+    import {UserData} from "../../../utils/UserData";
 
     export let params: Params;
     export let columnCount: number = 2;
@@ -445,6 +447,26 @@
         });
     }
 
+    function openLabelDialog(field: string, rowNumber: number, cellIndex: number) {
+        params.opedEditLabelDialog(params.scope, field, (label) => {
+            panels = panels.map(panel => {
+                panel.rows = panel.rows.map((row, rIndex) => {
+                    if (row.number === rowNumber) {
+                        row.cells[cellIndex].label = label;
+                    }
+                    return row;
+                });
+                return panel;
+            })
+        });
+    }
+
+    function isAdmin() {
+        let data = UserData.get();
+
+        return !!(data && data.user && data.user.isAdmin);
+    }
+
     function handleDrop(event, panelNumber, rowNumber, cellIndex) {
         // get properties of dragged object
         const name = event.dataTransfer.getData('name')
@@ -612,6 +634,12 @@
                                                                on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
                                                                 <i class="ph ph-x"></i>
                                                             </a>
+                                                            {#if isAdmin()}
+                                                                <a href="#" data-action="change-label" class="change-label"
+                                                                   on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
+                                                                    <i class="ph ph-globe-simple"></i>
+                                                                </a>
+                                                            {/if}
                                                         </li>
                                                     {:else}
                                                         <li class="empty cell"
@@ -702,7 +730,7 @@
 
     #layout ul.cells {
         min-height: 30px;
-        margin-top: 18px;
+        margin-top: 20px;
     }
 
     #layout ul.panels ul.cells > li {
@@ -790,11 +818,13 @@
         cursor: pointer;
     }
 
-    ul.cells li.cell a.remove-field {
+    ul.cells li.cell a.remove-field,
+    ul.cells li.cell a.change-label {
         display: none;
     }
 
-    ul.cells li.cell:hover a.remove-field {
+    ul.cells li.cell:hover a.remove-field,
+    ul.cells li.cell:hover a.change-label {
         display: block;
     }
 

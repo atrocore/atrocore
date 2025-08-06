@@ -9,6 +9,8 @@
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";
     import {Metadata} from "../../../utils/Metadata";
+    import {Acl} from "../../../utils/Acl";
+    import {UserData} from "../../../utils/UserData";
 
     let layoutElement: HTMLElement
 
@@ -130,6 +132,23 @@
         });
     }
 
+    function openLabelDialog(field) {
+        params.opedEditLabelDialog(params.scope, field.name, (label) => {
+            selectedFields = selectedFields.map(item => {
+                if (item.name === field.name) {
+                    item.label = label
+                }
+                return item
+            })
+        });
+    }
+
+    function isAdmin() {
+        let data = UserData.get();
+
+        return !!(data && data.user && data.user.isAdmin);
+    }
+
     function removeField(item) {
         // remove item from available list
         selectedFields.splice(selectedFields.indexOf(item), 1)
@@ -237,6 +256,12 @@
                                 </div>
                                 {#if params.editable}
                                     <div class="right">
+                                        {#if isAdmin()}
+                                            <a href="javascript:" data-action="change-label" class="change-label"
+                                               on:click|preventDefault={() => openLabelDialog(item)}>
+                                                <i class="ph ph-globe-simple"></i>
+                                            </a>
+                                        {/if}
                                         <a href="javascript:" data-action="editField" class="edit-field"
                                            on:click={()=>editField(item)}>
                                             <i class="ph ph-pencil-simple"></i>
@@ -322,11 +347,15 @@
         font-weight: normal;
     }
 
-    .enabled li a.edit-field, .enabled li a.remove-field {
+    .enabled li a.edit-field,
+    .enabled li a.remove-field,
+    .enabled li a.change-label {
         display: none;
     }
 
-    .enabled li:hover a.edit-field, .enabled li:hover a.remove-field {
+    .enabled li:hover a.edit-field,
+    .enabled li:hover a.remove-field,
+    .enabled li:hover a.change-label {
         display: inline;
     }
 
