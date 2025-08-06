@@ -53,6 +53,37 @@ Espo.define('views/fields/colored-enum', 'views/fields/enum', function (Dep) {
             return data;
         },
 
+        getBackgroundColor(fieldValue) {
+            let options = this.model.getFieldParam(this.name, 'options') || this.params.options || [];
+            let optionColors = this.model.getFieldParam(this.name, 'optionColors') || this.params.optionColors || [];
+            let key = 0;
+
+            if (typeof optionColors !== 'object') {
+                optionColors = [];
+            }
+
+            if (!Array.isArray(optionColors)) {
+                key = fieldValue
+            } else {
+                options.forEach(function (item, k) {
+                    if (fieldValue === item) {
+                        key = k;
+                    }
+                });
+            }
+
+            let result = optionColors[key];
+            if (!result) {
+                return;
+            }
+
+            if (result.indexOf('#') < 0) {
+                result = '#' + result;
+            }
+
+            return result;
+        },
+
         getBorder(col) {
             let amt = -10;
             let num = parseInt(col.slice(1), 16);
