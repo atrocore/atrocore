@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
-use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\AclManager;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityCollection;
 
 class NotificationRule extends Base
 {
@@ -33,15 +31,15 @@ class NotificationRule extends Base
         if (!$this->getDataManager()->isUseCache(self::CACHE_NAME)) {
             $rule = $this->where([
                 "notificationProfileId" => $notificationProfileId,
-                "occurrence" => $occurrence,
-                "entity=" => $entityType
+                "occurrence"            => $occurrence,
+                "entity="               => $entityType
             ])->findOne();
 
-            if(empty($rule)){
+            if (empty($rule)) {
                 return null;
             }
 
-            $users[$notificationProfileId] = $this->getNotificationProfileUsers($notificationProfileId);
+            $users[$notificationProfileId] = self::getNotificationProfileUsers($notificationProfileId, $this->getConfig(), $this->getConnection());
         } else {
             $cachedData = $this->getDataManager()->getCacheData(self::CACHE_NAME);
 
@@ -97,11 +95,10 @@ class NotificationRule extends Base
         return $rule;
     }
 
-    public function getNotificationProfileUsers($notificationProfileId): array
+    public static function getNotificationProfileUsers($notificationProfileId, Config $config, Connection $connection): array
     {
-        $connection = $this->getConnection();
 
-        $profileParam = $this->getConfig()->get('defaultNotificationProfileId') === $notificationProfileId
+        $profileParam = $config->get('defaultNotificationProfileId') === $notificationProfileId
             ? 'default'
             : $notificationProfileId;
 
