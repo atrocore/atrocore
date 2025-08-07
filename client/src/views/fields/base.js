@@ -918,65 +918,29 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditSaveModel(model, attrs) {
             attrs['_prev'] = null;
-            attrs['_silentMode'] = false;
-            attrs['_skipIsEntityUpdated'] = true;
 
             this.notify('Saving...');
-            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs).success(res => {
-                model.set(attrs);
-                model._previousAttributes = res;
+            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
+                .success(res => {
+                    model.set(attrs);
+                    model._previousAttributes = res;
 
-                model.trigger('after:inlineEditSave');
+                    // this.trigger('after:save');
+                    // model.trigger('after:save');
+                    model.trigger('after:inlineEditSave');
 
-                this.notify('Saved', 'success');
-                this.inlineEditClose(true);
-
-                console.log('res', res, model);
-            });
-
-            // console.log('attrs', attrs);
-
-            // model.save(attrs, {
-            //     success: function () {
-            //         model._updatedById = self.getUser().id;
-            //         // self.trigger('after:save');
-            //         // model.trigger('after:save');
-            //         model.trigger('after:inlineEditSave');
-            //         self.notify('Saved', 'success');
-            //         self.inlineEditClose(true);
-            //     },
-            //     error: function (e, xhr) {
-            //         let statusReason = xhr.responseText || '';
-            //         if (xhr.status === 409) {
-            //             self.notify(false);
-            //             Espo.Ui.confirm(statusReason, {
-            //                 confirmText: self.translate('Apply'),
-            //                 cancelText: self.translate('Cancel')
-            //             }, function () {
-            //                 attrs['_prev'] = null;
-            //                 attrs['_silentMode'] = false;
-            //
-            //                 model.save(attrs, {
-            //                     success: function () {
-            //                         // self.trigger('after:save');
-            //                         // model.trigger('after:save');
-            //                         model.trigger('after:inlineEditSave');
-            //                         self.notify('Saved', 'success');
-            //                         self.inlineEditClose(true);
-            //                     },
-            //                     patch: true
-            //                 });
-            //             })
-            //         } else {
-            //             if (xhr.status === 304) {
-            //                 Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
-            //             } else {
-            //                 Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
-            //             }
-            //         }
-            //     },
-            //     patch: true
-            // });
+                    this.notify('Saved', 'success');
+                    this.inlineEditClose(true);
+                })
+                .error(xhr => {
+                    let statusReason = xhr.responseText || '';
+                    if (xhr.status === 304) {
+                        this.notify('Saved', 'success');
+                        this.inlineEditClose(true);
+                    } else {
+                        Espo.Ui.notify(`${this.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                    }
+                });
         },
 
         removeInlineEditLinks: function () {
@@ -1069,7 +1033,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         && !$target.is('button')
                         && !$target.is('a')
                     ) {
-                        console.log(this.name, 'save', e.target);
                         this.inlineEditSave();
                     }
                 }
