@@ -1290,10 +1290,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
-                            if (data.timestamp !== res.timestamp) {
-                                res.timestamp = data.timestamp;
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                            if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
+                                    res.timestamp = data.timestamp;
                                     this.model.fetch();
                                 }
                                 this.model._updatedById = undefined;
