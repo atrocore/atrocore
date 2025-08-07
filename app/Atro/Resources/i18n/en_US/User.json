@@ -33,8 +33,9 @@
     "layoutProfile": "Layout Profile",
     "locale": "Locale",
     "style": "User Interface Style",
-    "followCreatedEntities": "Auto-follow created records",
-    "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
+    "followEntityOnAssignment": "Automatic tracking on assignment",
+    "followCreatedEntities": "Auto-follow self-created records",
+    "followEntityOnStreamPost": "Auto-follow records after posting in Activities",
     "receiveNotifications": "Receive Notifications",
     "notificationProfile": "Notification Profile"
   },

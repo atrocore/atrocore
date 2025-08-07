@@ -222,6 +222,9 @@
       "type": "bool",
       "tooltip": true
     },
+    "followEntityOnAssignment": {
+      "type": "bool"
+    },
     "closedPanelOptions": {
       "type": "jsonObject",
       "layoutListDisabled": true,

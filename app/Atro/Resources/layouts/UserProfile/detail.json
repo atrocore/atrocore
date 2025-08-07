@@ -60,6 +60,12 @@
         {
           "name": "followEntityOnStreamPost"
         }
+      ],
+      [
+        {
+          "name": "followEntityOnAssignment"
+        },
+        false
       ]
     ]
   },
