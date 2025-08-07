@@ -88,7 +88,7 @@ class Manager
     /**
      * Get modules
      *
-     * @return array
+     * @return AbstractModule[]
      */
     public function getModules(): array
     {
