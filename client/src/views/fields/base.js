@@ -835,7 +835,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             var self = this;
             var model = this.model;
-            var prev = this.initialAttributes;
+            var prev = Espo.Utils.cloneDeep(this.initialAttributes);
 
             model.set(data, {silent: true});
             data = model.attributes;
@@ -850,30 +850,114 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (!attrs) {
                 this.inlineEditClose();
+                model.trigger('after:inlineEditClose');
                 return;
             }
 
             if (this.validate()) {
-                this.notify('Not valid', 'error');
+                this.notify(this.translate('Record cannot be saved'), 'error');
                 model.set(prev, {silent: true});
                 return;
             }
 
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = prev[field];
+            });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
+            model.trigger('before:save', attrs);
+
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
+            if (confirmMessage) {
+                Espo.Ui.confirm(confirmMessage, {
+                    confirmText: self.translate('Apply'),
+                    cancelText: self.translate('Cancel')
+                }, () => {
+                    this.inlineEditSaveModel(model, attrs);
+                });
+            } else {
+                this.inlineEditSaveModel(model, attrs);
+            }
+        },
+
+        getConfirmMessage: function (_prev, attrs, model) {
+            if (model._confirmMessage) {
+                return model._confirmMessage;
+            }
+
+            let confirmMessage = null;
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, data) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let key = null;
+                        if (typeof data.values !== 'undefined') {
+                            data.values.forEach(value => {
+                                if (attrs[field] === value) {
+                                    key = data.message;
+                                }
+                            });
+                        } else {
+                            key = data;
+                        }
+
+                        if (key) {
+                            let parts = key.split('.');
+                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                        }
+                    }
+                });
+            }
+
+            return confirmMessage;
+        },
+
+        inlineEditSaveModel: function (model, attrs) {
+            let self = this;
             this.notify('Saving...');
             model.save(attrs, {
                 success: function () {
+                    model._updatedById = self.getUser().id;
                     self.trigger('after:save');
                     model.trigger('after:save');
+                    model.trigger('after:inlineEditSave');
                     self.notify('Saved', 'success');
+                    self.inlineEditClose(true);
                 },
-                error: function () {
-                    self.notify('Error occured', 'error');
-                    model.set(prev, {silent: true});
-                    self.render()
+                error: function (e, xhr) {
+                    let statusReason = xhr.responseText || '';
+                    if (xhr.status === 409) {
+                        self.notify(false);
+                        Espo.Ui.confirm(statusReason, {
+                            confirmText: self.translate('Apply'),
+                            cancelText: self.translate('Cancel')
+                        }, function () {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+
+                            model.save(attrs, {
+                                success: function () {
+                                    self.trigger('after:save');
+                                    model.trigger('after:save');
+                                    self.notify('Saved', 'success');
+                                    self.inlineEditClose(true);
+                                },
+                                patch: true
+                            });
+                        })
+                    } else {
+                        if (xhr.status === 304) {
+                            Espo.Ui.notify(self.translate('notModified', 'messages'), 'warning', 1000 * 60 * 60 * 2, true);
+                        } else {
+                            Espo.Ui.notify(`${self.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
+                        }
+                    }
                 },
                 patch: true
             });
-            this.inlineEditClose(true);
         },
 
         removeInlineEditLinks: function () {
@@ -908,6 +992,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
+            $(document).off(`click.anywhere-for-${this.name}`);
             if (this.mode != 'edit') {
                 return;
             }
@@ -938,11 +1023,53 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.once('after:render', function () {
                 this.inlineEditFocusing();
                 this.addInlineEditLinks();
+                this.initSaveAfterOutsideClick();
             }, this);
 
             this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
+        },
+
+        initSaveAfterOutsideClick() {
+            $(document).off(`click.anywhere-for-${this.name}`);
+            $(document).on(`click.anywhere-for-${this.name}`, e => {
+                if (this.mode === 'edit') {
+                    const $target = $(e.target);
+                    const $cell = $target.parents('.cell');
+
+                    if ($cell.data('name') !== this.name) {
+                        console.log(this.name)
+                    }
+                }
+
+                //
+                // const inlineEditSelector = '.inline-edit-link';
+                // const inlineSaveSelector = '.inline-save-link';
+                //
+                // const $saveLink = $(inlineSaveSelector);
+                //
+                // if (
+                //     $cell.data('name')
+                //     && !$target.is(inlineEditSelector)
+                //     && $cell.find(inlineSaveSelector).length === 0
+                //     && $cell.find(inlineEditSelector).length > 0
+                // ) {
+                //     let $editLink = $target.parents('.cell').find(inlineEditSelector);
+                //
+                //     if ($saveLink.length === 0) {
+                //         setTimeout(() => {
+                //             const selection = window.getSelection();
+                //             const selectedText = selection ? selection.toString() : '';
+                //             if (!selectedText) {
+                //                 $editLink.click();
+                //             }
+                //         }, 200);
+                //     } else {
+                //         $clickCellName = $(e.target).parents('.cell').data('name');
+                //     }
+                // }
+            });
         },
 
         inlineEditFocusing() {
@@ -969,6 +1096,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (!$el.size() && this.$element) {
                 $el = this.$element;
             }
+
             $el.popover({
                 placement: 'bottom',
                 container: 'body',
@@ -976,31 +1104,31 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 trigger: 'manual'
             }).popover('show');
 
-            var isDestroyed = false;
+            $el.data('isDestroyed', false)
 
-            $el.closest('.field').one('mousedown click', function () {
-                if (isDestroyed) return;
+            $el.closest('.field').one('mousedown click', () => {
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                isDestroyed = true;
+                $el.data('isDestroyed', true)
             });
 
-            this.once('render remove', function () {
-                if (isDestroyed) return;
+            this.once('render remove', () => {
                 if ($el) {
+                    if ($el.data('isDestroyed')) return;
                     $el.popover('destroy');
-                    isDestroyed = true;
+                    $el.data('isDestroyed', true)
                 }
             });
 
-            if (this._timeout) {
-                clearTimeout(this._timeout);
+            if ($el.data('timeout')) {
+                clearTimeout($el.data('timeout'));
             }
 
-            this._timeout = setTimeout(function () {
-                if (isDestroyed) return;
+            $el.data('timeout', setTimeout(() => {
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                isDestroyed = true;
-            }, this.VALIDATION_POPOVER_TIMEOUT);
+                $el.data('isDestroyed', true)
+            }, this.VALIDATION_POPOVER_TIMEOUT));
         },
 
         validate: function () {
