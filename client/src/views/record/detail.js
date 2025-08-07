@@ -1271,6 +1271,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         initOnClickInlineEditing(){
+            return;
             let $clickCellName;
             this.listenTo(this.model, 'after:inlineEditClose after:inlineEditSave', () => {
                 if ($clickCellName) {
