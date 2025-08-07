@@ -609,6 +609,27 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $cell.prepend($editLink);
             }
 
+            this.$el.parent().off(`click.on-${this.name}`);
+            if (this.mode === 'detail') {
+                this.$el.parent().on(`click.on-${this.name}`, e => {
+                    const $target = $(e.target);
+                    if (
+                        !$target.is('i')
+                        && !$target.is('button')
+                        && !$target.is('a')
+                    ) {
+                        setTimeout(() => {
+                            const selection = window.getSelection();
+                            const selectedText = selection ? selection.toString() : '';
+                            if (!selectedText) {
+                                this.inlineEdit();
+                            }
+                        }, 200);
+                    }
+
+                });
+            }
+
             $editLink.on('click', function () {
                 this.inlineEdit();
             }.bind(this));
