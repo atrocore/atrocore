@@ -943,7 +943,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         onInlineEditSave(res, attrs, model){
-            model.set(attrs);
+            model.set(res);
             model._previousAttributes = res;
 
             // this.trigger('after:save'); // ignored because saving needs to be silent
@@ -1040,7 +1040,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     const $cell = $target.parents('.cell');
 
                     if (
-                        $cell.data('name') !== this.name
+                        $cell.data('name') !== name
                         && !$target.is('i')
                         && !$target.is('button')
                         && !$target.is('a')
