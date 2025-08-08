@@ -40,13 +40,14 @@ class Note
     {
         if ($entity->isNew()) {
             $this->handleRelationEntity($entity, 'Relate');
-            if ($this->streamEnabled($entity->getEntityType())) {
-                $this->followCreatedEntity($entity);
-            }
         }
 
-        if ($this->streamEnabled($entity->getEntityType()) && !$entity->isNew()) {
-            $this->handleAudited($entity);
+        if ($this->streamEnabled($entity->getEntityType())) {
+            $this->followEntity($entity);
+
+            if (!$entity->isNew()) {
+                $this->handleAudited($entity);
+            }
         }
 
         $this->handleRelation($entity);
@@ -130,24 +131,31 @@ class Note
         }
 
         return [
-            'fields'     => $updatedFieldList,
+            'fields' => $updatedFieldList,
             'attributes' => [
-                'was'    => $was,
+                'was' => $was,
                 'became' => $became
             ]
         ];
     }
 
-    protected function followCreatedEntity(OrmEntity $entity): void
+    protected function followEntity(OrmEntity $entity): void
     {
         $userIdList = [];
-        if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
-            $this->getStreamService()->followEntity($entity, $entity->get('createdById'));
-            $userIdList[] = $entity->get('createdById');
+
+        if ($entity->isNew()) {
+            if ($this->isFollowCreatedEntities() && $entity->get('createdById') && $entity->get('createdById') === $this->getUser()->id) {
+                $this->getStreamService()->followEntity($entity, $entity->get('createdById'));
+                $userIdList[] = $entity->get('createdById');
+            }
         }
-        if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList)) {
-            $this->getStreamService()->followEntity($entity, $entity->get('assignedUserId'));
-            $userIdList[] = $entity->get('assignedUserId');
+
+        if (!empty($entity->get('assignedUserId')) && !in_array($entity->get('assignedUserId'), $userIdList) && $entity->isAttributeChanged('assignedUserId')) {
+            $user = $this->getEntityManager()->getEntity('User', $entity->get('assignedUserId'));
+            if (!empty($user) && !empty($user->get('followEntityOnAssignment'))) {
+                $this->getStreamService()->followEntity($entity, $entity->get('assignedUserId'));
+                $userIdList[] = $entity->get('assignedUserId');
+            }
         }
 
         if (in_array($this->getUser()->id, $userIdList)) {
@@ -209,18 +217,18 @@ class Note
 
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
-                        'entityId'    => $entity->id,
-                        'entityType'  => $entity->getEntityType(),
-                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
                         'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
                     ]
                 ));
 
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity2'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), array_merge($data, [
-                        'entityId'    => $entity->id,
-                        'entityType'  => $entity->getEntityType(),
-                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                        'entityId' => $entity->id,
+                        'entityType' => $entity->getEntityType(),
+                        'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
                         'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
                     ]
                 ));
@@ -250,7 +258,7 @@ class Note
                         continue;
                     }
 
-                    if(!empty($defs['foreign']) && $this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'auditableDisabled'])) {
+                    if (!empty($defs['foreign']) && $this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'auditableDisabled'])) {
                         continue;
                     }
 
@@ -260,7 +268,7 @@ class Note
         }
 
         foreach ($this->createRelatedData[$entity->getEntityType()] as $field => list($scope, $foreignLink)) {
-            if(!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'auditableEnabled'])) {
+            if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $foreignLink, 'auditableEnabled'])) {
                 continue;
             }
             if ($entity->isAttributeChanged($field)) {
@@ -269,21 +277,21 @@ class Note
                 if (!empty($value)) {
                     $this->createNote('Relate', $scope, $value, [
                         'relatedType' => $entity->getEntityType(),
-                        'relatedId'   => $entity->id,
-                        'link'        => $foreignLink
+                        'relatedId' => $entity->id,
+                        'link' => $foreignLink
                     ]);
                     if (!empty($wasValue)) {
                         $this->createNote('Unrelate', $scope, $wasValue, [
                             'relatedType' => $entity->getEntityType(),
-                            'relatedId'   => $entity->id,
-                            'link'        => $foreignLink
+                            'relatedId' => $entity->id,
+                            'link' => $foreignLink
                         ]);
                     }
                 } elseif (!empty($wasValue)) {
                     $this->createNote('Unrelate', $scope, $wasValue, [
                         'relatedType' => $entity->getEntityType(),
-                        'relatedId'   => $entity->id,
-                        'link'        => $foreignLink
+                        'relatedId' => $entity->id,
+                        'link' => $foreignLink
                     ]);
                 }
             }
@@ -294,10 +302,10 @@ class Note
     {
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
-            'type'       => $type,
+            'type' => $type,
             'parentType' => $parentType,
-            'parentId'   => $parentId,
-            'data'       => $data,
+            'parentId' => $parentId,
+            'data' => $data,
         ]);
         $this->getEntityManager()->saveEntity($note);
     }
@@ -350,9 +358,9 @@ class Note
             return;
         }
 
-        $defaultRelationScopeAudited =  [];
+        $defaultRelationScopeAudited = [];
         foreach ($this->getMetadata()->get(['scopes']) as $scopeKey => $scopeDefs) {
-            if(!empty($scopeDefs['defaultRelationAudited'])) {
+            if (!empty($scopeDefs['defaultRelationAudited'])) {
                 $defaultRelationScopeAudited[] = $scopeKey;
             }
         }
@@ -367,14 +375,13 @@ class Note
             $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity1'])
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity2'], $defaultRelationScopeAudited)))
-        )
-        {
+        ) {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
-                'entityId'    => $entity->id,
-                'entityType'  => $entity->getEntityType(),
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+                'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
                 'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
-                'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
+                'link' => $this->relationEntityData[$entity->getEntityType()]['link1']
             ]);
         }
 
@@ -389,14 +396,13 @@ class Note
             $this->streamEnabled($this->relationEntityData[$entity->getEntityType()]['entity2'])
             && (!empty($fieldDefs['auditableEnabled'])
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity1'], $defaultRelationScopeAudited)))
-        )
-        {
+        ) {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
-                'entityId'    => $entity->id,
-                'entityType'  => $entity->getEntityType(),
-                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                'entityId' => $entity->id,
+                'entityType' => $entity->getEntityType(),
+                'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
                 'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
-                'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
+                'link' => $this->relationEntityData[$entity->getEntityType()]['link2']
             ]);
         }
 
