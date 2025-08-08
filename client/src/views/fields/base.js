@@ -612,7 +612,16 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const name = this.originalName || this.name;
             this.$el.parent().off(`click.on-${name}`);
             if (this.mode === 'detail') {
+                let lastClickTime = 0;
+
                 this.$el.parent().on(`click.on-${name}`, e => {
+                    // check if double-click for ignoring
+                    const now = Date.now();
+                    if (now - lastClickTime < 300) {
+                        return;
+                    }
+                    lastClickTime = now;
+
                     const $target = $(e.target);
                     if (
                         !$target.is('i')
