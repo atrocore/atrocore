@@ -1038,13 +1038,13 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         killAfterOutsideClickListener() {
             const name = this.originalName || this.name;
-            $(document).off(`click.anywhere-for-${name}`);
+            this.$el.parents('.middle').off(`click.anywhere-for-${name}`);
         },
 
         initSaveAfterOutsideClick() {
             this.killAfterOutsideClickListener();
             const name = this.originalName || this.name;
-            $(document).on(`click.anywhere-for-${name}`, e => {
+            this.$el.parents('.middle').on(`click.anywhere-for-${name}`, e => {
                 if (this.mode === 'edit') {
                     const $target = $(e.target);
                     const $cell = $target.parents('.cell');
