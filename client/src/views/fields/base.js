@@ -921,16 +921,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.notify('Saving...');
             this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
                 .success(res => {
-                    model.set(attrs);
-                    model._previousAttributes = res;
-
-                    // this.trigger('after:save'); // ignored because saving needs to be silent
-                    // model.trigger('after:save'); // ignored because saving needs to be silent
-
-                    model.trigger('after:inlineEditSave');
-
-                    this.notify('Saved', 'success');
-                    this.inlineEditClose(true);
+                    this.onInlineEditSave(res, attrs, model);
                 })
                 .error(xhr => {
                     const statusReason = xhr.responseText || '';
@@ -943,23 +934,25 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                         }, () => {
                             attrs['_prev'] = null;
                             attrs['_silentMode'] = false;
-
-                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
-                                .success(res => {
-                                    model.set(attrs);
-                                    model._previousAttributes = res;
-
-                                    // this.trigger('after:save'); // ignored because saving needs to be silent
-                                    // model.trigger('after:save'); // ignored because saving needs to be silent
-
-                                    model.trigger('after:inlineEditSave');
-
-                                    this.notify('Saved', 'success');
-                                    this.inlineEditClose(true);
-                                });
+                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs).success(res => {
+                                this.onInlineEditSave(res, attrs, model);
+                            });
                         })
                     }
                 });
+        },
+
+        onInlineEditSave(res, attrs, model){
+            model.set(attrs);
+            model._previousAttributes = res;
+
+            // this.trigger('after:save'); // ignored because saving needs to be silent
+            // model.trigger('after:save'); // ignored because saving needs to be silent
+
+            model.trigger('after:inlineEditSave');
+
+            this.notify('Saved', 'success');
+            this.inlineEditClose(true);
         },
 
         removeInlineEditLinks: function () {
