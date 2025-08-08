@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
