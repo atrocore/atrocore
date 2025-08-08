@@ -112,8 +112,79 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                     })
                                 });
                             });
-                        }
+                        },
+                        opedEditLabelDialog: (scope, field, callback) => {
+                            const viewName = this.getMetadata().get(['clientDefs', 'Translation', 'modalViews', 'edit']) || 'views/modals/edit',
+                                    key = `${scope}.fields.${field}`;
 
+                            this.wait(true);
+                            this.notify('Loading...');
+
+                            this.ajaxGetRequest('Translation', {
+                                where: [
+                                    {
+                                        type: 'textFilter',
+                                        value: key
+                                    }
+                                ]
+                            }).then(res => {
+                                let data = res.list[0] ?? {id: null, code: key};
+                                this.getModelFactory().create('Translation', model => {
+                                    model.set(data);
+
+                                    let options = {
+                                        scope: 'Translation',
+                                        model: model,
+                                        id: data.id,
+                                        fullFormDisabled: true,
+                                        hideName: true
+                                    };
+
+                                    this.createView('modal', viewName, options, view => {
+                                        this.wait(false);
+                                        Espo.Ui.notify(false);
+
+                                        if (!view.model.get('code')) {
+                                            view.model.set('code', key);
+                                        }
+
+                                        view.listenTo(view, 'after:render', () => {
+                                            let fieldViews = view.getFieldViews();
+
+                                            for (let i in fieldViews) {
+                                                let fieldView = fieldViews[i];
+
+                                                if (fieldView.name === 'code') {
+                                                    fieldView.setReadOnly(true);
+                                                }
+                                            }
+                                        });
+
+                                        this.listenToOnce(view, 'after:save', (model) => {
+                                            if (callback) {
+                                                const user = this.getUser(),
+                                                    locales = this.getConfig().get('locales') || {};
+
+                                                let userLocale = locales[user.get('localeId')];
+
+                                                if (!userLocale) {
+                                                    userLocale = locales[this.getConfig().get('locale')]
+                                                }
+
+                                                let field = userLocale.language.split('_').map(part => Espo.utils.upperCaseFirst(part.toLowerCase())).join('');
+                                                field = Espo.utils.lowerCaseFirst(field);
+
+                                                callback(model.get(field));
+                                            }
+
+                                            view.close();
+                                        }, this);
+
+                                        view.render();
+                                    });
+                                });
+                            });
+                        },
                     }
                 }
             });
