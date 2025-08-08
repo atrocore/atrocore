@@ -75,7 +75,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             }
 
             if (this.getBackgroundColor) {
-                this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item.color));
+                this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
             }
 
             Dep.prototype.setup.call(this);
