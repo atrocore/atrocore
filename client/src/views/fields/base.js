@@ -936,14 +936,18 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                             attrs['_silentMode'] = false;
                             this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs).success(res => {
                                 this.onInlineEditSave(res, attrs, model);
+                            }).error(xhr => {
+                                this.onInlineEditError(xhr);
                             });
                         })
+                    } else {
+                        this.onInlineEditError(xhr);
                     }
                 });
         },
 
         onInlineEditSave(res, attrs, model){
-            model.set(res);
+            model.set(attrs);
             model._previousAttributes = res;
 
             // this.trigger('after:save'); // ignored because saving needs to be silent
@@ -953,6 +957,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.notify('Saved', 'success');
             this.inlineEditClose(true);
+        },
+
+        onInlineEditError(xhr) {
+            if (xhr.status >= 400 && xhr.status < 500) {
+                this.trigger('invalid');
+            }
         },
 
         removeInlineEditLinks: function () {
