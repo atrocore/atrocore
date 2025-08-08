@@ -11632,7 +11632,6 @@ h4.panel-title span.color-icon {
     border-radius: 50%;
     display: block;
     background-color: transparent;
-    border: 1px solid transparent;
 }
 
 .field > .label.colored-enum,

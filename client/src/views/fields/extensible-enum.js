@@ -62,9 +62,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                 data.description = optionData.description || '';
                 data.fontSize = fontSize ? fontSize + 'em' : '100%';
                 data.fontWeight = 'normal';
-                data.backgroundColor = optionData.color || '#ececec';
-                data.color = ColoredEnum.prototype.getFontColor.call(this, data.backgroundColor);
-                data.border = ColoredEnum.prototype.getBorder.call(this, data.backgroundColor);
+                data.backgroundColor = optionData.color;
+                data.color = ColoredEnum.prototype.getFontColor.call(this, data.backgroundColor || '#ececec');
+                data.border = ColoredEnum.prototype.getBorder.call(this, data.backgroundColor || '#ececec');
             }
 
             return data;
