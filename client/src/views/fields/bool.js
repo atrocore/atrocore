@@ -89,7 +89,7 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
                     'true': this.translate('Yes'),
                 }
                 if (data.isNull) {
-                    data['value'] = 'null';
+                    data['value'] = this.notNull ? '' : 'null';
                 }
                 if (!this.notNull && !data.isNull) {
                     data['value'] = this.model.get(this.name).toString()
