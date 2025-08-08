@@ -958,6 +958,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         onInlineEditSave(res, attrs, model){
             model.set(attrs);
             model._previousAttributes = res;
+            model._updatedById = this.getUser().id; // block realtime
 
             // this.trigger('after:save'); // ignored because saving needs to be silent
             // model.trigger('after:save'); // ignored because saving needs to be silent

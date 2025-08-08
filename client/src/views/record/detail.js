@@ -1292,8 +1292,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     if (this.mode !== 'edit') {
                         $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
                             if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
+                                res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
-                                    res.timestamp = data.timestamp;
                                     this.model.fetch();
                                 }
                                 this.model._updatedById = undefined;
