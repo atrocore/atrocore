@@ -917,7 +917,15 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEditSaveModel(model, attrs) {
-            attrs['_prev'] = null;
+            if (attrs['_prev']) {
+                delete attrs['_prev'];
+            }
+
+            if (attrs['_silentMode']) {
+                delete attrs['_silentMode'];
+            }
+
+            attrs['_skipIsEntityUpdated'] = true;
 
             this.notify('Saving...');
             this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
@@ -931,15 +939,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
                     this.notify('Saved', 'success');
                     this.inlineEditClose(true);
-                })
-                .error(xhr => {
-                    let statusReason = xhr.responseText || '';
-                    if (xhr.status === 304) {
-                        this.notify('Saved', 'success');
-                        this.inlineEditClose(true);
-                    } else {
-                        Espo.Ui.notify(`${this.translate("Error")} ${xhr.status}: ${statusReason}`, "error", 1000 * 60 * 60 * 2, true);
-                    }
                 });
         },
 
