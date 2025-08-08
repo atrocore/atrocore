@@ -51,5 +51,6 @@
       "type":"varchar"
    },
    "personalData": true,
+   "textFilter": true,
    "group": "character"
 }
