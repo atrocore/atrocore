@@ -38,9 +38,6 @@
   "views/fields/array": [
     "treo-core"
   ],
-  "views/fields/base": [
-    "treo-core"
-  ],
   "views/fields/currency": [
     "treo-core"
   ],

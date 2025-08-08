@@ -753,7 +753,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var fieldView = fields[field];
                 this.listenTo(fieldView, 'edit', function (view) {
                     if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                        fieldInEditMode.inlineEditClose();
+                        // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
                     }
                     fieldInEditMode = view;
                 }, this);
@@ -1207,8 +1207,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
             });
 
-            this.initOnClickInlineEditing();
-
             if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && !this.isSmall) {
                 this.listenTo(this, 'after:render', () => {
                     this.applyOverviewFilters();
@@ -1270,61 +1268,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
-        initOnClickInlineEditing(){
-            return;
-            let $clickCellName;
-            this.listenTo(this.model, 'after:inlineEditClose after:inlineEditSave', () => {
-                if ($clickCellName) {
-                    setTimeout(() => {
-                        this.getView('middle').getView($clickCellName).inlineEdit();
-                        $clickCellName = null;
-                    }, 250);
-                }
-            });
-
-            $(document).off(`click.anywhere`);
-            $(document).on(`click.anywhere`, e => {
-                const $target = $(e.target);
-                const $cell = $target.parents('.cell');
-
-                const inlineEditSelector = '.inline-edit-link';
-                const inlineSaveSelector = '.inline-save-link';
-
-                const $saveLink = $(inlineSaveSelector);
-
-                if (
-                    $cell.data('name')
-                    && !$target.is(inlineEditSelector)
-                    && $cell.find(inlineSaveSelector).length === 0
-                    && $cell.find(inlineEditSelector).length > 0
-                ) {
-                    let $editLink = $target.parents('.cell').find(inlineEditSelector);
-
-                    if ($saveLink.length === 0) {
-                        setTimeout(() => {
-                            const selection = window.getSelection();
-                            const selectedText = selection ? selection.toString() : '';
-                            if (!selectedText) {
-                                $editLink.click();
-                            }
-                        }, 200);
-                    } else {
-                        $clickCellName = $(e.target).parents('.cell').data('name');
-                    }
-                }
-
-                if (
-                    $saveLink.length > 0
-                    && $saveLink.parents('.cell').data('name') !== $cell.data('name')
-                    && !$target.is('button')
-                    && !$target.is('a')
-                    && !$target.is('.inline-edit')
-                ) {
-                    $saveLink.click();
-                }
-            });
-        },
-
         highlightRequired() {
             let highlight = $('.highlighted-required').length === 0;
             $(`.required-sign`).each((k, el) => {
@@ -1347,10 +1290,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
-                            if (data.timestamp !== res.timestamp) {
-                                res.timestamp = data.timestamp;
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                            if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
+                                    res.timestamp = data.timestamp;
                                     this.model.fetch();
                                 }
                                 this.model._updatedById = undefined;

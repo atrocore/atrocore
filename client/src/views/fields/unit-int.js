@@ -46,6 +46,10 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             Dep.prototype.init.call(this);
         },
 
+        onInlineEditSave(res, attrs, model){
+            Varchar.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         setMode(mode) {
             Varchar.prototype.setTemplateFromMeasureFormat.call(this,mode);
             Dep.prototype.setMode.call(this, mode)
