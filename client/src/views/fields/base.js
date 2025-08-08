@@ -917,28 +917,48 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEditSaveModel(model, attrs) {
-            if (attrs['_prev']) {
-                delete attrs['_prev'];
-            }
-
-            if (attrs['_silentMode']) {
-                delete attrs['_silentMode'];
-            }
-
             attrs['_skipIsEntityUpdated'] = true;
-
             this.notify('Saving...');
             this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
                 .success(res => {
                     model.set(attrs);
                     model._previousAttributes = res;
 
-                    // this.trigger('after:save');
-                    // model.trigger('after:save');
+                    // this.trigger('after:save'); // ignored because saving needs to be silent
+                    // model.trigger('after:save'); // ignored because saving needs to be silent
+
                     model.trigger('after:inlineEditSave');
 
                     this.notify('Saved', 'success');
                     this.inlineEditClose(true);
+                })
+                .error(xhr => {
+                    const statusReason = xhr.responseText || '';
+                    if (xhr.status === 409) {
+                        xhr.errorIsHandled = true;
+                        this.notify(false);
+                        Espo.Ui.confirm(statusReason, {
+                            confirmText: this.translate('Apply'),
+                            cancelText: this.translate('Cancel')
+                        }, () => {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+
+                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
+                                .success(res => {
+                                    model.set(attrs);
+                                    model._previousAttributes = res;
+
+                                    // this.trigger('after:save'); // ignored because saving needs to be silent
+                                    // model.trigger('after:save'); // ignored because saving needs to be silent
+
+                                    model.trigger('after:inlineEditSave');
+
+                                    this.notify('Saved', 'success');
+                                    this.inlineEditClose(true);
+                                });
+                        })
+                    }
                 });
         },
 

@@ -753,7 +753,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var fieldView = fields[field];
                 this.listenTo(fieldView, 'edit', function (view) {
                     if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                        fieldInEditMode.inlineEditClose();
+                        // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
                     }
                     fieldInEditMode = view;
                 }, this);
