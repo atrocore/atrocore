@@ -16,6 +16,6 @@
             </div>
 
             {{#if iconHtml}}{{{iconHtml}}}{{/if}}
-            <span class="text-muted message">{{{message}}}</span>
+            <span class="message">{{{message}}}</span>
         </div>
     </div>

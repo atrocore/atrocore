@@ -1377,17 +1377,7 @@ td, th {
     content: "\e260"
 }
 
-* {
-    -ms-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box
-}
-
-*:before, *:after {
-    -ms-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+*, *:before, *:after  {
     box-sizing: border-box
 }
 
@@ -1400,8 +1390,6 @@ body {
     font-family: sans-serif;
     font-size: 14px;
     line-height: 1.36;
-    color: #333;
-    background-color: #ececec;
     height: 100dvh;
     max-height: 100dvh;
     display: flex;
@@ -1442,13 +1430,9 @@ img {
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
-    -webkit-transition: all all .2s ease-in-out ease-out;
-    -moz-transition: all all .2s ease-in-out ease-out;
-    -o-transition: all all .2s ease-in-out ease-out;
-    transition: all all .2s ease-in-out ease-out;
     display: inline-block;
     max-width: 100%;
-    height: auto
+    height: auto;
 }
 
 .img-circle {
