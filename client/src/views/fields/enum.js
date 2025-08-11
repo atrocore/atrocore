@@ -58,6 +58,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         translatedGroups: null,
 
+        hasColors: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
@@ -205,6 +207,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
             if (this.options.disabledOptionList) {
                 this.disableOptions(this.options.disabledOptionList)
+            }
+
+            if (this.getBackgroundColor) {
+                this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
             }
         },
 
@@ -480,14 +486,16 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         },
                         option: (item, escape) => {
                             let icon = '';
-                            let style = '';
-                            if (item.value && this.getBackgroundColor) {
-                                const color = this.getBackgroundColor(item.value);
-                                if (color) {
-                                    style = `style="background-color: ${color}; border-color: ${color};"`;
-                                }
+                            if (this.hasColors) {
+                                let style = '';
+                                if (item.value && this.getBackgroundColor) {
+                                    const color = this.getBackgroundColor(item.value);
+                                    if (color) {
+                                        style = `style="background-color: ${color}; border-color: ${color};"`;
+                                    }
 
-                                icon = `<i ${style}></i>`;
+                                    icon = `<i ${style}></i>`;
+                                }
                             }
 
                             return `<div class="option" ${(item.value === '' ? 'selectize-dropdown-emptyoptionlabel' : '')}><span class="label colored-enum">${icon}<span>${escape(item.text)}</span></span></div>`;

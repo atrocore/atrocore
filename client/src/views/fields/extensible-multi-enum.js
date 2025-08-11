@@ -67,14 +67,14 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                 if (ids && ids.length > 0 && optionsData) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                     optionsData.forEach(option => {
-                        let backgroundColor = option.color || '#ececec';
+                        let backgroundColor = option.color;
                         data.selectedValues.push({
                             description: option.description || '',
                             fontSize: fontSize ? fontSize + 'em' : '100%',
                             fontWeight: 'normal',
                             backgroundColor: backgroundColor,
-                            color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor),
-                            border: ColoredEnum.prototype.getBorder.call(this, backgroundColor),
+                            color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor || '#ececec'),
+                            border: ColoredEnum.prototype.getBorder.call(this, backgroundColor || '#ececec'),
                             optionName: option.preparedName ?? option.name
                         });
                     });

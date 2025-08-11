@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -89,7 +89,7 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
                     'true': this.translate('Yes'),
                 }
                 if (data.isNull) {
-                    data['value'] = 'null';
+                    data['value'] = this.notNull ? '' : 'null';
                 }
                 if (!this.notNull && !data.isNull) {
                     data['value'] = this.model.get(this.name).toString()
