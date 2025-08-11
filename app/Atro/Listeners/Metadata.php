@@ -68,6 +68,8 @@ class Metadata extends AbstractListener
 
         $this->prepareModifiedIntermediateEntities($data);
 
+        $this->prepareUnInheritedRelations($data);
+
         $this->pushDynamicActions($data);
 
         $this->prepareExtensibleEnum($data);
@@ -468,6 +470,20 @@ class Metadata extends AbstractListener
 
                         $data['scopes'][$relationDefs['entity']]['modifiedExtendedIntermediateRelations'][] = $relationDefs['foreign'];
                     }
+                }
+            }
+        }
+    }
+
+    protected function prepareUnInheritedRelations(array &$data): void
+    {
+        foreach ($data['scopes'] as $scope => $defs) {
+            if(empty($data['entityDefs'][$scope]['links'] )){
+                continue;
+            }
+            foreach ($data['entityDefs'][$scope]['links'] as $link => $linkDefs) {
+                if(!empty($linkDefs['isUninheritableRelation'])) {
+                    $data[$scope]['unInheritedRelations'][] = $link;
                 }
             }
         }
