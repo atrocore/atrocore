@@ -108,6 +108,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 }
             }
 
+            this.getStorage().set('previewTemplate', 'profile', this.profile);
+
             e.currentTarget.classList.remove('btn-default');
             e.currentTarget.classList.add('btn-primary');
         },
@@ -131,6 +133,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                 .sort((x, y) => (x.main === y.main) ? 0 : x.main ? -1 : 1); // main lang should be first
 
             this.selectedLanguage = this.languages[0];
+            const storedProfile = this.getStorage().get('previewTemplate', 'profile');
+            if (storedProfile && this.profiles[storedProfile]) {
+                this.profile = storedProfile;
+            }
         },
 
         loadPreviewFrame(afterLoad = null) {
@@ -239,7 +245,10 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         prepareEditorElements(document) {
             document.querySelectorAll('[data-editor-type]').forEach(el => {
-                el.addEventListener('click', () => this.prepareEditableElement(el));
+                el.addEventListener('click', (evt) => {
+                    evt.stopPropagation()
+                    this.prepareEditableElement(el)
+                });
             });
         },
 
