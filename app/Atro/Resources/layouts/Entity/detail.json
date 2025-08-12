@@ -110,10 +110,10 @@
       ],
       [
         {
-          "name": "nonComparableFields"
+          "name": "textFilterFields"
         },
         {
-          "name": "textFilterFields"
+          "name": "nonComparableFields"
         }
       ],
       [
