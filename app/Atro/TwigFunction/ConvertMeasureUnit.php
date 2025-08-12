@@ -21,8 +21,19 @@ class ConvertMeasureUnit extends AbstractTwigFunction
     {
     }
 
-    public function run($value, string $measureId, string $unitId): array
+    public function run($value, string $measureId, string $fromUnitId, ?string $toUnitId = null): array|float|int|null
     {
-        return $this->entityManager->getRepository('Measure')->convertMeasureUnit($value, $measureId, $unitId);
+        $repository = $this->entityManager->getRepository('Measure');
+        $data = $repository->convertMeasureUnit($value, $measureId, $fromUnitId);
+        if (empty($toUnitId)) {
+            return $data;
+        }
+
+        $units = $repository->getMeasureUnits($measureId);
+        if (!isset($units[$toUnitId])) {
+            return null;
+        }
+
+        return $data[$units[$toUnitId]->get('name')] ?? null;
     }
 }

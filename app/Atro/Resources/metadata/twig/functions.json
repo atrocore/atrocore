@@ -71,7 +71,8 @@
     "handler": "\\Atro\\TwigFunction\\FormatField"
   },
   "convertMeasureUnit": {
-    "handler": "\\Atro\\TwigFunction\\ConvertMeasureUnit"
+    "handler": "\\Atro\\TwigFunction\\ConvertMeasureUnit",
+    "insertText": "convertMeasureUnit(${1:value}, ${2:measureId}, ${3:fromUnitId}, ${4:toUnitId})"
   },
   "getLeafRecords": {
     "handler": "\\Atro\\TwigFunction\\GetLeafRecords"
