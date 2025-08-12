@@ -360,27 +360,6 @@
             }
           ]
         }
-      },
-      "textFilterFields": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "text",
-                "varchar",
-                "wysiwyg",
-                "markdown",
-                "url",
-                "email",
-                "autoincrement",
-                "int",
-                "float"
-              ]
-            }
-          ]
-        }
       }
     }
   }

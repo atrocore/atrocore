@@ -51,7 +51,7 @@ class Set extends AbstractAction
 
         $input->actionSetLinkerId = $current->get('id');
 
-        $res =  $this->getActionManager()->executeNow($action->get('id'), $input);
+        $res =  $this->getActionManager()->executeNow($action, $input);
 
         if (empty($action->get('inBackground')) &&
             (!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&

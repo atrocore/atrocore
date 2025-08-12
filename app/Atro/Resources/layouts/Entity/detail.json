@@ -112,7 +112,9 @@
         {
           "name": "nonComparableFields"
         },
-        false
+        {
+          "name": "textFilterFields"
+        }
       ],
       [
         {
@@ -178,12 +180,6 @@
         {
           "name": "unInheritedRelations"
         }
-      ],
-      [
-        {
-          "name": "textFilterFields"
-        },
-        false
       ]
     ]
   },
