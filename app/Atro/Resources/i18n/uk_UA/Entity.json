@@ -37,7 +37,8 @@
     "hasClassification": "Має класифікації",
     "singleClassification": "Дозволено лише одну класифікацію",
     "disableAttributeLinking": "Заборонено пряме зв'язування атрибутів",
-    "hasAssociate": "має пов'язані записи"
+    "hasAssociate": "має пов'язані записи",
+    "nonDuplicatableFields": "Недубльовані поля"
   },
   "options": {
     "type": {

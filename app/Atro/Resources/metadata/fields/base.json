@@ -1,13 +1,17 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool"
-      }
-   ],
-   "filter": false,
-   "notCreatable": true,
-   "fieldDefs":{
-      "notStorable":true
-   }
+  "params": [
+    {
+      "name": "required",
+      "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": false,
+  "notCreatable": true,
+  "fieldDefs": {
+    "notStorable": true
+  }
 }

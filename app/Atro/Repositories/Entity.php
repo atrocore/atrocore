@@ -515,6 +515,17 @@ class Entity extends ReferenceData
             }
         }
 
+        if ($entity->isAttributeChanged('nonDuplicatableFields')) {
+            foreach ($entity->get('fields') ?? [] as $field) {
+                if (in_array($field->get('code'), $entity->get('nonDuplicatableFields'))) {
+                    $field->set('duplicateIgnore', true);
+                } else if (!empty($field->get('duplicateIgnore'))) {
+                    $field->set('duplicateIgnore', false);
+                }
+                $this->getEntityManager()->getRepository('EntityField')->save($field);
+            }
+        }
+
         parent::afterSave($entity, $options);
     }
 
@@ -536,6 +547,7 @@ class Entity extends ReferenceData
                 $defaultRelationScopeAudited[] = $scopeKey;
             }
         }
+
         //prepare auditedEnabledRelations
         $fields = [];
         foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
@@ -561,6 +573,14 @@ class Entity extends ReferenceData
             }
         }
         $entity->set('auditedEnabledRelations', $fields);
+
+        $fields = [];
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
+            if (!empty($defs['type']) && !empty($defs['duplicateIgnore'])) {
+                $fields[] = $field;
+            }
+        }
+        $entity->set('nonDuplicatableFields', $fields);
     }
 
     protected function init()

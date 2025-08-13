@@ -45,6 +45,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "duplicateIgnore": {
+      "type": "bool",
+      "tooltip": true
+    },
     "multilangField": {
       "type": "varchar",
       "notStorable": true,

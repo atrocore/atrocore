@@ -37,6 +37,10 @@
     {
       "name": "extensibleEnumOptions",
       "type": "array"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "notSortable": true,

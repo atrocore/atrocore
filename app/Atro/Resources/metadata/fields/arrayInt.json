@@ -23,6 +23,10 @@
     {
       "name": "readOnly",
       "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,

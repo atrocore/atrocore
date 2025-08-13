@@ -6,6 +6,10 @@
       "default": false
     },
     {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    },
+    {
       "name": "default",
       "type": "varchar"
     },

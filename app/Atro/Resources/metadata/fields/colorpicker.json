@@ -1,23 +1,27 @@
 {
-   "params": [
-      {
-         "name":"required",
-         "type":"bool",
-         "default": false
-      },
-      {
-         "name":"default",
-         "type":"colorpicker"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": false,
-   "fieldDefs": {
-      "type":"varchar",
-      "maxLength": 7
-   },
-   "notCreatable": true
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "colorpicker"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": false,
+  "fieldDefs": {
+    "type": "varchar",
+    "maxLength": 7
+  },
+  "notCreatable": true
 }

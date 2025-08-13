@@ -35,7 +35,8 @@
     "singleClassification": "Nur eine Klassifizierung",
     "disableAttributeLinking": "Direkte Attributverknüpfung deaktivieren",
     "hasAssociate": "Hat assoziierte Datensätze",
-    "textFilterFields": "Textfilterfelder"
+    "textFilterFields": "Textfilterfelder",
+    "nonDuplicatableFields": "Nicht-duplizierbare Felder"
   },
   "options": {
     "type": {
