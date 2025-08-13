@@ -1258,7 +1258,8 @@
       "editable": "Check if an entity is editable",
       "getAllLanguageFields": "Get all language-specific fields",
       "parseMarkdown": "Parse markdown content",
-      "formatField": "Format a field value"
+      "formatField": "Format a field value",
+      "convertMeasureUnit": "Convert a value from one unit to another \n Params: float|int value, string measureId, string fromUnitId, string? toUnitId = null \n If toUnitId is empty, result will be an array with converted value for all measure units \n Example: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}"
     },
     "filters": {
       "prepareEntity": "Prepare entity for display or processing",
