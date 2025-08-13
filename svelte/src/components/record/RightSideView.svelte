@@ -233,11 +233,6 @@
         color: #2895ea85;
     }
 
-    :global(.right-side-view .row .cell .field) {
-        padding-bottom: 6px;
-        border-bottom: 1px solid var(--secondary-border-color);
-    }
-
     :global(.right-side-view .panel-heading .panel-title .collapser) {
         display: none;
     }

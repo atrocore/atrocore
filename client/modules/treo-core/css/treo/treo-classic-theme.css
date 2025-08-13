@@ -13127,7 +13127,8 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field {
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field,
+aside .cell:not[data-mode=edit] > .field {
     padding: 6px 10px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
