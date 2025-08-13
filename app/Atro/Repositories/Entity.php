@@ -494,35 +494,52 @@ class Entity extends ReferenceData
     {
         if ($entity->isAttributeChanged('auditedDisabledFields')) {
             foreach ($entity->get('fields') ?? [] as $field) {
+                $changed = false;
                 if (in_array($field->get('code'), $entity->get('auditedDisabledFields'))) {
                     $field->set('auditableDisabled', true);
+                    $changed = true;
                 } else if (!empty($field->get('auditableDisabled'))) {
                     $field->set('auditableDisabled', false);
+                    $changed = true;
                 }
-                $this->getEntityManager()->getRepository('EntityField')->save($field);
+
+                if ($changed) {
+                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                }
             }
         }
 
         if ($entity->isAttributeChanged('auditedEnabledRelations')) {
             foreach ($entity->get('fields') ?? [] as $field) {
+                $changed = false;
                 if (in_array($field->get('code'), $entity->get('auditedEnabledRelations'))) {
                     $field->set('auditableEnabled', true);
-                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                    $changed = true;
                 } else if (!empty($field->get('auditableEnabled'))) {
                     $field->set('auditableEnabled', false);
+                    $changed = true;
                 }
-                $this->getEntityManager()->getRepository('EntityField')->save($field);
+
+                if ($changed) {
+                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                }
             }
         }
 
         if ($entity->isAttributeChanged('nonDuplicatableFields')) {
             foreach ($entity->get('fields') ?? [] as $field) {
+                $changed = false;
                 if (in_array($field->get('code'), $entity->get('nonDuplicatableFields'))) {
                     $field->set('duplicateIgnore', true);
+                    $changed = true;
                 } else if (!empty($field->get('duplicateIgnore'))) {
                     $field->set('duplicateIgnore', false);
+                    $changed = true;
                 }
-                $this->getEntityManager()->getRepository('EntityField')->save($field);
+
+                if ($changed) {
+                    $this->getEntityManager()->getRepository('EntityField')->save($field);
+                }
             }
         }
 
