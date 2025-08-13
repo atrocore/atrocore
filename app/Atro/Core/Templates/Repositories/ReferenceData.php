@@ -479,7 +479,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function getAll()
     {
-        $collection = new EntityCollection($this->getAllItems(), $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
         return $collection;
