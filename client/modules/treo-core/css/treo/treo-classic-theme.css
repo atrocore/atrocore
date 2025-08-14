@@ -13222,7 +13222,6 @@ input#sn-checkbox-open-in-new-window {
 .panel-default > .panel-heading {
     padding: 5px 20px 6px 20px;
     color: rgba(0, 0, 0, 0.87);
-    background-color: #ececec;
     border-top: 1px solid var(--primary-border-color);
     border-bottom: 1px solid var(--primary-border-color);
 }
@@ -13232,7 +13231,10 @@ input#sn-checkbox-open-in-new-window {
 .bottom > .panel-default > .panel-heading,
 .composer .panel-default > .panel-heading,
 .modal-body > .panel-default > .panel-heading {
-    height: 34px;
+    height: 40px;
+    border-top-width: 2px;
+    border-bottom: 0;
+    margin-bottom: 10px;
 }
 
 .composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
@@ -13245,10 +13247,14 @@ input#sn-checkbox-open-in-new-window {
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
     text-align: right;
-    background-color: transparent;
-    border-right: 1px solid #dcdcdc;
     padding-right: 12px;
     padding-left: 12px;
+}
+
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total > span {
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    padding: 3px 6px;
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:hover {
