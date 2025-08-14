@@ -36,31 +36,34 @@ class V2Dot0Dot28 extends Base
         $actions = $this
             ->getConnection()
             ->createQueryBuilder()
-            ->select('id', 'data')
+            ->select('id', 'data', 'conditions')
             ->from('action')
-            ->where('data IS NOT NULL')
+            ->where('data IS NOT NULL OR conditions IS NOT NULL')
             ->andWhere('deleted = :false')
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         foreach ($actions as $action) {
-            if (strpos($action['data'], 'sku') !== false) {
-                $action['data'] = str_replace('.sku', '.number', $action['data']);
-                $action['data'] = str_replace('"sku"', '"number"', $action['data']);
-                $action['data'] = str_replace("'sku'", "'number'", $action['data']);
+            foreach (['data', 'conditions'] as $field) {
+                if (!is_null($action[$field]) && strpos($action[$field], 'sku') !== false) {
+                    $action[$field] = str_replace('.sku', '.number', $action[$field]);
+                    $action[$field] = str_replace('"sku"', '"number"', $action[$field]);
+                    $action[$field] = str_replace('\\"sku\\"', '\\"number\\"', $action[$field]);
+                    $action[$field] = str_replace("'sku'", "'number'", $action[$field]);
 
-                try {
-                    $this
-                        ->getConnection()
-                        ->createQueryBuilder()
-                        ->update('action')
-                        ->set('data', ':data')
-                        ->where('id = :id')
-                        ->setParameter('id', $action['id'])
-                        ->setParameter('data', $action['data'])
-                        ->executeStatement();
-                } catch (\Throwable $e) {
+                    try {
+                        $this
+                            ->getConnection()
+                            ->createQueryBuilder()
+                            ->update('action')
+                            ->set($field, ':data')
+                            ->where('id = :id')
+                            ->setParameter('id', $action['id'])
+                            ->setParameter('data', $action[$field])
+                            ->executeStatement();
+                    } catch (\Throwable $e) {
 
+                    }
                 }
             }
         }
@@ -76,12 +79,14 @@ class V2Dot0Dot28 extends Base
                     if (strpos($template['subject'], 'sku') !== false) {
                         $result[$key]['subject'] = str_replace('.sku', '.number', $result[$key]['subject']);
                         $result[$key]['subject'] = str_replace('"sku"', '"number"', $result[$key]['subject']);
+                        $result[$key]['subject'] = str_replace('\\"sku\\"', '\\"number\\"', $result[$key]['subject']);
                         $result[$key]['subject'] = str_replace("'sku'", "'number'", $result[$key]['subject']);
                     }
 
                     if (strpos($template['body'], 'sku') !== false) {
                         $result[$key]['body'] = str_replace('.sku', '.number', $result[$key]['body']);
                         $result[$key]['body'] = str_replace('"sku"', '"number"', $result[$key]['body']);
+                        $result[$key]['body'] = str_replace('\\"sku\\"', '\\"number\\"', $result[$key]['body']);
                         $result[$key]['body'] = str_replace("'sku'", "'number'", $result[$key]['body']);
                     }
                 }
@@ -107,6 +112,7 @@ class V2Dot0Dot28 extends Base
             if (strpos($template['template'], '.sku') !== false) {
                 $template['template'] = str_replace('.sku', '.number', $template['template']);
                 $template['template'] = str_replace('"sku"', '"number"', $template['template']);
+                $template['template'] = str_replace('\\"sku\\"', '\\"number\\"', $template['template']);
                 $template['template'] = str_replace("'sku'", "'number'", $template['template']);
 
                 try {
@@ -142,6 +148,7 @@ class V2Dot0Dot28 extends Base
             if (strpos($template['data'], '.sku') !== false) {
                 $template['data'] = str_replace('.sku', '.number', $template['data']);
                 $template['data'] = str_replace('"sku"', '"number"', $template['data']);
+                $template['data'] = str_replace('\\"sku\\"', '\\"number\\"', $template['data']);
                 $template['data'] = str_replace("'sku'", "'number'", $template['data']);
 
                 try {
