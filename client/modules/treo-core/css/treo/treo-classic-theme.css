@@ -13234,7 +13234,7 @@ input#sn-checkbox-open-in-new-window {
     height: 40px;
     border-top-width: 2px;
     border-bottom: 0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
