@@ -11625,7 +11625,7 @@ h4.panel-title span.color-icon {
 }
 
 .record .middle > .panel:first-child > .panel-heading {
-    border-top-width: 0
+    border-top-width: 1px;
 }
 
 .record .middle {
