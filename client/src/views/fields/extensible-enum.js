@@ -26,7 +26,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                 return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
             },
             onlyExtensibleEnumOptionIds() {
-                return this.model.get(this.idsName) || [];
+                return [this.model.get(this.idName)] || [];
             }
         },
 
