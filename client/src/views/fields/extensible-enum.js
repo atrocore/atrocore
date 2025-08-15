@@ -16,7 +16,7 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
 
         detailTemplate: 'fields/extensible-enum/detail',
 
-        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions'],
+        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions', 'onlyExtensibleEnumOptionIds'],
 
         boolFilterData: {
             onlyForExtensibleEnum() {
@@ -24,6 +24,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             },
             onlyAllowedOptions() {
                 return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
+            },
+            onlyExtensibleEnumOptionIds() {
+                return this.model.get(this.idsName) || [];
             }
         },
 
