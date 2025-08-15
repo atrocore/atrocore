@@ -11634,7 +11634,7 @@ h4.panel-title span.color-icon {
 
 .record .middle > .panel {
     border-top-width: 0;
-    margin-bottom: 0
+    margin-bottom: 10px;
 }
 
 .record .middle > .panel > .panel-heading .btn-group .btn {
