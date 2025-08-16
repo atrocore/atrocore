@@ -95,6 +95,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 idValue = null;
             }
 
+            if (this.mode === 'edit') {
+                if (!nameValue && idValue) {
+                    nameValue = idValue;
+                }
+            }
+
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
