@@ -21,6 +21,12 @@
         {
           "name": "action"
         },
+        false
+      ],
+      [
+        {
+          "name": "httpMethod"
+        },
         {
           "name": "url"
         }
