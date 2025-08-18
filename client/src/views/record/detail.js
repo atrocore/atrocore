@@ -1265,6 +1265,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
+                window.dispatchEvent(new Event('record:save'));
             });
         },
 

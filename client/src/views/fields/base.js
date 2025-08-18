@@ -965,6 +965,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             model.trigger('after:inlineEditSave');
 
+            window.dispatchEvent(new Event('record:save'));
+
             this.notify('Saved', 'success');
             this.inlineEditClose(true);
         },
