@@ -12,8 +12,6 @@
 namespace Atro\EntryPoints;
 
 use Atro\ActionTypes\TypeInterface;
-use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\NotFound;
 use Atro\Entities\Action;
 use Espo\ORM\Entity;
 
@@ -25,20 +23,33 @@ class Webhook extends AbstractEntryPoint
     {
         $id = $_GET['id'] ?? null;
         if (empty($id)) {
-            throw new NotFound();
+            $this->show404();
         }
 
         /** @var Entity $webhook */
         $webhook = $this->getEntityManager()->getEntity('Webhook', $id);
         if (!$webhook) {
-            throw new NotFound();
+            $this->show404();
+        }
+
+        if (empty($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== $webhook->get('httpMethod')) {
+            $this->show404();
         }
 
         /** @var Action $webhook */
         $action = $webhook->get('action');
-        if (!empty($action)) {
+        if (!empty($action) && !empty($handler = $this->getActionType($action->get('type')))) {
             $input = new \stdClass();
-            $this->getActionType($action->get('type'))->executeNow($action, $input);
+            $input->webhookRequest['headers'] = getallheaders();
+            $input->webhookRequest['queryParameters'] = [];
+            $input->webhookRequest['body'] = file_get_contents('php://input');
+            foreach ($_GET as $key => $value) {
+                if ($key !== 'atroq') {
+                    $input->webhookRequest['queryParameters'][$key] = $value;
+                }
+            }
+
+            $handler->executeNow($action, $input);
         }
 
         http_response_code(200);
@@ -47,13 +58,21 @@ class Webhook extends AbstractEntryPoint
         exit;
     }
 
-    protected function getActionType(string $type): TypeInterface
+    protected function getActionType(string $type): ?TypeInterface
     {
         $className = $this->getMetadata()->get(['action', 'types', $type]);
         if (empty($className)) {
-            throw new Error("No such action type '$type'.");
+            return null;
         }
 
         return $this->container->get($className);
+    }
+
+    protected function show404(): void
+    {
+        header("HTTP/1.0 404 Not Found");
+        echo "<h1>404 Not Found</h1>";
+        echo "The page that you have requested could not be found.";
+        exit;
     }
 }
