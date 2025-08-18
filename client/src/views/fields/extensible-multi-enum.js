@@ -139,6 +139,12 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             return res;
         },
 
+        onInlineEditSave(res, attrs, model){
+            model.set(this.name + 'OptionsData', res[this.name + 'OptionsData'] || null);
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         fetchSearch: function () {
             let type = this.$el.find('select.search-type').val();
             let data = null;
