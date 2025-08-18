@@ -324,13 +324,13 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         inlineEditFocusing() {
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 const $textarea = this.$el.find('textarea');
 
                 $textarea.focus();
                 const val = $textarea.val();
                 $textarea[0].setSelectionRange(val.length, val.length);
-            }, 500);
+            });
         },
 
         createQueryBuilderFilter() {
