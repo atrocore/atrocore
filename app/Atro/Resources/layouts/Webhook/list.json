@@ -4,6 +4,9 @@
     "link": true
   },
   {
+    "name": "action"
+  },
+  {
     "name": "isActive"
   }
 ]

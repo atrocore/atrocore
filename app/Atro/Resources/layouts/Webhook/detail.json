@@ -16,6 +16,12 @@
           "name": "description"
         },
         false
+      ],
+      [
+        {
+          "name": "action"
+        },
+        false
       ]
     ]
   }

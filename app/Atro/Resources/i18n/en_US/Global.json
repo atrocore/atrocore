@@ -612,6 +612,8 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "webhook": "Webhook",
+    "webhooks": "Webhooks",
     "classification": "Classification",
     "classifications": "Classifications",
     "status": "Status",

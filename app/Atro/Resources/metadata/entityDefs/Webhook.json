@@ -25,6 +25,10 @@
       "type": "link",
       "readOnly": true,
       "view": "views/fields/user"
+    },
+    "action": {
+      "type": "link",
+      "required": true
     }
   },
   "links": {
@@ -35,6 +39,11 @@
     "modifiedBy": {
       "type": "belongsTo",
       "entity": "User"
+    },
+    "action": {
+      "type": "belongsTo",
+      "foreign": "webhooks",
+      "entity": "Action"
     }
   },
   "collection": {
