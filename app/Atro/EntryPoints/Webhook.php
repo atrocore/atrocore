@@ -41,8 +41,8 @@ class Webhook extends AbstractEntryPoint
         if (!empty($action) && !empty($handler = $this->getActionType($action->get('type')))) {
             $input = new \stdClass();
             $input->webhookRequest['headers'] = getallheaders();
-            $input->webhookRequest['queryParameters'] = [];
             $input->webhookRequest['body'] = file_get_contents('php://input');
+            $input->webhookRequest['queryParameters'] = [];
             foreach ($_GET as $key => $value) {
                 if ($key !== 'atroq') {
                     $input->webhookRequest['queryParameters'][$key] = $value;
