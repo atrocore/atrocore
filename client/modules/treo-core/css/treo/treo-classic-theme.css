@@ -7490,9 +7490,8 @@ button.close {
 }
 
 .selectize-input > .clear-button > i {
-    font-size: 18px;
+    font-size: 16px;
 }
-
 
 .selectize-dropdown {
     position: absolute;
