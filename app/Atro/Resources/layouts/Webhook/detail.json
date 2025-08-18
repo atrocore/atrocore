@@ -21,7 +21,9 @@
         {
           "name": "action"
         },
-        false
+        {
+          "name": "url"
+        }
       ]
     ]
   }

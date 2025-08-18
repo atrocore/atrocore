@@ -29,6 +29,11 @@
     "action": {
       "type": "link",
       "required": true
+    },
+    "url": {
+      "type": "url",
+      "readOnly": true,
+      "notStorable": true
     }
   },
   "links": {
