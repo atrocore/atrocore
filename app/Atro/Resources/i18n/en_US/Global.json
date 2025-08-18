@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Webhook": "Webhook",
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribute Panel",
     "Classification": "Classification",
@@ -80,6 +81,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "Webhook": "Webhooks",
     "RoleScopeAttribute": "Attributes",
     "RoleScopeAttributePanel": "Attribute Panels",
     "Classification": "Classifications",
