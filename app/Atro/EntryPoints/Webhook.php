@@ -36,6 +36,10 @@ class Webhook extends AbstractEntryPoint
             $this->show404();
         }
 
+        if (!empty($webhook->get('ipWhiteList')) && !in_array($this->getClientIp(), $webhook->get('ipWhiteList'))) {
+            $this->show404();
+        }
+
         /** @var Action $webhook */
         $action = $webhook->get('action');
         if (!empty($action) && !empty($handler = $this->getActionType($action->get('type')))) {
@@ -75,4 +79,32 @@ class Webhook extends AbstractEntryPoint
         echo "The page that you have requested could not be found.";
         exit;
     }
+
+    protected function getClientIp(): string
+    {
+        $keys = [
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($keys as $key) {
+            if (!empty($_SERVER[$key])) {
+                $ipList = explode(',', $_SERVER[$key]);
+                foreach ($ipList as $ip) {
+                    $ip = trim($ip);
+                    if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                        return $ip;
+                    }
+                }
+            }
+        }
+
+        return 'UNKNOWN';
+    }
+
 }

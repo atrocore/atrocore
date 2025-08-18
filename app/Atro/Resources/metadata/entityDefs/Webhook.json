@@ -43,6 +43,9 @@
       ],
       "default": "POST",
       "required": true
+    },
+    "ipWhiteList": {
+      "type": "array"
     }
   },
   "links": {

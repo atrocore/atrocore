@@ -612,6 +612,7 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "ipWhiteList": "IP white list",
     "httpMethod": "HTTP Method",
     "url": "URL",
     "webhook": "Webhook",

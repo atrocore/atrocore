@@ -30,6 +30,12 @@
         {
           "name": "url"
         }
+      ],
+      [
+        {
+          "name": "ipWhiteList"
+        },
+        false
       ]
     ]
   }
