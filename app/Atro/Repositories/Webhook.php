@@ -29,6 +29,21 @@ class Webhook extends ReferenceData
             }
         }
 
+        if (!$this->isValidCode($entity->get('code'))) {
+            throw new BadRequest('Validation failed: code must contain only letters, numbers, underscores, or hyphens.');
+        }
+
         parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * Allows letters (a-z, A-Z), digits (0-9), underscores (_), and hyphens (-)
+     *
+     * @param string $input
+     * @return bool
+     */
+    protected function isValidCode(string $code): bool
+    {
+        return preg_match('/^[a-zA-Z0-9_-]+$/', $code) === 1;
     }
 }
