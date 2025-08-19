@@ -32,6 +32,10 @@ class Webhook extends AbstractEntryPoint
             $this->show404();
         }
 
+        if (empty($webhook->get('isActive'))) {
+            $this->show404();
+        }
+
         if (empty($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== $webhook->get('httpMethod')) {
             $this->show404();
         }

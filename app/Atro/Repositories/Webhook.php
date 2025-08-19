@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
 
-class Webhook extends Base
+class Webhook extends ReferenceData
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {

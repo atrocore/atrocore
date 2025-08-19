@@ -240,10 +240,6 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
-    },
-    "webhooks": {
-      "type": "linkMultiple",
-      "noLoad": true
     }
   },
   "links": {
@@ -278,11 +274,6 @@
     "connection": {
       "type": "belongsTo",
       "entity": "Connection"
-    },
-    "webhooks": {
-      "type": "hasMany",
-      "foreign": "action",
-      "entity": "Webhook"
     }
   },
   "collection": {

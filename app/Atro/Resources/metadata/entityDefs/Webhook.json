@@ -5,6 +5,13 @@
       "required": true,
       "trim": true
     },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true,
+      "customizable": false
+    },
     "description": {
       "type": "text"
     },
@@ -59,7 +66,6 @@
     },
     "action": {
       "type": "belongsTo",
-      "foreign": "webhooks",
       "entity": "Action"
     }
   },

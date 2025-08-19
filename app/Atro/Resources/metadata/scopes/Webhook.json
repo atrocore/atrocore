@@ -2,13 +2,10 @@
   "entity": true,
   "layouts": false,
   "tab": true,
-  "acl": true,
+  "acl": false,
   "customizable": false,
-  "type": "Base",
+  "type": "ReferenceData",
   "object": true,
   "hasActive": true,
-  "streamDisabled": true,
-  "hasOwner": true,
-  "hasAssignedUser": true,
-  "hasTeam": true
+  "streamDisabled": true
 }

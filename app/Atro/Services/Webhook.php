@@ -11,10 +11,10 @@
 
 namespace Atro\Services;
 
-use Atro\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity;
 
-class Webhook extends Base
+class Webhook extends ReferenceData
 {
     public function prepareEntityForOutput(Entity $entity)
     {
