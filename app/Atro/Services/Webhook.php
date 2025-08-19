@@ -20,6 +20,6 @@ class Webhook extends ReferenceData
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('url', $this->getConfig()->getSiteUrl() . '?entryPoint=webhook&id=' . $entity->get('id'));
+        $entity->set('url', $this->getConfig()->getSiteUrl() . '?entryPoint=webhook&code=' . $entity->get('code'));
     }
 }

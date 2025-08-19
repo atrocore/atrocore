@@ -21,13 +21,13 @@ class Webhook extends AbstractEntryPoint
 
     public function run()
     {
-        $id = $_GET['id'] ?? null;
-        if (empty($id)) {
+        $code = $_GET['code'] ?? null;
+        if (empty($code)) {
             $this->show404();
         }
 
         /** @var Entity $webhook */
-        $webhook = $this->getEntityManager()->getEntity('Webhook', $id);
+        $webhook = $this->getEntityManager()->getRepository('Webhook')->getEntityByCode($code);
         if (!$webhook) {
             $this->show404();
         }
