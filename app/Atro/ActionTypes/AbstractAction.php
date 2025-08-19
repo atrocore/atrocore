@@ -156,9 +156,4 @@ abstract class AbstractAction implements TypeInterface
     {
         return $this->container->get('metadata');
     }
-
-    public function getActionById(string $id): Entity
-    {
-        return $this->getEntityManager()->getEntity('Action', $id);
-    }
 }
