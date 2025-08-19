@@ -30,18 +30,6 @@ class SendEmail extends AbstractAction
         return $this->getEmailData($action, $entity);
     }
 
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getActionById($workflowData['id']);
-
-        $input = new \stdClass();
-        $input->triggeredEntity = $event->getArgument('entity');
-        $input->triggeredEntityType = $event->getArgument('entity')->getEntityType();
-        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
-
-        return $this->getActionManager()->executeNow($action, $input);
-    }
-
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         $entity = $this->getSourceEntity($action, $input);
