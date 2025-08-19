@@ -180,6 +180,11 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                     });
 
                                     this.listenToOnce(view, 'after:save', (model) => {
+                                        this.getLanguage().clearCache();
+                                        setTimeout(() => {
+                                            Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
+                                        }, 2000);
+
                                         if (callback) {
                                             const user = this.getUser(),
                                                 locales = this.getConfig().get('locales') || {};
