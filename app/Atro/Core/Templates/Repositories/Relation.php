@@ -421,9 +421,6 @@ class Relation extends Base
             return false;
         }
 
-        $GLOBALS['log']->alert('Links: ' . $hierarchicalEntityLink);
-        $GLOBALS['log']->alert('UnIneritedRelationLinks: ' . json_encode($this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritedRelations()));
-
         if (in_array($hierarchicalEntityLink, $this->getEntityManager()->getRepository($hierarchicalEntity)->getUnInheritedRelations())) {
             return false;
         }
