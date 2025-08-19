@@ -44,6 +44,14 @@ class Webhook extends AbstractEntryPoint
             $this->show404();
         }
 
+        if (!empty($webhook->get('hash'))) {
+            $hash = trim($this->container->get('twig')->renderTemplate($webhook->get('hash'), []));
+            $queryHash = $_GET['hash'] ?? null;
+            if (!empty($hash) && $hash !== $queryHash) {
+                $this->show404();
+            }
+        }
+
         /** @var Action $webhook */
         $action = $webhook->get('action');
         if (!empty($action) && !empty($handler = $this->getActionType($action->get('type')))) {
