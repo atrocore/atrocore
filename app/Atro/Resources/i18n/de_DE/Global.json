@@ -605,6 +605,7 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "hash": "Hash",
     "ipWhiteList": "IP-Weißliste",
     "httpMethod": "HTTP-Methode",
     "url": "URL",

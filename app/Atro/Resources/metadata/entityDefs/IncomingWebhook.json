@@ -53,6 +53,10 @@
     },
     "ipWhiteList": {
       "type": "array"
+    },
+    "hash": {
+      "type": "text",
+      "view": "views/fields/script"
     }
   },
   "links": {

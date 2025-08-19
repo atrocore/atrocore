@@ -612,6 +612,7 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "hash": "Hash",
     "ipWhiteList": "IP white list",
     "httpMethod": "HTTP Method",
     "url": "URL",
