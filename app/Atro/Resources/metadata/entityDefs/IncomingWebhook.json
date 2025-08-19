@@ -56,7 +56,8 @@
     },
     "hash": {
       "type": "text",
-      "view": "views/fields/script"
+      "view": "views/fields/script",
+      "default": "{# {{ ('your-string-here' ~ 'now'|date('Y-m-d_H-i'))|md5 }} #}"
     }
   },
   "links": {
