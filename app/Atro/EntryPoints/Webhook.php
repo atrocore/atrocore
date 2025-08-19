@@ -11,7 +11,7 @@
 
 namespace Atro\EntryPoints;
 
-use Atro\ActionTypes\TypeInterface;
+use Atro\Core\ActionManager;
 use Atro\Entities\Action;
 use Espo\ORM\Entity;
 
@@ -54,7 +54,7 @@ class Webhook extends AbstractEntryPoint
 
         /** @var Action $webhook */
         $action = $webhook->get('action');
-        if (!empty($action) && !empty($handler = $this->getActionType($action->get('type')))) {
+        if (!empty($action)) {
             $input = new \stdClass();
             $input->webhookRequest['headers'] = getallheaders();
             $input->webhookRequest['body'] = file_get_contents('php://input');
@@ -65,23 +65,17 @@ class Webhook extends AbstractEntryPoint
                 }
             }
 
-            $handler->executeNow($action, $input);
+            try {
+                $this->getActionManager()->executeNow($action, $input);
+            } catch (\Throwable $e) {
+                $this->show404();
+            }
         }
 
         http_response_code(200);
         header('Content-Type: text/plain');
         echo 'OK';
         exit;
-    }
-
-    protected function getActionType(string $type): ?TypeInterface
-    {
-        $className = $this->getMetadata()->get(['action', 'types', $type]);
-        if (empty($className)) {
-            return null;
-        }
-
-        return $this->container->get($className);
     }
 
     protected function show404(): void
@@ -119,4 +113,8 @@ class Webhook extends AbstractEntryPoint
         return 'UNKNOWN';
     }
 
+    protected function getActionManager(): ActionManager
+    {
+        return $this->container->get(ActionManager::class);
+    }
 }
