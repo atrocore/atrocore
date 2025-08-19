@@ -61,7 +61,7 @@
     }
 
     function initBoolFilter() {
-        boolFilterList = [];
+        boolFilterList =   [];
         (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
             if (typeof item === 'string') return true;
             item = item || {};
@@ -89,6 +89,10 @@
                 boolFilterList.push(item.name);
             }
         });
+
+        if(Array.isArray(searchManager.additionalBoolFilterList)) {
+            boolFilterList = boolFilterList.concat(searchManager.additionalBoolFilterList)
+        }
 
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
 

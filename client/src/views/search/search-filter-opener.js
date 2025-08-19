@@ -19,7 +19,7 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
             }
         },
 
-        open(foreignScope, initialWhere = [], callback) {
+        open(foreignScope, initialWhere = [], callback, additionalBoolFilterList = [], boolFilterData = {}) {
             if (!Array.isArray(initialWhere)) {
                 initialWhere = [];
             }
@@ -129,7 +129,9 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                disabledUnsetSearch: initialWhere.length > 0
+                disabledUnsetSearch: initialWhere.length > 0,
+                additionalBoolFilterList: additionalBoolFilterList,
+                boolFilterData: boolFilterData,
             }, (dialog) => {
                 dialog.render();
                 this.notify(false);
