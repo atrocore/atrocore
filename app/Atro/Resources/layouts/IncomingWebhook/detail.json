@@ -21,9 +21,9 @@
       ],
       [
         {
-          "name": "description"
-        },
-        false
+          "name": "description",
+          "fullWidth": true
+        }
       ],
       [
         {
@@ -32,13 +32,23 @@
         {
           "name": "url"
         }
+      ]
+    ]
+  },
+  {
+    "label": "Security",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "ipWhiteList",
+          "fullWidth": true
+        }
       ],
       [
         {
-          "name": "ipWhiteList"
-        },
-        {
-          "name": "hash"
+          "name": "hash",
+          "fullWidth": true
         }
       ]
     ]
