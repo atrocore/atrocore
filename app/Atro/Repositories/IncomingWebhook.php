@@ -17,7 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Espo\ORM\Entity;
 
-class Webhook extends ReferenceData
+class IncomingWebhook extends ReferenceData
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -39,7 +39,7 @@ class Webhook extends ReferenceData
     /**
      * Allows letters (a-z, A-Z), digits (0-9), underscores (_), and hyphens (-)
      *
-     * @param string $input
+     * @param string $code
      * @return bool
      */
     protected function isValidCode(string $code): bool

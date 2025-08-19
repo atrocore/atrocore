@@ -14,7 +14,7 @@ namespace Atro\Services;
 use Atro\Core\Templates\Services\ReferenceData;
 use Espo\ORM\Entity;
 
-class Webhook extends ReferenceData
+class IncomingWebhook extends ReferenceData
 {
     public function prepareEntityForOutput(Entity $entity)
     {

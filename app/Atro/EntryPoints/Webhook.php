@@ -27,7 +27,7 @@ class Webhook extends AbstractEntryPoint
         }
 
         /** @var Entity $webhook */
-        $webhook = $this->getEntityManager()->getRepository('Webhook')->getEntityByCode($code);
+        $webhook = $this->getEntityManager()->getRepository('IncomingWebhook')->getEntityByCode($code);
         if (!$webhook) {
             $this->show404();
         }

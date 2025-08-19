@@ -1,6 +1,6 @@
 {
   "scopeNames": {
-    "Webhook": "Webhook",
+    "IncomingWebhook": "Incoming Webhook",
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribute Panel",
     "Classification": "Classification",
@@ -81,7 +81,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
-    "Webhook": "Webhooks",
+    "IncomingWebhook": "Incoming Webhooks",
     "RoleScopeAttribute": "Attributes",
     "RoleScopeAttributePanel": "Attribute Panels",
     "Classification": "Classifications",
@@ -615,8 +615,6 @@
     "ipWhiteList": "IP white list",
     "httpMethod": "HTTP Method",
     "url": "URL",
-    "webhook": "Webhook",
-    "webhooks": "Webhooks",
     "classification": "Classification",
     "classifications": "Classifications",
     "status": "Status",
