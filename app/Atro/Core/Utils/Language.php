@@ -272,12 +272,7 @@ class Language
 
     public function clearCache(): void
     {
-        foreach ($this->getMetadata()->get('multilang.languageList', []) as $language) {
-            $cacheFile = "data/cache/{$language}.json";
-            if (file_exists($cacheFile)) {
-                @unlink($cacheFile);
-            }
-        }
+        $this->getDataManager()->clearCache(true);
     }
 
     protected function init(): void
