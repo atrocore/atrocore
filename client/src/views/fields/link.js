@@ -1109,6 +1109,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getForeignScope: function () {
+            const scope = this.model.urlRoot;
             return this.defs.params.foreignScope
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
