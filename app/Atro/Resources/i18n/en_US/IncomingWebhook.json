@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "invalidIP": "Invalid IP address: %s",
+    "invalidCode": "Validation failed: code must contain only letters, numbers, underscores, or hyphens."
+  }
+}

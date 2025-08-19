@@ -73,7 +73,8 @@
     "execute": "Execute",
     "status": "Status",
     "apiRequest": "API request",
-    "style": "Styles"
+    "style": "Styles",
+    "incomingWebhook": "Incoming Webhooks"
   },
   "layouts": {
     "relationships": "Relations",
@@ -165,6 +166,7 @@
     "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
   },
   "descriptions": {
+    "incomingWebhook": "The Incoming Webhook entity allows customers to configure external HTTP requests that trigger predefined Actions within the system. Each webhook can be customized with security features such as hash-based verification and IP whitelisting to ensure trusted and controlled execution.",
     "Storage": "Manage physical locations for all uploaded files (Local File System, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Manage file types for additional file validation (e.g. images, documents, videos, etc.) and classification.",
     "folders": "Maintain virtual folders for saving uploaded files.",

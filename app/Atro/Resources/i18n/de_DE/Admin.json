@@ -67,7 +67,8 @@
     "execute": "Ausführen",
     "status": "Status",
     "apiRequest": "API-Anfrag",
-    "style": "Stile"
+    "style": "Stile",
+    "incomingWebhook": "Eingehende Webhooks"
   },
   "logicalOperators": {
     "and": "UND",
@@ -158,6 +159,7 @@
     "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
   },
   "descriptions": {
+    "incomingWebhook": "Die Incoming Webhook-Entität ermöglicht es Kunden, externe HTTP-Anfragen zu konfigurieren, die vordefinierte Aktionen innerhalb des Systems auslösen. Jeder Webhook kann mit Sicherheitsfunktionen wie hashbasierter Überprüfung und IP-Whitelisting angepasst werden, um eine vertrauenswürdige und kontrollierte Ausführung zu gewährleisten.",
     "Storage": "Verwalten Sie physische Speicherorte für alle hochgeladenen Dateien (Lokales Dateisystem, Microsoft Sharepoint, Amazon S3 usw.)",
     "listOfSupportedFilesTypes": "Verwalten Sie Dateitypen für zusätzliche Dateivalidierung (z.B. Bilder, Dokumente, Videos, etc.) und Klassifizierung.",
     "folders": "Verwalten Sie virtuelle Ordner zum Speichern hochgeladener Dateien.",

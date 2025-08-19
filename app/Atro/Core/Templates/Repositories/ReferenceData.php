@@ -577,4 +577,9 @@ class ReferenceData extends Repository implements Injectable
     {
         return $this->getLanguage()->translate($label, $category, $scope);
     }
+
+    protected function translateException(string $key): string
+    {
+        return $this->translate($key, 'exceptions', $this->entityName);
+    }
 }
