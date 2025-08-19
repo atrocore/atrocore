@@ -470,7 +470,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 const plugins = [];
 
-                if (Selectize) {
+                if (Selectize && !this.prohibitedEmptyValue && !this.isRequired()) {
                     const clearTitle = this.translate('Clear');
                     Selectize.define('clear_button', function (options) {
                         const self = this;
