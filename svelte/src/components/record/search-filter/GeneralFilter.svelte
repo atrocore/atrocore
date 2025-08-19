@@ -61,7 +61,7 @@
     }
 
     function initBoolFilter() {
-        boolFilterList =   [];
+        boolFilterList = [];
         (Metadata.get(['clientDefs', scope, 'boolFilterList']) || []).filter(function (item) {
             if (typeof item === 'string') return true;
             item = item || {};
