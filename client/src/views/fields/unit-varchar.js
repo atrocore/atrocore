@@ -182,7 +182,6 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
 
         addMeasureDataOnFetch(data) {
             let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-
             data[this.unitFieldName] = ($unit && $unit.val())  ? $unit.val() : null;
             data[this.originalName] = data[this.name]
             delete data[this.name];
