@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "invalidIP": "Ungültige IP-Adresse: %s",
+    "invalidCode": "Validierung fehlgeschlagen: Der Code darf nur Buchstaben, Zahlen, Unterstriche oder Bindestriche enthalten."
+  }
+}

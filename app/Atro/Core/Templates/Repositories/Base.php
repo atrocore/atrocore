@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
@@ -207,10 +208,16 @@ class Base extends RDB
         parent::init();
 
         $this->addDependency(AttributeFieldConverter::class);
+        $this->addDependency('language');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
         return $this->getInjection(AttributeFieldConverter::class);
+    }
+
+    protected function translateException(string $key): string
+    {
+        return $this->getInjection('language')->translate($key, 'exceptions', $this->entityName);
     }
 }

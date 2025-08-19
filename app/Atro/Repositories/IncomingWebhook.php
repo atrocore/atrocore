@@ -24,13 +24,13 @@ class IncomingWebhook extends ReferenceData
         if (!empty($entity->get('ipWhiteList'))) {
             foreach ($entity->get('ipWhiteList') ?? [] as $ip) {
                 if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-                    throw new BadRequest("Invalid IP address: {$ip}");
+                    throw new BadRequest(sprintf($this->translateException('invalidIP'), $ip));
                 }
             }
         }
 
         if (!$this->isValidCode($entity->get('code'))) {
-            throw new BadRequest('Validation failed: code must contain only letters, numbers, underscores, or hyphens.');
+            throw new BadRequest($this->translateException('invalidCode'));
         }
 
         parent::beforeSave($entity, $options);
