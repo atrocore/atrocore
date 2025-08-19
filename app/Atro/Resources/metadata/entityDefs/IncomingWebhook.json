@@ -39,6 +39,7 @@
     },
     "url": {
       "type": "url",
+      "view": "views/incoming-webhook/fields/url",
       "readOnly": true,
       "notStorable": true
     },
