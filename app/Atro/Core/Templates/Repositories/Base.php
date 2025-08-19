@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\AttributeFieldConverter;
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
