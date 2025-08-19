@@ -29,8 +29,6 @@ abstract class AbstractAction implements TypeInterface
 {
     protected Container $container;
 
-    protected array $repositoryOptions = [];
-
     public static function getTypeLabel(): ?string
     {
         return null;
@@ -49,23 +47,6 @@ abstract class AbstractAction implements TypeInterface
     public function __construct(Container $container)
     {
         $this->container = $container;
-    }
-
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
-        $action->set('sourceEntity', $event->getArgument('entity')->getEntityType());
-
-        $input = new \stdClass();
-        $input->executedViaWorkflow = true;
-        $input->triggeredEntity = $event->getArgument('entity');
-        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
-        $input->triggeredEntityType = $event->getArgument('entity')->getEntityType();
-        $input->entityId = $event->getArgument('entity')->get('id');
-        $input->actionUser = $this->container->get('user');
-        $this->repositoryOptions = $event->getArgument('options');
-
-        return $this->getActionManager()->executeNow($action, $input);
     }
 
     public function useMassActions(Entity $action, \stdClass $input): bool
