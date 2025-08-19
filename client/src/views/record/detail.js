@@ -1176,10 +1176,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.setupBeforeFinal();
 
-            this.listenToOnce(this.model, 'sync', () => {
+            this.onModelReady(()=> {
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
-            });
+            })
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
