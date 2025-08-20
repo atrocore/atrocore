@@ -56,6 +56,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
 
         selectedLanguage: null,
 
+        controlsDisabled: false,
+
         events: {
             'click [data-action="changeProfile"]': function (e) {
                 this.changeProfile(e);
@@ -173,6 +175,8 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
                     });
                 }
 
+                this.controlsDisabled = !!res.controlsDisabled;
+
                 this.notify(false);
                 this.loadHtmlPage(this.htmlContent);
                 if (afterLoad instanceof Function) {
@@ -196,7 +200,7 @@ Espo.define('views/preview-template/record/modals/preview', 'views/modal',
         },
 
         loadHtmlPage(htmlContent) {
-            if (!htmlContent) {
+            if (htmlContent === null) {
                 return;
             }
 
