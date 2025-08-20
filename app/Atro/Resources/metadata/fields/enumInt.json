@@ -1,21 +1,25 @@
 {
-   "params":[
-      {
-         "name":"options",
-         "type":"array"
-      },
-      {
-         "name":"default",
-         "type":"int"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "type":"int"
-   }
+  "params": [
+    {
+      "name": "options",
+      "type": "array"
+    },
+    {
+      "name": "default",
+      "type": "int"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "notCreatable": true,
+  "fieldDefs": {
+    "type": "int"
+  }
 }

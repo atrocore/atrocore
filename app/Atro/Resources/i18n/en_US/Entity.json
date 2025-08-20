@@ -37,7 +37,8 @@
     "singleClassification": "Single Classification only",
     "disableAttributeLinking": "Disable direct attribute linking",
     "hasAssociate": "Has Associates",
-    "textFilterFields": "Text Filter fields"
+    "textFilterFields": "Text Filter fields",
+    "nonDuplicatableFields": "Non-duplicated fields"
   },
   "options": {
     "type": {

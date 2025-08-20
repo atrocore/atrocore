@@ -100,7 +100,9 @@
         {
           "name": "duplicatableRelations"
         },
-        false
+        {
+          "name": "nonDuplicatableFields"
+        }
       ],
       [
         {

@@ -36,6 +36,10 @@
     {
       "name": "showUser",
       "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,

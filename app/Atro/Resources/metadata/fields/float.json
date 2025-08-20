@@ -1,60 +1,64 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "notNull",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name": "measure",
-         "type": "link",
-         "entity": "Measure"
-      },
-      {
-         "name":"default",
-         "type":"float"
-      },
-      {
-         "name": "defaultUnit",
-         "type": "varchar"
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      },
-      {
-         "name": "amountOfDigitsAfterComma",
-         "type": "int",
-         "min": 0
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "unique",
-         "type": "bool"
-      },
-      {
-         "name": "index",
-         "type": "bool"
-      }
-   ],
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "double",
-   "textFilter": true,
-   "fieldDefs":{
-      "notNull":false
-   },
-   "group": "numeric"
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "measure",
+      "type": "link",
+      "entity": "Measure"
+    },
+    {
+      "name": "default",
+      "type": "float"
+    },
+    {
+      "name": "defaultUnit",
+      "type": "varchar"
+    },
+    {
+      "name": "min",
+      "type": "float"
+    },
+    {
+      "name": "max",
+      "type": "float"
+    },
+    {
+      "name": "amountOfDigitsAfterComma",
+      "type": "int",
+      "min": 0
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "double",
+  "textFilter": true,
+  "fieldDefs": {
+    "notNull": false
+  },
+  "group": "numeric"
 }

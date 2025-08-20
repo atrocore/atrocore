@@ -57,7 +57,8 @@
     "auditableEnabled": "Реєструвати зміну як активність в записі",
     "auditableDisabled": "Не створювати активність в записі",
     "modifiedExtendedDisabled": "Не фіксувати як зміну",
-    "modifiedExtendedEnabled": "Фіксувати як зміну"
+    "modifiedExtendedEnabled": "Фіксувати як зміну",
+    "duplicateIgnore": "Несвоєчасний"
   },
   "tooltips": {
     "foreignCode": "Це ім'я коду використовується для поля, створеного у пов'язаній сутності для зворотного зв'язку.",

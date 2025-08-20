@@ -1,36 +1,40 @@
 {
-    "params": [
-        {
-            "name": "required",
-            "type": "bool",
-            "default": false
-        },
-        {
-            "name": "default",
-            "type": "varchar"
-        },
-        {
-            "name": "readOnly",
-            "type": "bool"
-        },
-        {
-            "name": "unique",
-            "type": "bool"
-        },
-        {
-            "name": "index",
-            "type": "bool"
-        },
-        {
-            "name": "prohibitedEmptyValue",
-            "type": "bool"
-        }
-    ],
-    "filter": true,
-    "auditable": true,
-    "fieldDefs": {
-        "type": "varchar"
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
     },
-    "view": "views/fields/color",
-    "group": "other"
+    {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    },
+    {
+      "name": "prohibitedEmptyValue",
+      "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "fieldDefs": {
+    "type": "varchar"
+  },
+  "view": "views/fields/color",
+  "group": "other"
 }

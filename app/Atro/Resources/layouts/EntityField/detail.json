@@ -54,7 +54,9 @@
         {
           "name": "trim"
         },
-        false
+        {
+          "name": "duplicateIgnore"
+        }
       ],
       [
         {
