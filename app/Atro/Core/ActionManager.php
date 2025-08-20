@@ -145,11 +145,6 @@ class ActionManager
         return $this->container->get('config');
     }
 
-    public function getActionById(string $id): Entity
-    {
-        return $this->getEntityManager()->getEntity('Action', $id);
-    }
-
     protected function getActionType(string $type): TypeInterface
     {
         $className = $this->getMetadata()->get(['action', 'types', $type]);
