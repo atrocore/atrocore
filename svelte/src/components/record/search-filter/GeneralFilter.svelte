@@ -90,6 +90,10 @@
             }
         });
 
+        if(Array.isArray(searchManager.additionalBoolFilterList)) {
+            boolFilterList = boolFilterList.concat(searchManager.additionalBoolFilterList)
+        }
+
         let hiddenBoolFilterList = Metadata.get(['clientDefs', scope, 'hiddenBoolFilterList']) || [];
 
         boolFilterList = boolFilterList.filter(function (item) {

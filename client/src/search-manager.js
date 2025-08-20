@@ -42,6 +42,7 @@ Espo.define('search-manager', [], function () {
         this.emptyOnReset = emptyOnReset;
         this.savedSearchList = [];
         this.isFilterSetValue = null;
+        this.additionalBoolFilterList = [];
 
         this.emptyData = {
             textFilter: '',
