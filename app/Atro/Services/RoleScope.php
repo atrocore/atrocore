@@ -19,7 +19,7 @@ use Espo\ORM\Entity;
 
 class RoleScope extends Base
 {
-    protected $mandatorySelectAttributeList = ['roleId'];
+    protected $mandatorySelectAttributeList = ['roleId', 'createAction', 'readAction', 'editAction', 'deleteAction', 'streamAction', 'createAttributeValueAction', 'deleteAttributeValueAction'];
 
     public function getSelectAttributeList($params)
     {
