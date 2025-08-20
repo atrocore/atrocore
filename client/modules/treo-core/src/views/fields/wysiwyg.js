@@ -122,11 +122,11 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         checkDataForDefaultTagsValue(data, field) {
             if (data[field] === '<p><br></p>' || data[field] === '<p></p>' || data[field] === '<br>') {
-                data[field] = '';
+                data[field] = null;
             }
 
             if (data[field + 'Plain'] === '<p><br></p>' || data[field + 'Plain'] === '<p></p>' || data[field + 'Plain'] === '<br>') {
-                data[field + 'Plain'] = ''
+                data[field + 'Plain'] = null;
             }
 
             return data;

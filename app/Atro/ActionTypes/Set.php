@@ -45,13 +45,17 @@ class Set extends AbstractAction
             return false;
         }
 
+        if (!empty($input->triggeredEntityType) && !empty($action->get('sourceEntity'))) {
+            $action->set('sourceEntity', $input->triggeredEntityType);
+        }
+
         if (property_exists($input, 'actionSetLinkerId')) {
             unset($input->actionSetLinkerId);
         }
 
         $input->actionSetLinkerId = $current->get('id');
 
-        $res =  $this->getActionManager()->executeNow($action, $input);
+        $res = $this->getActionManager()->executeNow($action, $input);
 
         if (empty($action->get('inBackground')) &&
             (!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&

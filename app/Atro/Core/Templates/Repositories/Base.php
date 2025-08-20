@@ -207,10 +207,16 @@ class Base extends RDB
         parent::init();
 
         $this->addDependency(AttributeFieldConverter::class);
+        $this->addDependency('language');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
         return $this->getInjection(AttributeFieldConverter::class);
+    }
+
+    protected function translateException(string $key): string
+    {
+        return $this->getInjection('language')->translate($key, 'exceptions', $this->entityName);
     }
 }

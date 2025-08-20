@@ -965,6 +965,8 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             model.trigger('after:inlineEditSave');
 
+            window.dispatchEvent(new Event('record:save'));
+
             this.notify('Saved', 'success');
             this.inlineEditClose(true);
         },
@@ -1056,14 +1058,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             const name = this.originalName || this.name;
             this.$el.parents('.middle').on(`click.anywhere-for-${name}`, e => {
                 if (this.mode === 'edit') {
+                    let selector = `.cell[data-name=${this.name}]`;
+                    if (this.originalName) {
+                        selector += `, .cell[data-name="${this.originalName}"]`;
+                    }
+
                     const $target = $(e.target);
-                    const $cell = $target.parents('.cell');
+                    const $cell = $target.parents(selector);
 
                     if (
-                        $cell.data('name') !== name
+                        $cell.size() === 0
                         && !$target.is('i')
                         && !$target.is('button')
                         && !$target.is('a')
+                        && !$target.is('select')
                     ) {
                         this.inlineEditSave();
                     }

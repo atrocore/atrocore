@@ -1,0 +1,11 @@
+{
+  "entity": true,
+  "layouts": false,
+  "tab": true,
+  "acl": false,
+  "customizable": false,
+  "type": "ReferenceData",
+  "object": true,
+  "hasActive": true,
+  "streamDisabled": true
+}

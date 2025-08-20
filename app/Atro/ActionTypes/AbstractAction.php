@@ -57,6 +57,7 @@ abstract class AbstractAction implements TypeInterface
         $input = new \stdClass();
         $input->triggeredEntity = $event->getArgument('entity');
         $input->triggeredEntityId = $event->getArgument('entity')->get('id');
+        $input->triggeredEntityType = $event->getArgument('entity')->getEntityType();
         $input->entityId = $event->getArgument('entity')->get('id');
 
         return $this->getActionManager()->executeNow($action, $input);

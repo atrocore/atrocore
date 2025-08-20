@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Storage} from "../../utils/Storage";
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import {Language} from "../../utils/Language";
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
@@ -44,6 +44,7 @@
     }
 
     window.addEventListener('right-side-view:toggle-filter', toggleFilter);
+    window.addEventListener('record:save', refreshStream);
 
     let isPin = true;
     let streamView: Object;
@@ -84,8 +85,12 @@
                 streamView = view;
             });
         } else {
-            streamView?.refresh();
+            refreshStream();
         }
+    }
+
+    function refreshStream() {
+        streamView?.refresh();
     }
 
     function onSidebarResize(e: CustomEvent): void {
@@ -111,7 +116,7 @@
     }
 
     function storeData(key:string, name: string, value: any): void {
-        if(!useStorage) {
+        if (!useStorage) {
             return ;
         }
         Storage.set(key, name, value);
@@ -125,9 +130,9 @@
 
         let collapseState = getStoredData('right-side-view-collapse', scopeKey);
 
-        if(collapseState){
+        if (collapseState) {
             isCollapsed = collapseState === 'collapsed';
-        }else  if(window.innerWidth <= 768) {
+        } else if (window.innerWidth <= 768) {
             isCollapsed = true;
         }
 
@@ -172,6 +177,9 @@
         }
     });
 
+    onDestroy(() => {
+        window.removeEventListener('record:save', toggleFilter)
+    });
 </script>
 
 <BaseSidebar position="right" className="right-side-view" bind:isCollapsed={isCollapsed} bind:isPinned={isPin}

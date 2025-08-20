@@ -1,0 +1,56 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "action"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "httpMethod"
+        },
+        {
+          "name": "url"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Security",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "ipWhiteList",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "hash",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

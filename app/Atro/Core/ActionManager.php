@@ -14,6 +14,7 @@ namespace Atro\Core;
 use Atro\ActionTypes\TypeInterface;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
+use Atro\Core\Utils\Metadata;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
@@ -50,10 +51,12 @@ class ActionManager
         $actionType = $this->getActionType($action->get('type'));
 
         if (property_exists($input, 'where') && $actionType->useMassActions($action, $input)) {
-            $data = ['actionId'     => $action->get('id'),
-                     'sourceEntity' => $action->get('sourceEntity'),
-                     'where'        => $input->where
+            $data = [
+                'actionId'     => $action->get('id'),
+                'sourceEntity' => $action->get('sourceEntity'),
+                'where'        => $input->where
             ];
+
             if (property_exists($input, 'actionSetLinkerId')) {
                 $data['actionSetLinkerId'] = $input->actionSetLinkerId;
             }
@@ -72,6 +75,7 @@ class ActionManager
                 $input->entityId = $id;
                 $this->executeNow($action, $input);
             });
+
             return true;
         }
 
@@ -83,8 +87,10 @@ class ActionManager
         $currentUserId = $this->container->get('user')->get('id');
         $userChanged = false;
 
-        if (empty($this->getMemoryStorage()->get('importJobId')) &&
-            !empty($userId = $this->getExecuteAsUserId($action, $input))) {
+        if (
+            empty($this->getMemoryStorage()->get('importJobId'))
+            && !empty($userId = $this->getExecuteAsUserId($action, $input))
+        ) {
             $userChanged = $this->auth($userId);
         }
 
@@ -94,6 +100,7 @@ class ActionManager
             // auth as current user again
             $this->auth($currentUserId);
         }
+
         return $res;
     }
 
@@ -123,7 +130,7 @@ class ActionManager
         return $this->container->get('memoryStorage');
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
     }
@@ -138,7 +145,6 @@ class ActionManager
         return $this->container->get('config');
     }
 
-
     public function getActionById(string $id): Entity
     {
         return $this->getEntityManager()->getEntity('Action', $id);
@@ -150,6 +156,7 @@ class ActionManager
         if (empty($className)) {
             throw new Error("No such action type '$type'.");
         }
+
         return $this->container->get($className);
     }
 }

@@ -59,7 +59,7 @@ class Measure extends Base
 
         $result = [];
         foreach ($units as $unit) {
-            $result[$unit->get('name')] = round($value / $units[$unitId]->get('multiplier') * $unit->get('multiplier'), 4);
+            $result[$unit->get('name')] = round($value * $units[$unitId]->get('multiplier') / $unit->get('multiplier'), 4);
         }
 
         return $result;

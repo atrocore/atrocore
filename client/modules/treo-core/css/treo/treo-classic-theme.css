@@ -7487,6 +7487,15 @@ button.close {
     right: 0
 }
 
+.selectize-input > .clear-button {
+    color: #000;
+    margin: 0 25px 0 auto;
+}
+
+.selectize-input > .clear-button > i {
+    font-size: 16px;
+}
+
 .selectize-dropdown {
     position: absolute;
     z-index: 10;
