@@ -33,12 +33,13 @@
 Espo.define('views/fields/entity-relationships', ['views/fields/multi-enum', 'views/fields/entity-field'], (Dep, Field) => {
 
     return Dep.extend({
+        entityField: 'entityType',
 
         setup() {
             this.prepareEnumOptions();
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:entityType', () => {
+            this.listenTo(this.model, `change:${this.entityField}`, () => {
                 this.model.set(this.name, null);
                 this.prepareEnumOptions();
                 this.reRender();
