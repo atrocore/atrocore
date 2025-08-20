@@ -23,7 +23,7 @@ class IncomingWebhook extends ReferenceData
     {
         if (!empty($entity->get('ipWhiteList'))) {
             foreach ($entity->get('ipWhiteList') ?? [] as $ip) {
-                if (!empty($ip) && filter_var($ip, FILTER_VALIDATE_IP) === false) {
+                if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
                     throw new BadRequest(sprintf($this->translateException('invalidIP'), $ip));
                 }
             }
