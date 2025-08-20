@@ -32,6 +32,8 @@ body {
     --error: #f2dede;
     --highlighting-color-for-required: #f0f8ff;
     --highlighting-color-for-data-quality: #fff8B8;
+    --field-hover-color: #f8f8f8;
+    --field-inline-edit-color: #f2f2f2;
 }
 
 * {
@@ -3043,7 +3045,6 @@ output {
 }
 
 .form-control:focus {
-    border-color: #66afe9;
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3078,7 +3079,8 @@ output {
 }
 
 textarea.form-control {
-    height: auto
+    height: auto;
+    resize: vertical;
 }
 
 input[type="search"] {
@@ -7370,13 +7372,12 @@ button.close {
 }
 
 .selectize-input, .selectize-control.single .selectize-input.input-active {
-    background: #fff;
     cursor: text;
 }
 
 .selectize-input {
     border: 1px solid #eeeeee;
-    padding: 6px 10px;
+    padding: 3px 10px;
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -7391,10 +7392,8 @@ button.close {
     flex-wrap: wrap;
     align-items: center;
     line-height: 16px;
-}
-
-.selectize-control.multi .selectize-input.has-items {
-    padding: 5px 10px 2px
+    min-height: 30px;
+    height: 100%;
 }
 
 .filter-cell .selectize-control.multi .selectize-input.has-items {
@@ -7435,6 +7434,10 @@ button.close {
     border: 1px solid transparent;
     display: inline-flex;
     align-items: center;
+}
+
+.selectize-control.multi .selectize-input > div {
+    border-color: #dedede;
 }
 
 .selectize-control.multi .selectize-input > div:hover {
@@ -7500,8 +7503,6 @@ button.close {
     background: #fff;
     margin: -1px 0 0 0;
     border-top: 0 none;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -7600,8 +7601,8 @@ button.close {
     padding: 0;
     margin: 2px 0 0 0;
     z-index: 1000;
-    background: #fff;
-    border: 1px solid #ccc;
+    background: #fff !important;
+    border: 1px solid #ccc !important;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
@@ -7638,11 +7639,6 @@ button.close {
     padding: 6px 10px
 }
 
-.selectize-input {
-    min-height: 33px;
-    height: 100%;
-}
-
 .selectize-input.dropdown-active {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
@@ -7654,7 +7650,6 @@ button.close {
 }
 
 .selectize-input.focus {
-    border-color: #66afe9;
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6)
@@ -7673,12 +7668,12 @@ button.close {
 }
 
 .selectize-control.multi .selectize-input.has-items {
-    padding-left: 7px;
-    padding-right: 14px;
-    border-radius: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 1px 2px;
 }
 
 .form-control.selectize-control {
@@ -10394,7 +10389,6 @@ ul.dropdown-menu > li.checkbox {
     padding: 3px 0 3px 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none
@@ -10444,13 +10438,93 @@ ul.dropdown-menu > li.checkbox:last-child {
 .cell > .field {
     overflow-wrap: break-word;
     word-wrap: break-word;
-    line-height: 22px;
+    line-height: 16px;
+    transition: background-color .2s;
+    min-height: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: center;
+}
+
+main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
+.cell > .field > *:not([type=checkbox]):not([type=radio]):not(a) {
+    width: 100%;
+}
+
+.cell > .field:hover {
+    background-color: var(--field-hover-color);
+}
+
+.cell > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+.cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+.cell > .field > input:not([type=radio]):not([type=checkbox]) {
+    background-color: var(--field-inline-edit-color);
+    margin-top: -1px;
+    border-top: 1px solid transparent;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+}
+
+.cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])) {
+    margin-top: 0;
+}
+
+.cell > .field > .selectize-control > .selectize-input.focus,
+.cell > .field .input-group:has(.selectize-input.focus),
+.cell > .field .input-group:has(> input:focus),
+.cell > .field > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
+.cell > .field > :where(.range-container, .unit-group) > .unit-select select:focus,
+.cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
+.cell > .field > .array-control-container .selectize-input.focus,
+.cell > .field > textarea:focus {
+    border-bottom-color: #06c;
 }
 
 .cell > .field > a,
 .cell > .field > span.pre-label,
 .cell > .field > span.complex-text p {
     white-space: pre-wrap;
+    vertical-align: middle;
+}
+
+.cell > .field > input[type=checkbox],
+.cell > .field > input[type=radio] {
+    margin-top: 0;
+}
+
+.cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
+.cell[data-mode=edit] > .field > input[type=radio]:not([disabled]) {
+    margin: 0 10px;
+    line-height: inherit;
+}
+
+.cell > .field .form-control,
+.cell > .field .selectize-input {
+    border-left: 0;
+    border-right: 0;
+    margin-bottom: 0;
+}
+
+.cell > .field .input-group > .input-group-btn {
+    background-color: var(--field-inline-edit-color);
+    gap: 5px;
+    margin: 0 0 0 10px;
+}
+
+.cell > .field .input-group > .input-group-btn button {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+.cell > .field > .input-group > .input-group-btn button:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.cell > .field > .input-group > .input-group-btn button:active {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .list table td a:not(.btn) > img {
@@ -10474,10 +10548,6 @@ ul.dropdown-menu > li.checkbox:last-child {
 
 .field .input-group .form-control, .field .input-group .btn {
     margin-bottom: 0
-}
-
-.field .input-group {
-    margin-bottom: 3px
 }
 
 .field .input-group .btn {
@@ -11564,7 +11634,7 @@ h4.panel-title span.color-icon {
 }
 
 .record .middle > .panel:first-child > .panel-heading {
-    border-top-width: 0
+    border-top-width: 1px;
 }
 
 .record .middle {
@@ -11573,7 +11643,7 @@ h4.panel-title span.color-icon {
 
 .record .middle > .panel {
     border-top-width: 0;
-    margin-bottom: 0
+    margin-bottom: 10px;
 }
 
 .record .middle > .panel > .panel-heading .btn-group .btn {
@@ -11618,7 +11688,6 @@ h4.panel-title span.color-icon {
 
 .label.colored-enum > i,
 .label.colored-multi-enum > i {
-    margin-inline-start: -5px;
     margin-inline-end: 5px;
     width: 14px;
     height: 14px;
@@ -11627,19 +11696,24 @@ h4.panel-title span.color-icon {
     background-color: transparent;
 }
 
-.field > .label.colored-enum,
-.field > .label.colored-multi-enum {
+.field .label.colored-enum,
+.field .label.colored-multi-enum {
     padding-top: 0;
     padding-bottom: 0;
 }
 
-span.was > .label.colored-enum > *:first-child,
-span.became > .label.colored-enum > *:first-child,
-span.was > .label.colored-multi-enum > *:first-child,
-span.became > .label.colored-multi-enum > *:first-child,
-.field > .label.colored-enum > *:first-child,
-.field > .label.colored-multi-enum > *:first-child {
+span.was .label.colored-enum:first-child,
+span.became .label.colored-enum:first-child,
+span.was > .value-container > .label.colored-multi-enum,
+span.became > .value-container > .label.colored-multi-enum,
+.field .label.colored-enum:first-child,
+.field > .value-container > .label.colored-multi-enum {
     margin-inline-start: -5px;
+}
+
+span.was > .value-container,
+span.became > .value-container {
+    display: inline-block;
 }
 
 .label.colored-enum > *:last-child,
@@ -13062,8 +13136,14 @@ input#sn-checkbox-open-in-new-window {
     margin-top: 4px;
 }
 
-#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field {
-    padding-bottom: 6px;
+#main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field,
+#main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--secondary-border-color);
+}
+
+#main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field {
+    padding: 0 10px 2px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
 
@@ -13151,7 +13231,6 @@ input#sn-checkbox-open-in-new-window {
 .panel-default > .panel-heading {
     padding: 5px 20px 6px 20px;
     color: rgba(0, 0, 0, 0.87);
-    background-color: #ececec;
     border-top: 1px solid var(--primary-border-color);
     border-bottom: 1px solid var(--primary-border-color);
 }
@@ -13161,7 +13240,10 @@ input#sn-checkbox-open-in-new-window {
 .bottom > .panel-default > .panel-heading,
 .composer .panel-default > .panel-heading,
 .modal-body > .panel-default > .panel-heading {
-    height: 34px;
+    height: 40px;
+    border-top-width: 2px;
+    border-bottom: 0;
+    margin-bottom: 5px;
 }
 
 .composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
@@ -13174,10 +13256,14 @@ input#sn-checkbox-open-in-new-window {
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total {
     text-align: right;
-    background-color: transparent;
-    border-right: 1px solid #dcdcdc;
     padding-right: 12px;
     padding-left: 12px;
+}
+
+.panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total > span {
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    padding: 3px 6px;
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total:hover {
@@ -13585,7 +13671,6 @@ ul.dropdown-menu > li.checkbox {
 
 .selectize-input.focus {
     box-shadow: none;
-    border-color: #66afe9 !important;
 }
 
 .scroll-top {
@@ -15642,7 +15727,7 @@ span.became .file-link {
 .field .unit-group.input-group .unit-select {
     display: inline-block;
     width: 20%;
-    margin-left: -1px;
+    margin-left: 10px;
 }
 
 .lead-container > .edit > .row > .col-md-8 {
@@ -15774,6 +15859,10 @@ select {
     display: inline-flex;
     flex-wrap: nowrap;
     align-items: center;
+}
+
+.cell:not(.hidden-cell) .inline-actions {
+    gap: 8px;
 }
 
 .cell .status-icons > *,
@@ -18102,4 +18191,20 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .user-tooltip-inner > table tr td:first-child {
     border-left: 0;
+}
+
+.range-container, .datetime-container {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.datetime-container > .input-group {
+    flex: 1;
+    min-width: 0;
+}
+
+.range-container .unit-select {
+    flex-basis: 30%;
+    min-width: 150px;
 }
