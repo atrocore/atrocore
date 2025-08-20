@@ -93,10 +93,6 @@ class ConsoleManager
 
     public function getCommands(): array
     {
-        if (!$this->getConfig()->get('isInstalled')) {
-            return [];
-        }
-
         $commands = [
             "regenerate lists"                  => Console\RegenerateExtensibleEnums::class,
             "list"                              => Console\ListCommand::class,
@@ -122,8 +118,10 @@ class ConsoleManager
             "create condition type <className>" => Console\CreateConditionType::class
         ];
 
-        foreach ($this->getModuleManager()->getModules() as $module) {
-            $commands = array_merge($commands, $module->getConsoleCommands());
+        if ($this->getConfig()->get('isInstalled')) {
+            foreach ($this->getModuleManager()->getModules() as $module) {
+                $commands = array_merge($commands, $module->getConsoleCommands());
+            }
         }
 
         return $commands;
