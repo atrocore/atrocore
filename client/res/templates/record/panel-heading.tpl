@@ -6,7 +6,7 @@
     {{/if}}
     {{#if actionList}}
     <button type="button" class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm dropdown-toggle" data-toggle="dropdown">
-        <i class="ph ph-caret-down"></i>
+        <i class="ph ph-list"></i>
     </button>
     <ul class="dropdown-menu">
         {{#each actionList}}
