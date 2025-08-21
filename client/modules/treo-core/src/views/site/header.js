@@ -43,7 +43,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                     }
 
                     if (response.isNeedToRebuildDatabase && !this.rebuilding) {
-                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'info', 1000 * 60, true);
+                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'danger', 1000 * 60, true);
                     }
                 });
             }, 1000);

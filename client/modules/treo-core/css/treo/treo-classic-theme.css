@@ -12286,6 +12286,12 @@ pre > code {
     width: 200px
 }
 
+.table-admin-panel i.warning-icon {
+    color: red;
+    margin-inline-start: 3px;
+    font-size: 16px;
+}
+
 .admin-tables-container > div {
     margin-bottom: 20px
 }

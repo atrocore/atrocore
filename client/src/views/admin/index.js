@@ -53,6 +53,20 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
                 var panelItem = Espo.Utils.cloneDeep(panels[name]);
                 panelItem.name = name;
                 panelItem.itemList = panelItem.itemList || [];
+
+                panelItem.itemList.forEach(item => {
+                    if (item.url === '#Admin/rebuildDb') {
+                        item.hasWarning = (localStorage.getItem('pd_isNeedToRebuildDatabase') || false) === 'true';
+                        item.warningText = this.getLanguage().translate('rebuildDbWarning', 'labels', 'Admin');
+                    } else if (item.url === '#Composer/list') {
+                        item.hasWarning = (localStorage.getItem('pd_isNeedToUpdate') || false) === 'true';
+                        item.warningText = this.getLanguage().translate('updatesAvailable', 'labels', 'Admin');
+                    } else if (item.url === '#Admin/clearCache' && Espo?.loader?.cacheTimestamp) {
+                        const date = moment.unix(Espo.loader.cacheTimestamp).tz(this.getDateTime().getTimeZone()).format(this.getDateTime().getDateTimeFormat());
+                        item.tooltip = this.getLanguage().translate('clearCacheTooltip', 'labels', 'Admin') + ' ' + date;
+                    }
+                }, this);
+
                 if (panelItem.items) {
                     panelItem.items.forEach(function (item) {
                         panelItem.itemList.push(item);
