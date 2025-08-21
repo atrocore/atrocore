@@ -43,7 +43,15 @@
       "options": [
         "executed",
         "failed"
+      ],
+      "optionColors": [
+        "8fff87",
+        "ff6262"
       ]
+    },
+    "statusMessage": {
+      "type": "text",
+      "readOnly": true
     },
     "payload": {
       "type": "jsonObject",

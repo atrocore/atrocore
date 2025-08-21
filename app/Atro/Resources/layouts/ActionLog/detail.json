@@ -15,7 +15,15 @@
         {
           "name": "type"
         },
-        false
+        {
+          "name": "status"
+        }
+      ],
+      [
+        {
+          "name": "statusMessage",
+          "fullWidth": true
+        }
       ],
       [
         {

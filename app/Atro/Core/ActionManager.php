@@ -99,19 +99,25 @@ class ActionManager
         $log = $this->getEntityManager()->getRepository('ActionLog')->get();
 
         if (!empty($input->executedViaWorkflow)) {
-            $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);
-            $log->set('name', $workflow->get('name'));
             $log->set('type', 'workflow');
-            $log->set('workflowId', $workflow->get('id'));
+            $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);
+            if (!empty($workflow)) {
+                $log->set('name', $workflow->get('name'));
+                $log->set('workflowId', $workflow->get('id'));
+            }
         } elseif (!empty($input->executedViaWebhook)) {
-            $log->set('name', $input->webhook->get('name'));
             $log->set('type', 'incomingWebhook');
-            $log->set('incomingWebhookId', $input->webhook->get('id'));
+            if (!empty($input->webhook)) {
+                $log->set('name', $input->webhook->get('name'));
+                $log->set('incomingWebhookId', $input->webhook->get('id'));
+            }
         } elseif (!empty($input->executedViaScheduledJob)) {
-            $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($input->job->get('scheduledJobId'));
-            $log->set('name', $scheduledJob->get('name'));
             $log->set('type', 'scheduledJob');
-            $log->set('scheduledJobId', $scheduledJob->get('id'));
+            $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($input->job->get('scheduledJobId'));
+            if (!empty($scheduledJob)) {
+                $log->set('name', $scheduledJob->get('name'));
+                $log->set('scheduledJobId', $scheduledJob->get('id'));
+            }
         } else {
             $log->set('name', $action->get('name'));
             $log->set('type', 'manual');
@@ -123,19 +129,20 @@ class ActionManager
         try {
             $res = $actionType->executeNow($action, $input);
             $log->set('status', 'executed');
-            $this->getEntityManager()->saveEntity($log);
         } catch (\Throwable $e) {
             $log->set('status', 'failed');
-            $this->getEntityManager()->saveEntity($log);
-            throw $e;
+            $log->set('statusMessage', $e->getMessage());
         }
 
         if ($userChanged) {
             // auth as current user again
             $this->auth($currentUserId);
+        }
 
-            $log->set('createdById', $currentUserId);
-            $this->getEntityManager()->saveEntity($log);
+        $this->getEntityManager()->saveEntity($log);
+
+        if (!empty($e)) {
+            throw $e;
         }
 
         return $res;
@@ -160,7 +167,7 @@ class ActionManager
     {
         if (is_object($data)) {
             // Replace the object with its fully qualified class name
-            return "Instance of \\".get_class($data);
+            return "object [".get_class($data)."]";
         }
 
         if (is_array($data)) {
