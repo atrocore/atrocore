@@ -30,7 +30,7 @@ class ActionHandler extends AbstractJob implements JobInterface
         // execute standalone action in job
         if (empty($data['ids'])) {
             $input = new \stdClass();
-            $input->executedViaCron = true;
+            $input->executedViaScheduledJob = true;
             $input->job = $job;
             $input->queueData = $data;
             $this->getActionManager()->executeNow($action, $input);
@@ -39,7 +39,7 @@ class ActionHandler extends AbstractJob implements JobInterface
 
         foreach ($data['ids'] as $id) {
             $input = new \stdClass();
-            $input->executedViaCron = true;
+            $input->executedViaScheduledJob = true;
             $input->job = $job;
             $input->entityId = $id;
             $input->queueData = $data;

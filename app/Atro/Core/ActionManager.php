@@ -99,17 +99,19 @@ class ActionManager
         $log = $this->getEntityManager()->getRepository('ActionLog')->get();
 
         if (!empty($input->executedViaWorkflow)) {
-            $type = 'workflow';
-//            $input->workflowData
-            // $input->workflowData['workflow_id']
-//            $input->event = $event;
+            $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);
+            $log->set('name', $workflow->get('name'));
+            $log->set('type', 'workflow');
+            $log->set('workflowId', $workflow->get('id'));
         } elseif (!empty($input->executedViaWebhook)) {
             $log->set('name', $input->webhook->get('name'));
             $log->set('type', 'incomingWebhook');
             $log->set('incomingWebhookId', $input->webhook->get('id'));
-        } elseif (!empty($input->executedViaCron)) {
-            $type = 'scheduledJob';
-//            $input->job
+        } elseif (!empty($input->executedViaScheduledJob)) {
+            $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($input->job->get('scheduledJobId'));
+            $log->set('name', $scheduledJob->get('name'));
+            $log->set('type', 'scheduledJob');
+            $log->set('scheduledJobId', $scheduledJob->get('id'));
         } else {
             $log->set('name', $action->get('name'));
             $log->set('type', 'manual');
