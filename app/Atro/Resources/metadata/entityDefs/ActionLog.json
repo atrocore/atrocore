@@ -38,6 +38,17 @@
     "payload": {
       "type": "jsonObject",
       "readOnly": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "readOnly": true,
+      "options": [
+        "manual",
+        "webhook",
+        "cron",
+        "workflow"
+      ]
     }
   },
   "links": {

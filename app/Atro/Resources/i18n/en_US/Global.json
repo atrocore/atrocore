@@ -614,6 +614,8 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "start": "Start",
+    "end": "End",
     "action": "Action",
     "payload": "Payload",
     "logs": "Logs",

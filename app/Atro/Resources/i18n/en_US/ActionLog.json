@@ -1,0 +1,10 @@
+{
+  "options": {
+    "type": {
+      "manual": "Manual",
+      "webhook": "Incoming Webhook",
+      "cron": "Scheduled Job",
+      "workflow": "Workflow"
+    }
+  }
+}

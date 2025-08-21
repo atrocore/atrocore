@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      [
+        {
+          "name": "action"
+        },
+        false
+      ],
+      [
+        {
+          "name": "start"
+        },
+        {
+          "name": "end"
+        }
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
