@@ -56,7 +56,7 @@
 
     onMount(() => {
         const dropdown = new Dropdown(dropdownButton, dropdownMenu, {
-            placement: 'bottom-end',
+            placement: 'bottom-start',
         });
 
         return () => {
@@ -69,29 +69,16 @@
 <div class="search-row" style="padding-bottom: 0;margin-left: 20px !important;">
     <div class="form-group">
         <div class="button-group input-group filter-group">
-            <button
-                    type="button"
-                    class="filter"
-                    title={Language.translate('Filter')}
-                    aria-expanded="false"
-                    class:active={selectedFilters.length>0}
-            >
-                {#if selectedFilters.length > 0}
-                    <i class="ph-fill ph-funnel"></i>
-                {:else}
-                    <i class="ph ph-funnel"></i>
-                {/if}
-            </button>
             <div bind:this={dropdownDiv} class="dropdown" class:has-content={selectedFilters.length>0}>
                 <button
                         bind:this={dropdownButton}
                         class="filter-switcher"
                         on:mousedown={event => event.preventDefault()}
                 >
+                    <i class="ph-sliders-horizontal" class:ph={selectedFilters.length === 0} class:ph-fill={selectedFilters.length > 0}></i>
                     {#if selectedFilters.length > 0}
                         <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
                     {/if}
-                    <i class="ph ph-caret-down chevron"></i>
                 </button>
                 <div class="dropdown-menu" bind:this={dropdownMenu}>
                     <h5 style="margin-top: 0">{Language.translate('fieldValueFilters', 'labels', 'Global')}</h5>
@@ -149,9 +136,10 @@
     }
 
     .has-content .filter-switcher {
-        padding-right: 0;
         display: inline-flex;
         align-items: center;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     .dropdown .dropdown-menu {
@@ -160,9 +148,10 @@
         padding: 10px;
     }
 
-    .has-content .chevron {
+    .has-content .filter-switcher > i {
         flex-shrink: 0;
         margin-right: 10px;
+        color: #06c;
     }
 
     .has-content span.filter-names {
@@ -176,17 +165,5 @@
 
     .dropdown ul {
         padding: 0;
-    }
-
-    .dropdown:last-child button:last-of-type {
-        border-radius: 0 3px 3px 0;
-    }
-
-    .filter-group .filter.active {
-        color: #06c;
-    }
-
-    button.filter {
-        margin-right: 0;
     }
 </style>

@@ -26,7 +26,7 @@ Espo.define('views/attribute/fields/attribute-group-layout-item', 'views/fields/
                 });
             }
 
-            this.$el.css('border-bottom', '1px solid #e7e7e7');
+            this.$el.css({'border-bottom': '1px solid #e7e7e7', 'min-height': 'auto', 'padding': '0 0 5px'});
         },
 
     })
