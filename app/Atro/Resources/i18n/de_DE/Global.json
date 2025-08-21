@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "ActionLog": "Aktionsprotokoll",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -66,6 +67,7 @@
     "ProductGroup": "Produktgruppe"
   },
   "scopeNamesPlural": {
+    "ActionLog": "Aktionsprotokolle",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",
@@ -605,6 +607,8 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "action": "Aktion",
+    "payload": "Payload",
     "hash": "Hash",
     "ipWhiteList": "IP-Weißliste",
     "httpMethod": "HTTP-Methode",

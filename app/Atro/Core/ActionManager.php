@@ -12,6 +12,7 @@
 namespace Atro\Core;
 
 use Atro\ActionTypes\TypeInterface;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Utils\Metadata;
@@ -54,7 +55,7 @@ class ActionManager
             $data = [
                 'actionId'     => $action->get('id'),
                 'sourceEntity' => $action->get('sourceEntity'),
-                'where'        => $input->where
+                'where'        => $input->where,
             ];
 
             if (property_exists($input, 'actionSetLinkerId')) {
@@ -63,18 +64,20 @@ class ActionManager
 
             $params = [
                 'action'             => 'action',
-                'maxCountWithoutJob' => property_exists($input, 'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
+                'maxCountWithoutJob' => property_exists($input,
+                    'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
                 'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
                 'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
                 'where'              => json_decode(json_encode($input->where), true),
-                'additionalJobData'  => $data
+                'additionalJobData'  => $data,
             ];
 
-            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params, function ($id) use ($action) {
-                $input = new \stdClass();
-                $input->entityId = $id;
-                $this->executeNow($action, $input);
-            });
+            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
+                function ($id) use ($action) {
+                    $input = new \stdClass();
+                    $input->entityId = $id;
+                    $this->executeNow($action, $input);
+                });
 
             return true;
         }
@@ -94,14 +97,95 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
-        $res = $actionType->executeNow($action, $input);
+        $log = $this->getEntityManager()->getRepository('ActionLog')->get();
+
+        if (!empty($input->executedViaWorkflow)) {
+            $log->set('type', 'workflow');
+            $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);
+            if (!empty($workflow)) {
+                $log->set('name', $workflow->get('name'));
+                $log->set('workflowId', $workflow->get('id'));
+            }
+        } elseif (!empty($input->executedViaWebhook)) {
+            $log->set('type', 'incomingWebhook');
+            if (!empty($input->webhook)) {
+                $log->set('name', $input->webhook->get('name'));
+                $log->set('incomingWebhookId', $input->webhook->get('id'));
+            }
+        } elseif (!empty($input->executedViaScheduledJob)) {
+            $log->set('type', 'scheduledJob');
+            $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($input->job->get('scheduledJobId'));
+            if (!empty($scheduledJob)) {
+                $log->set('name', $scheduledJob->get('name'));
+                $log->set('scheduledJobId', $scheduledJob->get('id'));
+            }
+        } else {
+            $log->set('name', $action->get('name'));
+            $log->set('type', 'manual');
+        }
+
+        $log->set('actionId', $action->get('id'));
+        $log->set('payload', $this->preparePayload($input));
+
+        try {
+            $res = $actionType->executeNow($action, $input);
+            $log->set('status', 'executed');
+        } catch (\Throwable $e) {
+            $log->set('status', 'failed');
+            $log->set('statusMessage', $e->getMessage());
+
+            if ($e instanceof BadRequest && $action->get('type') === 'error') {
+                $log->set('status', 'executed');
+            }
+        }
 
         if ($userChanged) {
             // auth as current user again
             $this->auth($currentUserId);
         }
 
+        $this->getEntityManager()->saveEntity($log);
+
+        if (!empty($e)) {
+            throw $e;
+        }
+
         return $res;
+    }
+
+    protected function preparePayload(\stdClass $input): \stdClass
+    {
+        foreach ($input as $key => $value) {
+            $input->$key = $this->processDataRecursively($value);
+        }
+
+        return $input;
+    }
+
+    /**
+     * Recursively processes the data to replace objects with their class names.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function processDataRecursively(mixed $data): mixed
+    {
+        if (is_object($data)) {
+            // Replace the object with its fully qualified class name
+            return "object [".get_class($data)."]";
+        }
+
+        if (is_array($data)) {
+            // Recursively process each element in the array
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->processDataRecursively($value);
+            }
+
+            return $data;
+        }
+
+        // Return scalar values as-is
+        return $data;
     }
 
     protected function auth(string $userId): bool
@@ -117,6 +201,7 @@ class ActionManager
         $this->getEntityManager()->setUser($user);
         $this->container->setUser($user);
         $this->container->get('acl')->setUser($user);
+
         return true;
     }
 

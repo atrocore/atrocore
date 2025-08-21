@@ -47,9 +47,6 @@ class OpenApiGenerator
             $this->pushRoute($result, $route);
         }
 
-        /** @var Metadata $metadata */
-        $metadata = $this->container->get('metadata');
-
         /** @var Config $config */
         $config = $this->container->get('config');
 
@@ -58,8 +55,8 @@ class OpenApiGenerator
             $languages = $config->get('inputLanguageList', []);
         }
 
-        foreach ($metadata->get(['entityDefs'], []) as $entityName => $data) {
-            $scopeData = $metadata->get(['scopes', $entityName]);
+        foreach ($this->getMetadata()->get(['entityDefs'], []) as $entityName => $data) {
+            $scopeData = $this->getMetadata()->get(['scopes', $entityName]);
 
             if (empty($data['fields']) || empty($scopeData['entity']) || !empty($scopeData['openApiHidden'])) {
                 continue;
@@ -79,12 +76,12 @@ class OpenApiGenerator
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
 
-        foreach ($metadata->get(['scopes'], []) as $scopeName => $scopeData) {
+        foreach ($this->getMetadata()->get(['scopes'], []) as $scopeName => $scopeData) {
             if (!isset($result['components']['schemas'][$scopeName])) {
                 continue 1;
             }
 
-            if (empty(ControllerManager::getControllerClassName($scopeName, $this->container->get('metadata')))) {
+            if (empty(ControllerManager::getControllerClassName($scopeName, $this->getMetadata()))) {
                 continue 1;
             }
 
@@ -683,50 +680,52 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['type' => 'boolean'])
                 ];
 
-                $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Follow the $scopeName stream",
-                    "description" => "Follow the $scopeName stream",
-                    "operationId" => "follow{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ],
-                    "responses"   => self::prepareResponses([
-                        "type"       => "object",
-                        "properties" => [
-                            "message" => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ]),
-                ];
+                if (empty($this->getMetadata()->get("scopes.$scopeName.streamDisabled"))) {
+                    $result['paths']["/{$scopeName}/{id}/subscription"]['put'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Follow the $scopeName stream",
+                        "description" => "Follow the $scopeName stream",
+                        "operationId" => "follow{$scopeName}",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "id",
+                                "in"       => "path",
+                                "required" => true,
+                                "schema"   => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ],
+                        "responses"   => self::prepareResponses([
+                            "type"       => "object",
+                            "properties" => [
+                                "message" => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ]),
+                    ];
 
-                $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Unfollow the $scopeName stream",
-                    "description" => "Unfollow the $scopeName stream",
-                    "operationId" => "unfollow{$scopeName}",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string"
-                            ]
-                        ]
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean'])
-                ];
+                    $result['paths']["/{$scopeName}/{id}/subscription"]['delete'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Unfollow the $scopeName stream",
+                        "description" => "Unfollow the $scopeName stream",
+                        "operationId" => "unfollow{$scopeName}",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "id",
+                                "in"       => "path",
+                                "required" => true,
+                                "schema"   => [
+                                    "type" => "string",
+                                ],
+                            ],
+                        ],
+                        "responses"   => self::prepareResponses(['type' => 'boolean']),
+                    ];
+                }
             }
         }
 
@@ -734,6 +733,8 @@ class OpenApiGenerator
         $this->pushDashletActions($result, $schemas);
 
         $this->prepareUserProfileDocs($result, $schemas);
+
+        unset($result['paths']["/ActionLog"]['post']);
 
         $this->pushUserActions($result, $schemas);
         $this->pushSettingsActions($result, $schemas);
@@ -1111,9 +1112,7 @@ class OpenApiGenerator
     {
         $result['tags'][] = ['name' => 'Settings'];
 
-        /** @var Metadata $metadata */
-        $metadata = $this->container->get('metadata');
-        foreach ($metadata->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
+        foreach ($this->getMetadata()->get(['entityDefs', 'Settings', 'fields']) as $fieldName => $fieldData) {
             $this->getFieldSchema($result, 'Settings', $fieldName, $fieldData);
         }
 
@@ -1346,5 +1345,10 @@ class OpenApiGenerator
 
             $result['paths'][$routePath][$route['method']] = $row;
         }
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }

@@ -11,10 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Controllers;
+namespace Atro\Controllers;
 
-use Atro\Controllers\AbstractRecordController;
+use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Templates\Controllers\Base;
 
-class Base extends AbstractRecordController
+class ActionLog extends Base
 {
+    public function actionCreate($params, $data, $request)
+    {
+        throw new NotFound();
+    }
 }
