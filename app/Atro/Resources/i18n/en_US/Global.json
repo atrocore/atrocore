@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "ActionLog": "Action Log",
     "IncomingWebhook": "Incoming Webhook",
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribute Panel",
@@ -81,6 +82,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "ActionLog": "Action Logs",
     "IncomingWebhook": "Incoming Webhooks",
     "RoleScopeAttribute": "Attributes",
     "RoleScopeAttributePanel": "Attribute Panels",
@@ -612,6 +614,9 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "action": "Action",
+    "payload": "Payload",
+    "logs": "Logs",
     "hash": "Hash",
     "ipWhiteList": "IP white list",
     "httpMethod": "HTTP Method",

@@ -240,6 +240,12 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "logs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -274,6 +280,11 @@
     "connection": {
       "type": "belongsTo",
       "entity": "Connection"
+    },
+    "logs": {
+      "type": "hasMany",
+      "foreign": "action",
+      "entity": "ActionLog"
     }
   },
   "collection": {
