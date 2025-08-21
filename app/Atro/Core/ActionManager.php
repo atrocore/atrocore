@@ -103,7 +103,7 @@ class ActionManager
             $type = 'webhook';
 //            $input->webhook
         } elseif (!empty($input->executedViaCron)) {
-            $type = 'cron';
+            $type = 'scheduledJob';
 //            $input->job
         } else {
             $type = 'manual';

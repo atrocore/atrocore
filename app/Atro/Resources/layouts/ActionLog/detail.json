@@ -22,6 +22,24 @@
           "name": "payload",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "incomingWebhook"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scheduledJob"
+        },
+        false
+      ],
+      [
+        {
+          "name": "workflow"
+        },
+        false
       ]
     ]
   }

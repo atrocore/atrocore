@@ -1,9 +1,14 @@
 {
+  "fields": {
+    "incomingWebhook": "Eingehender Webhook",
+    "scheduledJob": "Geplante Aufgabe",
+    "workflow": "Workflow"
+  },
   "options": {
     "type": {
       "manual": "Manuell",
-      "webhook": "Eingehender Webhook",
-      "cron": "Geplante Aufgabe",
+      "incomingWebhook": "Eingehender Webhook",
+      "scheduledJob": "Geplante Aufgabe",
       "workflow": "Workflow"
     },
     "status": {

@@ -27,11 +27,11 @@
       "type": "link",
       "readOnly": true
     },
-    "webhook": {
+    "incomingWebhook": {
       "type": "link",
       "readOnly": true
     },
-    "cronJob": {
+    "scheduledJob": {
       "type": "link",
       "readOnly": true
     },
@@ -54,8 +54,8 @@
       "readOnly": true,
       "options": [
         "manual",
-        "webhook",
-        "cron",
+        "incomingWebhook",
+        "scheduledJob",
         "workflow"
       ]
     }
@@ -74,13 +74,13 @@
       "foreign": "logs",
       "entity": "Action"
     },
-    "webhook": {
+    "incomingWebhook": {
       "type": "belongsTo",
       "entity": "IncomingWebhook"
     },
-    "cronJob": {
+    "scheduledJob": {
       "type": "belongsTo",
-      "entity": "Job"
+      "entity": "ScheduledJob"
     }
   },
   "collection": {
