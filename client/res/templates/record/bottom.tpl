@@ -29,7 +29,7 @@
             </div>
             <h4 class="panel-title">
             <span class="collapser" data-action="collapsePanel" data-panel="{{name}}">
-                <i class="ph ph-caret-up-down"></i>
+                <i class="ph ph-caret-{{#if expanded}}down{{else}}right{{/if}}"></i>
             </span>
             {{#unless notRefreshable}}
             <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">

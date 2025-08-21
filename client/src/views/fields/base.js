@@ -320,6 +320,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.hideRequiredSign();
                 }
 
+                if (this.readOnly) {
+                    this.getCellElement().attr('data-readonly', 'true');
+                } else {
+                    this.getCellElement().removeAttr('data-readonly');
+                }
+
             }, this);
 
             if (this.mode === 'detail') {

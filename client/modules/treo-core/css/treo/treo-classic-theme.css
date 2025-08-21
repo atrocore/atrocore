@@ -10075,7 +10075,11 @@ div.list-kanban > div > table .item .panel div:last-child > .form-group {
 }
 
 div.list-kanban > div > table .item .panel .panel-body {
-    padding: 8px
+    padding: 8px;
+}
+
+div.list-kanban > div > table .item .panel .panel-body > *:not(:first-child):not(:last-child) {
+    margin: 5px 0;
 }
 
 div.list-kanban > div > table .item .panel .item-menu-container {
@@ -10435,6 +10439,12 @@ ul.dropdown-menu > li.checkbox:last-child {
     padding-right: 2px !important;
 }
 
+.field > .value-container,
+.was > .value-container,
+.became > .value-container {
+    display: inline-block;
+}
+
 .cell > .field {
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -10447,13 +10457,21 @@ ul.dropdown-menu > li.checkbox:last-child {
     justify-content: center;
 }
 
+td.cell > .field {
+    min-height: auto;
+}
+
 main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
 .cell > .field > *:not([type=checkbox]):not([type=radio]):not(a) {
     width: 100%;
 }
 
-.cell > .field:hover {
+.cell:not([data-readonly]):not([data-mode=edit]) > .field:hover {
     background-color: var(--field-hover-color);
+}
+
+main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:hover {
+    background-color: transparent;
 }
 
 .cell > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
@@ -10495,7 +10513,9 @@ main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
 }
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
-.cell[data-mode=edit] > .field > input[type=radio]:not([disabled]) {
+.cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
+main .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
+main .record > .edit .cell > .field > input[type=radio]:not([disabled]){
     margin: 0 10px;
     line-height: inherit;
 }
@@ -11109,6 +11129,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     align-items: center;
     flex-wrap: nowrap;
     position: relative;
+    justify-content: end;
 }
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .btn i {
@@ -11709,6 +11730,11 @@ span.became > .value-container > .label.colored-multi-enum,
 .field .label.colored-enum:first-child,
 .field > .value-container > .label.colored-multi-enum {
     margin-inline-start: -5px;
+}
+
+.kanban-row .item .label.colored-enum:first-child,
+.field > .value-container > .label.colored-multi-enum {
+    margin-inline-start: 0;
 }
 
 span.was > .value-container,
@@ -13329,13 +13355,14 @@ input#sn-checkbox-open-in-new-window {
     border-top: 1px solid #f5f5f5;
 }
 
-.list > table thead tr:hover {
-    background-color: #fafafa;
-    border-top: 1px solid #f5f5f5
+.list > table tbody tr:not(.active-dropdown):hover {
+    background-color: #f8f8f8;
 }
 
-.list > table tr:hover {
-    background-color: #f3f3f3
+.modal-body .list > table thead,
+.panel-body .list > table thead {
+    background-color: transparent;
+    border-top: 0;
 }
 
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
@@ -13763,7 +13790,7 @@ ul.dropdown-menu > li.checkbox {
 
 @media screen and (min-width: 768px) {
     .table > tbody > tr:not(:first-child) {
-        border-top: 1px solid #e8eced;
+        border-top: 1px solid var(--secondary-border-color);
     }
 }
 
@@ -15353,7 +15380,7 @@ td[data-name="draggableIcon"] {
 
 .panel-heading > .panel-title > .collapser {
     cursor: pointer;
-    margin-right: 4px;
+    margin-right: 8px;
     margin-left: -4px;
     color: var(--panel-title-color);
     font-size: 12px;
@@ -16006,6 +16033,8 @@ select {
 .kanban-avatar img {
     border-radius: 50%;
     width: 32px;
+    height: 32px;
+    object-fit: cover;
     float: right;
 }
 
@@ -16460,6 +16489,10 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder .pull-right, .query-builder .float-end {
     float: right !important;
+}
+
+.query-builder .selectize-input {
+    background-color: #fff;
 }
 
 .query-builder .btn {
