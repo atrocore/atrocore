@@ -19,12 +19,6 @@
       ],
       [
         {
-          "name": "payload",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
           "name": "incomingWebhook"
         },
         false
@@ -40,6 +34,12 @@
           "name": "workflow"
         },
         false
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
       ]
     ]
   }

@@ -118,7 +118,7 @@ class ActionManager
         }
 
         $log->set('actionId', $action->get('id'));
-        //        $log->set('payload', $input);
+        $log->set('payload', $this->preparePayload($input));
 
         try {
             $res = $actionType->executeNow($action, $input);
@@ -139,6 +139,41 @@ class ActionManager
         }
 
         return $res;
+    }
+
+    protected function preparePayload(\stdClass $input): \stdClass
+    {
+        foreach ($input as $key => $value) {
+            $input->$key = $this->processDataRecursively($value);
+        }
+
+        return $input;
+    }
+
+    /**
+     * Recursively processes the data to replace objects with their class names.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function processDataRecursively(mixed $data): mixed
+    {
+        if (is_object($data)) {
+            // Replace the object with its fully qualified class name
+            return "Instance of \\".get_class($data);
+        }
+
+        if (is_array($data)) {
+            // Recursively process each element in the array
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->processDataRecursively($value);
+            }
+
+            return $data;
+        }
+
+        // Return scalar values as-is
+        return $data;
     }
 
     protected function auth(string $userId): bool
