@@ -56,6 +56,8 @@ class Webhook extends AbstractEntryPoint
         $action = $webhook->get('action');
         if (!empty($action)) {
             $input = new \stdClass();
+            $input->executedViaWebhook = true;
+            $input->webhook = $webhook;
             $input->webhookRequest['headers'] = getallheaders();
             $input->webhookRequest['body'] = file_get_contents('php://input');
             $input->webhookRequest['queryParameters'] = [];

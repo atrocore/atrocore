@@ -27,13 +27,22 @@
       "type": "link",
       "readOnly": true
     },
-    "start": {
-      "type": "datetime",
+    "webhook": {
+      "type": "link",
       "readOnly": true
     },
-    "end": {
-      "type": "datetime",
+    "cronJob": {
+      "type": "link",
       "readOnly": true
+    },
+    "status": {
+      "type": "enum",
+      "required": true,
+      "readOnly": true,
+      "options": [
+        "executed",
+        "failed"
+      ]
     },
     "payload": {
       "type": "jsonObject",
@@ -60,32 +69,28 @@
       "type": "belongsTo",
       "entity": "User"
     },
-    "Action": {
+    "action": {
       "type": "belongsTo",
       "foreign": "logs",
       "entity": "Action"
+    },
+    "webhook": {
+      "type": "belongsTo",
+      "entity": "IncomingWebhook"
+    },
+    "cronJob": {
+      "type": "belongsTo",
+      "entity": "Job"
     }
   },
   "collection": {
-    "sortBy": "id",
+    "sortBy": "createdAt",
     "asc": false
   },
   "indexes": {
     "name": {
       "columns": [
         "name",
-        "deleted"
-      ]
-    },
-    "start": {
-      "columns": [
-        "start",
-        "deleted"
-      ]
-    },
-    "end": {
-      "columns": [
-        "end",
         "deleted"
       ]
     },

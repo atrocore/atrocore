@@ -19,14 +19,6 @@
       ],
       [
         {
-          "name": "start"
-        },
-        {
-          "name": "end"
-        }
-      ],
-      [
-        {
           "name": "payload",
           "fullWidth": true
         }

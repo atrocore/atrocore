@@ -94,7 +94,36 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
-        $res = $actionType->executeNow($action, $input);
+        if (!empty($input->executedViaWorkflow)) {
+            $type = 'workflow';
+//            $input->workflowData
+            // $input->workflowData['workflow_id']
+//            $input->event = $event;
+        } elseif (!empty($input->executedViaWebhook)) {
+            $type = 'webhook';
+//            $input->webhook
+        } elseif (!empty($input->executedViaCron)) {
+            $type = 'cron';
+//            $input->job
+        } else {
+            $type = 'manual';
+        }
+
+        echo '<pre>';
+        print_r('123');
+        die();
+
+        $log = $this->getEntityManager()->getRepository('ActionLog')->get();
+//        $log->set('name', $action->get('id'));
+        $log->set('actionId', $action->get('id'));
+
+        try {
+            $res = $actionType->executeNow($action, $input);
+        } catch (\Throwable $e) {
+            // do something with log
+            //            $log->set('status', 'error');
+            throw $e;
+        }
 
         if ($userChanged) {
             // auth as current user again

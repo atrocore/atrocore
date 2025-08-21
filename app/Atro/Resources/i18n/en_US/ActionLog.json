@@ -5,6 +5,10 @@
       "webhook": "Incoming Webhook",
       "cron": "Scheduled Job",
       "workflow": "Workflow"
+    },
+    "status": {
+      "executed": "Ausgeführt",
+      "failed": "Gescheitert"
     }
   }
 }

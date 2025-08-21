@@ -1,0 +1,14 @@
+{
+  "options": {
+    "type": {
+      "manual": "Manuell",
+      "webhook": "Eingehender Webhook",
+      "cron": "Geplante Aufgabe",
+      "workflow": "Workflow"
+    },
+    "status": {
+      "executed": "Executed",
+      "failed": "Failed"
+    }
+  }
+}

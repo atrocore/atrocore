@@ -13,11 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\Jobs;
 
-use Atro\ActionTypes\TypeInterface;
 use Atro\Core\ActionManager;
 use Atro\Entities\Job;
-use Espo\Core\ServiceFactory;
-use Espo\Services\Record;
 
 class ActionHandler extends AbstractJob implements JobInterface
 {
@@ -26,7 +23,6 @@ class ActionHandler extends AbstractJob implements JobInterface
         $data = $job->getPayload();
 
         $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
-
         if (!empty($data['sourceEntity'])) {
             $action->set('sourceEntity', $data['sourceEntity']);
         }
@@ -34,21 +30,17 @@ class ActionHandler extends AbstractJob implements JobInterface
         // execute standalone action in job
         if (empty($data['ids'])) {
             $input = new \stdClass();
+            $input->executedViaCron = true;
+            $input->job = $job;
             $input->queueData = $data;
             $this->getActionManager()->executeNow($action, $input);
             return;
         }
 
-        if (empty($action->get('sourceEntity'))) {
-            return;
-        }
-
-        /** @var Record $service */
-        $service = $this->getServiceFactory()->create($action->get('sourceEntity'));
-
-
         foreach ($data['ids'] as $id) {
             $input = new \stdClass();
+            $input->executedViaCron = true;
+            $input->job = $job;
             $input->entityId = $id;
             $input->queueData = $data;
 
