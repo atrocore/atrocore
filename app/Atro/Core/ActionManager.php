@@ -54,7 +54,7 @@ class ActionManager
             $data = [
                 'actionId'     => $action->get('id'),
                 'sourceEntity' => $action->get('sourceEntity'),
-                'where'        => $input->where
+                'where'        => $input->where,
             ];
 
             if (property_exists($input, 'actionSetLinkerId')) {
@@ -63,18 +63,20 @@ class ActionManager
 
             $params = [
                 'action'             => 'action',
-                'maxCountWithoutJob' => property_exists($input, 'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
+                'maxCountWithoutJob' => property_exists($input,
+                    'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
                 'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
                 'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
                 'where'              => json_decode(json_encode($input->where), true),
-                'additionalJobData'  => $data
+                'additionalJobData'  => $data,
             ];
 
-            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params, function ($id) use ($action) {
-                $input = new \stdClass();
-                $input->entityId = $id;
-                $this->executeNow($action, $input);
-            });
+            $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
+                function ($id) use ($action) {
+                    $input = new \stdClass();
+                    $input->entityId = $id;
+                    $this->executeNow($action, $input);
+                });
 
             return true;
         }
@@ -94,40 +96,44 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
+        $log = $this->getEntityManager()->getRepository('ActionLog')->get();
+
         if (!empty($input->executedViaWorkflow)) {
             $type = 'workflow';
 //            $input->workflowData
             // $input->workflowData['workflow_id']
 //            $input->event = $event;
         } elseif (!empty($input->executedViaWebhook)) {
-            $type = 'webhook';
-//            $input->webhook
+            $log->set('name', $input->webhook->get('name'));
+            $log->set('type', 'incomingWebhook');
+            $log->set('incomingWebhookId', $input->webhook->get('id'));
         } elseif (!empty($input->executedViaCron)) {
             $type = 'scheduledJob';
 //            $input->job
         } else {
-            $type = 'manual';
+            $log->set('name', $action->get('name'));
+            $log->set('type', 'manual');
         }
 
-        echo '<pre>';
-        print_r('123');
-        die();
-
-        $log = $this->getEntityManager()->getRepository('ActionLog')->get();
-//        $log->set('name', $action->get('id'));
         $log->set('actionId', $action->get('id'));
+        //        $log->set('payload', $input);
 
         try {
             $res = $actionType->executeNow($action, $input);
+            $log->set('status', 'executed');
+            $this->getEntityManager()->saveEntity($log);
         } catch (\Throwable $e) {
-            // do something with log
-            //            $log->set('status', 'error');
+            $log->set('status', 'failed');
+            $this->getEntityManager()->saveEntity($log);
             throw $e;
         }
 
         if ($userChanged) {
             // auth as current user again
             $this->auth($currentUserId);
+
+            $log->set('createdById', $currentUserId);
+            $this->getEntityManager()->saveEntity($log);
         }
 
         return $res;
@@ -146,6 +152,7 @@ class ActionManager
         $this->getEntityManager()->setUser($user);
         $this->container->setUser($user);
         $this->container->get('acl')->setUser($user);
+
         return true;
     }
 

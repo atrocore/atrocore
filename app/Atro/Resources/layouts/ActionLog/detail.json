@@ -8,12 +8,12 @@
           "name": "name"
         },
         {
-          "name": "type"
+          "name": "action"
         }
       ],
       [
         {
-          "name": "action"
+          "name": "type"
         },
         false
       ],

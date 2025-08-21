@@ -29,6 +29,7 @@
     },
     "incomingWebhook": {
       "type": "link",
+      "entity": "IncomingWebhook",
       "readOnly": true
     },
     "scheduledJob": {
@@ -73,10 +74,6 @@
       "type": "belongsTo",
       "foreign": "logs",
       "entity": "Action"
-    },
-    "incomingWebhook": {
-      "type": "belongsTo",
-      "entity": "IncomingWebhook"
     },
     "scheduledJob": {
       "type": "belongsTo",
