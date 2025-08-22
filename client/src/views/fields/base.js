@@ -972,6 +972,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             model.trigger('after:inlineEditSave');
 
             window.dispatchEvent(new Event('record:save'));
+            window.dispatchEvent(new Event('record:actions-reload'));
 
             this.notify('Saved', 'success');
             this.inlineEditClose(true);
