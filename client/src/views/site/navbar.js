@@ -486,18 +486,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         },
 
         actionRebuildDatabase: function () {
-            Espo.Ui.confirm(this.getLanguage().translate('rebuildDb', 'messages', 'Admin'), {
-                confirmText: this.getLanguage().translate('Apply'),
-                cancelText: this.getLanguage().translate('Cancel')
-            }, () => {
-                $.ajax({
-                    url: 'Admin/rebuildDb',
-                    type: 'POST',
-                    success: () => {
-                        Espo.Ui.success('Success');
-                    }
-                });
-            });
+            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => view.render());
         },
 
         actionShowHistory: function () {

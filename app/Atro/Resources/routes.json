@@ -704,6 +704,14 @@
     }
   },
   {
+    "route": "/Admin/getSchemaDiff",
+    "method": "get",
+    "params": {
+      "controller": "Admin",
+      "action": "getSchemaDiff"
+    }
+  },
+  {
     "route": "/Admin/clearCache",
     "method": "post",
     "params": {

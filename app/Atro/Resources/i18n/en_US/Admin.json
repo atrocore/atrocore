@@ -39,7 +39,7 @@
     "updatesAvailable": "New updates are available!",
     "Teams": "Teams",
     "Roles": "Roles",
-    "Maintenance": "System Maintenance",
+    "Maintenance": "Maintenance",
     "Account": "Account Management",
     "Outbound Emails": "Outbound emails",
     "Layout Manager": "Layouts",
@@ -167,7 +167,7 @@
     "selectEntityType": "Select the entity type in the left menu.",
     "selectLayout": "Select the layout in the left menu and edit it.",
     "incorrectThousandSeparatorOrDecimalMark": "Only the following delimiters are allowed: '.' and ','.",
-    "rebuildDb": "Are you sure you want to rebuild the database structure? All unused columns and tables will be removed."
+    "rebuildDb": "The changes that will be applied to your database when you click the 'Apply' button are listed below. Some data may be incompatible with the new software version and could be lost. This action is irreversible."
   },
   "descriptions": {
     "incomingWebhook": "The Incoming Webhook entity allows customers to configure external HTTP requests that trigger predefined Actions within the system. Each webhook can be customized with security features such as hash-based verification and IP whitelisting to ensure trusted and controlled execution.",

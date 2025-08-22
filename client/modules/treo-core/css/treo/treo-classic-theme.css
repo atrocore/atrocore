@@ -18258,3 +18258,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     flex-basis: 30%;
     min-width: 150px;
 }
+
+.modal-body > .rebuild-db-container {
+    height: 100%;
+    padding-top: 20px !important;
+}
