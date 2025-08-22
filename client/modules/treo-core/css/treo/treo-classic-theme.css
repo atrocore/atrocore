@@ -4063,8 +4063,6 @@ tbody.collapse.in {
 }
 
 .input-group .form-control {
-    position: relative;
-    z-index: 2;
     float: left;
     width: 100%;
     margin-bottom: 0
@@ -7513,7 +7511,8 @@ button.close {
 
 .selectize-dropdown [data-selectable] {
     cursor: pointer;
-    overflow: hidden
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .selectize-dropdown [data-selectable] .highlight {
@@ -10462,7 +10461,7 @@ td.cell > .field {
 }
 
 main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
-.cell > .field > *:not([type=checkbox]):not([type=radio]):not(a) {
+.cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label) {
     width: 100%;
 }
 
@@ -10514,8 +10513,8 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
-main .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
-main .record > .edit .cell > .field > input[type=radio]:not([disabled]){
+.record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
+.record > .edit .cell > .field > input[type=radio]:not([disabled]){
     margin: 0 10px;
     line-height: inherit;
 }
@@ -13163,7 +13162,8 @@ input#sn-checkbox-open-in-new-window {
 }
 
 #main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field,
-#main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field {
+#main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field,
+.modal-body .record > .detail .cell:not([data-mode=edit]) .field {
     padding: 6px 10px;
     border-bottom: 1px solid var(--secondary-border-color);
 }

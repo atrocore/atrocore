@@ -28,7 +28,7 @@ Espo.define('views/folder/fields/folder-path', 'views/fields/varchar',
                 pathData.forEach(item => {
                     path.unshift(`<a href="/#Folder/view/${item.parentId}">${item.parentName}</a>`);
                 });
-                this.$el.html(path.join(' / '));
+                this.$el.html(`<div class="value-container">${path.join(' / ')}</div>`);
             } else {
                 this.$el.html('<span class="text-gray">Null</span>');
             }

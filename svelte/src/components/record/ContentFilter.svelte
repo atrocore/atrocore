@@ -75,7 +75,7 @@
                         class="filter-switcher"
                         on:mousedown={event => event.preventDefault()}
                 >
-                    <i class="ph-sliders-horizontal" class:ph={selectedFilters.length === 0} class:ph-fill={selectedFilters.length > 0}></i>
+                    <i class="ph-radio-button" class:ph={selectedFilters.length === 0} class:ph-fill={selectedFilters.length > 0}></i>
                     {#if selectedFilters.length > 0}
                         <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
                     {/if}
