@@ -1838,8 +1838,6 @@ class Metadata extends AbstractListener
                             "notStorable"               => true,
                             "layoutListDisabled"        => true,
                             "layoutListSmallDisabled"   => true,
-                            "layoutDetailDisabled"      => true,
-                            "layoutDetailSmallDisabled" => true,
                             "layoutMassUpdateDisabled"  => true,
                             "filterDisabled"            => true,
                             "exportDisabled"            => true,
