@@ -31,8 +31,12 @@
     "Settings": "Einstellungen",
     "Scheduled Jobs": "Geplante Jobs",
     "Action": "Aktionen",
-    "Clear Cache": "Cache leeren",
+    "Clear Cache": "Systemcache leeren",
+    "clearCacheTooltip": "Cache erstellt unter",
     "rebuildDb": "Datenbankstruktur aktualisieren",
+    "rebuildDbWarning": "Die Datenbankstruktur wurde geändert. Um die ordnungsgemäße Funktionalität sicherzustellen, ist ein Rebuild erforderlich.",
+    "updatesAvailable": "Neue Updates sind verfügbar!",
+    "Maintenance": "Wartung",
     "Roles": "Rollen",
     "Account": "Account Management",
     "Outbound Emails": "Ausgehende E-Mails",
@@ -156,7 +160,7 @@
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein.",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
     "incorrectThousandSeparatorOrDecimalMark": "Es sind nur die folgenden Trennzeichen zulässig: '.' und ','.",
-    "rebuildDb": "Möchten Sie die Datenbankstruktur wirklich anpassen? Alle unbenutzten Spalten und Tabellen werden entfernt."
+    "rebuildDb": "Die Änderungen, die bei Klicken auf die Schaltfläche „Übernehmen“ an Ihrer Datenbank vorgenommen werden, sind unten aufgeführt. Einige Daten sind möglicherweise nicht mit der neuen Softwareversion kompatibel und könnten verloren gehen. Dieser Vorgang kann nicht rückgängig gemacht werden."
   },
   "descriptions": {
     "incomingWebhook": "Die Incoming Webhook-Entität ermöglicht es Kunden, externe HTTP-Anfragen zu konfigurieren, die vordefinierte Aktionen innerhalb des Systems auslösen. Jeder Webhook kann mit Sicherheitsfunktionen wie hashbasierter Überprüfung und IP-Whitelisting angepasst werden, um eine vertrauenswürdige und kontrollierte Ausführung zu gewährleisten.",

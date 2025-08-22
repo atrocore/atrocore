@@ -26,7 +26,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
-                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                        <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
                     {{else}}
                     <li class="divider"></li>
                     {{/unless}}
@@ -128,10 +128,10 @@
         <ul class="nav navbar-nav navbar-right navbar-dropdowns">
             <li class="dropdown menu-container hidden-xs">
                 <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><i class="ph ph-user"></i></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
+                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown" style="min-width: 230px;">
                     {{#each menuDataList}}
                     {{#unless divider}}
-                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
                     {{else}}
                     <li class="divider"></li>
                     {{/unless}}

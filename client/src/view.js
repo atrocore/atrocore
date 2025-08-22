@@ -101,12 +101,6 @@ Espo.define('view', [], function () {
             }
         },
 
-        getStorage: function () {
-            if (this._helper) {
-                return this._helper.storage;
-            }
-        },
-
         getSessionStorage: function () {
             if (this._helper) {
                 return this._helper.sessionStorage;

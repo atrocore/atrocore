@@ -234,7 +234,6 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 }.bind(this);
                 process();
             }
-            $('a[data-action="composerUpdate"]').parent().addClass('disabled');
         },
 
         selectTab: function (name) {
@@ -347,45 +346,61 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         },
 
         getMenuDataList: function () {
-            var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
-            if (avatarHtml) avatarHtml += ' ';
+            let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
 
-            var list = [
+            const list = [
                 {
                     link: '#UserProfile',
                     html: avatarHtml + this.getUser().get('name')
                 },
                 {
-                    divider: true
+                    link: '#clearCache',
+                    label: this.getLanguage().translate('Clear Local Cache'),
+                    icon: '<i class="ph ph-devices"></i>'
+                },
+                {
+                    link: '#logout',
+                    label: this.getLanguage().translate('Log Out'),
+                    icon: '<i class="ph ph-sign-out"></i>'
                 }
             ];
 
             if (this.getUser().isAdmin()) {
                 list.push({
-                    link: '#Admin',
-                    label: this.getLanguage().translate('Administration')
-                });
-            }
-
-            if (this.getUser().isAdmin()) {
-                list.push({
                     divider: true
                 });
 
                 list.push({
+                    link: '#Admin',
+                    label: this.getLanguage().translate('Administration'),
+                    icon: '<i class="ph ph-gear"></i>'
+                });
+
+                const systemCacheEntry = {
+                    action: 'clearSystemCache',
+                    label: this.getLanguage().translate('Clear Cache', 'labels', 'Admin'),
+                    icon: '<i class="ph ph-database"></i>',
+                };
+
+                if (Espo?.loader?.cacheTimestamp) {
+                    const date = moment.unix(Espo.loader.cacheTimestamp).tz(this.getDateTime().getTimeZone()).format(this.getDateTime().getDateTimeFormat());
+                    systemCacheEntry.title = this.getLanguage().translate('clearCacheTooltip', 'labels', 'Admin') + ' ' + date;
+                }
+
+                list.push(systemCacheEntry);
+
+                list.push({
+                    action: 'rebuildDatabase',
+                    label: this.getLanguage().translate('rebuildDb', 'labels', 'Admin'),
+                    icon: '<i class="ph ph-wrench"></i>'
+                });
+
+                list.push({
                     action: 'composerUpdate',
-                    html: this.getLanguage().translate('Run Update', 'labels', 'Composer') + ' <i id="composer-update" class="ph ph-box-arrow-down"></i>'
+                    label: this.getLanguage().translate('Run Update', 'labels', 'Composer'),
+                    icon: '<i class="ph ph-cloud-arrow-down"></i>'
                 });
             }
-
-            list.push({
-                divider: true
-            });
-
-            list.push({
-                link: '#clearCache',
-                label: this.getLanguage().translate('Clear Local Cache')
-            });
 
             list.push({
                 divider: true
@@ -393,39 +408,39 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
 
             list.push({
                 action: 'openFeedbackModal',
-                label: this.getLanguage().translate('Provide Feedback')
+                label: this.getLanguage().translate('Provide Feedback'),
+                icon: '<i class="ph ph-chat-text"></i>'
             });
 
             list.push({
                 link: 'https://community.atrocore.com/c/issues/8',
                 label: this.getLanguage().translate('Report a bug'),
-                targetBlank: true
+                targetBlank: true,
+                icon: '<i class="ph ph-bug-beetle"></i>'
             });
 
             list.push({
                 link: 'https://community.atrocore.com',
                 label: this.getLanguage().translate('Visit Community'),
-                targetBlank: true
-            });
-
-            list.push({
-                divider: true
-            });
-
-            list.push({
-                link: '#logout',
-                label: this.getLanguage().translate('Log Out')
+                targetBlank: true,
+                icon: '<i class="ph ph-users-three"></i>'
             });
 
             setInterval(() => {
-                let $composerLi = $('a[data-action="composerUpdate"]').parent();
-                let isNeedToUpdate = localStorage.getItem('pd_isNeedToUpdate') || false;
+                const $composerLi = $('a[data-action="composerUpdate"]').parent();
+                const $rebuildLi = $('a[data-action="rebuildDatabase"]').parent();
+                const isNeedToUpdate = localStorage.getItem('pd_isNeedToUpdate') || false;
+                const isNeedToRebuildDb = localStorage.getItem('pd_isNeedToRebuildDatabase') || false;
                 if (isNeedToUpdate === 'true') {
-                    $composerLi.removeClass('disabled');
+                    $composerLi.removeClass('hidden');
                 } else {
-                    if (!$composerLi.hasClass('disabled')) {
-                        $composerLi.addClass('disabled');
-                    }
+                    $composerLi.addClass('hidden');
+                }
+
+                if (isNeedToRebuildDb === 'true') {
+                    $rebuildLi.removeClass('hidden');
+                } else {
+                    $rebuildLi.addClass('hidden');
                 }
             }, 1000);
 
@@ -460,6 +475,18 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 });
                 view.render();
             });
+        },
+
+        actionClearSystemCache: function () {
+            Espo.Ui.notify(this.getLanguage().translate('Please wait...'));
+
+            this.ajaxPostRequest('Admin/clearCache').success(response => {
+                Espo.Ui.success(this.getLanguage().translate('Cache has been cleared', 'labels', 'Admin'));
+            });
+        },
+
+        actionRebuildDatabase: function () {
+            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => view.render());
         },
 
         actionShowHistory: function () {

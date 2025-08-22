@@ -43,7 +43,7 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
                     }
 
                     if (response.isNeedToRebuildDatabase && !this.rebuilding) {
-                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'info', 1000 * 60, true);
+                        Espo.Ui.notify(this.translate('pleaseRebuildDatabase'), 'danger', 1000 * 60, true);
                     }
                 });
             }, 1000);
@@ -61,21 +61,8 @@ Espo.define('treo-core:views/site/header', 'class-replace!treo-core:views/site/h
 
         rebuildDb() {
             this.rebuilding = true;
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.Ui.confirm(this.translate('rebuildDb', 'messages', 'Admin'), {
-                confirmText: this.translate('Apply'),
-                cancelText: this.translate('Cancel')
-            }, () => {
-                $.ajax({
-                    url: 'Admin/rebuildDb',
-                    type: 'POST',
-                    success: () => {
-                        this.rebuilding = false;
-                        Espo.Ui.success('Success');
-                    }
-                });
-            });
+            this.createView('rebuild-db', 'views/modals/rebuild-database', {}, view => view.render());
         }
 
     });
