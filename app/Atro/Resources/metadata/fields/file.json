@@ -14,11 +14,6 @@
       "name": "previewSize",
       "type": "enum",
       "default": "small",
-      "optionsIds": [
-        "small",
-        "medium",
-        "large"
-      ],
       "options": [
         "small",
         "medium",

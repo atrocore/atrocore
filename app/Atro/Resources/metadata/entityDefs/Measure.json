@@ -17,10 +17,6 @@
     "displayFormat": {
       "type": "enum",
       "options": [
-        "format1",
-        "format2"
-      ],
-      "optionsIds": [
         "1",
         "2"
       ]

@@ -34,17 +34,6 @@
     "type": {
       "type": "enum",
       "required": true,
-      "optionsIds": [
-        "Color Depth",
-        "Color Space",
-        "Extension",
-        "Mime",
-        "PDF Validation",
-        "Quality",
-        "Ratio",
-        "Scale",
-        "Size"
-      ],
       "options": [
         "Color Depth",
         "Color Space",
@@ -73,10 +62,6 @@
     "validateBy": {
       "type": "enum",
       "required": true,
-      "optionsIds": [
-        "List",
-        "Pattern"
-      ],
       "options": [
         "List",
         "Pattern"
@@ -128,10 +113,6 @@
       "type": "multiEnum",
       "storeArrayValues": true,
       "required": false,
-      "optionsIds": [
-        "RGB",
-        "SRGB"
-      ],
       "options": [
         "RGB",
         "SRGB"

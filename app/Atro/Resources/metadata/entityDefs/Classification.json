@@ -75,9 +75,6 @@
       "options": [
         "general"
       ],
-      "optionsIds": [
-        "general"
-      ],
       "default": "general"
     }
   },

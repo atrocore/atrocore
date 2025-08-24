@@ -15524,8 +15524,8 @@ td[data-name="draggableIcon"] {
     }
 }
 
-.field .attribute-type-value a.remove-icon {
-    margin-top: 0px;
+.field .attribute-type-value a.remove-icon, .field .attribute-type-value a.label-icon {
+    margin-top: 10px;
     margin-bottom: 6px;
 }
 

@@ -5,9 +5,6 @@
       "default": "Token",
       "options": [
         "Token"
-      ],
-      "optionsIds": [
-        "Token"
       ]
     },
     "disableActionHistory": {

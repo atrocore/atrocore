@@ -4,22 +4,6 @@
       "type": "enum",
       "required": true,
       "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "atrocore",
-        "pdoSql",
-        "mysql",
-        "psql",
-        "msql",
-        "ftp",
-        "sftp",
-        "oauth2",
-        "oauth1",
-        "otto",
-        "cookie",
-        "smtp",
-        "vertica",
-        "tokenAuthApi"
-      ],
       "options": [
         "atrocore",
         "pdoSql",
@@ -116,9 +100,6 @@
       "dataField": true,
       "required": false,
       "prohibitedEmptyValue": true,
-      "optionsIds": [
-        "client_credentials"
-      ],
       "options": [
         "client_credentials"
       ],
@@ -165,15 +146,6 @@
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "optionsIds": [
-        "orders",
-        "shipments",
-        "quantities",
-        "returns",
-        "products",
-        "receipts",
-        "price-reduction"
-      ],
       "options": [
         "orders",
         "shipments",
@@ -308,10 +280,6 @@
         "SSL",
         "TLS"
       ],
-      "optionsIds": [
-        "SSL",
-        "TLS"
-      ],
       "notStorable": true,
       "dataField": true
     },
@@ -399,11 +367,6 @@
       "prohibitedEmptyValue": true,
       "notStorable": true,
       "dataField": true,
-      "optionsIds": [
-        "mysql",
-        "psql",
-        "msql"
-      ],
       "options": [
         "mysql",
         "psql",
