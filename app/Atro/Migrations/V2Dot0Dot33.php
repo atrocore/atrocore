@@ -37,7 +37,13 @@ class V2Dot0Dot33 extends Base
                     $toUpdate = false;
                     foreach ($customDefs['fields'] as $field => $fieldDefs) {
                         if (!empty($fieldDefs['optionsIds'])) {
-
+                           // default value should use optionsIds
+                            if(!empty($fieldDefs['default']) && !empty($fieldDefs['options'])) {
+                                $key = array_search($fieldDefs['default'], $fieldDefs['options']);
+                                if($key !== false && !empty($fieldDefs['optionsIds'][$key])) {
+                                    $customDefs['fields'][$field]['default'] = $fieldDefs['optionsIds'][$key];
+                                }
+                            }
                             // we should define the default translation as old options (or the label will be keys in optionsIds instead)
                             foreach ($fieldDefs['optionsIds'] as $key => $optionId) {
                                 if (!isset($fieldDefs['options'][$key])) {
@@ -46,7 +52,7 @@ class V2Dot0Dot33 extends Base
                                 $keyTranslations[$scope . '.options.' . $field . '.' . $optionId] = $fieldDefs['options'][$key];
                             }
                             $customDefs['fields'][$field]['options'] = $fieldDefs['optionsIds'];
-//                            unset($customDefs['fields'][$field]['optionsIds']);
+                            // unset($customDefs['fields'][$field]['optionsIds']);
                             $toUpdate = true;
                         }
                     }
