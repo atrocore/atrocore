@@ -89,7 +89,6 @@ class V2Dot0Dot33 extends Base
                             }
                         }
 
-
                         foreach ($keyTranslations as $code => $value) {
                             $translations[$code] = [
                                 "id" => Util::generateId(),

@@ -132,7 +132,6 @@ class Translation extends ReferenceData
         }
     }
 
-
     protected function normalizeIntegerKey(array &$data): void
     {
         foreach ($data as $key => $value) {
@@ -172,7 +171,6 @@ class Translation extends ReferenceData
             }
         }
     }
-
 
     /**
      * @inheritDoc
