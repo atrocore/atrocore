@@ -55,7 +55,7 @@ class ThemeManager
     public function getGlobalCustomStylesheet(): ?string
     {
         if(!empty($this->config->get('customStylesheetPath')) && file_exists($this->config->get('customStylesheetPath'))) {
-            return $this->config->get('customStylesheetPath');
+            return str_replace('public/', '', $this->config->get('customStylesheetPath'));
         }
 
         return  null;

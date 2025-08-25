@@ -72,7 +72,7 @@ Espo.define('theme-manager', [], function () {
             let style = this.getStyle();
 
             if (style && style['customStylesheetPath']) {
-                let link = style['customStylesheetPath'];
+                let link = style['customStylesheetPath'].replace('client/', '');
 
                 if (this.config.get('cacheTimestamp')) {
                     link += '?r=' + this.config.get('cacheTimestamp').toString();
