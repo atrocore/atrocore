@@ -45,8 +45,6 @@ class V2Dot0Dot34 extends Base
             }
         }
 
-        Util::removeDir ('client/custom');
-
         if($toUpdate) {
             @file_put_contents($stylePath, @json_encode($res));
         }
@@ -71,7 +69,6 @@ class V2Dot0Dot34 extends Base
             $config->save();
         }
 
-
-
+        Util::removeDir ('client/custom');
     }
 }
