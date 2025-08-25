@@ -38,7 +38,8 @@
     "singleClassification": "Дозволено лише одну класифікацію",
     "disableAttributeLinking": "Заборонено пряме зв'язування атрибутів",
     "hasAssociate": "має пов'язані записи",
-    "nonDuplicatableFields": "Недубльовані поля"
+    "nonDuplicatableFields": "Недубльовані поля",
+    "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій"
   },
   "options": {
     "type": {

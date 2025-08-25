@@ -198,6 +198,40 @@ class Entity extends AbstractListener
         }
     }
 
+    protected function removeClassificationAttributesForRecord(OrmEntity $entity): void
+    {
+        $entityName = $this->getMetadata()->get("scopes.{$entity->getEntityName()}.classificationForEntity");
+        if (empty($entityName)) {
+            return;
+        }
+
+        if(empty($this->getMetadata()->get(['scopes', $entityName, 'deleteValuesAfterUnlinkingClassification']))){
+            return;
+        }
+
+        $cas = $this->getEntityManager()->getRepository('ClassificationAttribute')
+            ->where([
+                'classificationId' => $entity->get('classificationId')
+            ])
+            ->find();
+
+        if (empty($cas[0])) {
+            return;
+        }
+
+        foreach ($cas as $ca) {
+            $data = $ca->get('data')?->default ?? new \stdClass();
+            $data = json_decode(json_encode($data), true);
+            $data['attributeId'] = $ca->get('attributeId');
+
+            $this->getService('Attribute')->createAttributeValue([
+                'entityName' => $entityName,
+                'entityId'   => $entity->get(lcfirst($entityName) . 'Id'),
+                'data'       => $data
+            ]);
+        }
+    }
+
     protected function deleteAttributeValuesFromRecord(OrmEntity $entity, OrmEntity $classification): void
     {
         $entityName = $entity->getEntityName();
@@ -207,7 +241,7 @@ class Entity extends AbstractListener
         if (
             !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasAttribute'])
             || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasClassification'])
-            || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'disableAttributeLinking'])
+            || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'deleteValuesAfterUnlinkingClassification'])
         ) {
             return;
         }

@@ -36,7 +36,8 @@
     "disableAttributeLinking": "Direkte Attributverknüpfung deaktivieren",
     "hasAssociate": "Hat assoziierte Datensätze",
     "textFilterFields": "Textfilterfelder",
-    "nonDuplicatableFields": "Nicht-duplizierbare Felder"
+    "nonDuplicatableFields": "Nicht-duplizierbare Felder",
+    "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben"
   },
   "options": {
     "type": {

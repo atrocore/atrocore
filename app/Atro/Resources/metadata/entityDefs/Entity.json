@@ -216,6 +216,9 @@
     "textFilterFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/text-filter-fields"
+    },
+    "deleteValuesAfterUnlinkingClassification": {
+      "type": "bool"
     }
   },
   "links": {
