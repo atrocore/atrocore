@@ -98,9 +98,8 @@
               "value": true
             },
             {
-              "type": "notEquals",
-              "attribute": "id",
-              "value": "Listing"
+              "type": "isFalse",
+              "attribute": "disableAttributeLinking"
             }
           ]
         }
