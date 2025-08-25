@@ -50,5 +50,28 @@ class V2Dot0Dot34 extends Base
         if($toUpdate) {
             @file_put_contents($stylePath, @json_encode($res));
         }
+
+        $toUpdate = false;
+        $config = $this->getConfig();
+        if(!empty($this->getConfig()->get('customHeadCodePath')) && !str_starts_with($this->getConfig()->get('customHeadCodePath'), 'public/')&& is_file($this->getConfig()->get('customHeadCodePath')) ) {
+            @rename($this->getConfig()->get('customHeadCodePath'), 'public/'.$this->getConfig()->get('customHeadCodePath'));
+
+            $config->set('customHeadCodePath','public/'.$this->getConfig()->get('customHeadCodePath'));
+            $toUpdate = true;
+        }
+
+        if(!empty($this->getConfig()->get('customStylesheetPath')) && !str_starts_with($this->getConfig()->get('customStylesheetPath'), 'public/')&& is_file($this->getConfig()->get('customStylesheetPath')) ) {
+            @rename($this->getConfig()->get('customStylesheetPath'), 'public/'.$this->getConfig()->get('customStylesheetPath'));
+
+            $config->set('customStylesheetPath','public/'.$this->getConfig()->get('customStylesheetPath'));
+            $toUpdate = true;
+        }
+
+        if($toUpdate) {
+            $config->save();
+        }
+
+
+
     }
 }
