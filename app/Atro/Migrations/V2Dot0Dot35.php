@@ -123,10 +123,10 @@ class V2Dot0Dot35 extends Base
         foreach ($options as $old => $new) {
             $this->getConnection()->createQueryBuilder()
                 ->update('measure')
-                ->set('display_format', ':newFormat')
-                ->where('display_format = :oldFormat')
-                ->setParameter('newFormat', $new)
-                ->setParameter('oldFormat', $old)
+                ->set('display_format', ':new')
+                ->where('display_format = :old')
+                ->setParameter('new', $new)
+                ->setParameter('old', $old)
                 ->executeQuery();
         }
     }
