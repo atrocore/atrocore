@@ -14,7 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Util;
 
-class V2Dot0Dot33 extends Base
+class V2Dot0Dot35 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -112,6 +112,22 @@ class V2Dot0Dot33 extends Base
                     }
                 }
             }
+        }
+
+        // update display format option
+        $options  = [
+            "1" => "format1",
+            "2" => "format2",
+        ];
+
+        foreach ($options as $old => $new) {
+            $this->getConnection()->createQueryBuilder()
+                ->update('measure')
+                ->set('display_format', ':new')
+                ->where('display_format = :old')
+                ->setParameter('new', $new)
+                ->setParameter('old', $old)
+                ->executeQuery();
         }
     }
 }
