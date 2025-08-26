@@ -356,7 +356,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }).success(response => {
                     this.getModelFactory().create('EmailTemplate', model => {
                         model.set(response);
-                        this.createView('dialog', 'workflows:views/modals/send-email', {
+                        this.createView('dialog', 'views/modals/send-email', {
                             el: '[data-view="dialog"]',
                             model: model,
                             callback: (emailData) => {

@@ -17,10 +17,10 @@
  * for your own needs, if source code is provided.
  */
 
-Espo.define('workflows:views/modals/send-email', 'views/modal',
+Espo.define('views/modals/send-email', 'views/modal',
     Dep => Dep.extend({
 
-        template: 'workflows:modals/send-email',
+        template: 'modals/send-email',
 
         setup() {
             this.scope = 'EmailTemplate';
