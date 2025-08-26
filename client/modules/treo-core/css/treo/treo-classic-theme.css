@@ -3105,6 +3105,20 @@ input[type="search"] {
     margin-bottom: 10px;
 }
 
+.form-group-inline {
+    display: flex;
+    align-items: center;
+}
+
+.form-group-inline input,
+.form-group-inline label {
+    margin: 0;
+}
+
+.form-group-inline input[type="checkbox"] {
+    margin-right: 5px;
+}
+
 .radio, .checkbox {
     position: relative;
     display: block;
