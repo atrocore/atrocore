@@ -63,7 +63,7 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
 
         actionOpenSearchFilter() {
             if(!this.model.get('targetEntity') || !this.getMetadata().get(['scopes', this.model.get('targetEntity')])) {
-                this.notify(this.translate('The entity for the export is not valid'), 'error');
+                this.notify(this.translate('The target entity is not valid'), 'error');
                 return;
             }
 
