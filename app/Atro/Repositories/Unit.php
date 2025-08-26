@@ -126,6 +126,34 @@ class Unit extends Base
             }
         }
 
+        foreach ($this->getMetadata()->get(['scopes']) as $scope => $defs) {
+            $entityName = $defs['attributeValueFor'] ?? null;
+            if (!empty($entityName)) {
+                $avId = $this->getConnection()->createQueryBuilder()
+                    ->select('id')
+                    ->from($this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($scope))), 't')
+                    ->where('t.reference_value = :unitId')
+                    ->andWhere('t.deleted = :false')
+                    ->setParameter('unitId', $entity->get('id'))
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchOne();
+
+                if (!empty($avId)) {
+                    $avEntity = $this->getEntityManager()->getRepository($scope)->get($avId);
+                    throw new BadRequest(
+                        sprintf(
+                            $this->getLanguage()->translate('unitIsUsedOnEntityAttribute', 'exceptions', 'Unit'),
+                            $entity->get('name'),
+                            $avEntity->get('attributeName') ?? $avEntity->get('attributeId'),
+                            $this->getLanguage()->translate($entityName, 'scopeNames'),
+                            $avEntity->get(lcfirst($entityName . 'Name')) ?? $avEntity->get(lcfirst($entityName . 'Id'))
+                        )
+                    );
+                }
+            }
+        }
+
+
         $caId = $this->getConnection()->createQueryBuilder()
             ->select('id')
             ->from($this->getConnection()->quoteIdentifier('classification_attribute'), 't')
