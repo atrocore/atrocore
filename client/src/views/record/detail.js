@@ -186,9 +186,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         refreshLayout(middleOnly = false) {
             this.detailLayout = null
             this.gridLayout = null
-            this.notify('Loading...')
+
+            const useNotification = !this.model._disableRefreshNotification
+            if  (useNotification){
+                this.notify('Loading...')
+            }
             this.getGridLayout((layout) => {
-                this.notify(false)
+                if (useNotification){
+                    this.notify(false)
+                }else{
+                    delete this.model._disableRefreshNotification
+                }
+
                 const middle = this.getView('middle')
                 let reRenderMiddle = (middle) => {
                     middle._layout = layout
@@ -1295,6 +1304,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
+                                    this.model._disableRefreshNotification = true
                                     this.model.fetch();
                                 }
                                 this.model._updatedById = undefined;
