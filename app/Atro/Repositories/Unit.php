@@ -125,6 +125,28 @@ class Unit extends Base
                 }
             }
         }
+
+        $caId = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from($this->getConnection()->quoteIdentifier('classification_attribute'), 't')
+            ->where('t.data like :likeLink or t.data like :likeUnit')
+            ->andWhere('t.deleted = :false')
+            ->setParameter('likeLink', "%\"valueId\":\"{$entity->get('id')}\"%")
+            ->setParameter('likeUnit', "%\"valueUnitId\":\"{$entity->get('id')}\"%")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        if (!empty($caId)) {
+            $caEntity = $this->getEntityManager()->getRepository('ClassificationAttribute')->get($caId);
+            throw new BadRequest(
+                sprintf(
+                    $this->getLanguage()->translate('unitIsUsedOnClassificationAttribute', 'exceptions', 'Unit'),
+                    $entity->get('name'),
+                    $caEntity->get('attributeName') ?? $caEntity->get('attributeId'),
+                    $caEntity->get('classificationName') ?? $caEntity->get('classificationId')
+                )
+            );
+        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
