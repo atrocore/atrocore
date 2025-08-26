@@ -115,7 +115,6 @@ class Metadata extends AbstractListener
         $this->prepareRelationEntities($data);
 
         if (!empty($data['action']['types'])) {
-            $data['entityDefs']['Action']['fields']['type']['optionsIds'] = array_keys($data['action']['types']);
             $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
         }
 

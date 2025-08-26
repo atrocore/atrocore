@@ -22,10 +22,6 @@
       "options": [
         "individual",
         "company"
-      ],
-      "optionsIds": [
-        "individual",
-        "company"
       ]
     },
     "role": {

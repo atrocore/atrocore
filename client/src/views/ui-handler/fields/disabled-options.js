@@ -52,7 +52,6 @@ Espo.define('views/ui-handler/fields/disabled-options', 'views/fields/base', Dep
                     };
 
                     if (type === "multiEnum") {
-                        params.optionsIds = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'optionsIds']) || [];
                         params.options = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'options']) || []
                     } else {
                         params.extensibleEnumId = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'extensibleEnumId'])

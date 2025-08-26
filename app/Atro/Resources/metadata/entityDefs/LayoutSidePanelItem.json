@@ -21,14 +21,6 @@
         "primary",
         "info",
         "warning"
-      ],
-      "optionsIds": [
-        "default",
-        "success",
-        "danger",
-        "primary",
-        "info",
-        "warning"
       ]
     },
     "sticked": {

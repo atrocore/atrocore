@@ -9,12 +9,6 @@
       "prohibitedEmptyValue": true,
       "required": true,
       "default": "text",
-      "optionsIds": [
-        "text",
-        "bool",
-        "float",
-        "array"
-      ],
       "options": [
         "text",
         "bool",

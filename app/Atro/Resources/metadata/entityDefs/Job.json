@@ -9,14 +9,6 @@
       "type": "enum",
       "required": true,
       "default": "Pending",
-      "optionsIds": [
-        "Pending",
-        "Running",
-        "Success",
-        "Failed",
-        "Canceled",
-        "Awaiting"
-      ],
       "options": [
         "Pending",
         "Running",

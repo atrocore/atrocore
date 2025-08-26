@@ -76,6 +76,8 @@ class Translation extends ReferenceData
                 }
             }
         }
+        // remove normalize number key to remove __integer
+        $this->normalizeIntegerKey($preparedTranslationData);
         file_put_contents($this->cacheFilePath, json_encode($preparedTranslationData));
     }
 
@@ -130,6 +132,20 @@ class Translation extends ReferenceData
         }
     }
 
+    protected function normalizeIntegerKey(array &$data): void
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($data[$key])) {
+                $this->normalizeIntegerKey($data[$key]);
+            }
+            if (is_string($key) && str_starts_with($key, '__integer__')) {
+                $realKey = str_replace('__integer__', '', $key);
+                $data[$realKey] = $data[$key];;
+                unset($data[$key]);
+            }
+        }
+    }
+
     protected function saveDataToFile(array $data): bool
     {
         $res = parent::saveDataToFile($data);
@@ -148,6 +164,9 @@ class Translation extends ReferenceData
             if (!empty($data)) {
                 $this->prepareTreeValue($data, $result[$first], $value);
             } else {
+                if(preg_match('/^[0-9]+$/', $first)){
+                    $first = '__integer__'.$first;
+                }
                 $result[$first] = $value;
             }
         }

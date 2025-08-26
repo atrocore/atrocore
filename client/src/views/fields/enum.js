@@ -116,15 +116,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             // prepare default
-            if (this.mode === 'edit' && this.model.isNew() && this.params.default) {
-                let optionsIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'optionsIds']);
-                if (optionsIds) {
-                    let index = optionsIds.indexOf(this.params.default);
-                    // set current value to default value only if current value is invalid
-                    if (this.params.options[index] && !this.params.options.includes(this.model.get(this.name))) {
-                        this.params.default = this.params.options[index];
-                        this.model.set(this.name, this.params.options[index]);
-                    }
+            if (this.mode === 'edit' && this.model.isNew() && this.params.default && this.params.options) {
+                let index = this.params.options.indexOf(this.params.default);
+                // set current value to default value only if current value is invalid
+                if (!this.params.options.includes(this.model.get(this.name))) {
+                    this.params.default = this.params.options[index];
+                    this.model.set(this.name, this.params.options[index]);
                 }
             }
 

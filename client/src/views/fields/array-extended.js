@@ -54,10 +54,57 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 e.preventDefault();
                 this.removeGroup($(e.currentTarget));
             },
-            'change input[data-name][data-index]': function (e) {
-                e.stopPropagation();
+            'mouseenter .list-group-item[data-index]': function (e) {
+                if (this.mode === 'detail') {
+                    $(e.currentTarget).find('.label-icon').removeClass('hidden');
+                }
+            },
+            'mouseleave .list-group-item[data-index]': function (e) {
+                if (this.mode === 'detail') {
+                    $(e.currentTarget).find('.label-icon').addClass('hidden');
+                }
+            },
+            'click [data-action="editLabel"]': function(e) {
                 e.preventDefault();
-                this.trigger('change');
+                let data = $(e.currentTarget).data();
+                let option  = this.model.get(this.name)[data.index]
+                if(!option) {
+                    return;
+                }
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+                let scope = 'Translation';
+                let viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit';
+                let key = `${this.model.get('entityId')}.options.${this.model.get('code')}.${option}`;
+                this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
+                    let data = res.list[0] ?? {id: null, code: key};
+                    this.getModelFactory().create(scope, model => {
+                        model.set(data);
+
+                        let options = {
+                            scope: scope,
+                            model: model,
+                            id: data.id,
+                            fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
+                        };
+
+                        this.createView('modal', viewName, options, view => {
+                            Espo.Ui.notify(false);
+                            if (!view.model.get('code')) {
+                                view.model.set('code', key);
+                            }
+
+                            view.render();
+
+                            this.listenToOnce(view, 'remove', () => {
+                                this.clearView('modal');
+                            });
+
+                            this.listenToOnce(view, 'after:save', () => {
+                                this.model.fetch();
+                            });
+                        });
+                    });
+                });
             }
         }, Dep.prototype.events),
 
@@ -418,7 +465,6 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                         data[this.name + 'Ids'][key] = finalOptionId;
                     }
                 });
-                debugger
                 this.selectedComplex = data;
             } else {
                 Dep.prototype.fetchFromDom.call(this);

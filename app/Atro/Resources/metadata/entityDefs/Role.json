@@ -8,12 +8,6 @@
     },
     "assignmentPermission": {
       "type": "enum",
-      "optionsIds": [
-        "not-set",
-        "all",
-        "team",
-        "no"
-      ],
       "options": [
         "not-set",
         "all",
@@ -26,11 +20,6 @@
     },
     "dataPrivacyPermission": {
       "type": "enum",
-      "optionsIds": [
-        "not-set",
-        "yes",
-        "no"
-      ],
       "options": [
         "not-set",
         "yes",
@@ -42,11 +31,6 @@
     },
     "styleControlPermission": {
       "type": "enum",
-      "optionsIds": [
-        "not-set",
-        "yes",
-        "no"
-      ],
       "options": [
         "not-set",
         "yes",
