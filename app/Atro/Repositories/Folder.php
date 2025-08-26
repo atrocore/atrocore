@@ -20,8 +20,10 @@ use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\FileStorage\HasBasketInterface;
 use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Entities\Storage as StorageEntity;
 use Atro\Entities\Folder as FolderEntity;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -29,10 +31,67 @@ use Espo\ORM\Entity;
 class Folder extends Hierarchy
 {
     protected ?array $hierarchyData = null;
+    protected array $loadedHierarchyIds = [];
 
-    public function getAllHierarchyData(): array
+    public function loadHierarchyData($ids)
     {
-        if ($this->hierarchyData === null) {
+        if (empty($ids)) {
+            return;
+        }
+        if (is_string($ids)) {
+            $ids = [$ids];
+        }
+
+        $ids = array_unique($ids);
+        $idsToLoad = array_diff($ids, $this->loadedHierarchyIds);
+
+        if (empty($idsToLoad)) {
+            return;
+        }
+
+        if (Converter::isSlqRecursiveAvailable($this->getConnection())) {
+            $sql = <<<SQL
+WITH RECURSIVE parent_tree AS (
+    SELECT fh.entity_id,
+           fh.parent_id,
+           f.name    AS entity_name,
+           f1.name   AS parent_name
+    FROM folder_hierarchy fh
+    INNER JOIN folder f ON fh.entity_id = f.id
+    INNER JOIN folder f1 ON fh.parent_id = f1.id
+    WHERE fh.entity_id IN (:ids)
+      AND fh.parent_id <> fh.entity_id
+      AND f.deleted = :false
+      AND f1.deleted = :false
+
+    UNION ALL
+
+    SELECT fh.entity_id,
+           fh.parent_id,
+           f.name  AS entity_name,
+           f1.name AS parent_name
+    FROM folder_hierarchy fh
+    INNER JOIN folder f ON fh.entity_id = f.id
+    INNER JOIN folder f1 ON fh.parent_id = f1.id
+    JOIN parent_tree pt ON fh.entity_id = pt.parent_id
+    WHERE fh.entity_id <> fh.parent_id
+      AND f.deleted = :false
+      AND f1.deleted = :false
+)
+SELECT *
+FROM parent_tree
+SQL;
+
+            $records = $this->getEntityManager()->getConnection()->executeQuery(
+                $sql,
+                ['ids' => $idsToLoad, 'false' => false],
+                ['ids' => Mapper::getParameterType($idsToLoad), 'false' => ParameterType::BOOLEAN]
+            )->fetchAllAssociative();
+        } else {
+            if (!empty($this->loadedHierarchyIds)){
+                return;
+            }
+
             $records = $this->getEntityManager()->getConnection()->createQueryBuilder()
                 ->select('fh.parent_id, f1.name as parent_name, fh.entity_id, f.name as entity_name')
                 ->from('folder_hierarchy', 'fh')
@@ -43,19 +102,20 @@ class Folder extends Hierarchy
                 ->andWhere('f1.deleted=:false')
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
-
-            $this->hierarchyData = [];
-            foreach ($records as $record) {
-                $this->hierarchyData[$record['entity_id']] = $record;
-            }
         }
 
-        return $this->hierarchyData;
+
+        foreach ($records as &$record) {
+            $this->hierarchyData[$record['entity_id']] = &$record;
+        }
+
+        $this->loadedHierarchyIds = array_merge($this->loadedHierarchyIds, $idsToLoad);
     }
+
 
     public function getFolderHierarchyData(string $folderId): array
     {
-        $hierarchyData = $this->getAllHierarchyData();
+        $hierarchyData = $this->hierarchyData;
 
         $path = [];
         $id = $folderId;
