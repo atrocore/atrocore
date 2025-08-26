@@ -265,6 +265,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     onChange: value => {
                         const items = value.split(':,:').filter(item => !!item?.trim());
                         this.selected = Espo.Utils.clone(items);
+                        this.trigger('change');
                     }
                 });
             }
