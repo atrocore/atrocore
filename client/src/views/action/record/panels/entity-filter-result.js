@@ -16,10 +16,6 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         readOnly: true,
 
         setup() {
-            if (!this.panelVisible()) {
-                return;
-            }
-
             this.scope = this.model.get('targetEntity');
             this.url = this.model.get('targetEntity');
 
