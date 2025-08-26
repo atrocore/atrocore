@@ -207,7 +207,9 @@ class Entity extends AbstractListener
         if (
             !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasAttribute'])
             || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'hasClassification'])
-            || !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'disableAttributeLinking'])
+            || (!$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'disableAttributeLinking'])
+                && !$this->getMetadata()->get(['scopes', $entity->getEntityName(), 'deleteValuesAfterUnlinkingClassification'])
+            )
         ) {
             return;
         }
