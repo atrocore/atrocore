@@ -15,7 +15,7 @@
       {
         "name": "entityFilterResult",
         "label": "entityFilterResult",
-        "view": "workflows:views/action/record/panels/entity-filter-result",
+        "view": "views/action/record/panels/entity-filter-result",
         "canClose": false
       }
     ]
