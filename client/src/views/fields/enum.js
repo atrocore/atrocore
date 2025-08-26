@@ -468,38 +468,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 const plugins = [];
 
                 if (Selectize && !this.prohibitedEmptyValue && !this.isRequired()) {
-                    const clearTitle = this.translate('Clear');
-                    Selectize.define('clear_button', function (options) {
-                        const self = this;
-
-                        function appendButton() {
-                            if (!self.getValue()) {
-                                self.$control.find('.clear-button').remove();
-                                return;
-                            }
-
-                            if (self.$control.find('.clear-button').length) return;
-                            const $clearButton = $(`<a href="javascript:" class="clear-button" title="${clearTitle}"><i class="ph ph-minus"></i></a>`);
-                            $clearButton.on('click', function (e) {
-                                e.preventDefault();
-                                self.clear();
-                            });
-                            self.$control.append($clearButton);
-                        }
-
-                        this.setup = (function () {
-                            const original = self.setup;
-                            return function () {
-                                original.apply(this, arguments);
-
-                                appendButton();
-                                this.on('change', appendButton);
-                                this.on('clear', appendButton);
-                                this.on('item_add', appendButton);
-                                this.on('item_remove', appendButton);
-                            };
-                        })();
-                    });
+                    this.initSelectizeClearPlugin();
 
                     plugins.push('clear_button');
                 }

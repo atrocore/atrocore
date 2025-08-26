@@ -7386,7 +7386,7 @@ button.close {
 
 .selectize-input {
     border: 1px solid #eeeeee;
-    padding: 3px 10px;
+    padding: 3px 27px 3px 10px;
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -7498,7 +7498,7 @@ button.close {
 
 .selectize-input > .clear-button {
     color: #000;
-    margin: 0 25px 0 auto;
+    margin: 0 0 0 auto;
 }
 
 .selectize-input > .clear-button > i {
@@ -7580,7 +7580,7 @@ button.close {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 10px;
+    right: 7px;
     line-height: 1;
     margin-top: 1px;
     margin-bottom: 0;
@@ -15765,13 +15765,20 @@ span.became .file-link {
 }
 
 .field .unit-group.input-group .unit-input {
-    width: 80%;
+    flex: 1;
+    min-width: 0;
 }
 
 .field .unit-group.input-group .unit-select {
     display: inline-block;
-    width: 20%;
     margin-left: 10px;
+    width: fit-content;
+    min-width: 100px;
+    max-width: 50%;
+}
+
+.field .unit-group.input-group .unit-select .selectize-control {
+    min-width: auto;
 }
 
 .lead-container > .edit > .row > .col-md-8 {
