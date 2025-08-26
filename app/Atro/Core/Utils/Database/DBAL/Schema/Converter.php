@@ -54,7 +54,7 @@ class Converter
         return strpos(get_class($connection->getDriver()), 'PgSQL') !== false;
     }
 
-    public static function isSlqRecursiveAvailable(Connection $connection): bool
+    public static function isSqlRecursiveAvailable(Connection $connection): bool
     {
         if (self::isPgSQL($connection)) {
             return true;

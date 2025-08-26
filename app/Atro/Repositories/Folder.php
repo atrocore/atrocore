@@ -49,7 +49,7 @@ class Folder extends Hierarchy
             return;
         }
 
-        if (Converter::isSlqRecursiveAvailable($this->getConnection())) {
+        if (Converter::isSqlRecursiveAvailable($this->getConnection())) {
             $sql = <<<SQL
 WITH RECURSIVE parent_tree AS (
     SELECT fh.entity_id,
