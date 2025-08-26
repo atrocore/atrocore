@@ -191,6 +191,19 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             let data = Dep.prototype.fetch.call(this);
             this.addMeasureDataOnFetch(data)
             return data;
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.initUnitSelector();
+        },
+
+        initUnitSelector() {
+            this.initSelectizeClearPlugin();
+            this.$el.find('.unit-select select').selectize({
+                plugins: ['clear_button']
+            });
         }
 
     });

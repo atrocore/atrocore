@@ -88,7 +88,12 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             let data = Dep.prototype.fetch.call(this);
             Varchar.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
-        }
+        },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            Varchar.prototype.initUnitSelector.call(this);
+        },
     });
 });
