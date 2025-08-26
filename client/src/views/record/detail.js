@@ -335,6 +335,48 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
 
+        actionDynamicActionEmail(data) {
+            const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
+            if (!defs) {
+                return
+            }
+            const payload = {
+                actionId: data.id,
+                entityId: this.model.get('id')
+            }
+
+            if (defs.showEmailPreview) {
+                // show preview modal
+                Espo.ui.notify(this.translate('loading', 'messages'))
+
+                this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
+                    actionId: data.id,
+                    entityId: this.model.get('id'),
+                    actionType: "emailPreview"
+                }).success(response => {
+                    this.getModelFactory().create('EmailTemplate', model => {
+                        model.set(response);
+                        this.createView('dialog', 'workflows:views/modals/send-email', {
+                            el: '[data-view="dialog"]',
+                            model: model,
+                            callback: (emailData) => {
+                                this.executeActionRequest(Object.assign({}, payload, emailData), () => {
+                                    if (this.getView('dialog')) {
+                                        this.getView('dialog').dialog.close()
+                                    }
+                                })
+                            }
+                        }, view => {
+                            view.render()
+                            Espo.Ui.notify(false);
+                        });
+                    })
+                })
+            } else {
+                this.executeActionRequest(payload)
+            }
+        },
+
         actionUiHandler: function (data) {
             const handler = (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).find(el => el.id === data.id)
             if (handler) {

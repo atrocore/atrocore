@@ -10,6 +10,16 @@
   "hiddenBoolFilterList": [
     "notActionSet"
   ],
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "entityFilterResult",
+        "label": "entityFilterResult",
+        "view": "workflows:views/action/record/panels/entity-filter-result",
+        "canClose": false
+      }
+    ]
+  },
   "relationshipPanels": {
     "actions": {
       "selectAction": "selectRelatedEntity",
