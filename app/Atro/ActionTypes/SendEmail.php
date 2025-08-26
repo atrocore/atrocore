@@ -34,20 +34,11 @@ class SendEmail extends AbstractAction
     {
         $entity = $this->getSourceEntity($action, $input);
 
-        if (property_exists($input, 'subject')
-            && property_exists($input, 'body')
-            && property_exists($input, 'emailTo')
-        ) {
-            $emailData = [
-                'emailTo' => $input->emailTo,
-                'subject' => $input->subject,
-                'body'    => $input->body,
-            ];
-            if (property_exists($input, 'emailCc')) {
-                $emailData['emailCc'] = $input->emailCc;
+        $emailData = $this->getEmailData($action, $entity);
+        foreach (['subject', 'body', 'emailTo', 'emailCc'] as $key) {
+            if (property_exists($input, $key)) {
+                $emailData[$key] = $input->$key;
             }
-        } else {
-            $emailData = $this->getEmailData($action, $entity);
         }
 
         $data = [
