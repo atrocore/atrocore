@@ -228,7 +228,6 @@ Espo.define(
                     if (this.themeManager.isUserTheme()) {
                         var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
                         $('#main-stylesheet').attr('href', stylesheetPath);
-
                         if (this.themeManager.getCustomStylesheet()) {
                             let customStylesheetPath = this.basePath + this.themeManager.getCustomStylesheet();
 
