@@ -98,6 +98,7 @@ class ActionManager
         }
 
         $log = $this->getEntityManager()->getRepository('ActionLog')->get();
+        $log->set('actionId', $action->get('id'));
 
         if (!empty($input->executedViaWorkflow)) {
             $log->set('type', 'workflow');
@@ -124,9 +125,6 @@ class ActionManager
             $log->set('type', 'manual');
         }
 
-        $log->set('actionId', $action->get('id'));
-        $log->set('payload', $this->preparePayload($input));
-
         try {
             $res = $actionType->executeNow($action, $input);
             $log->set('status', 'executed');
@@ -144,6 +142,7 @@ class ActionManager
             $this->auth($currentUserId);
         }
 
+        $log->set('payload', $this->preparePayload($input));
         $this->getEntityManager()->saveEntity($log);
 
         if (!empty($e)) {
