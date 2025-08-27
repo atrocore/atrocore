@@ -3115,6 +3115,10 @@ input[type="search"] {
     margin: 0;
 }
 
+.form-group-inline label {
+    font-weight: normal;
+}
+
 .form-group-inline input[type="checkbox"] {
     margin-right: 5px;
 }
