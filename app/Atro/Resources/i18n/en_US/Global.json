@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ActionLog": "Action Log",
+    "IncomingWebhook": "Incoming Webhook",
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribute Panel",
     "Classification": "Classification",
@@ -80,6 +82,8 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "ActionLog": "Action Logs",
+    "IncomingWebhook": "Incoming Webhooks",
     "RoleScopeAttribute": "Attributes",
     "RoleScopeAttributePanel": "Attribute Panels",
     "Classification": "Classifications",
@@ -284,6 +288,7 @@
     "Remove": "Delete",
     "Options": "Options",
     "Username": "Username",
+    "RememberUsername": "Remember username",
     "Password": "Password",
     "Login": "Login",
     "Log Out": "Log Out",
@@ -295,7 +300,7 @@
     "Followed": "Followed",
     "Follow": "Follow",
     "Followers": "Followers",
-    "Clear Local Cache": "Clear Local Cache",
+    "Clear Local Cache": "Clear Browser cache",
     "Actions": "Actions",
     "Delete": "Delete",
     "Update": "Update",
@@ -610,6 +615,15 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "start": "Start",
+    "end": "End",
+    "action": "Action",
+    "payload": "Payload",
+    "logs": "Logs",
+    "hash": "Hash",
+    "ipWhiteList": "IP white list",
+    "httpMethod": "HTTP Method",
+    "url": "URL",
     "classification": "Classification",
     "classifications": "Classifications",
     "status": "Status",
@@ -1258,7 +1272,8 @@
       "editable": "Check if an entity is editable",
       "getAllLanguageFields": "Get all language-specific fields",
       "parseMarkdown": "Parse markdown content",
-      "formatField": "Format a field value"
+      "formatField": "Format a field value",
+      "convertMeasureUnit": "Convert a value from one unit to another \n Params: float|int value, string measureId, string fromUnitId, string? toUnitId = null \n If toUnitId is empty, result will be an array with converted value for all measure units \n Example: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}"
     },
     "filters": {
       "prepareEntity": "Prepare entity for display or processing",

@@ -186,9 +186,18 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         refreshLayout(middleOnly = false) {
             this.detailLayout = null
             this.gridLayout = null
-            this.notify('Loading...')
+
+            const useNotification = !this.model._disableRefreshNotification
+            if  (useNotification){
+                this.notify('Loading...')
+            }
             this.getGridLayout((layout) => {
-                this.notify(false)
+                if (useNotification){
+                    this.notify(false)
+                }else{
+                    delete this.model._disableRefreshNotification
+                }
+
                 const middle = this.getView('middle')
                 let reRenderMiddle = (middle) => {
                     middle._layout = layout
@@ -753,7 +762,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 var fieldView = fields[field];
                 this.listenTo(fieldView, 'edit', function (view) {
                     if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                        fieldInEditMode.inlineEditClose();
+                        // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
                     }
                     fieldInEditMode = view;
                 }, this);
@@ -871,10 +880,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
-                    if (fieldView.mode == 'edit') {
+                    if (fieldView.mode === 'edit') {
                         fieldView.fetchToModel();
                         fieldView.removeInlineEditLinks();
                         fieldView.inlineEditModeIsOn = false;
+                        fieldView.killAfterOutsideClickListener()
                     }
                     fieldView.setMode('edit');
                     fieldView.render(() => {
@@ -1176,10 +1186,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.setupBeforeFinal();
 
-            this.listenToOnce(this.model, 'sync', () => {
+            this.onModelReady(()=> {
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
-            });
+            })
 
             this.on('after:render', function () {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
@@ -1265,6 +1275,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
+                window.dispatchEvent(new Event('record:save'));
             });
         },
 
@@ -1290,10 +1301,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
-                            if (data.timestamp !== res.timestamp) {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                            if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
+                                    this.model._disableRefreshNotification = true
                                     this.model.fetch();
                                 }
                                 this.model._updatedById = undefined;
@@ -1344,7 +1356,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupBeforeFinal: function () {
-            this.manageAccess();
+            this.listenToOnce(this.model, 'sync', function () {
+                this.manageAccess();
+            });
 
             this.attributes = this.model.getClonedAttributes();
 
@@ -1553,21 +1567,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             });
                         }
 
-
-                        $el.find('.panel-title').prepend('<span class="collapser" >\n' +
-                            '        <i class="ph ph-caret-up-down"></i>\n' +
-                            '    </span>')
-
-                        $el.find('.collapser').click(() => {
-                            $panelBody.collapse('toggle')
-                        })
-
                         $panelBody.on('show.bs.collapse', (event) => {
                             if ($panelBody.is(event.target)) {
                                 let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
                                 if (collapsedPanels.includes(panelName)) {
                                     collapsedPanels = collapsedPanels.filter(item => item !== panelName)
                                     this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                    $el.find('.collapser').html('<i class="ph ph-caret-down"></i>');
                                 }
                             }
                         })
@@ -1578,6 +1584,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 if (!collapsedPanels.includes(panelName)) {
                                     collapsedPanels.push(panelName)
                                     this.getStorage().set('collapsed-attribute-panels', this.scope, collapsedPanels)
+                                    $el.find('.collapser').html('<i class="ph ph-caret-right"></i>')
                                 }
                             }
                         })
@@ -1585,7 +1592,14 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                         // apply collapse state
                         let collapsedPanels = this.getStorage().get('collapsed-attribute-panels', this.scope) || [];
-                        $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in')
+                        $panelBody.addClass(collapsedPanels.includes(panelName) ? 'collapse' : 'collapse in');
+
+                        $el.find('.panel-title').prepend(`<span class="collapser"><i class="ph ph-caret-${collapsedPanels.includes(panelName) ? 'right' : 'down'}"></i></span>`)
+
+                        $el.find('.collapser').click(() => {
+                            $panelBody.collapse('toggle')
+                        })
+
                         this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(this.getView('bottom')?.panelList || []) });
                     }
                 });

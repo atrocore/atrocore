@@ -16,7 +16,7 @@
                 <span class="text-muted small">{{{createdAt}}}</span>
             </div>
 
-            <span class="text-muted message">{{{message}}}</span>
+            <span class="message">{{{message}}}</span>
         </div>
     </div>
 

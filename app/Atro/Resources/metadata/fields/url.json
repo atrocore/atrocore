@@ -42,6 +42,10 @@
        "name": "isMultilang",
        "type": "bool",
        "tooltip": true
+     },
+     {
+       "name": "duplicateIgnore",
+       "type": "bool"
      }
    ],
    "filter": true,
@@ -51,5 +55,6 @@
       "type":"varchar"
    },
    "personalData": true,
+   "textFilter": true,
    "group": "character"
 }

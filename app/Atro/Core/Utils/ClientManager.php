@@ -110,7 +110,7 @@ class ClientManager
         $link = null;
 
         if (!empty($customStylesheet = $this->getThemeManager()->getGlobalCustomStylesheet())) {
-            $link .= '<link href="' . $this->basePath . $customStylesheet . '?r=' . $this->getCacheTimestamp() . '" rel="stylesheet" id="custom-stylesheet">' . PHP_EOL;
+            $link .= '<link href="' . $this->basePath . $customStylesheet . '?r=' . $this->getCacheTimestamp() . '" rel="stylesheet" id="custom-stylesheet-global">' . PHP_EOL;
         }
 
         if (!empty($customStylesheet = $this->getThemeManager()->getCustomStylesheet())) {

@@ -10,9 +10,6 @@
       "type": "enum",
       "required": true,
       "default": "local",
-      "optionsIds": [
-        "local"
-      ],
       "options": [
         "local"
       ]

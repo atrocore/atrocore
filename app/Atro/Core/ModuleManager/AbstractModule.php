@@ -106,6 +106,11 @@ abstract class AbstractModule
         return false;
     }
 
+    public function getConsoleCommands(): array
+    {
+        return [];
+    }
+
     public function prepareApiDocs(array &$data, array $schemas): void
     {
     }

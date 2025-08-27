@@ -479,7 +479,7 @@ class ReferenceData extends Repository implements Injectable
 
     public function getAll()
     {
-        $collection = new EntityCollection($this->getAllItems(), $this->entityName, $this->entityFactory);
+        $collection = new EntityCollection(array_values($this->getAllItems()), $this->entityName, $this->entityFactory);
         $collection->setAsFetched();
 
         return $collection;
@@ -576,5 +576,10 @@ class ReferenceData extends Repository implements Injectable
     protected function translate(string $label, ?string $category = 'labels', ?string $scope = 'Global'): string
     {
         return $this->getLanguage()->translate($label, $category, $scope);
+    }
+
+    protected function translateException(string $key): string
+    {
+        return $this->translate($key, 'exceptions', $this->entityName);
     }
 }

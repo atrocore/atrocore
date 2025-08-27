@@ -14,11 +14,6 @@
       "name": "previewSize",
       "type": "enum",
       "default": "small",
-      "optionsIds": [
-        "small",
-        "medium",
-        "large"
-      ],
       "options": [
         "small",
         "medium",
@@ -32,6 +27,10 @@
     {
       "name": "default",
       "type": "varchar"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "actualFields": [

@@ -22,6 +22,11 @@
         "sortField": "action_set_linker_mm.sortOrder"
       },
       "view": "views/action/record/panels/actions"
+    },
+    "logs": {
+      "create": false,
+      "select": false,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
     }
   },
   "dynamicLogic": {

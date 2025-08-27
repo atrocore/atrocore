@@ -199,7 +199,7 @@ abstract class AbstractRecordController extends AbstractController
             $params['filterList'] = $request->get('filterList');
         }
 
-        if ($request->get('select')) {
+        if ($request->get('select') && is_string($request->get('select'))) {
             $params['select'] = explode(',', $request->get('select'));
         }
     }

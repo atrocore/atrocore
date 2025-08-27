@@ -27,10 +27,6 @@ class Relation extends Base
 {
     public function hasDeletedRecordsToClear(): bool
     {
-        if (empty($this->seed)) {
-            return false;
-        }
-
         $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {
@@ -57,10 +53,6 @@ class Relation extends Base
 
     public function clearDeletedRecords(): void
     {
-        if (empty($this->seed)) {
-            return;
-        }
-
         $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
 
         foreach ($this->getMetadata()->get("entityDefs.$this->entityName.fields") ?? [] as $field => $fieldDefs) {

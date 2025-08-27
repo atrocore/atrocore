@@ -45,8 +45,9 @@ class Set extends AbstractAction
             return false;
         }
 
-        /** @var Action $actionService */
-        $actionService = $this->getServiceFactory()->create('Action');
+        if (!empty($input->triggeredEntityType) && !empty($action->get('sourceEntity'))) {
+            $action->set('sourceEntity', $input->triggeredEntityType);
+        }
 
         if (property_exists($input, 'actionSetLinkerId')) {
             unset($input->actionSetLinkerId);
@@ -54,7 +55,7 @@ class Set extends AbstractAction
 
         $input->actionSetLinkerId = $current->get('id');
 
-        $res = $actionService->executeNow($action->get('id'), $input);
+        $res = $this->getActionManager()->executeNow($action, $input);
 
         if (empty($action->get('inBackground')) &&
             (!property_exists($input, 'where') || in_array($action->get('type'), ['export', 'import', 'synchronization'])) &&
@@ -62,7 +63,7 @@ class Set extends AbstractAction
             return $this->executeAction($next, $input);
         }
 
-        return (bool)$res;
+        return $res;
     }
 
     public function getNextAction(Entity $entity): ?Entity

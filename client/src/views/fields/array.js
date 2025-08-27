@@ -254,7 +254,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     create: true,
                     plugins: {
                         remove_button: {
-                            label: '&#x2715;'
+                            label: ''
                         },
                         drag_drop: {}
                     },
@@ -263,7 +263,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                     labelField: 'label',
                     valueField: 'value',
                     onChange: value => {
-                        const items = value.split(':,:');
+                        const items = value.split(':,:').filter(item => !!item?.trim());
                         this.selected = Espo.Utils.clone(items);
                     }
                 });

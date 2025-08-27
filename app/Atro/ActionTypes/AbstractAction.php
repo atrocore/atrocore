@@ -49,19 +49,6 @@ abstract class AbstractAction implements TypeInterface
         $this->container = $container;
     }
 
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getEntityManager()->getEntity('Action', $workflowData['id']);
-        $action->set('sourceEntity', $event->getArgument('entity')->getEntityType());
-
-        $input = new \stdClass();
-        $input->triggeredEntity = $event->getArgument('entity');
-        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
-        $input->entityId = $event->getArgument('entity')->get('id');
-
-        return $this->getActionManager()->executeNow($action, $input);
-    }
-
     public function useMassActions(Entity $action, \stdClass $input): bool
     {
         return true;
@@ -168,10 +155,5 @@ abstract class AbstractAction implements TypeInterface
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
-    }
-
-    public function getActionById(string $id): Entity
-    {
-        return $this->getEntityManager()->getEntity('Action', $id);
     }
 }

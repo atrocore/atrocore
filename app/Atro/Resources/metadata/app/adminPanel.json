@@ -1,4 +1,21 @@
 {
+  "maintenance": {
+    "label": "Maintenance",
+    "itemList": [
+      {
+        "url": "#Admin/clearCache",
+        "label": "Clear Cache",
+        "description": "clearCache",
+        "listDisabled": true
+      },
+      {
+        "url": "#Admin/rebuildDb",
+        "label": "rebuildDb",
+        "description": "rebuildDb",
+        "listDisabled": true
+      }
+    ]
+  },
   "system": {
     "label": "System",
     "itemList": [
@@ -56,18 +73,6 @@
         "url": "#NotificationProfile",
         "label": "notificationProfiles",
         "description": "notificationProfiles"
-      },
-      {
-        "url": "#Admin/clearCache",
-        "label": "Clear Cache",
-        "description": "clearCache",
-        "listDisabled": true
-      },
-      {
-        "url": "#Admin/rebuildDb",
-        "label": "rebuildDb",
-        "description": "rebuildDb",
-        "listDisabled": true
       },
       {
         "url": "#Composer/list",
@@ -222,6 +227,11 @@
         "url": "#Admin/apiRequest",
         "label": "apiRequest",
         "description": "apiRequest"
+      },
+      {
+        "url": "#IncomingWebhook",
+        "label": "incomingWebhook",
+        "description": "incomingWebhook"
       }
     ]
   }

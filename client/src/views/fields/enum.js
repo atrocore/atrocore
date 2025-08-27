@@ -58,6 +58,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         translatedGroups: null,
 
+        hasColors: false,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
@@ -68,6 +70,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 data.prohibitedEmptyValue = this.prohibitedEmptyValue
                 data.groupOptions = this.getActiveGroups()
             }
+
+            data.hasBackground = this.getBackgroundColor && !!this.getBackgroundColor(data.value);
 
             var value = this.model.get(this.name);
 
@@ -112,15 +116,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             // prepare default
-            if (this.mode === 'edit' && this.model.isNew() && this.params.default) {
-                let optionsIds = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'optionsIds']);
-                if (optionsIds) {
-                    let index = optionsIds.indexOf(this.params.default);
-                    // set current value to default value only if current value is invalid
-                    if (this.params.options[index] && !this.params.options.includes(this.model.get(this.name))) {
-                        this.params.default = this.params.options[index];
-                        this.model.set(this.name, this.params.options[index]);
-                    }
+            if (this.mode === 'edit' && this.model.isNew() && this.params.default && this.params.options) {
+                let index = this.params.options.indexOf(this.params.default);
+                // set current value to default value only if current value is invalid
+                if (!this.params.options.includes(this.model.get(this.name))) {
+                    this.params.default = this.params.options[index];
+                    this.model.set(this.name, this.params.options[index]);
                 }
             }
 
@@ -203,6 +204,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
             if (this.options.disabledOptionList) {
                 this.disableOptions(this.options.disabledOptionList)
+            }
+
+            if (this.getBackgroundColor) {
+                this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
             }
         },
 
@@ -435,9 +440,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
-            var data = [];
+            const data = [];
             (this.params.options || []).forEach(function (value) {
-                var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                let label = this.getLanguage().translateOption(value, this.name, this.scope);
                 if (this.translatedOptions) {
                     if (value in this.translatedOptions) {
                         label = this.translatedOptions[value];
@@ -460,23 +465,46 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     this.updateLanguagesFields(model, value);
                 });
 
+                const plugins = [];
+
+                if (Selectize && !this.prohibitedEmptyValue && !this.isRequired()) {
+                    this.initSelectizeClearPlugin();
+
+                    plugins.push('clear_button');
+                }
+
                 this.$el.find('select').selectize({
+                    allowEmptyOption: true,
+                    showEmptyOptionInDropdown: true,
+                    emptyOptionLabel: '',
+                    plugins,
                     render: {
                         item: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (item.value && this.getBackgroundColor) {
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    icon = `<i style="background-color: ${color};"></i>`;
+                                }
                             }
 
                             return `<div class="label colored-enum">${icon}<span>${escape(item.text)}</span></div>`;
                         },
                         option: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (this.hasColors) {
+                                let style = '';
+                                if (item.value && this.getBackgroundColor) {
+                                    const color = this.getBackgroundColor(item.value);
+                                    if (color) {
+                                        style = `style="background-color: ${color}; border-color: ${color};"`;
+                                    }
+
+                                    icon = `<i ${style}></i>`;
+                                }
                             }
 
-                            return `<div class="option"><span class="label colored-enum">${icon}<span>${escape(item.text)}</span></span></div>`;
+                            return `<div class="option" ${(item.value === '' ? 'selectize-dropdown-emptyoptionlabel' : '')}><span class="label colored-enum">${icon}<span>${escape(item.text)}</span></span></div>`;
                         },
                     }
                 });
@@ -707,7 +735,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             };
         },
-
     });
 });
 

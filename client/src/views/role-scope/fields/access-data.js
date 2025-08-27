@@ -18,9 +18,11 @@ Espo.define('views/role-scope/fields/access-data', 'views/fields/json-object', D
             if (this.model.get('hasAccess')) {
                 let items = [];
                 $.each((this.model.get('accessData').scopeData || {}), (action, value) => {
-                    let actionLabel = this.translate(action + 'Action', 'fields', 'RoleScope');
-                    let valueLabel = this.translate(value, 'labels', 'RoleScope');
-                    items.push(`<div class="access-item"><b>${actionLabel}:</b> ${valueLabel}</div>`);
+                    if (value) {
+                        let actionLabel = this.translate(action + 'Action', 'fields', 'RoleScope');
+                        let valueLabel = this.translate(value, 'labels', 'RoleScope');
+                        items.push(`<div class="access-item"><b>${actionLabel}:</b> ${valueLabel}</div>`);
+                    }
                 });
 
                 let html = `<div class="scope-access-data">${items.join('')}</div>`

@@ -17,7 +17,7 @@
             </div>
 
             <span class="label label-{{style}}">{{statusText}}</span>
-            <span class="text-muted message">{{{message}}}</span>
+            <span class="message">{{{message}}}</span>
         </div>
     </div>
 

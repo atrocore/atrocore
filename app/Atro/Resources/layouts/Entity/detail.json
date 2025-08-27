@@ -100,7 +100,9 @@
         {
           "name": "duplicatableRelations"
         },
-        false
+        {
+          "name": "nonDuplicatableFields"
+        }
       ],
       [
         {
@@ -110,9 +112,11 @@
       ],
       [
         {
-          "name": "nonComparableFields"
+          "name": "textFilterFields"
         },
-        false
+        {
+          "name": "nonComparableFields"
+        }
       ],
       [
         {
@@ -137,6 +141,12 @@
         {
           "name": "singleClassification"
         }
+      ],
+      [
+        {
+          "name": "deleteValuesAfterUnlinkingClassification"
+        },
+        false
       ],
       [
         {

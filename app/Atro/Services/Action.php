@@ -91,8 +91,7 @@ class Action extends Base
 
         if (!empty($action->get('sourceEntity'))) {
             $dynamicRecordAction = null;
-            foreach ($this->getMetadata()->get(['clientDefs', $action->get('sourceEntity'), 'dynamicRecordActions'],
-                []) as $dra) {
+            foreach ($this->getMetadata()->get("clientDefs.{$action->get('sourceEntity')}.dynamicRecordActions") ?? [] as $dra) {
                 if ($dra['id'] == $action->get('id')) {
                     $dynamicRecordAction = $dra;
                     break;
@@ -124,8 +123,12 @@ class Action extends Base
 
     public function updateEntity($id, $data)
     {
-        if (property_exists($data,
-                '_link') && $data->_link === 'actions' && !empty($data->_id) && !empty($data->_sortedIds)) {
+        if (
+            property_exists($data, '_link')
+            && $data->_link === 'actions'
+            && !empty($data->_id)
+            && !empty($data->_sortedIds)
+        ) {
             $collection = $this->getEntityManager()->getRepository('ActionSetLinker')
                 ->where([
                     'setId'    => $data->_id,
@@ -191,13 +194,9 @@ class Action extends Base
         $dynamicActions = [];
         $dynamicPreviewActions = [];
         $actionIds = [];
+        $key = $type === 'field' ? 'dynamicFieldActions' : 'dynamicRecordActions';
 
-
-        foreach ($this->getMetadata()->get([
-            'clientDefs',
-            $scope,
-            $type === 'field' ? 'dynamicFieldActions' : 'dynamicRecordActions'
-        ]) ?? [] as $action) {
+        foreach ($this->getMetadata()->get(['clientDefs', $scope, $key]) ?? [] as $action) {
             if (!empty($action['acl']['scope'])) {
                 if (!$this->getAcl()->check($action['acl']['scope'], $action['acl']['action'])) {
                     continue;

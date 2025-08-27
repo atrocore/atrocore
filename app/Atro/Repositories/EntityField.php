@@ -489,7 +489,6 @@ class EntityField extends ReferenceData
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
         if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $typeFields[] = 'optionColors';
-            $typeFields[] = 'optionsIds';
         }
 
         foreach (array_merge($commonFields, $typeFields) as $field) {

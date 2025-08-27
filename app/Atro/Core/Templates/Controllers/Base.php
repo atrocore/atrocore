@@ -17,5 +17,4 @@ use Atro\Controllers\AbstractRecordController;
 
 class Base extends AbstractRecordController
 {
-
 }

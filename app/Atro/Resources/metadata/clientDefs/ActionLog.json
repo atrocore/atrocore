@@ -1,0 +1,39 @@
+{
+  "iconClass": "code-block",
+  "controller": "controllers/record",
+  "createDisabled": true,
+  "dynamicLogic": {
+    "fields": {
+      "incomingWebhook": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "incomingWebhookId"
+            }
+          ]
+        }
+      },
+      "scheduledJob": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "scheduledJobId"
+            }
+          ]
+        }
+      },
+      "workflow": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "workflowId"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

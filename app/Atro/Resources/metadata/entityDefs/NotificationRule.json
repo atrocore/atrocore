@@ -21,19 +21,6 @@
       "type": "enum",
       "prohibitedEmptyValue": true,
       "required": true,
-      "optionsIds": [
-        "creation",
-        "updating",
-        "linking",
-        "unlinking",
-        "deletion",
-        "note_created",
-        "note_updated",
-        "note_deleted",
-        "ownership_assignment",
-        "unlinking_ownership_assignment",
-        "mentioned"
-      ],
       "options": [
         "creation",
         "updating",

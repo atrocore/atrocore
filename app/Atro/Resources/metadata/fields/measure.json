@@ -28,6 +28,10 @@
     {
       "name": "default",
       "type": "varchar"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,

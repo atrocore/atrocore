@@ -47,9 +47,10 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored
 
                 data['fontWeight'] = 'normal';
                 data['fontSize'] = fontSize ? fontSize + 'em' : '100%';
-                data['backgroundColor'] = this.model.get(this.name) || '#ececec'
-                data['color'] = ColoredEnum.prototype.getFontColor.call(this, data['backgroundColor']);
-                data['border'] = ColoredEnum.prototype.getBorder.call(this, data['backgroundColor']);
+                data['hasBackground'] = true;
+                data['backgroundColor'] = this.model.get(this.name);
+                data['color'] = ColoredEnum.prototype.getFontColor.call(this, data['backgroundColor'] || '#ececec');
+                data['border'] = ColoredEnum.prototype.getBorder.call(this, data['backgroundColor'] || '#ececec');
             }
 
             return data;

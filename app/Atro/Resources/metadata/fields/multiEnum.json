@@ -24,14 +24,12 @@
       "type": "bool"
     },
     {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,
   "auditable": true,
-  "notCreatable": true,
   "notSortable": true,
   "fieldDefs": {
     "type": "jsonArray"

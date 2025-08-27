@@ -134,6 +134,11 @@
         cursor: pointer;
     }
 
+    select, option, optgroup {
+        color: var(--nav-font-color);
+        background-color: var(--nav-menu-background);
+    }
+
     button:hover, .locale-switcher:hover, button:focus, .locale-switcher:focus {
         background-color: rgba(0, 0, 0, 0.03);
     }

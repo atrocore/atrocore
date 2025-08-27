@@ -27,7 +27,13 @@
     "passwordUpdatedAt": "Passwort aktualisiert am",
     "passwordUpdatedBy": "Passwort aktualisiert von",
     "notes": "Notizen",
-    "tasks": "Aufgaben"
+    "tasks": "Aufgaben",
+    "followEntityOnAssignment": "Automatische Nachverfolgung bei Zuweisung",
+    "followEntityOnStreamPost": "Automatische Nachverfolgung beim Posten in Aktivitäten",
+    "followCreatedEntities": "Eigenerstellte Datensätze automatisch verfolgen",
+    "receiveNotifications": "Erhalten Sie Benachrichtigungen",
+    "locale": "Gebietsschema",
+    "style": "Design"
   },
   "labels": {
     "Generate": "Erzeugen",
@@ -47,7 +53,8 @@
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
     "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
-    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
+    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
+    "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",

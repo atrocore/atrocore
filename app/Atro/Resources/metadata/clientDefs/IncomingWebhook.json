@@ -1,0 +1,4 @@
+{
+  "iconClass": "webhooks-logo",
+  "controller": "controllers/record"
+}

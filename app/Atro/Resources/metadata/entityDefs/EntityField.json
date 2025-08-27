@@ -45,6 +45,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "duplicateIgnore": {
+      "type": "bool",
+      "tooltip": true
+    },
     "multilangField": {
       "type": "varchar",
       "notStorable": true,
@@ -176,12 +180,6 @@
     },
     "optionColors": {
       "type": "array",
-      "layoutListDisabled": true,
-      "layoutDetailDisabled": true
-    },
-    "optionsIds": {
-      "type": "array",
-      "readOnly": true,
       "layoutListDisabled": true,
       "layoutDetailDisabled": true
     },

@@ -29,7 +29,7 @@ class ThemeManager
     public function getCustomStylesheet(): ?string
     {
         if(!empty($style = $this->getStyle()) && !empty($style['customStylesheetPath']) && file_exists($style['customStylesheetPath'])) {
-            return $style['customStylesheetPath'];
+            return str_replace('public/', '', $style['customStylesheetPath']);
         }
 
         return null;
@@ -55,7 +55,7 @@ class ThemeManager
     public function getGlobalCustomStylesheet(): ?string
     {
         if(!empty($this->config->get('customStylesheetPath')) && file_exists($this->config->get('customStylesheetPath'))) {
-            return $this->config->get('customStylesheetPath');
+            return str_replace('public/', '', $this->config->get('customStylesheetPath'));
         }
 
         return  null;

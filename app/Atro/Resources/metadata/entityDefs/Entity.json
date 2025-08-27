@@ -191,6 +191,11 @@
       "type": "array",
       "notStorable": true
     },
+    "nonDuplicatableFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/non-duplicatable-fields",
+      "notStorable": true
+    },
     "hasAssociate": {
       "type": "bool"
     },
@@ -206,6 +211,13 @@
       "type": "bool"
     },
     "disableAttributeLinking": {
+      "type": "bool"
+    },
+    "textFilterFields": {
+      "type": "array",
+      "view": "views/admin/entity-manager/fields/text-filter-fields"
+    },
+    "deleteValuesAfterUnlinkingClassification": {
       "type": "bool"
     }
   },

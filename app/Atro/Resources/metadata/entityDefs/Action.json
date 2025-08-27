@@ -13,7 +13,6 @@
       "view": "views/action/fields/type",
       "required": true,
       "prohibitedEmptyValue": false,
-      "optionsIds": [],
       "options": []
     },
     "typePhpCode": {
@@ -42,10 +41,6 @@
       "type": "enum",
       "prohibitedEmptyValue": true,
       "default": "system",
-      "optionsIds": [
-        "system",
-        "sameUser"
-      ],
       "options": [
         "system",
         "sameUser"
@@ -95,11 +90,6 @@
       "type": "enum",
       "prohibitedEmptyValue": false,
       "inlineEditDisabled": true,
-      "optionsIds": [
-        "entity",
-        "record",
-        "field"
-      ],
       "options": [
         "entity",
         "record",
@@ -115,10 +105,6 @@
     },
     "display": {
       "type": "enum",
-      "optionsIds": [
-        "dropdown",
-        "single"
-      ],
       "options": [
         "dropdown",
         "single"
@@ -240,6 +226,12 @@
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
       "noLoad": true
+    },
+    "logs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
     }
   },
   "links": {
@@ -274,6 +266,11 @@
     "connection": {
       "type": "belongsTo",
       "entity": "Connection"
+    },
+    "logs": {
+      "type": "hasMany",
+      "foreign": "action",
+      "entity": "ActionLog"
     }
   },
   "collection": {

@@ -44,11 +44,13 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
         dragDrop: true,
 
+        hasColors: false,
+
         events: {},
 
         data: function () {
             return _.extend({
-                optionList: this.params.options || []
+                optionList: this.params.options || [],
             }, Dep.prototype.data.call(this));
         },
 
@@ -70,6 +72,10 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
             if (this.options.disabledOptionList) {
                 this.disableOptions(this.options.disabledOptionList)
+            }
+
+            if (this.getBackgroundColor) {
+                this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
             }
 
             Dep.prototype.setup.call(this);
@@ -155,12 +161,11 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                             label = this.translatedOptions[value];
                         }
                     }
-                    if (value === '') {
-                        value = '__emptystring__';
-                    }
+
                     if (label === '') {
-                        label = this.translate('None');
+                        return;
                     }
+
                     data.push({
                         value: value,
                         label: label
@@ -170,7 +175,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 data.forEach(item => item.value = item.value.replace(/"/g, '-quote-').replace(/\\/g, '-backslash-'));
 
                 let plugins = {remove_button: {
-                    label: '&#x2715;'
+                    label: ''
                 }};
                 if (this.dragDrop) {
                     plugins.drag_drop = {};
@@ -204,16 +209,24 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                     render: {
                         item: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (item.value && this.getBackgroundColor) {
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    icon = `<i style="background-color: ${color};"></i>`;
+                                }
                             }
 
                             return `<div class="label colored-multi-enum">${icon}<span>${escape(item.label)}</span></div>`;
                         },
                         option: (item, escape) => {
                             let icon = '';
-                            if (this.getBackgroundColor) {
-                                icon = `<i style="background-color: ${this.getBackgroundColor(item.value)};"></i>`;
+                            if (this.hasColors) {
+                                let styles = '';
+                                const color = this.getBackgroundColor(item.value);
+                                if (color) {
+                                    styles = `style="background-color: ${color};"`;
+                                }
+                                icon = `<i ${styles}></i>`;
                             }
 
                             return `<div class="option"><span class="label colored-multi-enum">${icon}<span>${escape(item.label)}</span></span></div>`;

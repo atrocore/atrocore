@@ -18,7 +18,5 @@ use Espo\ORM\Entity;
 
 interface TypeInterface
 {
-    public function executeViaWorkflow(array $workflowData, Event $event): bool;
-
     public function executeNow(Entity $action, \stdClass $input): bool;
 }

@@ -46,6 +46,10 @@
     {
       "name": "index",
       "type": "bool"
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,

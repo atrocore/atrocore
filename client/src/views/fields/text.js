@@ -323,6 +323,16 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
 
+        inlineEditFocusing() {
+            requestAnimationFrame(() => {
+                const $textarea = this.$el.find('textarea');
+
+                $textarea.focus();
+                const val = $textarea.val();
+                $textarea[0].setSelectionRange(val.length, val.length);
+            });
+        },
+
         createQueryBuilderFilter() {
             return {
                 id: this.name,

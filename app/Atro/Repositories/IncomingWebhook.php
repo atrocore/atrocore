@@ -1,0 +1,49 @@
+<?php
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+declare(strict_types=1);
+
+namespace Atro\Repositories;
+
+use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Templates\Repositories\ReferenceData;
+use Espo\ORM\Entity;
+
+class IncomingWebhook extends ReferenceData
+{
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        if (!empty($entity->get('ipWhiteList'))) {
+            foreach ($entity->get('ipWhiteList') ?? [] as $ip) {
+                if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
+                    throw new BadRequest(sprintf($this->translateException('invalidIP'), $ip));
+                }
+            }
+        }
+
+        if (!$this->isValidCode($entity->get('code'))) {
+            throw new BadRequest($this->translateException('invalidCode'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
+    /**
+     * Allows letters (a-z, A-Z), digits (0-9), underscores (_), and hyphens (-)
+     *
+     * @param string $code
+     * @return bool
+     */
+    protected function isValidCode(string $code): bool
+    {
+        return preg_match('/^[a-zA-Z0-9_-]+$/', $code) === 1;
+    }
+}

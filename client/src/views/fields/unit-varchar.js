@@ -42,6 +42,16 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             this.afterSetup();
         },
 
+        onInlineEditSave(res, attrs, model) {
+            model.set(this.originalName, res[this.originalName] || null);
+            model.set(this.originalName + 'AllUnits', res[this.originalName + 'AllUnits'] || null);
+            model.set(this.originalName + 'UnitData', res[this.originalName + 'UnitData'] || null);
+            model.set(this.originalName + 'UnitId', res[this.originalName + 'UnitId'] || null);
+            model.set(this.originalName + 'UnitName', res[this.originalName + 'UnitName'] || null);
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         setMode(mode) {
             this.setTemplateFromMeasureFormat(mode)
             Dep.prototype.setMode.call(this, mode)
@@ -172,7 +182,7 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
 
         addMeasureDataOnFetch(data) {
             let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
-            data[this.unitFieldName] = $unit ? $unit.val() : null;
+            data[this.unitFieldName] = ($unit && $unit.val())  ? $unit.val() : null;
             data[this.originalName] = data[this.name]
             delete data[this.name];
         },
@@ -181,6 +191,19 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             let data = Dep.prototype.fetch.call(this);
             this.addMeasureDataOnFetch(data)
             return data;
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.initUnitSelector();
+        },
+
+        initUnitSelector() {
+            this.initSelectizeClearPlugin();
+            this.$el.find('.unit-select select').selectize({
+                plugins: ['clear_button']
+            });
         }
 
     });

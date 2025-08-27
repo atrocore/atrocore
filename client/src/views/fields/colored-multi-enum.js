@@ -53,12 +53,14 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
 
         getFieldStyles(fieldValue) {
             const enumView = new Enum();
-            const backgroundColor = this.getBackgroundColor(fieldValue);
+            const backgroundColorValue = this.getBackgroundColor(fieldValue);
+            const backgroundColor = backgroundColorValue || '#' + this.defaultBackgroundColor;
             const fontSize = this.model.getFieldParam(this.name, 'fontSize');
 
             let data = {
                 fontWeight: 'normal',
                 backgroundColor: backgroundColor,
+                hasBackground: !!backgroundColorValue,
                 color: enumView.getFontColor(backgroundColor),
                 border: enumView.getBorder(backgroundColor)
             };
@@ -89,7 +91,11 @@ Espo.define('views/fields/colored-multi-enum', ['views/fields/multi-enum', 'view
             }
 
 
-            let color = (optionColors[key] || this.defaultBackgroundColor);
+            let color = optionColors[key];
+            if (!color) {
+                return null;
+            }
+
             if (color.indexOf('#') < 0) {
                 color = '#' + color;
             }

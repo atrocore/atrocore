@@ -28,5 +28,8 @@
   },
   "unique": {
     "handler": "\\Atro\\TwigFilter\\Unique"
+  },
+  "md5": {
+    "handler": "\\Atro\\TwigFilter\\Md5"
   }
 }

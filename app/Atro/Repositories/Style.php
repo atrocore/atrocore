@@ -20,9 +20,9 @@ use Espo\ORM\Entity;
 
 class Style extends ReferenceData
 {
-    protected $customStylesheetDir = 'client/custom/css';
+    protected $customStylesheetDir = 'public/client/custom/css';
 
-    protected $customHeadCodeDir = 'client/custom/html';
+    protected $customHeadCodeDir = 'public/client/custom/html';
 
     public function refreshCache(): void
     {
@@ -41,7 +41,7 @@ class Style extends ReferenceData
         }
 
         if (!empty($entity->get('customHeadCode'))) {
-            Util::createDir($this->customHeadCodeDir);
+            Util::createDir( $this->customHeadCodeDir);
             $path = $this->getCustomHeadCodePath($entity);
 
             file_put_contents($path, $entity->get('customHeadCode'));

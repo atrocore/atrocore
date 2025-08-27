@@ -42,6 +42,10 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             Varchar.prototype.afterSetup.call(this);
         },
 
+        onInlineEditSave(res, attrs, model){
+            Varchar.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         setMode(mode) {
             Varchar.prototype.setTemplateFromMeasureFormat.call(this,mode);
             Dep.prototype.setMode.call(this, mode)
@@ -85,6 +89,12 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
             let data = Dep.prototype.fetch.call(this);
             Varchar.prototype.addMeasureDataOnFetch.call(this, data)
             return data;
-        }
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            Varchar.prototype.initUnitSelector.call(this);
+        },
     });
 });

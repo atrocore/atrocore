@@ -111,10 +111,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.selectDuplicateEnabled = !!this.options.selectDuplicateEnabled;
             this.showFilter = this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData';
             this.selectAllByDefault = this.options.selectAllByDefault;
+            this.additionalBoolFilterList = this.options.additionalBoolFilterList;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
-
             }
 
             if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
@@ -422,6 +422,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 return hiddenBoolFilters.includes(filter);
             });
             this.searchManager.boolFilterData = this.boolFilterData;
+            this.searchManager.additionalBoolFilterList = Array.isArray(this.additionalBoolFilterList) ? this.additionalBoolFilterList : [];
 
             const listView = this.getView('list');
             if (listView && !listView.canRenderSearch()) {
@@ -766,6 +767,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 }.bind(this));
             });
         },
+
         handleOnSelect(duplicate = false) {
             if (this.getSelectedViewType() === 'tree') {
                 let ids = [];

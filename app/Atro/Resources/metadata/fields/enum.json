@@ -33,14 +33,12 @@
       "type": "bool"
     },
     {
-      "name": "isMultilang",
-      "type": "bool",
-      "tooltip": true
+      "name": "duplicateIgnore",
+      "type": "bool"
     }
   ],
   "filter": true,
   "auditable": true,
-  "notCreatable": true,
   "fieldDefs": {
     "type": "varchar"
   },

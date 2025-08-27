@@ -63,8 +63,17 @@ Espo.define('views/login', 'view', function (Dep) {
 
         afterRender: function () {
             let demo = this.getConfig().get('demo') || {"username": "", "password": ""};
-            $('#field-userName').val(demo.username);
-            $('#field-password').val(demo.password);
+
+            if (demo.username) {
+                $('#field-userName').val(demo.username);
+                $('#field-password').val(demo.password);
+            } else {
+                const lastAuthUsername = localStorage.getItem('lastAuthUserName');
+
+                if (lastAuthUsername) {
+                    $('#field-userName').val(lastAuthUsername);
+                }
+            }
 
             // setup background image
             this.setupBackgroundImage();
@@ -122,28 +131,29 @@ Espo.define('views/login', 'view', function (Dep) {
         },
 
         login: function () {
-            var userName = $('#field-userName').val();
-            var trimmedUserName = userName.trim();
+            let userName = $('#field-userName').val(),
+                trimmedUserName = userName.trim(),
+                rememberUsername = $('#field-rememberUsername').is(':checked') || false;
+
             if (trimmedUserName !== userName) {
                 $('#field-userName').val(trimmedUserName);
                 userName = trimmedUserName;
             }
 
-            var password = $('#field-password').val();
-
-            var $submit = this.$el.find('#btn-login');
+            let password = $('#field-password').val(),
+                $submit = this.$el.find('#btn-login');
 
             if (userName == '') {
-                var $el = $("#field-userName");
+                let $el = $("#field-userName"),
+                    message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
-                var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
                 $el.popover({
                     placement: 'bottom',
                     content: message,
                     trigger: 'manual',
                 }).popover('show');
 
-                var $cell = $el.closest('.form-group');
+                let $cell = $el.closest('.form-group');
                 $cell.addClass('has-error');
                 this.$el.one('mousedown click', function () {
                     $cell.removeClass('has-error');
@@ -177,6 +187,12 @@ Espo.define('views/login', 'view', function (Dep) {
                         settings: data.settings,
                         appParams: data.appParams
                     });
+
+                    if (rememberUsername) {
+                        localStorage.setItem('lastAuthUserName', userName);
+                    } else {
+                        localStorage.removeItem('lastAuthUserName');
+                    }
                 }.bind(this),
                 error: function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');

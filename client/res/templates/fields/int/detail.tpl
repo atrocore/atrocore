@@ -1,1 +1,1 @@
-{{#if isNotEmpty}}{{value}}{{else}}{{#if valueIsSet}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}...{{/if}}{{/if}} {{#if unitFieldName}}{{#if unitValue}}{{unitValueTranslate}}{{else}}<span class="text-gray">{{{translate 'Null'}}}</span>{{/if}}{{/if}}
+<div class="value-container">{{#if isNotEmpty}}{{value}}{{else}}{{#if valueIsSet}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}...{{/if}}{{/if}} {{#if unitFieldName}}{{#if unitValue}}{{unitValueTranslate}}{{else}}<span class="text-gray">{{{translate 'Null'}}}</span>{{/if}}{{/if}}</div>

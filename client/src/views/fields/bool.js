@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
+Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -82,14 +82,14 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             data.isNull = this.model.get(this.name) === null || this.model.get(this.name) === undefined;
 
             if (['edit', 'search'].includes(this.mode)) {
-                data.options = ['', 'false', 'true'];
+                data.options = ['null', 'false', 'true'];
                 data.translatedOptions = {
-                    '': 'NULL',
+                    'null': 'NULL',
                     'false': this.translate('No'),
                     'true': this.translate('Yes'),
                 }
                 if (data.isNull) {
-                    data['value'] = '';
+                    data['value'] = this.notNull ? '' : 'null';
                 }
                 if (!this.notNull && !data.isNull) {
                     data['value'] = this.model.get(this.name).toString()
@@ -108,12 +108,23 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.find('select').selectize();
+        },
+
         fetch: function () {
             let value = null;
             if (this.notNull) {
                 value = this.$el.find('input[name=' + this.name + ']').is(":checked");
             } else {
                 let val = this.$el.find('[name="' + this.name + '"]').val();
+
+                if (val === 'null') {
+                    val = null;
+                }
+
                 value = val ? val === "true" : null;
             }
             var data = {};
@@ -131,6 +142,11 @@ Espo.define('views/fields/bool', 'views/fields/base', function (Dep) {
                 value = this.$element.get(0).checked;
             } else {
                 let val = this.$element.get(0).value;
+
+                if (val === 'null') {
+                    val = null;
+                }
+
                 value = val ? val === "true" : null;
             }
 

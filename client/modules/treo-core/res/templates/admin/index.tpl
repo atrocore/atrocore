@@ -13,7 +13,7 @@
                                 {{#each itemList}}
                                 <tr>
                                     <td>
-                                        <a href="{{url}}">{{translate label scope='Admin' category='labels'}}</a>
+                                        <a href="{{url}}"{{#if tooltip}} title="{{tooltip}}"{{/if}}>{{translate label scope='Admin' category='labels'}}{{#if hasWarning}}<i class="ph ph-warning-circle warning-icon"{{#if warningText}} title="{{warningText}}"{{/if}}></i>{{/if}}</a>
                                     </td>
                                     <td>{{translate description scope='Admin' category='descriptions'}}</td>
                                 </tr>

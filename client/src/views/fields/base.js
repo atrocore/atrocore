@@ -84,7 +84,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         defaultFilterValue: null,
 
-
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -319,6 +318,12 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                     this.showRequiredSign();
                 } else {
                     this.hideRequiredSign();
+                }
+
+                if (this.readOnly) {
+                    this.getCellElement().attr('data-readonly', 'true');
+                } else {
+                    this.getCellElement().removeAttr('data-readonly');
                 }
 
             }, this);
@@ -610,11 +615,36 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $cell.prepend($editLink);
             }
 
-            this.$el.parent().one('dblclick.inlineEditOnce', () => {
-                if (this.mode === 'detail') {
-                    this.inlineEdit();
-                }
-            });
+            const name = this.originalName || this.name;
+            this.$el.parent().off(`click.on-${name}`);
+            if (this.mode === 'detail') {
+                let lastClickTime = 0;
+
+                this.$el.parent().on(`click.on-${name}`, e => {
+                    // check if double-click for ignoring
+                    const now = Date.now();
+                    if (now - lastClickTime < 300) {
+                        return;
+                    }
+                    lastClickTime = now;
+
+                    const $target = $(e.target);
+                    if (
+                        !$target.is('i')
+                        && !$target.is('button')
+                        && !$target.is('a')
+                    ) {
+                        setTimeout(() => {
+                            const selection = window.getSelection();
+                            const selectedText = selection ? selection.toString() : '';
+                            if (!selectedText) {
+                                this.inlineEdit();
+                            }
+                        }, 200);
+                    }
+
+                });
+            }
 
             $editLink.on('click', function () {
                 this.inlineEdit();
@@ -821,7 +851,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             var self = this;
             var model = this.model;
-            var prev = this.initialAttributes;
+            var prev = Espo.Utils.cloneDeep(this.initialAttributes);
 
             model.set(data, {silent: true});
             data = model.attributes;
@@ -836,30 +866,122 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             if (!attrs) {
                 this.inlineEditClose();
+                model.trigger('after:inlineEditClose');
                 return;
             }
 
             if (this.validate()) {
-                this.notify('Not valid', 'error');
+                this.notify(this.translate('Record cannot be saved'), 'error');
                 model.set(prev, {silent: true});
                 return;
             }
 
-            this.notify('Saving...');
-            model.save(attrs, {
-                success: function () {
-                    self.trigger('after:save');
-                    model.trigger('after:save');
-                    self.notify('Saved', 'success');
-                },
-                error: function () {
-                    self.notify('Error occured', 'error');
-                    model.set(prev, {silent: true});
-                    self.render()
-                },
-                patch: true
+            let _prev = {};
+            $.each(attrs, function (field, value) {
+                _prev[field] = prev[field];
             });
+
+            attrs['_prev'] = _prev;
+            attrs['_silentMode'] = true;
+
+            model.trigger('before:save', attrs);
+
+            let confirmMessage = this.getConfirmMessage(_prev, attrs, model);
+            if (confirmMessage) {
+                Espo.Ui.confirm(confirmMessage, {
+                    confirmText: self.translate('Apply'),
+                    cancelText: self.translate('Cancel')
+                }, () => {
+                    this.inlineEditSaveModel(model, attrs);
+                });
+            } else {
+                this.inlineEditSaveModel(model, attrs);
+            }
+        },
+
+        getConfirmMessage: function (_prev, attrs, model) {
+            if (model._confirmMessage) {
+                return model._confirmMessage;
+            }
+
+            let confirmMessage = null;
+            if (this.model.get('id')) {
+                let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
+                $.each(confirmations, (field, data) => {
+                    if (_prev[field] !== attrs[field]) {
+                        let key = null;
+                        if (typeof data.values !== 'undefined') {
+                            data.values.forEach(value => {
+                                if (attrs[field] === value) {
+                                    key = data.message;
+                                }
+                            });
+                        } else {
+                            key = data;
+                        }
+
+                        if (key) {
+                            let parts = key.split('.');
+                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                        }
+                    }
+                });
+            }
+
+            return confirmMessage;
+        },
+
+        inlineEditSaveModel(model, attrs) {
+            attrs['_skipIsEntityUpdated'] = true;
+            this.notify('Saving...');
+            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs)
+                .success(res => {
+                    this.onInlineEditSave(res, attrs, model);
+                })
+                .error(xhr => {
+                    const statusReason = xhr.responseText || '';
+                    if (xhr.status === 409) {
+                        xhr.errorIsHandled = true;
+                        this.notify(false);
+                        Espo.Ui.confirm(statusReason, {
+                            confirmText: this.translate('Apply'),
+                            cancelText: this.translate('Cancel')
+                        }, () => {
+                            attrs['_prev'] = null;
+                            attrs['_silentMode'] = false;
+                            this.ajaxPatchRequest(`${model.name}/${this.model.id}`, attrs).success(res => {
+                                this.onInlineEditSave(res, attrs, model);
+                            }).error(xhr => {
+                                this.onInlineEditError(xhr);
+                            });
+                        })
+                    } else {
+                        this.onInlineEditError(xhr);
+                    }
+                });
+        },
+
+        onInlineEditSave(res, attrs, model){
+            model.set(attrs);
+            model._previousAttributes = res;
+            model._updatedById = this.getUser().id; // block realtime
+
+            // this.trigger('after:save'); // ignored because saving needs to be silent
+            // model.trigger('after:save'); // ignored because saving needs to be silent
+
+            model.trigger('after:inlineEditSave');
+
+            window.dispatchEvent(new Event('record:save'));
+            window.dispatchEvent(new Event('record:actions-reload'));
+
+            this.notify('Saved', 'success');
             this.inlineEditClose(true);
+        },
+
+        onInlineEditError(xhr) {
+            if (xhr.status >= 400 && xhr.status < 500) {
+                this.trigger('invalid');
+            }
         },
 
         removeInlineEditLinks: function () {
@@ -894,6 +1016,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
+            this.killAfterOutsideClickListener();
             if (this.mode != 'edit') {
                 return;
             }
@@ -908,8 +1031,6 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.model.set(this.initialAttributes);
             }
 
-            this.$el.parent().off('dblclick.inlineEditOnce');
-
             this.reRender(true);
         },
 
@@ -918,20 +1039,61 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 return false;
             }
 
-            var self = this;
-
             this.trigger('edit', this);
             this.setMode('edit');
 
             this.initialAttributes = this.model.getClonedAttributes();
 
             this.once('after:render', function () {
+                this.inlineEditFocusing();
                 this.addInlineEditLinks();
+                this.initSaveAfterOutsideClick();
             }, this);
 
             this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
+        },
+
+        killAfterOutsideClickListener() {
+            const name = this.originalName || this.name;
+            this.$el.parents('.middle').off(`click.anywhere-for-${name}`);
+        },
+
+        initSaveAfterOutsideClick() {
+            this.killAfterOutsideClickListener();
+            const name = this.originalName || this.name;
+            this.$el.parents('.middle').on(`click.anywhere-for-${name}`, e => {
+                if (this.mode === 'edit') {
+                    let selector = `.cell[data-name=${this.name}]`;
+                    if (this.originalName) {
+                        selector += `, .cell[data-name="${this.originalName}"]`;
+                    }
+
+                    const $target = $(e.target);
+                    const $cell = $target.parents(selector);
+
+                    if (
+                        $cell.size() === 0
+                        && !$target.is('i')
+                        && !$target.is('button')
+                        && !$target.is('a')
+                        && !$target.is('select')
+                    ) {
+                        this.inlineEditSave();
+                    }
+                }
+            });
+        },
+
+        inlineEditFocusing() {
+            const $input = this.$el.find('input').first();
+
+            $input.focus();
+            if ($input[0] && $input[0].type === 'text') {
+                const val = $input.val();
+                $input[0].setSelectionRange(val.length, val.length);
+            }
         },
 
         showValidationMessage: function (message, target) {
@@ -948,6 +1110,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (!$el.size() && this.$element) {
                 $el = this.$element;
             }
+
             $el.popover({
                 placement: 'bottom',
                 container: 'body',
@@ -955,31 +1118,31 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 trigger: 'manual'
             }).popover('show');
 
-            var isDestroyed = false;
+            $el.data('isDestroyed', false)
 
-            $el.closest('.field').one('mousedown click', function () {
-                if (isDestroyed) return;
+            $el.closest('.field').one('mousedown click', () => {
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                isDestroyed = true;
+                $el.data('isDestroyed', true)
             });
 
-            this.once('render remove', function () {
-                if (isDestroyed) return;
+            this.once('render remove', () => {
                 if ($el) {
+                    if ($el.data('isDestroyed')) return;
                     $el.popover('destroy');
-                    isDestroyed = true;
+                    $el.data('isDestroyed', true)
                 }
             });
 
-            if (this._timeout) {
-                clearTimeout(this._timeout);
+            if ($el.data('timeout')) {
+                clearTimeout($el.data('timeout'));
             }
 
-            this._timeout = setTimeout(function () {
-                if (isDestroyed) return;
+            $el.data('timeout', setTimeout(() => {
+                if ($el.data('isDestroyed')) return;
                 $el.popover('destroy');
-                isDestroyed = true;
-            }, this.VALIDATION_POPOVER_TIMEOUT);
+                $el.data('isDestroyed', true)
+            }, this.VALIDATION_POPOVER_TIMEOUT));
         },
 
         validate: function () {
@@ -1285,6 +1448,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.model.isNew()
                 && !this.model.get('_duplicatingEntityId')
                 && this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.defaultValueType`) === 'script'
+                && !(this.options.el || '').includes("stream")
             ) {
                 this.model.set(this.name, null);
                 this.ajaxGetRequest('App/action/defaultValueForScriptType', {

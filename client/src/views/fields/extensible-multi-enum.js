@@ -15,7 +15,7 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
 
         detailTemplate: 'fields/extensible-multi-enum/detail',
 
-        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions'],
+        selectBoolFilterList: ['onlyForExtensibleEnum', 'onlyAllowedOptions', 'onlyExtensibleEnumOptionIds'],
 
         boolFilterData: {
             onlyForExtensibleEnum() {
@@ -23,6 +23,9 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             },
             onlyAllowedOptions() {
                 return this.model.getFieldParam(this.name, 'allowedOptions') || this.model.get('allowedOptions') || null
+            },
+            onlyExtensibleEnumOptionIds() {
+                return this.model.get(this.idsName) || [];
             }
         },
 
@@ -67,14 +70,14 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                 if (ids && ids.length > 0 && optionsData) {
                     const fontSize = this.model.getFieldParam(this.name, 'fontSize');
                     optionsData.forEach(option => {
-                        let backgroundColor = option.color || '#ececec';
+                        let backgroundColor = option.color;
                         data.selectedValues.push({
                             description: option.description || '',
                             fontSize: fontSize ? fontSize + 'em' : '100%',
                             fontWeight: 'normal',
                             backgroundColor: backgroundColor,
-                            color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor),
-                            border: ColoredEnum.prototype.getBorder.call(this, backgroundColor),
+                            color: ColoredEnum.prototype.getFontColor.call(this, backgroundColor || '#ececec'),
+                            border: ColoredEnum.prototype.getBorder.call(this, backgroundColor || '#ececec'),
                             optionName: option.preparedName ?? option.name
                         });
                     });
@@ -134,6 +137,12 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             }
 
             return res;
+        },
+
+        onInlineEditSave(res, attrs, model){
+            model.set(this.name + 'OptionsData', res[this.name + 'OptionsData'] || null);
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
         },
 
         fetchSearch: function () {

@@ -30,36 +30,15 @@ class SendEmail extends AbstractAction
         return $this->getEmailData($action, $entity);
     }
 
-    public function executeViaWorkflow(array $workflowData, Event $event): bool
-    {
-        $action = $this->getActionById($workflowData['id']);
-
-        $input = new \stdClass();
-        $input->triggeredEntity = $event->getArgument('entity');
-        $input->triggeredEntityType = $event->getArgument('entity')->getEntityType();
-        $input->triggeredEntityId = $event->getArgument('entity')->get('id');
-
-        return $this->getActionManager()->executeNow($action, $input);
-    }
-
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         $entity = $this->getSourceEntity($action, $input);
 
-        if (property_exists($input, 'subject')
-            && property_exists($input, 'body')
-            && property_exists($input, 'emailTo')
-        ) {
-            $emailData = [
-                'emailTo' => $input->emailTo,
-                'subject' => $input->subject,
-                'body'    => $input->body,
-            ];
-            if (property_exists($input, 'emailCc')) {
-                $emailData['emailCc'] = $input->emailCc;
+        $emailData = $this->getEmailData($action, $entity);
+        foreach (['subject', 'body', 'emailTo', 'emailCc'] as $key) {
+            if (property_exists($input, $key)) {
+                $emailData[$key] = $input->$key;
             }
-        } else {
-            $emailData = $this->getEmailData($action, $entity);
         }
 
         $data = [

@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "ActionLog": "Aktionsprotokoll",
+    "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
     "Attribute": "Attribut",
@@ -65,6 +67,8 @@
     "ProductGroup": "Produktgruppe"
   },
   "scopeNamesPlural": {
+    "ActionLog": "Aktionsprotokolle",
+    "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",
     "Attribute": "Attribute",
@@ -256,6 +260,7 @@
     "Remove": "Löschen",
     "Options": "Optionen",
     "Username": "Benutzername",
+    "RememberUsername": "Benutzernamen merken",
     "Password": "Passwort",
     "Login": "Anmelden",
     "Log Out": "Abmelden",
@@ -267,7 +272,7 @@
     "Followed": "Abonniert",
     "Follow": "Abonnieren",
     "Followers": "Abonnenten",
-    "Clear Local Cache": "Lokalen Cache leeren",
+    "Clear Local Cache": "Browser-Cache leeren",
     "Actions": "Aktionen",
     "Delete": "Löschen",
     "Update": "Aktualisieren",
@@ -603,6 +608,12 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "action": "Aktion",
+    "payload": "Payload",
+    "hash": "Hash",
+    "ipWhiteList": "IP-Weißliste",
+    "httpMethod": "HTTP-Methode",
+    "url": "URL",
     "classification": "Klassifikation",
     "classifications": "Klassifikationen",
     "status": "Status",

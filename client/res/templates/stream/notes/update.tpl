@@ -14,11 +14,11 @@
             </div>
                 {{#if showInline}}
                     {{#each fieldsArr}}
-                        <span class="text-muted message">{{{../message}}} <code>{{label}}</code> {{translate 'from' category='streamMessages' scope='Global'}}&nbsp;<{{htmlTag}} class="was">{{{var was ../this}}}</{{htmlTag}}>&nbsp;{{translate 'to' category='streamMessages' scope='Global'}} <{{htmlTag}} class="became">{{{var became ../this}}}</{{htmlTag}}></span>
+                        <span class="message">{{{../message}}} <code>{{label}}</code> {{translate 'from' category='streamMessages' scope='Global'}}&nbsp;<{{htmlTag}} class="was">{{{var was ../this}}}</{{htmlTag}}>&nbsp;{{translate 'to' category='streamMessages' scope='Global'}} <{{htmlTag}} class="became">{{{var became ../this}}}</{{htmlTag}}></span>
                     {{/each}}
                 {{/if}}
                 {{#if showCommon}}
-                    <span class="text-muted message">{{{message}}} {{{changedFieldsStr}}}</span>
+                    <span class="message">{{{message}}} {{{changedFieldsStr}}}</span>
                     <a href="javascript:" data-action="expandDetails"><i class="ph ph-caret-down"></i></a>
                 {{/if}}
         </div>

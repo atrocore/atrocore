@@ -192,6 +192,8 @@
 <style>
     .sidebar {
         --sidebar-color: #fafafa;
+        --field-hover-color: #f4f4f4;
+        --field-inline-edit-color: #f0f0f0;
 
         height: 100%;
         background-color: var(--sidebar-color);
