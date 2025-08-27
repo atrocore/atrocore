@@ -216,7 +216,6 @@ class Note
                                     'entityType'  => $entity->getEntityType(),
                                     'relatedId'   => $entity->id,
                                     'relatedType' => $entity->getEntityType(),
-                                    'link'        => $link
                                 ]
                             ));
                     }
