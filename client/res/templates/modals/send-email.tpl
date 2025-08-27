@@ -1,10 +1,10 @@
 <div class="row">
     <div class="col-xs-6 cell form-group">
-        <label class="control-label" data-name="emailTo">{{translate 'emailTo' scope='EmailTemplate' category='fields'}}</label>
+        <label class="control-label" data-name="emailTo">{{translate 'emailTo' scope='Action' category='fields'}}</label>
         <div class="field" data-name="emailTo">{{{emailTo}}}</div>
     </div>
     <div class="col-xs-6 cell form-group">
-        <label class="control-label" data-name="emailCc">{{translate 'emailCc' scope='EmailTemplate' category='fields'}}</label>
+        <label class="control-label" data-name="emailCc">{{translate 'emailCc' scope='Action' category='fields'}}</label>
         <div class="field" data-name="emailCc">{{{emailCc}}}</div>
     </div>
 </div>
