@@ -208,17 +208,20 @@
       "view": "views/entity/fields/has-classification"
     },
     "singleClassification": {
-      "type": "bool"
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/single-classification"
     },
     "disableAttributeLinking": {
-      "type": "bool"
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/disable-attribute-linking"
     },
     "textFilterFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/text-filter-fields"
     },
     "deleteValuesAfterUnlinkingClassification": {
-      "type": "bool"
+      "type": "bool",
+      "view": "views/admin/entity-manager/fields/delete-values-after-unlinking-classification"
     }
   },
   "links": {
