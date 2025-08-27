@@ -38,6 +38,7 @@
     },
     "status": {
       "type": "enum",
+      "view": "views/action-log/fields/status",
       "required": true,
       "readOnly": true,
       "options": [
