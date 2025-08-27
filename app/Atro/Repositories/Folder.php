@@ -30,7 +30,7 @@ use Espo\ORM\Entity;
 
 class Folder extends Hierarchy
 {
-    protected ?array $hierarchyData = null;
+    protected array $hierarchyData = [];
     protected array $loadedHierarchyIds = [];
 
     public function loadHierarchyData($ids)
@@ -61,6 +61,7 @@ WITH RECURSIVE parent_tree AS (
     INNER JOIN folder f1 ON fh.parent_id = f1.id
     WHERE fh.entity_id IN (:ids)
       AND fh.parent_id <> fh.entity_id
+      AND fh.deleted = :false
       AND f.deleted = :false
       AND f1.deleted = :false
 
@@ -75,6 +76,7 @@ WITH RECURSIVE parent_tree AS (
     INNER JOIN folder f1 ON fh.parent_id = f1.id
     JOIN parent_tree pt ON fh.entity_id = pt.parent_id
     WHERE fh.entity_id <> fh.parent_id
+      AND fh.deleted = :false
       AND f.deleted = :false
       AND f1.deleted = :false
 )
