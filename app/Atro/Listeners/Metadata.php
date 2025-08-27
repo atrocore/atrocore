@@ -478,12 +478,10 @@ class Metadata extends AbstractListener
     protected function prepareUnInheritedRelations(array &$data): void
     {
         foreach ($data['scopes'] as $scope => $defs) {
-            if(empty($data['entityDefs'][$scope]['links'] )){
-                continue;
-            }
-            foreach ($data['entityDefs'][$scope]['links'] as $link => $linkDefs) {
-                if(!empty($linkDefs['isUninheritableRelation'])) {
-                    $data[$scope]['unInheritedRelations'][] = $link;
+            foreach (($data['entityDefs'][$scope]['fields'] ?? []) as $field => $fieldDefs) {
+
+                if(!empty($fieldDefs['isUninheritableRelation'])) {
+                    $data[$scope]['unInheritedRelations'][] = $fieldDefs;
                 }
             }
         }
