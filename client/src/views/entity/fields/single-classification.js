@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/entity-manager/fields/disable-attribute-linking', 'views/fields/bool', Dep => {
+Espo.define('views/entity/fields/single-classification', 'views/fields/bool', Dep => {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ Espo.define('views/admin/entity-manager/fields/disable-attribute-linking', 'view
             if(!this.model.isNew()
                 && this.initialAttributes['hasAttribute']
                 && this.initialAttributes['hasClassification']
-                && this.initialAttributes['id'] !== 'Listing'
+                && this.model.id !== 'Listing'
                 && this.model.get('hasClassification')
             ){
                 this.show();

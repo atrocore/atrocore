@@ -209,11 +209,11 @@
     },
     "singleClassification": {
       "type": "bool",
-      "view": "views/admin/entity-manager/fields/single-classification"
+      "view": "views/entity/fields/single-classification"
     },
     "disableAttributeLinking": {
       "type": "bool",
-      "view": "views/admin/entity-manager/fields/disable-attribute-linking"
+      "view": "views/entity/fields/disable-attribute-linking"
     },
     "textFilterFields": {
       "type": "array",
@@ -221,7 +221,7 @@
     },
     "deleteValuesAfterUnlinkingClassification": {
       "type": "bool",
-      "view": "views/admin/entity-manager/fields/delete-values-after-unlinking-classification"
+      "view": "views/entity/fields/delete-values-after-unlinking-classification"
     }
   },
   "links": {

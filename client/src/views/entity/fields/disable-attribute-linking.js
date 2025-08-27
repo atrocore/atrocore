@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/entity-manager/fields/delete-values-after-unlinking-classification', 'views/fields/bool', Dep => {
+Espo.define('views/entity/fields/disable-attribute-linking', 'views/fields/bool', Dep => {
 
     return Dep.extend({
 
@@ -31,13 +31,12 @@ Espo.define('views/admin/entity-manager/fields/delete-values-after-unlinking-cla
 
             this.hide();
 
-           if(!this.model.isNew()
-               && this.initialAttributes['hasAttribute']
-               && this.initialAttributes['hasClassification']
-               && !this.model.get('disableAttributeLinking')
-               && this.initialAttributes['id'] !== 'Listing'
-               && this.model.get('hasClassification')
-           ){
+            if(!this.model.isNew()
+                && this.initialAttributes['hasAttribute']
+                && this.initialAttributes['hasClassification']
+                && this.model.id !== 'Listing'
+                && this.model.get('hasClassification')
+            ){
                 this.show();
             }
         }
