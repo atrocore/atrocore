@@ -13,8 +13,8 @@
       "workflow": "Workflow"
     },
     "status": {
-      "executed": "Executed",
-      "failed": "Failed"
+      "executed": "Ausgeführt",
+      "failed": "Gescheitert"
     }
   }
 }
