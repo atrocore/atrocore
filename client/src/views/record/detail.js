@@ -1207,6 +1207,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.readOnlyLocked = this.readOnly;
             this.readOnly = this.options.readOnly || this.readOnly;
 
+            if (this.getMetadata().get(['clientDefs', this.entityType, 'createDisabled']) || this.getMetadata().get(['scopes', this.entityType, 'disabled'])) {
+                this.duplicateAction = false;
+            }
+
             this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled'])
                 || this.getMetadata().get(['scopes', this.model.name, 'disabled']) || false;
 
