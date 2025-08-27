@@ -962,6 +962,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
         },
 
         onInlineEditSave(res, attrs, model){
+            if (res.inheritedFields !== undefined) {
+                attrs.inheritedFields = res.inheritedFields;
+            }
+
             model.set(attrs);
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
