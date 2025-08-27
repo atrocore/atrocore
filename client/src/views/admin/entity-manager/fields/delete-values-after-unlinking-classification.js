@@ -35,6 +35,8 @@ Espo.define('views/admin/entity-manager/fields/delete-values-after-unlinking-cla
                && this.initialAttributes['hasAttribute']
                && this.initialAttributes['hasClassification']
                && !this.model.get('disableAttributeLinking')
+               && this.initialAttributes['id'] !== 'Listing'
+               && this.model.get('hasClassification')
            ){
                 this.show();
             }

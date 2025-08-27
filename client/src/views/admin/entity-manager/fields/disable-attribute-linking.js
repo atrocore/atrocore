@@ -34,6 +34,8 @@ Espo.define('views/admin/entity-manager/fields/disable-attribute-linking', 'view
             if(!this.model.isNew()
                 && this.initialAttributes['hasAttribute']
                 && this.initialAttributes['hasClassification']
+                && this.initialAttributes['id'] !== 'Listing'
+                && this.model.get('hasClassification')
             ){
                 this.show();
             }
