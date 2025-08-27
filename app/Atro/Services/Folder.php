@@ -36,6 +36,12 @@ class Folder extends Hierarchy
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
+        $ids = [];
+        foreach ($collection as $entity) {
+            $ids[] = $entity->get('id');
+        }
+        $this->getRepository()->loadHierarchyData($ids);
+
         foreach ($collection as $entity) {
             $entity->_pathPrepared = true;
             $entity->set('folderPath', $this->getRepository()->getFolderHierarchyData($entity->get('id')));

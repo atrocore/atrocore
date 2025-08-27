@@ -54,6 +54,25 @@ class Converter
         return strpos(get_class($connection->getDriver()), 'PgSQL') !== false;
     }
 
+    public static function isSqlRecursiveAvailable(Connection $connection): bool
+    {
+        if (self::isPgSQL($connection)) {
+            return true;
+        }
+
+        $version = $connection->fetchOne('SELECT VERSION()');
+
+        if (str_contains($version, 'MariaDB') && version_compare($version, '10.2.0', '>=')) {
+            return true;
+        }
+
+        if (version_compare($version, '8.0.0', '>=')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function createSchema(): Schema
     {
         $ormMetadata = $this->ormMetadata->getData();
@@ -72,7 +91,7 @@ class Converter
             }
 
             $entityType = $this->metadata->get(['scopes', $entityName, 'type']);
-            if ($entityType === 'ReferenceData'){
+            if ($entityType === 'ReferenceData') {
                 continue;
             }
 

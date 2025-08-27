@@ -29,6 +29,14 @@ class File extends Base
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
+        $ids = [];
+        foreach ($collection as $entity) {
+            if (!empty($entity->get('folderId'))){
+                $ids[] = $entity->get('folderId');
+            }
+        }
+        $this->getEntityManager()->getRepository('Folder')->loadHierarchyData($ids);
+
         foreach ($collection as $entity) {
             $entity->_pathPrepared = true;
             if (!empty($entity->get('folderId'))) {
