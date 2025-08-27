@@ -35,7 +35,7 @@ class SendEmail extends AbstractAction
         $entity = $this->getSourceEntity($action, $input);
 
         $emailData = $this->getEmailData($action, $entity);
-        foreach (['subject', 'body', 'emailTo', 'emailCc'] as $key) {
+        foreach (['subject', 'body', 'emailTo', 'emailCc', 'emailBcc'] as $key) {
             if (property_exists($input, $key)) {
                 $emailData[$key] = $input->$key;
             }
@@ -50,6 +50,10 @@ class SendEmail extends AbstractAction
 
         if (!empty($emailData['emailCc'])) {
             $data['cc'] = implode(';', $emailData['emailCc']);
+        }
+
+        if (!empty($emailData['emailBcc'])) {
+            $data['bcc'] = implode(';', $emailData['emailBcc']);
         }
 
         if (!empty($data['to'])) {
@@ -96,10 +100,11 @@ class SendEmail extends AbstractAction
         $emailTemplateId = $action->get('emailTemplateId');
         $emailTo = $action->get('emailTo');
         $emailCc = $action->get('emailCc') ?? [];
+        $emailBcc = $action->get('emailBcc') ?? [];
         if ($action->get('mode') === 'script') {
-            $script = "{% set emailTo=[] %}{% set emailCc=[] %}{% set emailTemplateId=null %}";
+            $script = "{% set emailTo=[] %}{% set emailCc=[] %}{% set emailBcc=[] %}{% set emailTemplateId=null %}";
             $script .= $action->get('emailScript');
-            $script .= " {% set data = {'emailTemplateId': emailTemplateId, 'emailTo': emailTo, 'emailCc': emailCc} %} PREPARED_SCRIPT_START=`{{data|json_encode|raw}}`PREPARED_SCRIPT_END";
+            $script .= " {% set data = {'emailTemplateId': emailTemplateId, 'emailTo': emailTo, 'emailCc': emailCc, 'emailBcc': emailBcc} %} PREPARED_SCRIPT_START=`{{data|json_encode|raw}}`PREPARED_SCRIPT_END";
 
             $res = $twig->renderTemplate($script, $templateData);
             if (preg_match_all("/PREPARED_SCRIPT_START=`(.*)`PREPARED_SCRIPT_END$/", $res, $matches)) {
@@ -109,6 +114,7 @@ class SendEmail extends AbstractAction
                         $emailTemplateId = $scriptData['emailTemplateId'];
                         $emailTo = $scriptData['emailTo'];
                         $emailCc = $scriptData['emailCc'];
+                        $emailBcc = $scriptData['emailBcc'];
                     }
                 }
             }
@@ -121,6 +127,7 @@ class SendEmail extends AbstractAction
             'body'            => $twig->renderTemplate($emailTemplate->get('body'), $templateData),
             'emailTo'         => $emailTo,
             'emailCc'         => $emailCc,
+            'emailBcc'        => $emailBcc,
             'emailTemplateId' => $emailTemplateId
         ];
 

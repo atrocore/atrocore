@@ -16,7 +16,8 @@
     "showEmailPreview": "Vorschau vor dem Senden",
     "emailTemplate": "E-Mail-Vorlage",
     "emailTo": "E-Mail an",
-    "emailCc": "E-Mail CC"
+    "emailCc": "E-Mail CC",
+    "emailBcc": "E-Mail BCC"
   },
   "labels": {
     "execute": "Ausführen",

@@ -75,6 +75,19 @@ Espo.define('views/modals/send-email', 'views/modal',
                 inlineEditDisabled: true
             }, view => view.render());
 
+            this.createView('emailBcc', 'views/fields/array-email', {
+                name: 'emailBcc',
+                el: `${this.options.el} .field[data-name="emailBcc"]`,
+                model: this.model,
+                scope: this.scope,
+                defs: {
+                    name: 'emailBcc'
+                },
+                mode: 'edit',
+                prohibitedEmptyValue: true,
+                inlineEditDisabled: true
+            }, view => view.render());
+
             this.createView('subject', 'views/fields/text', {
                 name: 'subject',
                 el: `${this.options.el} .field[data-name="subject"]`,
@@ -88,7 +101,7 @@ Espo.define('views/modals/send-email', 'views/modal',
                 inlineEditDisabled: true
             }, view => view.render());
 
-            this.createView('body', 'views/fields/text', {
+            this.createView('body', 'views/fields/wysiwyg', {
                 name: 'body',
                 el: `${this.options.el} .field[data-name="body"]`,
                 model: this.model,

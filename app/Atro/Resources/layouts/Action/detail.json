@@ -110,8 +110,14 @@
         {
           "name": "emailTo"
         },
+        false
+      ],
+      [
         {
           "name": "emailCc"
+        },
+        {
+          "name": "emailBcc"
         }
       ],
       [

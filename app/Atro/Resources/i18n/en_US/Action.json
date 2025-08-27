@@ -18,7 +18,8 @@
     "showEmailPreview": "Preview before sending",
     "emailTemplate": "Email Template",
     "emailTo": "Email To",
-    "emailCc": "Email CC"
+    "emailCc": "Email CC",
+    "emailBcc": "Email BCC"
   },
   "labels": {
     "execute": "Execute",
