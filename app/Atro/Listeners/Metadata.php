@@ -382,6 +382,14 @@ class Metadata extends AbstractListener
                 ]
             ];
 
+            if ($action['type'] === 'email') {
+                $actionData = @json_decode($action['data'], true);
+                $params = array_merge($params, [
+                    'showEmailPreview' => !empty($actionData['field']['showEmailPreview']),
+                    'emailTemplateId'  => $actionData['field']['emailTemplateId'] ?? '',
+                ]);
+            }
+
             if ($action['usage'] === 'entity' && !empty($action['source_entity'])) {
                 $data['clientDefs'][$action['source_entity']]['dynamicEntityActions'][] = $params;
             }
