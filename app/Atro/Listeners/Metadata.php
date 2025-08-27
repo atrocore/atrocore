@@ -257,6 +257,10 @@ class Metadata extends AbstractListener
 
     protected function prepareEntityFields(array &$data): void
     {
+        $visible = [];
+        $required = [];
+        $readOnly = [];
+
         foreach ($data['fields'] ?? [] as $type => $defs) {
             if (empty($defs['params'])) {
                 continue;
@@ -266,22 +270,41 @@ class Metadata extends AbstractListener
                 if (empty($item['name']) || !empty($item['hidden'])) {
                     continue;
                 }
-                $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['visible']['conditionGroup'][0]['type'] = 'in';
-                $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['visible']['conditionGroup'][0]['attribute'] = 'type';
-                $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['visible']['conditionGroup'][0]['value'][] = $type;
+
+                $visible[$item['name']][] = $type;
 
                 if (!empty($item['required'])) {
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['required']['conditionGroup'][0]['type'] = 'in';
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['required']['conditionGroup'][0]['attribute'] = 'type';
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['required']['conditionGroup'][0]['value'][] = $type;
+                    $required[$item['name']][] = $type;
                 }
 
                 if (!empty($item['readOnly'])) {
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['readOnly']['conditionGroup'][0]['type'] = 'in';
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['readOnly']['conditionGroup'][0]['attribute'] = 'type';
-                    $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$item['name']]['readOnly']['conditionGroup'][0]['value'][] = $type;
+                    $readOnly[$item['name']][] = $type;
                 }
             }
+        }
+
+        foreach ($visible as $field => $types) {
+            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['visible']['conditionGroup'][] = [
+                'type' => 'in',
+                'attribute' => 'type',
+                'value' => $types,
+            ];
+        }
+
+        foreach ($required as $field => $types) {
+            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['required']['conditionGroup'][] = [
+                'type' => 'in',
+                'attribute' => 'type',
+                'value' => $types,
+            ];
+        }
+
+        foreach ($readOnly as $field => $types) {
+            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['readOnly']['conditionGroup'][] = [
+                'type' => 'in',
+                'attribute' => 'type',
+                'value' => $types,
+            ];
         }
 
         $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][] = [
