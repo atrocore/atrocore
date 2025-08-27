@@ -6330,6 +6330,11 @@ button.close {
     transform: translateY(-40%);
 }
 
+.password-change-request-modal > .modal,
+.password-change-request-modal + .modal-backdrop {
+    top: 0;
+}
+
 .password-change-request-modal .modal-dialog {
     margin: 0 auto;
 }
