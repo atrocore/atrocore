@@ -123,6 +123,26 @@
           ]
         }
       },
+      "emailBcc": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      },
       "connection": {
         "visible": {
           "conditionGroup": [

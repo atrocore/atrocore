@@ -177,10 +177,18 @@
       "filterDisabled": true,
       "massUpdateDisabled": true
     },
+    "emailBcc": {
+      "type": "array",
+      "view": "views/fields/array-email",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
     "emailScript": {
       "type": "text",
       "view": "views/fields/script",
-      "default": "{% set emailTo = ['email1@somedomain.com', 'email2@somedomain.com'] %}\n{% set emailCc = [] %}\n{% set emailTemplateId = 'some-id' %}",
+      "default": "{% set emailTo = ['email1@somedomain.com', 'email2@somedomain.com'] %}\n{% set emailCc = [] %}\n{% set emailBcc = [] %}\n{% set emailTemplateId = 'some-id' %}",
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
