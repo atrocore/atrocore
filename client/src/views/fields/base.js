@@ -97,21 +97,29 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return true
             }
 
-            const rules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.logicRules.required`);
-            if (rules) {
-                return this.checkConditionGroup(rules);
-            }
-
             return this.isRequiredViaLogicRules(this.name);
         },
 
         isRequiredViaLogicRules(name) {
-            const rules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${name}.logicRules.required`);
+            const rules = this.getLogicRules(this.model.name, name, 'required');
             if (rules) {
                 return this.checkConditionGroup(rules);
             }
 
             return false;
+        },
+
+        isReadOnlyViaLogicRules(name) {
+            const rules = this.getLogicRules(this.model.name, name, 'readOnly');
+            if (rules) {
+                return this.checkConditionGroup(rules);
+            }
+
+            return false;
+        },
+
+        getLogicRules(scope, name, type) {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.logicRules.${type}`);
         },
 
         getCellElement: function () {
@@ -300,6 +308,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
+            }
+
+            if (!this.readOnly) {
+                this.readOnly = this.isReadOnlyViaLogicRules(this.name);
             }
 
             this.disabledLocked = this.options.disabledLocked || false;
@@ -842,9 +854,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         toggleVisibility(name) {
-            const visibleRules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${name}.logicRules.visible`);
-            if (visibleRules) {
-                if (this.checkConditionGroup(visibleRules)) {
+            const rules = this.getLogicRules(this.model.name, name, 'visible');
+            if (rules) {
+                if (this.checkConditionGroup(rules)) {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();
