@@ -838,9 +838,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         togglePanelVisibility() {
             const $panel = this.$el.closest('.panel');
-            const panelBodyCells = $panel.find('> .panel-body > .row > .cell');
+            const $panelBodyCells = $panel.find('> .panel-body > .row > .cell');
 
-            const isPanelHidden = Array.from(panelBodyCells).every(cell => $(cell).is(':hidden'));
+            const isPanelHidden = Array.from($panelBodyCells).every(cell => $(cell).is(':hidden'));
 
             if (isPanelHidden) {
                 $panel.hide();
