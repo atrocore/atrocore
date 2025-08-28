@@ -353,9 +353,10 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         addNewValue() {
+            this.fetchFromDom();
             let data = {
                 [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
-                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`toUpadate-${new Date().getTime()}`])
+                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
                 data[name] = (this.selectedComplex[name] || []).concat([""])
@@ -370,6 +371,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         removeGroup($el) {
+            this.fetchFromDom();
             let index = $el.parents('.list-group-item').index();
             let value = this.selectedComplex[this.name] || [];
 
