@@ -816,14 +816,18 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (['edit', 'detail'].includes(this.mode)) {
-                this.toggleVisibility(this.model.name, this.name);
+                this.toggleVisibility(this.name);
             }
         },
 
-        toggleVisibility(scope, name) {
-            const visibleRules = this.getMetadata().get(`entityDefs.${scope}.fields.${name}.logicRules.visible`);
+        checkConditionGroup(rules){
+            return new ConditionsChecker(this).checkConditionGroup(rules);
+        },
+
+        toggleVisibility(name) {
+            const visibleRules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${name}.logicRules.visible`);
             if (visibleRules) {
-                if (new ConditionsChecker(this).checkConditionGroup(visibleRules)) {
+                if (this.checkConditionGroup(visibleRules)) {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();

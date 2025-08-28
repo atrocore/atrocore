@@ -514,9 +514,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
         },
 
-        toggleVisibility(scope, name) {
-            Dep.prototype.toggleVisibility.call(this, scope, name);
-            Dep.prototype.toggleVisibility.call(this, scope, name + 'Ids');
+        toggleVisibility(name) {
+            Dep.prototype.toggleVisibility.call(this, name);
+            Dep.prototype.toggleVisibility.call(this, name + 'Ids');
         },
 
         renderLinks: function () {
