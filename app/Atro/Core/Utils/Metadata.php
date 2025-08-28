@@ -240,10 +240,6 @@ class Metadata
                 }
             }
             unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
-
-            echo '<pre>';
-            print_r($metadata['entityDefs'][$entityName]);
-            die();
         }
     }
 
