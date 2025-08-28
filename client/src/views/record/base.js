@@ -110,14 +110,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
                 }
-
-                const $panel = $field.closest('.panel')
-                if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
-                    const name = $panel.attr('data-name')
-                    if (name) {
-                        this.hidePanel(name)
-                    }
-                }
             }.bind(this);
             if (this.isRendered()) {
                 processHtml();
@@ -393,7 +385,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }, this);
 
             this.initDependancy();
-            this.initUiHandler();
+            // this.initUiHandler();
         },
 
         setInitalAttributeValue: function (attribute, value) {
