@@ -190,6 +190,20 @@ class Metadata
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
             $this->objData = Json::decode(Json::encode($this->loadData()), true);
+            // convert legacy dynamic logic into field logic rules
+            foreach ($this->objData['clientDefs'] as $entityName => $defs) {
+                if (!empty($defs['dynamicLogic']['fields'])) {
+                    foreach ($defs['dynamicLogic']['fields'] as $fieldName => $logic) {
+                        foreach ($logic as $logicType => $logicData) {
+                            if (empty($logicData['conditionGroup'])) {
+                                continue;
+                            }
+                            $this->objData['entityDefs'][$entityName]['fields'][$fieldName]['logicRules'][$logicType] = $logicData['conditionGroup'];
+                        }
+                    }
+                    unset($this->objData['clientDefs'][$entityName]['dynamicLogic']);
+                }
+            }
 
             $this->objData = $this
                 ->getEventManager()
@@ -209,7 +223,7 @@ class Metadata
             ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))
             ->getArgument('data');
 
-        $this->loadUiHandlers($data);
+//        $this->loadUiHandlers($data);
         $this->clearMetadata($data);
 
         // set object data
