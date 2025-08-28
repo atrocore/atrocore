@@ -817,6 +817,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (['edit', 'detail'].includes(this.mode)) {
                 this.toggleVisibility(this.name);
+                this.togglePanelVisibility();
             }
         },
 
@@ -832,7 +833,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 } else {
                     this.$el.parent().hide();
                 }
-                this.togglePanelVisibility();
             }
         },
 
