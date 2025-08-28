@@ -92,12 +92,28 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return Dep.prototype.translate.call(this, name, category, scope);
         },
 
-        isRequired: function () {
-            return this.params.required;
-        }, /**
-         * Get cell element. Works only after rendered.
-         * {jQuery}
-         */
+        isRequired() {
+            if (this.params.required) {
+                return true
+            }
+
+            const rules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.logicRules.required`);
+            if (rules) {
+                return this.checkConditionGroup(rules);
+            }
+
+            return this.isRequiredViaLogicRules(this.name);
+        },
+
+        isRequiredViaLogicRules(name) {
+            const rules = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${name}.logicRules.required`);
+            if (rules) {
+                return this.checkConditionGroup(rules);
+            }
+
+            return false;
+        },
+
         getCellElement: function () {
             return this.$el.parent();
         },
