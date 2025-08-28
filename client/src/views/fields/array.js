@@ -231,6 +231,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
             if (this.mode === 'edit') {
                 var $select = this.$select = this.$el.find('.select');
                 $select.val(this.selected.join(':,:'));

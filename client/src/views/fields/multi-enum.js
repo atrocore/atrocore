@@ -126,6 +126,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
             if (this.mode === 'edit') {
                 this.listenTo(this.model, 'change:' + this.name, (model, value) => {
                     if (typeof value === 'string') {

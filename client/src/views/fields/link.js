@@ -397,6 +397,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
             if (this.foreignScope === 'User' && this.model.getFieldParam(this.name, 'currentUserAsDefault') && (this.mode === 'edit' || this.mode === 'detail') && !this.model.get('id')) {
                 this.model.set(this.idName, this.getUser().get('id'));
                 this.model.set(this.nameName, this.getUser().get('name'));
@@ -570,6 +572,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 }
             }
+        },
+
+        controlVisibility(scope, name) {
+            Dep.prototype.controlVisibility.call(this, scope, name);
+            Dep.prototype.controlVisibility.call(this, scope, name + 'Id');
         },
 
         getValueForDisplay: function () {

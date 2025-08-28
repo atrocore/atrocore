@@ -30,7 +30,9 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/base', 'view', function (Dep) {
+import {$} from "../../../lib/backbone-min";
+
+Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, ConditionsChecker) {
 
     return Dep.extend({
 
@@ -814,6 +816,53 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit' || this.mode === 'search') {
                 this.initElement();
             }
+
+            if (['edit', 'detail'].includes(this.mode)) {
+                this.controlVisibility(this.model.name, this.name);
+            }
+        },
+
+        controlVisibility(scope, name) {
+            const visibleRules = this.getMetadata().get(`entityDefs.${scope}.fields.${name}.logicRules.visible`);
+            if (visibleRules) {
+                if (new ConditionsChecker(this).checkConditionGroup(visibleRules)) {
+                    this.$el.parent().show();
+                    // this.controlPanelVisibility();
+                } else {
+                    this.$el.parent().hide();
+                    // this.controlPanelVisibility();
+                }
+            }
+        },
+
+        controlPanelVisibility(){
+            const $panel = this.$el.closest('.panel');
+
+            // let hide = true;
+            // $panel.find('> .panel-body > .row > .cell').each((i, el) => {
+            //     if (!$(el).is(':hidden')) {
+            //         hide = false;
+            //     }
+            // });
+
+            // if (hide){
+            //     $panel.hide();
+            // }
+
+            // if ('transport' === $panel.attr('data-name')){
+            //     console.log($panel.find('> .panel-body > .row > .cell'));
+            // }
+            //
+            //
+            // if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
+            //     const name = $panel.attr('data-name')
+            //
+            //     // console.log($panel);
+            //
+            //     // if (name) {
+            //     //     this.hidePanel(name)
+            //     // }
+            // }
         },
 
         setup: function () {
