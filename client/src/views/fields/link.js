@@ -574,9 +574,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             }
         },
 
-        controlVisibility(scope, name) {
-            Dep.prototype.controlVisibility.call(this, scope, name);
-            Dep.prototype.controlVisibility.call(this, scope, name + 'Id');
+        toggleVisibility(scope, name) {
+            Dep.prototype.toggleVisibility.call(this, scope, name);
+            Dep.prototype.toggleVisibility.call(this, scope, name + 'Id');
         },
 
         getValueForDisplay: function () {

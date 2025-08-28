@@ -30,8 +30,6 @@
  * and "AtroCore" word.
  */
 
-import {$} from "../../../lib/backbone-min";
-
 Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, ConditionsChecker) {
 
     return Dep.extend({
@@ -818,51 +816,33 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (['edit', 'detail'].includes(this.mode)) {
-                this.controlVisibility(this.model.name, this.name);
+                this.toggleVisibility(this.model.name, this.name);
             }
         },
 
-        controlVisibility(scope, name) {
+        toggleVisibility(scope, name) {
             const visibleRules = this.getMetadata().get(`entityDefs.${scope}.fields.${name}.logicRules.visible`);
             if (visibleRules) {
                 if (new ConditionsChecker(this).checkConditionGroup(visibleRules)) {
                     this.$el.parent().show();
-                    // this.controlPanelVisibility();
                 } else {
                     this.$el.parent().hide();
-                    // this.controlPanelVisibility();
                 }
+                this.togglePanelVisibility();
             }
         },
 
-        controlPanelVisibility(){
+        togglePanelVisibility() {
             const $panel = this.$el.closest('.panel');
+            const panelBodyCells = $panel.find('> .panel-body > .row > .cell');
 
-            // let hide = true;
-            // $panel.find('> .panel-body > .row > .cell').each((i, el) => {
-            //     if (!$(el).is(':hidden')) {
-            //         hide = false;
-            //     }
-            // });
+            const isPanelHidden = Array.from(panelBodyCells).every(cell => $(cell).is(':hidden'));
 
-            // if (hide){
-            //     $panel.hide();
-            // }
-
-            // if ('transport' === $panel.attr('data-name')){
-            //     console.log($panel.find('> .panel-body > .row > .cell'));
-            // }
-            //
-            //
-            // if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
-            //     const name = $panel.attr('data-name')
-            //
-            //     // console.log($panel);
-            //
-            //     // if (name) {
-            //     //     this.hidePanel(name)
-            //     // }
-            // }
+            if (isPanelHidden) {
+                $panel.hide();
+            } else {
+                $panel.show();
+            }
         },
 
         setup: function () {
