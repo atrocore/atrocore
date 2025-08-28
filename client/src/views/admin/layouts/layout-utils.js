@@ -133,6 +133,8 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                                 this.ajaxGetRequest('Translation', {where: [{type: 'textFilter', value: globalKey}]}, {async: false}).then(res => {
                                     if (res.list[0]) {
                                         data = res.list[0];
+                                    } else {
+                                        data = {};
                                     }
 
                                     data.id = null;
