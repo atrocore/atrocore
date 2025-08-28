@@ -97,7 +97,6 @@ class ConsoleManager
             "regenerate lists"                  => Console\RegenerateExtensibleEnums::class,
             "list"                              => Console\ListCommand::class,
             "regenerate measures"               => Console\RegenerateMeasures::class,
-            "regenerate ui handlers"            => Console\RegenerateUiHandlers::class,
             "refresh translations"              => Console\RefreshTranslations::class,
             "install demo-project"              => Console\InstallDemoProject::class,
             "clear cache"                       => Console\ClearCache::class,

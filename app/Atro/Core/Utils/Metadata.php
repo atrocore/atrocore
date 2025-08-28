@@ -190,21 +190,6 @@ class Metadata
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
             $this->objData = Json::decode(Json::encode($this->loadData()), true);
-            // convert legacy dynamic logic into field logic rules
-            foreach ($this->objData['clientDefs'] as $entityName => $defs) {
-                if (!empty($defs['dynamicLogic']['fields'])) {
-                    foreach ($defs['dynamicLogic']['fields'] as $fieldName => $logic) {
-                        foreach ($logic as $logicType => $logicData) {
-                            if (empty($logicData['conditionGroup'])) {
-                                continue;
-                            }
-                            $this->objData['entityDefs'][$entityName]['fields'][$fieldName]['logicRules'][$logicType] = $logicData['conditionGroup'];
-                        }
-                    }
-                    unset($this->objData['clientDefs'][$entityName]['dynamicLogic']);
-                }
-            }
-
             $this->objData = $this
                 ->getEventManager()
                 ->dispatch('Metadata', 'loadData', new Event(['data' => $this->objData]))
@@ -223,6 +208,7 @@ class Metadata
             ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))
             ->getArgument('data');
 
+        $this->convertDynamicLogicToFieldLogicRules($data);
 //        $this->loadUiHandlers($data);
         $this->clearMetadata($data);
 
@@ -231,6 +217,34 @@ class Metadata
 
         // clearing metadata
         $this->clearingMetadata();
+    }
+
+    /**
+     * Convert legacy dynamic logic into field logic rules
+     */
+    protected function convertDynamicLogicToFieldLogicRules(array &$metadata): void
+    {
+        foreach ($metadata['clientDefs'] as $entityName => $defs) {
+            if (empty($defs['dynamicLogic']['fields'])) {
+                continue;
+            }
+            foreach ($defs['dynamicLogic']['fields'] as $fieldName => $logic) {
+                foreach ($logic as $logicType => $logicData) {
+                    if (empty($logicData['conditionGroup'])) {
+                        continue;
+                    }
+                    if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['logicRules'][$logicType])) {
+                        continue;
+                    }
+                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['logicRules'][$logicType] = $logicData['conditionGroup'];
+                }
+            }
+            unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
+
+            echo '<pre>';
+            print_r($metadata['entityDefs'][$entityName]);
+            die();
+        }
     }
 
     protected function loadUiHandlers(array &$metadata): void
