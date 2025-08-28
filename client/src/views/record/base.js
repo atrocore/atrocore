@@ -689,6 +689,9 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 if (xhr.responseJSON && xhr.responseJSON.reason) {
                     statusReason = xhr.responseJSON.reason;
                 }
+                if (!statusReason) {
+                    statusReason = this.translate('unableToDuplicateRecord', 'messages')
+                }
                 xhr.errorIsHandled = true;
                 if (xhr.status === 409) {
                     self.notify(false);
