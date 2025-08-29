@@ -543,9 +543,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (!this.searchData) {
                 return;
             }
-            let subQuery = data.where ?? [];
+            let subQuery = Espo.Utils.clone(data.where ?? []);
             this.searchData.subQuery = subQuery;
-            this.addLinkSubQueryHtml(subQuery);
+            this.addLinkSubQueryHtml(subQuery, silent);
             if (!silent) {
                 this.trigger('add-subquery', subQuery);
             }
@@ -578,12 +578,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.deleteLink('subquery');
         },
 
-        addLinkSubQueryHtml: function (subQuery) {
+        addLinkSubQueryHtml: function (subQuery, silent) {
             if (!subQuery || subQuery.length === 0) {
                 return;
             }
-
-            this.deleteLinkSubQueryHtml();
+            if(!silent) {
+                this.deleteLinkSubQueryHtml();
+            }
             this.addLinkHtml('subquery', '(Subquery)');
         },
 
@@ -820,7 +821,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         if (rule.data && rule.data['subQuery']) {
                             let data = { where: rule.data['subQuery'] };
-                            view.addLinkSubQuery(data, true);
+                            this.listenTo(view, 'after:render', () => {
+                                view.addLinkSubQuery(data);
+                            })
                         }
 
                         this.listenTo(view, 'add-subquery', subQuery => {
