@@ -28,7 +28,7 @@ class Size extends Base
             $imageSize = $file->get('fileSize') / 1024;
         }
 
-        if ($imageSize >= $this->rule->get('min') && $imageSize <= $this->rule->get('max')) {
+        if ($imageSize >= $this->params['minSize'] && $imageSize <= $this->params['maxSize']) {
             return true;
         }
 
@@ -37,6 +37,6 @@ class Size extends Base
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->rule->get('min'), $this->rule->get('max')));
+        throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->params['minSize'], $this->params['maxSize']));
     }
 }

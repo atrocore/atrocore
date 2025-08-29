@@ -27,11 +27,28 @@ class Ratio extends Base
             return false;
         }
 
-        return ($width / $height) == $this->rule->get('ratio');
+        $ratio = $this->aspectRatioToFloat($this->params['ratio']);
+        if (empty($ratio)) {
+            return false;
+        }
+
+        return ($width / $height) == $this->params['ratio'];
     }
+
+    public static function aspectRatioToFloat(string $ratio): ?float
+    {
+        [$width, $height] = explode(':', $ratio);
+
+        if (empty((float)$height)) {
+            return null;
+        }
+
+        return (float)$width / (float)$height;
+    }
+
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageRatioValidationFailed'), $this->rule->get('ratio')));
+        throw new BadRequest(sprintf($this->exception('imageRatioValidationFailed'), $this->params['ratio']));
     }
 }

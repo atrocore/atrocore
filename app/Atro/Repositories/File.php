@@ -88,9 +88,6 @@ class File extends Base
                 throw new BadRequest($this->getInjection('language')->translate('fileCreateFailed', 'exceptions', 'File'));
             }
 
-            // assign the file type automatically
-            $this->assignTheFileTypeAutomatically($entity);
-
             if ($this->getConfig()->get('automaticFileExtensionCorrection')) {
                 $this->automaticallyCorrectExtension($entity);
             }
@@ -590,22 +587,6 @@ class File extends Base
         }
     }
 
-    protected function assignTheFileTypeAutomatically(Entity $entity): void
-    {
-        if (empty($entity->get('typeId'))) {
-            $fileTypes = $this->getEntityManager()->getRepository('FileType')
-                ->where(['assignAutomatically' => true])
-                ->order('priority', 'DESC')
-                ->find();
-            foreach ($fileTypes as $fileType) {
-                if ($this->getFileValidator()->validateFile($fileType, $entity)) {
-                    $entity->set('typeId', $fileType->get('id'));
-                    break;
-                }
-            }
-        }
-    }
-
     protected function automaticallyCorrectExtension(Entity $entity): void
     {
         if (empty($entity->_input->fromApi)) {
@@ -634,11 +615,6 @@ class File extends Base
         }
 
         $entity->set('name', join('.', $nameParts));
-
-        if (empty($entity->_input->typeId)) {
-            $entity->set('typeId', null);
-            $this->assignTheFileTypeAutomatically($entity);
-        }
 
         $this->getStorage($entity)->reupload($entity);
     }

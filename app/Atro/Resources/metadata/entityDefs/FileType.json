@@ -5,22 +5,34 @@
       "required": true,
       "trim": true
     },
-    "assignAutomatically": {
-      "type": "bool",
-      "notNull": true,
-      "default": false
-    },
-    "priority": {
+    "minSize": {
       "type": "int",
-      "notNull": false,
-      "default": 10,
       "min": 0
     },
-    "files": {
-      "type": "linkMultiple",
-      "noLoad": true
+    "maxSize": {
+      "type": "int",
+      "min": 0
     },
-    "validationRules": {
+    "aspectRatio": {
+      "type": "varchar"
+    },
+    "minWidth": {
+      "type": "int",
+      "min": 0
+    },
+    "minHeight": {
+      "type": "int",
+      "min": 0
+    },
+    "extensions": {
+      "type": "array",
+      "storeArrayValues": true
+    },
+    "mimeTypes": {
+      "type": "array",
+      "storeArrayValues": true
+    },
+    "files": {
       "type": "linkMultiple",
       "noLoad": true
     },
@@ -48,11 +60,6 @@
       "type": "hasMany",
       "foreign": "type",
       "entity": "File"
-    },
-    "validationRules": {
-      "type": "hasMany",
-      "foreign": "fileType",
-      "entity": "ValidationRule"
     },
     "createdBy": {
       "type": "belongsTo",

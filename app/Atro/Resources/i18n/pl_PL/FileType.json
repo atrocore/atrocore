@@ -1,7 +1,5 @@
 {
   "fields": {
-    "validationRules": "Reguły walidacji",
-    "assignAutomatically": "Przypisz automatycznie",
     "files": "Pliki"
   },
   "exceptions": {

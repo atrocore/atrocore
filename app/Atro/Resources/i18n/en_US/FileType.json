@@ -1,10 +1,20 @@
 {
   "fields": {
-    "validationRules": "Validation rules",
-    "assignAutomatically": "Assign automatically",
-    "files": "Files"
+    "files": "Files",
+    "aspectRatio": "Aspect Ratio",
+    "minSize": "Minimum Size, Kb",
+    "maxSize": "Maximum Size, Kb",
+    "minWidth": "Minimum Width, px",
+    "minHeight": "Minimum Height, px",
+    "extensions": "Extensions",
+    "mimeTypes": "Mime Types"
   },
   "exceptions": {
-    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the '%s' field of the '%s' entity."
+    "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the '%s' field of the '%s' entity.",
+    "aspectRatioMustBeInFormat": "Error: Invalid aspect ratio format. Please use the format width:height, such as 16:9."
+  },
+  "labels": {
+    "General Settings": "General Settings",
+    "Image Settings": "Image Settings"
   }
 }
