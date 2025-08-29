@@ -819,7 +819,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         if (rule.data && rule.data['subQuery']) {
                             let data = { where: rule.data['subQuery'] };
-                            this.listenTo(view, 'after:render', () => {
+                            this.listenToOnce(view, 'after:render', () => {
                                 view.addLinkSubQuery(data);
                             })
                         }
