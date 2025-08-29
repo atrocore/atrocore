@@ -1412,7 +1412,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync after:inlineEditSave', function () {
                 this.attributes = this.model.getClonedAttributes();
             }, this);
 
