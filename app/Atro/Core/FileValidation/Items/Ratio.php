@@ -32,7 +32,7 @@ class Ratio extends Base
             return false;
         }
 
-        return ($width / $height) == $this->params['ratio'];
+        return ($width / $height) == $ratio;
     }
 
     public static function aspectRatioToFloat(string $ratio): ?float

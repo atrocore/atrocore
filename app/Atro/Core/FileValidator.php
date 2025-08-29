@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Utils\Metadata;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -31,11 +32,11 @@ class FileValidator
     {
         $validators = [];
 
-        if (empty($fileType->get('extensions'))) {
+        if (!empty($fileType->get('extensions'))) {
             $validators['Extension'] = ['extensions' => $fileType->get('extensions')];
         }
-        if (!empty($fileType->get('mimeType'))) {
-            $validators['MimeType'] = ['mimeTypes' => $fileType->get('mimeTypes')];
+        if (!empty($fileType->get('mimeTypes'))) {
+            $validators['Mime'] = ['mimeTypes' => $fileType->get('mimeTypes')];
         }
         if (!empty($fileType->get('minSize')) || !empty($fileType->get('maxSize'))) {
             $validators['Size'] = [
@@ -47,7 +48,7 @@ class FileValidator
         $fileNameParts = explode('.', $entity->get("name"));
         $fileExt = strtolower(array_pop($fileNameParts));
 
-        if (in_array($fileExt, $this->getEntityManager()->getMetadata()->get('app.file.image.extensions', []))) {
+        if (in_array($fileExt, $this->getMetadata()->get('app.file.image.extensions', []))) {
             if (!empty($fileType->get('minWidth')) || !empty($fileType->get('minHeight'))) {
                 $validators['Scale'] = [
                     'minWidth'  => $fileType->get('minWidth'),
@@ -78,5 +79,10 @@ class FileValidator
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }
