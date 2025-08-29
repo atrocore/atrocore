@@ -578,13 +578,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.deleteLink('subquery');
         },
 
-        addLinkSubQueryHtml: function (subQuery, silent) {
+        addLinkSubQueryHtml: function (subQuery) {
             if (!subQuery || subQuery.length === 0) {
                 return;
             }
-            if(!silent) {
-                this.deleteLinkSubQueryHtml();
-            }
+            this.deleteLinkSubQueryHtml();
             this.addLinkHtml('subquery', '(Subquery)');
         },
 
