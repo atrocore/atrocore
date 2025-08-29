@@ -70,6 +70,10 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.dragDrop = false;
             }
 
+            if (!this.options.disabledOptionList) {
+                this.options.disabledOptionList = this.getDisableOptionsViaConditions();
+            }
+
             if (this.options.disabledOptionList) {
                 this.disableOptions(this.options.disabledOptionList)
             }

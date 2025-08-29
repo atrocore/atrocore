@@ -27,6 +27,9 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             },
             onlyExtensibleEnumOptionIds() {
                 return [this.model.get(this.idName)] || [];
+            },
+            notDisabledOptions() {
+                return this.getDisableOptionsViaConditions();
             }
         },
 
@@ -45,6 +48,10 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
                         this.selectBoolFilterList.push(item);
                     }
                 });
+            }
+
+            if (this.getDisableOptionsRules() && !(this.selectBoolFilterList || []).includes('notDisabledOptions')) {
+                this.selectBoolFilterList.push('notDisabledOptions');
             }
 
             Dep.prototype.setup.call(this);

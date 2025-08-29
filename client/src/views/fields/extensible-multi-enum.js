@@ -26,6 +26,9 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
             },
             onlyExtensibleEnumOptionIds() {
                 return this.model.get(this.idsName) || [];
+            },
+            notDisabledOptions() {
+                return this.getDisableOptionsViaConditions();
             }
         },
 
@@ -45,6 +48,10 @@ Espo.define('views/fields/extensible-multi-enum', ['treo-core:views/fields/filte
                         this.selectBoolFilterList.push(item);
                     }
                 });
+            }
+
+            if (this.getDisableOptionsRules() && !(this.selectBoolFilterList || []).includes('notDisabledOptions')) {
+                this.selectBoolFilterList.push('notDisabledOptions');
             }
 
             Dep.prototype.setup.call(this);

@@ -202,6 +202,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 }
             }
 
+            if (!this.options.disabledOptionList) {
+                this.options.disabledOptionList = this.getDisableOptionsViaConditions();
+            }
+
             if (this.options.disabledOptionList) {
                 this.disableOptions(this.options.disabledOptionList)
             }

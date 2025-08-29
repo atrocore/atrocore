@@ -5,12 +5,14 @@
     "defaultOption",
     "onlyForExtensibleEnum",
     "onlyAllowedOptions",
-    "onlyExtensibleEnumOptionIds"
+    "onlyExtensibleEnumOptionIds",
+    "notDisabledOptions"
   ],
   "hiddenBoolFilterList": [
     "defaultOption",
     "onlyForExtensibleEnum",
     "onlyAllowedOptions",
-    "onlyExtensibleEnumOptionIds"
+    "onlyExtensibleEnumOptionIds",
+    "notDisabledOptions"
   ]
 }

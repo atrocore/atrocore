@@ -877,6 +877,23 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditionalProperties.${type}.conditions`);
         },
 
+        getDisableOptionsRules() {
+            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.disableOptions`);
+        },
+
+        getDisableOptionsViaConditions() {
+            let res = [];
+            (this.getDisableOptionsRules() || []).forEach(rule => {
+                if (this.checkConditionGroup(rule.conditions)) {
+                    (rule.options || []).forEach(option => {
+                        res.push(option);
+                    })
+                }
+            });
+
+            return res;
+        },
+
         setup: function () {
             this.defaultUnit = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultUnit']);
             if (this.params.defaultUnit) {
