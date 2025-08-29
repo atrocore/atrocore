@@ -235,9 +235,9 @@ class SavedSearch extends Base
         } else {
             $value = $defs['value'] ?? null;
             return [
-                'isAttribute' => $defs['fieldParams']['isAttribute'] ?? null,
                 'type' => $type,
                 'attribute' => $attribute,
+                'isAttribute' => $defs['fieldParams']['isAttribute'] ?? null,
                 'subQuery' => $defs['subQuery'] ?? [],
                 'value' => $value
             ];
