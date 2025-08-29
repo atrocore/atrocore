@@ -233,10 +233,10 @@ class Metadata
                     if (empty($logicData['conditionGroup'])) {
                         continue;
                     }
-                    if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['logicRules'][$logicType])) {
+                    if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType])) {
                         continue;
                     }
-                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditions'][$logicType] = $logicData['conditionGroup'];
+                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditions'] = $logicData['conditionGroup'];
                 }
             }
             unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
