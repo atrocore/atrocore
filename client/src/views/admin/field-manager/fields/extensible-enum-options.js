@@ -29,6 +29,12 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/
             this.hide();
             this.$el.parent().find('label[data-name="extensibleEnumOptions"]').remove();
 
+            this.$el
+                .css('padding-left', 0)
+                .css('padding-right', 0)
+                .css('margin-left', '-10px')
+                .css('margin-top', '-15px');
+
             if (this.model.get('extensibleEnumId')) {
                 let scope = 'ExtensibleEnum';
                 this.getModelFactory().create(scope, model => {
@@ -54,6 +60,7 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/
                                 view.getView('extensibleEnumOptions').collection.fetch()
                             })
                             this.show();
+                            view.$el.find('.panel-heading').css('border-top', 'none');
                         });
                     });
                 });
