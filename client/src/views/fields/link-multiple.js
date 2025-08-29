@@ -545,7 +545,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             }
             let subQuery = Espo.Utils.clone(data.where ?? []);
             this.searchData.subQuery = subQuery;
-            this.addLinkSubQueryHtml(subQuery, silent);
+            this.addLinkSubQueryHtml(subQuery);
             if (!silent) {
                 this.trigger('add-subquery', subQuery);
             }
