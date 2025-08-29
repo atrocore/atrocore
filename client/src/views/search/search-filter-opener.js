@@ -20,7 +20,21 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
         },
 
         open(foreignScope, initialWhere = [], callback, additionalBoolFilterList = [], boolFilterData = {}) {
-            if (!Array.isArray(initialWhere)) {
+            let filters = {}
+            if (!Array.isArray(initialWhere) && typeof initialWhere === 'object' && initialWhere !== null) {
+                filters = initialWhere;
+                initialWhere = [];
+            } else if (!Array.isArray(initialWhere)) {
+                filters = {
+                    bool: [],
+                    queryBuilder: {
+                        condition: "AND",
+                        rules: [],
+                        valid: true
+                    },
+                    textFilter: "",
+                    queryBuilderApplied: true
+                }
                 initialWhere = [];
             }
             let getOperator = (type) => {
@@ -91,11 +105,6 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
             };
             let bool = {};
             let textFilter = "";
-            let queryBuilder = {
-                condition: "AND",
-                rules: [],
-                valid: true
-            }
             let where = initialWhere || [];
             where.forEach(item => {
                 if (item.type === 'bool') {
@@ -103,40 +112,39 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                 }
 
                 if (item.condition) {
-                    queryBuilder.rules.push(item);
+                    filters.queryBuilder.rules.push(item);
                 }
 
                 if (item.type === 'textFilter') {
-                    textFilter = item.value;
+                    filters.textFilter = item.value;
                 }
 
                 if (item.attribute && item.type) {
-                    convertToQueryBuilder(item, queryBuilder);
+                    convertToQueryBuilder(item, filters.queryBuilder);
                 }
             });
 
-            if (queryBuilder.rules.length === 1 && queryBuilder.rules[0].condition) {
-                queryBuilder = queryBuilder.rules[0];
+            if (filters.queryBuilder.rules.length === 1 && filters.queryBuilder.rules[0].condition) {
+                filters.queryBuilder = queryBuilder.rules[0];
             }
 
-            if(queryBuilder.rules.length === 0) {
-                queryBuilder = {}
+            if (filters.queryBuilder.rules.length === 0) {
+                filters.queryBuilder = {}
             }
 
-            let filters = {bool, queryBuilder, textFilter, queryBuilderApplied: true}
 
             this.notify(this.translate('loading', 'messages'));
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                disabledUnsetSearch: initialWhere.length > 0,
+                disabledUnsetSearch: filters.queryBuilder.rules.length > 0,
                 additionalBoolFilterList: additionalBoolFilterList,
                 boolFilterData: boolFilterData,
             }, (dialog) => {
                 dialog.render();
                 this.notify(false);
 
-                this.listenTo(dialog, 'select', function (where) {
+                this.listenTo(dialog, 'select', function ({where, whereData}) {
 
                     if (!callback) {
                         return;
@@ -147,39 +155,12 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                             where: null,
                             whereData: null
                         });
-                        return ;
+                        return;
                     }
-
-                    let bool = {};
-                    textFilter = '';
-                    let queryBuilder = {
-                        condition: "AND",
-                        rules: [],
-                        valid: true
-                    };
-
-                    where.forEach(item => {
-                        if (item.type === 'bool') {
-                            item.value.forEach(v => bool[v] = true);
-                        }
-
-                        if (item.type === 'textFilter') {
-                            textFilter = item.value;
-                        }
-
-                        if (item.condition && item.rules) {
-                            (item.condition === 'AND' || item.rules.length === 1) ? queryBuilder.rules = queryBuilder.rules.concat(item.rules) : queryBuilder.rules.push(item);
-                        }
-                    });
 
                     callback({
                         where: where,
-                        whereData: {
-                            bool,
-                            queryBuilder,
-                            textFilter,
-                            queryBuilderApplied: true
-                        }
+                        whereData: whereData
                     });
 
                 });
