@@ -1428,12 +1428,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
-
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-
-            this.onModelReady(() => {
-                this.initUiHandler();
-            })
         },
 
         initDynamicHandler: function () {
