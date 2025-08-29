@@ -292,13 +292,15 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.originalOptionList = this.params.options;
             }
 
-            const options = []
-            this.originalOptionList.forEach(option => {
-                if (disabledOptionList.includes(option)) {
-                    return
-                }
-                options.push(option)
-            })
+            const options = [];
+            if (this.originalOptionList) {
+                this.originalOptionList.forEach(option => {
+                    if (disabledOptionList.includes(option)) {
+                        return
+                    }
+                    options.push(option)
+                })
+            }
 
             this.setOptionList(options)
         },
