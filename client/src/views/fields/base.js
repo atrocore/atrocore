@@ -97,29 +97,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return true
             }
 
-            return this.isRequiredViaLogicRules(this.name);
-        },
-
-        isRequiredViaLogicRules(name) {
-            const rules = this.getLogicRules(this.model.name, name, 'required');
-            if (rules) {
-                return this.checkConditionGroup(rules);
-            }
-
-            return false;
-        },
-
-        isReadOnlyViaLogicRules(name) {
-            const rules = this.getLogicRules(this.model.name, name, 'readOnly');
-            if (rules) {
-                return this.checkConditionGroup(rules);
-            }
-
-            return false;
-        },
-
-        getLogicRules(scope, name, type) {
-            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.logicRules.${type}`);
+            return this.isRequiredViaConditions(this.name);
         },
 
         getCellElement: function () {
@@ -311,7 +289,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (!this.readOnly) {
-                this.readOnly = this.isReadOnlyViaLogicRules(this.name);
+                this.readOnly = this.isReadOnlyViaConditions(this.name);
             }
 
             this.disabledLocked = this.options.disabledLocked || false;
@@ -854,7 +832,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         toggleVisibility(name) {
-            const rules = this.getLogicRules(this.model.name, name, 'visible');
+            const rules = this.getConditions(this.model.name, name, 'visible');
             if (rules) {
                 if (this.checkConditionGroup(rules)) {
                     this.$el.parent().show();
@@ -875,6 +853,28 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             } else {
                 $panel.show();
             }
+        },
+
+        isRequiredViaConditions(name) {
+            const conditions = this.getConditions(this.model.name, name, 'required');
+            if (conditions) {
+                return this.checkConditionGroup(conditions);
+            }
+
+            return false;
+        },
+
+        isReadOnlyViaConditions(name) {
+            const conditions = this.getConditions(this.model.name, name, 'readOnly');
+            if (conditions) {
+                return this.checkConditionGroup(conditions);
+            }
+
+            return false;
+        },
+
+        getConditions(scope, name, type) {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditions.${type}`);
         },
 
         setup: function () {
