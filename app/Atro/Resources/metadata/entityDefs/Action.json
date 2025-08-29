@@ -6,15 +6,7 @@
       "trim": true
     },
     "description": {
-      "type": "text",
-      "conditions": {
-        "required": [
-          {
-            "type": "isNotEmpty",
-            "attribute": "id"
-          }
-        ]
-      }
+      "type": "text"
     },
     "type": {
       "type": "enum",
