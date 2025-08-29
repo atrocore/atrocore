@@ -37,7 +37,7 @@ class V2Dot0Dot36 extends Base
             $this->exec("ALTER TABLE file_type DROP assign_automatically;");
             $this->exec("ALTER TABLE file_type DROP priority;");
         } else {
-            $this->exec("ALTER TABLE file_type ADD min_size INT DEFAULT NULL, ADD max_size INT DEFAULT NULL, ADD aspect_ratio VARCHAR(255) DEFAULT NULL, ADD min_width INT DEFAULT NULL, ADD min_height INT DEFAULT NULL, ADD color_depth LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD color_space LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD extensions LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD mime_types LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', DROP assign_automatically, DROP priority;");
+            $this->exec("ALTER TABLE file_type ADD min_size INT DEFAULT NULL, ADD max_size INT DEFAULT NULL, ADD aspect_ratio VARCHAR(255) DEFAULT NULL, ADD min_width INT DEFAULT NULL, ADD min_height INT DEFAULT NULL, ADD extensions LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD mime_types LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', DROP assign_automatically, DROP priority;");
         }
 
         $types = $this->getConnection()->createQueryBuilder()
