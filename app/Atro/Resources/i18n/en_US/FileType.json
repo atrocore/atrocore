@@ -11,7 +11,7 @@
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "The record cannot be deleted as it is used in the '%s' field of the '%s' entity.",
-    "aspectRatioMustBeInFormat": "Error: Invalid aspect ratio format. Please use the format width:height, such as 16:9."
+    "aspectRatioMustBeInFormat": "Invalid aspect ratio format. Please use the format width:height, such as 16:9."
   },
   "labels": {
     "General Settings": "General Settings",
