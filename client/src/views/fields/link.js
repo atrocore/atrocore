@@ -908,7 +908,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         view = this.getView(inputName);
                         if (rule.data && rule.data['subQuery'] && view) {
                             let data = { where: rule.data['subQuery'] };
-                            view.addLinkSubQuery(data, true);
+                            this.listenToOnce(view, 'after:render', () => {
+                                view.addLinkSubQuery(data);
+                            })
                         }
                         if (view) {
                             view.reRender();

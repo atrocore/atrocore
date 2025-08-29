@@ -388,7 +388,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync after:inlineEditSave', function () {
                 this.attributes = this.model.getClonedAttributes();
             }, this);
 
@@ -689,12 +689,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                 if (xhr.responseJSON && xhr.responseJSON.reason) {
                     statusReason = xhr.responseJSON.reason;
                 }
+                if (!statusReason) {
+                    statusReason = this.translate('unableToDuplicateRecord', 'messages')
+                }
                 xhr.errorIsHandled = true;
                 if (xhr.status === 409) {
                     self.notify(false);
                     self.enableButtons();
                     self.trigger('cancel:save');
-                    Espo.Ui.confirm(this.translate('unableToDuplicateRecord', 'messages'), {
+                    Espo.Ui.confirm(statusReason, {
                         confirmText: self.translate('Apply'),
                         cancelText: self.translate('Cancel')
                     }, function () {
