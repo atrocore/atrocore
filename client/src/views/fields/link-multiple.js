@@ -568,7 +568,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         deleteLinkHtml: function (id) {
-            if (this.$element.size() > 0) {
+            if (this.$element && this.$element.size() > 0) {
                 const selectize = this.$element[0].selectize;
                 selectize.removeOption(id);
             }
@@ -588,7 +588,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         addLinkHtml: function (id, name) {
-            if (this.$element.size() > 0) {
+            if (this.$element && this.$element.size() > 0) {
                 const selectize = this.$element[0].selectize;
                 selectize.registerOption({
                     id, name
