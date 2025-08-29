@@ -71,5 +71,4 @@ class V2Dot0Dot34 extends Base
 
         Util::removeDir ('client/custom');
     }
-
 }
