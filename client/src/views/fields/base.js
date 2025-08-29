@@ -827,14 +827,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        checkConditionGroup(rules){
-            return new ConditionsChecker(this).checkConditionGroup(rules);
+        checkConditionGroup(conditions){
+            return new ConditionsChecker(this).checkConditionGroup(conditions);
         },
 
         toggleVisibility(name) {
-            const rules = this.getConditions(this.model.name, name, 'visible');
-            if (rules) {
-                if (this.checkConditionGroup(rules)) {
+            const conditions = this.getConditions(this.model.name, name, 'visible');
+            if (conditions) {
+                if (this.checkConditionGroup(conditions)) {
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();
