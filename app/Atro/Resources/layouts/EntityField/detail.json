@@ -326,5 +326,16 @@
         }
       ]
     ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalRequired",
+          "fullWidth": true
+        }
+      ]
+    ]
   }
 ]

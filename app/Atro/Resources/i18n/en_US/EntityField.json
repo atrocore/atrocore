@@ -59,7 +59,8 @@
     "auditableDisabled": "Create no record activity",
     "modifiedExtendedDisabled": "No recording as modification",
     "modifiedExtendedEnabled": "Recording as modification",
-    "duplicateIgnore": "Non Duplicatable"
+    "duplicateIgnore": "Non Duplicatable",
+    "conditionalRequired": "Conditional Required"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -118,6 +119,7 @@
   },
   "labels": {
     "resetToDefault": "Reset to default",
-    "relationManagement": "Relation Management"
+    "relationManagement": "Relation Management",
+    "conditionalProperties": "Conditional Properties"
   }
 }

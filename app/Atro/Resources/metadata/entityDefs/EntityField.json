@@ -355,6 +355,10 @@
     "modifiedExtendedDisabled": {
       "type": "bool",
       "tooltip": true
+    },
+    "conditionalRequired": {
+      "type": "wysiwyg",
+      "view": "views/admin/field-manager/fields/conditions-container"
     }
   },
   "links": {

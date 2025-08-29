@@ -37,10 +37,10 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                 // try later
                 setTimeout(() => this.clearValue(), 100);
             } else {
-                if (this.model.get('conditionsType') === 'script') {
-                    this.model.set('conditions', "{% set proceed = true %}" + "\n{{ proceed }}");
+                if (this.getConditionType() === 'script') {
+                    this.model.set(this.name, "{% set proceed = true %}" + "\n{{ proceed }}");
                 } else {
-                    this.model.set('conditions', null);
+                    this.model.set(this.name, null);
                 }
             }
         },
@@ -49,8 +49,12 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
             return this.model.get(this.entityTypeField);
         },
 
+        getConditionType(){
+            return this.model.get('conditionsType') || 'basic'
+        },
+
         canShowValueField() {
-            return this.model.get('conditionsType') && this.getEntityType()
+            return this.getConditionType() && this.getEntityType()
         },
 
 
@@ -71,10 +75,10 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                 };
 
                 let view;
-                if (this.model.get('conditionsType') === 'basic') {
+                if (this.getConditionType() === 'basic') {
                     view = 'views/admin/field-manager/fields/dynamic-logic-conditions';
                     options.scope = this.getEntityType();
-                } else if (this.model.get('conditionsType') === 'script') {
+                } else if (this.getConditionType() === 'script') {
                     view = 'views/fields/script'
                     options.params.required = true;
                     options.params.twigVariables = [
