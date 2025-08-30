@@ -188,19 +188,22 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.gridLayout = null
 
             const useNotification = !this.model._disableRefreshNotification
-            if  (useNotification){
+            if (useNotification) {
                 this.notify('Loading...')
             }
             this.getGridLayout((layout) => {
-                if (useNotification){
+                if (useNotification) {
                     this.notify(false)
-                }else{
+                } else {
                     delete this.model._disableRefreshNotification
                 }
 
                 const middle = this.getView('middle')
                 let reRenderMiddle = (middle) => {
                     middle._layout = layout
+                    for (let key in middle.nestedViews) {
+                        middle.clearView(key);
+                    }
                     middle._loadNestedViews(() => {
                         if (middleOnly) {
                             middle.reRender()
@@ -211,7 +214,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 if (middle) {
                     reRenderMiddle(middle)
-                }else{
+                } else {
                     this.listenToOnce(this, 'after:render', () => {
                         reRenderMiddle(this.getView('middle'))
                     })
@@ -1232,7 +1235,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
             this.setupBeforeFinal();
 
-            this.onModelReady(()=> {
+            this.onModelReady(() => {
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             })
@@ -1303,6 +1306,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(this, 'change:disabled-languages', (value) => {
                     this.getUser().set('disabledLanguages', value)
+                    if (this.mode === 'edit' && this.getView('middle')) {
+                        this.listenToOnce(this.getView('middle'), 'after:render', () => {
+                            this.setEditMode()
+                        })
+                    }
                     this.refreshLayout(true)
                 })
             }
@@ -1347,7 +1355,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 let id = this.$el.find('.detail').attr('id');
                 if (id && this.realtimeId === this.model.get('id')) {
                     if (this.mode !== 'edit') {
-                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, {local: true}).done(data => {
+                        $.ajax(`${res.endpoint}?silent=true&time=${$.now()}`, { local: true }).done(data => {
                             if (data.timestamp !== res.timestamp && $('.inline-cancel-link').length === 0) {
                                 res.timestamp = data.timestamp;
                                 if (!this.model._updatedById || this.model._updatedById !== this.getUser().id) {
