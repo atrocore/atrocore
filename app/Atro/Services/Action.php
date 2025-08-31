@@ -224,8 +224,14 @@ class Action extends Base
 
             if ($data['type'] === 'previewTemplate') {
                 if (!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope) {
-                    if (!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id,
-                        $action['data']['where'])) {
+                    $where = $action['data']['where'];
+                    if(!empty($action['data']['whereData'])) {
+                        $temp = \Atro\Repositories\SavedSearch::getWhereFromWhereData($action['data']['whereData'], $this->getEntityManager());
+                        if(!empty($temp)) {
+                            $where = $temp;
+                        }
+                    }
+                    if (!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id, $where)) {
                         continue;
                     }
                 }
