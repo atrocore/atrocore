@@ -21,10 +21,11 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
 
         open(foreignScope, initialWhere = [], callback, additionalBoolFilterList = [], boolFilterData = {}) {
             let filters = {}
+
             if (!Array.isArray(initialWhere) && typeof initialWhere === 'object' && initialWhere !== null) {
                 filters = initialWhere;
                 initialWhere = [];
-            } else if (!Array.isArray(initialWhere)) {
+            } else {
                 filters = {
                     bool: [],
                     queryBuilder: {
@@ -35,7 +36,9 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                     textFilter: "",
                     queryBuilderApplied: true
                 }
-                initialWhere = [];
+                if (!Array.isArray(initialWhere)) {
+                    initialWhere = [];
+                }
             }
             let getOperator = (type) => {
                 let data = {
@@ -124,12 +127,13 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
                 }
             });
 
-            if (filters.queryBuilder.rules.length === 1 && filters.queryBuilder.rules[0].condition) {
+            if (filters.queryBuilder.rules && filters.queryBuilder.rules.length === 1 && filters.queryBuilder.rules[0].condition) {
                 filters.queryBuilder = queryBuilder.rules[0];
             }
 
-            if (filters.queryBuilder.rules.length === 0) {
+            if (filters.queryBuilder.rules && filters.queryBuilder.rules.length === 0) {
                 filters.queryBuilder = {}
+                filters.queryBuilderApplied = false;
             }
 
 
@@ -137,7 +141,7 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                disabledUnsetSearch: filters.queryBuilder.rules.length > 0,
+                disabledUnsetSearch: filters.queryBuilder.rules && filters.queryBuilder.rules.length > 0,
                 additionalBoolFilterList: additionalBoolFilterList,
                 boolFilterData: boolFilterData,
             }, (dialog) => {

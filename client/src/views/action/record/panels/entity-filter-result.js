@@ -63,7 +63,19 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                 return;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get('targetEntity'), this.model.get('data')?.where,  ({where, whereData}) => {
+            let whereData = this.model.get('data')?.where;
+
+            if(this.model.get('data')?.whereData
+                && (this.model.get('data')?.whereData['queryBuilder']
+                    || this.model.get('data')?.whereData['bool']
+                    || this.model.get('data')?.whereData['textFilter']
+                    || this.model.get('data')?.whereData['savedSearch']
+                )
+            ){
+                whereData = this.model.get('data')?.whereData;
+            }
+
+            SearchFilterOpener.prototype.open.call(this, this.model.get('targetEntity'), whereData,  ({where, whereData}) => {
                 this.model.set('data', _.extend({}, this.model.get('data'), {
                     where,
                     whereData,

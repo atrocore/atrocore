@@ -76,8 +76,8 @@ class SendEmail extends AbstractAction
         $targetEntity = $action->get('targetEntity');
         if (!empty($targetEntity)) {
             $where = [];
-            if (!empty($action->get('data')->where)) {
-                $whereJson = json_encode($action->get('data')->where);
+            if (!empty($this->getWhere($action))) {
+                $whereJson = json_encode($this->getWhere($action));
                 $whereJson = $this->container->get('twig')->renderTemplate($whereJson, $templateData);
                 $where = @json_decode($whereJson, true);
             }
