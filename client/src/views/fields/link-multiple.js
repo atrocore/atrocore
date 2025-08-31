@@ -547,7 +547,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
             if (!silent) {
-                setTimeout(() =>  this.trigger('add-subquery', subQuery), 100)
+                 this.trigger('add-subquery', subQuery)
             }
         },
 
@@ -833,8 +833,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         });
 
-                        this.listenTo(view, 'clear-subquery', () => {
-
+                        this.listenTo(view, 'clear-subquery', () => {g
                             this.filterValue = rule.value;
                             if (rule.value !== null && rule.length === 0) {
                                 this.filterValue = null;
