@@ -547,7 +547,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
             if (!silent) {
-                 this.trigger('add-subquery', subQuery);
+                this.trigger('add-subquery', subQuery);
             }
         },
 
