@@ -547,7 +547,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
             if (!silent) {
-                this.trigger('add-subquery', subQuery);
+                 this.trigger('add-subquery', subQuery);
             }
         },
 
@@ -819,7 +819,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         if (rule.data && rule.data['subQuery']) {
                             let data = { where: rule.data['subQuery'] };
-                            this.listenToOnce(view, 'after:render', () => {
+                            this.listenTo(view, 'after:render', () => {
                                 view.addLinkSubQuery(data);
                             })
                         }
