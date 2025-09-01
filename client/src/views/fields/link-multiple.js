@@ -550,11 +550,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (!this.searchData) {
                 return;
             }
-            let subQuery = data.where ?? [];
+            let subQuery = Espo.Utils.clone(data.where ?? []);
             this.searchData.subQuery = subQuery;
             this.addLinkSubQueryHtml(subQuery);
             if (!silent) {
-                this.trigger('add-subquery', subQuery);
+                 this.trigger('add-subquery', subQuery);
             }
         },
 
@@ -575,7 +575,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         deleteLinkHtml: function (id) {
-            if (this.$element.size() > 0) {
+            if (this.$element && this.$element.size() > 0) {
                 const selectize = this.$element[0].selectize;
                 selectize.removeOption(id);
             }
@@ -589,13 +589,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             if (!subQuery || subQuery.length === 0) {
                 return;
             }
-
             this.deleteLinkSubQueryHtml();
             this.addLinkHtml('subquery', '(Subquery)');
         },
 
         addLinkHtml: function (id, name) {
-            if (this.$element.size() > 0) {
+            if (this.$element && this.$element.size() > 0) {
                 const selectize = this.$element[0].selectize;
                 selectize.registerOption({
                     id, name
@@ -827,7 +826,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                         if (rule.data && rule.data['subQuery']) {
                             let data = { where: rule.data['subQuery'] };
-                            view.addLinkSubQuery(data, true);
+                            this.listenTo(view, 'after:render', () => {
+                                view.addLinkSubQuery(data);
+                            })
                         }
 
                         this.listenTo(view, 'add-subquery', subQuery => {

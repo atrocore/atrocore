@@ -68,8 +68,10 @@ Espo.define('views/login', 'view', function (Dep) {
                 $('#field-userName').val(demo.username);
                 $('#field-password').val(demo.password);
             } else {
-                const lastAuthUsername = localStorage.getItem('lastAuthUserName');
+                const rememberUsername = localStorage.getItem('rememberUserName') || false,
+                    lastAuthUsername = localStorage.getItem('lastAuthUserName');
 
+                $('#field-rememberUsername').prop("checked", rememberUsername);
                 if (lastAuthUsername) {
                     $('#field-userName').val(lastAuthUsername);
                 }
@@ -189,8 +191,10 @@ Espo.define('views/login', 'view', function (Dep) {
                     });
 
                     if (rememberUsername) {
+                        localStorage.setItem('rememberUserName', rememberUsername);
                         localStorage.setItem('lastAuthUserName', userName);
                     } else {
+                        localStorage.removeItem('rememberUserName');
                         localStorage.removeItem('lastAuthUserName');
                     }
                 }.bind(this),

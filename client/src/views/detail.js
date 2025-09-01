@@ -516,7 +516,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 props: this.getHeaderOptions()
             });
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync after:save after:inlineEditSave', function () {
                 window.dispatchEvent(new CustomEvent('breadcrumbs:items-updated', {detail: this.getBreadcrumbsItems()}));
                 this.updatePageTitle();
             });

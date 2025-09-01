@@ -563,9 +563,15 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         fetch: function () {
             var value = this.$el.find('[name="' + this.name + '"]').val();
+
             if (value) {
                 value = value.replace(/~dbq~/g, '"');
             }
+
+            if(this.prohibitedEmptyValue && value === "") {
+                value = null;
+            }
+
             var data = {};
             data[this.name] = value;
             return data;

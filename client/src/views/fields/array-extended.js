@@ -353,9 +353,10 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         addNewValue() {
+            this.fetchFromDom();
             let data = {
                 [this.name]: (this.selectedComplex[this.name] || []).concat([""]),
-                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`toUpadate-${new Date().getTime()}`])
+                [this.name + 'Ids']: (this.selectedComplex[this.name + 'Ids'] || []).concat([`${new Date().getTime()}`])
             };
             this.langFieldNames.forEach(name => {
                 data[name] = (this.selectedComplex[name] || []).concat([""])
@@ -370,6 +371,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         removeGroup($el) {
+            this.fetchFromDom();
             let index = $el.parents('.list-group-item').index();
             let value = this.selectedComplex[this.name] || [];
 
@@ -383,6 +385,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                 [this.name]: value,
                 [this.name + 'Ids']: optionsIds,
             };
+
             this.langFieldNames.forEach(name => {
                 let value = this.selectedComplex[name] || [];
                 value.splice(index, 1);
@@ -434,36 +437,21 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
             if (this.isEnums()) {
                 const data = {};
                 data[this.name] = [];
-                data[this.name + 'Ids'] = [];
+
                 if (!this.isAttribute) {
                     data['optionColors'] = [];
                 }
-                this.langFieldNames.forEach(name => data[name] = []);
+
                 this.$el.find('.option-group').each((index, element) => {
                     $(element).find('.option-item input').each((i, el) => {
                         const $el = $(el);
                         if (!$el.hasClass('color-input')) {
-                            data[this.name + 'Ids'][index] = `${$el.data('id')}`;
                             data[$el.data('name').toString()][index] = $el.val().toString();
                         }
                         if ($el.hasClass('color-input')) {
                             data['optionColors'][index] = $el.val();
                         }
                     });
-                });
-                data[this.name + 'Ids'].forEach((id, key) => {
-                    if(id.includes('toUpadate')) {
-                        let optionId = data[this.name][key];
-                        let finalOptionId;
-                        // slugify
-                        optionId = optionId.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').replace(/-+/g, '-');
-                        finalOptionId = optionId;
-                        // ensure unique ids
-                        while (data[this.name + 'Ids'].includes(finalOptionId)) {
-                            finalOptionId = `${optionId}-${Math.floor(Math.random() * 9999) + 1}`;
-                        }
-                        data[this.name + 'Ids'][key] = finalOptionId;
-                    }
                 });
                 this.selectedComplex = data;
             } else {
@@ -603,7 +591,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                     let options = [
                         {
                             name: this.name,
-                            id: this.selectedComplex[this.name + 'Ids'][index],
+                            id: this.selectedComplex[this.name][index],
                             value: item,
                             shortLang: '',
                             colorValue: colorValue
@@ -616,7 +604,7 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
                             options.push(
                                 {
                                     name: name,
-                                    id: this.selectedComplex[this.name + 'Ids'][index],
+                                    id: this.selectedComplex[this.name][index],
                                     value: localeItem,
                                     shortLang: name.slice(-4, -2).toLowerCase() + '_' + name.slice(-2).toUpperCase(),
                                     colorValue: null
