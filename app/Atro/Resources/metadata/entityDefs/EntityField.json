@@ -357,7 +357,7 @@
       "tooltip": true
     },
     "conditionalRequired": {
-      "type": "wysiwyg",
+      "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
         "visible": {
@@ -371,7 +371,7 @@
       }
     },
     "conditionalReadOnly": {
-      "type": "wysiwyg",
+      "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
         "visible": {
@@ -385,7 +385,7 @@
       }
     },
     "conditionalVisible": {
-      "type": "wysiwyg",
+      "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
         "visible": {
@@ -393,6 +393,30 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalDisableOptions": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditional-disable-options",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "enum",
+                "multiEnum",
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
             }
           ]
         }

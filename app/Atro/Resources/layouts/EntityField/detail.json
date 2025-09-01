@@ -347,6 +347,12 @@
           "name": "conditionalReadOnly"
         },
         false
+      ],
+      [
+        {
+          "name": "conditionalDisableOptions",
+          "fullWidth": true
+        }
       ]
     ]
   }

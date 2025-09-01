@@ -62,7 +62,8 @@
     "duplicateIgnore": "Non Duplicatable",
     "conditionalRequired": "Required",
     "conditionalVisible": "Visible",
-    "conditionalReadOnly": "Read-only"
+    "conditionalReadOnly": "Read-only",
+    "conditionalDisableOptions": "Disable Options"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
