@@ -109,19 +109,16 @@ class EntityField extends ReferenceData
         }
 
         return array_merge($fieldDefs, [
-            'id'             => "{$entityName}_{$fieldName}",
-            'code'           => $fieldName,
-            'name'           => $label,
-            'entityId'       => $entityName,
-            'entityName'     => $this->translate($entityName, 'scopeNames'),
-            'tooltipText'    => $this->translate($fieldName, 'tooltips', $entityName),
-            'multilangField' => $this->getMetadata()->get([
-                'entityDefs',
-                $entityName,
-                'fields',
-                $fieldName,
-                'multilangField'
-            ])
+            'id'                  => "{$entityName}_{$fieldName}",
+            'code'                => $fieldName,
+            'name'                => $label,
+            'entityId'            => $entityName,
+            'entityName'          => $this->translate($entityName, 'scopeNames'),
+            'tooltipText'         => $this->translate($fieldName, 'tooltips', $entityName),
+            'conditionalRequired' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
+            'conditionalReadOnly' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
+            'conditionalVisible' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
+            'multilangField'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
         ]);
     }
 
@@ -544,6 +541,31 @@ class EntityField extends ReferenceData
             $saveMetadata = true;
         }
 
+        $conditionalProperties = $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties") ?? [];
+
+        if ($entity->isAttributeChanged('conditionalRequired')) {
+            $conditionalProperties['required'] = $entity->get('conditionalRequired');
+        }
+
+        if ($entity->isAttributeChanged('conditionalReadOnly')) {
+            $conditionalProperties['visible'] = $entity->get('conditionalReadOnly');
+        }
+
+        if ($entity->isAttributeChanged('conditionalVisible')) {
+            $conditionalProperties['visible'] = $entity->get('conditionalVisible');
+        }
+
+        if (!empty($conditionalProperties)) {
+            $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                'fields' => [
+                    $entity->get('code') => [
+                        'conditionalProperties' => $conditionalProperties,
+                    ],
+                ],
+            ]);
+            $saveMetadata = true;
+        }
+
         if ($saveMetadata) {
             $this->getMetadata()->save();
             $this->getDataManager()->rebuild();
@@ -556,7 +578,6 @@ class EntityField extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
-
         $this->deleteFromMetadata($entity);
         $this->getMetadata()->save();
         $this->getDataManager()->rebuild();

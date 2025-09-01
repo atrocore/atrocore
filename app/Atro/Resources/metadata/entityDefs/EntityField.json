@@ -361,7 +361,35 @@
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
         "visible": {
-          "conditions": [
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "wysiwyg",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalVisible": {
+      "type": "wysiwyg",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
             {
               "type": "isNotEmpty",
               "attribute": "id"

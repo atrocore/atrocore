@@ -332,7 +332,19 @@
     "rows": [
       [
         {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
           "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
         },
         false
       ]

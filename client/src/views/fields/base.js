@@ -860,7 +860,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getConditions(scope, name, type) {
-            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditionalProperties.${type}.conditions`);
+            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditionalProperties.${type}.conditionGroup`);
         },
 
         getDisableOptionsRules() {

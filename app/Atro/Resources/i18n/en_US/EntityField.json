@@ -60,7 +60,9 @@
     "modifiedExtendedDisabled": "No recording as modification",
     "modifiedExtendedEnabled": "Recording as modification",
     "duplicateIgnore": "Non Duplicatable",
-    "conditionalRequired": "Conditional Required"
+    "conditionalRequired": "Required",
+    "conditionalVisible": "Visible",
+    "conditionalReadOnly": "Read-only"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

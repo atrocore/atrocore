@@ -511,7 +511,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         toggleVisibilityViaConditions() {
             if (this.link) {
-                const conditions = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.link}.conditionalProperties.visible.conditions`);
+                const conditions = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.link}.conditionalProperties.visible.conditionGroup`);
                 if (conditions) {
                     if (new ConditionsChecker(this).checkConditionGroup(conditions)) {
                         this.$el.parent().show();
