@@ -11,7 +11,7 @@
 Espo.define('views/admin/field-manager/fields/conditions-container', 'views/fields/conditions-container',
     Dep => Dep.extend({
 
-        inlineEditDisabled: false,
+        inlineEditDisabled: true,
 
         entityTypeField: 'entityId',
 
