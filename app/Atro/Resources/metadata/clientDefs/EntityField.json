@@ -283,6 +283,17 @@
             }
           ]
         }
+      },
+      "options": {
+        "required": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "in",
+              "value": ["enum", "multiEnum"]
+            }
+          ]
+        }
       }
     }
   }
