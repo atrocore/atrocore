@@ -235,7 +235,7 @@ class Metadata
                     if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType])) {
                         continue;
                     }
-                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditions'] = $logicData['conditionGroup'];
+                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditionGroup'] = $logicData['conditionGroup'];
                 }
             }
             unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
