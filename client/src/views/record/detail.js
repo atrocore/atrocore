@@ -1426,8 +1426,28 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.initDependancy();
 
             this.setupFieldLevelSecurity();
+            this.togglePanelsVisibility();
 
             this.initDynamicHandler();
+        },
+
+        togglePanelsVisibility() {
+            this.listenTo(this, 'after:render', () => {
+                this.$el.find('.middle > .panel').each((k, el) => {
+                    const $panel = $(el);
+
+                    const shown = $panel.find('> .panel-body > .row > .cell').length;
+                    const hidden = $panel.find('> .panel-body > .row > .cell').filter(function () {
+                        return $(this).css('display') === 'none';
+                    }).length;
+
+                    if (shown !== hidden) {
+                        $panel.show();
+                    } else {
+                        $panel.hide();
+                    }
+                });
+            });
         },
 
         initDynamicHandler: function () {
