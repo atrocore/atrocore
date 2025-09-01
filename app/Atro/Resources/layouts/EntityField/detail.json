@@ -116,14 +116,6 @@
       ],
       [
         {
-          "name": "extensibleEnum"
-        },
-        {
-          "name": "allowedOptions"
-        }
-      ],
-      [
-        {
           "name": "foreignName"
         },
         false
@@ -202,13 +194,21 @@
       ],
       [
         {
-          "name": "extensibleEnumOptions"
+          "name": "extensibleEnum"
         },
-        false
+        {
+          "name": "dropdown"
+        }
       ],
       [
         {
-          "name": "dropdown"
+          "name": "extensibleEnumOptions",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "allowedOptions"
         },
         false
       ],
@@ -332,9 +332,9 @@
     "rows": [
       [
         {
-          "name": "conditionalRequired",
-          "fullWidth": true
-        }
+          "name": "conditionalRequired"
+        },
+        false
       ]
     ]
   }
