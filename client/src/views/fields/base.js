@@ -823,7 +823,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (['edit', 'detail'].includes(this.mode)) {
                 this.toggleVisibility(this.name);
-                this.togglePanelVisibility();
             }
         },
 
@@ -839,19 +838,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 } else {
                     this.$el.parent().hide();
                 }
-            }
-        },
-
-        togglePanelVisibility() {
-            const $panel = this.$el.closest('.panel');
-            const $panelBodyCells = $panel.find('> .panel-body > .row > .cell');
-
-            const isPanelHidden = Array.from($panelBodyCells).every(cell => $(cell).is(':hidden'));
-
-            if (isPanelHidden) {
-                $panel.hide();
-            } else {
-                $panel.show();
             }
         },
 
