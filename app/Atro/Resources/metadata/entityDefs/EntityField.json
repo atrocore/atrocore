@@ -358,7 +358,17 @@
     },
     "conditionalRequired": {
       "type": "wysiwyg",
-      "view": "views/admin/field-manager/fields/conditions-container"
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditions": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     }
   },
   "links": {
