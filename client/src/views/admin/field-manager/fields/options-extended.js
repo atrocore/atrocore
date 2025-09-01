@@ -31,25 +31,7 @@ Espo.define('views/admin/field-manager/fields/options-extended', ['views/fields/
                     jscolor.init();
                 });
             }
-        },
-
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-
-            if (!data[this.name].length) {
-                data[this.name] = false;
-                data.translatedOptions = {};
-                return data;
-            }
-
-            data.translatedOptions = {};
-            (data[this.name] || []).forEach(function (value) {
-                data.translatedOptions[value] = value;
-            }, this);
-
-            return data;
         }
-
     });
 
 });
