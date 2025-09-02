@@ -69,29 +69,65 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             let model = new Model();
             model.set('options', this.optionsDefsList[num].options || []);
 
-            this.createView(key, 'views/fields/multi-enum', {
-                el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
-                model: model,
-                name: 'options',
-                mode: this.mode,
-                params: {
-                    options: this.model.get('options'),
-                    translatedOptions: this.model.get('translatedOptions')
-                }
-            }, view => {
-                if (this.isRendered()) {
-                    view.render();
-                }
+            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('type'))) {
+                const requestData = {
+                    where: [{
+                        type: 'in',
+                        attribute: 'id',
+                        value: model.get('options')
+                    }]
+                };
 
-                this.listenTo(this.model, 'change:options', () => {
-                    view.setTranslatedOptions(this.getTranslatedOptions());
-                    view.setOptionList(this.model.get('options'));
+                this.ajaxGetRequest('ExtensibleEnumOption', requestData, {async: false}).success(res => {
+                    let optionsNames = {};
+                    (res.list || []).forEach(item => {
+                        optionsNames[item.id] = item.name;
+                    })
+                    model.set('optionsNames', optionsNames);
                 });
 
-                this.listenTo(model, 'change', () => {
-                    this.optionsDefsList[num].options = model.get('options') || [];
+                this.createView(key, 'views/fields/extensible-multi-enum', {
+                    el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
+                    model: model,
+                    name: 'options',
+                    mode: this.mode,
+                    params: {
+                        extensibleEnumId: this.model.get('extensibleEnumId'),
+                    }
+                }, view => {
+                    if (this.isRendered()) {
+                        view.render();
+                    }
+
+                    this.listenTo(model, 'change', () => {
+                        this.optionsDefsList[num].options = model.get('options') || [];
+                    });
                 });
-            });
+            } else {
+                this.createView(key, 'views/fields/multi-enum', {
+                    el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
+                    model: model,
+                    name: 'options',
+                    mode: this.mode,
+                    params: {
+                        options: this.model.get('options'),
+                        translatedOptions: this.model.get('translatedOptions')
+                    }
+                }, view => {
+                    if (this.isRendered()) {
+                        view.render();
+                    }
+
+                    this.listenTo(this.model, 'change:options', () => {
+                        view.setTranslatedOptions(this.getTranslatedOptions());
+                        view.setOptionList(this.model.get('options'));
+                    });
+
+                    this.listenTo(model, 'change', () => {
+                        this.optionsDefsList[num].options = model.get('options') || [];
+                    });
+                });
+            }
         },
 
         getTranslatedOptions() {
