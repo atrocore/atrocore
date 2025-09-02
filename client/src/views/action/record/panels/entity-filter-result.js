@@ -16,36 +16,41 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         readOnly: true,
 
         setup() {
-            this.scope = this.model.get('targetEntity');
-            this.url = this.model.get('targetEntity');
+            this.wait(true);
 
-            this.model.defs.links.entityFilterResult = {
-                entity: this.scope,
-                type: "hasMany"
-            }
+            this.onModelReady(() => {
+                this.scope = this.model.get('targetEntity');
+                this.url = this.model.get('targetEntity');
+                this.model.defs.links.entityFilterResult = {
+                    entity: this.scope,
+                    type: "hasMany"
+                }
 
-            this.defs.create = false;
-            this.defs.select = false;
-            this.defs.unlinkAll = false;
+                this.defs.create = false;
+                this.defs.select = false;
+                this.defs.unlinkAll = false;
 
-            Dep.prototype.setup.call(this);
+                Dep.prototype.setup.call(this);
 
-            if(!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
-                this.actionList.push({
-                    label: 'showFullList',
-                    action: 'showFullList'
+                if(!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
+                    this.actionList.push({
+                        label: 'showFullList',
+                        action: 'showFullList'
+                    });
+                }
+
+                this.buttonList.unshift({
+                    title: this.translate('openSearchFilter'),
+                    action: 'openSearchFilter',
+                    html: this.getFilterButtonHtml()
                 });
-            }
 
-            this.buttonList.unshift({
-                title: this.translate('openSearchFilter'),
-                action: 'openSearchFilter',
-                html: this.getFilterButtonHtml()
-            });
+                this.listenTo(this.model, 'change:targetEntity', () => {
+                    this.reRender();
+                });
+                this.wait(false)
+            })
 
-            this.listenTo(this.model, 'change:targetEntity', () => {
-                this.reRender();
-            });
         },
 
         setFilter(filter) {
@@ -63,7 +68,19 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                 return;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get('targetEntity'), this.model.get('data')?.where,  ({where, whereData}) => {
+            let whereData = this.model.get('data')?.where;
+
+            if(this.model.get('data')?.whereData
+                && (this.model.get('data')?.whereData['queryBuilder']
+                    || this.model.get('data')?.whereData['bool']
+                    || this.model.get('data')?.whereData['textFilter']
+                    || this.model.get('data')?.whereData['savedSearch']
+                )
+            ){
+                whereData = this.model.get('data')?.whereData;
+            }
+
+            SearchFilterOpener.prototype.open.call(this, this.model.get('targetEntity'), whereData,  ({where, whereData}) => {
                 this.model.set('data', _.extend({}, this.model.get('data'), {
                     where,
                     whereData,

@@ -18,6 +18,7 @@ use Atro\Console\CreateConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
+use Atro\Repositories\SavedSearch as SavedSearchRepo;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\Error;
@@ -224,8 +225,14 @@ class Action extends Base
 
             if ($data['type'] === 'previewTemplate') {
                 if (!empty($action['data']['where']) && !empty($action['data']['whereScope']) && $action['data']['whereScope'] === $scope) {
-                    if (!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id,
-                        $action['data']['where'])) {
+                    $where = $action['data']['where'];
+                    if(!empty($action['data']['whereData'])) {
+                        $temp = SavedSearchRepo::getWhereFromWhereData($action['data']['whereData'], $this->getEntityManager());
+                        if(!empty($temp)) {
+                            $where = $temp;
+                        }
+                    }
+                    if (!$this->getServiceFactory()->create('PreviewTemplate')->canExecute($scope, $id, $where)) {
                         continue;
                     }
                 }
