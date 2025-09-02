@@ -109,16 +109,17 @@ class EntityField extends ReferenceData
         }
 
         return array_merge($fieldDefs, [
-            'id'                  => "{$entityName}_{$fieldName}",
-            'code'                => $fieldName,
-            'name'                => $label,
-            'entityId'            => $entityName,
-            'entityName'          => $this->translate($entityName, 'scopeNames'),
-            'tooltipText'         => $this->translate($fieldName, 'tooltips', $entityName),
-            'conditionalRequired' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
-            'conditionalReadOnly' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
-            'conditionalVisible' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
-            'multilangField'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
+            'id'                        => "{$entityName}_{$fieldName}",
+            'code'                      => $fieldName,
+            'name'                      => $label,
+            'entityId'                  => $entityName,
+            'entityName'                => $this->translate($entityName, 'scopeNames'),
+            'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
+            'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
+            'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
+            'conditionalVisible'        => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
+            'conditionalDisableOptions' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.disableOptions"),
+            'multilangField'            => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
         ]);
     }
 

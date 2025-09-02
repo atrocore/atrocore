@@ -350,9 +350,9 @@
       ],
       [
         {
-          "name": "conditionalDisableOptions",
-          "fullWidth": true
-        }
+          "name": "conditionalDisableOptions"
+        },
+        false
       ]
     ]
   }
