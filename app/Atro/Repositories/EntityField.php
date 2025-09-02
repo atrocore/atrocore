@@ -544,30 +544,47 @@ class EntityField extends ReferenceData
 
         $conditionalProperties = $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.conditionalProperties") ?? [];
 
+        $conditionalPropertiesChanged = false;
         if ($entity->isAttributeChanged('conditionalRequired')) {
             $conditionalProperties['required'] = $entity->get('conditionalRequired');
+            $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
             $conditionalProperties['visible'] = $entity->get('conditionalReadOnly');
+            $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalVisible')) {
             $conditionalProperties['visible'] = $entity->get('conditionalVisible');
+            $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalDisableOptions')) {
             $conditionalProperties['disableOptions'] = $entity->get('conditionalDisableOptions');
+            $conditionalPropertiesChanged = true;
         }
 
-        if (!empty($conditionalProperties)) {
-            $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
-                'fields' => [
-                    $entity->get('code') => [
-                        'conditionalProperties' => $conditionalProperties,
+        if ($conditionalPropertiesChanged) {
+            foreach ($conditionalProperties as $key => $value) {
+                if ($value === null) {
+                    unset($conditionalProperties[$key]);
+                }
+            }
+
+            if (!empty($conditionalProperties)) {
+                $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
+                    'fields' => [
+                        $entity->get('code') => [
+                            'conditionalProperties' => $conditionalProperties,
+                        ],
                     ],
-                ],
-            ]);
+                ]);
+            } else {
+                $this->getMetadata()->delete('entityDefs', $entity->get('entityId'),
+                    ["fields.{$entity->get('code')}.conditionalProperties"]);
+            }
+
             $saveMetadata = true;
         }
 

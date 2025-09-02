@@ -70,13 +70,10 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.dragDrop = false;
             }
 
-            if (!this.options.disabledOptionList) {
-                this.options.disabledOptionList = this.getDisableOptionsViaConditions();
-            }
-
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
-            }
+            this.disableOptions(this.getDisableOptionsViaConditions());
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
+                this.disableOptions(this.getDisableOptionsViaConditions());
+            });
 
             if (this.getBackgroundColor) {
                 this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));

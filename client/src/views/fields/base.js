@@ -897,6 +897,19 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.afterModelSave();
                 this.reRender();
             });
+
+            this.listenTo(this.model, 'after:inlineEditSave', () => {
+                const scope = this.model.name;
+                if (
+                    this.getConditions(scope, this.name, 'readOnly')
+                    || this.getConditions(scope, this.name, 'visible')
+                    || this.getConditions(scope, this.name, 'required')
+                    || (this.getDisableOptionsRules() || []).length > 0
+                ) {
+                    console.log(this.name)
+                    this.reRender();
+                }
+            });
         },
 
         afterModelSave() {

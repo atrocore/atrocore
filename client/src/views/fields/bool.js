@@ -51,6 +51,8 @@ Espo.define('views/fields/bool', ['views/fields/base', 'lib!Selectize'], functio
         notNull: true,
 
         setup() {
+            Dep.prototype.setup.call(this);
+
             this.notNull = this.model.getFieldParam(this.name, 'notNull') ?? this.params?.notNull ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'notNull']) ?? true;
         },
 
