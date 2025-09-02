@@ -208,7 +208,7 @@ class Metadata
             ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))
             ->getArgument('data');
 
-        $this->convertDynamicLogicToFieldLogicRules($data);
+        $this->convertDynamicLogicToFieldConditionalProperties($data);
         $this->clearMetadata($data);
 
         // set object data
@@ -219,9 +219,9 @@ class Metadata
     }
 
     /**
-     * Convert legacy dynamic logic into field logic rules
+     * Convert legacy dynamic logic into field conditional properties
      */
-    protected function convertDynamicLogicToFieldLogicRules(array &$metadata): void
+    protected function convertDynamicLogicToFieldConditionalProperties(array &$metadata): void
     {
         foreach ($metadata['clientDefs'] as $entityName => $defs) {
             if (empty($defs['dynamicLogic']['fields'])) {
@@ -235,7 +235,17 @@ class Metadata
                     if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType])) {
                         continue;
                     }
-                    $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditionGroup'] = $logicData['conditionGroup'];
+
+                    if ($logicType === 'disableOptions') {
+                        $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType] = [
+                            [
+                                'options'        => $logicData['disabledOptions'],
+                                'conditionGroup' => $logicData['conditionGroup'],
+                            ],
+                        ];
+                    } else {
+                        $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditionGroup'] = $logicData['conditionGroup'];
+                    }
                 }
             }
             unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
