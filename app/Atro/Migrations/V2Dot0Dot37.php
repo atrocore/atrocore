@@ -95,9 +95,62 @@ class V2Dot0Dot37 extends Base
             }
         }
 
-        echo '<pre>';
-        print_r(count($uiHandlers));
-        print_r($uiHandlers);
-        die();
+        $saveMetadata = false;
+
+        foreach ($uiHandlers as $code => $uiHandler) {
+            $conditions = json_decode($uiHandler['conditions'], true);
+            if (empty($conditions['conditionGroup'])) {
+                unset($uiHandlers[$code]);
+                continue;
+            }
+            foreach ($uiHandler['fields'] ?? [] as $field) {
+                $conditionalProperties = $metadata->get("entityDefs.{$uiHandler['entityType']}.fields.{$field}.conditionalProperties") ?? [];
+                switch ($uiHandler['type']) {
+                    case 'ui_read_only':
+                        $conditionalProperties['readOnly'] = [
+                            'conditionGroup' => $conditions['conditionGroup'],
+                        ];
+                        break;
+                    case 'ui_visible':
+                        $conditionalProperties['visible'] = [
+                            'conditionGroup' => $conditions['conditionGroup'],
+                        ];
+                        break;
+                    case 'ui_required':
+                        $conditionalProperties['required'] = [
+                            'conditionGroup' => $conditions['conditionGroup'],
+                        ];
+                        break;
+                    case 'ui_disable_options':
+                        $conditionalProperties['disableOptions'] = [
+                            [
+                                'options'        => $uiHandler['disabledOptions'] ?? [],
+                                'conditionGroup' => $conditions['conditionGroup'],
+                            ],
+                        ];
+                        break;
+                }
+                $metadata->set('entityDefs', $uiHandler['entityType'], [
+                    'fields' => [
+                        $field => [
+                            'conditionalProperties' => $conditionalProperties,
+                        ],
+                    ],
+                ]);
+
+                unset($uiHandlers[$code]['fields'][array_search($field, $uiHandlers[$code]['fields'])]);
+                if (empty($uiHandlers[$code]['fields'])) {
+                    unset($uiHandlers[$code]);
+                }
+
+                $saveMetadata = true;
+            }
+        }
+
+        if ($saveMetadata) {
+            $metadata->save();
+        }
+
+        unlink($fileName);
     }
 }
