@@ -199,7 +199,7 @@ Espo.define('search-manager', [], function () {
         },
 
         get: function () {
-            return this.data;
+            return Espo.Utils.clone(this.data);
         },
 
         getQueryBuilder: function () {

@@ -131,9 +131,9 @@ class Note
         }
 
         return [
-            'fields' => $updatedFieldList,
+            'fields'     => $updatedFieldList,
             'attributes' => [
-                'was' => $was,
+                'was'    => $was,
                 'became' => $became
             ]
         ];
@@ -207,6 +207,21 @@ class Note
             $this->createNote('Update', $entity->getEntityType(), $entity->id, $data);
 
             $this->setRelationEntityData($entity);
+            if (!empty($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'])) {
+                foreach ($this->relationEntityData[$entity->getEntityType() . '_LinksToRecord'] as $link => $entityType) {
+                    if (!empty($entity->get($link . 'Id'))) {
+                        $this->createNote('Update', $entityType,
+                            $entity->get($link . 'Id'), array_merge($data, [
+                                    'entityId'    => $entity->id,
+                                    'entityType'  => $entity->getEntityType(),
+                                    'relatedId'   => $entity->id,
+                                    'relatedType' => $entity->getEntityType(),
+                                ]
+                            ));
+                    }
+                }
+            }
+
             if (empty($this->relationEntityData[$entity->getEntityType()])) {
                 return;
             }
@@ -217,18 +232,18 @@ class Note
 
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity1'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), array_merge($data, [
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType(),
-                        'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                        'entityId'    => $entity->id,
+                        'entityType'  => $entity->getEntityType(),
+                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
                         'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2']
                     ]
                 ));
 
             $this->createNote('Update', $this->relationEntityData[$entity->getEntityType()]['entity2'],
                 $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), array_merge($data, [
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType(),
-                        'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                        'entityId'    => $entity->id,
+                        'entityType'  => $entity->getEntityType(),
+                        'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
                         'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1']
                     ]
                 ));
@@ -277,21 +292,21 @@ class Note
                 if (!empty($value)) {
                     $this->createNote('Relate', $scope, $value, [
                         'relatedType' => $entity->getEntityType(),
-                        'relatedId' => $entity->id,
-                        'link' => $foreignLink
+                        'relatedId'   => $entity->id,
+                        'link'        => $foreignLink
                     ]);
                     if (!empty($wasValue)) {
                         $this->createNote('Unrelate', $scope, $wasValue, [
                             'relatedType' => $entity->getEntityType(),
-                            'relatedId' => $entity->id,
-                            'link' => $foreignLink
+                            'relatedId'   => $entity->id,
+                            'link'        => $foreignLink
                         ]);
                     }
                 } elseif (!empty($wasValue)) {
                     $this->createNote('Unrelate', $scope, $wasValue, [
                         'relatedType' => $entity->getEntityType(),
-                        'relatedId' => $entity->id,
-                        'link' => $foreignLink
+                        'relatedId'   => $entity->id,
+                        'link'        => $foreignLink
                     ]);
                 }
             }
@@ -302,10 +317,10 @@ class Note
     {
         $note = $this->getEntityManager()->getEntity('Note');
         $note->set([
-            'type' => $type,
+            'type'       => $type,
             'parentType' => $parentType,
-            'parentId' => $parentId,
-            'data' => $data,
+            'parentId'   => $parentId,
+            'data'       => $data,
         ]);
         $this->getEntityManager()->saveEntity($note);
     }
@@ -349,6 +364,16 @@ class Note
                 }
             }
         }
+
+        $key = $entity->getEntityType() . '_LinksToRecord';
+        if (!isset($this->relationEntityData[$key])) {
+            $this->relationEntityData[$key] = [];
+            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
+                if ($defs['type'] === 'belongsTo' && !empty($defs['foreign']) && !empty($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'recordRelatedChangesInStream']))) {
+                    $this->relationEntityData[$key][$link] = $defs['entity'];
+                }
+            }
+        }
     }
 
     protected function handleRelationEntity(OrmEntity $entity, string $type): void
@@ -377,11 +402,11 @@ class Note
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity2'], $defaultRelationScopeAudited)))
         ) {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity1'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']), [
-                'entityId' => $entity->id,
-                'entityType' => $entity->getEntityType(),
-                'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
+                'entityId'    => $entity->id,
+                'entityType'  => $entity->getEntityType(),
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']),
                 'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity2'],
-                'link' => $this->relationEntityData[$entity->getEntityType()]['link1']
+                'link'        => $this->relationEntityData[$entity->getEntityType()]['link1']
             ]);
         }
 
@@ -398,11 +423,11 @@ class Note
                 || (!isset($fieldDefs['auditableEnabled']) && in_array($this->relationEntityData[$entity->getEntityType()]['entity1'], $defaultRelationScopeAudited)))
         ) {
             $this->createNote($type, $this->relationEntityData[$entity->getEntityType()]['entity2'], $entity->get($this->relationEntityData[$entity->getEntityType()]['field2']), [
-                'entityId' => $entity->id,
-                'entityType' => $entity->getEntityType(),
-                'relatedId' => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
+                'entityId'    => $entity->id,
+                'entityType'  => $entity->getEntityType(),
+                'relatedId'   => $entity->get($this->relationEntityData[$entity->getEntityType()]['field1']),
                 'relatedType' => $this->relationEntityData[$entity->getEntityType()]['entity1'],
-                'link' => $this->relationEntityData[$entity->getEntityType()]['link2']
+                'link'        => $this->relationEntityData[$entity->getEntityType()]['link2']
             ]);
         }
 

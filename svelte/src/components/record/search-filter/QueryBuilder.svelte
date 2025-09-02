@@ -44,6 +44,8 @@
 
     let queryBuilderRulesChanged: boolean = false;
 
+    let hideRowAction: boolean = false;
+
     let defaultValue = "-1";
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
@@ -704,6 +706,7 @@
                 cancelEditSearchQuery()
             }
             Notifier.notify(Language.translate('Done'), 'success');
+            updateCollection();
         }).catch(e => {
             console.error('Error on saving saveSearch', e);
             Notifier.notify(false)
@@ -1050,7 +1053,7 @@
                 cancel={cancelEditSearchQuery}
                 copy={copySaveSearch}
                 uniqueKey={uniqueKey}
-                hideRowAction={uniqueKey.includes('dialog')}
+                hideRowAction={hideRowAction}
                 bind:opened={savedFiltersOpened}
         />
     {/if}
@@ -1074,7 +1077,7 @@
             <div class="query-builder" bind:this={queryBuilderElement}></div>
             <div class="filter-action">
                 <div style="display:flex; align-items:center; gap: 10px;">
-                    {#if Acl.check('SavedSearch', 'create') && !uniqueKey.includes('dialog') }
+                    {#if Acl.check('SavedSearch', 'create')  }
                         <button class="primary small filter-button" on:click={saveFilter}
                                 disabled={advancedFilterDisabled || queryBuilderRulesChanged}
                         >

@@ -58,11 +58,23 @@ Espo.define('views/preview-template/record/detail', ['views/record/detail', 'vie
 
         actionOpenSearchFilter() {
             if(!this.model.get('entityType') || !this.getMetadata().get(['scopes', this.model.get('entityType')])) {
-                this.notify(this.translate('The entity for the export is not valid'), 'error');
+                this.notify(this.translate('The entity  is not valid'), 'error');
                 return;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get('entityType'), this.model.get('data')?.where,  ({where, whereData}) => {
+            let whereData = this.model.get('data')?.where;
+
+            if(this.model.get('data')?.whereData
+                && (this.model.get('data')?.whereData['queryBuilder']
+                    || this.model.get('data')?.whereData['bool']
+                    || this.model.get('data')?.whereData['textFilter']
+                    || this.model.get('data')?.whereData['savedSearch']
+                )
+            ){
+                whereData = this.model.get('data')?.whereData;
+            }
+
+            SearchFilterOpener.prototype.open.call(this, this.model.get('entityType'), whereData,  ({where, whereData}) => {
                     this.model.set('data',  _.extend({}, this.model.get('data'), {
                         where,
                         whereData,

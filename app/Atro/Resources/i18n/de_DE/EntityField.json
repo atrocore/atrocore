@@ -57,8 +57,9 @@
     "auditableEnabled": "Die Änderung als Datensatz-Aktivität protokoliere",
     "auditableDisabled": "Keine Datensatz-Aktivität erstellen",
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
-    "modifiedExtendedEnabled": "Aufzeichnung als Änderung",
-    "duplicateIgnore": "Nicht entlastbar"
+    "modifiedExtendedEnabled": "Änderung als Modifikation erfassen",
+    "duplicateIgnore": "Nicht entlastbar",
+    "recordRelatedChangesInStream": "Änderungen an zugehörigen Datensätzen für die aktuelle Entität aufzeichnen."
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
