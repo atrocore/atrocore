@@ -8,9 +8,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fields/base', 'model'], function (Dep, Model) {
+Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fields/base', 'model'], (Dep, Model) => {
 
     return Dep.extend({
+
+        detailTemplate: 'entity-field/fields/conditional-disable-options/detail',
 
         editTemplate: 'entity-field/fields/conditional-disable-options/edit',
 
@@ -71,7 +73,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                 el: this.getSelector() + ' .options-container[data-key="'+key+'"]',
                 model: model,
                 name: 'options',
-                mode: 'edit',
+                mode: this.mode,
                 params: {
                     options: this.model.get('options'),
                     translatedOptions: this.model.get('translatedOptions')

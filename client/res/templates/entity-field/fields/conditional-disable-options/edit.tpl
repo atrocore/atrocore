@@ -1,5 +1,5 @@
-<div class="dynamic-logic-options">
-    <div class="dynamic-logic-options-list-container list-group">
+<div class="conditional-disable-options">
+    <div class="conditional-disable-options-list-container list-group">
         {{#each itemDataList}}
         <div class="list-group-item">
             <div class="clearfix option-list-item-header">
