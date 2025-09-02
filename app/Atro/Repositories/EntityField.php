@@ -556,6 +556,10 @@ class EntityField extends ReferenceData
             $conditionalProperties['visible'] = $entity->get('conditionalVisible');
         }
 
+        if ($entity->isAttributeChanged('conditionalDisableOptions')) {
+            $conditionalProperties['disableOptions'] = $entity->get('conditionalDisableOptions');
+        }
+
         if (!empty($conditionalProperties)) {
             $this->getMetadata()->set('entityDefs', $entity->get('entityId'), [
                 'fields' => [
