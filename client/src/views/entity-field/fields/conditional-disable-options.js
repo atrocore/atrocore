@@ -128,7 +128,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
         edit(num) {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.optionsDefsList[num].conditionGroup,
-                scope: this.options.scope
+                scope: this.scope
             }, view => {
                 view.render();
 
