@@ -332,6 +332,9 @@ class ReferenceData extends Repository implements Injectable
         $items = array_values($items);
 
         foreach ($params['whereClause'] ?? [] as $row) {
+            if (!empty($row['AND'])) {
+                $row = $row['AND'][0];
+            }
             foreach ($row as $field => $value) {
                 // skip if SQL operator
                 if (in_array($field, QueryConverter::$sqlOperators)) {
@@ -350,9 +353,13 @@ class ReferenceData extends Repository implements Injectable
 
                 // skip if comparison operator. It will be allowed later
                 foreach (QueryConverter::$comparisonOperators as $alias => $sqlOperator) {
-                    if (strpos($field, $alias) !== false) {
+                    if ($alias !== '=' && str_contains($field, $alias)) {
                         continue 2;
                     }
+                }
+
+                if (str_ends_with($field, '=')) {
+                    $field = substr($field, 0, -1);
                 }
 
                 $filtered = [];
@@ -377,7 +384,7 @@ class ReferenceData extends Repository implements Injectable
                 $field = str_replace('*', '', $k);
                 $search = str_replace('%', '', $v);
                 foreach ($items as $item) {
-                    if(!isset($item[$field])){
+                    if (!isset($item[$field])) {
                         continue;
                     }
                     if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
