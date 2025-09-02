@@ -186,14 +186,20 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
         },
 
         validate() {
-            (this.model.get(this.name) || []).forEach(item => {
-                if (!item.options || !item.options.length || !item.conditionGroup) {
-                    this.trigger('invalid');
-                    return true;
-                }
-            })
+            let res = false;
 
-            return false;
+            (this.model.get(this.name) || []).forEach((item, i) => {
+                if (!item.options || item.options.length === 0 || !item.conditionGroup || item.conditionGroup.length === 0) {
+                    res = true;
+                    this.$el.find('.list-group-item').eq(i).css('border', '1px solid #a94442');
+                }
+            });
+
+            if (res) {
+                this.trigger('invalid');
+            }
+
+            return res;
         },
 
     });
