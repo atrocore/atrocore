@@ -183,7 +183,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        refreshLayout(middleOnly = false) {
+        refreshLayout(middleOnly = false, callback) {
             this.detailLayout = null
             this.gridLayout = null
 
@@ -209,6 +209,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             middle.reRender()
                         } else {
                             this.reRender();
+                        }
+
+                        if (callback) {
+                            callback()
                         }
                     })
                 }
@@ -1306,12 +1310,11 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                 this.listenTo(this, 'change:disabled-languages', (value) => {
                     this.getUser().set('disabledLanguages', value)
-                    if (this.mode === 'edit' && this.getView('middle')) {
-                        this.listenToOnce(this.getView('middle'), 'after:render', () => {
+                    this.refreshLayout(true, () => {
+                        if (this.mode === 'edit' && this.getView('middle')) {
                             this.setEditMode()
-                        })
-                    }
-                    this.refreshLayout(true)
+                        }
+                    });
                 })
             }
 
