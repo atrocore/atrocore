@@ -128,6 +128,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             if (this.nameName === null) {
                 this.nameName = this.name + 'Name';
             }
