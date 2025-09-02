@@ -1,3 +1,6 @@
+{{#if isEmpty}}
+<span class="text-gray">{{{translate 'Null'}}}</span>
+{{else}}
 <div class="conditional-disable-options">
     <div class="conditional-disable-options-list-container list-group">
         {{#each itemDataList}}
@@ -16,3 +19,4 @@
         {{/each}}
     </div>
 </div>
+{{/if}}

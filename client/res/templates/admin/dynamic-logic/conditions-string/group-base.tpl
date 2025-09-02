@@ -1,5 +1,5 @@
 {{#if isEmpty}}
-    {{translate 'None'}}
+    <span class="text-gray">{{{translate 'Null'}}}</span>
 {{else}}
     <div>(
     {{#each viewDataList}}

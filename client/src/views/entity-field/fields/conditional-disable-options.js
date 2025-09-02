@@ -30,8 +30,11 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }
         },
 
+        itemDataList: [],
+
         data() {
             return {
+                isEmpty: this.itemDataList.length === 0,
                 itemDataList: this.itemDataList
             };
         },
