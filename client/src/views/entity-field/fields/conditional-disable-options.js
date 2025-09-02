@@ -30,21 +30,21 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }
         },
 
-        data: function () {
+        data() {
             return {
                 itemDataList: this.itemDataList
             };
         },
 
-        setup: function () {
+        setup() {
             this.optionsDefsList = Espo.Utils.cloneDeep(this.model.get(this.name)) || []
-            this.scope = this.options.scope;
+            this.scope = this.model.get('entityId');
 
             this.setupItems();
             this.setupItemViews();
         },
 
-        setupItems: function () {
+        setupItems() {
             this.itemDataList = [];
             this.optionsDefsList.forEach(function (item, i) {
                 this.itemDataList.push({
@@ -55,22 +55,22 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }, this);
         },
 
-        setupItemViews: function () {
+        setupItemViews() {
             this.optionsDefsList.forEach(function (item, i) {
                 this.createStringView(i);
                 this.createOptionsView(i);
             }, this);
         },
 
-        createOptionsView: function (num) {
+        createOptionsView(num) {
             var key = 'options' + num.toString();
             if (!this.optionsDefsList[num]) return;
 
             var model = new Model();
-            model.set('options', this.optionsDefsList[num].optionList || []);
+            model.set('options', this.optionsDefsList[num].options || []);
 
             this.createView(key, 'views/fields/multi-enum', {
-                el: this.getSelector() + ' .options-container[data-key="'+key+'"]',
+                el: this.getSelector() + ' .options-container[data-key="' + key + '"]',
                 model: model,
                 name: 'options',
                 mode: this.mode,
@@ -89,12 +89,12 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                 }, this);
 
                 this.listenTo(model, 'change', function () {
-                    this.optionsDefsList[num].optionList = model.get('options') || [];
+                    this.optionsDefsList[num].options = model.get('options') || [];
                 }, this);
             }, this);
         },
 
-        getTranslatedOptions: function () {
+        getTranslatedOptions() {
             if (this.model.get('translatedOptions')) {
                 return this.model.get('translatedOptions');
             }
@@ -107,12 +107,12 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             return translatedOptions;
         },
 
-        createStringView: function (num) {
-            var key = 'conditionGroup' + num.toString();
+        createStringView(num) {
+            let key = 'conditionGroup' + num.toString();
             if (!this.optionsDefsList[num]) return;
 
             this.createView(key, 'views/admin/dynamic-logic/conditions-string/group-base', {
-                el: this.getSelector() + ' .string-container[data-key="'+key+'"]',
+                el: this.getSelector() + ' .string-container[data-key="' + key + '"]',
                 itemData: {
                     value: this.optionsDefsList[num].conditionGroup
                 },
@@ -125,7 +125,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }, this);
         },
 
-        edit: function (num) {
+        edit(num) {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.optionsDefsList[num].conditionGroup,
                 scope: this.options.scope
@@ -139,7 +139,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }, this);
         },
 
-        addOptionList: function () {
+        addOptionList() {
             var i = this.itemDataList.length;
 
             this.optionsDefsList.push({
@@ -152,7 +152,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             this.setupItemViews();
         },
 
-        removeItem: function (num) {
+        removeItem(num) {
             this.optionsDefsList.splice(num, 1);
 
             this.setupItems();
@@ -160,8 +160,8 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             this.setupItemViews();
         },
 
-        fetch: function () {
-            var data = {};
+        fetch() {
+            let data = {};
 
             data[this.name] = this.optionsDefsList;
 
@@ -170,7 +170,23 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             }
 
             return data;
-        }
+        },
+
+        setMode(mode) {
+            Dep.prototype.setMode.call(this, mode);
+
+            (this.optionsDefsList || []).forEach((item, i) => {
+                const key = 'options' + i.toString();
+                const optionsView = this.getView(key);
+                if (optionsView) {
+                    optionsView.setMode(mode);
+                }
+            });
+        },
+
+        initSaveAfterOutsideClick() {
+        },
+
     });
 
 });
