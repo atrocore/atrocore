@@ -870,7 +870,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         getDisableOptionsViaConditions() {
             let res = [];
             (this.getDisableOptionsRules() || []).forEach(rule => {
-                if (this.checkConditionGroup(rule.conditions)) {
+                if (this.checkConditionGroup(rule.conditionGroup)) {
                     (rule.options || []).forEach(option => {
                         res.push(option);
                     })
