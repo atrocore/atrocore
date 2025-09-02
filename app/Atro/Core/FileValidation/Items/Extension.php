@@ -26,11 +26,11 @@ class Extension extends Base
             return false;
         }
 
-        return in_array(strtolower($pathInfo['extension']), array_map('strtolower', $this->rule->get('extension')));
+        return in_array(strtolower($pathInfo['extension']), array_map('strtolower', $this->params['extensions']));
     }
 
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->rule->get('extension'))));
+        throw new BadRequest(sprintf($this->exception('fileExtensionValidationFailed'), implode(", ", $this->params['extensions'])));
     }
 }

@@ -1,10 +1,20 @@
 {
   "fields": {
-    "validationRules": "Правила перевірки",
-    "assignAutomatically": "Призначити автоматично",
-    "files": "Файли"
+    "files": "Файли",
+    "aspectRatio": "Seitenverhältnis",
+    "minSize": "Мінімальний розмір, Кб",
+    "maxSize": "Максимальний розмір, Кб",
+    "minWidth": "Мінімальна ширина, px",
+    "minHeight": "Мінімальна висота, px",
+    "extensions": "Розширення",
+    "mimeTypes": "Mime тип"
   },
   "exceptions": {
-    "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в полі '%s' сутності '%s'."
+    "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в полі '%s' сутності '%s'.",
+    "aspectRatioMustBeInFormat": "Неправильний формат співвідношення сторін. Використовуйте формат ширина:висота, наприклад 16:9."
+  },
+  "labels": {
+    "General Settings": "Загальні налаштування",
+    "Image Settings": "Налаштування зображення"
   }
 }

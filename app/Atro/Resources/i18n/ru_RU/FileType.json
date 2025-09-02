@@ -1,7 +1,5 @@
 {
   "fields": {
-    "validationRules": "Правила проверки",
-    "assignAutomatically": "Назначить автоматически",
     "files": "Файлы"
   },
   "exceptions": {

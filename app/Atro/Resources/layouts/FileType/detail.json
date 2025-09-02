@@ -6,17 +6,51 @@
           "name": "name"
         },
         false
-      ],
-      [
-        {
-          "name": "assignAutomatically"
-        },
-        {
-          "name": "priority"
-        }
       ]
     ],
     "style": "default",
     "label": "Details"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "extensions"
+        },
+        {
+          "name": "mimeTypes"
+        }
+      ],
+      [
+        {
+          "name": "minSize"
+        },
+        {
+          "name": "maxSize"
+        }
+      ]
+    ],
+    "style": "default",
+    "label": "General Settings"
+  },
+  {
+    "rows": [
+      [
+        {
+          "name": "minWidth"
+        },
+        {
+          "name": "minHeight"
+        }
+      ],
+      [
+        {
+          "name": "aspectRatio"
+        },
+        false
+      ]
+    ],
+    "style": "default",
+    "label": "Image Settings"
   }
 ]

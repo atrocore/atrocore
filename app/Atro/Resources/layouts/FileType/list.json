@@ -4,9 +4,9 @@
     "link": true
   },
   {
-    "name": "assignAutomatically"
+    "name": "extensions"
   },
   {
-    "name": "priority"
+    "name": "mimeTypes"
   }
 ]
