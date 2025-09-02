@@ -20,6 +20,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -282,7 +283,9 @@ class Record extends RecordService
                         $column = $mapper->toDb($link . 'Id');
 
                         $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
-                            ->andWhere("et.$column is not null");
+                            ->andWhere("et.$column is not null")
+                            ->andWhere("et.deleted = :false")
+                            ->setParameter('false', false, ParameterType::BOOLEAN);;
                     }
                 ];
                 $params['distinct'] = true;
