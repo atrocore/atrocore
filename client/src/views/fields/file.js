@@ -135,6 +135,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             this.nameName = this.name + 'Name';
             this.namePathsData = this.name + 'PathsData';
             this.idName = this.name + 'Id';
