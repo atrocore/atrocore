@@ -906,7 +906,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     || this.getConditions(scope, this.name, 'required')
                     || (this.getDisableOptionsRules() || []).length > 0
                 ) {
-                    console.log(this.name)
                     this.reRender();
                 }
             });
