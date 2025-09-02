@@ -46,27 +46,27 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
 
         setupItems() {
             this.itemDataList = [];
-            this.optionsDefsList.forEach(function (item, i) {
+            this.optionsDefsList.forEach((item, i) => {
                 this.itemDataList.push({
                     conditionGroupViewKey: 'conditionGroup' + i.toString(),
                     optionsViewKey: 'options' + i.toString(),
                     index: i
                 });
-            }, this);
+            });
         },
 
         setupItemViews() {
-            this.optionsDefsList.forEach(function (item, i) {
+            this.optionsDefsList.forEach((item, i) => {
                 this.createStringView(i);
                 this.createOptionsView(i);
-            }, this);
+            });
         },
 
         createOptionsView(num) {
-            var key = 'options' + num.toString();
+            const key = 'options' + num.toString();
             if (!this.optionsDefsList[num]) return;
 
-            var model = new Model();
+            let model = new Model();
             model.set('options', this.optionsDefsList[num].options || []);
 
             this.createView(key, 'views/fields/multi-enum', {
@@ -78,31 +78,31 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     options: this.model.get('options'),
                     translatedOptions: this.model.get('translatedOptions')
                 }
-            }, function (view) {
+            }, view => {
                 if (this.isRendered()) {
                     view.render();
                 }
 
-                this.listenTo(this.model, 'change:options', function () {
+                this.listenTo(this.model, 'change:options', () => {
                     view.setTranslatedOptions(this.getTranslatedOptions());
                     view.setOptionList(this.model.get('options'));
-                }, this);
+                });
 
-                this.listenTo(model, 'change', function () {
+                this.listenTo(model, 'change', () => {
                     this.optionsDefsList[num].options = model.get('options') || [];
-                }, this);
-            }, this);
+                });
+            });
         },
 
         getTranslatedOptions() {
             if (this.model.get('translatedOptions')) {
                 return this.model.get('translatedOptions');
             }
-            var translatedOptions = {};
-            var list = this.model.get('options') || [];
-            list.forEach(function (value) {
+            let translatedOptions = {};
+            let list = this.model.get('options') || [];
+            list.forEach(value => {
                 translatedOptions[value] = this.getLanguage().translateOption(value, this.options.field, this.options.scope);
-            }, this);
+            });
 
             return translatedOptions;
         },
@@ -118,32 +118,30 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                 },
                 operator: 'and',
                 scope: this.scope
-            }, function (view) {
+            }, view => {
                 if (this.isRendered()) {
                     view.render();
                 }
-            }, this);
+            });
         },
 
         edit(num) {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.optionsDefsList[num].conditionGroup,
                 scope: this.options.scope
-            }, function (view) {
+            }, view => {
                 view.render();
 
-                this.listenTo(view, 'apply', function (conditionGroup) {
+                this.listenTo(view, 'apply', conditionGroup => {
                     this.optionsDefsList[num].conditionGroup = conditionGroup;
                     this.createStringView(num);
-                }, this);
-            }, this);
+                });
+            });
         },
 
         addOptionList() {
-            var i = this.itemDataList.length;
-
             this.optionsDefsList.push({
-                optionList: this.model.get('options') || [],
+                options: [],
                 conditionGroup: null
             });
 
@@ -185,6 +183,17 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
         },
 
         initSaveAfterOutsideClick() {
+        },
+
+        validate() {
+            (this.model.get(this.name) || []).forEach(item => {
+                if (!item.options || !item.options.length || !item.conditionGroup) {
+                    this.trigger('invalid');
+                    return true;
+                }
+            })
+
+            return false;
         },
 
     });
