@@ -400,7 +400,7 @@
     },
     "conditionalDisableOptions": {
       "type": "jsonObject",
-      "view": "views/admin/field-manager/fields/conditional-disable-options",
+      "view": "views/admin/field-manager/fields/dynamic-logic-options",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

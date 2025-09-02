@@ -1,4 +1,3 @@
-
 <div class="dynamic-logic-options">
     <div class="dynamic-logic-options-list-container list-group">
         {{#each itemDataList}}
