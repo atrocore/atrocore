@@ -682,7 +682,7 @@ abstract class AbstractRecordController extends AbstractController
     protected function prepareWhereQuery($where)
     {
         if (is_string($where)) {
-            $where = json_decode(str_replace(['"{', '}"', '\"', '\n'], ['{', '}', '"', ''], $where), true);
+            $where = json_decode(str_replace(['"{', '}"', '\"', '\n', '\t'], ['{', '}', '"', '', ''], $where), true);
         }
 
         return $where;
