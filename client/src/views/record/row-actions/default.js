@@ -119,7 +119,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 .then(dynamicActions => {
                     $(this.$el).find('li.dynamic-action').remove();
 
-                    dynamicActions = dynamicActions.filter(action => !this.hiddenActionTypes.includes(action.type));
+                    dynamicActions = dynamicActions.filter(action => !this.hiddenActionTypes.includes(action.type) && !this.getMetadata().get(['action', 'typesData', action.type, 'forEditModeOnly']));
 
                     const template = this._templator.compileTemplate(`
                     {{#each dynamicActions}}
