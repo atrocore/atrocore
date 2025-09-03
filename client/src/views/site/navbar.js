@@ -322,7 +322,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 }
             }
 
-            if (!result.iconSrc && result.name) {
+            if (!result.iconSrc && result.name && !tabIconsDisabled) {
                 result.defaultIconSrc = this.getDefaultTabIcon(result.name);
             }
 
