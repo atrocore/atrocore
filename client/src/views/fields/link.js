@@ -77,26 +77,26 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         data: function () {
-            var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
+            let idValue = this.model.get(this.idName),
+                nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : idValue;
 
-            if (this.mode === 'detail' && !nameValue && this.model.get(this.idName)) {
-                nameValue = this.translate('None');
-            } else if (nameValue === null) {
-                nameValue = this.model.get(this.idName);
+            if (idValue === 'system') {
+                nameValue = this.getLanguage().translate('System')
             }
 
-            var iconHtml = null;
+            if (this.mode === 'detail' && !nameValue && idValue) {
+                nameValue = this.translate('None');
+            } else if (nameValue === null) {
+                nameValue = idValue;
+            }
+
+            let iconHtml = null;
             if (this.mode === 'detail') {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
 
-            let idValue = this.model.get(this.idName);
             if (this.options.isKanban) {
                 idValue = null;
-            }
-
-            if (idValue === 'system' && !nameValue) {
-                nameValue = this.getLanguage().translate('System')
             }
 
             if (this.mode === 'edit') {
