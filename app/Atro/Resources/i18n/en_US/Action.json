@@ -33,9 +33,9 @@
   },
   "options": {
     "usage": {
-      "entity": "Entity level",
-      "record": "Record level",
-      "field": "Field level"
+      "entity": "Entity action button",
+      "record": "Record action button",
+      "field": "Field action button"
     },
     "display": {
       "dropdown": "Dropdown",

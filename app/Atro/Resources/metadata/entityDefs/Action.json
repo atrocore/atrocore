@@ -55,7 +55,20 @@
         "system",
         "sameUser"
       ],
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "suggestValue"
+              ]
+            }
+          ]
+        }
+      }
     },
     "sourceEntity": {
       "type": "varchar",

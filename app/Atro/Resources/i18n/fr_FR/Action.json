@@ -21,10 +21,6 @@
     "executeNow": "Êtes-vous sûr de vouloir exécuter l'action sélectionnée ?"
   },
   "options": {
-    "usage": {
-      "entity": "Entité",
-      "record": "Enregistrement"
-    },
     "display": {
       "dropdown": "Liste déroulante",
       "single": "Unique"
