@@ -35,7 +35,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                     name: 'unsetSearch',
                     style: 'primary',
                     label: 'unsetSearch',
-                    disabled: !this.options.disabledUnsetSearch,
+                    disabled: this.options.disabledUnsetSearch,
                     onClick: (dialog) => {
                         this.trigger('select', {
                             where: null
