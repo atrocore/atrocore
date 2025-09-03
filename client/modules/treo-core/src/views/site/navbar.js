@@ -412,7 +412,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             Dep.prototype.setupTabDefsList.call(this);
 
             this.tabDefsList.forEach(tab => {
-                if (!tab.iconClass && !this.getConfig().get('tabIconsDisabled')) {
+                if (!tab.iconClass) {
                     tab.defaultIconSrc = this.getDefaultTabIcon(tab.name);
                 }
             });
