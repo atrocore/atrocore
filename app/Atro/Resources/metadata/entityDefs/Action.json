@@ -171,6 +171,11 @@
             {
               "type": "isNotEmpty",
               "attribute": "sourceEntity"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "suggestValue"
             }
           ]
         }
@@ -187,6 +192,17 @@
       ],
       "tooltip": true,
       "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "suggestValue"
+              ]
+            }
+          ]
+        },
         "disableOptions": [
           {
             "options": [
@@ -194,11 +210,9 @@
             ],
             "conditionGroup": [
               {
-                "type": "in",
+                "type": "equals",
                 "attribute": "type",
-                "value": [
-                  "suggestValue"
-                ]
+                "value": "suggestValue"
               }
             ]
           }
@@ -253,7 +267,21 @@
               ]
             }
           ]
-        }
+        },
+        "disableOptions": [
+          {
+            "options": [
+              "dropdown"
+            ],
+            "conditionGroup": [
+              {
+                "type": "equals",
+                "attribute": "type",
+                "value": "suggestValue"
+              }
+            ]
+          }
+        ]
       }
     },
     "targetEntity": {
