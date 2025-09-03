@@ -71,7 +71,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             }
 
             this.disableOptions(this.getDisableOptionsViaConditions());
-            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
+            this.listenTo(this.model, 'change', () => {
                 this.disableOptions(this.getDisableOptionsViaConditions());
             });
 

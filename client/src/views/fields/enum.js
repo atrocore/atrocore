@@ -203,7 +203,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             this.disableOptions(this.getDisableOptionsViaConditions());
-            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
+            this.listenTo(this.model, 'change', () => {
                 this.disableOptions(this.getDisableOptionsViaConditions());
             });
 

@@ -185,7 +185,25 @@
         "record",
         "field"
       ],
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "disableOptions": [
+          {
+            "options": [
+              "entity"
+            ],
+            "conditionGroup": [
+              {
+                "type": "in",
+                "attribute": "type",
+                "value": [
+                  "suggestValue"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     "displayField": {
       "type": "enum",
