@@ -335,6 +335,20 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
 
+        actionDynamicActionSuggestValue(data) {
+            Espo.ui.notify(this.translate('loading', 'messages'))
+            this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
+                actionId: data.id,
+                entityId: this.model.get('id'),
+                actionType: "suggestingValue"
+            }).success(res => {
+                Espo.Ui.notify(false);
+                if (res.toUpdate) {
+                    this.model.set(res.data);
+                }
+            })
+        },
+
         actionDynamicActionEmail(data) {
             const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
             if (!defs) {
