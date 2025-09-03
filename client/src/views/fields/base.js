@@ -909,6 +909,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.reRender();
                 }
             });
+
+            this.listenTo(this.model, 'change', () => {
+                if (['edit', 'detail'].includes(this.mode)) {
+                    this.toggleVisibility(this.name);
+                }
+            });
         },
 
         afterModelSave() {
