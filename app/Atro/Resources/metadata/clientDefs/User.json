@@ -11,50 +11,6 @@
   "modalViews": {
     "detail": "views/user/modals/detail"
   },
-  "defaultSidePanel": {
-    "detail": {
-      "name": "default",
-      "label": false,
-      "view": "views/user/record/panels/default-side",
-      "isForm": true
-    },
-    "detailSmall": {
-      "name": "default",
-      "label": false,
-      "view": "views/user/record/panels/default-side",
-      "isForm": true
-    },
-    "edit": {
-      "name": "default",
-      "label": false,
-      "view": "views/user/record/panels/default-side",
-      "isForm": true
-    },
-    "editSmall": {
-      "name": "default",
-      "label": false,
-      "view": "views/user/record/panels/default-side",
-      "isForm": true
-    }
-  },
-  "defaultSidePanelFieldLists": {
-    "detail": [
-      "avatar",
-      "createdAt",
-      "lastAccess",
-      "passwordUpdatedAt"
-    ],
-    "detailSmall": [
-      "avatar",
-      "lastAccess"
-    ],
-    "edit": [
-      "avatar"
-    ],
-    "editSmall": [
-      "avatar"
-    ]
-  },
   "iconClass": "user",
   "dynamicLogic": {
     "fields": {
