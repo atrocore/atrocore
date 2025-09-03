@@ -95,6 +95,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 idValue = null;
             }
 
+            if (idValue === 'system' && !nameValue) {
+                nameValue = this.getLanguage().translate('System')
+            }
+
             if (this.mode === 'edit') {
                 if (!nameValue && idValue) {
                     nameValue = idValue;
