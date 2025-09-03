@@ -320,11 +320,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.on('after:render', function () {
                 this.initLinkIfAttribute();
-                if (this.hasRequiredMarker()) {
-                    this.showRequiredSign();
-                } else {
-                    this.hideRequiredSign();
-                }
+                this.toggleRequiredMarker();
 
                 if (this.readOnly) {
                     this.getCellElement().attr('data-readonly', 'true');
@@ -834,10 +830,19 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getConditions(this.model.name, name, 'visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
+                    this.toggleRequiredMarker();
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();
                 }
+            }
+        },
+
+        toggleRequiredMarker(){
+            if (this.hasRequiredMarker()) {
+                this.showRequiredSign();
+            } else {
+                this.hideRequiredSign();
             }
         },
 
