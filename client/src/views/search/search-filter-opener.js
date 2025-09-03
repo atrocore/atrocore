@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
+Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], function (Dep, SearchManager) {
     return Dep.extend({
 
         getFilterButtonHtml(field) {
@@ -138,10 +138,13 @@ Espo.define('views/search/search-filter-opener', 'view', function (Dep) {
 
 
             this.notify(this.translate('loading', 'messages'));
+
+            let searchManager = new SearchManager(null, null, null, this.getDateTime(), filters || {});
+
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                disabledUnsetSearch: filters.queryBuilder.rules && filters.queryBuilder.rules.length > 0,
+                disabledUnsetSearch: searchManager.isFilterSet(),
                 additionalBoolFilterList: additionalBoolFilterList,
                 boolFilterData: boolFilterData,
             }, (dialog) => {
