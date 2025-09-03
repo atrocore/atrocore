@@ -21,41 +21,6 @@
     "sortOrder": 20
   },
   {
-    "id": "ui_visible",
-    "extensibleEnumId": "ui_handler_type",
-    "name": "Make Visible",
-    "code": "visible",
-    "sortOrder": 0
-  },
-  {
-    "id": "ui_required",
-    "extensibleEnumId": "ui_handler_type",
-    "name": "Make Required",
-    "code": "required",
-    "sortOrder": 10
-  },
-  {
-    "id": "ui_read_only",
-    "extensibleEnumId": "ui_handler_type",
-    "name": "Make Read-only",
-    "code": "readOnly",
-    "sortOrder": 20
-  },
-  {
-    "id": "ui_disable_options",
-    "extensibleEnumId": "ui_handler_type",
-    "name": "Make Options Disabled",
-    "code": "disableOptions",
-    "sortOrder": 30
-  },
-  {
-    "id": "ui_on_change",
-    "extensibleEnumId": "ui_trigger",
-    "name": "On Load/Change",
-    "code": "ui_on_change",
-    "sortOrder": 10
-  },
-  {
     "id": "supplier",
     "extensibleEnumId": "role",
     "name": "Supplier",

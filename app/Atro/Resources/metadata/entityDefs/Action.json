@@ -13,7 +13,17 @@
       "view": "views/action/fields/type",
       "required": true,
       "prohibitedEmptyValue": false,
-      "options": []
+      "options": [],
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "typePhpCode": {
       "type": "wysiwyg",
@@ -49,7 +59,35 @@
     },
     "sourceEntity": {
       "type": "varchar",
-      "view": "views/action/fields/source-entity"
+      "view": "views/action/fields/source-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record",
+                "field"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record",
+                "field"
+              ]
+            }
+          ]
+        }
+      }
     },
     "conditionsType": {
       "type": "varchar",
@@ -75,16 +113,68 @@
       "virtualField": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "webhook"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "webhook"
+              ]
+            }
+          ]
+        }
+      }
     },
     "inBackground": {
       "type": "bool",
       "default": false,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": []
+            }
+          ]
+        }
+      }
     },
     "massAction": {
       "type": "bool",
-      "default": true
+      "default": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "sourceEntity"
+            }
+          ]
+        }
+      }
     },
     "usage": {
       "type": "enum",
@@ -101,18 +191,69 @@
       "type": "enum",
       "prohibitedEmptyValue": false,
       "view": "views/fields/entity-field",
-      "entityField": "sourceEntity"
+      "entityField": "sourceEntity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "field"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "field"
+              ]
+            }
+          ]
+        }
+      }
     },
     "display": {
       "type": "enum",
       "options": [
         "dropdown",
         "single"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "entity",
+                "record"
+              ]
+            }
+          ]
+        }
+      }
     },
     "targetEntity": {
       "type": "varchar",
-      "view": "views/action/fields/target-entity"
+      "view": "views/action/fields/target-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "showEmailPreview": {
       "type": "bool",
@@ -120,7 +261,27 @@
       "virtualField": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "record"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailTemplate": {
       "type": "link",
@@ -129,7 +290,45 @@
       "virtualField": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailTemplateId": {
       "type": "varchar",
@@ -159,7 +358,31 @@
       "emHidden": true
     },
     "connection": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailTo": {
       "type": "array",
@@ -167,7 +390,45 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailCc": {
       "type": "array",
@@ -175,7 +436,27 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailBcc": {
       "type": "array",
@@ -183,7 +464,27 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "basic"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "emailScript": {
       "type": "text",
@@ -192,7 +493,27 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "mode",
+              "value": [
+                "script"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "mode": {
       "type": "enum",
@@ -203,7 +524,31 @@
       ],
       "virtualField": true,
       "filterDisabled": true,
-      "massUpdateDisabled": true
+      "massUpdateDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "email"
+              ]
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",
