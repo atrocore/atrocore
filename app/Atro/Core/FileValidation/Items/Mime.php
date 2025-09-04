@@ -24,13 +24,20 @@ class Mime extends Base
     {
         $mimeType = (new finfo(FILEINFO_MIME_TYPE))->buffer($file->getContents());
 
-        if ($this->rule->get('validateBy') == 'List') {
-            return in_array($mimeType, $this->rule->get('mimeList'));
-        } elseif ($this->rule->get('validateBy') == 'Pattern') {
-            return stripos($mimeType, $this->rule->get('pattern')) === false ? false : true;
+        if (in_array($mimeType, $this->params['mimeTypes'])) {
+            return true;
         }
 
-        return true;
+        foreach ($this->params['mimeTypes'] ?? [] as $type) {
+            // if type is a regex
+            if (preg_match('/^\/.*\/[a-z]*$/', $type) === 1) {
+                if (preg_match($type, $mimeType) === 1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function onValidateFail()

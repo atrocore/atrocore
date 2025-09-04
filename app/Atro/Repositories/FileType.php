@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\FileValidation\Items\Ratio;
 use Atro\Core\Templates\Repositories\Base;
 use Espo\ORM\Entity;
 
@@ -23,6 +24,11 @@ class FileType extends Base
     {
         if ($entity->get('priority') === null) {
             $entity->set('priority', 0);
+        }
+
+        if (!empty($entity->get('aspectRatio')) && (!preg_match('/^[0-9]+:[0-9]+$/', $entity->get('aspectRatio')) ||
+                empty(Ratio::aspectRatioToFloat($entity->get('aspectRatio'))))) {
+            throw new BadRequest($this->getLanguage()->translate('aspectRatioMustBeInFormat', 'exceptions', 'FileType'));
         }
 
         parent::beforeSave($entity, $options);

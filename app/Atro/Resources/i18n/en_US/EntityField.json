@@ -58,8 +58,9 @@
     "auditableEnabled": "Log the change as a record activity",
     "auditableDisabled": "Create no record activity",
     "modifiedExtendedDisabled": "No recording as modification",
-    "modifiedExtendedEnabled": "Recording as modification",
-    "duplicateIgnore": "Non Duplicatable"
+    "modifiedExtendedEnabled": "Record change as modification",
+    "duplicateIgnore": "Non Duplicatable",
+    "recordRelatedChangesInStream": "Record changes to related records for the current entity."
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

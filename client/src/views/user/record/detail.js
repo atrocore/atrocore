@@ -42,12 +42,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
             this.setupNonAdminFieldsAccess();
 
             if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
-                this.buttonList.push({
-                    name: 'access',
-                    label: 'Access',
-                    style: 'default'
-                });
-
                 if (!this.getConfig().get('resetPasswordViaEmailOnly', false)) {
                     this.dropdownItemList.push({
                         name: 'changePassword',
@@ -144,26 +138,6 @@ Espo.define('views/user/record/detail', 'views/record/detail', function (Dep) {
                         this.getBaseController().logout();
                     }
                 }, 2000);
-            }.bind(this));
-        },
-
-        actionAccess: function () {
-            this.notify('Loading...');
-
-            $.ajax({
-                url: 'User/action/acl',
-                type: 'GET',
-                data: {
-                    id: this.model.id,
-                }
-            }).done(function (aclData) {
-                this.createView('access', 'views/user/modals/access', {
-                    aclData: aclData,
-                    model: this.model,
-                }, function (view) {
-                    this.notify(false);
-                    view.render();
-                }.bind(this));
             }.bind(this));
         },
 

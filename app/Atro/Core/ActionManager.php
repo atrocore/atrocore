@@ -142,7 +142,7 @@ class ActionManager
             $this->auth($currentUserId);
         }
 
-        $log->set('payload', $this->preparePayload($input));
+        $log->set('payload', $this->preparePayload(clone $input));
         $this->getEntityManager()->saveEntity($log);
 
         if (!empty($e)) {
@@ -171,7 +171,7 @@ class ActionManager
     {
         if (is_object($data)) {
             // Replace the object with its fully qualified class name
-            return "object [".get_class($data)."]";
+            return "object [" . get_class($data) . "]";
         }
 
         if (is_array($data)) {

@@ -133,7 +133,7 @@ class NotificationProfileSeeder extends AbstractSeeder
                         "data" => [
                             "field" => [
                                 "body"     => "{% macro translateField(field, context) %}
-    {{ translate(field, context.language, 'fields', context.entityType) }}
+    {{ context.updateData['fieldDefs'][field]['label'] ?? translate(field, context.language, 'fields', context.entityType) }}
 {% endmacro %}
 
 {% macro getValue(field, type, context)  %}
@@ -288,7 +288,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {% endif %}
 </div>",
                                 "bodyDeDe" => "{% macro translateField(field, context) %}
-    {{ translate(field, context.language, 'fields', context.entityType) }}
+    {{ context.updateData['fieldDefs'][field]['label'] ?? translate(field, context.language, 'fields', context.entityType) }}
 {% endmacro %}
 
 {% macro getValue(field, type, context)  %}
@@ -443,7 +443,7 @@ class NotificationProfileSeeder extends AbstractSeeder
     {% endif %}
 </div>",
                                 "bodyUkUa" => "{% macro translateField(field, context) %}
-    {{ translate(field, context.language, 'fields', context.entityType) }}
+    {{ context.updateData['fieldDefs'][field]['label'] ?? translate(field, context.language, 'fields', context.entityType) }}
 {% endmacro %}
 
 {% macro getValue(field, type, context)  %}
