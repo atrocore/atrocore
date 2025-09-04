@@ -9,12 +9,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+declare(strict_types=1);
+
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
 class V2Dot0Dot38 extends Base
 {
+    public function getMigrationDateTime(): ?\DateTime
+    {
+        return new \DateTime('2025-09-04 14:00:00');
+    }
+
     public function up(): void
     {
         $path = 'data/metadata/entityDefs/Product.json';
