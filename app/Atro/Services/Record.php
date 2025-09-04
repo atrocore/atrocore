@@ -20,8 +20,11 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\IEntity;
 use Espo\Services\RecordService;
 
 class Record extends RecordService
@@ -273,24 +276,43 @@ class Record extends RecordService
     public function getTreeItems(string $link, string $scope, array $params): array
     {
         if ($link !== '_self') {
-            $foreignLink = '';
-            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-                if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
-                    $foreignLink = $linkName;
+            if (in_array($link, ['createdBy', 'modifiedBy']) || !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $link, 'unitIdField']))) {
+                $params['queryCallbacks'] = [
+                    function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($link, $scope) {
+                        $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                        $column = $mapper->toDb($link . 'Id');
+
+                        $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
+                            ->andWhere("et.$column is not null")
+                            ->andWhere("et.deleted = :false")
+                            ->setParameter('false', false, ParameterType::BOOLEAN);
+                    }
+                ];
+                $params['distinct'] = true;
+            } else {
+                $foreignLink = '';
+                foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
+                    if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+                        $foreignLink = $linkName;
+                        break;
+                    }
                 }
+                if (empty($foreignLink)) {
+                    throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
+                }
+                $params['where'][] = [
+                    'type'      => 'isLinked',
+                    'attribute' => $foreignLink,
+                ];
             }
-            if (empty($foreignLink)) {
-                throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
-            }
-            $params['where'][] = [
-                'type'      => 'isLinked',
-                'attribute' => $foreignLink,
-            ];
         }
 
         $repository = $this->getRepository();
 
         $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
+        if (!empty($params['distinct'])) {
+            $selectParams['distinct'] = true;
+        }
 
         $fields = ['id', 'name'];
         $localizedNameField = $this->getLocalizedNameField($scope);

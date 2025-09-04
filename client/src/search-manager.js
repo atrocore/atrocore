@@ -35,7 +35,7 @@ Espo.define('search-manager', [], function () {
     var SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
 
         this.collection = collection;
-        this.scope = collection.name;
+        this.scope = collection?.name;
         this.storage = storage;
         this.type = type || 'list';
         this.dateTime = dateTime;
@@ -199,7 +199,7 @@ Espo.define('search-manager', [], function () {
         },
 
         get: function () {
-            return this.data;
+            return Espo.Utils.clone(this.data);
         },
 
         getQueryBuilder: function () {

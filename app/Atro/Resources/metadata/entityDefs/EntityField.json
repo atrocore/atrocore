@@ -356,6 +356,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "recordRelatedChangesInStream": {
+      "type": "bool",
+      "view": "views/admin/field-manager/fields/record-related-changes-in-stream"
+    },
     "conditionalRequired": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",

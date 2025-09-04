@@ -1,5 +1,7 @@
+@import './fonts.css';
+
 html {
-    font-family: sans-serif;
+    font-family: 'Roboto', 'Noto Sans Arabic', sans-serif;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
 }
@@ -1389,7 +1391,7 @@ html {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: 'Roboto', 'Noto Sans Arabic', sans-serif;
     font-size: 14px;
     line-height: 1.36;
     height: 100dvh;
@@ -1473,7 +1475,7 @@ hr {
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1;
     color: inherit
 }
@@ -10325,7 +10327,7 @@ table.table > thead th {
 
 .cell label, .filter label {
     color: #999;
-    font-weight: normal
+    font-weight: 500;
 }
 
 .cell > label, .filter label {
@@ -11484,11 +11486,6 @@ label.attach-file-label > input.file {
         padding: 0 !important;
         border: none;
     }
-}
-
-@font-face {
-    font-family: Open Sans;
-    src: url('../../fonts/open-sans-regular.eot?') format('eot'), url('../../fonts/open-sans-regular.woff') format('woff'), url('../../fonts/open-sans-regular.ttf') format('truetype'), url('../../fonts/open-sans-regular.svg#svgFontName') format('svg')
 }
 
 .notifications-badge-container > .notifications-button > .number-badge {

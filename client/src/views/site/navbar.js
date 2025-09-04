@@ -27,7 +27,8 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 logoSrc: this.getLogoSrc(),
                 navbarIsVertical: this.getThemeManager().getParam('navbarIsVertical'),
                 showBookmarked: true,
-                canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId')
+                canConfigureMenu: this.getUser().isAdmin()  && this.getPreferences().get('layoutProfileId'),
+                showIcon: !this.getConfig().get('tabIconsDisabled')
             };
         },
 
@@ -274,14 +275,11 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 this.getPreferences().get('tabColorsDisabled') ||
                 this.getConfig().get('scopeColorsDisabled') ||
                 this.getConfig().get('tabColorsDisabled');
-            let tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
             if (Espo.Utils.isObject(tab)) {
                 if (!colorsDisabled) {
                     color = tab.color || null;
                 }
-                if (!tabIconsDisabled) {
-                    iconClass = tab.iconClass;
-                }
+                iconClass = tab.iconClass;
                 id = tab.id;
                 group = true;
                 name = tab.name;
@@ -289,9 +287,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 items = tab.items.map(item => this.getTabDefs(item));
                 link = 'javascript:';
             } else {
-                if (!tabIconsDisabled) {
-                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
-                }
+                iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
                 id = tab;
                 group = false;
                 name = tab;

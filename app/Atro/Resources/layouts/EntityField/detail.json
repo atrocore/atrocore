@@ -296,7 +296,9 @@
         {
           "name": "modifiedExtendedEnabled"
         },
-        false
+        {
+          "name": "recordRelatedChangesInStream"
+        }
       ]
     ]
   },

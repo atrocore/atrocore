@@ -18,5 +18,6 @@
   "nonComparableFields": [
     "classificationAttributes"
   ],
-  "attributesDisabled": true
+  "attributesDisabled": true,
+  "hideFieldTypeFilters": true
 }

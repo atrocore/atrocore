@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
 use Atro\Core\Utils\Condition\Condition;
+use Atro\Repositories\SavedSearch;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Atro\Core\Utils\Config;
@@ -128,6 +129,18 @@ abstract class AbstractAction implements TypeInterface
         }
 
         return $sourceEntity;
+    }
+
+    protected  function getWhere(Entity $action): ?array
+    {
+        if (!empty($action->get('data')->whereData)) {
+            $where  =  SavedSearch::getWhereFromWhereData(@json_decode(@json_encode($action->get('data')->whereData), true), $this->getEntityManager());
+            if(!empty($where)){
+                return $where;
+            }
+        }
+
+         return !empty($action->get('data')->where) ? $action->get('data')->where : null;
     }
 
     public function getServiceFactory(): ServiceFactory

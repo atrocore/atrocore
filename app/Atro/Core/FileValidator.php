@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Core;
 
+use Atro\Core\Utils\Metadata;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
@@ -29,15 +30,41 @@ class FileValidator
 
     public function validateFile(Entity $fileType, FileEntity $entity, bool $error = false): bool
     {
-        foreach ($fileType->get('validationRules') as $rule) {
-            if (empty($rule->get('isActive'))) {
-                continue;
+        $validators = [];
+
+        if (!empty($fileType->get('extensions'))) {
+            $validators['Extension'] = ['extensions' => $fileType->get('extensions')];
+        }
+        if (!empty($fileType->get('mimeTypes'))) {
+            $validators['Mime'] = ['mimeTypes' => $fileType->get('mimeTypes')];
+        }
+        if (!empty($fileType->get('minSize')) || !empty($fileType->get('maxSize'))) {
+            $validators['Size'] = [
+                'minSize' => $fileType->get('minSize'),
+                'maxSize' => $fileType->get('maxSize')
+            ];
+        }
+
+        $fileNameParts = explode('.', $entity->get("name"));
+        $fileExt = strtolower(array_pop($fileNameParts));
+
+        if (in_array($fileExt, $this->getMetadata()->get('app.file.image.extensions', []))) {
+            if (!empty($fileType->get('minWidth')) || !empty($fileType->get('minHeight'))) {
+                $validators['Scale'] = [
+                    'minWidth'  => $fileType->get('minWidth'),
+                    'minHeight' => $fileType->get('minHeight')
+                ];
             }
+            if (!empty($fileType->get('aspectRatio'))) {
+                $validators['Ratio'] = ['ratio' => $fileType->get('aspectRatio')];
+            }
+        }
 
-            $type = Util::toCamelCase(strtolower(str_replace(' ', '_', $rule->get('type'))));
-            $className = "\\Atro\\Core\\FileValidation\\Items\\" . ucfirst($type);
 
-            $validator = new $className($this->container, $rule);
+        foreach ($validators as $type => $params) {
+            $className = "\\Atro\\Core\\FileValidation\\Items\\$type";
+
+            $validator = new $className($this->container, $params);
             if (!$validator->validate($entity)) {
                 if ($error) {
                     $validator->onValidateFail();
@@ -52,5 +79,10 @@ class FileValidator
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }

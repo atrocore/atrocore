@@ -98,7 +98,7 @@
         if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
             return true
         }
-        return  Storage.get('useDataRequest', scope) === 'yes'
+        return Storage.get('useDataRequest', scope) === 'yes'
     }
 
     function getHashScope() {
@@ -119,11 +119,11 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null   && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
+            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
             !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && ((canUseDataRequest() && whereData.length) || hasTextFilter)
         ) {
             treeLoading = true;
-            if(searchValue){
+            if (searchValue) {
                 whereData.push({"type": "textFilter", "value": searchValue});
             }
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
@@ -190,7 +190,7 @@
 
                 if (activeItem.name === '_admin'
                     && ((Metadata.get(['scopes', getHashScope()])
-                        && (node.id.includes('#' + getHashScope()+'/'))
+                        && (node.id.includes('#' + getHashScope() + '/'))
                         && isLinkExistsOnce(getHashScope())) || node.id === window.location.hash)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
@@ -423,12 +423,12 @@
             url += '&selectedId=' + model.id;
         }
         let whereData = [];
-        if(searchValue) {
+        if (searchValue) {
             whereData.push({"type": "textFilter", "value": searchValue});
         }
 
-        if(['_self','_bookmark'].includes(activeItem.name) ) {
-                whereData = [...whereData, ...getWhereData() ]
+        if (['_self', '_bookmark'].includes(activeItem.name)) {
+            whereData = [...whereData, ...getWhereData()]
         }
 
         if (whereData.length > 0) {
@@ -452,8 +452,9 @@
                 el = window.$(el);
                 let li = el.parent().parent();
 
-                if (el.data('id') !== id && $tree.tree('getNodeById', el.data('id'))) {
-                    $tree.tree('removeFromSelection', $tree.tree('getNodeById', el.data('id')));
+                const elId = el.data('id') + ''
+                if (elId !== id && $tree.tree('getNodeById', elId)) {
+                    $tree.tree('removeFromSelection', $tree.tree('getNodeById', elId));
                     li.removeClass('jqtree-selected');
                     removeUnsetButton(li);
                     return;
@@ -649,7 +650,7 @@
         let count = 0;
         for (const treeItem of getAdminTreeData()) {
             for (const child of treeItem.children) {
-                if(child.id.includes('#'+scope)) {
+                if (child.id.includes('#' + scope)) {
                     count += 1;
                 }
             }
@@ -661,7 +662,7 @@
     function getAdminTreeData() {
         let data = Metadata.get(['app', 'adminPanel']);
         let total = Object.keys(data).length;
-        let result:[] = [];
+        let result: [] = [];
         let i = 0;
         Object.entries(data).forEach(([k, v]) => {
             let treeItem = {
@@ -676,7 +677,7 @@
             let j = 0;
             let totalItem = v['itemList'].length;
             for (const item of v['itemList']) {
-                if(item.listDisabled) {
+                if (item.listDisabled) {
                     continue;
                 }
                 const label = Language.translate(item['label'], 'labels', 'Admin');
@@ -814,14 +815,14 @@
         isPinned = Storage.get('catalog-tree-panel-pin', scope) !== 'not-pinned';
 
         let treeApplyAdvanced = Storage.get('treeApplyAdvancedFilter', scope);
-        if(treeApplyAdvanced) {
+        if (treeApplyAdvanced) {
             applyAdvancedFilter = treeApplyAdvanced === 'on';
-        }else{
+        } else {
             applyAdvancedFilter = true;
         }
 
 
-        if(collection) {
+        if (collection) {
             Storage.set('treeWhereData', scope, collection.where)
         }
 
@@ -876,7 +877,7 @@
 
     function handleFilterToggle(e: MouseEvent): void {
         applyAdvancedFilter = !applyAdvancedFilter;
-        Storage.set('treeApplyAdvancedFilter', scope, applyAdvancedFilter ? 'on' : 'off' );
+        Storage.set('treeApplyAdvancedFilter', scope, applyAdvancedFilter ? 'on' : 'off');
         rebuildTree()
     }
 </script>
@@ -887,7 +888,7 @@
     <div class="category-panel" class:hidden={isCollapsed}>
         {#if layoutLoading}
             <div class="text-center">
-                <Preloader heightPx={12} />
+                <Preloader heightPx={12}/>
             </div>
         {:else if treeItems.length > 0 }
             <div class="panel-group" style="margin-bottom: 10px; min-height: 26px;">
@@ -924,7 +925,7 @@
                     </div>
                     {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
                         <div style="margin-top:  20px;">
-                             <span class="icons-wrapper" >
+                             <span class="icons-wrapper">
                                 <span class="toggle" class:active={applyAdvancedFilter}
                                       on:click|stopPropagation|preventDefault={handleFilterToggle}
                                 >

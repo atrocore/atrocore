@@ -23,12 +23,12 @@ use Espo\ORM\Entity;
 abstract class Base
 {
     protected Container $container;
-    protected Entity $rule;
+    protected array $params;
 
-    public function __construct(Container $container, Entity $rule)
+    public function __construct(Container $container, array $params)
     {
         $this->container = $container;
-        $this->rule = $rule;
+        $this->params = $params;
     }
 
     abstract public function validate(File $file): bool;

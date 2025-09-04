@@ -24,8 +24,10 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                     label: 'applySearch',
                     disabled: true,
                     onClick: (dialog) => {
-                        var where = this.collection.where;
-                        this.trigger('select', where);
+                        this.trigger('select', {
+                            where: this.collection.where,
+                            whereData: this.searchManager.get()
+                        });
                         dialog.close();
                     }
                 },
@@ -33,7 +35,7 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
                     name: 'unsetSearch',
                     style: 'primary',
                     label: 'unsetSearch',
-                    disabled: !this.options.disabledUnsetSearch,
+                    disabled: this.options.disabledUnsetSearch,
                     onClick: (dialog) => {
                         this.trigger('select', {
                             where: null
