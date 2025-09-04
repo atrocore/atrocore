@@ -128,7 +128,7 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
             });
 
             if (filters.queryBuilder.rules && filters.queryBuilder.rules.length === 1 && filters.queryBuilder.rules[0].condition) {
-                filters.queryBuilder = queryBuilder.rules[0];
+                filters.queryBuilder = filters.queryBuilder.rules[0];
             }
 
             if (filters.queryBuilder.rules && filters.queryBuilder.rules.length === 0) {
