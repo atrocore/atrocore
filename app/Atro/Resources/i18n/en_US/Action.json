@@ -56,5 +56,8 @@
     "inBackground": "Action will be executed in background with no direct success/error message. Use it, if the action's execution till take more than 30 seconds.",
     "usage": "Usage prescribes placement of the action. A Record Action requires the effected records to be preselected.",
     "executeAs": "Specify which user the system will use to perform the action"
+  },
+  "exceptions": {
+    "forEditModeOnly": "Action '%s' is only available in edit mode and cannot be used here."
   }
 }
