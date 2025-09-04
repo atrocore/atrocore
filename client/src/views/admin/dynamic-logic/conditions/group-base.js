@@ -61,6 +61,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             },
             'click > div.group-bottom [data-action="addNot"]': function (e) {
                 this.actionAddGroup('not');
+            },
+            'click > div.group-bottom [data-action="addCurrentUser"]': function (e) {
+                this.actionAddCurrentUser();
             }
         },
 
@@ -190,6 +193,12 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                     view.close();
                 }, this);
             }, this);
+        },
+
+        actionAddCurrentUser: function () {
+            console.log('actionAddCurrentUser')
+
+            // this.addField(field);
         },
 
         addField: function (field) {
