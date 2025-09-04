@@ -186,9 +186,6 @@ class Action extends Base
             throw new Error("Action for '$scope' disabled");
         }
 
-        if ($type === 'onFieldFocus') {
-        }
-
         $recordService = $this->getServiceFactory()->create($scope);
         $entity = $recordService->getEntity($id);
 

@@ -336,13 +336,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         actionDynamicActionSuggestValue(data) {
+            if (this.mode !== 'edit') {
+                return;
+            }
             Espo.ui.notify(this.translate('loading', 'messages'))
             this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
                 actionId: data.id,
                 entityId: this.model.get('id'),
                 actionType: "suggestingValue",
                 payload: {
-                    model: this.model.attributes
+                    uiRecord: this.model.attributes
                 }
             }).success(res => {
                 Espo.Ui.notify(false);
