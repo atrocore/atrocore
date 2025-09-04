@@ -276,7 +276,7 @@ class Record extends RecordService
     public function getTreeItems(string $link, string $scope, array $params): array
     {
         if ($link !== '_self') {
-            if (in_array($link, ['createdBy', 'modifiedBy'])) {
+            if (in_array($link, ['createdBy', 'modifiedBy']) || !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $link, 'unitIdField']))) {
                 $params['queryCallbacks'] = [
                     function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($link, $scope) {
                         $ta = $mapper->getQueryConverter()->getMainTableAlias();
@@ -285,7 +285,7 @@ class Record extends RecordService
                         $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
                             ->andWhere("et.$column is not null")
                             ->andWhere("et.deleted = :false")
-                            ->setParameter('false', false, ParameterType::BOOLEAN);;
+                            ->setParameter('false', false, ParameterType::BOOLEAN);
                     }
                 ];
                 $params['distinct'] = true;
@@ -294,6 +294,7 @@ class Record extends RecordService
                 foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
                     if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
                         $foreignLink = $linkName;
+                        break;
                     }
                 }
                 if (empty($foreignLink)) {
