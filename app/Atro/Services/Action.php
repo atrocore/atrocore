@@ -60,7 +60,7 @@ class Action extends Base
         }
     }
 
-    public function executeRecordAction(string $id, string $entityId, string $actionName): array
+    public function executeRecordAction(string $id, string $entityId, string $actionName, $payload = null): array
     {
         $action = $this->getRepository()->where(['id' => $id])->findOne();
         if (empty($action)) {
@@ -74,7 +74,7 @@ class Action extends Base
             throw new NotFound();
         }
 
-        return $actionType->$method($action, $entityId);
+        return $actionType->$method($action, $entityId, $payload);
     }
 
     public function executeNow(string $id, \stdClass $input): array
@@ -184,6 +184,9 @@ class Action extends Base
     {
         if ($this->getMetadata()->get(['scopes', $scope, 'actionDisabled'], false)) {
             throw new Error("Action for '$scope' disabled");
+        }
+
+        if ($type === 'onFieldFocus') {
         }
 
         $recordService = $this->getServiceFactory()->create($scope);

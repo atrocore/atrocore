@@ -38,7 +38,7 @@ class Action extends Base
 
         return $this
             ->getRecordService()
-            ->executeRecordAction((string)$data->actionId, (string)$data->entityId, (string)$data->actionType);
+            ->executeRecordAction((string)$data->actionId, (string)$data->entityId, (string)$data->actionType, $data->payload ?? null);
     }
 
     public function actionDynamicActions($params, $data, $request)

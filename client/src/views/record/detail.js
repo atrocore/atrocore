@@ -340,7 +340,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
                 actionId: data.id,
                 entityId: this.model.get('id'),
-                actionType: "suggestingValue"
+                actionType: "suggestingValue",
+                payload: {
+                    model: this.model.attributes
+                }
             }).success(res => {
                 Espo.Ui.notify(false);
                 if (res.toUpdate) {
@@ -1336,6 +1339,27 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'after:save', () => {
                 window.dispatchEvent(new Event('record:actions-reload'));
                 window.dispatchEvent(new Event('record:save'));
+            });
+
+            const dynamicOnFieldFocusActions = this.getMetadata().get(`clientDefs.${this.model.name}.dynamicOnFieldFocusActions`) || [];
+
+            this.listenTo(this.model, 'focusField', field => {
+                dynamicOnFieldFocusActions.forEach(item => {
+                    if (item.focusField === field) {
+                        if (item.type) {
+                            const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(item.type);
+                            if (typeof this[method] == 'function') {
+                                this[method].call(this, item);
+                                return
+                            }
+                        }
+
+                        this.executeActionRequest({
+                            actionId: item.id,
+                            entityId: this.model.get('id')
+                        })
+                    }
+                })
             });
         },
 
