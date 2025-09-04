@@ -70,9 +70,10 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.dragDrop = false;
             }
 
-            if (this.options.disabledOptionList) {
-                this.disableOptions(this.options.disabledOptionList)
-            }
+            this.disableOptions(this.getDisableOptionsViaConditions());
+            this.listenTo(this.model, 'change', () => {
+                this.disableOptions(this.getDisableOptionsViaConditions());
+            });
 
             if (this.getBackgroundColor) {
                 this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
@@ -86,13 +87,15 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 this.originalOptionList = this.params.options;
             }
 
-            const options = []
-            this.originalOptionList.forEach(option => {
-                if (disabledOptionList.includes(option)) {
-                    return
-                }
-                options.push(option)
-            })
+            const options = [];
+            if (this.originalOptionList) {
+                this.originalOptionList.forEach(option => {
+                    if (disabledOptionList.includes(option)) {
+                        return
+                    }
+                    options.push(option)
+                })
+            }
 
             this.setOptionList(options)
         },
@@ -126,6 +129,7 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
             if (this.mode === 'edit') {
                 this.listenTo(this.model, 'change:' + this.name, (model, value) => {
                     if (typeof value === 'string') {

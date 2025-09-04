@@ -415,6 +415,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
             if (this.mode === 'edit' || this.mode === 'search') {
                 this.$element = this.$el.find('input.main-element');
 
@@ -510,6 +512,11 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     this.handleSearchType(type);
                 }
             }
+        },
+
+        toggleVisibility(name) {
+            Dep.prototype.toggleVisibility.call(this, name);
+            Dep.prototype.toggleVisibility.call(this, name + 'Ids');
         },
 
         renderLinks: function () {

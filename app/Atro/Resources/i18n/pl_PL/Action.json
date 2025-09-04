@@ -18,10 +18,6 @@
 		"executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
 	},
 	"options": {
-		"usage": {
-			"entity": "Jednostka",
-			"record": "Rekord"
-		},
 		"display": {
 			"dropdown": "Rozwijane",
 			"single": "Pojedyncze"

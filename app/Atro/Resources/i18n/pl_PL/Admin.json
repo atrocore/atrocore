@@ -157,7 +157,6 @@
        "Storage": "Zarządzanie fizycznymi lokalizacjami wszystkich przesłanych plików (lokalny system plików, Microsoft Sharepoint, Amazon S3 itp.)",
        "listOfSupportedFilesTypes": "Zarządzanie typami plików w celu ich dodatkowej weryfikacji (np. obrazy, dokumenty, filmy itp.) i klasyfikacji.",
        "folders": "Utrzymywanie wirtualnych folderów do zapisywania przesłanych plików.",
-       "uiHandler":"Zarządzaj zachowaniem interfejsu użytkownika na podstawie konfigurowalnej logiki warunkowej.",
        "locale":"Zarządzaj ustawieniami lokalizacji, takimi jak język, format daty i czasu, separator dziesiętny, separator tysięcy oraz jednostki miary specyficzne dla lokalizacji.",
        "multiLanguagesSettings":"Skonfiguruj języki do użycia.",
        "composer":"Aktualizuj system i wszystkie zainstalowane moduły, instaluj lub usuwaj publicznie lub prywatnie dostępne moduły. Zależność od wersji modułu jest automatycznie uwzględniana.",

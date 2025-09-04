@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'lib!Twig'], function (Dep, ViewRecordHelper, UiHandler) {
+Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -45,8 +45,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
         isNew: false,
 
         dependencyDefs: {},
-
-        uiHandlerDefs: [],
 
         fieldList: null,
 
@@ -109,14 +107,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
                     $field.addClass('hidden');
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
-                }
-
-                const $panel = $field.closest('.panel')
-                if ($panel.find('> .panel-body > .row > .cell').length === $panel.find('> .panel-body > .row > .cell.hidden-cell').length) {
-                    const name = $panel.attr('data-name')
-                    if (name) {
-                        this.hidePanel(name)
-                    }
                 }
             }.bind(this);
             if (this.isRendered()) {
@@ -393,7 +383,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }, this);
 
             this.initDependancy();
-            this.initUiHandler();
         },
 
         setInitalAttributeValue: function (attribute, value) {
@@ -413,30 +402,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'ui-handler', 'l
             }
 
             this.model.set(this.attributes);
-        },
-
-        initUiHandler: function () {
-            this.uiHandlerDefs = Espo.Utils.clone(this.uiHandlerDefs || []);
-            this.uiHandler = new UiHandler(this.uiHandlerDefs, this, Twig);
-
-            this.processUiHandler('onLoad', this.name);
-            this.listenTo(this.model, 'sync', () => {
-                this.processUiHandler('onLoad', this.name);
-            });
-            this.listenTo(this.model, 'changeField', fieldName => {
-                this.processUiHandler('onChange', fieldName);
-            });
-            this.listenTo(this.model, 'focusField', fieldName => {
-                this.processUiHandler('onFocus', fieldName);
-            });
-        },
-
-        processUiHandler: function (type, field) {
-            let additionalParams = {
-                currentUserId: this.getPreferences().get('id')
-            }
-
-            this.uiHandler.process(type, field, additionalParams);
         },
 
         initDependancy: function () {

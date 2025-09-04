@@ -42,6 +42,15 @@ class ExtensibleEnumOption extends Base
         }
     }
 
+    protected function boolFilterNotDisabledOptions(array &$result): void
+    {
+        $ids = $this->getBoolFilterParameter('notDisabledOptions');
+
+        if (!empty($ids)) {
+            $result['whereClause'][] = ['id!=' => $ids];
+        }
+    }
+
     private function addExtensibleEnumIdWhere($extensibleEnumId, &$result)
     {
         $where = [[

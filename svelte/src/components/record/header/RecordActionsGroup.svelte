@@ -26,8 +26,9 @@
     let dropdownActions: ActionParams[] = [];
     let additionalActions: ActionParams[] = [];
     let dynamicActions: ActionParams[] = [];
+    let dynamicEditActions: ActionParams[] = [];
     let dynamicActionsDropdown: ActionParams[] = [];
-    let uiHandlerActions: ActionParams[] = [];
+    let additionalEditActions: ActionParams[] = [];
     let headerButtons: ActionParams[] = [];
     let loadingActions: boolean = false;
     let bookmarkId: string | null = null;
@@ -36,7 +37,7 @@
         recordActions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
         additionalActions = [...(recordButtons?.additionalButtons ?? []), ...dynamicActions];
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
-        uiHandlerActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...getUiHandlerButtons()] : []);
+        additionalEditActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...dynamicEditActions] : []);
         headerButtons = (recordButtons?.headerButtons?.buttons ?? []).filter(button => !button.hidden);
     }
 
@@ -95,22 +96,6 @@
         }
     }
 
-    function getUiHandlerButtons(): ActionParams[] {
-        const result: ActionParams[] = [];
-        (Metadata.get(['clientDefs', scope, 'uiHandler']) || []).forEach((handler: Record<string, any>) => {
-            if (handler.type === 'setValue' && handler.triggerAction === 'onButtonClick') {
-                result.push({
-                    'action': 'uiHandler',
-                    'id': handler.id,
-                    'label': handler.name
-                });
-
-            }
-        })
-
-        return result;
-    }
-
     function reloadDynamicActions(): void {
         if (Metadata.get(['scopes', scope, 'actionDisabled'])) {
             return;
@@ -131,8 +116,9 @@
                 bookmarkId = bookmarkAction.data.bookmark_id ?? null;
             }
 
-            dynamicActions = preparedList.filter(item => item.display === 'single');
-            dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown');
+            dynamicActions = preparedList.filter(item => item.display === 'single' && !Metadata.get(['action', 'typesData', item.type || '', 'forEditModeOnly']));
+            dynamicActionsDropdown = preparedList.filter(item => item.display === 'dropdown' && !Metadata.get(['action', 'typesData', item.type || '', 'forEditModeOnly']));
+            dynamicEditActions = preparedList.filter(item => item.display === 'single' && Metadata.get(['action', 'typesData', item.type || '', 'forEditModeOnly']));
         }).catch(error => {
             console.error(error);
         }).finally(() => loadingActions = false);
@@ -165,7 +151,7 @@
                 <ContentFilter scope="{scope}" onExecute={executeAction}/>
             {/if}
         {:else if mode === 'edit'}
-            {#each uiHandlerActions as action}
+            {#each additionalEditActions as action}
                 <ActionButton params={action} on:execute={executeAction} className="additional-button"/>
             {/each}
         {/if}

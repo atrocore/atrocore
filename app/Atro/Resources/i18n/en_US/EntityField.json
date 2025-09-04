@@ -60,7 +60,11 @@
     "modifiedExtendedDisabled": "No recording as modification",
     "modifiedExtendedEnabled": "Record change as modification",
     "duplicateIgnore": "Non Duplicatable",
-    "recordRelatedChangesInStream": "Record changes to related records for the current entity."
+    "recordRelatedChangesInStream": "Record changes to related records for the current entity.",
+    "conditionalRequired": "Required",
+    "conditionalVisible": "Visible",
+    "conditionalReadOnly": "Read-only",
+    "conditionalDisableOptions": "Disabled Options"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",
@@ -119,6 +123,7 @@
   },
   "labels": {
     "resetToDefault": "Reset to default",
-    "relationManagement": "Relation Management"
+    "relationManagement": "Relation Management",
+    "conditionalProperties": "Conditional Properties"
   }
 }

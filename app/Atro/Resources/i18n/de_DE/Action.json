@@ -30,10 +30,6 @@
     "executeNow": "Sind Sie sicher, dass Sie die ausgewählte Aktion ausführen möchten?"
   },
   "options": {
-    "usage": {
-      "entity": "Entitätsebene",
-      "record": "Datensatzebene"
-    },
     "display": {
       "dropdown": "Auswahlliste",
       "single": "Einzeln"

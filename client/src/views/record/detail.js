@@ -342,6 +342,26 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             })
         },
 
+        actionDynamicActionSuggestValue(data) {
+            if (this.mode !== 'edit') {
+                return;
+            }
+            Espo.ui.notify(this.translate('loading', 'messages'))
+            this.ajaxPostRequest('Action/action/ExecuteRecordAction', {
+                actionId: data.id,
+                entityId: this.model.get('id'),
+                actionType: "suggestingValue",
+                payload: {
+                    uiRecord: this.model.attributes
+                }
+            }).success(res => {
+                Espo.Ui.notify(false);
+                if (res.toUpdate) {
+                    this.model.set(res.data);
+                }
+            })
+        },
+
         actionDynamicActionEmail(data) {
             const defs = (this.getMetadata().get(['clientDefs', this.entityType, 'dynamicRecordActions']) || []).find(defs => defs.id === data.id)
             if (!defs) {
@@ -381,16 +401,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 })
             } else {
                 this.executeActionRequest(payload)
-            }
-        },
-
-        actionUiHandler: function (data) {
-            const handler = (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).find(el => el.id === data.id)
-            if (handler) {
-                let methodName = 'execute' + Espo.Utils.upperCaseFirst(handler.type);
-                if (typeof this.uiHandler[methodName] === "function") {
-                    this.uiHandler[methodName](handler);
-                }
             }
         },
 
@@ -1334,6 +1344,27 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 window.dispatchEvent(new Event('record:actions-reload'));
                 window.dispatchEvent(new Event('record:save'));
             });
+
+            const dynamicOnFieldFocusActions = this.getMetadata().get(`clientDefs.${this.model.name}.dynamicOnFieldFocusActions`) || [];
+
+            this.listenTo(this.model, 'focusField', field => {
+                dynamicOnFieldFocusActions.forEach(item => {
+                    if (item.focusField === field) {
+                        if (item.type) {
+                            const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(item.type);
+                            if (typeof this[method] == 'function') {
+                                this[method].call(this, item);
+                                return
+                            }
+                        }
+
+                        this.executeActionRequest({
+                            actionId: item.id,
+                            entityId: this.model.get('id')
+                        })
+                    }
+                })
+            });
         },
 
         highlightRequired() {
@@ -1427,24 +1458,44 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.attributes = this.model.getClonedAttributes();
             }, this);
 
-            this.listenTo(this.model, 'change', function () {
-                if (this.mode == 'edit' || this.inlineEditModeIsOn) {
+            this.listenTo(this.model, 'change', () => {
+                if (this.mode === 'edit' || this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
-            }, this);
+                if (['edit', 'detail'].includes(this.mode)) {
+                    setTimeout(() => {
+                        this.togglePanelsVisibility();
+                    }, 200);
+                }
+            });
 
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this.initDependancy();
 
             this.setupFieldLevelSecurity();
 
-            this.initDynamicHandler();
-
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-
-            this.onModelReady(() => {
-                this.initUiHandler();
+            this.listenTo(this, 'after:render', () => {
+                this.togglePanelsVisibility();
             })
+
+            this.initDynamicHandler();
+        },
+
+        togglePanelsVisibility() {
+            this.$el.find('.middle > .panel').each((k, el) => {
+                const $panel = $(el);
+
+                const shown = $panel.find('> .panel-body > .row > .cell').length;
+                const hidden = $panel.find('> .panel-body > .row > .cell').filter(function () {
+                    return $(this).css('display') === 'none';
+                }).length;
+
+                if (shown !== hidden) {
+                    $panel.show();
+                } else {
+                    $panel.hide();
+                }
+            });
         },
 
         initDynamicHandler: function () {

@@ -14,7 +14,6 @@ namespace Atro\ActionTypes;
 use Atro\ConditionTypes\AbstractConditionType;
 use Atro\Core\ActionManager;
 use Atro\Core\Container;
-use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
@@ -58,7 +57,12 @@ abstract class AbstractAction implements TypeInterface
     public function canExecute(Entity $action, \stdClass $input): bool
     {
         if ($action->get('conditionsType') === 'basic') {
-            $sourceEntity = $this->getSourceEntity($action, $input);
+            if (!empty($input->uiRecord)) {
+                $sourceEntity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get();
+                $sourceEntity->set($input->uiRecord);
+            }else{
+                $sourceEntity = $this->getSourceEntity($action, $input);
+            }
             if (empty($sourceEntity)) {
                 return true;
             }
@@ -78,6 +82,10 @@ abstract class AbstractAction implements TypeInterface
                 'user'            => $this->getEntityManager()->getUser(),
                 'importJobId'     => $this->container->get('memoryStorage')->get('importJobId')
             ];
+
+            if (!empty($input->uiRecord)) {
+                $templateData['uiRecord'] = $input->uiRecord;
+            }
 
             if (
                 empty($templateData['triggeredEntity'])

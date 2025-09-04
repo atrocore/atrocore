@@ -1,7 +1,7 @@
 
 <div>
-    <div class="pull-right">
-        <a href="javascript:" data-action="editConditions">{{translate 'Edit'}}</a>
+    <div class="pull-right inline-actions">
+        <a href="javascript:" data-action="editConditions" title="{{translate 'Configure'}}"><i class="ph ph-gear-six"></i></a>
     </div>
     <div class="top-group-string-container">
         {{{conditionGroup}}}

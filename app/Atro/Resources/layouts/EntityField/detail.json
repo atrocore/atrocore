@@ -116,14 +116,6 @@
       ],
       [
         {
-          "name": "extensibleEnum"
-        },
-        {
-          "name": "allowedOptions"
-        }
-      ],
-      [
-        {
           "name": "foreignName"
         },
         false
@@ -202,13 +194,21 @@
       ],
       [
         {
-          "name": "extensibleEnumOptions"
+          "name": "extensibleEnum"
         },
-        false
+        {
+          "name": "dropdown"
+        }
       ],
       [
         {
-          "name": "dropdown"
+          "name": "extensibleEnumOptions",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "allowedOptions"
         },
         false
       ],
@@ -326,6 +326,35 @@
         {
           "name": "linkMultipleField"
         }
+      ]
+    ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalDisableOptions"
+        },
+        false
       ]
     ]
   }

@@ -50,10 +50,6 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between'],
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
         data: function () {
             var data = Dep.prototype.data.call(this);
             if (this.mode === 'search') {

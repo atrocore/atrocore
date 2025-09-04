@@ -17,6 +17,8 @@ Espo.define('views/fields/composite', 'views/fields/base', Dep => Dep.extend({
         childrenFields: [],
 
         setup() {
+            Dep.prototype.setup.call(this);
+
             this.name = this.options.name || this.defs.name;
 
             this.childrenFields = [];

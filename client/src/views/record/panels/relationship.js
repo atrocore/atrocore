@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager'], function (Dep, SearchManager) {
+Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager', 'conditions-checker'], function (Dep, SearchManager, ConditionsChecker) {
 
     return Dep.extend({
 
@@ -501,6 +501,25 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             this.getRouter().navigate(`#${this.scope}`, { trigger: true });
             this.getRouter().dispatch(this.scope, 'list', params);
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.toggleVisibilityViaConditions();
+        },
+
+        toggleVisibilityViaConditions() {
+            if (this.link) {
+                const conditions = this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.link}.conditionalProperties.visible.conditionGroup`);
+                if (conditions) {
+                    if (new ConditionsChecker(this).checkConditionGroup(conditions)) {
+                        this.$el.parent().show();
+                    } else {
+                        this.$el.parent().hide();
+                    }
+                }
+            }
         },
 
         getUnInheritedRelations: function () {

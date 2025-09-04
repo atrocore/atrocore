@@ -190,7 +190,6 @@ class Metadata
         $this->objData = $this->dataManager->getCacheData('metadata');
         if ($this->objData === null || $reload) {
             $this->objData = Json::decode(Json::encode($this->loadData()), true);
-
             $this->objData = $this
                 ->getEventManager()
                 ->dispatch('Metadata', 'loadData', new Event(['data' => $this->objData]))
@@ -209,7 +208,7 @@ class Metadata
             ->dispatch('Metadata', 'afterInit', new Event(['data' => $data]))
             ->getArgument('data');
 
-        $this->loadUiHandlers($data);
+        $this->convertDynamicLogicToFieldConditionalProperties($data);
         $this->clearMetadata($data);
 
         // set object data
@@ -219,127 +218,38 @@ class Metadata
         $this->clearingMetadata();
     }
 
-    protected function loadUiHandlers(array &$metadata): void
+    /**
+     * Convert legacy dynamic logic into field conditional properties
+     */
+    protected function convertDynamicLogicToFieldConditionalProperties(array &$metadata): void
     {
-        $config = $this->getConfig();
-        if (!$config->get('isInstalled', false)) {
-            return;
-        }
-
-        if (!empty($this->container->get('memoryStorage')->get('ignorePushUiHandler'))) {
-            return;
-        }
-
-        // remove dynamic logic from data
-        foreach ($this->objData['clientDefs'] as $entity => $defs) {
-            if (isset($defs['dynamicLogic'])) {
-                unset($this->objData['clientDefs'][$entity]['dynamicLogic']);
-            }
-        }
-
-        $mapper = [
-            'ui_read_only'       => 'readOnly',
-            'ui_visible'         => 'visible',
-            'ui_required'        => 'required',
-            'ui_set_value'       => 'setValue',
-            'ui_update_by_ai'    => 'updateByAi',
-            'ui_disable_options' => 'disableOptions'
-        ];
-
-        $data = [];
-        foreach ($config->get('referenceData.UiHandler') ?? [] as $v) {
-            if (!isset($mapper[$v['type']]) || empty($v['triggerAction']) || empty($v['isActive'])) {
+        foreach ($metadata['clientDefs'] as $entityName => $defs) {
+            if (empty($defs['dynamicLogic']['fields'])) {
                 continue;
             }
+            foreach ($defs['dynamicLogic']['fields'] as $fieldName => $logic) {
+                foreach ($logic as $logicType => $logicData) {
+                    if (empty($logicData['conditionGroup'])) {
+                        continue;
+                    }
+                    if (!empty($metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType])) {
+                        continue;
+                    }
 
-            switch ($v['triggerAction']) {
-                case 'ui_on_change':
-                    $triggerAction = 'onChange';
-                    break;
-                case 'ui_on_focus':
-                    $triggerAction = 'onFocus';
-                    break;
-                case 'ui_on_button_click':
-                    $triggerAction = 'onButtonClick';
-                    break;
-                default:
-                    continue 2;
-            }
-
-            $conditions = ['type' => $v['conditionsType']];
-            if ($v['conditionsType'] === 'basic') {
-                $val = @json_decode((string)$v['conditions'], true);
-                if (is_array($val)) {
-                    $conditions = array_merge($conditions, $val);
+                    if ($logicType === 'disableOptions') {
+                        $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType] = [
+                            [
+                                'options'        => $logicData['disabledOptions'],
+                                'conditionGroup' => $logicData['conditionGroup'],
+                            ],
+                        ];
+                    } else {
+                        $metadata['entityDefs'][$entityName]['fields'][$fieldName]['conditionalProperties'][$logicType]['conditionGroup'] = $logicData['conditionGroup'];
+                    }
                 }
-            } else {
-                $conditions['script'] = (string)($v['conditions'] ?? '');
             }
-
-            if (!array_key_exists('triggerFields', $v)) {
-                $v['triggerFields'] = null;
-            }
-
-            $row = [];
-            $row['type'] = $mapper[$v['type']];
-            $row['triggerAction'] = $triggerAction;
-            $row['triggerFields'] = is_array($v['triggerFields']) ? $v['triggerFields'] : @json_decode((string)$v['triggerFields'], true);
-            $row['conditions'] = $conditions;
-
-            switch ($row['type']) {
-                case 'readOnly':
-                case 'visible':
-                case 'required':
-                    $row['targetFields'] = [];
-                    if (!empty($v['fields'])) {
-                        $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
-                    }
-                    $row['targetPanels'] = [];
-                    if (!empty($v['relationships'])) {
-                        $row['targetPanels'] = is_array($v['relationships']) ? $v['relationships'] : @json_decode((string)$v['relationships'], true);
-                    }
-                    break;
-                case 'disableOptions':
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
-                    $row['disabledOptions'] = is_array($v['disabledOptions']) ? $v['disabledOptions'] : @json_decode((string)$v['disabledOptions'], true);
-                    break;
-                case 'setValue':
-                    $parsedData = is_array($v['data']) ? $v['data'] : @json_decode((string)$v['data'], true);
-                    if (empty($parsedData['field']['updateType'])) {
-                        continue 2;
-                    }
-                    $row['id'] = $v['id'];
-                    $row['name'] = $v['name'];
-                    $row['updateType'] = $parsedData['field']['updateType'];
-                    $row['overwrite'] = !empty($parsedData['field']['overwrite']);
-                    switch ($parsedData['field']['updateType']) {
-                        case 'basic':
-                            $row['updateData'] = $parsedData['fieldData'] ?? [];
-                            break;
-                        case 'script':
-                            $row['updateData'] = $parsedData['field']['updateScript'] ?? '';
-                            break;
-                    }
-                    break;
-                case 'updateByAi':
-                    $parsedData = is_array($v['data']) ? $v['data'] : @json_decode((string)$v['data'], true);
-                    if (empty($parsedData['field']['aiEngine'])) {
-                        continue 2;
-                    }
-                    $row['id'] = $v['id'];
-                    $row['name'] = $v['name'];
-                    $row['targetFields'] = is_array($v['fields']) ? $v['fields'] : @json_decode((string)$v['fields'], true);
-                    $row['aiEngine'] = $parsedData['field']['aiEngine'];
-                    $row['confirmPromptByPopup'] = !empty($parsedData['field']['confirmPromptByPopup']);
-                    $row['prompt'] = $parsedData['field']['prompt'];
-                    $row['buttonLabel'] = $parsedData['field']['buttonLabel'] ?? ($parsedData['name'] ?? '');
-                    break;
-            }
-
-            $data['clientDefs'][$v['entityType']]['uiHandler'][] = $row;
+            unset($metadata['clientDefs'][$entityName]['dynamicLogic']);
         }
-
-        $metadata = Util::merge($metadata, $data);
     }
 
     public function loadData(bool $ignoreCustom = false): \stdClass

@@ -429,6 +429,12 @@ class Metadata extends AbstractListener
                     'massAction'   => !empty($action['mass_action']),
                 ]);
             }
+
+            if ($action['usage'] === 'onFieldFocus') {
+                $data['clientDefs'][$action['source_entity']]['dynamicOnFieldFocusActions'][] = array_merge($params, [
+                    'focusField' => $action['focus_field'],
+                ]);
+            }
         }
     }
 

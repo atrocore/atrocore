@@ -51,13 +51,11 @@ Espo.define('views/fields/entity-field', 'views/fields/enum', Dep => {
         },
 
         prepareEnumOptions() {
-            this.params.options = [''];
             this.translatedOptions = {'': ''};
-
             $.each((this.getEntityFields() || []), field => {
-                this.params.options.push(field);
                 this.translatedOptions[field] = this.translate(field, 'fields', this.getEntityType());
             });
+            this.originalOptionList = this.params.options = Object.keys(this.translatedOptions);
         },
 
         getEntityType() {

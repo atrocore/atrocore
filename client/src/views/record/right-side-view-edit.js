@@ -96,9 +96,6 @@ Espo.define('views/record/right-side-view-edit', ['views/record/edit', 'view-rec
             this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
             this.initDependancy();
 
-            this.uiHandlerDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.uiHandler') || [], this.uiHandler);
-            this.initUiHandler();
-
             this.setupFieldLevelSecurity();
         },
 

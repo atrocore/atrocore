@@ -706,7 +706,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
                 });
 
-                this.listenTo(view.model, 'change after:process-ui-handler', () => {
+                this.listenTo(view.model, 'change', () => {
                     window.dispatchEvent(new CustomEvent('detail:panels-loaded', {detail: this.getVisiblePanels()}));
                 });
 

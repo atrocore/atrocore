@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/fields/base', 'view', function (Dep) {
+Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, ConditionsChecker) {
 
     return Dep.extend({
 
@@ -92,12 +92,14 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             return Dep.prototype.translate.call(this, name, category, scope);
         },
 
-        isRequired: function () {
-            return this.params.required;
-        }, /**
-         * Get cell element. Works only after rendered.
-         * {jQuery}
-         */
+        isRequired() {
+            if (this.params.required) {
+                return true
+            }
+
+            return this.isRequiredViaConditions(this.name);
+        },
+
         getCellElement: function () {
             return this.$el.parent();
         },
@@ -286,6 +288,10 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 this.readOnly = false;
             }
 
+            if (!this.readOnly) {
+                this.readOnly = this.isReadOnlyViaConditions(this.name);
+            }
+
             this.disabledLocked = this.options.disabledLocked || false;
             this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 
@@ -314,11 +320,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
 
             this.on('after:render', function () {
                 this.initLinkIfAttribute();
-                if (this.hasRequiredMarker()) {
-                    this.showRequiredSign();
-                } else {
-                    this.hideRequiredSign();
-                }
+                this.toggleRequiredMarker();
 
                 if (this.readOnly) {
                     this.getCellElement().attr('data-readonly', 'true');
@@ -814,6 +816,73 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit' || this.mode === 'search') {
                 this.initElement();
             }
+
+            if (['edit', 'detail'].includes(this.mode)) {
+                this.toggleVisibility(this.name);
+            }
+        },
+
+        checkConditionGroup(conditions){
+            return new ConditionsChecker(this).checkConditionGroup(conditions);
+        },
+
+        toggleVisibility(name) {
+            const conditions = this.getConditions(this.model.name, name, 'visible');
+            if (conditions) {
+                if (this.checkConditionGroup(conditions)) {
+                    this.toggleRequiredMarker();
+                    this.$el.parent().show();
+                } else {
+                    this.$el.parent().hide();
+                }
+            }
+        },
+
+        toggleRequiredMarker(){
+            if (this.hasRequiredMarker()) {
+                this.showRequiredSign();
+            } else {
+                this.hideRequiredSign();
+            }
+        },
+
+        isRequiredViaConditions(name) {
+            const conditions = this.getConditions(this.model.name, name, 'required');
+            if (conditions) {
+                return this.checkConditionGroup(conditions);
+            }
+
+            return false;
+        },
+
+        isReadOnlyViaConditions(name) {
+            const conditions = this.getConditions(this.model.name, name, 'readOnly');
+            if (conditions) {
+                return this.checkConditionGroup(conditions);
+            }
+
+            return false;
+        },
+
+        getConditions(scope, name, type) {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditionalProperties.${type}.conditionGroup`);
+        },
+
+        getDisableOptionsRules() {
+            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.disableOptions`);
+        },
+
+        getDisableOptionsViaConditions() {
+            let res = [];
+            (this.getDisableOptionsRules() || []).forEach(rule => {
+                if (this.checkConditionGroup(rule.conditionGroup)) {
+                    (rule.options || []).forEach(option => {
+                        res.push(option);
+                    })
+                }
+            });
+
+            return res;
         },
 
         setup: function () {
@@ -832,6 +901,24 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.listenTo(this.model, 'after:save', () => {
                 this.afterModelSave();
                 this.reRender();
+            });
+
+            this.listenTo(this.model, 'after:inlineEditSave', () => {
+                const scope = this.model.name;
+                if (
+                    this.getConditions(scope, this.name, 'readOnly')
+                    || this.getConditions(scope, this.name, 'visible')
+                    || this.getConditions(scope, this.name, 'required')
+                    || (this.getDisableOptionsRules() || []).length > 0
+                ) {
+                    this.reRender();
+                }
+            });
+
+            this.listenTo(this.model, 'change', () => {
+                if (['edit', 'detail'].includes(this.mode)) {
+                    this.toggleVisibility(this.name);
+                }
             });
         },
 
