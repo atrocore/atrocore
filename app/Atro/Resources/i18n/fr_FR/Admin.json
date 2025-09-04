@@ -151,7 +151,6 @@
     "Storage": "Gérer les emplacements physiques de tous les fichiers téléchargés (système de fichiers local, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Gérez les types de fichiers pour une validation et une classification supplémentaires (par exemple, images, documents, vidéos, etc.).",
     "folders": "Gérer des dossiers virtuels pour l'enregistrement des fichiers téléchargés.",
-    "uiHandler": "Gérez le comportement de l'interface utilisateur sur la base d'une logique conditionnelle configurable.",
     "locale": "Gérez les paramètres locaux tels que la langue, le format de la date et de l'heure, le séparateur décimal, le séparateur de milliers, ainsi que les unités de mesure spécifiques à la région.",
     "multiLanguagesSettings": "Configurez les langues à utiliser.",
     "composer": "Mettez à jour le système et tous les modules installés, installez ou supprimez les modules disponibles publiquement ou en privé. La dépendance de la version du module est automatiquement prise en compte.",

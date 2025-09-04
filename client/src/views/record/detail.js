@@ -404,16 +404,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
         },
 
-        actionUiHandler: function (data) {
-            const handler = (this.getMetadata().get(['clientDefs', this.scope, 'uiHandler']) || []).find(el => el.id === data.id)
-            if (handler) {
-                let methodName = 'execute' + Espo.Utils.upperCaseFirst(handler.type);
-                if (typeof this.uiHandler[methodName] === "function") {
-                    this.uiHandler[methodName](handler);
-                }
-            }
-        },
-
         executeActionRequest(payload, callback) {
             this.notify(this.translate('pleaseWait', 'messages'));
             this.ajaxPostRequest('Action/action/executeNow?silent=true', payload).success(response => {

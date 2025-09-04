@@ -54,11 +54,6 @@
     "exportsTo": "$",
     "exportsAs": "jsTree"
   },
-  "Twig": {
-    "path": "client/lib/twig.min.js",
-    "exportsTo": "$",
-    "exportsAs": "twig"
-  },
   "QueryBuilder": {
     "path": "client/lib/query-builder.standalone.min.js",
     "exportsTo": "$",

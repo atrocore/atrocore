@@ -33,19 +33,6 @@ class Locale extends ReferenceData
         }
     }
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if (($entity->isNew() || $entity->isAttributeChanged('code')) && !empty($entity->get('code'))) {
-            $this->getEntityManager()
-                ->getRepository('NotificationTemplate')
-                ->addUiHandlerForLanguage($entity->get('code'));
-        }
-
-        $this->refreshCache();
-    }
-
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $systemLocale = $this->getConfig()->get('locale');
