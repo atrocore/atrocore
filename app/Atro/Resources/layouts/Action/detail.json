@@ -35,6 +35,12 @@
       ],
       [
         {
+          "name": "focusField"
+        },
+        false
+      ],
+      [
+        {
           "name": "displayField"
         },
         false

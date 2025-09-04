@@ -23,6 +23,8 @@ class V2Dot0Dot37 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE action ADD focus_field VARCHAR(255) DEFAULT NULL");
+
         $fileName = 'data/reference-data/UiHandler.json';
 
         if (!file_exists($fileName)) {
@@ -152,5 +154,13 @@ class V2Dot0Dot37 extends Base
         }
 
         unlink($fileName);
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+        }
     }
 }

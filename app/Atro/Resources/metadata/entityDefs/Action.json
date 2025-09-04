@@ -82,7 +82,8 @@
               "value": [
                 "entity",
                 "record",
-                "field"
+                "field",
+                "onFieldFocus"
               ]
             }
           ]
@@ -95,7 +96,8 @@
               "value": [
                 "entity",
                 "record",
-                "field"
+                "field",
+                "onFieldFocus"
               ]
             }
           ]
@@ -201,7 +203,8 @@
       "options": [
         "entity",
         "record",
-        "field"
+        "field",
+        "onFieldFocus"
       ],
       "tooltip": true,
       "conditionalProperties": {
@@ -229,13 +232,51 @@
                 "value": "suggestValue"
               }
             ]
+          },
+          {
+            "options": [
+              "onFieldFocus"
+            ],
+            "conditionGroup": [
+              {
+                "type": "notIn",
+                "attribute": "type",
+                "value": [
+                  "suggestValue"
+                ]
+              }
+            ]
           }
         ]
       }
     },
+    "focusField": {
+      "type": "enum",
+      "view": "views/fields/entity-field",
+      "entityField": "sourceEntity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "onFieldFocus"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "onFieldFocus"
+            }
+          ]
+        }
+      }
+    },
     "displayField": {
       "type": "enum",
-      "prohibitedEmptyValue": false,
       "view": "views/fields/entity-field",
       "entityField": "sourceEntity",
       "conditionalProperties": {

@@ -12,6 +12,7 @@
     "webhookUrl": "URL",
     "executeAs": "Execute As",
     "displayField": "Display Field",
+    "focusField": "Focus Field",
     "targetEntity": "Target Entity",
     "mode": "Mode",
     "emailScript": "Script",
@@ -35,7 +36,8 @@
     "usage": {
       "entity": "Entity action button",
       "record": "Record action button",
-      "field": "Field action button"
+      "field": "Field action button",
+      "onFieldFocus": "On field focus"
     },
     "display": {
       "dropdown": "Dropdown",
