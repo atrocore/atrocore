@@ -73,7 +73,6 @@ Espo.define('views/dashlets/fields/records/entity-type', 'views/fields/enum', fu
                 if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
                 if (!this.getAcl().checkScope(scope, 'read')) return;
                 if (!this.getMetadata().get(['scopes', scope, 'entity'])) return;
-                if (!this.getMetadata().get(['scopes', scope, 'object'])) return;
 
                 return true;
             }, this).sort(function (v1, v2) {
