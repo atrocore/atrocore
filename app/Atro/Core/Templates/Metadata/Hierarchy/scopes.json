@@ -1,5 +1,6 @@
 {
   "entity": true,
+  "object": true,
   "layouts": true,
   "tab": true,
   "acl": true,
