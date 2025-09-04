@@ -219,7 +219,8 @@
         "disableOptions": [
           {
             "options": [
-              "entity"
+              "entity",
+              "field"
             ],
             "conditionGroup": [
               {
