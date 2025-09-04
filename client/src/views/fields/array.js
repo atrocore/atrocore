@@ -241,10 +241,8 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
 
                 (this.selected || []).forEach(i => {
                     let label = this.getLanguage().translateOption(i, this.name, this.scope);
-                    if (this.translatedOptions) {
-                        if (value in this.translatedOptions) {
-                            label = this.translatedOptions[i];
-                        }
+                    if (this.translatedOptions && i in this.translatedOptions) {
+                        label = this.translatedOptions[i];
                     }
                     data.push({
                         value: i,
