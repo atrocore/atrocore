@@ -101,6 +101,22 @@
               ]
             }
           ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "applyToPreselectedRecords"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "update",
+                "delete"
+              ]
+            }
+          ]
         }
       }
     },
