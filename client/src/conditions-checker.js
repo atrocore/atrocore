@@ -62,6 +62,10 @@ Espo.define('conditions-checker', [], function () {
 
             var setValue = this.view.model.get(attribute);
 
+            if (attribute === '__currentUserId'){
+                setValue = this.view.getUser().get('id');
+            }
+
             if (type === 'equals') {
                 if (!value) return;
                 return setValue === value;
