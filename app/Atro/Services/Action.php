@@ -181,14 +181,13 @@ class Action extends Base
         return $this->getInjection('container')->get($className);
     }
 
-    public function getDynamicActions(string $scope, string $id, ?string $type, ?string $display)
+    public function getDynamicActions(string $scope, ?string $id, ?string $type, ?string $display)
     {
         if ($this->getMetadata()->get(['scopes', $scope, 'actionDisabled'], false)) {
             throw new Error("Action for '$scope' disabled");
         }
 
-        $recordService = $this->getServiceFactory()->create($scope);
-        $entity = $recordService->getEntity($id);
+        $entity = $id !== null ? $this->getServiceFactory()->create($scope)->getEntity($id) : null;
 
         $res = [];
 
