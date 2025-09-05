@@ -73,7 +73,7 @@
             return true;
         }).forEach(function (item) {
             // needs for reports module
-            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope).bool.reportSpecific) {
+            if (item === 'reportSpecific' && !Storage.get('listQueryBuilder', scope)?.bool?.reportSpecific) {
                 return;
             }
 
