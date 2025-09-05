@@ -1053,7 +1053,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 attrs.inheritedFields = res.inheritedFields;
             }
 
-            model.set(res);
+            model.set(attrs);
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
 
