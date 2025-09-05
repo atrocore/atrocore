@@ -611,6 +611,7 @@
     "removeAttribute": "Delete Attribute"
   },
   "fields": {
+    "__currentUser": "Current User",
     "start": "Start",
     "end": "End",
     "action": "Action",

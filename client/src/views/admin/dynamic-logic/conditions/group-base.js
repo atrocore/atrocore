@@ -112,10 +112,13 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             if (~['and', 'or', 'not'].indexOf(type)) {
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
             } else {
-                fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-
-                if (field === 'id') {
-                    fieldType = 'id';
+                if (additionalData.fieldType) {
+                    fieldType = additionalData.fieldType;
+                } else {
+                    fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                    if (field === 'id') {
+                        fieldType = 'id';
+                    }
                 }
 
                 if (fieldType) {
@@ -196,9 +199,24 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
         },
 
         actionAddCurrentUser: function () {
-            console.log('actionAddCurrentUser')
+            const field = '__currentUser';
+            const fieldType = 'link';
 
-            // this.addField(field);
+            const type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'typeList'])[0];
+
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
+
+            this.addItemContainer(i);
+            this.addViewDataListItem(i, key);
+
+            this.createItemView(i, key, {
+                data: {
+                    field: field,
+                    fieldType: fieldType,
+                    type: type
+                }
+            });
         },
 
         addField: function (field) {

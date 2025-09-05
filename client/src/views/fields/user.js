@@ -36,6 +36,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
         searchTemplate: 'fields/user/search',
 
+        foreignScope: 'User',
+
         setupSearch: function () {
             Dep.prototype.setupSearch.call(this);
 
