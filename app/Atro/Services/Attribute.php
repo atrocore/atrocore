@@ -49,23 +49,59 @@ class Attribute extends Base
         return $attributesDefs;
     }
 
-    public function createAttributeValue(array $pseudoTransactionData): void
+    public function createAttributeValuesFromClassification(string $classificationId, string $entityName, string $entityId): void
+    {
+        $cas = $this->getEntityManager()->getRepository('ClassificationAttribute')
+            ->where([
+                'classificationId' => $classificationId
+            ])
+            ->find();
+
+        if (empty($cas[0])) {
+            return;
+        }
+
+        $res = false;
+
+        foreach ($cas as $ca) {
+            $data = $ca->get('data')?->default ?? new \stdClass();
+            $data = json_decode(json_encode($data), true);
+            $data['attributeId'] = $ca->get('attributeId');
+
+            $created = $this->createAttributeValue([
+                'entityName'      => $entityName,
+                'entityId'        => $entityId,
+                'data'            => $data,
+                'skipAfterCreate' => true
+            ]);
+
+            if (empty($res) && !empty($created)) {
+                $res = true;
+            }
+        }
+
+        if ($res) {
+            $this->afterCreateDeleteAttributeValue($entityName, $entityId);
+        }
+    }
+
+    public function createAttributeValue(array $pseudoTransactionData): bool
     {
         $entityName = $pseudoTransactionData['entityName'] ?? null;
         $entityId = $pseudoTransactionData['entityId'] ?? null;
         $data = $pseudoTransactionData['data'] ?? [];
 
         if (empty($entityName) || empty($entityId) || empty($data)) {
-            return;
+            return false;
         }
 
         if (!$this->getAcl()->check($entityName, 'createAttributeValue')) {
-            return;
+            return false;
         }
 
         $entity = $this->getEntityManager()->getRepository($entityName)->get($entityId);
         if (empty($entity)) {
-            return;
+            return false;
         }
 
         /** @var \Atro\Repositories\Attribute $attributeRepo */
@@ -73,13 +109,13 @@ class Attribute extends Base
 
         $attributes = $attributeRepo->getAttributesByIds([$data['attributeId']]);
         if (empty($attributes[0])) {
-            return;
+            return false;
         }
 
         $row = $attributes[0];
 
         if ($attributeRepo->hasAttributeValue($entityName, $entityId, $row['id'])) {
-            return;
+            return false;
         }
 
         /** @var AttributeFieldConverter $converter */
@@ -105,7 +141,11 @@ class Attribute extends Base
             }
         }
 
-        $this->afterCreateDeleteAttributeValue($entityName, $entityId);
+        if (empty($pseudoTransactionData['skipAfterCreate'])) {
+            $this->afterCreateDeleteAttributeValue($entityName, $entityId);
+        }
+
+        return true;
     }
 
     public function addAttributeValue(string $entityName, string $entityId, ?array $where, ?array $ids): bool
@@ -400,9 +440,9 @@ class Attribute extends Base
         parent::checkFieldsWithPattern($entity);
     }
 
-    protected function afterCreateDeleteAttributeValue(string $entityName, string $entityId): void
+    protected function afterCreateDeleteAttributeValue(string $entityName, string $entityId, bool $fromClassificationAttribute = false): void
     {
-        $event = new Event(['entityName' => $entityName, 'entityId' => $entityId]);
+        $event = new Event(['entityName' => $entityName, 'entityId' => $entityId, 'fromClassificationAttribute' => $fromClassificationAttribute]);;
         $this->dispatchEvent('afterCreateDeleteAttributeValue', $event);
     }
 }
