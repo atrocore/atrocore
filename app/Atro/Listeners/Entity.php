@@ -102,7 +102,7 @@ class Entity extends AbstractListener
         $relationName = $event->getArgument('relationName');
 
         if ($relationName === 'classifications') {
-            if (is_string($classification)){
+            if (is_string($classification)) {
                 $classification = $this->getEntityManager()->getRepository('Classification')->get($classification);
             }
             $this->deleteAttributeValuesFromRecord($entity, $classification);
@@ -175,27 +175,7 @@ class Entity extends AbstractListener
             return;
         }
 
-        $cas = $this->getEntityManager()->getRepository('ClassificationAttribute')
-            ->where([
-                'classificationId' => $entity->get('classificationId')
-            ])
-            ->find();
-
-        if (empty($cas[0])) {
-            return;
-        }
-
-        foreach ($cas as $ca) {
-            $data = $ca->get('data')?->default ?? new \stdClass();
-            $data = json_decode(json_encode($data), true);
-            $data['attributeId'] = $ca->get('attributeId');
-
-            $this->getService('Attribute')->createAttributeValue([
-                'entityName' => $entityName,
-                'entityId'   => $entity->get(lcfirst($entityName) . 'Id'),
-                'data'       => $data
-            ]);
-        }
+        $this->getService('Attribute')->createAttributeValuesFromClassification($entity->get('classificationId'), $entityName, $entity->get(lcfirst($entityName) . 'Id'));
     }
 
     protected function deleteAttributeValuesFromRecord(OrmEntity $entity, OrmEntity $classification): void
