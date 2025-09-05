@@ -17737,15 +17737,15 @@ span[data-img-src]::after {
 
 @media screen and (min-width: 768px) {
     .layout-editor-container {
-        display: none;
+        opacity: 0;
     }
 
     .layout-editor-container.open {
-        display: block !important;
+        opacity: 1;
     }
 
     table thead:hover .layout-editor-container {
-        display: block;
+        opacity: 1;
     }
 
     .panel-heading .layout-editor-container {
@@ -17753,20 +17753,20 @@ span[data-img-src]::after {
     }
 
     .panel-heading:hover .layout-editor-container {
-        display: block;
+        opacity: 1;
     }
 
     .sidebar .panel-group:hover .layout-editor-container {
-        display: block;
+        opacity: 1;
         z-index: auto;
     }
 
     .sidebar-header:hover .layout-editor-container {
-        display: block;
+        opacity: 1;
     }
 
     .anchor-nav-container .layout-editor-container {
-        display: block;
+        opacity: 1;
     }
 }
 
