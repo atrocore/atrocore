@@ -3026,9 +3026,9 @@ output {
 .form-control, .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown) {
     display: block;
     width: 100%;
-    padding: 6px 10px;
+    padding: 5px 10px;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 18px;
     color: #000;
     background-color: #fff;
     background-image: none;
@@ -3368,18 +3368,12 @@ textarea.input-lg, select[multiple].input-lg {
 
 .has-error .form-control,
 .has-error .input-group-btn > button.btn {
-    border-color: #a94442;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+    border-bottom-color: #a94442 !important;
 }
 
 .has-error .form-control:focus,
 .has-error .input-group-btn > button.btn:focus {
     border-color: #843534;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483
 }
 
 .has-error .input-group-addon {
@@ -7671,7 +7665,7 @@ button.close {
 }
 
 .selectize-dropdown-header {
-    padding: 6px 10px
+    padding: 5px 10px
 }
 
 .selectize-input.dropdown-active {
@@ -10483,7 +10477,7 @@ ul.dropdown-menu > li.checkbox:last-child {
 .cell > .field {
     overflow-wrap: break-word;
     word-wrap: break-word;
-    line-height: 16px;
+    line-height: 18px;
     transition: background-color .2s;
     min-height: 30px;
     display: flex;
@@ -13201,7 +13195,7 @@ input#sn-checkbox-open-in-new-window {
 #main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group:not([data-mode=edit]) div.field,
 #main main[data-mode=detail] + .right-side-view .row .cell:not([data-mode=edit]) .field,
 .modal-body .record > .detail .cell:not([data-mode=edit]) .field {
-    padding: 6px 10px;
+    padding: 5px 10px;
     border-bottom: 1px solid var(--secondary-border-color);
 }
 
