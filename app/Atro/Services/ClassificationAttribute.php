@@ -225,7 +225,10 @@ class ClassificationAttribute extends Base
                 'entity' => $entity,
             ];
 
-            $attribute = $attributes[$entity->get('attributeId')];
+            $attribute = $attributes[$entity->get('attributeId')] ?? null;
+            if (empty($attribute)) {
+                continue;
+            }
 
             $row['sortOrder'] = empty($attribute->get('sortOrder')) ? 0 : (int)$attribute->get('sortOrder');
 
