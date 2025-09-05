@@ -390,7 +390,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 this.listenTo(this, 'change', function () {
                     var attributes = this.fetch();
-                    this.model.set(attributes, {ui: true});
+                    this.model.set(attributes, { ui: true });
                 });
             }
         },
@@ -540,7 +540,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initClassificationFieldMarker: function () {
-            if (!this.model.get('attributesDefs')){
+            if (!this.model.get('attributesDefs')) {
                 return;
             }
 
@@ -696,7 +696,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $button.on('click', () => {
-                    recordView.actionDynamicAction({id: action.data.action_id})
+                    recordView.actionDynamicAction({ id: action.data.action_id })
                 });
             })
 
@@ -733,7 +733,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if (this.options?.params?.disableAttributeRemove){
+            if (this.options?.params?.disableAttributeRemove) {
                 return;
             }
 
@@ -1048,7 +1048,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 });
         },
 
-        onInlineEditSave(res, attrs, model){
+        onInlineEditSave(res, attrs, model) {
             if (res.inheritedFields !== undefined) {
                 attrs.inheritedFields = res.inheritedFields;
             }
@@ -1056,6 +1056,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             model.set(attrs);
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
+            if (res.isUpdatedByWorkflow) {
+                model._fetchAfterInlineEditClose = true;
+            }
 
             // this.trigger('after:save'); // ignored because saving needs to be silent
             // model.trigger('after:save'); // ignored because saving needs to be silent
@@ -1116,6 +1119,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.setMode('detail');
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
+                if (this.model._fetchAfterInlineEditClose && $('.inline-cancel-link').length === 0) {
+                    delete this.model._fetchAfterInlineEditClose
+                    this.model.fetch();
+                }
             }, this);
 
             if (!dontReset) {
@@ -1276,7 +1283,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         fetchToModel: function () {
-            this.model.set(this.fetch(), {silent: true});
+            this.model.set(this.fetch(), { silent: true });
         },
 
         fetch: function () {
