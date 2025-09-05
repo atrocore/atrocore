@@ -244,6 +244,8 @@ Espo.define('views/fields/array-extended', 'views/fields/array',
         },
 
         afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
             const arrayExtended = this;
 
             if (this.mode === 'edit') {
