@@ -63,7 +63,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                     params: {
                         mode: 'edit',
                         scope: this.scope,
-                        id: this.model.id,
+                        id: this.model.id || null,
                         permissions: {
                             canRead: this.getAcl().check(this.scope, 'read'),
                             canEdit: this.getAcl().check(this.scope, 'edit'),

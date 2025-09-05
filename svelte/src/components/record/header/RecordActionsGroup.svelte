@@ -72,12 +72,12 @@
 
     async function loadDynamicActions(): Promise<Record<string, any>[]> {
         let userData = UserData.get();
-        if (!userData || !id) {
+        if (!userData) {
             return [];
         }
 
         try {
-            const response = await fetch(`/api/v1/Action/${scope}/${id}/dynamicActions?type=record`, {
+            const response = await fetch(`/api/v1/Action/action/dynamicActions?type=record&scope=${scope}` + (id ? '&id=' + id : ''), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

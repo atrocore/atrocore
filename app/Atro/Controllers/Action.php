@@ -43,10 +43,10 @@ class Action extends Base
 
     public function actionDynamicActions($params, $data, $request)
     {
-        if (!$request->isGet() || empty($params['id']) || empty($params['scope'])) {
+        if (!$request->isGet() || empty($request->get('scope'))) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->getDynamicActions((string)$params['scope'], (string)$params['id'], (string)$request->get('type'), (string)$request->get('display'));
+        return $this->getRecordService()->getDynamicActions((string)$request->get('scope'), $request->get('id'), $request->get('type'), $request->get('display'));
     }
 }

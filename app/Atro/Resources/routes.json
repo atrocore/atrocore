@@ -786,19 +786,17 @@
     }
   },
   {
-    "route": "Action/:scope/:id/dynamicActions",
+    "route": "Action/action/dynamicActions",
     "method": "get",
     "params": {
       "controller": "Action",
-      "scope": ":scope",
-      "action": "dynamicActions",
-      "id": ":id"
+      "action": "dynamicActions"
     },
     "description": "Get dynamic actions available for a record",
     "requestParameters": [
       {
         "name": "scope",
-        "in": "path",
+        "in": "query",
         "required": true,
         "schema": {
           "type": "string",
@@ -807,11 +805,29 @@
       },
       {
         "name": "id",
-        "in": "path",
-        "required": true,
+        "in": "query",
+        "required": false,
         "schema": {
           "type": "string",
           "example": "1"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "record"
+        }
+      },
+      {
+        "name": "display",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "single"
         }
       }
     ],
