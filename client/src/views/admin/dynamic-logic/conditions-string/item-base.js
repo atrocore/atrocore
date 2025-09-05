@@ -63,6 +63,15 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
             this.wait(true);
 
             this.getModelFactory().create(this.scope, function (model) {
+                model.defs.fields.__currentUser = {
+                    type: "link",
+                    view: "views/fields/user-with-avatar"
+                };
+                model.defs.links.__currentUser = {
+                    entity: "User",
+                    type: "belongsTo"
+                };
+
                 this.model = model;
 
                 this.populateValues();
@@ -87,7 +96,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-base', 'view', fun
         createValueFieldView: function () {
             var key = this.getValueViewKey();
 
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || this.model.getFieldParam(this.field, 'type') || 'base';
             var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
 
             this.createView('value', viewName, {
