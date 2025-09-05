@@ -103,7 +103,17 @@
       "tooltip": true
     },
     "fieldValueInheritance": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "disableHierarchy"
+            }
+          ]
+        }
+      }
     },
     "unInheritedFields": {
       "type": "array",
@@ -112,7 +122,17 @@
     },
     "relationInheritance": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "disableHierarchy"
+            }
+          ]
+        }
+      }
     },
     "disableHierarchy": {
       "type": "bool",
