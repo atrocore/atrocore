@@ -33,7 +33,7 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
+    "sortBy": "name",
     "asc": false
   },
   "indexes": {
