@@ -811,6 +811,24 @@
           "type": "string",
           "example": "1"
         }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "record"
+        }
+      },
+      {
+        "name": "display",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "single"
+        }
       }
     ],
     "response": {
