@@ -124,7 +124,6 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 if (fieldType) {
                     viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'view']);
                 }
-
             }
 
             if (!viewName) return;
