@@ -22,7 +22,7 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\Core\Utils\Util;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\IEntity;
 use Espo\Services\RecordService;
@@ -276,34 +276,68 @@ class Record extends RecordService
     public function getTreeItems(string $link, string $scope, array $params): array
     {
         if ($link !== '_self') {
-            if (in_array($link, ['createdBy', 'modifiedBy']) || !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $link, 'unitIdField']))) {
-                $params['queryCallbacks'] = [
-                    function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($link, $scope) {
-                        $ta = $mapper->getQueryConverter()->getMainTableAlias();
-                        $column = $mapper->toDb($link . 'Id');
+            $foreignLink = '';
+            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
+                if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
+                    $foreignLink = $linkName;
+                    break;
+                }
+            }
 
-                        $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
-                            ->andWhere("et.$column is not null")
-                            ->andWhere("et.deleted = :false")
-                            ->setParameter('false', false, ParameterType::BOOLEAN);
-                    }
-                ];
-                $params['distinct'] = true;
-            } else {
-                $foreignLink = '';
-                foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-                    if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
-                        $foreignLink = $linkName;
-                        break;
-                    }
-                }
-                if (empty($foreignLink)) {
-                    throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
-                }
+            if (!empty($foreignLink)) {
                 $params['where'][] = [
                     'type'      => 'isLinked',
                     'attribute' => $foreignLink,
                 ];
+            } else {
+                $field = $link . 'Id';
+                if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
+                    $column = Util::toUnderScore($field);
+                    $ids = $this->getEntityManager()->getConnection()
+                        ->createQueryBuilder()
+                        ->select($column)
+                        ->from(Util::toUnderScore($scope), 'e')
+                        ->where('deleted = :false')
+                        ->andWhere("$column is not null")
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->distinct()
+                        ->fetchFirstColumn();
+
+                    $params['where'][] = [
+                        'type'      => 'in',
+                        'attribute' => 'id',
+                        'value'     => $ids,
+                    ];
+                } else if ($link === 'teams') {
+                    $params['queryCallbacks'] = [
+                        function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($scope) {
+                            $ta = $mapper->getQueryConverter()->getMainTableAlias();
+
+                            $qb->innerJoin($ta, 'entity_team', 'et', "$ta.id = et.team_id")
+                                ->innerJoin('et', $mapper->toDb($scope), 'ts', "et.entity_id = ts.id")
+                                ->andWhere("et.entity_id is not null")
+                                ->andWhere("et.deleted = :false")
+                                ->andWhere("ts.deleted = :false")
+                                ->setParameter('false', false, ParameterType::BOOLEAN);
+                        }
+                    ];
+                    $params['distinct'] = true;
+                } else if (!empty($this->getEntityManager()->getOrmMetadata()->get($scope, 'fields')[$field])) {
+                    $params['queryCallbacks'] = [
+                        function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($field, $scope) {
+                            $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                            $column = $mapper->toDb($field);
+
+                            $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
+                                ->andWhere("et.$column is not null")
+                                ->andWhere("et.deleted = :false")
+                                ->setParameter('false', false, ParameterType::BOOLEAN);
+                        }
+                    ];
+                    $params['distinct'] = true;
+                } else {
+                    throw new BadRequest("Field $field not found on $scope and Foreign link not found for ($scope: $link) on " . $this->entityName);
+                }
             }
         }
 
