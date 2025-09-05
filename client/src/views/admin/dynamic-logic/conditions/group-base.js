@@ -61,6 +61,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             },
             'click > div.group-bottom [data-action="addNot"]': function (e) {
                 this.actionAddGroup('not');
+            },
+            'click > div.group-bottom [data-action="addCurrentUser"]': function (e) {
+                this.actionAddCurrentUser();
             }
         },
 
@@ -109,16 +112,18 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             if (~['and', 'or', 'not'].indexOf(type)) {
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
             } else {
-                fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-
-                if (field === 'id') {
-                    fieldType = 'id';
+                if (additionalData.field === '__currentUser') {
+                    fieldType = 'link';
+                } else {
+                    fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                    if (field === 'id') {
+                        fieldType = 'id';
+                    }
                 }
 
                 if (fieldType) {
                     viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'view']);
                 }
-
             }
 
             if (!viewName) return;
@@ -190,6 +195,24 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                     view.close();
                 }, this);
             }, this);
+        },
+
+        actionAddCurrentUser: function () {
+            const field = '__currentUser';
+            const type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', 'link', 'typeList'])[0];
+
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
+
+            this.addItemContainer(i);
+            this.addViewDataListItem(i, key);
+
+            this.createItemView(i, key, {
+                data: {
+                    field: field,
+                    type: type
+                }
+            });
         },
 
         addField: function (field) {

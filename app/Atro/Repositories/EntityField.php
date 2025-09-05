@@ -551,7 +551,7 @@ class EntityField extends ReferenceData
         }
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
-            $conditionalProperties['visible'] = $entity->get('conditionalReadOnly');
+            $conditionalProperties['readOnly'] = $entity->get('conditionalReadOnly');
             $conditionalPropertiesChanged = true;
         }
 
