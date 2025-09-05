@@ -84,7 +84,8 @@ class Hierarchy extends Base
             $primarySortBy = 'sort_order';
             $sortOrder = (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
         }
-        $secondarySortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+        $secondarySortBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy']);
+        $secondarySortBy = Util::toUnderScore(!empty($secondarySortBy) ? $secondarySortBy : 'name');
 
         if (Converter::isPgSQL($this->getConnection())) {
             if (empty($parentId)) {

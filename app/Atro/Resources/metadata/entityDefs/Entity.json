@@ -110,6 +110,11 @@
             {
               "type": "isFalse",
               "attribute": "disableHierarchy"
+            },
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
             }
           ]
         }
@@ -129,6 +134,11 @@
             {
               "type": "isFalse",
               "attribute": "disableHierarchy"
+            },
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
             }
           ]
         }
