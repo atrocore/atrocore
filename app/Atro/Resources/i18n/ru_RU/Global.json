@@ -412,7 +412,6 @@
     "sortOrder": "Порядок сортировки",
     "parents": "Родительские записи",
     "assignedAccounts": "Контрагенты",
-    "prohibitedEmptyValue": "Запретить пустые значения",
     "name": "Название",
     "firstName": "Имя",
     "lastName": "Фамилия",

@@ -224,19 +224,6 @@
           ]
         }
       },
-      "prohibitedEmptyValue": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "extensibleEnum"
-              ]
-            }
-          ]
-        }
-      },
       "amountOfDigitsAfterComma": {
         "visible": {
           "conditionGroup": [

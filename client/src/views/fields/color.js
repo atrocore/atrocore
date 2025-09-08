@@ -63,14 +63,6 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored
             if (input) {
                 let options = {zIndex: 2020, required: false};
 
-                if (this.model && this.model.name) {
-                    const defs = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name]) || [];
-
-                    if (defs['prohibitedEmptyValue']) {
-                        options.required = true;
-                    }
-                }
-
                 let picker = new jscolor(input, options);
 
                 jscolor.init();

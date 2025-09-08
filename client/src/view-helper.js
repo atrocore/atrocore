@@ -334,7 +334,7 @@ Espo.define('view-helper', [], function () {
                     return (options.hash.translatedGroups || {})[name] || name
                 }
 
-                if (!options.hash.prohibitedEmptyValue) {
+                if (!options.hash.required) {
                     html += '<option value="" ' + (value ? '' : 'selected') + '></option>'
                 }
 

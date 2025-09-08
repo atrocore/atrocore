@@ -28,7 +28,6 @@
     },
     "align": {
       "type": "enum",
-      "prohibitedEmptyValue": false,
       "options": [
         "left",
         "right",

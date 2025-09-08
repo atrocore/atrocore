@@ -20,7 +20,7 @@ Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (D
                             model.set('response', '  ');
 
                             this.createView('type', 'views/fields/enum', {
-                                prohibitedEmptyValue: true,
+                                required: true,
                                 model: model,
                                 el: `#api-request-content .field[data-name="type"]`,
                                 defs: {

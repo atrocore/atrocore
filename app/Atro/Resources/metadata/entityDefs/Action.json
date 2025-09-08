@@ -12,7 +12,6 @@
       "type": "enum",
       "view": "views/action/fields/type",
       "required": true,
-      "prohibitedEmptyValue": false,
       "options": [],
       "conditionalProperties": {
         "readOnly": {
@@ -49,7 +48,6 @@
     },
     "executeAs": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "default": "system",
       "options": [
         "system",
@@ -214,7 +212,6 @@
     },
     "usage": {
       "type": "enum",
-      "prohibitedEmptyValue": false,
       "inlineEditDisabled": true,
       "options": [
         "entity",

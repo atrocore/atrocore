@@ -214,12 +214,6 @@
       ],
       [
         {
-          "name": "prohibitedEmptyValue"
-        },
-        false
-      ],
-      [
-        {
           "name": "useNumericFormat"
         },
         {

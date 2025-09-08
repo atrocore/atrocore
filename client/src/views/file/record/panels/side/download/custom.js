@@ -77,7 +77,9 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                         }
                     },
                     mode: 'edit',
-                    prohibitedEmptyValue: true
+                    params:{
+                        required: true
+                    }
                 });
 
                 this.createView("format", "views/fields/enum", {
@@ -95,7 +97,9 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                         }
                     },
                     mode: "edit",
-                    prohibitedEmptyValue: true
+                    params:{
+                        required: true
+                    }
                 });
 
                 this.createView("quality", "views/fields/int", {

@@ -13,7 +13,7 @@ Espo.define('views/admin/field-manager/fields/foreign-name', 'views/fields/enum'
 
         return Dep.extend({
 
-            prohibitedEmptyValue: true,
+            required: true,
 
             setup() {
                 Dep.prototype.setup.call(this);

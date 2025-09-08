@@ -636,7 +636,6 @@
     "sortOrder": "Sortierreihenfolge",
     "parents": "Übergeordnete Datensätze",
     "assignedAccounts": "Accounts",
-    "prohibitedEmptyValue": "Leeren Wert deaktivieren",
     "amount": "Anzahl",
     "measure": "Maß",
     "oneGeoType": "OneGeo Typ",

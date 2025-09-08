@@ -61,7 +61,9 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             }, this);
 
             this.createView('exportFeed', 'views/fields/enum', {
-                prohibitedEmptyValue: true,
+                params:{
+                    required: true
+                },
                 model: this.model,
                 el: `${this.options.el} .field[data-name="exportFeed"]`,
                 defs: {
@@ -77,7 +79,9 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             this.model.set('fileType','csv')
 
             this.createView('fileType', 'views/fields/enum', {
-                prohibitedEmptyValue: true,
+                params:{
+                    required: true
+                },
                 model: this.model,
                 el: `${this.options.el} .field[data-name="fileType"]`,
                 defs: {
@@ -103,7 +107,9 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
             });
 
             this.createView('fieldList', 'views/export/fields/field-list', {
-                prohibitedEmptyValue: true,
+                params:{
+                    required: true
+                },
                 model: this.model,
                 el: `${this.options.el} .field[data-name="fieldList"]`,
                 scope: this.scope,

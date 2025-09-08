@@ -34,7 +34,6 @@
     "extensibleEnum": "Liste",
     "hierarchySortOrder": "Hiérarchie Ordre de tri",
     "parents": "Fiche(s) parent(s)",
-    "prohibitedEmptyValue": "Désactiver la valeur vide",
     "addressCity": "Ville",
     "addressStreet": "Rue",
     "addressCountry": "Pays",

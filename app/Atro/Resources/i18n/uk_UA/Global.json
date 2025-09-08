@@ -576,7 +576,6 @@
     "sortOrder": "Порядок сортування",
     "parents": "Батьківські записи",
     "assignedAccounts": "Контрагенти",
-    "prohibitedEmptyValue": "Заборонити порожні значення",
     "name": "Назва",
     "firstName": "Ім'я",
     "lastName": "Прізвище",
