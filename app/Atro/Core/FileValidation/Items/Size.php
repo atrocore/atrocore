@@ -21,22 +21,32 @@ class Size extends Base
 {
     public function validate(File $file): bool
     {
-        $content  = $file->getContents();
-        if(!empty($content)) {
+        $content = $file->getContents();
+        if (!empty($content)) {
             $imageSize = (strlen($content) / 1024);
-        }else{
+        } else {
             $imageSize = $file->get('fileSize') / 1024;
         }
 
-        if ($imageSize >= $this->params['minSize'] && $imageSize <= $this->params['maxSize']) {
+        if ((empty($this->params['minSize']) || $imageSize >= $this->params['minSize']) &&
+            (empty($this->params['maxSize']) || $imageSize <= $this->params['maxSize'])) {
             return true;
         }
 
         return false;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->params['minSize'], $this->params['maxSize']));
+        if (!empty($this->params['minSize']) && !empty($this->params['maxSize'])) {
+            throw new BadRequest(sprintf($this->exception('imageSizeValidationFailed'), $this->params['minSize'], $this->params['maxSize']));
+        } elseif (!empty($this->params['minSize'])) {
+            throw new BadRequest(sprintf($this->exception('imageMinSizeValidationFailed'), $this->params['minSize']));
+        } else {
+            throw new BadRequest(sprintf($this->exception('imageMaxSizeValidationFailed'), $this->params['maxSize']));
+        }
     }
 }

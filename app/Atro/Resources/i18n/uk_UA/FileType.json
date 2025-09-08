@@ -1,7 +1,7 @@
 {
   "fields": {
     "files": "Файли",
-    "aspectRatio": "Seitenverhältnis",
+    "aspectRatio": "Співвідношення сторін",
     "minSize": "Мінімальний розмір, Кб",
     "maxSize": "Максимальний розмір, Кб",
     "minWidth": "Мінімальна ширина, px",

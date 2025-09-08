@@ -23,11 +23,20 @@ class Scale extends Base
     {
         list ($width, $height) = getimagesizefromstring($file->getContents());
 
-        return $width > $this->params['minWidth'] && $height > $this->params['minHeight'];
+        return (empty($this->params['minWidth']) || $width > $this->params['minWidth']) && (empty($this->params['minHeight']) || $height > $this->params['minHeight']);
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function onValidateFail()
     {
-        throw new BadRequest(sprintf($this->exception('imageScaleValidationFailed'), $this->params['minWidth'], $this->params['minHeight']));
+        if (!empty($this->params['minWidth']) && !empty($this->params['minHeight'])) {
+            throw new BadRequest(sprintf($this->exception('imageScaleValidationFailed'), $this->params['minWidth'], $this->params['minHeight']));
+        } elseif (!empty($this->params['minWidth'])) {
+            throw new BadRequest(sprintf($this->exception('imageScaleWidthValidationFailed'), $this->params['minWidth']));
+        } else {
+            throw new BadRequest(sprintf($this->exception('imageScaleHeightValidationFailed'), $this->params['minHeight']));
+        }
     }
 }
