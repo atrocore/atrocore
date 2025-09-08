@@ -435,6 +435,10 @@ class Metadata extends AbstractListener
                     'focusField' => $action['focus_field'],
                 ]);
             }
+
+            if ($action['usage'] === 'onRecordLoad') {
+                $data['clientDefs'][$action['source_entity']]['dynamicOnRecordLoadActions'][] = $params;
+            }
         }
     }
 

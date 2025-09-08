@@ -1350,21 +1350,41 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             this.listenTo(this.model, 'focusField', field => {
                 dynamicOnFieldFocusActions.forEach(item => {
                     if (item.focusField === field) {
-                        if (item.type) {
-                            const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(item.type);
-                            if (typeof this[method] == 'function') {
-                                this[method].call(this, item);
-                                return
-                            }
-                        }
-
-                        this.executeActionRequest({
-                            actionId: item.id,
-                            entityId: this.model.get('id')
-                        })
+                        this.executeDynamicAction(item);
                     }
                 })
             });
+
+            const dynamicOnRecordLoadActions = this.getMetadata().get(`clientDefs.${this.model.name}.dynamicOnRecordLoadActions`) || [];
+            this.listenTo(this, 'after:render after:change-mode', () => {
+                if (this.mode === 'edit') {
+                    dynamicOnRecordLoadActions.forEach(item => {
+                        this.executeDynamicAction(item);
+                    });
+                }
+            });
+            this.listenTo(this.model, 'after:change-mode', (type) => {
+                if (this.mode === 'edit') {
+                    dynamicOnRecordLoadActions.forEach(item => {
+                        this.executeDynamicAction(item);
+                    });
+                }
+            });
+        },
+
+        executeDynamicAction(item) {
+            if (item.type) {
+                const method = 'actionDynamicAction' + Espo.Utils.upperCaseFirst(item.type);
+                if (typeof this[method] == 'function') {
+                    this[method].call(this, item);
+                    return
+                }
+            }
+
+            this.executeActionRequest({
+                actionId: item.id,
+                entityId: this.model.get('id')
+            })
         },
 
         highlightRequired() {
