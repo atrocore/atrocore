@@ -352,7 +352,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 entityId: this.model.get('id'),
                 actionType: "suggestingValue",
                 payload: {
-                    uiRecord: this.model.attributes
+                    uiRecord: this.model.attributes,
+                    uiRecordFromName: this.model.attributes?._entityName || null,
+                    uiRecordFrom: this.model.attributes?._entityFrom || null,
                 }
             }).success(res => {
                 Espo.Ui.notify(false);

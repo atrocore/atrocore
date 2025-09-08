@@ -83,8 +83,10 @@ abstract class AbstractAction implements TypeInterface
                 'importJobId'     => $this->container->get('memoryStorage')->get('importJobId')
             ];
 
-            if (!empty($input->uiRecord)) {
-                $templateData['uiRecord'] = $input->uiRecord;
+            foreach (['uiRecord', 'uiRecordFrom', 'uiRecordFromName'] as $key) {
+                if (!empty($input->$key)) {
+                    $templateData[$key] = $input->$key;
+                }
             }
 
             if (
