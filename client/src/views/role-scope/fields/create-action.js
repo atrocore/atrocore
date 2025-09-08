@@ -27,7 +27,7 @@ Espo.define('views/role-scope/fields/create-action', 'views/fields/enum', Dep =>
 
             if (['detail', 'edit'].includes(this.mode)) {
                 this.$el.parent().hide();
-                if (aclActionList.includes('create')) {
+                if (aclActionList.includes('create') && this.model.get('hasAccess')) {
                     this.$el.parent().show();
                 }
             }

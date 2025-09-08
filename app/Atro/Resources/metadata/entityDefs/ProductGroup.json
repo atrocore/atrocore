@@ -35,7 +35,6 @@
     },
     "itemType": {
       "type": "extensibleEnum",
-      "prohibitedEmptyValue": false,
       "dropdown": true,
       "extensibleEnumId": "product_group_item_type"
     },

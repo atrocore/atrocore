@@ -7,7 +7,7 @@
       },
       "autorefreshInterval": {
         "type": "enumFloat",
-        "prohibitedEmptyValue": true,
+        "required": true,
         "options": [
           0,
           0.5,
@@ -19,7 +19,7 @@
       },
       "displayRecords": {
         "type": "enumInt",
-        "prohibitedEmptyValue": true,
+        "required": true,
         "options": [
           3,
           4,
@@ -41,12 +41,12 @@
       },
       "sortBy": {
         "type": "enum",
-        "prohibitedEmptyValue": true,
+        "required": true,
         "view": "views/dashlets/fields/records/sort-by"
       },
       "sortDirection": {
         "type": "enum",
-        "prohibitedEmptyValue": true,
+        "required": true,
         "view": "views/dashlets/fields/records/sort-direction",
         "options": [
           "asc",

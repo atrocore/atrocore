@@ -58,7 +58,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                     name: 'emailTo'
                 },
                 mode: 'edit',
-                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => view.render());
 
@@ -71,7 +70,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                     name: 'emailCc'
                 },
                 mode: 'edit',
-                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => view.render());
 
@@ -84,7 +82,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                     name: 'emailBcc'
                 },
                 mode: 'edit',
-                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => view.render());
 
@@ -97,7 +94,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                     name: 'subject'
                 },
                 mode: 'edit',
-                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => view.render());
 
@@ -110,7 +106,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                     name: 'body'
                 },
                 mode: 'edit',
-                prohibitedEmptyValue: true,
                 inlineEditDisabled: true
             }, view => view.render());
 
@@ -125,7 +120,6 @@ Espo.define('views/modals/send-email', 'views/modal',
                         name: 'attachments'
                     },
                     mode: 'edit',
-                    prohibitedEmptyValue: true,
                     inlineEditDisabled: true
                 }, view => view.render());
             }

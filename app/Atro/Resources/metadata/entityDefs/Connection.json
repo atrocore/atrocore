@@ -3,7 +3,6 @@
     "type": {
       "type": "enum",
       "required": true,
-      "prohibitedEmptyValue": true,
       "options": [
         "atrocore",
         "pdoSql",
@@ -99,11 +98,36 @@
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "prohibitedEmptyValue": true,
       "options": [
         "client_credentials"
       ],
-      "default": "client_credentials"
+      "default": "client_credentials",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2",
+                "otto"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2",
+                "otto"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthUrl": {
       "type": "varchar",
@@ -364,7 +388,6 @@
     "server": {
       "type": "enum",
       "required": false,
-      "prohibitedEmptyValue": true,
       "notStorable": true,
       "dataField": true,
       "options": [

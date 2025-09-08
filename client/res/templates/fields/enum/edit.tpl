@@ -2,7 +2,7 @@
     <option value=""></option>
     {{#if hasGroups }}
         {{groupedOptions groupOptions value scope=scope field=name translatedGroups=translatedGroups
-                         prohibitedEmptyValue=prohibitedEmptyValue translatedOptions=translatedOptions}}
+                         required=required translatedOptions=translatedOptions}}
     {{ else }}
         {{options params.options value scope=scope field=name translatedOptions=translatedOptions}}
     {{/if}}

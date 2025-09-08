@@ -16,59 +16,5 @@
       "rowActionsView": "views/record/row-actions/relationship-no-unlink",
       "view": "views/role-scope/record/panels/attributes"
     }
-  },
-  "dynamicLogic": {
-    "fields": {
-      "createAction": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
-        }
-      },
-      "readAction": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
-        }
-      },
-      "editAction": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
-        }
-      },
-      "deleteAction": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
-        }
-      },
-      "streamAction": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
-        }
-      }
-    }
   }
 }

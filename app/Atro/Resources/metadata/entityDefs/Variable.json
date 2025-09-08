@@ -6,7 +6,6 @@
     },
     "type": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "default": "text",
       "options": [

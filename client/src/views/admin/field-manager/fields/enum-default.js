@@ -33,7 +33,7 @@ Espo.define('views/admin/field-manager/fields/enum-default', 'views/fields/enum'
         },
 
         validate() {
-            if (this.model.get('prohibitedEmptyValue') && this.model.get('default') === '') {
+            if (this.model.get('required') && this.model.get('default') === '') {
                 this.showValidationMessage(this.translate('defaultEnumValueCannotBeEmpty', 'messages'));
                 return true;
             }

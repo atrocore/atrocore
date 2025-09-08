@@ -101,7 +101,9 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     },
                     mode: 'edit',
                     inlineEditDisabled: true,
-                    prohibitedEmptyValue: true
+                    params:{
+                        required: true
+                    }
                 });
 
                 this.createView('viewType', 'views/layout/fields/view-type', {
@@ -114,7 +116,9 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     },
                     mode: 'edit',
                     inlineEditDisabled: true,
-                    prohibitedEmptyValue: true
+                    params:{
+                        required: true
+                    }
                 });
 
                 this.createView('relatedEntity', 'views/layout/fields/related-entity', {
@@ -125,8 +129,7 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     defs: {
                         name: 'relatedEntity'
                     },
-                    mode: 'edit',
-                    inlineEditDisabled: true
+                    mode: 'edit'
                 });
 
                 this.createView('layoutProfile', 'views/layout/fields/layout-profile-dropdown', {
@@ -139,7 +142,9 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                     },
                     mode: 'edit',
                     inlineEditDisabled: true,
-                    prohibitedEmptyValue: true
+                    params:{
+                        required: true
+                    }
                 })
             })
         },

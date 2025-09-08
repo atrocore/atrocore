@@ -12,7 +12,6 @@
     "isMultilang": "Multilingual",
     "fileType": "File Type",
     "pattern": "Regex Pattern",
-    "prohibitedEmptyValue": "Disable empty value",
     "measure": "Measure",
     "defaultUnit": "Default Unit",
     "defaultDate": "Default Date",

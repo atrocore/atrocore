@@ -25,8 +25,10 @@ Espo.define('views/role-scope/fields/create-attribute-value-action', 'views/fiel
 
             if (['detail', 'edit'].includes(this.mode)) {
                 this.$el.parent().hide();
+                this.setNotRequired()
                 if (this.getMetadata().get(`scopes.${this.model.get('name')}.hasAttribute`) && this.model.get('hasAccess')) {
                     this.$el.parent().show();
+                    this.setRequired()
                 }
             }
         },

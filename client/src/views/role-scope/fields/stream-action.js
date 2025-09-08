@@ -29,7 +29,7 @@ Espo.define('views/role-scope/fields/stream-action', 'views/fields/enum', Dep =>
 
             if (['detail', 'edit'].includes(this.mode)) {
                 this.$el.parent().hide();
-                if (aclActionList.includes('stream') && !this.getMetadata().get(`scopes.${scope}.streamDisabled`)) {
+                if (aclActionList.includes('stream') && !this.getMetadata().get(`scopes.${scope}.streamDisabled`) && this.model.get('hasAccess')) {
                     this.$el.parent().show();
                 }
             }

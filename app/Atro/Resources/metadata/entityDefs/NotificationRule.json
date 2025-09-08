@@ -19,7 +19,6 @@
     },
     "occurrence": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "options": [
         "creation",

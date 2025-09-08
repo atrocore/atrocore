@@ -50,7 +50,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
         searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
 
-        prohibitedEmptyValue: false,
+        required: false,
 
         prohibitedScopes: ['Settings', 'EntityManager'],
 
@@ -61,13 +61,20 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         hasColors: false,
 
         data: function () {
+            for (let i = 0; i < this.params.options.length; i++) {
+                let option = this.params.options[i];
+                if(option === "") {
+                    this.params.options[i] = "__empty__"
+                    this.translatedOptions["__empty__"] =  ' ';
+                }
+            }
+
             var data = Dep.prototype.data.call(this);
             data.translatedOptions = this.translatedOptions;
             data.hasGroups = this.hasGroups()
-
             if (this.hasGroups()) {
                 data.translatedGroups = this.translatedGroups
-                data.prohibitedEmptyValue = this.prohibitedEmptyValue
+                data.required = this.required
                 data.groupOptions = this.getActiveGroups()
             }
 
@@ -145,7 +152,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.translatedOptions = Espo.Utils.clone(this.model.defs.fields[this.name].translatedOptions);
             }
 
-
             this.setupTranslation();
 
             if (this.translatedOptions === null) {
@@ -180,27 +186,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.setOptionList(this.options.customOptionList);
             }
 
-            this.prohibitedEmptyValue = this.prohibitedEmptyValue || this.options.prohibitedEmptyValue || this.model.getFieldParam(this.name, 'prohibitedEmptyValue');
-
-            if (!this.prohibitedEmptyValue) {
-                const scopeIsAllowed = !this.prohibitedScopes.includes(this.model.name);
-                const isArray = Array.isArray((this.params || {}).options);
-
-                if (isArray && scopeIsAllowed && !this.params.options.includes('')) {
-                    this.params.options.unshift('');
-                    if (this.params.optionColors && this.params.optionColors.length > 0) {
-                        this.params.optionColors.unshift('');
-                    }
-
-                    if (Espo.Utils.isObject(this.translatedOptions)) {
-                        this.translatedOptions[''] = '';
-                    }
-
-                    if (this.model.isNew() && this.mode === 'edit' && !this.model.get('_duplicatingEntityId') && !this.params.default) {
-                        this.model.set({[this.name]: ''});
-                    }
-                }
-            }
+            this.required = this.required || this.options.required || this.model.getFieldParam(this.name, 'required');
 
             this.disableOptions(this.getDisableOptionsViaConditions());
             this.listenTo(this.model, 'change', () => {
@@ -245,6 +231,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 var translatedOptions = {};
                 if (this.params.options) {
                     this.params.options.forEach(function (item) {
+                        if(item === '__empty__') {
+                            translatedOptions[item] = ' '
+                        }
                         if (typeof translationObj === 'object' && item in translationObj) {
                             translatedOptions[item] = translationObj[item];
                         } else {
@@ -274,6 +263,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.params.options) {
                 let options = [];
                 this.params.options.forEach(option => {
+                    if(option === '') {
+                        options.push('__empty__')
+                    }
                     if (option.value) {
                         options.push(option.value);
                     } else {
@@ -470,7 +462,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 const plugins = [];
 
-                if (Selectize && !this.prohibitedEmptyValue && !this.isRequired()) {
+                if (Selectize && !this.required && !this.isRequired()) {
                     this.initSelectizeClearPlugin();
 
                     plugins.push('clear_button');
@@ -565,8 +557,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 value = value.replace(/~dbq~/g, '"');
             }
 
-            if(this.prohibitedEmptyValue && value === "") {
+            if(value === "") {
                 value = null;
+            }
+
+            if(value === "__empty__") {
+                value = "";
             }
 
             var data = {};
