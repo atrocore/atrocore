@@ -33,7 +33,7 @@ Espo.define('views/role-scope/fields/delete-action', 'views/fields/enum', Dep =>
 
             if (['detail', 'edit'].includes(this.mode)) {
                 this.$el.parent().hide();
-                if (aclActionList.includes('delete')) {
+                if (aclActionList.includes('delete') && this.model.get('hasAccess')) {
                     this.$el.parent().show();
                 }
             }
