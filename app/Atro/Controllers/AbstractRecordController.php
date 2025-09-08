@@ -679,6 +679,17 @@ abstract class AbstractRecordController extends AbstractController
         return $result;
     }
 
+    public function actionRenderScriptField($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $this->checkControllerAccess();
+
+        return $this->getRecordService()->renderScriptField($data)->getValueMap();
+    }
+
     protected function prepareWhereQuery($where)
     {
         if (is_string($where)) {

@@ -524,6 +524,38 @@ class Record extends RecordService
         return true;
     }
 
+    public function renderScriptField(\stdClass $data): Entity
+    {
+        if (!property_exists($data, 'field') || !property_exists($data, 'id')) {
+            throw new BadRequest();
+        }
+
+        $id = $data->id;
+        $field = $data->field;
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field]);
+
+        if(empty($fieldDefs)) {
+            throw new BadRequest();
+        }
+
+        $entity = $this->getEntity($id);
+
+        if(empty($entity)) {
+            throw new BadRequest();
+        }
+
+        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
+            $contents = $this->getInjection('twig')
+                ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
+
+            $entity->set($field, $contents);
+
+            $this->getEntityManager()->saveEntity($entity);
+        }
+
+       return $entity;
+    }
+
     protected function getMandatoryLinksToMerge(): array
     {
         return [];

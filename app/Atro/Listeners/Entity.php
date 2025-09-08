@@ -31,6 +31,8 @@ class Entity extends AbstractListener
         $entity = $event->getArgument('entity');
 
         $this->validateClassificationAttributesForRecord($entity);
+
+        $this->reRenderScriptFields($entity);
     }
 
     public function afterSave(Event $event): void
@@ -203,6 +205,20 @@ class Entity extends AbstractListener
         $attributeRepository = $this->getEntityManager()->getRepository('Attribute');
         foreach ($attributeIds as $attributeId) {
             $attributeRepository->removeAttributeValue($entityName, $entityId, $attributeId);
+        }
+    }
+
+    protected function reRenderScriptFields(OrmEntity $entity): void
+    {
+        foreach ($entity->entityDefs['fields'] ?? [] as $field => $fieldDefs) {
+            if(!empty($fieldDefs['attributeId'])) {
+                continue;
+            }
+            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
+                $contents = $this->getTwig()
+                    ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
+                $entity->set($field, $contents);
+            }
         }
     }
 }

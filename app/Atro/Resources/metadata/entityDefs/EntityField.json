@@ -324,6 +324,14 @@
         "datetime"
       ],
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {

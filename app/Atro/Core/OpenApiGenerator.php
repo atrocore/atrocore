@@ -726,6 +726,46 @@ class OpenApiGenerator
                         "responses"   => self::prepareResponses(['type' => 'boolean']),
                     ];
                 }
+
+                if($scopeName === 'Tata') {
+                    $test = "test";
+                }
+                $scriptFields = [];
+                foreach ($this->getMetadata()->get("entityDefs.$scopeName.fields") as $field => $fieldDef) {
+                    if($fieldDef['type'] == 'script') {
+                        $scriptFields[] = $field;
+                    }
+                }
+                if(!empty($scriptFields)) {
+                    $result['paths']["/{$scopeName}/action/renderScriptField"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Rerender the value of the script fields",
+                        "description" => "Rerender the value of the script fields",
+                        "operationId" => "renderScriptField",
+                        'security'    => [['Authorization-Token' => []]],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => [
+                                        "type"  => "object",
+                                        "properties" => [
+                                            "id" => [
+                                              "type" => "string",
+                                            ],
+                                            "field" => [
+                                                "type"    => "string",
+                                                "enum" => $scriptFields
+                                            ]
+                                        ],
+                                        "required" => ["id", "field"]
+                                    ]
+                                ]
+                            ],
+                        ],
+                        "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                    ];
+                }
             }
         }
 

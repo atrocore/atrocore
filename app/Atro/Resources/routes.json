@@ -974,5 +974,13 @@
       "controller": "Attribute",
       "action": "getAttributesIdsFilter"
     }
+  },
+  {
+    "route": "/:controller/action/renderScriptField",
+    "method": "post",
+    "params": {
+      "controller": ":controller",
+      "action": "renderScriptField"
+    }
   }
 ]
