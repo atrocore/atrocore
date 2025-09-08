@@ -181,7 +181,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         $res = $this->getConnection()->createQueryBuilder()
             ->select('id')
-            ->from($this->getMapper()->toDb($this->entityType))
+            ->from($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($this->entityType)))
             ->where('id=:id')
             ->setParameter('id', $id)
             ->fetchAssociative();
