@@ -26,7 +26,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
-                        <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
+                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
                     {{else}}
                     <li class="divider"></li>
                     {{/unless}}
@@ -41,7 +41,7 @@
             <li class="header">
                 <span>{{translate "Navigation Menu"}}</span>
                 {{#if canConfigureMenu}}
-                    <i data-action="configureMenu" class="ph ph-gear cursor-pointer"></i>
+                <i data-action="configureMenu" class="ph ph-gear cursor-pointer"></i>
                 {{/if}}
             </li>
             {{#each tabDefsList}}
@@ -65,9 +65,9 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown-{{id}}">
                     {{#each items}}
                     <li data-name="{{name}}" class="in-more tab">
-                        <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                        <a href="{{link}}" class="nav-link" style="{{#if color}} border-color: {{color}} ; {{/if}}   {{#unless ../../showIcon }} height: 35px; {{/unless}}">
                             <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
-                                 {{#if ../showIcon }}
+                                 {{#if ../../showIcon }}
                                     {{#if iconSrc}}
                                         <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                     {{else}}
@@ -78,7 +78,7 @@
                                 {{/if}}
                                 <span class="short-label-text">{{shortLabel}}</span>
                             </span>
-                            <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
+                            <span class="full-label" {{#unless ../../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
                         </a>
                         <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                             <i class="ph ph-plus"></i>
@@ -116,9 +116,9 @@
 
     <div class="collapse navbar-collapse navbar-body">
         {{#if globalSearch}}
-            <div class="nav navbar-nav navbar-form global-search-container">
-                {{{globalSearch}}}
-            </div>
+        <div class="nav navbar-nav navbar-form global-search-container">
+            {{{globalSearch}}}
+        </div>
         {{/if}}
         {{#if hasLocaleSwitcher}}
         <div class="locale-switcher-container"></div>
