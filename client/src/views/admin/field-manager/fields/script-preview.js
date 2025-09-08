@@ -36,7 +36,7 @@ Espo.define('views/admin/field-manager/fields/script-preview', 'views/fields/bas
         },
 
         preparePreview() {
-            if (this.model.get('type') !== 'script') {
+            if (this.model.isNew() || this.model.get('type') !== 'script') {
                 return;
             }
 

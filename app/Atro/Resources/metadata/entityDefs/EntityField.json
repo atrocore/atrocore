@@ -43,7 +43,38 @@
     },
     "isMultilang": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": ["varchar", "text", "wysiwyg", "markdown"]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "type",
+                      "value": "script"
+                    },
+                    {
+                      "type": "equals",
+                      "attribute": "outputType",
+                      "value": "text"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "duplicateIgnore": {
       "type": "bool",
