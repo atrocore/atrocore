@@ -37,7 +37,8 @@
       "entity": "Entity action button",
       "record": "Record action button",
       "field": "Field action button",
-      "onFieldFocus": "On field focus"
+      "onFieldFocus": "On field focus",
+      "onRecordLoad": "On record load"
     },
     "display": {
       "dropdown": "Dropdown",

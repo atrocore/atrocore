@@ -11,6 +11,13 @@
 Espo.define('views/action/fields/conditions-container', 'views/fields/conditions-container',
     Dep => Dep.extend({
 
+        twigVariables: [
+            "entity",
+            "uiRecord",
+            "uiRecordFromName",
+            "uiRecordFrom"
+        ],
+
         setup() {
             Dep.prototype.setup.call(this);
 

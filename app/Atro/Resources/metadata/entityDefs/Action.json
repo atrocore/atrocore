@@ -83,7 +83,8 @@
                 "entity",
                 "record",
                 "field",
-                "onFieldFocus"
+                "onFieldFocus",
+                "onRecordLoad"
               ]
             }
           ]
@@ -97,7 +98,8 @@
                 "entity",
                 "record",
                 "field",
-                "onFieldFocus"
+                "onFieldFocus",
+                "onRecordLoad"
               ]
             }
           ]
@@ -220,7 +222,8 @@
         "entity",
         "record",
         "field",
-        "onFieldFocus"
+        "onFieldFocus",
+        "onRecordLoad"
       ],
       "tooltip": true,
       "conditionalProperties": {
@@ -251,7 +254,8 @@
           },
           {
             "options": [
-              "onFieldFocus"
+              "onFieldFocus",
+              "onRecordLoad"
             ],
             "conditionGroup": [
               {
