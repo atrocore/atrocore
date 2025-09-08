@@ -103,6 +103,21 @@ class Attribute extends Base
         }
     }
 
+    public function getCompositeAttributeIdsFromClassification(string $classificationId): array
+    {
+        return $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('a.id')
+            ->from('classification_attribute', 'ca')
+            ->innerJoin('ca', 'attribute', 'a', 'a.id=ca.attribute_id')
+            ->where('ca.classification_id = :classification_id')
+            ->setParameter('classification_id', $classificationId)
+            ->andWhere('a.type = :type')
+            ->setParameter('type', 'composite')
+            ->andWhere('a.deleted = :false and ca.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchFirstColumn();
+    }
+
     public function clearCache(): void
     {
         $this->getInjection('dataManager')->setCacheData('attribute_product_fields', null);

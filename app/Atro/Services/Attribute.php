@@ -64,21 +64,7 @@ class Attribute extends Base
         $res = false;
 
         // check composite attributes
-        $ids = [];
-        foreach ($cas as $ca) {
-            $ids[] = $ca->get('attributeId');
-        }
-
-        $compositeIds = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->select('a.id')
-            ->from('attribute', 'a')
-            ->where('a.id in (:ids)')
-            ->setParameter('ids', $ids, Mapper::getParameterType($ids))
-            ->andWhere('a.type = :type')
-            ->setParameter('type', 'composite')
-            ->andWhere('a.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchFirstColumn();
+        $compositeIds = $this->getRepository()->getCompositeAttributeIdsFromClassification($classificationId);
 
         if (!empty($compositeIds)) {
             $this->addAttributeValue($entityName, $entityId, null, $compositeIds);
