@@ -43,7 +43,7 @@ Espo.define('views/admin/entity-manager/fields/un-inherited-fields', 'views/fiel
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('fieldValueInheritance') && !this.model.get('disableHierarchy')) {
+            if (this.model.get('type') === 'Hierarchy' && this.model.get('fieldValueInheritance') && !this.model.get('disableHierarchy')) {
                 this.$el.parent().show();
             } else {
                 this.$el.parent().hide();
