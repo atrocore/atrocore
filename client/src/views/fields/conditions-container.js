@@ -18,6 +18,10 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         inlineEditDisabled: true,
         entityTypeField: 'entityType',
 
+        twigVariables: [
+            "entity"
+        ],
+
         setup() {
             Dep.prototype.setup.call(this);
 
@@ -81,9 +85,7 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
                 } else if (this.getConditionType() === 'script') {
                     view = 'views/fields/script'
                     options.params.required = true;
-                    options.params.twigVariables = [
-                        "entity"
-                    ]
+                    options.params.twigVariables = this.twigVariables
                 }
 
                 this.show();

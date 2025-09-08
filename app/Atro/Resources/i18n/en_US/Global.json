@@ -1284,8 +1284,11 @@
     }
   },
   "twigVariables": {
-    "entity": "Entity to check",
-    "config": "Configuration object of the system"
+    "entity": "Entity (Record) object",
+    "config": "Configuration object of the system",
+    "uiRecord": "Record data array. Variable contains data that you have on frontend side.",
+    "uiRecordFromName": "The name of the entity from which you open current entity.",
+    "uiRecordFrom": "Record data array of the entity from which you open current entity."
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "You are going to replace one or more values with an empty value. Are you sure?"
