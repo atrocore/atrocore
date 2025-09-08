@@ -246,12 +246,12 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             });
 
             this.createView('selectedLink', 'views/fields/enum', {
-                required: true,
                 model: this.model,
                 el: `${this.options.el} .entity-container .field[data-name="selectedLink"]`,
                 defs: {
                     name: 'selectedLink',
                     params: {
+                        required: true,
                         options: options,
                         translatedOptions: translatedOptions
                     }
