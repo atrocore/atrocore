@@ -249,14 +249,14 @@ class EntityField extends ReferenceData
 
             if (!empty($type) && $type !== 'ReferenceData') {
                 $connection = $this->getEntityManager()->getConnection();
-                $tableName = $this->getEntityManager()->getMapper()->toDb($entityName);
-                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
+                $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
+                $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
+
                 $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
                     ->select($column, 'deleted')
-                    ->from($connection->quoteIdentifier($tableName))
+                    ->from($tableName)
                     ->groupBy($column, 'deleted')
                     ->having("count($column) > 1")
-                    ->distinct()
                     ->fetchFirstColumn();
 
                 if (!empty($values)) {
