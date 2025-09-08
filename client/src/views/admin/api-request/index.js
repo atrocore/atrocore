@@ -20,7 +20,6 @@ Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (D
                             model.set('response', '  ');
 
                             this.createView('type', 'views/fields/enum', {
-                                required: true,
                                 model: model,
                                 el: `#api-request-content .field[data-name="type"]`,
                                 defs: {
@@ -29,7 +28,8 @@ Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (D
                                         options: ['upsert'],
                                         translatedOptions: {
                                             upsert: this.getLanguage().translate('upsert', 'labels', 'Admin')
-                                        }
+                                        },
+                                        required: true,
                                     }
                                 },
                                 mode: 'edit'
