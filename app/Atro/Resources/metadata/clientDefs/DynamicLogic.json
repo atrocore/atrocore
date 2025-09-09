@@ -96,19 +96,32 @@
         },
         "varchar": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"]
         },
         "email": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
+            "valueType": "varchar"
         },
         "phone": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
+            "valueType": "varchar"
         },
         "text": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
+          "valueType": "varchar"
+        },
+        "wysiwyg": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
+            "valueType": "varchar"
+        },
+        "markdown": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
+            "valueType": "varchar"
         },
         "int": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
@@ -213,10 +226,10 @@
             "valueType": "field"
         },
         "contains": {
-            "valueType": "custom"
+            "valueType": "field"
         },
         "notContains": {
-            "valueType": "custom"
+            "valueType": "field"
         },
         "inPast": {
             "valueType": "empty"
