@@ -31,7 +31,7 @@ Espo.define('views/role-scope/fields/read-action', 'views/fields/enum', Dep => {
 
             const aclActionList = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionList`) || ['read'];
 
-            if (['detail', 'edit'].includes(this.mode)) {
+            if (['detail', 'edit'].includes(this.mode) && this.model.get('hasAccess')) {
                 this.$el.parent().hide();
                 if (aclActionList.includes('read')) {
                     this.$el.parent().show();

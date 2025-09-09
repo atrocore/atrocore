@@ -453,7 +453,6 @@
     "hierarchySortOrder": "Hierarchy Sort Order",
     "sortOrder": "Sort Order",
     "parents": "Parent Record(s)",
-    "prohibitedEmptyValue": "Disable Empty Value",
     "addressCity": "City",
     "addressStreet": "Street",
     "addressCountry": "Country",

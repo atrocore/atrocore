@@ -8,7 +8,6 @@
     "viewType": {
       "type": "enum",
       "required": true,
-      "prohibitedEmptyValue": false,
       "view": "views/layout/fields/view-type"
     },
     "relatedEntity": {

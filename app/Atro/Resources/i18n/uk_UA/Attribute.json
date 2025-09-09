@@ -11,7 +11,6 @@
     "isMultilang": "Багатомовність",
     "fileType": "Тип файлу",
     "pattern": "Regex Pattern",
-    "prohibitedEmptyValue": "Заборонити порожні значення",
     "measure": "Міра",
     "defaultUnit": "Одиниця виміру за замовченням",
     "defaultDate": "Дата за замовченням",

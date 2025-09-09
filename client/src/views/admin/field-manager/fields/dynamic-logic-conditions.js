@@ -79,7 +79,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
                 this.listenTo(view, 'apply', function (conditionGroup) {
                     this.conditionGroup = conditionGroup;
-
+                    this.model.trigger(`apply:${this.name}`);
                     this.createStringView();
                 }, this);
             }, this);

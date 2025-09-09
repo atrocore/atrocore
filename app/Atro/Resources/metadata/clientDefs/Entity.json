@@ -263,28 +263,6 @@
           ]
         }
       },
-      "fieldValueInheritance": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Hierarchy"
-            }
-          ]
-        }
-      },
-      "unInheritedFields": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Hierarchy"
-            }
-          ]
-        }
-      },
       "relationInheritance": {
         "visible": {
           "conditionGroup": [

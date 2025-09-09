@@ -129,7 +129,6 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
 
                 let customOptions = {}
                 if (attributeType === 'extensibleEnum' || attributeType === 'extensibleMultiEnum') {
-                    params.prohibitedEmptyValue = !!this.model.get('prohibitedEmptyValue');
                     params.extensibleEnumId = this.model.get('attributeExtensibleEnumId');
 
                     customOptions = {
@@ -256,7 +255,6 @@ Espo.define('views/classification-attribute/fields/value-container', 'views/fiel
                 this.model.set('attributeTrim', !!attr.trim);
                 this.model.set('countBytesInsteadOfCharacters', attr.countBytesInsteadOfCharacters);
                 this.model.set('useDisabledTextareaInViewMode', attr.useDisabledTextareaInViewMode);
-                this.model.set('prohibitedEmptyValue', !!attr.prohibitedEmptyValue);
                 this.model.set('attributeNotNull', !!attr.notNull);
                 this.reRender();
             });

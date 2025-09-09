@@ -63,6 +63,20 @@
     },
     "readOnly": {
       "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
       "tooltip": true
     },
     "customizable": {
@@ -112,12 +126,27 @@
     "defaultValueType": {
       "type": "enum",
       "required": false,
-      "prohibitedEmptyValue": true,
       "default": "basic",
       "options": [
         "basic",
         "script"
-      ]
+      ],
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "varchar",
+                "text",
+                "wysiwyg",
+                "markdown"
+              ]
+            }
+          ]
+        }
+      }
     },
     "defaultName": {
       "type": "varchar",
@@ -160,9 +189,6 @@
     "noEmptyString": {
       "type": "bool"
     },
-    "prohibitedEmptyValue": {
-      "type": "bool"
-    },
     "useNumericFormat": {
       "type": "bool"
     },
@@ -202,7 +228,6 @@
     "previewSize": {
       "type": "enum",
       "required": false,
-      "prohibitedEmptyValue": false,
       "default": "small",
       "options": [
         "small",
@@ -278,7 +303,6 @@
     "outputType": {
       "type": "enum",
       "default": "text",
-      "prohibitedEmptyValue": true,
       "options": [
         "text",
         "int",
@@ -286,7 +310,18 @@
         "bool",
         "date",
         "datetime"
-      ]
+      ],
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "script"
+            }
+          ]
+        }
+      }
     },
     "preview": {
       "type": "text",
@@ -375,6 +410,24 @@
       }
     },
     "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {

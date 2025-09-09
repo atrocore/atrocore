@@ -14,15 +14,15 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "unique",
       "type": "bool"
     },
     {
       "name": "index",
-      "type": "bool"
-    },
-    {
-      "name": "prohibitedEmptyValue",
       "type": "bool"
     },
     {

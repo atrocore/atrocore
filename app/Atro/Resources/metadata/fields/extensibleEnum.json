@@ -10,9 +10,8 @@
       "type": "bool"
     },
     {
-      "name": "prohibitedEmptyValue",
-      "type": "bool",
-      "default": false
+      "name": "protected",
+      "type": "bool"
     },
     {
       "name": "dropdown",

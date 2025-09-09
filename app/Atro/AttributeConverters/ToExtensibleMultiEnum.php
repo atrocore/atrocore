@@ -31,7 +31,6 @@ class ToExtensibleMultiEnum implements AttributeConverterInterface
 
     public function convert(Entity $attribute): void
     {
-        $attribute->set('prohibitedEmptyValue', false);
 
         $tableName = Util::toUnderScore(lcfirst($attribute->get('entityId')));
 

@@ -18,7 +18,6 @@
       "type": "extensibleEnum",
       "extensibleEnumId": "addressType",
       "required": true,
-      "prohibitedEmptyValue": true,
       "notNull": true,
       "dropdown": true
     },
