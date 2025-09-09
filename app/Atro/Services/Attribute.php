@@ -63,7 +63,19 @@ class Attribute extends Base
 
         $res = false;
 
+        // check composite attributes
+        $compositeIds = $this->getRepository()->getCompositeAttributeIdsFromClassification($classificationId);
+
+        if (!empty($compositeIds)) {
+            $this->addAttributeValue($entityName, $entityId, null, $compositeIds);
+            $res = true;
+        }
+
         foreach ($cas as $ca) {
+            if (in_array($ca->get('attributeId'), $compositeIds)) {
+                continue;
+            }
+
             $data = $ca->get('data')?->default ?? new \stdClass();
             $data = json_decode(json_encode($data), true);
             $data['attributeId'] = $ca->get('attributeId');
