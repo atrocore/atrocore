@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Services\ReferenceData;
+use Espo\ORM\Entity as OrmEntity;
 
 class Entity extends ReferenceData
 {
@@ -65,6 +66,11 @@ class Entity extends ReferenceData
             }
         }
 
+    }
+
+    protected function getFieldsThatConflict(OrmEntity $entity, \stdClass $data): array
+    {
+        return [];
     }
 
     protected function init()
