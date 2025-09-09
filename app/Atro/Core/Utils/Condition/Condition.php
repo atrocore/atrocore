@@ -301,7 +301,6 @@ class Condition
         self::isValidFirstValueIsArray($currentValue);
 
         $needValue = array_shift($values);
-
         self::isValidNotArrayAndObject($needValue);
 
         return in_array($needValue, $currentValue);
