@@ -65,7 +65,6 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
             return this.getConditionType() && this.getEntityType()
         },
 
-
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
