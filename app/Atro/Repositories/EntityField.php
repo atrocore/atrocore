@@ -51,7 +51,7 @@ class EntityField extends ReferenceData
             $fieldDefs = $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName");
         }
 
-        if(empty($fieldDefs)) {
+        if (empty($fieldDefs)) {
             return null;
         }
 
@@ -240,6 +240,33 @@ class EntityField extends ReferenceData
                     ->where("$column is null")
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->executeStatement();
+            }
+        }
+
+        if (!$entity->isNew() && !empty($entity->get('unique')) && $entity->isAttributeChanged('unique')) {
+            $entityName = $entity->get('entityId');
+            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+
+            if (!empty($type) && $type !== 'ReferenceData') {
+                $connection = $this->getEntityManager()->getConnection();
+                $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
+                $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entity->get('code')));
+
+                $values = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select($column, 'deleted')
+                    ->from($tableName)
+                    ->groupBy($column, 'deleted')
+                    ->having("count($column) > 1")
+                    ->fetchFirstColumn();
+
+                if (!empty($values)) {
+                    $str = join(', ', array_slice($values, 0, 15));
+                    if (count($values) > 15) {
+                        $str .= ', ...' . (count($values) - 15) . ' more';
+                    }
+
+                    throw new BadRequest("You have duplicate unique values in the database for the field '{$entity->get('code')}': <br> $str");
+                }
             }
         }
 
