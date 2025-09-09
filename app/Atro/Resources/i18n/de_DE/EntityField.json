@@ -69,7 +69,7 @@
     "isMultilang": "Automatische Erstellung von Feldern durch Klonen des aktuellen Feldes, und zwar so oft, wie in den Mehrspracheneinstellungen Gebietsschemata aktiviert sind.",
     "required": "Das Feld ist obligatorisch. Kann nicht leer gelassen werden.",
     "readOnly": "Der Feldwert kann nicht vom Benutzer festgelegt werden. Es ist jedoch möglich, ihn über die API zu ändern.",
-    "protected": "Der Feldwert kann nicht vom Benutzer angegeben werden. Weder das Frontend noch die API.",
+    "protected": "Der Feldwert kann nicht vom Benutzer angegeben werden. Weder über das Frontend noch über die API.",
     "maxLength": "Maximal zulässige Länge des Textes.",
     "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
     "default": "Der Wert wird bei der Erstellung standardmäßig festgelegt.",
