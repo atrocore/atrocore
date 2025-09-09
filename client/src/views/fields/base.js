@@ -859,13 +859,36 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return false;
         },
 
+        getReadOnlyConditions(name) {
+            return this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
+        },
+
         isReadOnlyViaConditions(name) {
-            const conditions = this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
+            const conditions = this.getReadOnlyConditions(name);
             if (conditions) {
                 return this.checkConditionGroup(conditions);
             }
 
             return false;
+        },
+
+        toggleReadOnlyViaConditions(name) {
+            if (this.params.readOnly || this.model.getFieldParam(name, 'readOnly')) {
+                return;
+            }
+
+            const conditions = this.getReadOnlyConditions(name);
+            if (conditions) {
+                this.readOnly = this.checkConditionGroup(conditions);
+                if (this.getParentView()?.getParentView()?.mode === 'edit') {
+                    if (this.readOnly) {
+                        this.setMode('detail');
+                    } else {
+                        this.setMode('edit');
+                    }
+                }
+                this.reRender();
+            }
         },
 
         getConditions(scope, name, type) {
@@ -922,6 +945,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
                     this.toggleVisibility(this.name);
+                    this.toggleReadOnlyViaConditions(this.name);
                 }
             });
         },
