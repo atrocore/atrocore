@@ -111,6 +111,7 @@
     function initQueryBuilderFilter() {
         const $queryBuilder = window.$(queryBuilderElement)
         let rules = searchManager.getQueryBuilder() || [];
+
         if (typeof rules === 'object' && !rules.condition) {
             rules = [];
         }
@@ -332,7 +333,7 @@
                         rule.filter = previousFilter;
                         previousFilter = null
                         qb.updateRuleFilter(rule, previousFilter);
-                        rule.$el.find('.rule-filter-container select')[0].selectize.setValue(rule.filter.id);
+                        rule.$el.find('.rule-filter-container select')[0].selectize.setValue(rule.filter ? rule.filter.id : null);
                     } else {
                         qb.updateRuleFilter(rule, previousFilter);
                     }
@@ -445,6 +446,7 @@
                     }
                 });
 
+
                 if (attributesIds.length > 0) {
                     const where = [{attribute: 'id', type: 'in', value: attributesIds}];
                     let userData = UserData.get();
@@ -459,7 +461,7 @@
                             // we clean up the rules to remove attribute rule if attribute does not exist anymore
                             cleanUpSavedRule((fieldId: string) => {
                                 if (fieldId.startsWith('attr_')) {
-                                    return attrs.list.find(v => v.id === getFieldOrAttributeId(fieldId))
+                                    return !!attrs.list.find(v => v.id === getFieldOrAttributeId(fieldId))
                                 } else {
                                     return true;
                                 }
@@ -860,7 +862,7 @@
         let hasChanged = false;
         let cleanUpRule = (rule: Rule) => {
             if (rule.rules) {
-                let newRules: Rule[] = [];
+                let newRules: Rule[]|null = null;
                 for (const rulesKey in rule.rules) {
                     if (rule.rules[rulesKey].id) {
                         if (!exists(rule.rules[rulesKey].id)) {
@@ -872,7 +874,7 @@
                         cleanUpRule(rule.rules[rulesKey]);
                     }
                 }
-                if (newRules.length !== rule.rules.length) {
+                if (hasChanged && newRules && newRules.length !== rule.rules.length) {
                     rule.rules = newRules;
                 }
             }
