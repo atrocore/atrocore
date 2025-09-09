@@ -295,9 +295,13 @@ class Condition
         self::isValidCountArray(2, $values);
 
         $currentValue = array_shift($values);
+        if($currentValue === null) {
+            $currentValue = [];
+        }
         self::isValidFirstValueIsArray($currentValue);
 
         $needValue = array_shift($values);
+
         self::isValidNotArrayAndObject($needValue);
 
         return in_array($needValue, $currentValue);

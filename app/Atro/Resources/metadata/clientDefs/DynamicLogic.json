@@ -92,7 +92,7 @@
     "fieldTypes": {
         "bool": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isTrue", "isFalse"]
+            "typeList": ["isEmpty", "isNotEmpty","isTrue", "isFalse"]
         },
         "varchar": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
@@ -111,7 +111,7 @@
         "text": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"],
-          "valueType": "varchar"
+            "valueType": "varchar"
         },
         "wysiwyg": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
@@ -133,11 +133,11 @@
         },
         "date": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
-            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast", "equals", "notEquals"]
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals",  "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals","isToday", "inFuture", "inPast", "equals", "notEquals"]
         },
         "datetime": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
-            "typeList": ["isEmpty", "isNotEmpty", "isToday", "inFuture", "inPast"]
+            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals",  "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals", "isToday", "inFuture", "inPast"]
         },
         "datetimeOptional": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
@@ -180,8 +180,9 @@
             "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
         },
         "array": {
-            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
-            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"],
+            "valueType": "varchar"
         },
         "color": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
