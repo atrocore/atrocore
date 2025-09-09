@@ -147,18 +147,7 @@
       "options": [
         "basic",
         "script"
-      ],
-      "conditionalProperties": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": ["varchar", "text", "wysiwyg", "markdown"]
-            }
-          ]
-        }
-      }
+      ]
     },
     "defaultName": {
       "type": "varchar",
