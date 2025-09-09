@@ -78,13 +78,16 @@ class V2Dot0Dot40 extends Base
         try {
             $this->getPDO()->exec($sql);
         } catch (\Throwable $e) {
-//            var_dump($e);
         }
     }
 
     public function getType($type) {
         if($type === 'int'){
             return 'integer';
+        }
+
+        if($type === 'bool'){
+            return 'boolean';
         }
 
         if(in_array($type, ['text', 'date', 'datetime', 'float'])){
