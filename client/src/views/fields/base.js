@@ -880,7 +880,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getReadOnlyConditions(name);
             if (conditions) {
                 this.readOnly = this.checkConditionGroup(conditions);
-                if (this.getParentView().getParentView().mode === 'edit') {
+                if (this.getParentView()?.getParentView()?.mode === 'edit') {
                     if (this.readOnly) {
                         this.setMode('detail');
                     } else {
