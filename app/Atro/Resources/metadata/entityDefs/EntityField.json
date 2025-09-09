@@ -65,6 +65,10 @@
       "type": "bool",
       "tooltip": true
     },
+    "protected": {
+      "type": "bool",
+      "tooltip": true
+    },
     "customizable": {
       "type": "bool",
       "readOnly": true

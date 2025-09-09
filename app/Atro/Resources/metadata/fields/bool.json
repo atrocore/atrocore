@@ -17,6 +17,10 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "isMultilang",
       "type": "bool",
       "tooltip": true

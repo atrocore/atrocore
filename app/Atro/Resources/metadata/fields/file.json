@@ -25,6 +25,10 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "default",
       "type": "varchar"
     },

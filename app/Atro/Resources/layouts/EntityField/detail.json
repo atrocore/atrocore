@@ -36,6 +36,12 @@
       ],
       [
         {
+          "name": "protected"
+        },
+        false
+      ],
+      [
+        {
           "name": "index"
         },
         {
