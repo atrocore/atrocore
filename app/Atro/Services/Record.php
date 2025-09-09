@@ -533,10 +533,18 @@ class Record extends RecordService
         $id = $data->id;
         $field = $data->field;
 
+        if(in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit'))){
+            throw new Forbidden();
+        }
+
         $entity = $this->getEntity($id);
 
         if(empty($entity)) {
             throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
         }
 
         $fieldDefs = $entity->entityDefs['fields'][$field];

@@ -310,7 +310,8 @@
     },
     "script": {
       "type": "text",
-      "view": "views/fields/script"
+      "view": "views/entity-field/fields/script",
+      "isMultilang": true
     },
     "outputType": {
       "type": "enum",
@@ -346,7 +347,8 @@
     "preview": {
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
-      "readOnly": true
+      "readOnly": true,
+      "isMultilang": true
     },
     "rowsMin": {
       "type": "int",

@@ -605,6 +605,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initScriptFieldAction: function() {
+            if(!this.model.defs.fields[this.name]){
+                return;
+            }
             const type =  this.model.defs.fields[this.name].type
             if(type !== 'script') {
                 return;

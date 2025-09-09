@@ -150,9 +150,9 @@
       ],
       [
         {
-          "name": "preview",
-          "fullWidth": true
-        }
+          "name": "preview"
+        },
+        false
       ],
       [
         {
