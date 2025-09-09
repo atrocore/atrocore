@@ -727,9 +727,6 @@ class OpenApiGenerator
                     ];
                 }
 
-                if($scopeName === 'Tata') {
-                    $test = "test";
-                }
                 $scriptFields = [];
                 foreach ($this->getMetadata()->get("entityDefs.$scopeName.fields") as $field => $fieldDef) {
                     if($fieldDef['type'] == 'script') {
