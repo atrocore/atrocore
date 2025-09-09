@@ -524,7 +524,7 @@ class Record extends RecordService
         return true;
     }
 
-    public function renderScriptField(\stdClass $data): Entity
+    public function recalculateScriptField(\stdClass $data): Entity
     {
         if (!property_exists($data, 'field') || !property_exists($data, 'id')) {
             throw new BadRequest();

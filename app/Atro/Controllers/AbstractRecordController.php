@@ -687,7 +687,7 @@ abstract class AbstractRecordController extends AbstractController
 
         $this->checkControllerAccess();
 
-        return $this->getRecordService()->renderScriptField($data)->getValueMap();
+        return $this->getRecordService()->recalculateScriptField($data)->getValueMap();
     }
 
     protected function prepareWhereQuery($where)

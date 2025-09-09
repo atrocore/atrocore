@@ -32,7 +32,7 @@ class Entity extends AbstractListener
 
         $this->validateClassificationAttributesForRecord($entity);
 
-        $this->reRenderScriptFields($entity);
+        $this->recalculateScriptField($entity);
     }
 
     public function afterSave(Event $event): void
@@ -208,7 +208,7 @@ class Entity extends AbstractListener
         }
     }
 
-    protected function reRenderScriptFields(OrmEntity $entity): void
+    protected function recalculateScriptField(OrmEntity $entity): void
     {
         foreach ($entity->entityDefs['fields'] ?? [] as $field => $fieldDefs) {
             if(!empty($fieldDefs['attributeId'])) {

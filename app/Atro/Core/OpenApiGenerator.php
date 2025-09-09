@@ -737,11 +737,11 @@ class OpenApiGenerator
                     }
                 }
                 if(!empty($scriptFields)) {
-                    $result['paths']["/{$scopeName}/action/renderScriptField"]['post'] = [
+                    $result['paths']["/{$scopeName}/action/recalculateScriptField"]['post'] = [
                         'tags'        => [$scopeName],
-                        "summary"     => "Rerender the value of the script fields",
-                        "description" => "Rerender the value of the script fields",
-                        "operationId" => "renderScriptField",
+                        "summary"     => "Recalculate the value of the script fields",
+                        "description" => "Recalculate the value of the script fields",
+                        "operationId" => "recalculateScriptField",
                         'security'    => [['Authorization-Token' => []]],
                         'requestBody' => [
                             'required' => true,

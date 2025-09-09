@@ -976,11 +976,11 @@
     }
   },
   {
-    "route": "/:controller/action/renderScriptField",
+    "route": "/:controller/action/recalculateScriptField",
     "method": "post",
     "params": {
       "controller": ":controller",
-      "action": "renderScriptField"
+      "action": "recalculateScriptField"
     }
   }
 ]
