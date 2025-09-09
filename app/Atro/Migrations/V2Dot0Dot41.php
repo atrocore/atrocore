@@ -13,13 +13,12 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Util;
-use Doctrine\DBAL\ParameterType;
 
 class V2Dot0Dot41 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-09-09 15:00:00');
+        return new \DateTime('2025-09-10 10:00:00');
     }
 
     public function up(): void
