@@ -117,6 +117,7 @@ class EntityField extends ReferenceData
             'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
             'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
             'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
+            'conditionalProtected'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
             'conditionalVisible'        => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
             'conditionalDisableOptions' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.disableOptions"),
             'multilangField'            => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
@@ -579,6 +580,11 @@ class EntityField extends ReferenceData
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
             $conditionalProperties['readOnly'] = $entity->get('conditionalReadOnly');
+            $conditionalPropertiesChanged = true;
+        }
+
+        if ($entity->isAttributeChanged('conditionalProtected')) {
+            $conditionalProperties['protected'] = $entity->get('conditionalProtected');
             $conditionalPropertiesChanged = true;
         }
 

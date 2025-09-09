@@ -28,7 +28,7 @@
       ],
       [
         {
-          "name": "readOnly"
+          "name": "protected"
         },
         {
           "name": "notNull"
@@ -36,7 +36,7 @@
       ],
       [
         {
-          "name": "protected"
+          "name": "readOnly"
         },
         false
       ],
@@ -341,6 +341,12 @@
       [
         {
           "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
         },
         false
       ],
