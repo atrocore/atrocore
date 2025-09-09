@@ -65,9 +65,9 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown-{{id}}">
                     {{#each items}}
                     <li data-name="{{name}}" class="in-more tab">
-                        <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
+                        <a href="{{link}}" class="nav-link" style="{{#if color}} border-color: {{color}} ; {{/if}}   {{#unless ../../showIcon }} height: 35px; {{/unless}}">
                             <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
-                                 {{#if ../showIcon }}
+                                 {{#if ../../showIcon }}
                                     {{#if iconSrc}}
                                         <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                     {{else}}
@@ -78,7 +78,7 @@
                                 {{/if}}
                                 <span class="short-label-text">{{shortLabel}}</span>
                             </span>
-                            <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
+                            <span class="full-label" {{#unless ../../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
                         </a>
                         <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                             <i class="ph ph-plus"></i>
