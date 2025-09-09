@@ -34,6 +34,10 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
 
                 this.wait(false)
             })
+
+            this.listenTo(this.model, `apply:${this.name}`, () => {
+                this.trigger('change');
+            })
         },
 
         clearValue() {
