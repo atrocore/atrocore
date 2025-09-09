@@ -15,7 +15,7 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 
-class V2Dot0Dot40 extends Base
+class V2Dot0Dot38 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -24,8 +24,29 @@ class V2Dot0Dot40 extends Base
 
     public function up(): void
     {
+        $this->updateUiHandlers();
         $this->updateEntityDefs();
         $this->updateScopes();
+    }
+
+    protected function updateUiHandlers(): void
+    {
+        $path = 'data/reference-data/UiHandler.json';
+
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $content = @file_get_contents($path);
+
+        if (!empty($content)) {
+            $content = str_replace('.sku', '.number', $content);
+            $content = str_replace('"sku"', '"number"', $content);
+            $content = str_replace('\\"sku\\"', '\\"number\\"', $content);
+            $content = str_replace("'sku'", "'number'", $content);
+
+            file_put_contents($path, $content);
+        }
     }
 
     protected function updateEntityDefs(): void
