@@ -75,7 +75,7 @@
     "isMultilang": "Automatic creation of fields via cloning the current one as many times as there are locales activated in the Multi-Languages Settings.",
     "required": "Field will be mandatory. Can't be left empty.",
     "readOnly": "The field value cannot be specified by the user. It is still possible to change it via the API.",
-    "protected": "The field value cannot be specified by the user. Neither the front end nor the API.",
+    "protected": "The field value cannot be specified by the user. Neither via the front end nor via the API.",
     "maxLength": "Max acceptable length of text.",
     "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
     "default": "Value will be set by default upon creating.",
