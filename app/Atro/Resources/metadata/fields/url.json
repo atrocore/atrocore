@@ -1,60 +1,64 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "notNull",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name":"default",
-         "type":"varchar"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
-         "name":"countBytesInsteadOfCharacters",
-         "type":"bool"
-      },
-      {
-         "name": "strip",
-         "type": "bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "unique",
-         "type": "bool"
-      },
-      {
-         "name": "index",
-         "type": "bool"
-      },
-     {
-       "name": "isMultilang",
-       "type": "bool",
-       "tooltip": true
-     },
-     {
-       "name": "duplicateIgnore",
-       "type": "bool"
-     }
-   ],
-   "filter": true,
-   "auditable": true,
-   "qbFilterType": "string",
-   "fieldDefs":{
-      "type":"varchar"
-   },
-   "personalData": true,
-   "textFilter": true,
-   "group": "character"
+  "params": [
+    {
+      "name": "required",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "notNull",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "default",
+      "type": "varchar"
+    },
+    {
+      "name": "maxLength",
+      "type": "int"
+    },
+    {
+      "name": "countBytesInsteadOfCharacters",
+      "type": "bool"
+    },
+    {
+      "name": "strip",
+      "type": "bool"
+    },
+    {
+      "name": "readOnly",
+      "type": "bool"
+    },
+    {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
+      "name": "unique",
+      "type": "bool"
+    },
+    {
+      "name": "index",
+      "type": "bool"
+    },
+    {
+      "name": "isMultilang",
+      "type": "bool",
+      "tooltip": true
+    },
+    {
+      "name": "duplicateIgnore",
+      "type": "bool"
+    }
+  ],
+  "filter": true,
+  "auditable": true,
+  "qbFilterType": "string",
+  "fieldDefs": {
+    "type": "varchar"
+  },
+  "personalData": true,
+  "textFilter": true,
+  "group": "character"
 }

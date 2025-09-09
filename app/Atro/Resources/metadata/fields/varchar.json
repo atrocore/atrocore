@@ -41,6 +41,10 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "pattern",
       "type": "varchar",
       "tooltip": true

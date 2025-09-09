@@ -51,6 +51,10 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "index",
       "type": "bool"
     },

@@ -94,6 +94,20 @@
     },
     "readOnly": {
       "type": "bool",
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "protected"
+            }
+          ]
+        }
+      }
+    },
+    "protected": {
+      "type": "bool",
       "tooltip": true
     },
     "customizable": {
@@ -421,6 +435,24 @@
       }
     },
     "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/admin/field-manager/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "conditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {

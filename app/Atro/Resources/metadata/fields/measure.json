@@ -10,6 +10,10 @@
       "type": "bool"
     },
     {
+      "name": "protected",
+      "type": "bool"
+    },
+    {
       "name": "dropdown",
       "type": "bool",
       "default": false

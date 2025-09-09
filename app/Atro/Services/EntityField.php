@@ -154,6 +154,11 @@ class EntityField extends ReferenceData
         }
     }
 
+    protected function getFieldsThatConflict(Entity $entity, \stdClass $data): array
+    {
+        return [];
+    }
+
     protected function init()
     {
         parent::init();

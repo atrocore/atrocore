@@ -9,86 +9,88 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
-
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 
 class V2Dot0Dot40 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2025-09-05 14:00:00');
+        return new \DateTime('2025-09-09 15:00:00');
     }
 
     public function up(): void
     {
-        $this->updateEntityDefs();
-        $this->updateScopes();
-    }
-
-    protected function updateEntityDefs(): void
-    {
-        $path = 'data/metadata/entityDefs/Product.json';
-
+        $path = 'data/metadata/entityDefs';
         if (file_exists($path)) {
-            $customDefs = @json_decode(file_get_contents($path), true);
-
-            if (!empty($customDefs['fields'])) {
-                $toUpdate = false;
-
-                if (!empty($customDefs['fields']['sku'])) {
-                    $oldDefs = $customDefs['fields']['sku'];
-
-                    if (is_array($oldDefs) && empty($oldDefs['isCustom'])) {
-                        $newDefs = $customDefs['fields']['number'] ?? [];
-
-                        unset($customDefs['fields']['sku']);
-
-                        $customDefs['fields']['number'] = array_merge($oldDefs, $newDefs);
-
-                        $toUpdate = true;
-                    }
+            foreach (scandir($path) as $file) {
+                if (in_array($file, ['.', '..'])) {
+                    continue;
                 }
 
-                if ($toUpdate) {
-                    file_put_contents($path, json_encode($customDefs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                $scope = explode('.', $file)[0];
+                $entityDefs = @json_decode(file_get_contents("$path/$file"), true);
+
+                if(empty($entityDefs['fields'])) {
+                    continue;
                 }
-            }
-        }
-    }
 
-    protected function updateScopes(): void
-    {
-        $path = 'data/metadata/scopes/Product.json';
-
-        if (file_exists($path)) {
-            $customScopes = @json_decode(file_get_contents($path), true);
-
-            if (is_array($customScopes)) {
-                $toUpdate = false;
-
-                foreach ($customScopes as $key => $value) {
-                    if (is_string($value) && $value == 'sku') {
-                        $customScopes[$key] = 'number';
-                        $toUpdate = true;
+                $fromSchema = $this->getCurrentSchema();
+                $toSchema = clone $fromSchema;
+                foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                    if(empty($fieldDefs['type']) || $fieldDefs['type'] !== 'script') {
+                        continue;
                     }
 
-                    if (is_array($value) && in_array('sku', $value)) {
-                        $k = array_search('sku', $value);
-                        if ($k !== false) {
-                            $customScopes[$key][$k] = 'number';
+                    $tableName = Util::toUnderScore($scope);
+                    if ($toSchema->hasTable($tableName)) {
+                        $table = $toSchema->getTable($tableName);
+
+                        $type = $this->getType($fieldDefs['outputType'] ?? 'text');
+
+                        if (!$table->hasColumn(util::toUnderScore($field))) {
+                            $table->addColumn(Util::toUnderScore($field), $type, ['notnull' => false]);
                         }
 
-                        $toUpdate = true;
+                        if (!empty($fieldDefs['isMultilang']) && !empty($this->getConfig()->get('isMultilangActive')) && in_array($type, ['text', 'wysiwyg'])) {
+                            foreach ($this->getConfig()->get('inputLanguageList', []) as $language) {
+                                $nField = Util::toUnderScore($field). '_'. strtolower($language);
+                                if(!$table->hasColumn($nField)) {
+                                    $table->addColumn($nField, $type, ['notnull' => false]);
+                                }
+                            }
+                        }
                     }
                 }
 
-                if ($toUpdate) {
-                    file_put_contents($path, json_encode($customScopes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                    $this->exec($sql);
                 }
             }
         }
+    }
+
+    protected function exec(string $sql): void
+    {
+        try {
+            $this->getPDO()->exec($sql);
+        } catch (\Throwable $e) {
+//            var_dump($e);
+        }
+    }
+
+    public function getType($type) {
+        if($type === 'int'){
+            return 'integer';
+        }
+
+        if(in_array($type, ['text', 'date', 'datetime', 'float'])){
+            return $type;
+        }
+
+        return 'text';
     }
 }

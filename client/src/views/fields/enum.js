@@ -196,6 +196,12 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.getBackgroundColor) {
                 this.hasColors = (this.params.options || []).some(item => !!this.getBackgroundColor(item));
             }
+
+            this.listenToOnce(this, 'remove', () => {
+                if (this.selectizeEl && typeof this.selectizeEl.destroy === 'function') {
+                    this.selectizeEl.destroy();
+                }
+            });
         },
 
         setupGroups() {
@@ -315,15 +321,52 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
         },
 
+        getSelectizeOptions: function () {
+            const result = [];
+
+            this.params.options.forEach((option, i) => {
+                let label = this.getLanguage().translateOption(option, this.name, this.scope);
+                if (this.translatedOptions) {
+                    if (option in this.translatedOptions) {
+                        label = this.translatedOptions[option];
+                    }
+                }
+
+                let optgroup = null;
+                if (this.params.groupOptions && option in this.params.groupOptions) {
+                    optgroup = this.params.groupOptions[option];
+                }
+
+                result.push({
+                    value: option,
+                    text: label,
+                    $order: i,
+                    ...(optgroup ? { optgroup } : {})
+                });
+            })
+
+            return result;
+        },
+
         setOptionList: function (optionList) {
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
             }
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (this.isRendered()) {
-                    this.reRender();
+                    const newOptions = this.getSelectizeOptions();
+                    this.selectizeEl.addOption(newOptions);
+
+                    this.originalOptionList.forEach(option => {
+                        if (!this.params.options.includes(option)) {
+                            this.selectizeEl.removeOption(option);
+                        }
+                    });
+
+                    this.selectizeEl.refreshOptions(false);
+
                     if (!(this.params.options || []).includes(this.model.get(this.name) ?? '')) {
                         this.trigger('change');
                     }
@@ -468,10 +511,14 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                     plugins.push('clear_button');
                 }
 
-                this.$el.find('select').selectize({
+                const select = this.$el.find('select');
+                select.selectize({
                     allowEmptyOption: true,
                     showEmptyOptionInDropdown: true,
                     emptyOptionLabel: '',
+                    valueField: 'value',
+                    labelField: 'text',
+                    searchField: ['text'],
                     plugins,
                     render: {
                         item: (item, escape) => {
@@ -503,6 +550,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                         },
                     }
                 });
+
+                this.selectizeEl = select[0]?.selectize;
             }
 
             if (this.mode == 'search') {

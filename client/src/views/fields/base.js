@@ -288,6 +288,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.readOnly = false;
             }
 
+            if (this.params.protected || this.model.getFieldParam(this.name, 'protected')) {
+                this.readOnly = true;
+            }
+
             if (!this.readOnly) {
                 this.readOnly = this.isReadOnlyViaConditions(this.name);
             }
@@ -917,7 +921,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isReadOnlyViaConditions(name) {
-            const conditions = this.getConditions(this.model.name, name, 'readOnly');
+            const conditions = this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
             if (conditions) {
                 return this.checkConditionGroup(conditions);
             }

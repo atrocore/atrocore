@@ -75,7 +75,7 @@ class V2Dot0Dot36 extends Base
                         if ($rule['validate_by'] !== 'List' && !empty($rule['pattern'])) {
                             $value = json_encode(['/' . $rule['pattern'] . '/i']);
                         }
-                        $qb->set('mime_type', ":mimeTypes")
+                        $qb->set('mime_types', ":mimeTypes")
                             ->setParameter('mimeTypes', $value);
                         break;
                     case "PDF Validation":

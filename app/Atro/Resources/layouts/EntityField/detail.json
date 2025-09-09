@@ -28,11 +28,17 @@
       ],
       [
         {
-          "name": "readOnly"
+          "name": "protected"
         },
         {
           "name": "notNull"
         }
+      ],
+      [
+        {
+          "name": "readOnly"
+        },
+        false
       ],
       [
         {
@@ -335,6 +341,12 @@
       [
         {
           "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
         },
         false
       ],

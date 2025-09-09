@@ -14,7 +14,7 @@
       "required": true,
       "options": [],
       "conditionalProperties": {
-        "readOnly": {
+        "protected": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",
