@@ -77,18 +77,9 @@ Espo.define('views/layout/fields/related-entity', 'views/fields/enum', function 
         setup: function () {
             this.setupOptions();
             Dep.prototype.setup.call(this);
-            if (!this.model.get(this.name) && this.params.options.length) {
-                this.model.set(this.name, this.params.options[0])
-            }
 
             this.listenTo(this.model, 'change:entity change:viewType', () => {
                 this.setupOptions()
-                if (!this.prohibitedEmptyValue) {
-                    this.translatedOptions[''] = '';
-                    if (!this.params.options.includes('')) {
-                        this.params.options.unshift('')
-                    }
-                }
                 if (this.model.get('relatedEntity') && !this.params.options.includes(this.model.get('relatedEntity'))) {
                     this.model.set('relatedEntity', '')
                 }
@@ -98,6 +89,7 @@ Espo.define('views/layout/fields/related-entity', 'views/fields/enum', function 
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this)
+
             const show = ['list', 'detail'].includes(this.model.get('viewType')) && this.getMetadata().get(['scopes', this.model.get('entity'), 'type']) !== 'Relation'
             if (this.mode !== 'list') {
                 if (show) {

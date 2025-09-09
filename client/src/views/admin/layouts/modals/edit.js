@@ -45,7 +45,6 @@ Espo.define('views/admin/layouts/modals/edit', ['views/modal', 'views/admin/layo
                     readOnly: !allowSwitch,
                     mode: 'edit',
                     inlineEditDisabled: true,
-                    prohibitedEmptyValue: true,
                 };
 
                 if (this.model.get('layoutProfileId')) {

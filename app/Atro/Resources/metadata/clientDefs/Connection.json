@@ -198,20 +198,6 @@
           ]
         }
       },
-      "oauthGrantType": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "oauth2",
-                "otto"
-              ]
-            }
-          ]
-        }
-      },
       "oauthClientId": {
         "visible": {
           "conditionGroup": [

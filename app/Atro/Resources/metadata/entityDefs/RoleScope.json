@@ -27,53 +27,138 @@
     "createAction": {
       "type": "enum",
       "view": "views/role-scope/fields/create-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "yes"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        }
+      }
     },
     "readAction": {
       "type": "enum",
       "view": "views/role-scope/fields/read-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
         "team",
         "all"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        }
+      }
     },
     "editAction": {
       "type": "enum",
       "view": "views/role-scope/fields/edit-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
         "team",
         "all"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        }
+      }
     },
     "deleteAction": {
       "type": "enum",
       "view": "views/role-scope/fields/delete-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "own",
         "team",
         "all"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        }
+      }
     },
     "streamAction": {
       "type": "enum",
       "view": "views/role-scope/fields/stream-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "all"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasAccess"
+            }
+          ]
+        }
+      }
     },
     "accessData": {
       "type": "jsonObject",
@@ -113,7 +198,6 @@
     "createAttributeValueAction": {
       "type": "enum",
       "view": "views/role-scope/fields/create-attribute-value-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "yes"
@@ -122,7 +206,6 @@
     "deleteAttributeValueAction": {
       "type": "enum",
       "view": "views/role-scope/fields/create-attribute-value-action",
-      "prohibitedEmptyValue": true,
       "options": [
         "no",
         "yes"

@@ -10,7 +10,6 @@
     "isMultilang": "Многоязычность",
     "fileType": "Тип файла",
     "pattern": "Regex Pattern",
-    "prohibitedEmptyValue": "Запретить пустые значения",
     "measure": "Мера",
     "isRequired": "Обязательно",
     "tooltip": "Текст подсказки",

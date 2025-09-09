@@ -100,10 +100,6 @@
       "filterDisabled": true,
       "tooltip": true
     },
-    "prohibitedEmptyValue": {
-      "type": "bool",
-      "default": false
-    },
     "min": {
       "type": "float",
       "notStorable": true,

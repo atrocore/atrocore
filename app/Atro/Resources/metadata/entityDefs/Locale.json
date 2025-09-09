@@ -184,7 +184,6 @@
     },
     "timeFormat": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "options": [
         "HH:mm",
@@ -203,7 +202,6 @@
     },
     "weekStart": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "options": [
         "sunday",
@@ -213,7 +211,6 @@
     },
     "dateFormat": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "options": [
         "MM/DD/YYYY",
@@ -225,7 +222,6 @@
     },
     "timeZone": {
       "type": "enum",
-      "prohibitedEmptyValue": true,
       "required": true,
       "default": "UTC",
       "options": [

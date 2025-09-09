@@ -10,7 +10,6 @@
     },
     "style": {
       "type": "enum",
-      "prohibitedEmptyValue": false,
       "options": [
         "default",
         "success",

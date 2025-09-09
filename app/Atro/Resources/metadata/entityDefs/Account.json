@@ -18,7 +18,6 @@
     "type": {
       "type": "enum",
       "required": false,
-      "prohibitedEmptyValue": false,
       "options": [
         "individual",
         "company"

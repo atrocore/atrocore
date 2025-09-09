@@ -22,10 +22,6 @@
       "type": "bool"
     },
     {
-      "name": "prohibitedEmptyValue",
-      "type": "bool"
-    },
-    {
       "name": "duplicateIgnore",
       "type": "bool"
     }
