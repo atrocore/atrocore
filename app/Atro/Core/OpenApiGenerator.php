@@ -752,7 +752,7 @@ class OpenApiGenerator
                                             ],
                                             "field" => [
                                                 "type"    => "string",
-                                                "enum" => $scriptFields
+                                                "example" => join(',', $scriptFields)
                                             ]
                                         ],
                                         "required" => ["id", "field"]

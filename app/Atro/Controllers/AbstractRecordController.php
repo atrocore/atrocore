@@ -679,7 +679,7 @@ abstract class AbstractRecordController extends AbstractController
         return $result;
     }
 
-    public function actionRenderScriptField($params, $data, $request)
+    public function actionRecalculateScriptField($params, $data, $request)
     {
         if (!$request->isPost()) {
             throw new BadRequest();

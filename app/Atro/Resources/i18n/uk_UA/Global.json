@@ -408,7 +408,8 @@
     "emailCc": "Email CC",
     "associationTooltip": "Оберіть як Асоціюючий елемент пов'язаний з Асоційованим елементом",
     "associatedTitle": "Поточний елемент пов'язаний як :name з:",
-    "associatingTitle": "Пов'язані з поточним елементом як :name:"
+    "associatingTitle": "Пов'язані з поточним елементом як :name:",
+    "recalculateScript": "Перерахувати скрипт"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

@@ -211,9 +211,6 @@ class Entity extends AbstractListener
     protected function recalculateScriptField(OrmEntity $entity): void
     {
         foreach ($entity->entityDefs['fields'] ?? [] as $field => $fieldDefs) {
-            if(!empty($fieldDefs['attributeId'])) {
-                continue;
-            }
             if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
                 $contents = $this->getTwig()
                     ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);

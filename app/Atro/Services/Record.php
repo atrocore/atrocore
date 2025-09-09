@@ -532,16 +532,17 @@ class Record extends RecordService
 
         $id = $data->id;
         $field = $data->field;
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $field]);
-
-        if(empty($fieldDefs)) {
-            throw new BadRequest();
-        }
 
         $entity = $this->getEntity($id);
 
         if(empty($entity)) {
-            throw new BadRequest();
+            throw new NotFound();
+        }
+
+        $fieldDefs = $entity->entityDefs['fields'][$field];
+
+        if(empty($fieldDefs)) {
+            throw new BadRequest('No such Field');
         }
 
         if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {

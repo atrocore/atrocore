@@ -463,7 +463,8 @@
     "emailCc": "Email CC",
     "associationTooltip": "Defines how Associating Item is linked to Associated Item",
     "associatedTitle": "Current item links as :name to:",
-    "associatingTitle": "Linked to current item as :name:"
+    "associatingTitle": "Linked to current item as :name:",
+    "recalculateScript": "Recalculate Script"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

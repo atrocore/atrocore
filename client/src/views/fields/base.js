@@ -419,6 +419,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initStatusContainer();
                 this.initRemoveAttributeValue();
                 this.initDynamicFieldActions();
+                this.initScriptFieldAction();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
                 }
@@ -601,6 +602,63 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.getInheritActionEl().addClass('hidden');
                 }
             }.bind(this));
+        },
+
+        initScriptFieldAction: function() {
+            const type =  this.model.defs.fields[this.name].type
+            if(type !== 'script') {
+                return;
+            }
+
+            if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit') || []).includes(this.name)) {
+                return;
+            }
+
+            const $cell = this.getCellElement();
+            const $inlineActions = this.getInlineActionsContainer();
+
+            $inlineActions.find('.ph-magic-wand').parent().remove();
+
+            const $recalculateLink = $(`<a href="javascript:" class="recalcuate-script hidden" title="${this.translate('recalculateScript')}"><i class="ph ph-magic-wand "></i></a>`);
+
+            if ($inlineActions.size()) {
+                $inlineActions.prepend($recalculateLink);
+            } else {
+                $cell.prepend($recalculateLink);
+            }
+
+            $recalculateLink.on('click', () => {
+                const data = {
+                    id: this.model.id,
+                    field: this.name
+                }
+                $.ajax({
+                    url: `${this.model.name}/action/recalculateScriptField`,
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: (data) => {
+                        this.model.fetch().then(() => {
+                            this.notify('Done', 'success');
+                        });
+                    }
+                });
+            })
+
+            $cell.on('mouseenter', e => {
+                e.stopPropagation();
+                if (this.disabled) {
+                    return;
+                }
+                if (this.mode === 'detail') {
+                    $recalculateLink.removeClass('hidden');
+                }
+            }).on('mouseleave', e => {
+                e.stopPropagation();
+                if (this.mode === 'detail') {
+                    $recalculateLink.addClass('hidden');
+                }
+            });
         },
 
         initInlineEdit: function () {
