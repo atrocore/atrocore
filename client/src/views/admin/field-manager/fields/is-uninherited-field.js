@@ -29,7 +29,7 @@ Espo.define('views/admin/field-manager/fields/is-uninherited-field', 'views/fiel
                 && !(this.getMetadata().get(['scopes', this.model.get('entityId'), 'mandatoryUnInheritedFields']) || []).includes(this.model.get('code'))
                 && this.model.get('notStorable') !== true
                 && this.model.get('disabled') !== true
-                && this.getMetadata().get(['scope', this.model.get('entityId'), 'type']) === 'Hierarchy'
+                && this.getMetadata().get(['scopes', this.model.get('entityId'), 'type']) === 'Hierarchy'
             ) {
                 shouldHide = false;
             }
