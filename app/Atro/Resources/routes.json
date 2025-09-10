@@ -976,11 +976,44 @@
     }
   },
   {
-    "route": "/:controller/action/recalculateScriptField",
+    "route": "/App/action/recalculateScriptField",
     "method": "post",
     "params": {
-      "controller": ":controller",
+      "controller": "App",
       "action": "recalculateScriptField"
+    },
+    "summary": "Recalculate the value of the script fields",
+    "description": "Recalculate the value of the script fields",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "id": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string",
+                "example": "myFieldScriptCode"
+              }
+            },
+            "required": ["id", "field", "scope"]
+          }
+        }
+      }
+    },
+    "response" : {
+      "type": "object",
+      "example": {
+        "id": "a01k1g09hhce8m8pkmzt3zzyq5v",
+        "name": "Yellow Bike"
+      }
     }
   }
 ]

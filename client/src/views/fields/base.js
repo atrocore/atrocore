@@ -636,11 +636,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $recalculateLink.on('click', () => {
                 const data = {
+                    scope: this.model.name,
                     id: this.model.id,
                     field: this.name
                 }
                 $.ajax({
-                    url: `${this.model.name}/action/recalculateScriptField`,
+                    url: `App/action/recalculateScriptField`,
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json',

@@ -524,47 +524,6 @@ class Record extends RecordService
         return true;
     }
 
-    public function recalculateScriptField(\stdClass $data): Entity
-    {
-        if (!property_exists($data, 'field') || !property_exists($data, 'id')) {
-            throw new BadRequest();
-        }
-
-        $id = $data->id;
-        $field = $data->field;
-
-        if(in_array($field, $this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit'))){
-            throw new Forbidden();
-        }
-
-        $entity = $this->getEntity($id);
-
-        if(empty($entity)) {
-            throw new NotFound();
-        }
-
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $fieldDefs = $entity->entityDefs['fields'][$field];
-
-        if(empty($fieldDefs)) {
-            throw new BadRequest('No such Field');
-        }
-
-        if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-            $contents = $this->getInjection('twig')
-                ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
-
-            $entity->set($field, $contents);
-
-            $this->getEntityManager()->saveEntity($entity);
-        }
-
-       return $entity;
-    }
-
     protected function getMandatoryLinksToMerge(): array
     {
         return [];
