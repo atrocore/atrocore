@@ -66,19 +66,17 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                     model: this.downloadModel,
                     el: `${this.options.el} .field[data-name="mode"]`,
                     defs: {
-                        name: 'mode',
-                        params: {
-                            options: ["byWidth", "byHeight", "resize"],
-                            translatedOptions: {
-                                "resize": "Resize",
-                                "byWidth": "Scale by width",
-                                "byHeight": "Scale by height"
-                            }
-                        }
+                        name: 'mode'
                     },
                     mode: 'edit',
-                    params:{
-                        required: true
+                    params: {
+                        required: true,
+                        options: ["byWidth", "byHeight", "resize"],
+                        translatedOptions: {
+                            "resize": "Resize",
+                            "byWidth": "Scale by width",
+                            "byHeight": "Scale by height"
+                        }
                     }
                 });
 
@@ -86,19 +84,17 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                     model: this.downloadModel,
                     el: `${this.options.el} .field[data-name="format"]`,
                     defs: {
-                        name: "format",
-                        params: {
-                            options: ["jpeg", "png","webp"],
-                            translatedOptions: {
-                                "jpeg": "JPEG",
-                                "png": "PNG",
-                                "webp": "WEBP"
-                            }
-                        }
+                        name: "format"
                     },
                     mode: "edit",
-                    params:{
-                        required: true
+                    params: {
+                        required: true,
+                        options: ["jpeg", "png","webp"],
+                        translatedOptions: {
+                            "jpeg": "JPEG",
+                            "png": "PNG",
+                            "webp": "WEBP"
+                        }
                     }
                 });
 

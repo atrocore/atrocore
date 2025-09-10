@@ -100,6 +100,33 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
             this.setOptionList(options)
         },
 
+        getSelectizeOptions: function () {
+            const result = [];
+
+            this.params.options.forEach((option, i) => {
+                let label = this.getLanguage().translateOption(option, this.name, this.scope);
+                if (this.translatedOptions) {
+                    if (option in this.translatedOptions) {
+                        label = this.translatedOptions[option];
+                    }
+                }
+
+                let optgroup = null;
+                if (this.params.groupOptions && option in this.params.groupOptions) {
+                    optgroup = this.params.groupOptions[option];
+                }
+
+                result.push({
+                    value: option,
+                    label: label,
+                    $order: i,
+                    ...(optgroup ? { optgroup } : {})
+                });
+            })
+
+            return result;
+        },
+
         setOptionList: function (optionList) {
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
@@ -108,7 +135,21 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
 
             if (this.mode == 'edit') {
                 if (this.isRendered()) {
-                    this.reRender();
+                    const newOptions = this.getSelectizeOptions();
+                    if (!this.selectizeEl) {
+                        return;
+                    }
+
+                    this.selectizeEl.addOption(newOptions);
+
+                    this.originalOptionList.forEach(option => {
+                        if (!this.params.options.includes(option)) {
+                            this.selectizeEl.removeOption(option);
+                        }
+                    });
+
+                    this.selectizeEl.refreshOptions(false);
+
                     for (value of this.model.get(this.name) || []) {
                         if (!(this.params.options || []).includes(value)) {
                             this.trigger('change');
@@ -253,6 +294,8 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                 }
 
                 this.$element.selectize(selectizeOptions);
+
+                this.selectizeEl = this.$element[0]?.selectize;
 
                 if (this.$element.size()) {
                     let depPositionDropdown = this.$element[0].selectize.positionDropdown;

@@ -22,15 +22,15 @@ Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (D
                             this.createView('type', 'views/fields/enum', {
                                 model: model,
                                 el: `#api-request-content .field[data-name="type"]`,
+                                params: {
+                                    options: ['upsert'],
+                                    translatedOptions: {
+                                        upsert: this.getLanguage().translate('upsert', 'labels', 'Admin')
+                                    },
+                                    required: true,
+                                },
                                 defs: {
-                                    name: 'type',
-                                    params: {
-                                        options: ['upsert'],
-                                        translatedOptions: {
-                                            upsert: this.getLanguage().translate('upsert', 'labels', 'Admin')
-                                        },
-                                        required: true,
-                                    }
+                                    name: 'type'
                                 },
                                 mode: 'edit'
                             }, view => view.render());

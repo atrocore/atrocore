@@ -62,16 +62,14 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.createView('exportFeed', 'views/fields/enum', {
                 params:{
-                    required: true
+                    required: true,
+                    options: exportFeedOptions,
+                    translatedOptions: exportFeedTranslatedOptions
                 },
                 model: this.model,
                 el: `${this.options.el} .field[data-name="exportFeed"]`,
                 defs: {
-                    name: 'exportFeed',
-                    params: {
-                        options: exportFeedOptions,
-                        translatedOptions: exportFeedTranslatedOptions
-                    }
+                    name: 'exportFeed'
                 },
                 mode: 'edit'
             });
@@ -80,19 +78,17 @@ Espo.define('views/export/record/record', 'views/record/base', function (Dep) {
 
             this.createView('fileType', 'views/fields/enum', {
                 params:{
-                    required: true
+                    required: true,
+                    options: ['csv', 'xlsx'],
+                    translatedOptions: {
+                        csv: this.getLanguage().translateOption('csv', 'fileType', 'ExportFeed'),
+                        xlsx: this.getLanguage().translateOption('xlsx', 'fileType', 'ExportFeed'),
+                    }
                 },
                 model: this.model,
                 el: `${this.options.el} .field[data-name="fileType"]`,
                 defs: {
-                    name: 'fileType',
-                    params: {
-                        options: ['csv', 'xlsx'],
-                        translatedOptions: {
-                            csv: this.getLanguage().translateOption('csv', 'fileType', 'ExportFeed'),
-                            xlsx: this.getLanguage().translateOption('xlsx', 'fileType', 'ExportFeed'),
-                        }
-                    }
+                    name: 'fileType'
                 },
                 mode: 'edit'
             });

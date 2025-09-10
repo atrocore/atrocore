@@ -102,7 +102,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                         view.render();
                     }
 
-                    this.listenTo(model, 'change', () => {
+                    this.listenTo(view, 'change', () => {
                         this.optionsDefsList[num].options = model.get('options') || [];
                     });
                 });
@@ -126,7 +126,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                         view.setOptionList(this.model.get('options'));
                     });
 
-                    this.listenTo(model, 'change', () => {
+                    this.listenTo(view, 'change', () => {
                         this.optionsDefsList[num].options = model.get('options') || [];
                     });
                 });

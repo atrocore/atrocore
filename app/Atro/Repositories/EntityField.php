@@ -625,6 +625,9 @@ class EntityField extends ReferenceData
             foreach ($conditionalProperties as $key => $value) {
                 if ($value === null) {
                     unset($conditionalProperties[$key]);
+                    $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                        "fields.{$entity->get('code')}.conditionalProperties.$key"
+                    ]);
                 }
             }
 

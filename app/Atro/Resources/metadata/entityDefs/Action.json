@@ -122,7 +122,26 @@
     },
     "conditionsType": {
       "type": "varchar",
-      "view": "views/action/fields/conditions-type"
+      "view": "views/action/fields/conditions-type",
+      "conditionalProperties": {
+        "disableOptions": [
+          {
+            "options": [
+              "basic"
+            ],
+            "conditionGroup": [
+              {
+                "type": "isEmpty",
+                "attribute": "sourceEntity"
+              },
+              {
+                "type": "isEmpty",
+                "attribute": "targetEntity"
+              }
+            ]
+          }
+        ]
+      }
     },
     "conditions": {
       "type": "wysiwyg",

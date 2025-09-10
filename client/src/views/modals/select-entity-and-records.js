@@ -249,12 +249,12 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
                 model: this.model,
                 el: `${this.options.el} .entity-container .field[data-name="selectedLink"]`,
                 defs: {
-                    name: 'selectedLink',
-                    params: {
-                        required: true,
-                        options: options,
-                        translatedOptions: translatedOptions
-                    }
+                    name: 'selectedLink'
+                },
+                params: {
+                    required: true,
+                    options: options,
+                    translatedOptions: translatedOptions
                 },
                 mode: 'edit'
             }, view => {

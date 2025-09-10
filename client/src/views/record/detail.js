@@ -2481,7 +2481,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
             let layoutHasActionFields = false
 
-            if (fieldActions.length) {
+            if (fieldActions.length  && this.gridLayout) {
                 const fields = fieldActions.map(action => action.displayField);
                 this.gridLayout.layout.forEach(panel => {
                     panel.rows.forEach(row => {

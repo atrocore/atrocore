@@ -753,7 +753,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             $cell.find('.dynamic-action').remove();
 
             dynamicActions.forEach(action => {
-                const $button = $(`<a href="javascript:" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.label}</a>`);
+                const forEditModeOnly = !!this.getMetadata().get(['action', 'typesData', action.type || '', 'forEditModeOnly'])
+                const $button = $(`<a href="javascript:" data-for-edit-only="${forEditModeOnly}" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.label}</a>`);
 
                 if (inlineActions.size()) {
                     inlineActions.prepend($button);
@@ -772,9 +773,23 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (this.disabled || this.readOnly) {
                     return;
                 }
-                if (this.mode === 'detail') {
-                    $cell.find('.dynamic-action').removeClass('hidden');
-                }
+
+                $cell.find('.dynamic-action').each((idx, el) => {
+                    $el = $(el)
+                    if (this.mode === 'edit') {
+                        if ($el.data('forEditOnly')) {
+                            $el.removeClass('hidden');
+                        } else {
+                            $el.addClass('hidden');
+                        }
+                    } else {
+                        if ($el.data('forEditOnly')) {
+                            $el.addClass('hidden');
+                        } else {
+                            $el.removeClass('hidden');
+                        }
+                    }
+                });
             }).on('mouseleave', e => {
                 e.stopPropagation();
                 if (this.mode === 'detail') {
@@ -888,7 +903,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        checkConditionGroup(conditions){
+        checkConditionGroup(conditions) {
             return new ConditionsChecker(this).checkConditionGroup(conditions);
         },
 
@@ -896,7 +911,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getConditions(this.model.name, name, 'visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
-                    this.toggleRequiredMarker();
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();
@@ -904,7 +918,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        toggleRequiredMarker(){
+        toggleRequiredMarker() {
             if (this.hasRequiredMarker()) {
                 this.showRequiredSign();
             } else {
@@ -921,13 +935,40 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return false;
         },
 
+        getReadOnlyConditions(name) {
+            return this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
+        },
+
         isReadOnlyViaConditions(name) {
-            const conditions = this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
+            const conditions = this.getReadOnlyConditions(name);
             if (conditions) {
                 return this.checkConditionGroup(conditions);
             }
 
             return false;
+        },
+
+        toggleReadOnlyViaConditions(name) {
+            if (this.params.readOnly || this.model.getFieldParam(name, 'readOnly')) {
+                return;
+            }
+
+            const conditions = this.getReadOnlyConditions(name);
+            if (conditions) {
+                const readOnly = this.checkConditionGroup(conditions);
+                if (this.getParentView()?.getParentView()?.mode === 'edit') {
+                    if (readOnly) {
+                        this.setMode('detail');
+                    } else {
+                        this.setMode('edit');
+                    }
+                }
+
+                if (readOnly !== this.readOnly) {
+                    this.readOnly = readOnly;
+                    this.reRender();
+                }
+            }
         },
 
         getConditions(scope, name, type) {
@@ -984,6 +1025,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
                     this.toggleVisibility(this.name);
+                    this.toggleRequiredMarker();
+                    this.toggleReadOnlyViaConditions(this.name);
                 }
             });
         },
@@ -1006,7 +1049,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             var model = this.model;
             var prev = Espo.Utils.cloneDeep(this.initialAttributes);
 
-            model.set(data, {silent: true});
+            model.set(data, { silent: true });
             data = model.attributes;
 
             var attrs = false;
@@ -1025,7 +1068,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.validate()) {
                 this.notify(this.translate('Record cannot be saved'), 'error');
-                model.set(prev, {silent: true});
+                model.set(prev, { silent: true });
                 return;
             }
 
@@ -1383,7 +1426,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (!Espo[key]) {
                 Espo[key] = [];
-                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
+                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, { extensibleEnumId: extensibleEnumId }, { async: false }).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1406,10 +1449,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 };
 
                 if (customOptions) {
-                    options = {...options, ...customOptions}
+                    options = { ...options, ...customOptions }
                 }
 
-                this.ajaxGetRequest(scope, options, {async: false}).then(res => {
+                this.ajaxGetRequest(scope, options, { async: false }).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
                     }
@@ -1435,7 +1478,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             let key = 'measure_data_' + measureId;
             if (!Espo[key]) {
                 Espo[key] = {};
-                this.ajaxGetRequest(`Measure/action/measureWithUnits`, {id: measureId}, {async: false}).then(res => {
+                this.ajaxGetRequest(`Measure/action/measureWithUnits`, { id: measureId }, { async: false }).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1453,8 +1496,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         loadUnitOptions() {
             this.unitList = [''];
-            this.unitListTranslates = {'': ''};
-            this.unitListSymbols = {'': ''};
+            this.unitListTranslates = { '': '' };
+            this.unitListSymbols = { '': '' };
 
             if (this.measureId) {
                 let nameField = 'name'
@@ -1497,11 +1540,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (!rule || !inputName) {
                 return '';
             }
-            if(!this.isNotListeningToOperatorChange) {
+            if (!this.isNotListeningToOperatorChange) {
                 this.isNotListeningToOperatorChange = {};
             }
 
-            if(!this.isNotListeningToOperatorChange[inputName]) {
+            if (!this.isNotListeningToOperatorChange[inputName]) {
                 this.listenTo(this.model, 'afterUpdateRuleOperator', (rule, previous) => {
                     if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                         return;
@@ -1511,22 +1554,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     let view = this.getView(viewKey);
 
 
-                    if(!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
-                        if(rule.operator.type !== 'between' && view){
+                    if (!['is_null', 'is_not_null', 'current_month', 'last_month', 'next_month', 'current_year', 'last_year'].includes(rule.operator.type)) {
+                        if (rule.operator.type !== 'between' && view) {
                             this.filterValue = view.model.get('value');
                             rule.$el.find(`input[name="${inputName}"]`).trigger('change');
                         }
 
-                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && !['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
 
-                        if(!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
+                        if (!['last_x_days', 'next_x_days'].includes(this.previousOperatorType) && ['last_x_days', 'next_x_days'].includes(rule.operator.type)) {
                             createValueField(rule.operator.type)
                         }
-                    }else{
+                    } else {
                         rule.value = this.defaultFilterValue;
-                        if(view) {
+                        if (view) {
                             view.model.set('value', this.defaultFilterValue);
                         }
                     }
@@ -1534,61 +1577,61 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.isNotListeningToOperatorChange[inputName] = true;
                 })
             }
-               this.filterValue = this.defaultFilterValue;
-               let createValueField = (type) => this.getModelFactory().create(null, model => {
-                    model.set('value', this.defaultFilterValue);
-                    setTimeout(() => {
-                        this.previousOperatorType = type ?? rule.operator.type;
-                        let view =  `views/fields/${this.type}`
+            this.filterValue = this.defaultFilterValue;
+            let createValueField = (type) => this.getModelFactory().create(null, model => {
+                model.set('value', this.defaultFilterValue);
+                setTimeout(() => {
+                    this.previousOperatorType = type ?? rule.operator.type;
+                    let view = `views/fields/${this.type}`
 
-                        if (['wysiwyg', 'markdown', 'text'].includes(this.type)) {
-                            view = 'views/fields/varchar';
-                        } else if (this.type === 'autoincrement') {
-                            view = 'views/fields/int';
+                    if (['wysiwyg', 'markdown', 'text'].includes(this.type)) {
+                        view = 'views/fields/varchar';
+                    } else if (this.type === 'autoincrement') {
+                        view = 'views/fields/int';
+                    }
+
+                    if (['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
+                        view = 'views/fields/int'
+                    }
+                    this.createView(viewKey, view, {
+                        name: 'value',
+                        el: `#${rule.id} .field-container.${inputName}`,
+                        model: model,
+                        mode: 'edit',
+                        params: {
+                            notNull: true
                         }
-
-                        if(['last_x_days', 'next_x_days'].includes(this.previousOperatorType)) {
-                            view = 'views/fields/int'
-                        }
-                        this.createView(viewKey, view, {
-                            name: 'value',
-                            el: `#${rule.id} .field-container.${inputName}`,
-                            model: model,
-                            mode: 'edit',
-                            params: {
-                                notNull: true
-                            }
-                        }, view => {
-                            view.render();
-                            this.listenTo(model, 'change', () => {
-                                if(rule.operator.type === 'between') {
-                                    if(inputName.endsWith('value_1')){
-                                        rule.rightValue = model.get('value')
-                                    }else{
-                                        rule.leftValue = model.get('value')
-                                    }
-
-                                    if(rule.rightValue != null && rule.leftValue != null) {
-                                        this.filterValue = [rule.leftValue, rule.rightValue];
-                                    }
-                                }else{
-                                    this.filterValue = model.get('value')
+                    }, view => {
+                        view.render();
+                        this.listenTo(model, 'change', () => {
+                            if (rule.operator.type === 'between') {
+                                if (inputName.endsWith('value_1')) {
+                                    rule.rightValue = model.get('value')
+                                } else {
+                                    rule.leftValue = model.get('value')
                                 }
-                                rule.$el.find(`input[name="${inputName}"]`).trigger('change');
-                            });
-                            this.renderAfterEl(view, `#${rule.id} .field-container`);
-                        });
-                    }, 50);
-                    this.listenTo(this.model, 'afterInitQueryBuilder', () => {
-                            if(rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
-                                model.set('value',inputName.endsWith('value_1') ? rule.value[1]: rule.value[0]);
-                            }else{
-                                model.set('value', rule.value);
-                            }
-                    });
-                });
 
-               createValueField();
+                                if (rule.rightValue != null && rule.leftValue != null) {
+                                    this.filterValue = [rule.leftValue, rule.rightValue];
+                                }
+                            } else {
+                                this.filterValue = model.get('value')
+                            }
+                            rule.$el.find(`input[name="${inputName}"]`).trigger('change');
+                        });
+                        this.renderAfterEl(view, `#${rule.id} .field-container`);
+                    });
+                }, 50);
+                this.listenTo(this.model, 'afterInitQueryBuilder', () => {
+                    if (rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
+                        model.set('value', inputName.endsWith('value_1') ? rule.value[1] : rule.value[0]);
+                    } else {
+                        model.set('value', rule.value);
+                    }
+                });
+            });
+
+            createValueField();
 
             return `<div class="field-container ${inputName}"></div><input type="hidden" real-name="${viewKey}" name="${inputName}" />`;
         },
