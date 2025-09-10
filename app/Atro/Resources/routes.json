@@ -1000,7 +1000,7 @@
               },
               "field": {
                 "type": "string",
-                "example": "myFieldScriptCode"
+                "example": "myScriptFieldCode"
               }
             },
             "required": ["id", "field", "scope"]
