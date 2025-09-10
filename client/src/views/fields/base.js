@@ -894,15 +894,19 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const conditions = this.getReadOnlyConditions(name);
             if (conditions) {
-                this.readOnly = this.checkConditionGroup(conditions);
+                const readOnly = this.checkConditionGroup(conditions);
                 if (this.getParentView()?.getParentView()?.mode === 'edit') {
-                    if (this.readOnly) {
+                    if (readOnly) {
                         this.setMode('detail');
                     } else {
                         this.setMode('edit');
                     }
                 }
-                this.reRender();
+
+                if (readOnly !== this.readOnly) {
+                    this.readOnly = readOnly;
+                    this.reRender();
+                }
             }
         },
 
