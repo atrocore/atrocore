@@ -26,7 +26,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                     {{#unless divider}}
-                        <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
+                    <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" {{#if targetBlank}} target="_blank" {{/if}} class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{#if icon}}{{{icon}}}{{/if}}{{label}}{{/if}}</a></li>
                     {{else}}
                     <li class="divider"></li>
                     {{/unless}}
@@ -41,7 +41,7 @@
             <li class="header">
                 <span>{{translate "Navigation Menu"}}</span>
                 {{#if canConfigureMenu}}
-                    <i data-action="configureMenu" class="ph ph-gear cursor-pointer"></i>
+                <i data-action="configureMenu" class="ph ph-gear cursor-pointer"></i>
                 {{/if}}
             </li>
             {{#each tabDefsList}}
@@ -116,9 +116,9 @@
 
     <div class="collapse navbar-collapse navbar-body">
         {{#if globalSearch}}
-            <div class="nav navbar-nav navbar-form global-search-container">
-                {{{globalSearch}}}
-            </div>
+        <div class="nav navbar-nav navbar-form global-search-container">
+            {{{globalSearch}}}
+        </div>
         {{/if}}
         {{#if hasLocaleSwitcher}}
         <div class="locale-switcher-container"></div>

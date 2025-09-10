@@ -98,8 +98,10 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
         },
 
         getValueViewName: function () {
-            const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || this.model.getFieldParam(this.field, 'type') || 'base';
+            let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type'])
+                || this.model.getFieldParam(this.field, 'type') || 'base';
 
+            fieldType = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'valueType']) || fieldType;
             return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
         },
 

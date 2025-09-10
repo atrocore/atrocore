@@ -43,6 +43,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
                     isEmpty: true
                 };
             }
+
             return {
                 viewDataList: this.viewDataList,
                 operator: this.operator,
