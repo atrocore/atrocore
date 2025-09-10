@@ -411,9 +411,9 @@ Espo.define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, 
             var o = {
                 model: this.model,
                 el: this.options.el + ' .field[data-name="' + name + '"]',
+                params: params,
                 defs: {
-                    name: name,
-                    params: params
+                    name: name
                 },
                 mode: readOnly ? 'detail' : 'edit',
                 readOnly: readOnly,
