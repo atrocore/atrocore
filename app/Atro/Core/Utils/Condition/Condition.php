@@ -102,6 +102,7 @@ class Condition
 
         $currentValue = $entity->get($attribute);
 
+
         if (is_null($currentValue)
             && !empty($item['data']['field'])
             && $entity->get($item['data']['field'])) {
@@ -110,6 +111,10 @@ class Condition
 
         if ($currentValue instanceof EntityCollection) {
             $currentValue = array_column($currentValue->toArray(), 'id');
+        }
+
+        if($currentValue === null && $entity->getAttributes()[$attribute]['type'] === 'jsonArray') {
+            $currentValue  = [];
         }
 
         $values[] = $currentValue;
@@ -293,17 +298,25 @@ class Condition
     protected static function checkContains(array $values): bool
     {
         self::isValidCountArray(2, $values);
-
         $currentValue = array_shift($values);
+        $needValue = array_shift($values);
+
+        if(is_array($currentValue)) {
+            self::isValidFirstValueIsArray($currentValue);
+            self::isValidNotArrayAndObject($needValue);
+
+            return in_array($needValue, $currentValue);
+        }
+
         if($currentValue === null) {
             $currentValue = [];
         }
-        self::isValidFirstValueIsArray($currentValue);
 
-        $needValue = array_shift($values);
-        self::isValidNotArrayAndObject($needValue);
+        if(!is_string($currentValue)) {
+            throw new Error('The first value must be of string type');
+        }
 
-        return in_array($needValue, $currentValue);
+        return str_contains($needValue, $currentValue);
     }
 
     /**
