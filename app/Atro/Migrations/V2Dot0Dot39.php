@@ -100,11 +100,17 @@ class V2Dot0Dot39 extends Base
         $saveMetadata = false;
 
         foreach ($uiHandlers as $code => $uiHandler) {
+            if ($metadata->get("scopes.{$uiHandler['entityType']}.customizable") === false) {
+                unset($uiHandlers[$code]);
+                continue;
+            }
+
             $conditions = json_decode($uiHandler['conditions'], true);
             if (empty($conditions['conditionGroup'])) {
                 unset($uiHandlers[$code]);
                 continue;
             }
+
             foreach ($uiHandler['fields'] ?? [] as $field) {
                 $conditionalProperties = $metadata->get("entityDefs.{$uiHandler['entityType']}.fields.{$field}.conditionalProperties") ?? [];
                 switch ($uiHandler['type']) {
