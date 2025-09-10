@@ -575,26 +575,41 @@ class EntityField extends ReferenceData
         $conditionalPropertiesChanged = false;
         if ($entity->isAttributeChanged('conditionalRequired')) {
             $conditionalProperties['required'] = $entity->get('conditionalRequired');
+            $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                "fields.{$entity->get('code')}.conditionalProperties.required"
+            ]);
             $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalReadOnly')) {
             $conditionalProperties['readOnly'] = $entity->get('conditionalReadOnly');
+            $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                "fields.{$entity->get('code')}.conditionalProperties.readOnly"
+            ]);
             $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalProtected')) {
             $conditionalProperties['protected'] = $entity->get('conditionalProtected');
+            $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                "fields.{$entity->get('code')}.conditionalProperties.protected"
+            ]);
             $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalVisible')) {
             $conditionalProperties['visible'] = $entity->get('conditionalVisible');
+            $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                "fields.{$entity->get('code')}.conditionalProperties.visible"
+            ]);
             $conditionalPropertiesChanged = true;
         }
 
         if ($entity->isAttributeChanged('conditionalDisableOptions')) {
             $conditionalProperties['disableOptions'] = $entity->get('conditionalDisableOptions');
+            $this->getMetadata()->delete('entityDefs', $entity->get('entityId'), [
+                "fields.{$entity->get('code')}.conditionalProperties.disableOptions"
+            ]);
             $conditionalPropertiesChanged = true;
         }
 

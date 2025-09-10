@@ -849,7 +849,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getConditions(this.model.name, name, 'visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
-                    this.toggleRequiredMarker();
                     this.$el.parent().show();
                 } else {
                     this.$el.parent().hide();
@@ -964,6 +963,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
                     this.toggleVisibility(this.name);
+                    this.toggleRequiredMarker();
                     this.toggleReadOnlyViaConditions(this.name);
                 }
             });
