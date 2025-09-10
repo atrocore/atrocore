@@ -39,3 +39,4 @@ Espo.define('views/admin/field-manager/fields/is-uninherited-field', 'views/fiel
         }
     });
 });
+

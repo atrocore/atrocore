@@ -111,8 +111,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
 
         manageValue: function () {
             var valueType = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
-
-            if (valueType === 'field') {
+            let defaultFieldCreateValueView = () => {
                 var viewName = this.getValueViewName();
                 var fieldName = this.getValueFieldName();
                 this.createView('value', viewName, {
@@ -126,12 +125,19 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
                         view.render();
                     }
                 }, this);
+            }
 
-            } else if (valueType === 'custom') {
+            if (valueType === 'custom') {
                 this.clearView('value');
                 var methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
-                this[methodName]();
-            } else {
+                if(this[methodName]) {
+                    this[methodName]();
+                }else{
+                    defaultFieldCreateValueView();
+                }
+            }else if (valueType === 'field') {
+                defaultFieldCreateValueView()
+            }  else {
                 this.clearView('value');
             }
         },

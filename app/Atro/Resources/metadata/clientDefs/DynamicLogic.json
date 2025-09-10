@@ -221,16 +221,16 @@
             "valueType": "field"
         },
         "in": {
-            "valueType": "field"
+            "valueType": "custom"
         },
         "notIn": {
-            "valueType": "field"
+            "valueType": "custom"
         },
         "contains": {
-            "valueType": "field"
+            "valueType": "custom"
         },
         "notContains": {
-            "valueType": "field"
+            "valueType": "custom"
         },
         "inPast": {
             "valueType": "empty"
