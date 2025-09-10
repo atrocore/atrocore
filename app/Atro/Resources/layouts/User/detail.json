@@ -49,7 +49,9 @@
         {
           "name": "layoutProfile"
         },
-        false
+        {
+          "name": "locale"
+        }
       ]
     ]
   }
