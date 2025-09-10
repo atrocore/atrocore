@@ -357,6 +357,10 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     const newOptions = this.getSelectizeOptions();
+                    if (!this.selectizeEl) {
+                        return;
+                    }
+
                     this.selectizeEl.addOption(newOptions);
 
                     this.originalOptionList.forEach(option => {
@@ -513,9 +517,6 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
 
                 const select = this.$el.find('select');
                 select.selectize({
-                    allowEmptyOption: true,
-                    showEmptyOptionInDropdown: true,
-                    emptyOptionLabel: '',
                     valueField: 'value',
                     labelField: 'text',
                     searchField: ['text'],
