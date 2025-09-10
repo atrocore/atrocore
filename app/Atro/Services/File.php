@@ -31,7 +31,7 @@ class File extends Base
 
         $ids = [];
         foreach ($collection as $entity) {
-            if (!empty($entity->get('folderId'))){
+            if (!empty($entity->get('folderId'))) {
                 $ids[] = $entity->get('folderId');
             }
         }
@@ -198,6 +198,7 @@ class File extends Base
     {
         if (property_exists($attachment, 'reupload') && !empty($attachment->reupload)) {
             $attachment->id = $attachment->reupload;
+            $attachment->_skipIsEntityUpdated = true;
             $entity = parent::updateEntity($attachment->id, $attachment);
         } else {
             $entity = parent::createEntity($attachment);
