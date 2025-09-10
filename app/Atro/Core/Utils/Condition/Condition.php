@@ -102,7 +102,6 @@ class Condition
 
         $currentValue = $entity->get($attribute);
 
-
         if (is_null($currentValue)
             && !empty($item['data']['field'])
             && $entity->get($item['data']['field'])) {
