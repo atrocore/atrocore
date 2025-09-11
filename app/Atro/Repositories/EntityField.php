@@ -108,10 +108,13 @@ class EntityField extends ReferenceData
             $label = $this->translate('unit' . ucfirst($fieldName), 'fields', $entityName);
         }
 
-        $translatedOptions = [];
+        $translatedOptions = null;
         if(in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !empty($fieldDefs['options'])) {
             foreach ($fieldDefs['options'] as $option) {
-                $translatedOptions[$option] = $this->translate($option, 'fields', $entityName);
+                if(empty($translatedOptions)) {
+                   $translatedOptions = new \stdClass();
+                }
+                $translatedOptions->$option = $this->getLanguage()->translateOption($option, $fieldName, $entityName);
             }
         }
 
@@ -129,6 +132,12 @@ class EntityField extends ReferenceData
             'conditionalDisableOptions' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.disableOptions"),
             'multilangField'            => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
         ]);
+
+        if(!empty($translatedOptions)) {
+            $result["translatedOptions"] = $translatedOptions;
+        }
+
+        return $result;
     }
 
     protected function getAllItems(array $params = []): array
@@ -630,6 +639,46 @@ class EntityField extends ReferenceData
 
             $saveMetadata = true;
         }
+
+        if ($entity->isAttributeChanged('translatedOptions') && in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+            $deletedOptions = [];
+            $updatedOrCreatedOptions = [];
+            $newTranslationOptions = $entity->get('translatedOptions') ?? new \stdClass();
+            $fetchedTranslatedOptions = $entity->getFetched('translatedOptions') ?? new \stdClass();
+            $fetchedOptions = $entity->getFetched('options');
+            $newOptions = $entity->get('options') ?? [];
+            foreach ($fetchedOptions as $option) {
+                if(!in_array($option,  $newOptions)) {
+                    $deletedOptions[] = $option;
+                }
+
+                if(!empty($fetchedTranslatedOptions->{$option}) && !empty($newTranslationOptions->{$option}) && $fetchedTranslatedOptions->{$option} !== $newTranslationOptions->{$option}) {
+                    $updatedOrCreatedOptions[] = $option;
+                }
+            }
+
+            foreach ($newOptions as $option) {
+                if(!in_array($option,  $fetchedOptions)) {
+                    $updatedOrCreatedOptions[] = $option;
+                }
+            }
+
+            foreach ($deletedOptions as $option) {
+                $this->getLanguage()
+                    ->deleteOption($entity->get('entityId'), 'options', $entity->get('code'), $option);
+                $saveLanguage = true;
+            }
+
+            foreach ($updatedOrCreatedOptions as $option) {
+                if(empty($newTranslationOptions->{$option})) {
+                    continue;
+                }
+                $this->getLanguage()
+                    ->setOption($entity->get('entityId'), 'options', $entity->get('code'), $option, $newTranslationOptions->{$option});
+                $saveLanguage = true;
+            }
+        }
+
 
         if ($saveMetadata) {
             $this->getMetadata()->save();

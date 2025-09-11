@@ -40,8 +40,8 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
         setup() {
             this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
                 let color = this.model.get('optionColors')[index] ?? null;
-                if(color && !color.includes('#')) {
-                    color = '#'+ color;
+                if (color && !color.includes('#')) {
+                    color = '#' + color;
                 }
                 return {
                     code: option,
@@ -60,10 +60,11 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             });
 
             this.listenTo(this, 'after:render', () => {
-                if(this.mode === 'edit') {
+                if (this.mode === 'edit') {
                     this.setupDragAndDrop();
                 }
-            })
+            });
+            this.af
         },
 
         setupItems() {
@@ -149,7 +150,8 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 mode: this.mode,
                 params: {
                     readOnly: (this.model.get(this.name) ?? []).includes(model.get('code')),
-                    required: true
+                    required: true,
+                    trim: true
                 },
                 inlineEditDisabled: true
             }, view => {
@@ -167,14 +169,17 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 model: model,
                 name: 'label',
                 mode: this.mode,
-                inlineEditDisabled: true
+                inlineEditDisabled: true,
+                params: {
+                    trim: true
+                },
             }, view => {
                 if (this.isRendered()) {
                     view.render();
                 }
 
                 this.listenTo(view, 'change', () => {
-                    this.optionsDefsList[num].label = model.get('label') ;
+                    this.optionsDefsList[num].label = model.get('label');
                 });
             });
 
@@ -240,14 +245,14 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             let translatedOptions = {};
 
             (this.optionsDefsList || []).forEach((item, i) => {
-                options.push(item.code);
-                translatedOptions[item.code] = item.label;
+                options.push(item.code.trim());
+                translatedOptions[item.code] = item.label ? item.label.trim() : "";
                 optionColors.push(item.color ?? "");
             });
 
             data[this.name] = null;
 
-            if(options.length) {
+            if (options.length) {
                 data[this.name] = options;
                 data['optionColors'] = optionColors;
                 data['translatedOptions'] = translatedOptions;
@@ -262,13 +267,17 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 const keys = ['code' + i.toString(), 'label' + i.toString(), 'color' + i.toString()];
                 keys.forEach((key) => {
                     const optionsView = this.getView(key);
-                    if (optionsView && !optionsView.params.readOnly) {
-                        optionsView.setMode(mode);
+                    if(!optionsView) {
+                        return;
                     }
+                    if (mode === 'edit' && optionsView.name === 'code' && (this.model.get(this.name) ?? []).includes(item.code)) {
+                        return;
+                    }
+                    optionsView.setMode(mode);
                 })
             });
 
-            if(mode === 'edit') {
+            if (mode === 'edit') {
                 this.setupDragAndDrop();
             }
         },
