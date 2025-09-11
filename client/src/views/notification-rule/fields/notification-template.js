@@ -18,9 +18,16 @@ Espo.define('views/notification-rule/fields/notification-template', 'views/field
 
         setup: function () {
             this.transportType = this.model.getFieldParam(this.name, 't_type')
+            this.realName = this.name;
             this.name = this.model.getFieldParam(this.name, 'name')
             this.foreignScope = this.transportType === 'email' ? 'EmailTemplate' : 'NotificationTemplate';
+
             Dep.prototype.setup.call(this);
         },
+
+        getConditions(type) {
+            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.realName}.conditionalProperties.${type}.conditionGroup`);
+        },
+
     });
 });
