@@ -112,6 +112,10 @@ class Condition
             $currentValue = array_column($currentValue->toArray(), 'id');
         }
 
+        if($currentValue === null && $entity->getAttributes()[$attribute]['type'] === 'jsonArray') {
+            $currentValue  = [];
+        }
+
         $values[] = $currentValue;
         if (isset($item['value'])) {
             $values[] = $item['value'];
@@ -293,17 +297,25 @@ class Condition
     protected static function checkContains(array $values): bool
     {
         self::isValidCountArray(2, $values);
-
         $currentValue = array_shift($values);
+        $needValue = array_shift($values);
+
+        if(is_array($currentValue)) {
+            self::isValidFirstValueIsArray($currentValue);
+            self::isValidNotArrayAndObject($needValue);
+
+            return in_array($needValue, $currentValue);
+        }
+
         if($currentValue === null) {
             $currentValue = [];
         }
-        self::isValidFirstValueIsArray($currentValue);
 
-        $needValue = array_shift($values);
-        self::isValidNotArrayAndObject($needValue);
+        if(!is_string($currentValue)) {
+            throw new Error('The first value must be of string type');
+        }
 
-        return in_array($needValue, $currentValue);
+        return str_contains($needValue, $currentValue);
     }
 
     /**

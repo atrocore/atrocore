@@ -27,15 +27,15 @@ Espo.define('views/admin/field-manager/fields/is-uninheritable-relation', 'views
             let shouldHide = true;
 
             if (
-               this.model.get('type') === 'linkMultiple'
+                this.model.get('type') === 'linkMultiple'
                 && !(this.getMetadata().get('app.nonInheritedRelations') || []).includes(field)
                 && !(this.getMetadata().get(['scopes', scope, 'mandatoryUnInheritedRelations']) || []).includes(field)
-                && this.getMetadata().get(['scope', scope, 'type']) === 'Hierarchy'
+                && this.getMetadata().get(['scopes', scope, 'type']) === 'Hierarchy'
             ) {
                 let foreignEntity = this.getMetadata().get(['entityDefs', scope, 'links', field, 'entity']);
                 let isRelationshipEntity = this.getMetadata().get(['scopes', foreignEntity, 'type']) === 'Relation';
                 if (isRelationshipEntity || this.getMetadata().get(['entityDefs', scope, 'links', field, 'relationName']) || (this.getMetadata().get(['scopes', scope, 'inheritedRelations']) || []).includes(field)) {
-                   shouldHide = false;
+                    shouldHide = false;
                 }
             }
 
