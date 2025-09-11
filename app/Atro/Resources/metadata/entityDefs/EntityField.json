@@ -186,7 +186,18 @@
     },
     "options": {
       "type": "array",
-      "view": "views/entity-field/fields/options"
+      "view": "views/entity-field/fields/options",
+      "conditionalProperties":  {
+        "required": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "in",
+              "value": ["enum", "multiEnum", "enumInt", "enumFloat"]
+            }
+          ]
+        }
+      }
     },
     "optionColors": {
       "type": "array",

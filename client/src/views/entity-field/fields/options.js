@@ -38,6 +38,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
         },
 
         setup() {
+            Dep.prototype.setup.call(this);
             this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
                 let color = this.model.get('optionColors')[index] ?? null;
                 if (color && !color.includes('#')) {
@@ -49,7 +50,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                     color: color
                 }
             })
-            this.scope = this.model.get('entityId');
 
             this.setupItems();
             this.setupItemViews();
@@ -64,7 +64,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                     this.setupDragAndDrop();
                 }
             });
-            this.af
+
         },
 
         setupItems() {
@@ -254,9 +254,11 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
 
             if (options.length) {
                 data[this.name] = options;
-                data['optionColors'] = optionColors;
                 data['translatedOptions'] = translatedOptions;
             }
+
+            data['optionColors'] = optionColors.filter(o => o).length > 0 ? optionColors : null;
+
 
             return data;
         },
@@ -286,7 +288,11 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
         },
 
         validate() {
-            let res = false;
+            let res = Dep.prototype.validate.call(this);
+
+            if(res) {
+                return true;
+            }
 
             (this.optionsDefsList || []).forEach((item, i) => {
                 const key = 'code' + i.toString();

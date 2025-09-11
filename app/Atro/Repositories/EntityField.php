@@ -640,12 +640,12 @@ class EntityField extends ReferenceData
             $saveMetadata = true;
         }
 
-        if ($entity->isAttributeChanged('translatedOptions') && in_array($entity->get('type'), ['enum', 'multiEnum'])) {
+        if (($entity->isNew() || $entity->isAttributeChanged('translatedOptions')) && in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $deletedOptions = [];
             $updatedOrCreatedOptions = [];
             $newTranslationOptions = $entity->get('translatedOptions') ?? new \stdClass();
             $fetchedTranslatedOptions = $entity->getFetched('translatedOptions') ?? new \stdClass();
-            $fetchedOptions = $entity->getFetched('options');
+            $fetchedOptions = $entity->getFetched('options') ?? [];
             $newOptions = $entity->get('options') ?? [];
             foreach ($fetchedOptions as $option) {
                 if(!in_array($option,  $newOptions)) {

@@ -1,5 +1,5 @@
-<div class="conditional-disable-options">
-    <div class="conditional-disable-options-list-container list-group" style="margin-bottom: 10px">
+<div class="options">
+    <div class="options-list-container list-group" style="margin-bottom: 10px">
         <div class="list-group-item">
             <div style="margin: 5px 0; display:flex; gap: 15px">
                 <div data-name="draggableIcon">
