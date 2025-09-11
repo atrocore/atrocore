@@ -160,7 +160,7 @@ class ClassificationAttribute extends Base
 
             $this
                 ->getPseudoTransactionManager()
-                ->pushUpdateEntityJob($entityName, $id, ['modifiedAt' => date('Y-m-d')], $parentId);
+                ->pushUpdateEntityJob($entityName, $id, ['modifiedAt' => date('Y-m-d H:i:s')], $parentId);
         }
     }
 

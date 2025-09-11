@@ -11,7 +11,8 @@
     "fields": {
       "select": false,
       "limit": 2000,
-      "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink"
+      "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink",
+      "hideShowFullList": true
     }
   },
   "bottomPanels": {
