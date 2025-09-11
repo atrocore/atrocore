@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Atro\Core\Exceptions\BadRequest;
@@ -252,5 +253,85 @@ class ExtensibleEnumOption extends Base
             ->executeQuery();
 
         parent::afterRemove($entity, $options);
+    }
+
+
+    public function bulkCreateOptions(array $data, ?string $uniqueField = 'code'): void
+    {
+        $existingItems = [];
+        if (!empty($uniqueField)) {
+            $existingItems = $this->select(['id', $uniqueField])->where([$uniqueField => array_filter(array_column($data, $uniqueField))])
+                ->find()->toArray();
+        }
+        $optionIds = array_column($existingItems, 'id');
+        $existingKeys = array_column($existingItems, $uniqueField);
+
+        $insertData = [];
+        $relationData = [];
+        foreach ($data as $item) {
+            $extensibleEnumId = $item['extensibleEnumId'];
+            unset($item['extensibleEnumId']);
+            $index = array_search($item[$uniqueField], $existingKeys);
+            if ($index !== false) {
+                $id = $optionIds[$index];
+            } else {
+                $id = Util::generateId();
+                $item['id'] = $id;
+                $insertData[] = $item;
+            }
+
+            if (empty($extensibleEnumId)) {
+                continue;
+            }
+
+            $relationData[] = [
+                'id'                     => Util::generateId(),
+                'extensibleEnumId'       => $extensibleEnumId,
+                'extensibleEnumOptionId' => $id,
+            ];
+        }
+
+        if (!empty($insertData)) {
+            $columns = array_keys($insertData[0]);
+            $columnList = implode(', ', array_map(fn($column) => $this->getConnection()->quoteIdentifier($this->getMapper()->toDb($column)), $columns));
+
+            $sql = "INSERT INTO extensible_enum_option ($columnList) VALUES ";
+            $placeholders = [];
+            $params = [];
+
+            foreach ($insertData as $index => $row) {
+                $placeholders[] = '(' . implode(', ', array_fill(0, count($columns), '?')) . ')';
+                foreach ($columns as $column) {
+                    $params[] = $row[$column];
+                }
+            }
+
+            $sql .= implode(', ', $placeholders);
+
+            $this->getEntityManager()->getConnection()->executeStatement($sql, $params);
+        }
+
+        // insert relation data
+        if (!empty($relationData)) {
+            $sql = 'INSERT INTO extensible_enum_extensible_enum_option (id, extensible_enum_id, extensible_enum_option_id) VALUES ';
+            $placeholders = [];
+            $params = [];
+
+            foreach ($relationData as $index => $row) {
+                $placeholders[] = '(?, ?, ?)';
+                $params[] = $row['id'];
+                $params[] = $row['extensibleEnumId'];
+                $params[] = $row['extensibleEnumOptionId'];;
+            }
+
+            $sql .= implode(', ', $placeholders);
+            if (Converter::isPgSQL($this->getEntityManager()->getConnection())) {
+                $sql .= ' ON CONFLICT DO NOTHING';
+            } else {
+                $sql = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $sql);
+            }
+
+            $this->getEntityManager()->getConnection()->executeStatement($sql, $params);
+        }
     }
 }
