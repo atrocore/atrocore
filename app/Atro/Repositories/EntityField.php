@@ -108,7 +108,14 @@ class EntityField extends ReferenceData
             $label = $this->translate('unit' . ucfirst($fieldName), 'fields', $entityName);
         }
 
-        return array_merge($fieldDefs, [
+        $translatedOptions = [];
+        if(in_array($fieldDefs['type'], ['enum', 'multiEnum']) && !empty($fieldDefs['options'])) {
+            foreach ($fieldDefs['options'] as $option) {
+                $translatedOptions[$option] = $this->translate($option, 'fields', $entityName);
+            }
+        }
+
+        $result =  array_merge($fieldDefs, [
             'id'                        => "{$entityName}_{$fieldName}",
             'code'                      => $fieldName,
             'name'                      => $label,

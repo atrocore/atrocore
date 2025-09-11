@@ -186,7 +186,7 @@
     },
     "options": {
       "type": "array",
-      "view": "views/admin/field-manager/fields/options-extended"
+      "view": "views/entity-field/fields/options"
     },
     "optionColors": {
       "type": "array",
@@ -199,6 +199,9 @@
     "allowedOptions": {
       "type": "array",
       "view": "views/admin/field-manager/fields/allowed-options"
+    },
+    "translatedOptions": {
+      "type": "jsonObject"
     },
     "extensibleEnumOptions": {
       "type": "jsonObject",
