@@ -7,19 +7,18 @@
                 </div>
                 <div class="cell form-group"  style="flex: 1">
                     <label class="control-label" >
-                        <span class="label-text">Code</span>
+                        <span class="label-text">{{translate 'code'}}</span>
                     </label>
                 </div>
                 <div class="cell  form-group" style="flex: 1">
                     <label class="control-label" >
-                        <span class="label-text">Label</span>
+                        <span class="label-text">{{translate 'label'}}</span>
                     </label>
                 </div>
                 <div class="cell form-group" style="flex: 1">
                     <label class="control-label" >
-                        <span class="label-text">Color</span>
+                        <span class="label-text">{{translate 'color'}}</span>
                     </label>
-
                 </div>
             </div>
         </div>

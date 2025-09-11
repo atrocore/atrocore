@@ -5,22 +5,21 @@
     <div class="options-list-container list-group">
      <div class="list-group-item">
          <div style="margin: 5px 0; display:flex; gap: 15px">
-            <div class="cell form-group"  style="flex: 1">
-                <label class="control-label" >
-                    <span class="label-text">Code</span>
-                </label>
-            </div>
-            <div class="cell  form-group" style="flex: 1">
-                <label class="control-label" >
-                    <span class="label-text">Label</span>
-                </label>
-            </div>
-            <div class="cell form-group" style="flex: 1">
-                <label class="control-label" >
-                    <span class="label-text">Color</span>
-                </label>
-
-            </div>
+              <div class="cell form-group"  style="flex: 1">
+                    <label class="control-label" >
+                        <span class="label-text">{{translate 'code'}}</span>
+                    </label>
+                </div>
+                <div class="cell  form-group" style="flex: 1">
+                    <label class="control-label" >
+                        <span class="label-text">{{translate 'label'}}</span>
+                    </label>
+                </div>
+                <div class="cell form-group" style="flex: 1">
+                    <label class="control-label" >
+                        <span class="label-text">{{translate 'color'}}</span>
+                    </label>
+                </div>
         </div>
     </div>
         {{#each itemDataList}}
