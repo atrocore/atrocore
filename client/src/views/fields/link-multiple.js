@@ -152,6 +152,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         setup: function () {
+            Dep.prototype.setup.call(this);
+
             if (this.nameHashName === null) {
                 this.nameHashName = this.name + 'Names';
             }
