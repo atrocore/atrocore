@@ -961,9 +961,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
-                    this.toggleVisibility();
-                    this.toggleRequiredMarker();
                     this.toggleReadOnlyViaConditions();
+                    if (
+                        this.getConditions('visible')
+                        || this.getConditions('required')
+                    ) {
+                        this.reRender();
+                    }
                 }
             });
         },

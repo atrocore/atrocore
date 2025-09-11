@@ -284,7 +284,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($visible as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['visible']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
@@ -292,7 +292,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($required as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['required']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['required']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
@@ -300,14 +300,14 @@ class Metadata extends AbstractListener
         }
 
         foreach ($readOnly as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['readOnly']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['readOnly']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
             ];
         }
 
-        $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][] = [
+        $data['entityDefs']['EntityField']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'][] = [
             "type"      => "isEmpty",
             "attribute" => "multilangField"
         ];
