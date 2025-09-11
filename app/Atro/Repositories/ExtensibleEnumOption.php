@@ -258,20 +258,21 @@ class ExtensibleEnumOption extends Base
 
     public function bulkCreateOptions(array $data, ?string $uniqueField = 'code'): void
     {
-        $existingItems = [];
+        $optionIds = [];
+        $existingKeys = [];
         if (!empty($uniqueField)) {
             $existingItems = $this->select(['id', $uniqueField])->where([$uniqueField => array_filter(array_column($data, $uniqueField))])
                 ->find()->toArray();
+            $optionIds = array_column($existingItems, 'id');
+            $existingKeys = array_column($existingItems, $uniqueField);
         }
-        $optionIds = array_column($existingItems, 'id');
-        $existingKeys = array_column($existingItems, $uniqueField);
 
         $insertData = [];
         $relationData = [];
         foreach ($data as $item) {
             $extensibleEnumId = $item['extensibleEnumId'];
             unset($item['extensibleEnumId']);
-            $index = array_search($item[$uniqueField], $existingKeys);
+            $index = empty($uniqueField) ? false : array_search($item[$uniqueField], $existingKeys);
             if ($index !== false) {
                 $id = $optionIds[$index];
             } else {
