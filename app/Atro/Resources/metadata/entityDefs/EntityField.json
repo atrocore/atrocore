@@ -201,7 +201,8 @@
       "view": "views/admin/field-manager/fields/allowed-options"
     },
     "translatedOptions": {
-      "type": "jsonObject"
+      "type": "jsonObject",
+      "notStorable": true
     },
     "extensibleEnumOptions": {
       "type": "jsonObject",

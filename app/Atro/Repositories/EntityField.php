@@ -679,7 +679,6 @@ class EntityField extends ReferenceData
             }
         }
 
-
         if ($saveMetadata) {
             $this->getMetadata()->save();
             $this->getDataManager()->rebuild();
