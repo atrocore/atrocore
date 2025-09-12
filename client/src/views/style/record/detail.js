@@ -28,7 +28,6 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
                 setTimeout(() => {
                     this.showReloadPageMessage()
                 }, 2000);
-
             });
         }
     });
