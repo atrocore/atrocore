@@ -899,7 +899,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (['edit', 'detail'].includes(this.mode)) {
-                this.toggleVisibility(this.name);
+                this.toggleVisibility();
             }
         },
 
@@ -907,8 +907,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return new ConditionsChecker(this).checkConditionGroup(conditions);
         },
 
-        toggleVisibility(name) {
-            const conditions = this.getConditions(this.model.name, name, 'visible');
+        toggleVisibility() {
+            const conditions = this.getConditions('visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
                     this.$el.parent().show();
@@ -926,8 +926,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        isRequiredViaConditions(name) {
-            const conditions = this.getConditions(this.model.name, name, 'required');
+        isRequiredViaConditions() {
+            const conditions = this.getConditions('required');
             if (conditions) {
                 return this.checkConditionGroup(conditions);
             }
@@ -935,12 +935,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return false;
         },
 
-        getReadOnlyConditions(name) {
-            return this.getConditions(this.model.name, name, 'protected') || this.getConditions(this.model.name, name, 'readOnly');
+        getReadOnlyConditions() {
+            return this.getConditions('protected') || this.getConditions('readOnly');
         },
 
-        isReadOnlyViaConditions(name) {
-            const conditions = this.getReadOnlyConditions(name);
+        isReadOnlyViaConditions() {
+            const conditions = this.getReadOnlyConditions();
             if (conditions) {
                 return this.checkConditionGroup(conditions);
             }
@@ -948,12 +948,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return false;
         },
 
-        toggleReadOnlyViaConditions(name) {
-            if (this.params.readOnly || this.model.getFieldParam(name, 'readOnly')) {
+        toggleReadOnlyViaConditions() {
+            if (this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly')) {
                 return;
             }
 
-            const conditions = this.getReadOnlyConditions(name);
+            const conditions = this.getReadOnlyConditions();
             if (conditions) {
                 const readOnly = this.checkConditionGroup(conditions);
                 if (this.getParentView()?.getParentView()?.mode === 'edit') {
@@ -971,8 +971,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        getConditions(scope, name, type) {
-            return this.getMetadata().get(`entityDefs.${scope}.fields.${name}.conditionalProperties.${type}.conditionGroup`);
+        getConditions(type) {
+            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.${type}.conditionGroup`);
         },
 
         getDisableOptionsRules() {
@@ -1011,11 +1011,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             });
 
             this.listenTo(this.model, 'after:inlineEditSave', () => {
-                const scope = this.model.name;
                 if (
-                    this.getConditions(scope, this.name, 'readOnly')
-                    || this.getConditions(scope, this.name, 'visible')
-                    || this.getConditions(scope, this.name, 'required')
+                    this.getConditions('readOnly')
+                    || this.getConditions('visible')
+                    || this.getConditions('required')
                     || (this.getDisableOptionsRules() || []).length > 0
                 ) {
                     this.reRender();
@@ -1024,9 +1023,13 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
-                    this.toggleVisibility(this.name);
-                    this.toggleRequiredMarker();
-                    this.toggleReadOnlyViaConditions(this.name);
+                    this.toggleReadOnlyViaConditions();
+                    if (
+                        this.getConditions('visible')
+                        || this.getConditions('required')
+                    ) {
+                        this.reRender();
+                    }
                 }
             });
         },

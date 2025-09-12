@@ -4,21 +4,61 @@
       "type": "link",
       "view": "views/role-scope-attribute-panel/fields/attribute-panel",
       "entity": "AttributePanel",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "roleScope": {
       "type": "link",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "readAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributePanelId"
+            }
+          ]
+        }
+      }
     },
     "editAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributePanelId"
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",

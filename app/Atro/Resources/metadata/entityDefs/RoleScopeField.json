@@ -4,7 +4,17 @@
       "type": "varchar",
       "view": "views/role-scope-field/fields/name",
       "required": true,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "nameLabel": {
       "type": "varchar",
@@ -18,17 +28,47 @@
     },
     "roleScope": {
       "type": "link",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "readAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "name"
+            }
+          ]
+        }
+      }
     },
     "editAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "name"
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",

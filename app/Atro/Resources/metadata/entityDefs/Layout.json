@@ -13,7 +13,18 @@
     "relatedEntity": {
       "type": "varchar",
       "view": "views/layout/fields/related-entity",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "viewType",
+              "type": "equals",
+              "value": "list"
+            }
+          ]
+        }
+      }
     },
     "relatedLink": {
       "type": "varchar"

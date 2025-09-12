@@ -3,7 +3,17 @@
     "name": {
       "type": "varchar",
       "notStorable": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "code": {
       "type": "varchar",
@@ -22,7 +32,18 @@
     "isCustomized": {
       "type": "bool",
       "readOnly": true,
-      "default": true
+      "default": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "module",
+              "value": "custom"
+            }
+          ]
+        }
+      }
     },
     "afZa": {
       "type": "text",

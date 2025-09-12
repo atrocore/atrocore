@@ -3,21 +3,61 @@
     "attribute": {
       "type": "link",
       "view": "views/role-scope-attribute/fields/attribute",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "roleScope": {
       "type": "link",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "readAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
     },
     "editAction": {
       "type": "bool",
       "default": false,
-      "notNull": true
+      "notNull": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",

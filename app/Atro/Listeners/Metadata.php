@@ -131,7 +131,7 @@ class Metadata extends AbstractListener
             }
         }
 
-        $data['clientDefs']['Attribute']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'] = [
+        $data['entityDefs']['Attribute']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'] = [
             [
                 "type"      => "in",
                 "attribute" => "type",
@@ -284,7 +284,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($visible as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['visible']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
@@ -292,7 +292,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($required as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['required']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['required']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
@@ -300,14 +300,14 @@ class Metadata extends AbstractListener
         }
 
         foreach ($readOnly as $field => $types) {
-            $data['clientDefs']['EntityField']['dynamicLogic']['fields'][$field]['readOnly']['conditionGroup'][] = [
+            $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['readOnly']['conditionGroup'][] = [
                 'type' => 'in',
                 'attribute' => 'type',
                 'value' => $types,
             ];
         }
 
-        $data['clientDefs']['EntityField']['dynamicLogic']['fields']['isMultilang']['visible']['conditionGroup'][] = [
+        $data['entityDefs']['EntityField']['fields']['isMultilang']['conditionalProperties']['visible']['conditionGroup'][] = [
             "type"      => "isEmpty",
             "attribute" => "multilangField"
         ];
@@ -557,36 +557,36 @@ class Metadata extends AbstractListener
                 ];
 
                 if ($visibleLogic = $this->getMetadata()->get([
-                    'clientDefs',
+                    'entityDefs',
                     $entityType,
-                    'dynamicLogic',
                     'fields',
                     $field,
+                    'conditionalProperties',
                     'visible'
                 ])) {
-                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['visible'] = $visibleLogic;
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                 }
 
                 if (($readOnly = $this->getMetadata()->get([
-                    'clientDefs',
+                    'entityDefs',
                     $entityType,
-                    'dynamicLogic',
                     'fields',
                     $field,
+                    'conditionalProperties',
                     'readOnly'
                 ]))) {
-                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['readOnly'] = $readOnly;
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                 }
 
                 if ($requireLogic = $this->getMetadata()->get([
-                    'clientDefs',
+                    'entityDefs',
                     $entityType,
-                    'dynamicLogic',
                     'fields',
                     $field,
+                    'conditionalProperties',
                     'required'
                 ])) {
-                    $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$unitFieldName]['required'] = $requireLogic;
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
                 }
 
                 if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
@@ -606,36 +606,36 @@ class Metadata extends AbstractListener
                     ];
 
                     if ($visibleLogic = $this->getMetadata()->get([
-                        'clientDefs',
+                        'entityDefs',
                         $entityType,
-                        'dynamicLogic',
                         'fields',
                         $field,
+                        'conditionalProperties',
                         'visible'
                     ])) {
-                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['visible'] = $visibleLogic;
+                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['visible'] = $visibleLogic;
                     }
 
                     if (($readOnly = $this->getMetadata()->get([
-                        'clientDefs',
+                        'entityDefs',
                         $entityType,
-                        'dynamicLogic',
                         'fields',
                         $field,
+                        'conditionalProperties',
                         'readOnly'
                     ]))) {
-                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['readOnly'] = $readOnly;
+                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['readOnly'] = $readOnly;
                     }
 
                     if ($requireLogic = $this->getMetadata()->get([
-                        'clientDefs',
+                        'entityDefs',
                         $entityType,
-                        'dynamicLogic',
                         'fields',
                         $field,
+                        'conditionalProperties',
                         'required'
                     ])) {
-                        $data['clientDefs'][$entityType]['dynamicLogic']['fields'][$virtualFieldName]['required'] = $requireLogic;
+                        $data['entityDefs'][$entityType]['fields'][$virtualFieldName]['conditionalProperties']['required'] = $requireLogic;
                     }
                 } else {
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
@@ -757,9 +757,9 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entity]['fields'][$fieldTo]['amountOfDigitsAfterComma'] = $fieldDefs['amountOfDigitsAfterComma'];
                 }
 
-                if (!empty($data['clientDefs'][$entity]['dynamicLogic']['fields'][$field])) {
-                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldFrom] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
-                    $data['clientDefs'][$entity]['dynamicLogic']['fields'][$fieldTo] = $data['clientDefs'][$entity]['dynamicLogic']['fields'][$field];
+                if (!empty($data['entityDefs'][$entity]['fields'][$field]['conditionalProperties'])) {
+                    $data['entityDefs'][$entity]['fields'][$fieldFrom]['conditionalProperties'] = $data['entityDefs'][$entity]['fields'][$field]['conditionalProperties'];
+                    $data['entityDefs'][$entity]['fields'][$fieldTo]['conditionalProperties'] = $data['entityDefs'][$entity]['fields'][$field]['conditionalProperties'];
                 }
             }
         }
@@ -1671,31 +1671,30 @@ class Metadata extends AbstractListener
                 "notStorable"  => true
             ];
             // field for the notification template selected for this transport
-            $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateId'] = [
-                "type"           => "varchar",
-                "virtualField"   => true,
-                "notStorable"    => true,
-                "filterDisabled" => true,
-                "view"           => "views/notification-rule/fields/notification-template",
-                "name"           => $transport . 'Template',
-                "t_type"         => $transport
+            $data['entityDefs']['NotificationRule']['fields'][$transport.'TemplateId'] = [
+                "type"                  => "varchar",
+                "virtualField"          => true,
+                "notStorable"           => true,
+                "filterDisabled"        => true,
+                "view"                  => "views/notification-rule/fields/notification-template",
+                "name"                  => $transport.'Template',
+                "t_type"                => $transport,
+                "conditionalProperties" => [
+                    "required" => [
+                        "conditionGroup" => [
+                            [
+                                "type"      => "isTrue",
+                                "attribute" => $transport.'Active',
+                            ],
+                        ],
+                    ],
+                ],
             ];
             $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateName'] = [
                 "type"           => "varchar",
                 "filterDisabled" => true,
                 "readOnly"       => true,
                 "notStorable"    => true
-            ];
-
-            $data['clientDefs']['NotificationRule']['dynamicLogic']['fields'][$transport . 'TemplateId'] = [
-                "required" => [
-                    "conditionGroup" => [
-                        [
-                            "type"      => "isTrue",
-                            "attribute" => $transport . 'Active'
-                        ]
-                    ]
-                ]
             ];
         }
     }

@@ -29,29 +29,5 @@
       "avatar"
     ]
   },
-  "iconClass": "user",
-  "dynamicLogic": {
-    "fields": {
-      "password": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      },
-      "passwordConfirm": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    }
-  }
+  "iconClass": "user"
 }

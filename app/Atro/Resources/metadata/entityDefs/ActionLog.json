@@ -30,11 +30,31 @@
     "incomingWebhook": {
       "type": "link",
       "entity": "IncomingWebhook",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "incomingWebhookId"
+            }
+          ]
+        }
+      }
     },
     "scheduledJob": {
       "type": "link",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "scheduledJobId"
+            }
+          ]
+        }
+      }
     },
     "status": {
       "type": "enum",

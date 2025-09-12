@@ -32,19 +32,5 @@
   "recordViews": {
     "compare": "views/classification/record/compare",
     "compareInstance": "views/classification/record/compare-instance"
-  },
-  "dynamicLogic": {
-    "fields": {
-      "entity": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
-    }
   }
 }

@@ -2,16 +2,46 @@
   "fields": {
     "classification": {
       "type": "link",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
     },
     "attribute": {
       "type": "link",
       "required": true,
-      "view": "views/classification-attribute/fields/attribute"
+      "view": "views/classification-attribute/fields/attribute",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "isRequired": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
     },
     "isInherited": {
       "type": "bool",
@@ -360,7 +390,21 @@
       "virtualField": true,
       "fieldProperty": true,
       "filterDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      }
     },
     "max": {
       "type": "float",
@@ -368,7 +412,21 @@
       "virtualField": true,
       "fieldProperty": true,
       "filterDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "int",
+                "float"
+              ]
+            }
+          ]
+        }
+      }
     },
     "maxLength": {
       "type": "int",
@@ -376,7 +434,23 @@
       "virtualField": true,
       "fieldProperty": true,
       "filterDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "varchar",
+                "text",
+                "markdown",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      }
     },
     "countBytesInsteadOfCharacters": {
       "type": "bool",
@@ -385,7 +459,23 @@
       "virtualField": true,
       "fieldProperty": true,
       "filterDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "varchar",
+                "text",
+                "markdown",
+                "wysiwyg"
+              ]
+            }
+          ]
+        }
+      }
     },
     "data": {
       "type": "jsonObject",
