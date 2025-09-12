@@ -446,7 +446,21 @@
     },
     "nonComparableFields": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/non-comparable-fields"
+      "view": "views/admin/entity-manager/fields/non-comparable-fields",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "auditedDisabledFields": {
       "type": "array",
