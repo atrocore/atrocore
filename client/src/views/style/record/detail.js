@@ -17,7 +17,10 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
 
             this.listenTo(this.model, 'change', () => {
                 let style = this.getThemeManager().getStyle();
-                if(!this.model.isNew() && style.id === this.model.id) {
+                if(!style) {
+                    return;
+                }
+                if(!this.model.isNew()  && style.id === this.model.id) {
                     let master = new Master();
                     master.initStyleVariables(this.model.attributes);
                 }
