@@ -7,30 +7,5 @@
   "recordViews": {
     "list": "views/translation/record/list",
     "detail": "views/translation/record/detail"
-  },
-  "dynamicLogic": {
-    "fields": {
-      "name": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      },
-      "isCustomized": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "module",
-              "value": "custom"
-            }
-          ]
-        }
-      }
-    }
   }
 }

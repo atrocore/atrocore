@@ -18,7 +18,17 @@
       "readOnly": true
     },
     "user": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "ipAddress": {
       "type": "varchar",
