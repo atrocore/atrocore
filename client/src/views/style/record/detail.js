@@ -19,18 +19,8 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
 
             if(style && style.id === this.model.id) {
                 this.listenTo(this.model, 'change', () => {
-                    if(!this.model.isNew()  && style.id === this.model.id) {
-                        const newStyle = this.model.attributes;
-                        let master = new Master();
-                        master.initStyleVariables(newStyle);
-                        if (newStyle.navigationIconColor ) {
-                            let colorConverter = new ColorConverter(newStyle['navigationIconColor']);
-                            this.filter = colorConverter.solve().filter;
-                            $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
-                        }else{
-                            $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter','');
-                        }
-                    }
+                    const style = this.model.attributes;
+                    this.reloadStyle(style);
                 })
             }
 
@@ -59,8 +49,27 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
                 styles[this.model.get('code')] = this.model.attributes;
                 referenceData['Style'] = styles;
                 this.getConfig().set('referenceData', referenceData);
-                // this.getConfig().save();
             });
+        },
+
+        reloadStyle(style) {
+            let master = new Master();
+            master.initStyleVariables(style);
+            if (style.navigationIconColor ) {
+                let colorConverter = new ColorConverter(style['navigationIconColor']);
+                this.filter = colorConverter.solve().filter;
+                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
+            }else{
+                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter','');
+            }
+        },
+
+        remove() {
+            const style = this.getThemeManager().getStyle();
+            if(style && this.model.id === style.id) {
+                this.reloadStyle(style);
+            }
+            Dep.prototype.remove.call(this);
         }
     });
 });

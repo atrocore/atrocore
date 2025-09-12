@@ -16,19 +16,9 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, `change:${this.name + 'Id'}`, () => {
-                let style = this.getStyle(this.model.get(this.name + 'Id'));
-                if(style){
-                    let master = new Master();
-                    master.initStyleVariables(style);
-                    if (style?.navigationIconColor) {
-                        let colorConverter = new ColorConverter(style?.navigationIconColor);
-                        this.filter = colorConverter.solve().filter;
-                        $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
-                    }else{
-                        $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
-                    }
-                }
-            })
+                const style = this.getStyle(this.model.get(this.name + 'Id'));
+                this.reloadStyle(style);
+            });
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getPreferences().set('styleId', this.model.get(this.name + 'Id'))
@@ -52,6 +42,26 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             });
         },
 
+        reloadStyle(style){
+            if(style){
+                let master = new Master();
+                master.initStyleVariables(style);
+                if (style?.navigationIconColor) {
+                    let colorConverter = new ColorConverter(style?.navigationIconColor);
+                    this.filter = colorConverter.solve().filter;
+                    $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
+                }else{
+                    $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
+                }
+
+                if(style.logo) {
+                    $('.navbar-brand img').attr('src', style.logo);
+                }else{
+                    $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
+                }
+            }
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
@@ -60,7 +70,7 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             }
         },
 
-        getStyle(id) {
+        getStyle(id = null) {
             if(!id) {
                 return this.getThemeManager().getStyle();
             }
@@ -75,6 +85,12 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
 
             return this.getThemeManager().getStyle();
         },
+
+        remove() {
+            const style = this.getStyle();
+            this.reloadStyle(style);
+            Dep.prototype.remove.call(this);
+        }
 
     });
 });
