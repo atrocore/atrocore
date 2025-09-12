@@ -40,24 +40,32 @@ class V2Dot1Dot0 extends Base
             $this->exec("ALTER TABLE file_type ADD min_size INT DEFAULT NULL, ADD max_size INT DEFAULT NULL, ADD aspect_ratio VARCHAR(255) DEFAULT NULL, ADD min_width INT DEFAULT NULL, ADD min_height INT DEFAULT NULL, ADD extensions LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', ADD mime_types LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)', DROP assign_automatically, DROP priority;");
         }
 
-        $types = $this->getConnection()->createQueryBuilder()
-            ->select('*')
-            ->from('file_type')
-            ->where('deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+        try {
+            $types = $this->getConnection()->createQueryBuilder()
+                ->select('*')
+                ->from('file_type')
+                ->where('deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->fetchAllAssociative();
+        } catch (\Throwable $e) {
+            $types = [];
+        }
 
         foreach ($types as $type) {
-            $validationRules = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('validation_rule')
-                ->where('file_type_id = :id')
-                ->setParameter('id', $type['id'])
-                ->andWhere('deleted = :false')
-                ->andWhere('is_active = :true')
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->setParameter('true', true, ParameterType::BOOLEAN)
-                ->fetchAllAssociative();
+            try {
+                $validationRules = $this->getConnection()->createQueryBuilder()
+                    ->select('*')
+                    ->from('validation_rule')
+                    ->where('file_type_id = :id')
+                    ->setParameter('id', $type['id'])
+                    ->andWhere('deleted = :false')
+                    ->andWhere('is_active = :true')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('true', true, ParameterType::BOOLEAN)
+                    ->fetchAllAssociative();
+            } catch (\Throwable $e) {
+                $validationRules = [];
+            }
 
             $qb = $this->getConnection()->createQueryBuilder()
                 ->update('file_type');
