@@ -52,6 +52,8 @@ Espo.define('views/admin/field-manager/fields/foreign-name', 'views/fields/enum'
                         }
                     }
                 });
+
+                this.originalOptionList = this.params.options;
             },
 
             afterRender() {

@@ -33,6 +33,8 @@ Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum'
                     this.translatedOptions[option.id] = option.name ? option.name : ' ';
                 });
             }
+
+            this.originalOptionList = this.params.options;
         },
 
         afterRender() {
