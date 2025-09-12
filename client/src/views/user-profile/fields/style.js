@@ -26,6 +26,17 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getStorage().clear('icons', 'navigationIconColor');
                 this.getPreferences().set('styleId', this.model.get(this.name + 'Id'))
+                let styleUrl = this.getThemeManager().getCustomStylesheet()
+                if (styleUrl) {
+                    let customLink = $('#custom-stylesheet');
+                    if (customLink.length > 0) {
+                        customLink.attr('href', styleUrl + `?r=${Date.now()}`);
+                    } else {
+                        $('head').append('<link href="' + styleUrl + '" rel="stylesheet" id="custom-stylesheet">');
+                    }
+                } else {
+                    $('#custom-stylesheet').remove();
+                }
             });
         },
 
