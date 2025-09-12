@@ -835,7 +835,7 @@
                 }
             }
             tick().then(() => {
-                if (activeItem.name === '_admin') {
+                if (activeItem?.name === '_admin') {
                     searchValue = Storage.get('treeSearchValue', '_admin') || null;
                 } else {
                     searchValue = Storage.get('treeSearchValue', scope) || null;
