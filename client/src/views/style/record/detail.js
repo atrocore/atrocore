@@ -25,6 +25,10 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getStorage().clear('icons', 'navigationIconColor');
+                setTimeout(() => {
+                    this.showReloadPageMessage()
+                }, 2000);
+
             });
         }
     });
