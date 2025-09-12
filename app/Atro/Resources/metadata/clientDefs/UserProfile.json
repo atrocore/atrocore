@@ -9,19 +9,5 @@
     "edit": [
       "avatar"
     ]
-  },
-  "dynamicLogic": {
-    "fields": {
-      "notificationProfileId": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "receiveNotifications"
-            }
-          ]
-        }
-      }
-    }
   }
 }

@@ -256,7 +256,17 @@
     },
     "notificationProfile": {
       "type": "link",
-      "view": "views/user-profile/fields/notification-profile"
+      "view": "views/user-profile/fields/notification-profile",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "receiveNotifications"
+            }
+          ]
+        }
+      }
     },
     "lpNavigation": {
       "type": "jsonObject",
