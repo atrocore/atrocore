@@ -39,9 +39,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
         rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],
 
-        afterRender() {
+        initStyleVariables(style) {
             if ($(":root").length > 0) {
-                let style = this.getThemeManager().getStyle();
                 if (style) {
                     (Object.keys(this.styleVariableMap) || []).forEach(param => {
                         if (style[param]) {
@@ -53,6 +52,11 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     });
                 }
             }
+        },
+
+        afterRender() {
+            let style = this.getThemeManager().getStyle();
+            this.initStyleVariables(style);
 
             const getTooltipContent = (el) => {
                 const titleText = el.getAttribute('data-original-title') || el.getAttribute('title');
