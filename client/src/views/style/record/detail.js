@@ -28,9 +28,24 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getStorage().clear('icons', 'navigationIconColor');
-                setTimeout(() => {
-                    this.showReloadPageMessage()
-                }, 2000);
+                let customStylesheetPath = this.model.get('customStylesheetPath');
+                if (this.model.changed._prev?.customStylesheet && this.model.get('customStylesheet') && customStylesheetPath) {
+                    customStylesheetPath = customStylesheetPath.replace('public/', '');
+                    let customLink = $('#custom-stylesheet');
+
+                    if (customLink.length > 0) {
+                        customLink.attr('href', customStylesheetPath + `?r=${Date.now()}`);
+                    } else {
+                        $('head').append('<link href="' + customStylesheetPath + '" rel="stylesheet" id="custom-stylesheet">');
+                    }
+                } else {
+                    $('#custom-stylesheet').remove();
+                }
+                if(this.model.changed._prev?.navigationIconColor) {
+                    setTimeout(() => {
+                        this.showReloadPageMessage()
+                    }, 2000);
+                }
             });
         }
     });
