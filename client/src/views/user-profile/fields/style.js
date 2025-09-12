@@ -23,8 +23,9 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 }
             })
 
-            this.listenTo(this.model, 'after:save', () => {
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getStorage().clear('icons', 'navigationIconColor');
+                this.getPreferences().set('styleId', this.model.get(this.name + 'Id'))
             });
         },
 
