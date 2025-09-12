@@ -41,7 +41,17 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": false
+      "importDisabled": false,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "passwordConfirm": {
       "type": "password",
@@ -53,7 +63,17 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "notStorable": true
+      "notStorable": true,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "firstName": {
       "type": "varchar",
