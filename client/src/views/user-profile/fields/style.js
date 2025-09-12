@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:views/site/master'], (Dep, Master) => {
+Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
 
     return Dep.extend({
 
@@ -20,11 +20,17 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 if(style){
                     let master = new Master();
                     master.initStyleVariables(style);
+                    if (style?.navigationIconColor) {
+                        let colorConverter = new ColorConverter(style?.navigationIconColor);
+                        this.filter = colorConverter.solve().filter;
+                        $(".nav-link img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
+                    }else{
+                        $(".nav-link img[src^=\"client/img/icons\"]").css('filter', '');
+                    }
                 }
             })
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.getStorage().clear('icons', 'navigationIconColor');
                 this.getPreferences().set('styleId', this.model.get(this.name + 'Id'))
                 let styleUrl = this.getThemeManager().getCustomStylesheet()
                 if (styleUrl) {
@@ -37,10 +43,11 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 } else {
                     $('#custom-stylesheet').remove();
                 }
-                if((this.model.changed._prev ?? {})[this.name+'Id']) {
-                    setTimeout(() => {
-                        Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
-                    }, 2000);
+
+                if(this.filter) {
+                    this.getStorage().set('icons', 'navigationIconColor', this.filter);
+                }else{
+                    this.getStorage().clear('icons', 'navigationIconColor')
                 }
             });
         },
