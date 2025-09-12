@@ -35,7 +35,6 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
             }
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.getStorage().clear('icons', 'navigationIconColor');
                 let customStylesheetPath = this.model.get('customStylesheetPath');
                 if (this.model.changed._prev?.customStylesheet && this.model.get('customStylesheet') && customStylesheetPath) {
                     customStylesheetPath = customStylesheetPath.replace('public/', '');
@@ -54,6 +53,13 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
                 }else{
                     this.getStorage().clear('icons', 'navigationIconColor')
                 }
+
+                const referenceData = this.getConfig().get('referenceData') || {}
+                const styles = referenceData['Style'] || {};
+                styles[this.model.get('code')] = this.model.attributes;
+                referenceData['Style'] = styles;
+                this.getConfig().set('referenceData', referenceData);
+                // this.getConfig().save();
             });
         }
     });
