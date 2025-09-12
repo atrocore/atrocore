@@ -26,9 +26,9 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
                         if (newStyle.navigationIconColor ) {
                             let colorConverter = new ColorConverter(newStyle['navigationIconColor']);
                             this.filter = colorConverter.solve().filter;
-                            $(".nav-link img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
+                            $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
                         }else{
-                            $(".nav-link img[src^=\"client/img/icons\"]").css('filter','');
+                            $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter','');
                         }
                     }
                 })
