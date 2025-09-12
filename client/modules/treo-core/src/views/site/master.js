@@ -33,7 +33,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             actionIconColor: '--action-icon-color',
             statusIconColor: '--status-icon-color',
             highlightingColorForRequired: '--highlighting-color-for-required',
-            highlightingColorForDataQuality: '--highlighting-color-for-data-quality'
+            highlightingColorForDataQuality: '--highlighting-color-for-data-quality',
+            toolbarBackgroundColor: '--toolbar-background-color'
         },
 
         rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],

@@ -36,6 +36,7 @@ body {
     --highlighting-color-for-data-quality: #fff8B8;
     --field-hover-color: #f8f8f8;
     --field-inline-edit-color: #f2f2f2;
+    --toolbar-background-color: #f5f5f5;
 }
 
 * {
@@ -13257,7 +13258,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .navbar-inverse {
-    background-color: var(--nav-menu-background);
+    background-color: var( --toolbar-background-color);
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -14049,7 +14050,7 @@ button.category:focus {
     }
 
     #navbar .nav.navbar-nav.navbar-right {
-        background-color: var(--nav-menu-background);
+        background-color: var(--toolbar-background-color);
         padding-right: 8px;
         margin-left: auto;
     }
