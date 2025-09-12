@@ -15,16 +15,16 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change', () => {
-                let style = this.getThemeManager().getStyle();
-                if(!style) {
-                    return;
-                }
-                if(!this.model.isNew()  && style.id === this.model.id) {
-                    let master = new Master();
-                    master.initStyleVariables(this.model.attributes);
-                }
-            })
+            let style = this.getThemeManager().getStyle();
+
+            if(style && style.id === this.model.id) {
+                this.listenTo(this.model, 'change', () => {
+                    if(!this.model.isNew()  && style.id === this.model.id) {
+                        let master = new Master();
+                        master.initStyleVariables(this.model.attributes);
+                    }
+                })
+            }
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 this.getStorage().clear('icons', 'navigationIconColor');
