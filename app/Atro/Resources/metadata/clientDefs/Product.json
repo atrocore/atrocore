@@ -37,19 +37,5 @@
             }
         }
     },
-    "dynamicLogic": {
-        "fields": {
-            "sortOrder": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isRoot"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "iconClass": "package"
 }
