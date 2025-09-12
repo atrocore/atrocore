@@ -41,19 +41,84 @@
       "type": "bool"
     },
     "asOwner": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": [
+                "mentioned"
+              ]
+            }
+          ]
+        }
+      }
     },
     "asFollower": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": [
+                "mentioned"
+              ]
+            }
+          ]
+        }
+      }
     },
     "asAssignee": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": [
+                "mentioned"
+              ]
+            }
+          ]
+        }
+      }
     },
     "asTeamMember": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": [
+                "mentioned"
+              ]
+            }
+          ]
+        }
+      }
     },
     "asNotificationProfile": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "occurrence",
+              "value": [
+                "mentioned"
+              ]
+            }
+          ]
+        }
+      }
     },
     "data": {
       "type": "jsonObject",

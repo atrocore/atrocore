@@ -40,7 +40,17 @@
       "type": "link",
       "entity": "Entity",
       "required": true,
-      "view": "views/classification/fields/entity"
+      "view": "views/classification/fields/entity",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "createdAt": {
       "type": "datetime",
