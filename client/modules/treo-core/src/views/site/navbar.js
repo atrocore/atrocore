@@ -46,7 +46,17 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
                 'click #global-search-panel a': function () {
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
+                },
+
+                'click .favorites-items [data-action="quickFavCreate"]': function(e){
+                    e.preventDefault();
+                    let data = $(e.currentTarget).data();
+
+                    // debugger
+                    this.getRouter().navigate(`#${data.name}/create/new`, {trigger: true});
+
                 }
+
             });
         },
 
