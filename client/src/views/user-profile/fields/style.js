@@ -37,6 +37,11 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 } else {
                     $('#custom-stylesheet').remove();
                 }
+                if((this.model.changed._prev ?? {})[this.name+'Id']) {
+                    setTimeout(() => {
+                        Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
+                    }, 2000);
+                }
             });
         },
 
