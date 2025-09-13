@@ -36,7 +36,7 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                     $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
                 }
 
-                if(!this.getConfig().get('companyLogo')) {
+                if(!this.getConfig().get('companyLogoId')) {
                     if(style.logo) {
                         $('.navbar-brand img').attr('src', style.logo);
                     }else{
@@ -45,7 +45,7 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 }
             }else{
                 master.removeStyleVariables();
-                if(!this.getConfig().get('companyLogo')) {
+                if(!this.getConfig().get('companyLogoId')) {
                     $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
                 }
                 $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
