@@ -16,34 +16,11 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, `change:${this.name + 'Id'}`, () => {
-                const style = this.getStyle(this.model.get(this.name + 'Id'));
-                this.reloadStyle(style);
+               this.updateStylesAfterChange();
             });
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.getPreferences().set('styleId', this.model.get(this.name + 'Id'));
-                const style = this.getStyle(this.model.get(this.name + 'Id'));
-                let styleUrl = this.getThemeManager().getCustomStylesheet()
-                if (styleUrl) {
-                    let customLink = $('#custom-stylesheet');
-                    if (customLink.length > 0) {
-                        customLink.attr('href', styleUrl + `?r=${Date.now()}`);
-                    } else {
-                        $('head').append('<link href="' + styleUrl + '" rel="stylesheet" id="custom-stylesheet">');
-                    }
-                } else {
-                    $('#custom-stylesheet').remove();
-                }
-
-                if(this.filter && style?.id) {
-                    this.getStorage().set('icons', 'navigationIconColor', this.filter);
-                }else{
-                    this.getStorage().clear('icons', 'navigationIconColor')
-                }
-
-                if(!style?.id) {
-                    setTimeout(() => this.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true), 500)
-                }
+               this.updateStylesAfterSave();
             });
         },
 
@@ -78,7 +55,7 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.getAcl().get('styleControlPermission') === 'no') {
+            if (this.shouldHide()) {
                 this.hide();
             }
         },
@@ -97,6 +74,43 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             }
 
             return this.getThemeManager().getStyle();
+        },
+
+        updateStylesAfterSave(){
+            this.updatePreferences('styleId', this.model.get(this.name + 'Id'))
+            const style = this.getStyle(this.model.get(this.name + 'Id') || this.getConfig().get('defaultStyleId'));
+
+            let styleUrl = this.getThemeManager().getCustomStylesheet()
+
+            if (styleUrl) {
+                let customLink = $('#custom-stylesheet');
+                if (customLink.length > 0) {
+                    customLink.attr('href', styleUrl + `?r=${Date.now()}`);
+                } else {
+                    $('head').append('<link href="' + styleUrl + '" rel="stylesheet" id="custom-stylesheet">');
+                }
+            } else {
+                $('#custom-stylesheet').remove();
+            }
+
+            if(this.filter && style?.id) {
+                this.getStorage().set('icons', 'navigationIconColor', this.filter);
+            }else{
+                this.getStorage().clear('icons', 'navigationIconColor')
+            }
+        },
+
+        updateStylesAfterChange(){
+            const style = this.getStyle(this.model.get(this.name + 'Id') || this.getConfig().get('defaultStyleId'));
+            this.reloadStyle(style);
+        },
+
+        shouldHide(){
+            return this.getAcl().get('styleControlPermission') === 'no'
+        },
+
+        updatePreferences(key, value) {
+            this.getPreferences().set(key, value);
         },
 
         remove() {

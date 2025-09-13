@@ -26,7 +26,7 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
                 let customStylesheetPath = this.model.get('customStylesheetPath');
-                if (this.model.changed._prev?.customStylesheet && this.model.get('customStylesheet') && customStylesheetPath) {
+                if (this.model.get('customStylesheet') && customStylesheetPath) {
                     customStylesheetPath = customStylesheetPath.replace('public/', '');
                     let customLink = $('#custom-stylesheet');
 
