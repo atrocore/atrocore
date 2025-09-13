@@ -54,6 +54,17 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             }
         },
 
+        removeStyleVariables() {
+            if ($(":root").length > 0) {
+                (Object.keys(this.styleVariableMap) || []).forEach(param => {
+                    $(":root")[0].style.setProperty(this.styleVariableMap[param], '');
+                    if (this.rgbVariables.includes(param)) {
+                        $(":root")[0].style.setProperty(this.styleVariableMap[param] + '-rgb', '')
+                    }
+                });
+            }
+        },
+
         afterRender() {
             let style = this.getThemeManager().getStyle();
             this.initStyleVariables(style);

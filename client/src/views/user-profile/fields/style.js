@@ -21,7 +21,8 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             });
 
             this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
-                this.getPreferences().set('styleId', this.model.get(this.name + 'Id'))
+                this.getPreferences().set('styleId', this.model.get(this.name + 'Id'));
+                const style = this.getStyle(this.model.get(this.name + 'Id'));
                 let styleUrl = this.getThemeManager().getCustomStylesheet()
                 if (styleUrl) {
                     let customLink = $('#custom-stylesheet');
@@ -34,17 +35,21 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                     $('#custom-stylesheet').remove();
                 }
 
-                if(this.filter) {
+                if(this.filter && style?.id) {
                     this.getStorage().set('icons', 'navigationIconColor', this.filter);
                 }else{
                     this.getStorage().clear('icons', 'navigationIconColor')
+                }
+
+                if(!style?.id) {
+                    setTimeout(() => this.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true), 500)
                 }
             });
         },
 
         reloadStyle(style){
+            let master = new Master();
             if(style){
-                let master = new Master();
                 master.initStyleVariables(style);
                 if (style?.navigationIconColor) {
                     let colorConverter = new ColorConverter(style?.navigationIconColor);
@@ -61,6 +66,12 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                         $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
                     }
                 }
+            }else{
+                master.removeStyleVariables();
+                if(!this.getConfig().get('companyLogo')) {
+                    $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
+                }
+                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
             }
         },
 
