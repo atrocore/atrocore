@@ -137,8 +137,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
         getActionList: function () {
             const scope = this.options.scope;
-            const filters = this.getStorage().get('listQueryBuilder', scope) || {};
-            if (filters.bool && filters.bool['onlyDeleted'] === true) {
+            const filters = this.getStorage().get('listQueryBuilder', scope);
+            if (filters && filters?.bool?.onlyDeleted === true) {
                 if (this.options.acl.delete) {
                     return [
                         {
