@@ -16,7 +16,17 @@
       "view": "views/admin/entity-manager/fields/code",
       "required": true,
       "trim": true,
-      "unique": true
+      "unique": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "type": {
       "type": "enum",
@@ -25,7 +35,17 @@
         "Base",
         "Hierarchy",
         "ReferenceData"
-      ]
+      ],
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "iconClass": {
       "type": "varchar",
@@ -33,22 +53,62 @@
     },
     "sortBy": {
       "type": "varchar",
-      "view": "views/admin/entity-manager/fields/sort-by"
+      "view": "views/admin/entity-manager/fields/sort-by",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "sortDirection": {
       "type": "enum",
       "options": [
         "asc",
         "desc"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "statusField": {
       "type": "varchar",
       "view": "views/admin/entity-manager/fields/status-field",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "kanbanViewMode": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "statusField"
+            }
+          ]
+        }
+      }
     },
     "customizable": {
       "type": "bool",
@@ -56,28 +116,107 @@
     },
     "kanbanStatusIgnoreList": {
       "type": "multiEnum",
-      "view": "views/admin/entity-manager/fields/kanban-status-ignore-list"
+      "view": "views/admin/entity-manager/fields/kanban-status-ignore-list",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "kanbanViewMode"
+            }
+          ]
+        }
+      }
     },
     "deleteWithoutConfirmation": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      }
     },
     "clearDeletedAfterDays": {
       "type": "int",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "autoDeleteAfterDays": {
       "type": "int",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "modifiedExtendedRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/modified-extended-relations",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      }
     },
     "duplicatableRelations": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/duplicatable-relations"
+      "view": "views/admin/entity-manager/fields/duplicatable-relations",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "ReferenceData"
+            }
+          ]
+        }
+      }
     },
     "hasOwner": {
       "type": "bool",
@@ -96,11 +235,33 @@
       "tooltip": true
     },
     "multiParents": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      }
     },
     "dragAndDrop": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      }
     },
     "fieldValueInheritance": {
       "type": "bool",
@@ -146,12 +307,38 @@
     },
     "disableHierarchy": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            }
+          ]
+        }
+      }
     },
     "unInheritedRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/un-inherited-relations",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "Hierarchy"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "relationInheritance"
+            }
+          ]
+        }
+      }
     },
     "description": {
       "type": "text"
@@ -161,17 +348,73 @@
       "tooltip": true
     },
     "hasActive": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hasArchive": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hideFieldTypeFilters": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "streamDisabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "isCustom": {
       "type": "bool",
@@ -203,7 +446,21 @@
     },
     "nonComparableFields": {
       "type": "array",
-      "view": "views/admin/entity-manager/fields/non-comparable-fields"
+      "view": "views/admin/entity-manager/fields/non-comparable-fields",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "auditedDisabledFields": {
       "type": "array",

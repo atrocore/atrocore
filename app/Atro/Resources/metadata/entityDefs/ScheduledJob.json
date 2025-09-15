@@ -7,7 +7,17 @@
     "type": {
       "type": "varchar",
       "required": true,
-      "view": "views/scheduled-job/fields/type"
+      "view": "views/scheduled-job/fields/type",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "job": {
       "type": "varchar"
@@ -43,7 +53,27 @@
       "readOnly": true
     },
     "storage": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "ScanStorage"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "ScanStorage"
+            }
+          ]
+        }
+      }
     },
     "jobs": {
       "type": "linkMultiple"

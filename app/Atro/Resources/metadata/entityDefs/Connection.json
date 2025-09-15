@@ -27,25 +27,101 @@
       "default": "{# { \"Username\": \"{{ username }}\\n Password: {{ password }}\" } #}",
       "notStorable": true,
       "dataField": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie",
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
     },
     "loginUrl": {
       "type": "url",
       "notStorable": true,
       "dataField": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "cookie",
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
     },
     "atrocoreUrl": {
       "type": "url",
       "notStorable": true,
       "dataField": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        }
+      }
     },
     "atrocoreToken": {
       "type": "password",
       "notStorable": true,
       "dataField": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "atrocore"
+              ]
+            }
+          ]
+        }
+      }
     },
     "name": {
       "type": "varchar",
@@ -58,40 +134,160 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "default": "localhost"
+      "default": "localhost",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp",
+                "vertica"
+              ]
+            }
+          ]
+        }
+      }
     },
     "dbName": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "vertica"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "vertica"
+              ]
+            }
+          ]
+        }
+      }
     },
     "port": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp",
+                "vertica"
+              ]
+            }
+          ]
+        }
+      }
     },
     "user": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp",
+                "cookie",
+                "pdoSql",
+                "vertica"
+              ]
+            }
+          ]
+        }
+      }
     },
     "password": {
       "type": "password",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "mysql",
+                "psql",
+                "msql",
+                "ftp",
+                "sftp",
+                "cookie",
+                "pdoSql",
+                "vertica",
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
     },
     "ftpSsl": {
       "type": "bool",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "ftp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthGrantType": {
       "type": "enum",
@@ -134,21 +330,77 @@
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2",
+                "otto"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthClientId": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2",
+                "otto"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthClientSecret": {
       "type": "password",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth2",
+                "otto"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "oauthGrantType",
+              "value": [
+                "client_credentials"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthScope": {
       "type": "varchar",
@@ -156,14 +408,51 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "default": "partnerId installation developer"
+      "default": "partnerId installation developer",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        }
+      }
     },
     "vendorOauthUrl": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        }
+      }
     },
     "vendorOauthScopes": {
       "type": "multiEnum",
@@ -187,40 +476,140 @@
         "products",
         "receipts",
         "price-reduction"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "otto"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthConsumerKey": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthConsumerSecret": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "required": false,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "requestTokenUrl": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "accessTokenUrl": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
-      "trim": true
+      "trim": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthVerifier": {
       "type": "varchar",
       "notStorable": true,
       "dataField": true,
       "trim": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthToken": {
       "type": "varchar",
@@ -228,7 +617,20 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "readOnly": false
+      "readOnly": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "oauthTokenSecret": {
       "type": "password",
@@ -236,17 +638,56 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "readOnly": false
+      "readOnly": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "callbackUrl": {
       "type": "varchar",
       "notStorable": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "linkUrl": {
       "type": "varchar",
       "notStorable": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "storeUrl": {
       "type": "varchar",
@@ -262,7 +703,31 @@
       "dataField": true,
       "required": false,
       "trim": true,
-      "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204"
+      "default": "https://staging.davidsonsinc.com/rest/V1/products/011418204",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "oauth1"
+              ]
+            }
+          ]
+        }
+      }
     },
     "data": {
       "type": "jsonObject",
@@ -296,7 +761,20 @@
     "additionalParameters": {
       "type": "text",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "msql"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpSecurity": {
       "type": "enum",
@@ -305,38 +783,187 @@
         "TLS"
       ],
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpServer": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpPassword": {
       "type": "password",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "basic"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpPort": {
       "type": "int",
       "notStorable": true,
       "dataField": true,
-      "view": "views/connection/fields/smtp-port"
+      "view": "views/connection/fields/smtp-port",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpUsername": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "outboundEmailFromName": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "outboundEmailFromAddress": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpAuthType": {
       "type": "enum",
@@ -346,32 +973,246 @@
         "oauth"
       ],
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpClientId": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpClientSecret": {
       "type": "password",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpOauthScope": {
       "type": "varchar",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpOauthAuthorizeUrl": {
       "type": "url",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpOauthTokenUrl": {
       "type": "url",
       "notStorable": true,
-      "dataField": true
+      "dataField": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "smtp"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "smtpAuthType",
+              "value": [
+                "oauth"
+              ]
+            }
+          ]
+        }
+      }
     },
     "smtpAccessData": {
       "type": "text",
@@ -383,7 +1224,31 @@
       "notStorable": true,
       "dataField": true,
       "trim": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      }
     },
     "server": {
       "type": "enum",
@@ -394,7 +1259,31 @@
         "mysql",
         "psql",
         "msql"
-      ]
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "pdoSql"
+              ]
+            }
+          ]
+        }
+      }
     },
     "headers": {
       "type": "text",
@@ -402,7 +1291,20 @@
       "default": "{#  [\"Authorization: Bearer {{ response['token'] }}\" ] #}",
       "notStorable": true,
       "dataField": true,
-      "required": false
+      "required": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "tokenAuthApi"
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "links": {

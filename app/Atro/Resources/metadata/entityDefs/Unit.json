@@ -26,13 +26,41 @@
       "required": true
     },
     "isMain": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isMain"
+            }
+          ]
+        }
+      }
     },
     "multiplier": {
       "type": "float",
       "required": true,
       "default": 1,
-      "view": "views/unit/fields/multiplier"
+      "view": "views/unit/fields/multiplier",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isMain"
+            }
+          ]
+        }
+      }
     },
     "convertTo": {
       "type": "link",

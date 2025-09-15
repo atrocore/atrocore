@@ -47,7 +47,17 @@
       "type": "int",
       "default": null,
       "massUpdateDisabled": true,
-      "filterDisabled": true
+      "filterDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "isRoot"
+            }
+          ]
+        }
+      }
     },
     "image": {
       "type": "file",

@@ -220,7 +220,17 @@
       "view": "views/admin/notification/fields/notification-smtp-connection"
     },
     "defaultNotificationProfile": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "sendOutNotifications"
+            }
+          ]
+        }
+      }
     },
     "sendOutNotifications": {
       "type": "bool"

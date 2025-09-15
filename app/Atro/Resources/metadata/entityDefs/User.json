@@ -41,7 +41,17 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "exportDisabled": true,
-      "importDisabled": false
+      "importDisabled": false,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "passwordConfirm": {
       "type": "password",
@@ -53,7 +63,17 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": false,
-      "notStorable": true
+      "notStorable": true,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "firstName": {
       "type": "varchar",
@@ -236,7 +256,17 @@
     },
     "notificationProfile": {
       "type": "link",
-      "view": "views/user-profile/fields/notification-profile"
+      "view": "views/user-profile/fields/notification-profile",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "receiveNotifications"
+            }
+          ]
+        }
+      }
     },
     "lpNavigation": {
       "type": "jsonObject",

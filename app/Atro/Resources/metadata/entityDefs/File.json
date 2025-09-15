@@ -124,7 +124,17 @@
     },
     "storage": {
       "type": "link",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "createdAt"
+            }
+          ]
+        }
+      }
     },
     "folder": {
       "type": "link",
@@ -227,12 +237,54 @@
     "width": {
       "type": "float",
       "measureId": "dimension",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "height": {
       "type": "float",
       "measureId": "dimension",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "size": {
       "type": "varchar",
@@ -241,11 +293,53 @@
       "notStorable": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "exportDisabled": true
+      "exportDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "colorSpace": {
       "type": "varchar",
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "contains",
+                  "attribute": "mimeType",
+                  "value": "image/"
+                },
+                {
+                  "type": "equals",
+                  "attribute": "mimeType",
+                  "value": "application/pdf"
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "scanId": {
       "type": "varchar",

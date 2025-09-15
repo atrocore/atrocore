@@ -12,34 +12,168 @@
       "view": "views/admin/field-manager/fields/code",
       "required": true,
       "trim": true,
-      "unique": true
+      "unique": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "foreignCode": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/foreign-code",
       "trim": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "type": {
       "type": "varchar",
       "required": true,
-      "view": "views/admin/field-manager/fields/type"
+      "view": "views/admin/field-manager/fields/type",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "relationType": {
       "type": "enum",
       "options": [
         "oneToMany",
         "manyToMany"
-      ]
+      ],
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
     },
     "entity": {
       "type": "link",
-      "required": true
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "foreignEntity": {
       "type": "link",
       "tooltip": true,
-      "view": "views/admin/field-manager/fields/foreign-entity"
+      "view": "views/admin/field-manager/fields/foreign-entity",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "link",
+                "linkMultiple"
+              ]
+            }
+          ]
+        }
+      }
     },
     "isMultilang": {
       "type": "bool",
@@ -165,10 +299,30 @@
     },
     "tooltipText": {
       "type": "text",
-      "view": "views/admin/field-manager/fields/tooltip-text"
+      "view": "views/admin/field-manager/fields/tooltip-text",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "tooltip"
+            }
+          ]
+        }
+      }
     },
     "tooltipLink": {
-      "type": "url"
+      "type": "url",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "tooltip"
+            }
+          ]
+        }
+      }
     },
     "noEmptyString": {
       "type": "bool"
@@ -193,7 +347,12 @@
             {
               "attribute": "type",
               "type": "in",
-              "value": ["enum", "multiEnum", "enumInt", "enumFloat"]
+              "value": [
+                "enum",
+                "multiEnum",
+                "enumInt",
+                "enumFloat"
+              ]
             }
           ]
         }
@@ -260,11 +419,77 @@
       "type": "varchar",
       "trim": true,
       "tooltip": true,
-      "view": "views/admin/field-manager/fields/relation-name"
+      "view": "views/admin/field-manager/fields/relation-name",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        }
+      }
     },
     "linkMultipleField": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "linkMultiple"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "relationType",
+              "value": [
+                "manyToMany"
+              ]
+            }
+          ]
+        }
+      }
     },
     "fileTypes": {
       "type": "array",
@@ -354,7 +579,21 @@
       "type": "link"
     },
     "showUser": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "code",
+              "type": "in",
+              "value": [
+                "createdAt",
+                "modifiedAt"
+              ]
+            }
+          ]
+        }
+      }
     },
     "isDuplicatableRelation": {
       "view": "views/admin/field-manager/fields/is-duplicatable-relation",
@@ -380,15 +619,48 @@
     },
     "auditableDisabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notEquals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
+      }
     },
     "auditableEnabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
+      }
     },
     "modifiedExtendedDisabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notEquals",
+              "value": "linkMultiple"
+            }
+          ]
+        }
+      }
     },
     "recordRelatedChangesInStream": {
       "type": "bool",

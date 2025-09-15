@@ -13,37 +13,5 @@
     "fromMeasure",
     "notConverted"
   ],
-  "iconClass": "scales",
-  "dynamicLogic": {
-    "fields": {
-      "multiplier": {
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isMain"
-            }
-          ]
-        }
-      },
-      "isMain": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "isMain"
-            }
-          ]
-        }
-      }
-    }
-  }
+  "iconClass": "scales"
 }
