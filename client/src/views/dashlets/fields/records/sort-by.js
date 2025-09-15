@@ -47,7 +47,6 @@ Espo.define('views/dashlets/fields/records/sort-by', 'views/fields/enum', functi
         setupOptions: function () {
             var entityType = this.model.get('entityType');
             var scope = entityType;
-            // debugger
 
             if (!entityType) {
                 this.params.options = [];
