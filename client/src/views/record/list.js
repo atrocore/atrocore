@@ -1395,7 +1395,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }.bind(this), 50)
             }
             const filters = this.getStorage().get('listQueryBuilder', this.scope);
-            if (filters && filters.bool['onlyDeleted'] === true && !this.massActionList.includes('restore')) {
+            if (filters && filters?.bool?.onlyDeleted === true && !this.massActionList.includes('restore')) {
                 this.massActionListBackup = this.massActionList;
                 this.checkAllResultMassActionListBackup = this.checkAllResultMassActionList;
                 this.massActionList = ['restore', 'deletePermanently'];
@@ -1403,7 +1403,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.reRender();
             }
 
-            if (filters && filters.bool['onlyDeleted'] !== true && this.massActionList.includes('restore')) {
+            if (filters && filters?.bool?.onlyDeleted !== true && this.massActionList.includes('restore')) {
                 this.massActionList = this.massActionListBackup;
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()

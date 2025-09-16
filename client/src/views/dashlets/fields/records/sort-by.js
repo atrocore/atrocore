@@ -68,7 +68,8 @@ Espo.define('views/dashlets/fields/records/sort-by', 'views/fields/enum', functi
                 translatedOptions[item] = this.translate(item, 'fields', scope);
             }, this);
 
-            this.params.options = orderableFieldList;
+            this.params.options =  this.originalOptionList = orderableFieldList;
+            this.params.options  = orderableFieldList;
             this.translatedOptions = translatedOptions;
         }
 

@@ -22,9 +22,19 @@ Espo.define('views/translation/fields/module', 'views/fields/enum', function (De
             }
 
             if (!data || now.getTime() > data.expiry) {
-                this.ajaxGetRequest(`Composer/list`, {}, {async: false}).then(response => {
-                    data = {data: response.list, expiry: now.getTime() + 5 * 60 * 1000};
-                    localStorage.setItem(key, JSON.stringify(data))
+                this.ajaxGetRequest(`Composer/list`, {}, { async: false }).then(response => {
+                    const list = response.list.map(module => {
+                        return {
+                            id: module.id,
+                            name: module.name
+                        }
+                    });
+                    data = { data: list, expiry: now.getTime() + 5 * 60 * 1000 };
+                    try {
+                        localStorage.setItem(key, JSON.stringify(data))
+                    } catch (e) {
+                        console.warn('Failed to save data to localStorage', e);
+                    }
                 });
             }
 
@@ -32,7 +42,7 @@ Espo.define('views/translation/fields/module', 'views/fields/enum', function (De
             this.translatedOptions = {};
 
             data.data.forEach(module => {
-                let id = module.id === 'TreoCore' ? 'core' : module.id;
+                let id = module.id === 'Atro' ? 'core' : module.id;
 
                 this.params.options.push(id);
                 this.translatedOptions[id] = module.name;

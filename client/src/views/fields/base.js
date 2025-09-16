@@ -1023,15 +1023,19 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.listenTo(this.model, 'change', () => {
                 if (['edit', 'detail'].includes(this.mode)) {
-                    this.toggleReadOnlyViaConditions();
-                    if (
-                        this.getConditions('visible')
-                        || this.getConditions('required')
-                    ) {
-                        this.reRender();
-                    }
+                    this.reRenderByConditionalProperties();
                 }
             });
+        },
+
+        reRenderByConditionalProperties() {
+            this.toggleReadOnlyViaConditions();
+            if (
+                this.getConditions('visible')
+                || this.getConditions('required')
+            ) {
+                this.reRender();
+            }
         },
 
         afterModelSave() {

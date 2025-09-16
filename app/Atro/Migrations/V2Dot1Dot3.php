@@ -55,6 +55,10 @@ class V2Dot1Dot3 extends Base
                         continue;
                     }
 
+                    if ($type === 'protected') {
+                        $type = 'readOnly';
+                    }
+
                     switch ($type) {
                         case 'readOnly':
                             $typeId = 'ui_read_only';
@@ -138,20 +142,22 @@ class V2Dot1Dot3 extends Base
                         ];
                         break;
                 }
-                $metadata->set('entityDefs', $uiHandler['entityType'], [
-                    'fields' => [
-                        $field => [
-                            'conditionalProperties' => $conditionalProperties,
+
+                if ($metadata->get("entityDefs.{$uiHandler['entityType']}.fields.{$field}.customizable") !== false) {
+                    $metadata->set('entityDefs', $uiHandler['entityType'], [
+                        'fields' => [
+                            $field => [
+                                'conditionalProperties' => $conditionalProperties,
+                            ],
                         ],
-                    ],
-                ]);
+                    ]);
+                    $saveMetadata = true;
+                }
 
                 unset($uiHandlers[$code]['fields'][array_search($field, $uiHandlers[$code]['fields'])]);
                 if (empty($uiHandlers[$code]['fields'])) {
                     unset($uiHandlers[$code]);
                 }
-
-                $saveMetadata = true;
             }
         }
 
