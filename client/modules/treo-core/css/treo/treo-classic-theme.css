@@ -9908,20 +9908,16 @@ label {
     margin-bottom: 10px
 }
 
+.page-header-container {
+    position: sticky;
+    left: 0;
+}
+
 .page-header {
     margin: 14px 0 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
-    min-height: 33px
-}
-
-.page-header > .row {
     min-height: 33px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .dashboard-header > .row {
@@ -9939,13 +9935,6 @@ label {
 
 .header .header-buttons-container.full-row .header-buttons {
     justify-content: space-between;
-}
-
-@media (max-width: 767px) {
-    .page-header .row .col-lg-3,
-    .page-header .row .col-lg-4 {
-        width: 50%;
-    }
 }
 
 .modal-header {
@@ -10188,9 +10177,14 @@ table.table > thead th > div > a {
     color: var(--label-color)
 }
 
+#main main > .list-buttons-container {
+    margin: 10px 0;
+    position: sticky;
+    left: 0;
+    z-index: 11;
+}
+
 #main main > .list-container > .list {
-    overflow: hidden;
-    overflow-x: auto;
     scrollbar-width: none;
     margin-left: -10px;
     margin-right: -10px;
@@ -10199,6 +10193,12 @@ table.table > thead th > div > a {
 
 #main main > .list-container > .list::-webkit-scrollbar {
     display: none;
+}
+
+#main main > .list-container > .list > .table thead {
+    position: sticky;
+    top: -1px;
+    z-index: 10;
 }
 
 #main main > .list-container > .list > .table thead th > .layout-editor-container {
@@ -11131,7 +11131,7 @@ table.no-margin {
     padding-top: 3px;
     padding-bottom: 3px;
     padding-right: 5px;
-    right: 0;
+    right: -20px;
 }
 
 .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
@@ -12939,10 +12939,6 @@ table.table {
     border-top-width: 1px
 }
 
-.list-container .list-buttons-container {
-    margin-bottom: 10px
-}
-
 .calendar-container > .calendar, .calendar-container > .timeline {
     background-color: #fff
 }
@@ -13434,24 +13430,6 @@ input#sn-checkbox-open-in-new-window {
     display: flex;
     flex-direction: column;
     flex: 1;
-}
-
-.list-container .list-buttons-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.list-container .list-buttons-container .actions-button {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.list-container .list-buttons-container .actions-button i {
-    font-size: 14px;
 }
 
 .list-container .list-buttons-container .form-group {
@@ -14396,11 +14374,6 @@ button.category:focus {
 
     .list-container > .list > .table:not(.fixed-header-table) {
         width: auto;
-    }
-
-    .list-container .list-buttons-container {
-        margin-bottom: 10px;
-        margin-top: 10px;
     }
 
     .list-group-item {
