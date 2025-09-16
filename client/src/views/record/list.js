@@ -955,6 +955,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (~index) {
                 this.massActionList.splice(index, 1);
             }
+
+            this.trigger('mass-actions-updated');
         },
 
         addMassAction: function (item, allResult) {
@@ -962,6 +964,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (allResult) {
                 this.checkAllResultMassActionList.push(item);
             }
+
+            this.trigger('mass-actions-updated');
         },
 
         setup: function () {
@@ -1245,6 +1249,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
             });
 
+            this.listenTo(this, 'mass-actions-updated', () => {
+                component.$set({
+                    massActions: this.getMassActions(),
+                });
+            });
+
             return component;
         },
 
@@ -1253,6 +1263,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 showSearch: !!this.showSearch,
                 showFilter: !!this.showFilter,
                 searchManager: this.searchManager,
+                uniqueKey: this.uniqueKey,
                 scope: this.scope,
                 counters: this.getCounters(),
                 loading: this.isListLoading(),
@@ -1274,8 +1285,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
         },
 
         getCounters: function () {
-            const groups = [
-                [
+            const groups = [];
+
+            if (this.displayTotalCount) {
+                groups.push([
                     {
                         label: this.translate('Shown'),
                         value: this.collection.length,
@@ -1284,8 +1297,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         label: this.translate('Total'),
                         value: this.collection.total,
                     }
-                ]
-            ];
+                ]);
+            }
 
             if (this.checkedList?.length > 0) {
                 groups.unshift([
@@ -1308,7 +1321,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         getMassActions: function () {
             if (this.allResultIsChecked) {
-                return this.checkAllResultMassActionList;
+                return (this.massActionList || []).filter(item => ~this.checkAllResultMassActionList.indexOf(item));
             }
 
             return this.massActionList;

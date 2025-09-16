@@ -155,4 +155,11 @@
     .separator {
         margin: 0 5px;
     }
+    @media screen and (max-width: 768px) {
+        .filter-search-bar {
+            order: -1;
+            flex-basis: 100%;
+        }
+    }
+
 </style>

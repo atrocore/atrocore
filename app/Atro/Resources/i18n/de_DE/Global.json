@@ -416,7 +416,9 @@
     "associatedItems": "Assoziierte Elemente",
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
-    "associatingTitle": "Mit aktuellem Element als :name verlinkt:"
+    "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
+    "itemsInRow": "Anzahl Elemente in der Reihe",
+    "sort": "Sortieren"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

@@ -14,7 +14,6 @@
   "labels": {
     "Preview": "Podgląd",
     "Upload": "Przesyłanie",
-    "sort": "Sortuj",
     "retry": "Ponowić próbę?",
     "uploaded": "przesłany",
     "putUploadUrl": "Podaj adres URL pliku, jeśli chcesz przesłać go za pośrednictwem adresu URL",

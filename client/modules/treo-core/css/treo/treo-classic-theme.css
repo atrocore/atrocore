@@ -9787,6 +9787,10 @@ body > #header .navbar-brand span.home-icon {
     }
 }
 
+main .bottom > .panel > .panel-body {
+    overflow-x: auto;
+}
+
 .panel-body {
     padding: 14px 10px;
 }
@@ -10178,7 +10182,6 @@ table.table > thead th > div > a {
 }
 
 #main main > .list-buttons-container {
-    margin: 10px 0;
     position: sticky;
     left: 0;
     z-index: 11;
@@ -10862,14 +10865,10 @@ select[multiple].input-sm {
     margin-right: -14px
 }
 
-.panel-body > div > .list {
+.panel-body > .list-container > .list,
+.modal-body > .list-container > .list {
     margin-left: -20px;
     margin-right: -20px;
-}
-
-.panel-body > div > .list,
-.panel-body .group .list {
-    overflow-x: auto;
 }
 
 .panel-body > div > .list > table td:first-child,
@@ -10878,11 +10877,6 @@ select[multiple].input-sm {
 .panel-body > div > .group > .list-container > .list > table th:first-child,
 .bottom .panel .group-container > .group > .group-name {
     padding-left: 20px !important;
-}
-
-.modal-body > div > .list {
-    margin-left: -20px;
-    margin-right: -20px
 }
 
 .modal-body > div > .list > table td:first-child, .modal-body > div > .list > table th:first-child {
@@ -11020,22 +11014,6 @@ table.no-margin {
     width: 100%
 }
 
-.panel-body > div:first-child > .list-expanded:first-child {
-    margin-top: -14px
-}
-
-.panel-body > div:last-child > .list-expanded:last-child {
-    margin-bottom: -14px
-}
-
-.panel-body > div:first-child > .list:first-child {
-    margin-top: -14px
-}
-
-.panel-body > div:last-child > .list:last-child {
-    margin-bottom: -14px
-}
-
 .expanded-row {
     white-space: nowrap;
     overflow: hidden;
@@ -11131,7 +11109,7 @@ table.no-margin {
     padding-top: 3px;
     padding-bottom: 3px;
     padding-right: 5px;
-    right: -20px;
+    right: -10px;
 }
 
 .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
@@ -11140,12 +11118,12 @@ table.no-margin {
 
 .panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
     padding-right: 10px;
-    right: 0;
 }
 
 @media (min-width: 768px) {
     .list > table td.cell[data-name="buttons"] {
         padding-right: 12px;
+        right: -20px;
     }
 }
 
@@ -11241,8 +11219,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.dashlet > .panel-body {
-    overflow-y: auto;
-    overflow-x: hidden
+    overflow: auto;
 }
 
 .dashlets.row {
@@ -13395,7 +13372,7 @@ input#sn-checkbox-open-in-new-window {
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
     width: auto;
     position: sticky;
-    left: 20px;
+    left: 0;
 }
 
 .show-more {
@@ -13430,38 +13407,6 @@ input#sn-checkbox-open-in-new-window {
     display: flex;
     flex-direction: column;
     flex: 1;
-}
-
-.list-container .list-buttons-container .form-group {
-    margin-bottom: 0;
-}
-
-.list-container .list-buttons-container .counters-container {
-    margin-left: auto;
-    margin-right: 0;
-}
-
-.list-container .list-buttons-container .selected-count,
-.list-container .list-buttons-container .total-count {
-    color: var(--primary-font-color);
-    padding: 0;
-    display: inline;
-}
-
-.list-container .list-buttons-container .selected-count {
-    margin-right: 20px;
-}
-
-.list-container .list-buttons-container .counters-container > * {
-    display: inline;
-    vertical-align: bottom;
-}
-
-@media screen and (max-width: 768px) {
-    .list-container .list-buttons-container .filter-container {
-        order: -1;
-        flex-basis: 100%;
-    }
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
@@ -14357,7 +14302,8 @@ button.category:focus {
         white-space: nowrap;
     }
 
-    .panel-body > div > .list {
+    .panel-body > .list-container > .list,
+    .modal-body > .list-container > .list {
         margin-left: -10px;
         margin-right: -10px;
     }
@@ -14369,7 +14315,8 @@ button.category:focus {
 
     .record .middle .panel-body,
     .record .bottom .panel-body {
-        padding: 14px 0 0 0;
+        margin-left: -10px;
+        margin-right: -10px;
     }
 
     .list-container > .list > .table:not(.fixed-header-table) {
@@ -18256,4 +18203,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .modal-body > .rebuild-db-container {
     height: 100%;
     padding-top: 20px !important;
+}
+
+.list-buttons-container {
+    margin: 10px 0;
 }

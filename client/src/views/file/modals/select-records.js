@@ -51,7 +51,7 @@ Espo.define('views/file/modals/select-records', 'views/modals/select-records',
             Dep.prototype.afterRender.call(this);
 
             if (this.getAcl().check('File', 'create')) {
-                this.$el.find('.modal-footer').append(`<div class="btn-group main-btn-group pull-right"><div class="page-header" style="margin-top: 0"><div class="header-buttons"><div class="header-items"><a href="javascript:" data-action="upload" class="btn action btn-success">${this.translate('Upload', 'labels', 'File')}</a></div></div></div></div>`);
+                this.$el.find('.modal-footer').append(`<div class="btn-group main-btn-group pull-right"><div class="page-header" style="margin-top: 0"><div class="header-buttons"><div class="header-items"><a href="javascript:" data-action="upload" class="btn action btn-primary">${this.translate('Upload', 'labels', 'File')}</a></div></div></div></div>`);
             }
         },
     })
