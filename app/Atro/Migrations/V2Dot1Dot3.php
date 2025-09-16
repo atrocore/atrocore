@@ -55,8 +55,11 @@ class V2Dot1Dot3 extends Base
                         continue;
                     }
 
+                    if ($type === 'protected') {
+                        $type = 'readOnly';
+                    }
+
                     switch ($type) {
-                        case 'protected':
                         case 'readOnly':
                             $typeId = 'ui_read_only';
                             break;
