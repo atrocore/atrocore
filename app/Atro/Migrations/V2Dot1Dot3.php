@@ -56,6 +56,7 @@ class V2Dot1Dot3 extends Base
                     }
 
                     switch ($type) {
+                        case 'protected':
                         case 'readOnly':
                             $typeId = 'ui_read_only';
                             break;
