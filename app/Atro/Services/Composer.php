@@ -330,6 +330,29 @@ class Composer extends HasContainer
         // prepare composer data
         $composerData = self::getComposerJson();
 
+        // push custom modules
+        foreach ($this->getModuleManager()->getModules() as $module) {
+            if (!in_array($module->getId(), array_column($list, 'id'))) {
+                $moduleComposerJson = $module->getPath() . '/composer.json';
+                if (file_exists($moduleComposerJson)) {
+                    $moduleData = @json_decode(file_get_contents($moduleComposerJson), true);
+                    if (is_array($moduleData)) {
+                        $list[$module->getId()] = [
+                            'id'             => $module->getId(),
+                            'name'           => $moduleData['extra']['name']['default'] ?? $moduleData['name'],
+                            'description'    => $moduleData['extra']['description']['default'] ?? '',
+                            'currentVersion' => $module->getVersion(),
+                            'latestVersion'  => '-',
+                            'isSystem'       => false,
+                            'isComposer'     => false,
+                            'status'         => '',
+                            'settingVersion' => self::getSettingVersion($composerData, $moduleData['name']),
+                        ];
+                    }
+                }
+            }
+        }
+
         // get diff
         $composerDiff = $this->getComposerDiff();
 
@@ -517,7 +540,7 @@ class Composer extends HasContainer
                         'from'    => self::getCoreVersion()
                     ];
                 } else {
-                    if (!empty($module = $this->getModule($id))) {
+                    if (!empty($module = $this->getModuleManager()->getModule($id))) {
                         $result['update'][] = [
                             'id'      => $id,
                             'package' => $package,
@@ -577,18 +600,6 @@ class Composer extends HasContainer
         }
 
         return $packageId;
-    }
-
-    /**
-     * Get module data
-     *
-     * @param string $id
-     *
-     * @return object
-     */
-    protected function getModule(string $id)
-    {
-        return $this->getContainer()->get('moduleManager')->getModule($id);
     }
 
     /**
