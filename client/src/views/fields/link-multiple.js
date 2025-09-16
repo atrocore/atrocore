@@ -258,16 +258,23 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
+
+                            let selected = {};
                             models.forEach(function (model) {
                                 if (typeof model.get !== "undefined") {
                                     let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
-                                    self.addLink(model.id, self.getLocalizedFieldValue(model, foreignName));
+                                    selected[model.id] = self.getLocalizedFieldValue(model, foreignName);
                                 } else if (model.name) {
-                                    self.addLink(model.id, model.name);
+                                    selected[model.id] = model.name;
                                 } else {
-                                    self.addLink(model.id, model.id);
+                                    selected[model.id] = model.id;
                                 }
                             });
+
+                            this.model.set(this.idsName, Object.keys(selected));
+                            this.model.set(this.nameHashName, selected);
+
+                            this.trigger('change');
 
                             this.deleteLinkSubQuery();
                         });
