@@ -819,8 +819,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
 
         updatePageTitle: function () {

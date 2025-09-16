@@ -123,8 +123,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
 
         getNonInheritedFields: function () {

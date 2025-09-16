@@ -566,8 +566,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         isHierarchical() {
             const scope = this.model.urlRoot;
-            return this.getMetadata().get(`scopes.${scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${scope}.type`) === 'Hierarchy';
         },
 
         getStoredFilter: function () {
