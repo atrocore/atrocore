@@ -21,6 +21,7 @@ use Atro\Core\Utils\FileManager;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
+use Atro\Services\AbstractService;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
@@ -673,8 +674,14 @@ class LayoutManager
             $disabledLanguages = [];
         }
 
-        $userLocale = $entityManager->getEntity('Locale', $user->get('localeId'));
-        if (empty($userLocale)) {
+        $localeId = AbstractService::getHeader('Locale-Id');
+        if (!empty($localeId)) {
+            $userLocale = $entityManager->getEntity('Locale', $localeId);
+        }
+        if (empty($userLocale) && !empty($user->get('localeId'))) {
+            $userLocale = $entityManager->getEntity('Locale', $user->get('localeId'));
+        }
+        if (empty($userLocale) && !empty($config->get('locale'))) {
             $userLocale = $entityManager->getEntity('Locale', $config->get('locale'));
         }
 
