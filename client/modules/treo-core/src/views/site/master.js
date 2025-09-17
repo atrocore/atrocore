@@ -33,14 +33,14 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             actionIconColor: '--action-icon-color',
             statusIconColor: '--status-icon-color',
             highlightingColorForRequired: '--highlighting-color-for-required',
-            highlightingColorForDataQuality: '--highlighting-color-for-data-quality'
+            highlightingColorForDataQuality: '--highlighting-color-for-data-quality',
+            toolbarBackgroundColor: '--toolbar-background-color'
         },
 
         rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],
 
-        afterRender() {
+        initStyleVariables(style) {
             if ($(":root").length > 0) {
-                let style = this.getThemeManager().getStyle();
                 if (style) {
                     (Object.keys(this.styleVariableMap) || []).forEach(param => {
                         if (style[param]) {
@@ -52,6 +52,22 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     });
                 }
             }
+        },
+
+        removeStyleVariables() {
+            if ($(":root").length > 0) {
+                (Object.keys(this.styleVariableMap) || []).forEach(param => {
+                    $(":root")[0].style.setProperty(this.styleVariableMap[param], '');
+                    if (this.rgbVariables.includes(param)) {
+                        $(":root")[0].style.setProperty(this.styleVariableMap[param] + '-rgb', '')
+                    }
+                });
+            }
+        },
+
+        afterRender() {
+            let style = this.getThemeManager().getStyle();
+            this.initStyleVariables(style);
 
             const getTooltipContent = (el) => {
                 const titleText = el.getAttribute('data-original-title') || el.getAttribute('title');

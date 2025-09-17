@@ -20,6 +20,14 @@
       ],
       [
         {
+          "name": "toolbarBackgroundColor"
+        },
+        {
+          "name": "navigationIconColor"
+        }
+      ],
+      [
+        {
           "name": "linkFontColor"
         },
         {
@@ -112,9 +120,7 @@
         {
           "name": "statusIconColor"
         },
-        {
-          "name": "navigationIconColor"
-        }
+       false
       ]
     ]
   },
