@@ -8,20 +8,68 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/style/record/detail', 'views/record/detail', Dep => {
+Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
 
     return Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'after:save', () => {
-                this.getStorage().clear('icons', 'navigationIconColor');
+            let style = this.getThemeManager().getStyle();
 
-                setTimeout(() => {
-                    this.showReloadPageMessage()
-                }, 2000);
+            if(style && style.id === this.model.id) {
+                this.listenTo(this.model, 'change', () => {
+                    const style = this.model.attributes;
+                    this.reloadStyle(style);
+                })
+            }
+
+            this.listenTo(this.model, 'after:save after:inlineEditSave', () => {
+                let customStylesheetPath = this.model.get('customStylesheetPath');
+                if (this.model.get('customStylesheet') && customStylesheetPath) {
+                    customStylesheetPath = customStylesheetPath.replace('public/', '');
+                    let customLink = $('#custom-stylesheet');
+
+                    if (customLink.length > 0) {
+                        customLink.attr('href', customStylesheetPath + `?r=${Date.now()}`);
+                    } else {
+                        $('head').append('<link href="' + customStylesheetPath + '" rel="stylesheet" id="custom-stylesheet">');
+                    }
+                } else {
+                    $('#custom-stylesheet').remove();
+                }
+                if(this.filter) {
+                    this.getStorage().set('icons', 'navigationIconColor', this.filter);
+                }else{
+                    this.getStorage().clear('icons', 'navigationIconColor')
+                }
+
+                const referenceData = this.getConfig().get('referenceData') || {}
+                const styles = referenceData['Style'] || {};
+                styles[this.model.get('code')] = this.model.attributes;
+                referenceData['Style'] = styles;
+                this.getConfig().set('referenceData', referenceData);
             });
+        },
+
+        reloadStyle(style) {
+            let master = new Master();
+            master.initStyleVariables(style);
+            if (style.navigationIconColor ) {
+                let colorConverter = new ColorConverter(style['navigationIconColor']);
+                this.filter = colorConverter.solve().filter;
+                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
+            }else{
+                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter','');
+            }
+        },
+
+        remove() {
+            const style = this.getThemeManager().getStyle();
+            if(style && this.model.id === style.id) {
+                this.reloadStyle(style);
+            }
+            Dep.prototype.remove.call(this);
         }
     });
 });

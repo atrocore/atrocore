@@ -139,14 +139,14 @@
 <style>
     button, .locale-switcher {
         color: var(--nav-font-color);
-        background-color: var(--nav-menu-background);
+        background-color: var( --toolbar-background-color);
         border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
         cursor: pointer;
     }
 
     select, option, optgroup {
         color: var(--nav-font-color);
-        background-color: var(--nav-menu-background);
+        background-color: var(--toolbar-background-color);
     }
 
     button:hover, .locale-switcher:hover, button:focus, .locale-switcher:focus {

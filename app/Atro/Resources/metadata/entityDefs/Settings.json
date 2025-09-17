@@ -236,7 +236,8 @@
       "type": "bool"
     },
     "defaultStyle": {
-      "type": "link"
+      "type": "link",
+      "view": "views/settings/fields/style"
     },
     "automaticFileExtensionCorrection": {
       "type": "bool"

@@ -22,7 +22,8 @@
     "error": "Fehler",
     "actionIconColor": "Farbe des Aktionssymbols",
     "customHeadCode": "Head Code",
-    "highlightingColorForRequired": "Hervorhebungsfarbe für erforderliche Daten"
+    "highlightingColorForRequired": "Hervorhebungsfarbe für erforderliche Daten",
+    "toolbarBackgroundColor": "Hintergrundfarbe der Symbolleiste"
   },
   "tooltips": {
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
