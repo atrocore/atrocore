@@ -188,7 +188,8 @@
     "fail": "Fehlgeschlagen",
     "success": "Erfolg",
     "viewDetails": "Details anzeigen",
-    "showFullList": "Vollständige Liste anzeigen",
+    "showFullList": "Liste öffnen",
+    "showKanban": "Open Board",
     "On": "Auf",
     "Off": "Aus",
     "selectedLink": "Wählen Sie Entität",
@@ -418,7 +419,11 @@
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
     "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
     "itemsInRow": "Anzahl Elemente in der Reihe",
-    "sort": "Sortieren"
+    "sort": "Sortieren",
+    "recalculateScript": "Skript neu berechnen",
+    "code": "Code",
+    "label": "Beschriftung",
+    "color": "Farbe"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

@@ -36,6 +36,7 @@ body {
     --highlighting-color-for-data-quality: #fff8B8;
     --field-hover-color: #f8f8f8;
     --field-inline-edit-color: #f2f2f2;
+    --toolbar-background-color: #f5f5f5;
 }
 
 * {
@@ -13230,7 +13231,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .navbar-inverse {
-    background-color: var(--nav-menu-background);
+    background-color: var( --toolbar-background-color);
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -13972,7 +13973,7 @@ button.category:focus {
     }
 
     #navbar .nav.navbar-nav.navbar-right {
-        background-color: var(--nav-menu-background);
+        background-color: var(--toolbar-background-color);
         padding-right: 8px;
         margin-left: auto;
     }
@@ -17784,7 +17785,7 @@ span[data-img-src]::after {
 }
 
 .navbar-favorites .favorite:not(.active):hover,
-.favorites-dropdown .favorite:not(.active):hover {
+.favorites-dropdown  .favorite:not(.active):hover {
     background-color: rgba(0, 0, 0, .05);
 }
 
@@ -17812,6 +17813,7 @@ span[data-img-src]::after {
     display: flex;
     max-width: 300px;
     justify-content: space-between;
+    position: relative;
 }
 
 .favorites-dropdown ul .favorite {
@@ -17820,13 +17822,16 @@ span[data-img-src]::after {
 }
 
 .favorites-dropdown ul .favorite .full-label {
-    margin-right: 10px;
+    margin-right: 15px;
 }
 
 .favorites-dropdown ul .quick-create {
     padding: 0;
-    width: 20px;
+    position: absolute;
     height: 20px;
+    width: 20px;
+    right: 5px;
+    top: 7px;
     background-color: rgba(0, 0, 0, 0.1);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;

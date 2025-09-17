@@ -208,7 +208,8 @@
     "fail": "Fail",
     "success": "Success",
     "viewDetails": "View Details",
-    "showFullList": "Show Full List",
+    "showFullList": "Show List",
+    "showKanban": "Open board",
     "On": "On",
     "Off": "Off",
     "selectedLink": "Select Entity",
@@ -465,7 +466,11 @@
     "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:",
     "itemsInRow": "Items in row",
-    "sort": "Sort"
+    "sort": "Sort",
+    "recalculateScript": "Recalculate Script",
+    "code": "Code",
+    "label": "Label",
+    "color": "Color"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

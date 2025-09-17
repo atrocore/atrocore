@@ -15,6 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\Container;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Twig\Twig;
 use Espo\Core\ORM\EntityManager;
 use Atro\Core\Utils\Config;
 use Espo\Core\Utils\Language;
@@ -76,5 +77,10 @@ abstract class AbstractListener
     public function getConnection()
     {
         return $this->getContainer()->get('connection');
+    }
+
+    protected function getTwig(): Twig
+    {
+        return $this->getContainer()->get('twig');
     }
 }

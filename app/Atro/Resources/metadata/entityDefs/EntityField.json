@@ -177,7 +177,38 @@
     },
     "isMultilang": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": ["varchar", "text", "wysiwyg", "markdown"]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "type",
+                      "value": "script"
+                    },
+                    {
+                      "type": "equals",
+                      "attribute": "outputType",
+                      "value": "text"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "duplicateIgnore": {
       "type": "bool",
@@ -340,8 +371,8 @@
     },
     "options": {
       "type": "array",
-      "view": "views/admin/field-manager/fields/options-extended",
-      "conditionalProperties": {
+      "view": "views/entity-field/fields/options",
+      "conditionalProperties":  {
         "required": {
           "conditionGroup": [
             {
@@ -349,7 +380,9 @@
               "type": "in",
               "value": [
                 "enum",
-                "multiEnum"
+                "multiEnum",
+                "enumInt",
+                "enumFloat"
               ]
             }
           ]
@@ -367,6 +400,10 @@
     "allowedOptions": {
       "type": "array",
       "view": "views/admin/field-manager/fields/allowed-options"
+    },
+    "translatedOptions": {
+      "type": "jsonObject",
+      "notStorable": true
     },
     "extensibleEnumOptions": {
       "type": "jsonObject",
@@ -516,7 +553,8 @@
     },
     "script": {
       "type": "text",
-      "view": "views/fields/script"
+      "view": "views/entity-field/fields/script",
+      "isMultilang": true
     },
     "outputType": {
       "type": "enum",
@@ -530,6 +568,14 @@
         "datetime"
       ],
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {
@@ -544,7 +590,8 @@
     "preview": {
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
-      "readOnly": true
+      "readOnly": true,
+      "isMultilang": true
     },
     "rowsMin": {
       "type": "int",
