@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Controllers;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\ReferenceData;
 use Atro\Core\Exceptions\BadRequest;
 
@@ -24,7 +25,9 @@ class EntityField extends ReferenceData
             throw new BadRequest();
         }
 
-        $this->checkControllerAccess();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         return $this->getRecordService()->renderScriptPreview($data);
     }
@@ -35,8 +38,15 @@ class EntityField extends ReferenceData
             throw new BadRequest();
         }
 
-        $this->checkControllerAccess();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         return $this->getRecordService()->resetToDefault($data->scope, $data->field);
+    }
+
+
+    protected function checkControllerAccess()
+    {
     }
 }

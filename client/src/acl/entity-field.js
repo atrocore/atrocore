@@ -12,6 +12,14 @@ Espo.define('acl/entity-field', 'acl', Dep => {
 
     return Dep.extend({
 
+        checkScope: function (data, action, precise, entityAccessData) {
+            if (action !== 'read' && !this.getUser().isAdmin()) {
+                return false
+            }
+
+            return Dep.prototype.checkScope.call(this, data, action, precise, entityAccessData);
+        },
+
         checkModel(model, data, action, precise) {
             let entityData = model.get('entityData') || {};
 
@@ -19,7 +27,7 @@ Espo.define('acl/entity-field', 'acl', Dep => {
                 return false;
             }
 
-            if (model.get('customizable') === false){
+            if (model.get('customizable') === false) {
                 return false;
             }
 
