@@ -1647,10 +1647,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
-        fixedTableHead() {
-
-        },
-
         fullTableScroll() {
         },
 
