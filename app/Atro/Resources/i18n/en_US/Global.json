@@ -465,6 +465,8 @@
     "associationTooltip": "Defines how Associating Item is linked to Associated Item",
     "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:",
+    "itemsInRow": "Items in row",
+    "sort": "Sort",
     "recalculateScript": "Recalculate Script",
     "code": "Code",
     "label": "Label",

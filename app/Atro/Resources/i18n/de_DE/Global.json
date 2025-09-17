@@ -418,6 +418,8 @@
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
     "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
+    "itemsInRow": "Anzahl Elemente in der Reihe",
+    "sort": "Sortieren",
     "recalculateScript": "Skript neu berechnen",
     "code": "Code",
     "label": "Beschriftung",

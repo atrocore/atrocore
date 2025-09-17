@@ -426,6 +426,23 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         prepareRecordViewOptions: function (options) {
         },
 
+        renderListRecordActions: function (listView) {
+            if (!listView) {
+                return;
+            }
+
+            if (this.svelteListActions) {
+                try {
+                    this.svelteListActions.$destroy();
+                } catch (e) {}
+            }
+
+            const container = document.querySelector('#main .list-buttons-container');
+            if (container) {
+                this.svelteListActions = listView.renderActionsContainer(container);
+            }
+        },
+
         createListRecordView: function (fetch) {
             var o = {
                 collection: this.collection,
@@ -449,6 +466,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     view.undelegateEvents();
                     return;
                 }
+
+                this.renderListRecordActions(view);
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {

@@ -15,6 +15,7 @@
     {{/if}}
 </div>
 <div class="search-container">{{{search}}}</div>
+<div class="list-buttons-container"></div>
 <div class="list-container">{{{list}}}</div>
 {{#if createButton}}
 <div class="button-container">

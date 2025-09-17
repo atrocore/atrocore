@@ -1,4 +1,5 @@
 <div class="search-container">{{{search}}}</div>
+<div class="list-buttons-container for-table-view"></div>
 <div class="list-container for-table-view">{{{list}}}</div>
 {{#if hasTree}}
     <div class="list-container for-tree-view">
