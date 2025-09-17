@@ -22,7 +22,6 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
 
         setup() {
             Dep.prototype.setup.call(this);
-
             this.class = this.options.class || this.class;
 
             if (typeof this.options.showEmptyPlaceholder === 'boolean') {

@@ -425,10 +425,16 @@ Espo.define('view', [], function () {
             if (this.getMetadata().get(`entityDefs.${scope}.fields.${fieldName}.isMultilang`) === true) {
                 const user = this.getUser()
                 const locales = this.getConfig().get('locales') || {}
-                let userLocale = locales[user.get('localeId')]
-                if (!userLocale) {
-                    userLocale = locales[this.getConfig().get('locale')]
+                let userLocale = null;
+                if (this.getLanguage().localeId) {
+                    userLocale = locales[this.getLanguage().localeId]
+                } else {
+                    userLocale = locales[user.get('localeId')]
+                    if (!userLocale) {
+                        userLocale = locales[this.getConfig().get('locale')]
+                    }
                 }
+
 
                 let mainLocaleCode = ''
                 let userLocaleCode = ''

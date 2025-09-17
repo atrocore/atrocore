@@ -4,6 +4,7 @@
     import {UserData} from "../../utils/UserData";
     import {LayoutManager} from "../../utils/LayoutManager";
     import {Language} from "../../utils/Language";
+    import {Storage} from "../../utils/Storage";
 
     export let checkConfirmLeaveOut: Function;
     let mainLanguageCode = ''
@@ -20,11 +21,14 @@
         return res
     }, {})
 
-    let locale = UserData.get()?.user?.localeId
+    let locale = Storage.get('user', 'locale')
     if (!locale || !locales[locale]) {
-        locale = Config.get('locale')
-        if (!locales[locale]) {
-            locale = 'main'
+        locale = UserData.get()?.user?.localeId
+        if (!locale || !locales[locale]) {
+            locale = Config.get('locale')
+            if (!locales[locale]) {
+                locale = 'main'
+            }
         }
     }
 
@@ -51,8 +55,12 @@
         const newDefaultCode = code && languages[code] ? code : mainLanguageCode
 
         checkConfirmLeaveOut(async () => {
+            if (locale === UserData.get().user.localeId) {
+                Storage.clear('user', 'locale')
+            } else {
+                Storage.set('user', 'locale', locale)
+            }
             await Utils.patchRequest('/UserProfile/' + userData.user.id, {
-                localeId: locale,
                 disabledLanguages: Object.keys(languages).filter(item => item !== newDefaultCode)
             })
             window.location.reload()
@@ -77,7 +85,8 @@
 <div class="button-group input-group" style="display:flex; align-items: center; padding: 0 10px; height: 100%;">
     {#if Object.keys(locales).length > 1}
         <div>
-            <select class="form-control locale-switcher" title="{Language.translate('Locale','scopeNamesPlural','Global')}"
+            <select class="form-control locale-switcher"
+                    title="{Language.translate('Locale','scopeNamesPlural','Global')}"
                     style="max-width: 100px;" name="locales"
                     bind:value={locale}
                     on:change={onLocaleChange}>
@@ -94,7 +103,8 @@
     {#if Object.keys(languages).length > 1}
         <div class="dropdown has-content">
             <button data-toggle="dropdown" class="filter-switcher" aria-expanded="false" style="padding: 6px 12px">
-                <i class="{`ph ph-${enabledLanguages.length >= Object.keys(languages).length - 1 ? 'globe-simple':'translate' }`}" style="display: block"></i>
+                <i class="{`ph ph-${enabledLanguages.length >= Object.keys(languages).length - 1 ? 'globe-simple':'translate' }`}"
+                   style="display: block"></i>
             </button>
             <div class="dropdown-menu" style="padding: 10px; min-width: 180px">
                 <h5 style="margin-top: 0">{Language.translate('contentLanguages', 'labels', 'Global')}</h5>

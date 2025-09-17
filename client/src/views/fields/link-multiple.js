@@ -250,7 +250,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 this.model.set(this.idsName, null);
                                 this.model.set(this.nameHashName, null);
                                 this.ids = [];
-                                this.nameHash = [];
+                                this.nameHash = {};
                                 this.addLinkSubQuery(models);
                                 this.trigger('change')
                                 return;
@@ -274,9 +274,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             this.model.set(this.idsName, Object.keys(selected));
                             this.model.set(this.nameHashName, selected);
 
-                            this.trigger('change');
+                            this.ids = Object.keys(selected);
+                            this.nameHash = selected;
+                            this.nameHash._localeId = this.getUser().get('localeId');
 
+                            this.trigger('change');
                             this.deleteLinkSubQuery();
+                            this.reRender();
                         });
 
                         this.listenTo(dialog, 'unselect', id => {

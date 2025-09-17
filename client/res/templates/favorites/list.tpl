@@ -1,7 +1,7 @@
 {{#if favoritesList.length }}
     <ul {{#if class}}class="{{class}}"{{/if}}>
         {{#each favoritesList}}
-            <li data-name="{{name}}">
+            <li data-name="{{name}}" style="">
                 <a href="{{link}}" class="favorite nav-link{{#ifEqual ../activeTab name}} active{{/ifEqual}}"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
                     <span class="label-wrapper">
                         {{#if ../hasIcons}}
@@ -15,6 +15,9 @@
                         <span class="full-label">{{label}}</span>
                     </span>
                 </a>
+                <button data-action="quickFavCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                     <i class="ph ph-plus"></i>
+                </button>
             </li>
         {{/each}}
     </ul>

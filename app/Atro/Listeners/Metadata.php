@@ -463,11 +463,9 @@ class Metadata extends AbstractListener
             }
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                 if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script') {
-                    $data['entityDefs'][$entityType]['fields'][$field]['notStorable'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['readOnly'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['importDisabled'] = true;
                     $data['entityDefs'][$entityType]['fields'][$field]['massUpdateDisabled'] = true;
-                    $data['entityDefs'][$entityType]['fields'][$field]['filterDisabled'] = true;
 
                     switch ($fieldDefs['outputType']) {
                         case 'int':

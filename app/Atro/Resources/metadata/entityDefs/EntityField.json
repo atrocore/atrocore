@@ -177,7 +177,38 @@
     },
     "isMultilang": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "in",
+                  "attribute": "type",
+                  "value": ["varchar", "text", "wysiwyg", "markdown"]
+                },
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "equals",
+                      "attribute": "type",
+                      "value": "script"
+                    },
+                    {
+                      "type": "equals",
+                      "attribute": "outputType",
+                      "value": "text"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     "duplicateIgnore": {
       "type": "bool",
@@ -516,7 +547,8 @@
     },
     "script": {
       "type": "text",
-      "view": "views/fields/script"
+      "view": "views/entity-field/fields/script",
+      "isMultilang": true
     },
     "outputType": {
       "type": "enum",
@@ -530,6 +562,14 @@
         "datetime"
       ],
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {
@@ -544,7 +584,8 @@
     "preview": {
       "type": "text",
       "view": "views/admin/field-manager/fields/script-preview",
-      "readOnly": true
+      "readOnly": true,
+      "isMultilang": true
     },
     "rowsMin": {
       "type": "int",
