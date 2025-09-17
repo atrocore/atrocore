@@ -18213,3 +18213,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .list-buttons-container {
     margin: 10px 0;
 }
+
+.list-container.for-tree-view > .list-buttons-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.list-container.for-tree-view > .list-buttons-container .counters-container {
+    margin: 0 0 0 auto;
+}
