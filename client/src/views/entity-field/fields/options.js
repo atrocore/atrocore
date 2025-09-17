@@ -40,7 +40,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
         setup() {
             Dep.prototype.setup.call(this);
             this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
-                let color = this.model.get('optionColors')[index] ?? null;
+                let color = (this.model.get('optionColors') ||[])[index] ?? null;
                 if (color && !color.includes('#')) {
                     color = '#' + color;
                 }
@@ -245,7 +245,7 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             let translatedOptions = {};
 
             (this.optionsDefsList || []).forEach((item, i) => {
-                options.push(item.code.trim());
+                options.push(item.code ? item.code.trim() : null);
                 translatedOptions[item.code] = item.label ? item.label.trim() : "";
                 optionColors.push(item.color ?? "");
             });
