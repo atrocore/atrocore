@@ -39,7 +39,8 @@
     "ramsey/uuid": "^4.7@stable",
     "tuupola/base32": "^2.0@stable",
     "symfony/yaml": "^6.4.13@stable",
-    "symfony/html-sanitizer": "^6.4.13@stable"
+    "symfony/html-sanitizer": "^6.4.13@stable",
+    "twig/twig": "^3.4@stable"
   },
   "conflict": {
     "atrocore/pim": "<1.14.24",
