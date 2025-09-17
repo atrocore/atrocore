@@ -18,9 +18,10 @@
       "tooltip": true
     }
   ],
-  "notCreatable": true,
   "fieldDefs": {
     "type": "text"
   },
+  "filter": true,
+  "auditable": true,
   "group": "other"
 }

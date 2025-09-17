@@ -57,6 +57,17 @@ class App extends \Espo\Controllers\App
         ];
     }
 
+    public function actionRecalculateScriptField($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        $this->checkControllerAccess();
+
+        return $this->getService('App')->recalculateScriptField($data)->getValueMap();
+    }
+
     protected function getRealtimeManager(): RealtimeManager
     {
         return $this->getContainer()->get('realtimeManager');

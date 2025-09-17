@@ -8,5 +8,8 @@
   "streamDisabled": true,
   "hideFieldTypeFilters": true,
   "bookmarkDisabled": true,
-  "actionDisabled": true
+  "actionDisabled": true,
+  "duplicatableRelations": [
+    "scopes"
+  ]
 }

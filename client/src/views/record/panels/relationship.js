@@ -198,8 +198,19 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
                 let foreign = this.model.getLinkParam(this.link, 'foreign');
-
+                let entity = this.model.getLinkParam(this.link, 'entity')
                 if (foreign) {
+                    if(this.getMetadata().get(['clientDefs', entity, 'kanbanViewMode'])){
+                        this.actionList.unshift({
+                            label: 'showKanban',
+                            action:  'showKanban',
+                            data: {
+                                modelId: this.model.get('id'),
+                                modelName: this.model.get('name')
+                            }
+                        });
+                    }
+
                     this.actionList.unshift({
                         label: 'showFullList',
                         action: this.defs.showFullListAction || 'showFullList',
@@ -459,12 +470,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         {
                             id: foreign + 'Id',
                             field: foreign + 'Id',
-                            value: [data.modelId],
+                            value: [this.model.id],
                             type: 'string',
                             operator: 'in',
                             data: {
                                 nameHash: {
-                                    [data.modelId]: data.modelName
+                                    [this.model.id]: this.model.get('name')
                                 }
                             }
 
@@ -480,12 +491,12 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         {
                             id: foreign,
                             field: foreign,
-                            value: [data.modelId],
+                            value: [this.model.id],
                             type: 'string',
                             operator: 'linked_with',
                             data: {
                                 nameHash: {
-                                    [data.modelId]: data.modelName
+                                    [this.model.id]: this.model.get('name')
                                 }
                             }
                         }
@@ -495,12 +506,21 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             let params = {
-                showFullListFilter: true,
-                queryBuilder: queryBuilder
+                queryBuilder: queryBuilder,
+                queryBuilderApplied: true
             };
 
-            this.getRouter().navigate(`#${this.scope}`, { trigger: true });
-            this.getRouter().dispatch(this.scope, 'list', params);
+            this.getStorage().set('listQueryBuilder', this.scope, params);
+            if(this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode']) && data.isKanban) {
+                window.open(`#${this.scope}/kanban`, '_blank');
+                return;
+            }
+            window.open(`#${this.scope}`, '_blank');
+        },
+
+        actionShowKanban: function(data) {
+            data.isKanban = true;
+            this.actionShowFullList(data);
         },
 
         afterRender() {

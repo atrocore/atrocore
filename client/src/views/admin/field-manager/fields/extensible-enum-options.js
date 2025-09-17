@@ -23,6 +23,9 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/
             });
         },
 
+        reRenderByConditionalProperties() {
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 

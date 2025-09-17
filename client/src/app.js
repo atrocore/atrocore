@@ -124,7 +124,7 @@ Espo.define(
                 new Promise(function (resolve) {
                     this.settings.load(function (model) {
                         if (model.get('frontendTimeout')) {
-                            $.ajaxSetup({'timeout': model.get('frontendTimeout') * 1000})
+                            $.ajaxSetup({ 'timeout': model.get('frontendTimeout') * 1000 })
                         }
                         resolve();
                     });
@@ -396,7 +396,7 @@ Espo.define(
             initView: function () {
                 var helper = this.viewHelper = new ViewHelper();
 
-                helper.layoutManager = new LayoutManager({cache: this.cache, applicationId: this.id});
+                helper.layoutManager = new LayoutManager({ cache: this.cache, applicationId: this.id });
                 helper.settings = this.settings;
                 helper.config = this.settings;
                 helper.user = this.user;
@@ -517,7 +517,7 @@ Espo.define(
                 this.preferences.clear();
                 this.acl.clear();
                 this.storage.clear('user', 'auth');
-                this.doAction({action: 'login'});
+                this.doAction({ action: 'login' });
 
                 this.unsetCookieAuth();
 
@@ -559,6 +559,18 @@ Espo.define(
                     }.bind(this))
                 ]).then(function () {
                     (new Promise(function (resolve) {
+                        const storedLocale = this.storage.get('user', 'locale')
+                        if (storedLocale) {
+                            const data = this.settings.get('locales')?.[storedLocale]
+                            // update preferences with stored locale data
+                            if (data) {
+                                ['thousandSeparator', 'decimalMark', 'timeFormat', 'dateFormat', 'timeZone', 'weekStart','language','fallbackLanguage'].forEach(key => {
+                                    options.preferences[key]= data[key]
+                                })
+                                this.language.localeId = storedLocale
+                            }
+                        }
+
                         this.language.name = options.preferences.language;
                         this.language.fallbackName = options.preferences.fallbackLanguage;
                         this.language.load(function () {
@@ -629,6 +641,9 @@ Espo.define(
                         }
                         if (self.auth !== null) {
                             xhr.setRequestHeader('Authorization-Token', self.auth);
+                        }
+                        if (self.language.localeId) {
+                            xhr.setRequestHeader('Locale-Id', self.language.localeId);
                         }
                     },
                     dataType: 'json',

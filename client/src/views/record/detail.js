@@ -353,7 +353,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 actionType: "suggestingValue",
                 payload: {
                     uiRecord: this.model.attributes,
-                    uiRecordFromName: this.model.attributes?._entityName || null,
+                    uiRecordFromName: this.model.attributes?._entityFrom?._entityName || null,
                     uiRecordFrom: this.model.attributes?._entityFrom || null,
                 }
             }).success(res => {

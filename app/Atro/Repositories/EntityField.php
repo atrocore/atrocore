@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity as OrmEntity;
 
@@ -512,7 +513,29 @@ class EntityField extends ReferenceData
         }
 
         $commonFields = ['tooltipLink', 'tooltip', 'type', 'auditableEnabled', 'auditableDisabled', 'isCustom', 'modifiedExtendedDisabled'];
+
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
+
+        if(in_array('script', $typeFields) && !empty($entity->get('isMultilang'))) {
+            $languages = [];
+
+            if (!empty($this->getConfig()->get('isMultilangActive'))) {
+                foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                    $languages[$code] = $code;
+                    foreach ($this->getConfig()->get('referenceData.Language', []) as $v) {
+                        if ($code === $v['code']) {
+                            $languages[$code] = $v['name'];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach ($languages as $language => $languageName) {
+                $typeFields[] = 'script'. ucfirst(Util::toCamelCase(strtolower($language)));
+            }
+        }
+
         if (in_array($entity->get('type'), ['enum', 'multiEnum'])) {
             $typeFields[] = 'optionColors';
         }
