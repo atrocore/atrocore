@@ -418,7 +418,10 @@
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
     "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
-    "recalculateScript": "Skript neu berechnen"
+    "recalculateScript": "Skript neu berechnen",
+    "code": "Code",
+    "label": "Beschriftung",
+    "color": "Farbe"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
