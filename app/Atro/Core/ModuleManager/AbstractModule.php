@@ -88,6 +88,16 @@ abstract class AbstractModule
     {
     }
 
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
     /**
      * Get client path
      *
@@ -95,7 +105,7 @@ abstract class AbstractModule
      */
     public function getClientPath(): string
     {
-        return $this->path . 'client/';
+        return $this->getPath() . 'client/';
     }
 
     /**
@@ -344,6 +354,6 @@ abstract class AbstractModule
      */
     public function getAppPath(): string
     {
-        return $this->path . 'app/';
+        return $this->getPath() . 'app/';
     }
 }

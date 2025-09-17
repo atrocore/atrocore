@@ -51,6 +51,8 @@ Espo.define('views/fields/extensible-multi-enum-dropdown', 'views/fields/link-mu
                 }
             })
 
+            this.originalOptionList = this.params.options;
+
             if(this.mode === 'edit') {
                 let newValues = [];
                 (this.model.get(this.idsName) ?? []).forEach((id) => {

@@ -38,6 +38,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
         this.fallbackData = {}
         this.name = 'default';
         this.fallbackName = null;
+        this.localeId = null;
     };
 
     _.extend(Language.prototype, {
@@ -96,7 +97,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         loadFromCache: function (loadDefault, isFallback = false) {
             var name = isFallback ? this.fallbackName : this.name;
-            if(!isFallback && loadDefault) {
+            if (!isFallback && loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
@@ -124,7 +125,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         storeToCache: function (loadDefault, isFallback = false) {
             var name = isFallback ? this.fallbackName : this.name;
-            if(!isFallback && loadDefault) {
+            if (!isFallback && loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
@@ -138,12 +139,12 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
                     return;
-                }else{
+                } else {
                     this.fetch(disableCache, loadDefault, fallback);
                 }
-                if(this.loadFromCache(false, true)) {
+                if (this.loadFromCache(false, true)) {
                     this.trigger('sync')
-                }else{
+                } else {
                     this.fetchFallback(disableCache, fallback);
                 }
 
@@ -152,8 +153,14 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         },
 
-        fetch: function (disableCache, loadDefault, fallback = null) {
-            Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
+        fetch: function (disableCache, loadDefault) {
+            const data = {}
+            if (loadDefault) {
+                data.default = true;
+            } else if (this.localeId) {
+                data.locale = this.localeId
+            }
+            Ajax.getRequest(this.url, data).then(function (data) {
                 this.data = data;
                 window.SvelteLanguage.setTranslations(data);
                 if (!disableCache) {
@@ -161,12 +168,11 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 }
                 this.trigger('sync');
             }.bind(this));
-
         },
 
         fetchFallback: function (disableCache) {
             if (this.fallbackName) {
-                Ajax.getRequest(this.url, {locale: this.fallbackName}).then(function (data) {
+                Ajax.getRequest(this.url, { locale: this.fallbackName }).then(function (data) {
                     this.fallbackData = data;
                     window.SvelteLanguage.setFallbackTranslations(data);
                     if (!disableCache) {
