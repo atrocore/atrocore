@@ -1290,10 +1290,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.displayTotalCount) {
                 groups.push([
                     {
+                        name: 'shown',
                         label: this.translate('Shown'),
                         value: this.collection.length,
                     },
                     {
+                        name: 'total',
                         label: this.translate('Total'),
                         value: this.collection.total,
                     }
@@ -1303,6 +1305,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (this.checkedList?.length > 0) {
                 groups.unshift([
                     {
+                        name: 'selected',
                         label: this.translate('Selected'),
                         value: this.checkedList.length,
                     }
@@ -1310,6 +1313,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             } else if (this.allResultIsChecked) {
                 groups.unshift([
                     {
+                        name: 'selected',
                         label: this.translate('Selected'),
                         value: this.collection.total,
                     }
