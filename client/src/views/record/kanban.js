@@ -169,6 +169,22 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.displayTotalCount = this.options.displayTotalCount;
             }
 
+            if (this.options.searchManager) {
+                this.searchManager = this.options.searchManager;
+            }
+
+            if (typeof this.options.showFilter === 'boolean') {
+                this.showFilter = this.options.showFilter;
+            }
+
+            if (typeof this.options.showSearch === 'boolean') {
+                this.showSearch = this.options.showSearch;
+            }
+
+            if (typeof this.options.searchUniqueKey === 'string') {
+                this.uniqueKey = this.options.searchUniqueKey;
+            }
+
             this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
             if (!this.statusField) {
