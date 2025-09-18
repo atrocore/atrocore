@@ -553,7 +553,7 @@
     },
     "script": {
       "type": "text",
-     "view": "views/fields/script",
+     "view": "views/entity-field/fields/script",
       "isMultilang": true
     },
     "outputType": {
