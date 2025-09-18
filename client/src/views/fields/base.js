@@ -647,6 +647,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     contentType: 'application/json',
                     success: (data) => {
                         this.model.fetch().then(() => {
+                            // this.model.trigger('after:inlineEditSave');
                             this.notify('Done', 'success');
                         });
                     }
