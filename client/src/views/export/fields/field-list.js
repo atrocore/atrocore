@@ -50,7 +50,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
             }
 
             $.each(this.getMetadata().get(['entityDefs', entity, 'fields'], {}), (field, fieldDefs) => {
-                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type) && !fieldDefs.importDisabled && !fieldDefs.attributeId) {
+                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type)  && !fieldDefs.attributeId) {
                     this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', entity);
                 }
