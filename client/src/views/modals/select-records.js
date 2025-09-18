@@ -306,7 +306,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         } catch (e) {}
                     }
 
-                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
+                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container.for-table-view');
                     if (container) {
                         window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
                     }

@@ -3,6 +3,8 @@
     import Counter from "./interfaces/Counter";
     import MassAction from "./interfaces/MassAction";
     import {Language} from "../../../utils/Language";
+    import {onMount} from "svelte";
+    import Dropdown from "../../../utils/Dropdown";
 
     export let loading: boolean = false;
     export let counters: Array<Counter[]> = [];
@@ -30,6 +32,12 @@
     };
     export let changeSortDirection = (asc: boolean): void => {
     };
+
+    let sortButton: HTMLButtonElement;
+    let sortDropdown: HTMLUListElement;
+
+    let itemsInRowButton: HTMLButtonElement;
+    let itemsInRowDropdown: HTMLUListElement;
 
     function onClickItemsInRow(e: MouseEvent): void {
         const target = e.currentTarget as HTMLElement;
@@ -65,6 +73,16 @@
         changeSortDirection(sortDirection === 'asc');
     }
 
+    onMount(() => {
+        const sortDropdownHandle = new Dropdown(sortButton, sortDropdown);
+        const itemsInRowDropdownHandle = new Dropdown(itemsInRowButton, itemsInRowDropdown);
+
+        return () => {
+            sortDropdownHandle.destroy();
+            itemsInRowDropdownHandle.destroy();
+        }
+    });
+
 </script>
 
 <ListActionsContainer {scope} {searchManager} {showFilter} {showSearch} {loading} {counters} {massActions} {uniqueKey}
@@ -73,8 +91,8 @@
         <div class="control items-row">
             <div class="name">{Language.translate('itemsInRow', 'labels')}:</div>
             <div class="button-group">
-                <button data-toggle="dropdown">{itemsInRow}</button>
-                <ul class="dropdown-menu dropdown-menu-right">
+                <button bind:this={itemsInRowButton}>{itemsInRow}</button>
+                <ul class="dropdown-menu" bind:this={itemsInRowDropdown}>
                     {#each itemsInRowOptions as item}
                         <li><a href="javascript:" data-value={item} on:click={onClickItemsInRow}>{item}</a></li>
                     {/each}
@@ -85,9 +103,9 @@
         <div class="control sort">
             <div class="name">{Language.translate('sort', 'labels')}:</div>
             <div class="button-group">
-                <button data-toggle="dropdown">{Language.translate(sortBy, 'fields', scope)}</button>
+                <button bind:this={sortButton}>{Language.translate(sortBy, 'fields', scope)}</button>
                 <button data-value={sortDirection} on:click={onClickSortDirection}>{#if sortDirection === 'asc'}<i class="ph ph-arrow-up"></i>{:else}<i class="ph ph-arrow-down"></i>{/if}</button>
-                <ul class="dropdown-menu dropdown-menu-right">
+                <ul class="dropdown-menu" bind:this={sortDropdown}>
                     {#each sortByOptions.filter(f => f !== sortBy) as field}
                         <li><a href="javascript:" data-value={field} on:click={onClickSortBy}>{Language.translate(field, 'fields', scope)}</a></li>
                     {/each}
