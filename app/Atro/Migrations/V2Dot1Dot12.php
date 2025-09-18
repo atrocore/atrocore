@@ -91,7 +91,6 @@ class V2Dot1Dot12 extends Base
                 $this->exec($sql);
             }
         }
-
     }
 
     protected function exec(string $sql): void
