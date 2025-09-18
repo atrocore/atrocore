@@ -87,6 +87,13 @@ class Application
                 $this->showOpenApiJson();
             }
 
+            if (preg_match_all('/^thumbnail\/(.*)\\/(.*)\.(.*)$/', $query, $matches)) {
+                $_GET['size'] = $matches[1][0];
+                $_GET['id'] = $matches[2][0];
+                $this->runEntryPoint('thumbnail');
+                exit;
+            }
+
             if (preg_match_all('/^images\/(.*)\.(.*)$/', $query, $matches)) {
                 $_GET['id'] = $matches[1][0];
                 $this->runEntryPoint('image');
