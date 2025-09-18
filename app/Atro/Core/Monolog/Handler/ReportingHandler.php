@@ -57,10 +57,16 @@ class ReportingHandler extends AbstractProcessingHandler
 
     private function jsonMessage(LogRecord $record): string
     {
+        $message = $record->message;
+        if (isset($record->context['file']) && isset($record->context['line'])) {
+            $message = $message." at {$record->context['file']} line {$record->context['line']}";
+        }
+
+
         return json_encode([
             'level'    => $record->level,
-            'message'  => $record->message,
-            'datetime' => $record->datetime->format('Y-m-d H:i:s T')
+            'message'  => $message,
+            'datetime' => $record->datetime->format('Y-m-d H:i:s T'),
         ]);
     }
 
