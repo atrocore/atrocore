@@ -16,9 +16,6 @@
                         <span class="full-label">{{label}}</span>
                     </span>
                 </a>
-                <button  title="{{translate "quickCreate"}}"  class="quick-create btn btn-default btn-icon">
-
-                </button>
             </li>
         {{/each}}
     </ul>
