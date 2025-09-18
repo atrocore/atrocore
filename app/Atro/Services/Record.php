@@ -19,6 +19,7 @@ use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -244,16 +245,10 @@ class Record extends RecordService
 
     public function getLocalizedNameField(string $scope): ?string
     {
-        if (!empty($languages = $this->getConfig()->get('inputLanguageList'))) {
-            if (!empty($userLanguage = $this->getUser()->getLanguage())) {
-                if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'isMultilang'])) &&
-                    in_array($userLanguage, $languages)) {
-                    $localeNameField = Util::toCamelCase('name_' . strtolower($userLanguage));
-                    if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $localeNameField]))) {
-                        return $localeNameField;
-                    }
-                }
-            }
+        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $scope, 'name');
+
+        if ($name !== 'name') {
+            return $name;
         }
 
         return null;

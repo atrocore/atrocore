@@ -112,7 +112,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             return {
                 scope: this.scope,
                 header: this.header,
-                topBar: this.displayTotalCount || this.buttonList.length && !this.buttonsDisabled,
                 showCount: this.showCount && this.collection.total > 0,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && this.collection.total > 0,
@@ -213,9 +212,15 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.buildRows(function () {
                     this.render();
                 }.bind(this));
+
+                this.trigger('update-counters');
             }, this);
 
             this.collection.listenTo(this.collection, 'change:' + this.statusField, this.onChangeGroup.bind(this), this);
+
+            this.listenTo(this.collection, 'update-total', () => {
+                this.trigger('update-counters');
+            });
 
             this.buildRows();
 
@@ -241,29 +246,6 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
 
-            try {
-                this.svelteFilter?.$destroy();
-            } catch (e) {}
-
-            const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
-            if (target && this.options.searchManager && (this.options.showSearch || this.options.showFilter)) {
-                const props = {
-                    searchManager: this.options.searchManager,
-                    showSearchPanel: this.options.showSearch,
-                    showFilter: this.options.showFilter,
-                    scope: this.scope,
-                };
-
-                if (this.options.searchUniqueKey) {
-                    props.uniqueKey = this.options.searchUniqueKey;
-                }
-
-                this.svelteFilter = new Svelte.FilterSearchBar({
-                    target: target,
-                    props: props
-                })
-            }
-
             $window.off('resize.kanban');
             $window.on('resize.kanban', function () {
                 this.adjustMinHeight();
@@ -274,6 +256,10 @@ Espo.define('views/record/kanban', ['views/record/list'], function (Dep) {
             if (this.statusFieldIsEditable) {
                 this.initSortable();
             }
+        },
+
+        getMassActions: function () {
+            return [];
         },
 
         initSortable: function () {

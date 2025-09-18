@@ -37,6 +37,12 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                         label: 'showFullList',
                         action: 'showFullList'
                     });
+                    if(this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])){
+                        this.actionList.push({
+                            label: 'showKanban',
+                            action: 'showKanban'
+                        });
+                    }
                 }
 
                 this.buttonList.unshift({
@@ -98,6 +104,11 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         actionShowFullList(data) {
             this.getStorage().set('listQueryBuilder', this.scope, this.model.get('data').whereData || {});
             window.open(`#${this.scope}`, '_blank');
+        },
+
+        actionShowKanban(data) {
+            this.getStorage().set('listQueryBuilder', this.scope, this.model.get('data').whereData || {});
+            window.open(`#${this.scope}/kanban`, '_blank');
         },
 
         afterRender() {

@@ -271,8 +271,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
                 this.params.options.forEach(option => {
                     if(option === '') {
                         options.push('__empty__')
-                    }
-                    if (option.value) {
+                    }else if (option.value) {
                         options.push(option.value);
                     } else {
                         options.push(option);
