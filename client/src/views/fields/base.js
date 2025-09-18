@@ -648,7 +648,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     success: (data) => {
                         this.model.fetch().then(() => {
                             this.notify('Done', 'success');
-                            this.model.trigger('after:save');
                         });
                     }
                 });
