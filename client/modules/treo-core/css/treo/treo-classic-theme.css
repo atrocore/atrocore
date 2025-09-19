@@ -13370,6 +13370,13 @@ input#sn-checkbox-open-in-new-window {
     border-top: 0;
 }
 
+.dashlet-body.panel-body .list > table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+}
+
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
     width: auto;
     position: sticky;
@@ -14653,6 +14660,7 @@ button.category:focus {
 .dashlets.grid-stack .grid-stack-item .dashlet .dashlet-body {
     width: 100%;
     position: relative;
+    padding-top: 0;
 }
 
 .dashlets .dashlet {
