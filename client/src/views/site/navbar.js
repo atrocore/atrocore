@@ -110,7 +110,6 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                         });
                     });
                 })
-
             },
             'click .navbar-toggle': function (e) {
                 if (this.$el.find('.menu').hasClass('open-menu')) {
@@ -130,12 +129,10 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
                 $(e.currentTarget).find('.label-wrapper .plus-icon').removeClass('hidden');
             },
-
             'mouseleave .favorites-items .nav-link ': function (e) {
                 $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
                 $(e.currentTarget).find('.label-wrapper .plus-icon').addClass('hidden');
             },
-
             'click .favorites-items [data-action="quickFavCreate"]': function(e){
                 e.preventDefault();
                 let data = $(e.currentTarget).data();
