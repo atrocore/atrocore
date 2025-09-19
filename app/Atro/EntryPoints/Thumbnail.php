@@ -52,7 +52,7 @@ class Thumbnail extends AbstractEntryPoint
             }
         }
 
-        header("Location: {$this->getConfig()->getSiteUrl()}/{$thumbnailPath}");
+        header("Location: /{$thumbnailPath}");
         exit;
     }
 
