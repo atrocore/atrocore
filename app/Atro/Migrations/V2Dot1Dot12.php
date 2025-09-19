@@ -40,7 +40,7 @@ class V2Dot1Dot12 extends Base
                     "isMultilang" => $fieldDefs['isMultilang'] ?? false,
                 ];
 
-                if(!empty($entityDefs['notStorable'])) {
+                if(!empty($fieldDefs['notStorable'])) {
                     $metadata->set('entityDefs', $scope, [
                         'fields' => [
                             $field => [
