@@ -9,6 +9,7 @@
  */
 
 export default interface Counter {
+    name: string;
     label: string;
     value: number;
 }

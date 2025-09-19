@@ -126,6 +126,25 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                     this.menuShouldBeOpen = false;
                 }
             },
+            'mouseenter .favorites-items .nav-link': function (e) {
+                $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
+                $(e.currentTarget).find('.label-wrapper .plus-icon').removeClass('hidden');
+            },
+
+            'mouseleave .favorites-items .nav-link ': function (e) {
+                $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
+                $(e.currentTarget).find('.label-wrapper .plus-icon').addClass('hidden');
+            },
+
+            'click .favorites-items [data-action="quickFavCreate"]': function(e){
+                e.preventDefault();
+                let data = $(e.currentTarget).data();
+                if(data.name === 'File') {
+                    this.quickCreateFile();
+                    return;
+                }
+                this.getRouter().navigate(`#${data.name}/create/new`, {trigger: true});
+            }
         },
 
         handleMenuVisibility(e) {
@@ -446,21 +465,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         quickCreate: function (scope) {
             Espo.Ui.notify(this.translate('Loading...'));
             if(scope === 'File') {
-                this.notify('Loading...');
-                this.createView('upload', 'views/file/modals/upload', {
-                    scope: 'File',
-                    fullFormDisabled: true,
-                    layoutName: 'upload',
-                    multiUpload: true,
-                    attributes: {
-                        scope: scope
-                    },
-                }, view => {
-                    view.once('after:render', () => {
-                        this.notify(false);
-                    });
-                    view.render();
-                });
+                this.quickCreateFile();
                 return;
             }
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
@@ -468,6 +473,24 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             this.createView('quickCreate', viewName, {scope: scope}, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
+                });
+                view.render();
+            });
+        },
+
+        quickCreateFile: function() {
+            this.notify('Loading...');
+            this.createView('upload', 'views/file/modals/upload', {
+                scope: 'File',
+                fullFormDisabled: true,
+                layoutName: 'upload',
+                multiUpload: true,
+                attributes: {
+                    scope: 'File'
+                },
+            }, view => {
+                view.once('after:render', () => {
+                    this.notify(false);
                 });
                 view.render();
             });

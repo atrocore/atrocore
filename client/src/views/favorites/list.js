@@ -20,6 +20,8 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
 
         hasArrow: false,
 
+        plusIcon: 'client/img/icons/phosphor-regular/plus-square.svg',
+
         setup() {
             Dep.prototype.setup.call(this);
             this.class = this.options.class || this.class;
@@ -45,6 +47,7 @@ Espo.define('views/favorites/list', 'view', function (Dep) {
                 showEmptyPlaceholder: this.showEmptyPlaceholder,
                 activeTab: this.getRouter().getLast().controller,
                 hasArrow: this.hasArrow,
+                plusIcon: this.plusIcon
             }
         },
 
