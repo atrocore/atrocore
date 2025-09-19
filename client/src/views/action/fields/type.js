@@ -37,7 +37,7 @@ Espo.define('views/action/fields/type', 'views/fields/enum',
         initStatusContainer() {
             Dep.prototype.initStatusContainer.call(this);
 
-            if (this.model.get('typePhpCode')) {
+            if (this.mode !== 'list' && this.model.get('typePhpCode')) {
                 this.initShowCodeModal();
             }
         },

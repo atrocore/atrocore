@@ -51,7 +51,7 @@ Espo.define('views/action/fields/conditions-type', 'views/fields/enum',
             initStatusContainer() {
                 Dep.prototype.initStatusContainer.call(this);
 
-                if (this.model.get('conditionPhpCode')) {
+                if (this.mode !== 'list' && this.model.get('conditionPhpCode')) {
                     this.initShowCodeModal();
                 }
             },
