@@ -48,15 +48,21 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                     this.$el.find('.navbar-collapse ').toggleClass('open-search');
                 },
 
+                'mouseenter .favorites-items .nav-link': function (e) {
+                        $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
+                        $(e.currentTarget).find('.label-wrapper .plus-icon').removeClass('hidden');
+                },
+
+                'mouseleave .favorites-items .nav-link ': function (e) {
+                    $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
+                    $(e.currentTarget).find('.label-wrapper .plus-icon').addClass('hidden');
+                },
+
                 'click .favorites-items [data-action="quickFavCreate"]': function(e){
                     e.preventDefault();
                     let data = $(e.currentTarget).data();
-
-                    // debugger
                     this.getRouter().navigate(`#${data.name}/create/new`, {trigger: true});
-
                 }
-
             });
         },
 
