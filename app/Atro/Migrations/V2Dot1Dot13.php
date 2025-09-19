@@ -15,7 +15,7 @@ use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 
-class V2Dot1Dot12 extends Base
+class V2Dot1Dot13 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
@@ -40,7 +40,7 @@ class V2Dot1Dot12 extends Base
                     "isMultilang" => $fieldDefs['isMultilang'] ?? false,
                 ];
 
-                if(!empty($entityDefs['notStorable'])) {
+                if(!empty($fieldDefs['notStorable'])) {
                     $metadata->set('entityDefs', $scope, [
                         'fields' => [
                             $field => [
