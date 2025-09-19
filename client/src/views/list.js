@@ -319,8 +319,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             this.collection.maxSize = this.collectionMaxSize;
 
             if (toStore) {
-                var modeKey = 'listViewMode' + this.scope;
-                this.getStorage().set('state', modeKey, mode);
+                this.getStorage().set('list-view', this.scope, mode);
             }
 
             var methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
