@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "ThumbnailType": "Thumbnail Type",
     "ActionLog": "Action Log",
     "IncomingWebhook": "Incoming Webhook",
     "RoleScopeAttribute": "Attribute",
@@ -80,6 +81,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "ThumbnailType": "Thumbnail Types",
     "ActionLog": "Action Logs",
     "IncomingWebhook": "Incoming Webhooks",
     "RoleScopeAttribute": "Attributes",

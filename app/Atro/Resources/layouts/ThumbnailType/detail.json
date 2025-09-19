@@ -1,0 +1,15 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ]
+    ]
+  }
+]
