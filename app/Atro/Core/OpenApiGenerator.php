@@ -1165,7 +1165,11 @@ class OpenApiGenerator
         switch ($fieldData['type']) {
             case "autoincrement":
             case "int":
-                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                    'type'    => 'integer',
+                    'minimum' => -2147483648,
+                    'maximum' => 2147483647,
+                ];
                 break;
             case "float":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'number'];
