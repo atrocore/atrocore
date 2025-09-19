@@ -22,6 +22,14 @@
         }
       }
     },
+    "width": {
+      "type": "int",
+      "min": 1
+    },
+    "height": {
+      "type": "int",
+      "min": 1
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

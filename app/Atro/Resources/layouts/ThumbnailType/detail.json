@@ -9,6 +9,14 @@
         {
           "name": "code"
         }
+      ],
+      [
+        {
+          "name": "width"
+        },
+        {
+          "name": "height"
+        }
       ]
     ]
   }

@@ -621,6 +621,8 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "width": "Width",
+    "height": "Height",
     "start": "Start",
     "end": "End",
     "action": "Action",

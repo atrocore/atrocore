@@ -613,6 +613,8 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "width": "Breite",
+    "height": "Höhe",
     "action": "Aktion",
     "payload": "Payload",
     "hash": "Hash",
