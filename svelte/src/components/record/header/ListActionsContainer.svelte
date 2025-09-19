@@ -108,7 +108,7 @@
                     {#each counters as group}
                         <div class="group">
                             {#each group as counter, i}
-                                <span class="counter">{counter.label}: {counter.value}</span>{#if i < group.length - 1}<span class="separator">|</span>{/if}
+                                <span class="counter" data-name={counter.name}><span class="counter-label">{counter.label}</span>: <span class="counter-value">{counter.value}</span></span>{#if i < group.length - 1}<span class="separator">|</span>{/if}
                             {/each}
                         </div>
                     {/each}
