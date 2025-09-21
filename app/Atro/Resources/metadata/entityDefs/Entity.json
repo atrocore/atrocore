@@ -484,7 +484,21 @@
       "notStorable": true
     },
     "hasAssociate": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hasAttribute": {
       "type": "bool",
