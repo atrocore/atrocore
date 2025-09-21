@@ -5,6 +5,7 @@
     import {Utils} from "../../utils/Utils";
     import {Language} from "../../utils/Language";
     import ContentFilter from "./ContentFilter.svelte";
+    import {Storage} from "../../utils/Storage";
 
     export let scope;
     export let id;
@@ -16,7 +17,7 @@
     let activeItem = null
     let loading = false
     let data = null
-    let selectedFilters = []
+    let selectedFilters = Storage.get('qualityCheckRuleFilters', scope) || []
     let filteredRules = []
 
     $: {
@@ -150,7 +151,8 @@
 
         <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
             <div style="display: flex;justify-content: space-between;margin-bottom: 15px">
-                <ContentFilter allFilters="{['passed','failed','skipped']}" storageKey="qualityCheckRuleFilters"
+                <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
+                               storageKey="qualityCheckRuleFilters"
                                translationScope="QualityCheckRule" translationField="status"
                                titleLabel="" onExecute="{onFilterChange}" style="padding-bottom: 0"/>
 
