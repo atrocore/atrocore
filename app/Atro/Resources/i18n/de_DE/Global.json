@@ -1090,7 +1090,7 @@
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
-    "integerValueValidationFailed": "Der ganzzahlige Wert muss zwischen %s und %s liegen."
+    "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",
