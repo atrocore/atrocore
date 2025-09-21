@@ -5,9 +5,11 @@
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
     import QueryBuilder from "./search-filter/QueryBuilder.svelte";
+    import DataQualityPanel from "./DataQualityPanel.svelte";
 
     export let scope: string;
     export let mode: string;
+    export let id: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
@@ -19,8 +21,9 @@
     export let createView;
     export let showFilter: boolean = false;
     export let showSummary: boolean = false;
+    export let showDataQualities: boolean = false;
     export let useStorage: boolean = true;
-    export let uniqueKey: string|null = 'default';
+    export let uniqueKey: string | null = 'default';
 
     $: scopeKey = scope + mode;
 
@@ -108,16 +111,16 @@
         }
     }
 
-    function getStoredData(key:string, name: string): any{
-        if(!useStorage) {
+    function getStoredData(key: string, name: string): any {
+        if (!useStorage) {
             return null;
         }
         return Storage.get(key, name);
     }
 
-    function storeData(key:string, name: string, value: any): void {
+    function storeData(key: string, name: string, value: any): void {
         if (!useStorage) {
-            return ;
+            return;
         }
         Storage.set(key, name, value);
     }
@@ -158,6 +161,16 @@
                 {
                     "name": "activities",
                     "label": Language.translate('Activities')
+                }
+            ];
+        }
+
+        if (showDataQualities) {
+            items = [
+                ...items,
+                {
+                    "name": "data-qualities",
+                    "label": Language.translate('QualityCheck', 'scopeNames')
                 }
             ];
         }
@@ -204,17 +217,24 @@
 
         {#if showFilter}
             <div class="filter" class:hidden={activeItem?.name !== 'filter'}>
-                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView} uniqueKey={uniqueKey}></QueryBuilder>
+                <QueryBuilder scope={scope} searchManager={searchManager} createView={createView}
+                              uniqueKey={uniqueKey}></QueryBuilder>
             </div>
         {/if}
 
         <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
-            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
+            <img class="preloader" src="client/img/atro-loader.svg" alt="loader">
         </div>
 
         <div class="activities" class:hidden={activeItem?.name !== 'activities'}>
-            <img class="preloader"  src="client/img/atro-loader.svg" alt="loader">
+            <img class="preloader" src="client/img/atro-loader.svg" alt="loader">
         </div>
+
+        {#if showDataQualities}
+            <div class="data-qualities" class:hidden={activeItem?.name !== 'data-qualities'}>
+                <DataQualityPanel {scope} {id}/>
+            </div>
+        {/if}
     </div>
 </BaseSidebar>
 
@@ -223,6 +243,7 @@
         height: 12px;
         margin-top: 5px;
     }
+
     .content .btn-group {
         display: flex;
     }
