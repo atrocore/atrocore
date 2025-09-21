@@ -68,25 +68,7 @@ class Thumbnail
         $thumbnailPath = $this->preparePath($file, $size);
 
         if (!$this->hasThumbnail($file, $size)) {
-            if ($originFilePath === null) {
-                $originFilePath = $this->getImageFilePath($file);
-            }
-
-            if($this->isSvg($file)) {
-                $this
-                    ->getFileManager()
-                    ->putContents('public' . DIRECTORY_SEPARATOR . $thumbnailPath, $file->getContents());
-                return $thumbnailPath;
-            }
-
-            if ($this->isPdf($originFilePath)) {
-                $originFilePath = $this->createImageFromPdf($file, $originFilePath);
-            }
-
-            // create thumbnail if not exist
-            if (!$this->create($originFilePath, $size, $thumbnailPath)) {
-                return null;
-            }
+            $thumbnailPath = "thumbnail/{$size}/{$file->get('id')}.png";
         }
 
         return $thumbnailPath;
@@ -122,24 +104,19 @@ class Thumbnail
         return $this->getFileManager()->putContents($thumbnailPath, $image->getImageAsString());
     }
 
-    protected  function isSvg(FileEntity $file): bool
+    public function isSvg(FileEntity $file): bool
     {
         return $file->get('mimeType') === 'image/svg+xml';
     }
 
-    protected function getImageFilePath(FileEntity $file): string
-    {
-        return $file->getFilePath();
-    }
-
-    protected function isPdf(string $fileName): bool
+    public function isPdf(string $fileName): bool
     {
         $parts = explode('.', $fileName);
 
         return strtolower(array_pop($parts)) === 'pdf';
     }
 
-    protected function createImageFromPdf(FileEntity $file, string $pdfPath): string
+    public function createImageFromPdf(FileEntity $file, string $pdfPath): string
     {
         /** @var FileStorageInterface $storage */
         $storage = $this->getEntityManager()->getRepository('File')->getStorage($file);

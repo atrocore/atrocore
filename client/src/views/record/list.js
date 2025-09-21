@@ -151,42 +151,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click .select-all': function (e) {
-                if (e.shiftKey) {
-                    let checked = $(e.currentTarget).prop('checked');
-
-                    if (this.allResultIsChecked) {
-                        this.unselectAllResult();
-                    }
-
-                    this.$el.find('.record-checkbox').each(function (i, elem) {
-                        if (checked) {
-                            this.checkRecord($(elem).data('id'), $(elem));
-                        } else {
-                            this.uncheckRecord($(elem).data('id'), $(elem));
-                        }
-                    }.bind(this));
-                } else {
-                    if (this.allResultIsChecked) {
-                        this.unselectAllResult();
-                    } else {
-                        this.selectAllResult();
-                    }
-                }
-                return;
-
-                let checkbox = this.$el.find('.full-table').find('.select-all');
-                let checkboxFixed = this.$el.find('.fixed-header-table').find('.select-all');
-
-                if (!this.checkedAll) {
-                    checkbox.prop('checked', true);
-                    checkboxFixed.prop('checked', true);
-                } else {
-                    checkbox.prop('checked', false);
-                    checkboxFixed.prop('checked', false);
-                }
-
-                this.selectAllHandler(e.currentTarget.checked);
-                this.checkedAll = e.currentTarget.checked;
+                this.handleSelectAll(e);
             },
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
@@ -213,17 +178,39 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         }
                     }
                 }
-            },
-            'click .actions a.mass-action': function (e) {
-                $el = $(e.currentTarget);
-                var action = $el.data('action');
+            }
+        },
 
-                var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
-                if (method in this) {
-                    this[method]($el.data());
-                } else {
-                    this.massAction(action);
+        handleSelectAll(e) {
+            if (e.shiftKey) {
+                let checked = $(e.currentTarget).prop('checked');
+
+                if (this.allResultIsChecked) {
+                    this.unselectAllResult();
                 }
+
+                this.$el.find('.record-checkbox').each(function (i, elem) {
+                    if (checked) {
+                        this.checkRecord($(elem).data('id'), $(elem));
+                    } else {
+                        this.uncheckRecord($(elem).data('id'), $(elem));
+                    }
+                }.bind(this));
+            } else {
+                if (this.allResultIsChecked) {
+                    this.unselectAllResult();
+                } else {
+                    this.selectAllResult();
+                }
+            }
+        },
+
+        executeMassAction(action, data) {
+            const method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+            if (method in this) {
+                this[method](data);
+            } else {
+                this.massAction(action);
             }
         },
 
@@ -381,9 +368,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 moreCount: this.collection.total - this.collection.length,
                 checkboxes: this.checkboxes,
                 allowSelectAllResult: this.isAllowedSelectAllResult(),
+                disableSelectAllResult: (this.options.disableSelectAllResult ?? true) && this.collection.models.length === 0,
                 massActionList: this.massActionList,
                 rowList: this.rowList,
-                topBar: paginationTop || this.checkboxes || this.showSearch || this.showFilter || (this.buttonList.length && !this.buttonsDisabled) || fixedHeaderRow,
                 bottomBar: paginationBottom,
                 buttonList: this.buttonList,
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
@@ -413,6 +400,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             return true;
+        },
+
+        hasExternalSelectAllCheckbox() {
+            return false;
         },
 
         isFixedListHeaderRow() {
@@ -492,20 +483,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', true).attr('disabled', 'disabled');
             this.$el.find('input.select-all').prop('checked', true);
 
-            this.massActionList.forEach(function (item) {
-                if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().addClass('hidden');
-                }
-            }, this);
-
-            if (this.checkAllResultMassActionList.length) {
-                this.$el.find('.actions-button').removeAttr('disabled');
-            }
-
             this.$el.find('.list > table tbody tr').removeClass('active');
-
-            this.$el.find('.selected-count').removeClass('hidden');
-            this.$el.find('.selected-count > .selected-count-span').text(this.collection.total);
 
             this.trigger('select-all-results');
         },
@@ -517,18 +495,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
-            this.$el.find('.selected-count').addClass('hidden');
-            this.$el.find('.selected-count > .selected-count-span').text(0);
-
-            if (this.checkAllResultMassActionList.length) {
-                this.$el.find('.actions-button').attr('disabled', true);
-            }
-
-            this.massActionList.forEach(function (item) {
-                if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find('div.list-buttons-container .actions li a.mass-action[data-action="' + item + '"]').parent().removeClass('hidden');
-                }
-            }, this);
+            this.trigger('unselect-all-results');
         },
 
         deactivate: function () {
@@ -988,6 +955,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (~index) {
                 this.massActionList.splice(index, 1);
             }
+
+            this.trigger('mass-actions-updated');
         },
 
         addMassAction: function (item, allResult) {
@@ -995,6 +964,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
             if (allResult) {
                 this.checkAllResultMassActionList.push(item);
             }
+
+            this.trigger('mass-actions-updated');
         },
 
         setup: function () {
@@ -1198,10 +1169,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
 
             this.listenTo(this.collection, 'sync', () => {
-                let $shown = this.$el.find('.shown-count-span');
-                if ($shown.length > 0) {
-                    $shown.html(this.collection.length);
-                }
+                this.trigger('update-counters');
             });
             this.listenTo(this.collection, 'update-total', () => {
                 if (this.collection.total > this.collection.length || this.collection.total === -1) {
@@ -1211,18 +1179,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.$el.find('.show-more').addClass('hidden')
                 }
 
-                if (this.collection.total != null) {
-                    this.$el.find('.list-buttons-container .preloader').addClass('hidden')
-                    this.$el.find('.list-buttons-container .total-count').removeClass('hidden')
-                    if (this.collection.total >= 0) {
-                        this.$el.find('.total-count-span').html(this.collection.total)
-                        this.$el.find('.shown-count-span').html(this.collection.length)
-                    }
-                } else {
-                    this.$el.find('.list-buttons-container .preloader').removeClass('hidden')
-                    this.$el.find('.list-buttons-container .text-count').addClass('hidden')
-                }
-
+                this.trigger('update-counters');
             });
 
             $(window).on(`keydown.${this.cid} keyup.${this.cid}`, e => {
@@ -1250,35 +1207,140 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.collection.fetch();
         },
 
+        renderActionsContainer: function (container) {
+            if (!container) {
+                return;
+            }
+
+            const className = this.getActionsComponent()
+            const component = new className({
+                target: container,
+                props: this.getActionsProperties()
+            });
+
+            this.listenTo(this, 'update-counters', () => {
+                component.$set({
+                    counters: this.getCounters(),
+                    loading: this.isListLoading(),
+                })
+            });
+
+            this.listenTo(this, 'select-all-results', () => {
+                component.$set({
+                    counters: this.getCounters(),
+                    massActions: this.getMassActions(),
+                    selected: true,
+                });
+            });
+
+            this.listenTo(this, 'unselect-all-results', () => {
+                component.$set({
+                    counters: this.getCounters(),
+                    massActions: this.getMassActions(),
+                    selected: false
+                });
+            });
+
+            this.listenTo(this, 'check', () => {
+                component.$set({
+                    counters: this.getCounters(),
+                    massActions: this.getMassActions(),
+                    selected: this.checkedList
+                });
+            });
+
+            this.listenTo(this, 'mass-actions-updated', () => {
+                component.$set({
+                    massActions: this.getMassActions(),
+                });
+            });
+
+            return component;
+        },
+
+        getActionsProperties: function (component) {
+            return {
+                showSearch: !!this.showSearch,
+                showFilter: !!this.showFilter,
+                searchManager: this.searchManager,
+                uniqueKey: this.uniqueKey,
+                scope: this.scope,
+                counters: this.getCounters(),
+                loading: this.isListLoading(),
+                selected: false,
+                massActions: this.getMassActions(),
+                hasSelectAllCheckbox: this.hasExternalSelectAllCheckbox() && this.isAllowedSelectAllResult(),
+                executeMassAction: (action, data) => {
+                    this.executeMassAction(action, data)
+                },
+                handleSelectAll: (e) => {
+                    this.handleSelectAll(e);
+                    component.$set({selected: this.allResultIsChecked});
+                }
+            };
+        },
+
+        getActionsComponent: function () {
+            return Svelte.ListActionsContainer;
+        },
+
+        getCounters: function () {
+            const groups = [];
+
+            if (this.displayTotalCount) {
+                groups.push([
+                    {
+                        name: 'shown',
+                        label: this.translate('Shown'),
+                        value: this.collection.length,
+                    },
+                    {
+                        name: 'total',
+                        label: this.translate('Total'),
+                        value: this.collection.total,
+                    }
+                ]);
+            }
+
+            if (this.checkedList?.length > 0) {
+                groups.unshift([
+                    {
+                        name: 'selected',
+                        label: this.translate('Selected'),
+                        value: this.checkedList.length,
+                    }
+                ]);
+            } else if (this.allResultIsChecked) {
+                groups.unshift([
+                    {
+                        name: 'selected',
+                        label: this.translate('Selected'),
+                        value: this.collection.total,
+                    }
+                ]);
+            }
+
+            return groups;
+        },
+
+        getMassActions: function () {
+            if (this.allResultIsChecked) {
+                return (this.massActionList || []).filter(item => ~this.checkAllResultMassActionList.indexOf(item));
+            }
+
+            return this.massActionList;
+        },
+
+        isListLoading: function () {
+            return this.collection.total === null;
+        },
+
         canRenderSearch: function () {
             return this.searchManager && (this.showSearch || this.showFilter)
         },
 
         afterRender: function () {
             this.createLayoutConfigurator();
-
-            try {
-                this.svelteFilter?.$destroy();
-            } catch (e) {}
-
-            const target = document.querySelector(this.options.el + ' .list-buttons-container .filter-container');
-            if (target && this.canRenderSearch()) {
-                const props = {
-                    searchManager: this.searchManager,
-                    showSearchPanel: this.showSearch,
-                    showFilter: this.showFilter,
-                    scope: this.scope,
-                };
-
-                if (this.uniqueKey) {
-                    props.uniqueKey = this.uniqueKey;
-                }
-
-                this.svelteFilter = new Svelte.FilterSearchBar({
-                    target: target,
-                    props: props
-                })
-            }
 
             if (this.allResultIsChecked) {
                 this.selectAllResult();
@@ -1293,50 +1355,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let list = $('#main .list-container > .list');
             if (!list) {
                 return;
-            }
-
-            this.fullTableScroll();
-
-            if (this.enabledFixedHeader) {
-                this.fixedTableHead()
-            }
-
-            if (this.hasHorizontalScroll()) {
-                var scrollTimeout = null;
-
-                $(window).on("scroll.fixed-scrollbar", function () {
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(function () {
-                        list.each(function () {
-                            var $container = $(this);
-                            var $bar = $container.children('.fixed-scrollbar');
-
-                            if ($bar.length) {
-                                var containerOffset = {
-                                    top: $container.offset().top,
-                                    bottom: $container.offset().top + $container.height()
-                                };
-                                var windowOffset = {
-                                    top: $(window).scrollTop(),
-                                    bottom: $(window).scrollTop() + $(window).height()
-                                };
-
-                                if ((containerOffset.top > windowOffset.bottom) || (windowOffset.bottom > containerOffset.bottom)) {
-                                    if ($bar.data("status") === "on") {
-                                        $bar.hide().data("status", "off");
-                                    }
-                                } else {
-                                    if ($bar.data("status") === "off") {
-                                        $bar.show().data("status", "on");
-                                        $bar.scrollLeft($container.scrollLeft());
-                                    }
-                                }
-                            }
-                        });
-                    }, 50);
-                });
-
-                $(window).trigger("scroll.fixed-scrollbar");
             }
 
             this.changeDropDownPosition();
@@ -1633,160 +1651,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
         },
 
-        fixedTableHead() {
-            let $window = $(window),
-                content = $('#main main'),
-                list = $('#main main .list'),
-                fixedTable = this.$el.find('.fixed-header-table'),
-                fullTable = this.$el.find('.full-table'),
-                navBarRight = $('.navbar-right'),
-                fixedScroll = this.$el.find('.fixed-scrollbar'),
-                posLeftTable = 0,
-                navBarHeight = 0,
-
-                setPosition = () => {
-                    posLeftTable = fullTable.offset().left;
-                    navBarHeight = navBarRight.outerHeight();
-
-                    fixedTable.css({
-                        'position': 'fixed',
-                        'left': posLeftTable,
-                        'top': navBarHeight - 1,
-                        'right': 0,
-                        'z-index': 2
-                    });
-                },
-                setWidth = () => {
-                    let widthTable = fullTable.outerWidth();
-
-                    fixedTable.css('width', widthTable);
-
-                    fullTable.find('thead').find('th').each(function (i, elem) {
-                        let width = $(this).outerWidth();
-
-                        if (!width) {
-                            $(this).attr('width', 100);
-                        }
-
-                        fixedTable.find('th').eq(i).css('width', width);
-                    });
-
-                    fixedScroll.width(list.width()).children('div').height(1).width(list[0]?.scrollWidth);
-                },
-                toggleClass = () => {
-                    let showPosition = fullTable.offset().top;
-
-                    if ($window.scrollTop() > showPosition && $window.width() >= 768) {
-                        fixedTable.removeClass('hidden');
-                    } else {
-                        fixedTable.addClass('hidden');
-                    }
-                };
-
-            if (fullTable.length) {
-                setPosition();
-                setWidth();
-                toggleClass();
-
-                content.on('scroll', () => {
-                    setPosition();
-                    setWidth();
-                    toggleClass();
-                });
-                $window.on('resize', function () {
-                    this.fullTableScroll();
-                    setPosition();
-                    setWidth();
-                }.bind(this));
-
-                let observer = new ResizeObserver(() => {
-                    this.fullTableScroll();
-
-                    if (list) {
-                        if (!this.hasHorizontalScroll() || $(window).width() < 768) {
-                            this.$el.find('.fixed-scrollbar').css('display', 'none');
-                        } else {
-                            this.$el.find('.fixed-scrollbar').css('display', 'block');
-                        }
-                    }
-
-                    setPosition();
-                    setWidth();
-                });
-                observer.observe(content.get(0));
-
-                this.listenToOnce(this, 'remove', () => {
-                    observer.disconnect();
-                });
-            }
-        },
-
         fullTableScroll() {
-
-            let list = this.$el.find('.list');
-            if (list.length) {
-                let fixedTableHeader = list.find('.fixed-header-table');
-                let fullTable = list.find('.full-table');
-                let scroll = this.$el.find('.list > .panel-scroll');
-
-                if (fullTable.length) {
-                    if (scroll.length) {
-                        scroll.scrollLeft(0);
-                        scroll.addClass('hidden');
-                    }
-
-                    let $bar = this.$el.find('.fixed-scrollbar');
-                    if ($bar.length === 0) {
-                        $bar = $('<div class="fixed-scrollbar" style="display: none"><div></div></div>').appendTo(list).css({
-                            width: list.outerWidth()
-                        });
-
-                        $bar.scroll(function () {
-                            list.scrollLeft($bar.scrollLeft());
-                        });
-                    }
-
-                    $bar.data("status", "off");
-                    if (this.hasHorizontalScroll() && $(window).width() >= 768) {
-                        $bar.css('display', 'block');
-                    }
-
-                    fullTable.find('thead').find('th').each(function (i, elem) {
-                        let width = elem.width;
-
-                        if (width) {
-                            if (i in this.baseWidth) {
-                                width = this.baseWidth[i];
-                            }
-
-                            if (typeof width === 'string' && width.match(/[0-9]*(%)/gm)) {
-                                this.baseWidth[i] = width;
-                                width = list.outerWidth() * parseInt(width) / 100;
-
-                                if (width < 100) {
-                                    width = 100;
-                                }
-                            }
-
-                            elem.width = width;
-                        }
-                    }.bind(this));
-
-                    fixedTableHeader.addClass('table-scrolled');
-                    fullTable.addClass('table-scrolled');
-
-                    let prevScrollLeft = 0;
-
-                    list.off('scroll');
-                    list.on('scroll', () => {
-                        if (prevScrollLeft !== list.scrollLeft()) {
-                            let fixedTableHeaderBasePosition = list.offset().left + 1 || 0;
-                            fixedTableHeader.css('left', fixedTableHeaderBasePosition - list.scrollLeft());
-                        }
-                        prevScrollLeft = list.scrollLeft();
-                    });
-                }
-            }
         },
 
         setupMassActionItems() {

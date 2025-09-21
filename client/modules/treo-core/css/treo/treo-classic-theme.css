@@ -9788,6 +9788,10 @@ body > #header .navbar-brand span.home-icon {
     }
 }
 
+main .bottom > .panel > .panel-body {
+    overflow-x: auto;
+}
+
 .panel-body {
     padding: 14px 10px;
 }
@@ -9909,20 +9913,16 @@ label {
     margin-bottom: 10px
 }
 
+.page-header-container {
+    position: sticky;
+    left: 0;
+}
+
 .page-header {
     margin: 14px 0 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
-    min-height: 33px
-}
-
-.page-header > .row {
     min-height: 33px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .dashboard-header > .row {
@@ -9940,13 +9940,6 @@ label {
 
 .header .header-buttons-container.full-row .header-buttons {
     justify-content: space-between;
-}
-
-@media (max-width: 767px) {
-    .page-header .row .col-lg-3,
-    .page-header .row .col-lg-4 {
-        width: 50%;
-    }
 }
 
 .modal-header {
@@ -10189,9 +10182,13 @@ table.table > thead th > div > a {
     color: var(--label-color)
 }
 
+#main main > .list-buttons-container {
+    position: sticky;
+    left: 0;
+    z-index: 11;
+}
+
 #main main > .list-container > .list {
-    overflow: hidden;
-    overflow-x: auto;
     scrollbar-width: none;
     margin-left: -10px;
     margin-right: -10px;
@@ -10200,6 +10197,12 @@ table.table > thead th > div > a {
 
 #main main > .list-container > .list::-webkit-scrollbar {
     display: none;
+}
+
+#main main > .list-container > .list > .table thead {
+    position: sticky;
+    top: -1px;
+    z-index: 10;
 }
 
 #main main > .list-container > .list > .table thead th > .layout-editor-container {
@@ -10863,14 +10866,10 @@ select[multiple].input-sm {
     margin-right: -14px
 }
 
-.panel-body > div > .list {
+.panel-body > .list-container > .list,
+.modal-body > .list-container > .list {
     margin-left: -20px;
     margin-right: -20px;
-}
-
-.panel-body > div > .list,
-.panel-body .group .list {
-    overflow-x: auto;
 }
 
 .panel-body > div > .list > table td:first-child,
@@ -10879,11 +10878,6 @@ select[multiple].input-sm {
 .panel-body > div > .group > .list-container > .list > table th:first-child,
 .bottom .panel .group-container > .group > .group-name {
     padding-left: 20px !important;
-}
-
-.modal-body > div > .list {
-    margin-left: -20px;
-    margin-right: -20px
 }
 
 .modal-body > div > .list > table td:first-child, .modal-body > div > .list > table th:first-child {
@@ -11021,22 +11015,6 @@ table.no-margin {
     width: 100%
 }
 
-.panel-body > div:first-child > .list-expanded:first-child {
-    margin-top: -14px
-}
-
-.panel-body > div:last-child > .list-expanded:last-child {
-    margin-bottom: -14px
-}
-
-.panel-body > div:first-child > .list:first-child {
-    margin-top: -14px
-}
-
-.panel-body > div:last-child > .list:last-child {
-    margin-bottom: -14px
-}
-
 .expanded-row {
     white-space: nowrap;
     overflow: hidden;
@@ -11132,7 +11110,7 @@ table.no-margin {
     padding-top: 3px;
     padding-bottom: 3px;
     padding-right: 5px;
-    right: 0;
+    right: -10px;
 }
 
 .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
@@ -11141,12 +11119,12 @@ table.no-margin {
 
 .panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
     padding-right: 10px;
-    right: 0;
 }
 
 @media (min-width: 768px) {
     .list > table td.cell[data-name="buttons"] {
         padding-right: 12px;
+        right: -20px;
     }
 }
 
@@ -11242,8 +11220,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.dashlet > .panel-body {
-    overflow-y: auto;
-    overflow-x: hidden
+    overflow: auto;
 }
 
 .dashlets.row {
@@ -12940,10 +12917,6 @@ table.table {
     border-top-width: 1px
 }
 
-.list-container .list-buttons-container {
-    margin-bottom: 10px
-}
-
 .calendar-container > .calendar, .calendar-container > .timeline {
     background-color: #fff
 }
@@ -13397,10 +13370,17 @@ input#sn-checkbox-open-in-new-window {
     border-top: 0;
 }
 
+.dashlet-body.panel-body .list > table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+}
+
 .panel-body > .list-container > .list > div.show-more, .list.no-bottom-margin > div.show-more {
     width: auto;
     position: sticky;
-    left: 20px;
+    left: 0;
 }
 
 .show-more {
@@ -13435,56 +13415,6 @@ input#sn-checkbox-open-in-new-window {
     display: flex;
     flex-direction: column;
     flex: 1;
-}
-
-.list-container .list-buttons-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.list-container .list-buttons-container .actions-button {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.list-container .list-buttons-container .actions-button i {
-    font-size: 14px;
-}
-
-.list-container .list-buttons-container .form-group {
-    margin-bottom: 0;
-}
-
-.list-container .list-buttons-container .counters-container {
-    margin-left: auto;
-    margin-right: 0;
-}
-
-.list-container .list-buttons-container .selected-count,
-.list-container .list-buttons-container .total-count {
-    color: var(--primary-font-color);
-    padding: 0;
-    display: inline;
-}
-
-.list-container .list-buttons-container .selected-count {
-    margin-right: 20px;
-}
-
-.list-container .list-buttons-container .counters-container > * {
-    display: inline;
-    vertical-align: bottom;
-}
-
-@media screen and (max-width: 768px) {
-    .list-container .list-buttons-container .filter-container {
-        order: -1;
-        flex-basis: 100%;
-    }
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .admin-content .table.table-bordered, .admin-content iframe, .list-group-panel {
@@ -14380,7 +14310,8 @@ button.category:focus {
         white-space: nowrap;
     }
 
-    .panel-body > div > .list {
+    .panel-body > .list-container > .list,
+    .modal-body > .list-container > .list {
         margin-left: -10px;
         margin-right: -10px;
     }
@@ -14392,16 +14323,12 @@ button.category:focus {
 
     .record .middle .panel-body,
     .record .bottom .panel-body {
-        padding: 14px 0 0 0;
+        margin-left: -10px;
+        margin-right: -10px;
     }
 
     .list-container > .list > .table:not(.fixed-header-table) {
         width: auto;
-    }
-
-    .list-container .list-buttons-container {
-        margin-bottom: 10px;
-        margin-top: 10px;
     }
 
     .list-group-item {
@@ -14733,6 +14660,7 @@ button.category:focus {
 .dashlets.grid-stack .grid-stack-item .dashlet .dashlet-body {
     width: 100%;
     position: relative;
+    padding-top: 0;
 }
 
 .dashlets .dashlet {
@@ -18288,4 +18216,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .modal-body > .rebuild-db-container {
     height: 100%;
     padding-top: 20px !important;
+}
+
+.list-buttons-container {
+    margin: 10px 0;
+}
+
+.list-container.for-tree-view > .list-buttons-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.list-container.for-tree-view > .list-buttons-container .counters-container {
+    margin: 0 0 0 auto;
 }

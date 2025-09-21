@@ -295,6 +295,23 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             this.createView('list', viewName, options, function (view) {
+                this.listenTo(view, 'after:render', () => {
+                    if (!this.dialog) {
+                        return;
+                    }
+
+                    if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                        try {
+                            window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
+                        } catch (e) {}
+                    }
+
+                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container.for-table-view');
+                    if (container) {
+                        window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
+                    }
+                });
+
                 this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);
                     this.close();
@@ -473,6 +490,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         target: rightContainer,
                         props: rightViewOption
                     });
+
                     $(rightContainer).addClass('for-table-view');
                     if (this.getSelectedViewType() === 'tree') {
                         $(rightContainer).hide();

@@ -30,6 +30,8 @@ import TreePanel from "./components/record/TreePanel.svelte";
 import RightSideView from "./components/record/RightSideView.svelte";
 import BaseHeader from "./components/record/header/BaseHeader.svelte";
 import ListHeader from "./components/record/header/ListHeader.svelte";
+import ListActionsContainer from "./components/record/header/ListActionsContainer.svelte";
+import PlateActionsContainer from "./components/record/header/PlateActionsContainer.svelte";
 import DetailHeader from "./components/record/header/DetailHeader.svelte";
 import Gallery from "./components/record/Gallery.svelte";
 import FilterSearchBar from "./components/record/search/FilterSearchBar.svelte";
@@ -63,6 +65,8 @@ export {
     Favorites,
     BaseHeader,
     ListHeader,
+    ListActionsContainer,
+    PlateActionsContainer,
     DetailHeader,
     FilterSearchBar,
     Gallery,

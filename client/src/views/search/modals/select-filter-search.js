@@ -86,6 +86,23 @@ Espo.define('views/search/modals/select-filter-search', 'views/modals/select-rec
             }
 
             this.createView('list', viewName, options, function (view) {
+                this.listenTo(view, 'after:render', () => {
+                    if (!this.dialog) {
+                        return;
+                    }
+
+                    if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                        try {
+                            window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
+                        } catch (e) {}
+                    }
+
+                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
+                    if (container) {
+                        window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
+                    }
+                });
+
                 this.listenTo(view, 'select', function (model) {
                     window.open(`#${this.scope}/view/${model.id}`, '_blank');
                 }.bind(this));

@@ -63,6 +63,10 @@
     }
 
     function setActiveItem(item: any) {
+        if (!item) {
+            return;
+        }
+
         if (activeItem && activeItem.name === item.name) {
             return
         }
