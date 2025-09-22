@@ -1076,7 +1076,7 @@
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
     "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки.",
-    "integerValueValidationFailed": "Ціле значення повинно бути в межах від %s до %s"
+    "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s"
   },
   "queryBuilderFilter": {
     "add_rule": "Додати",

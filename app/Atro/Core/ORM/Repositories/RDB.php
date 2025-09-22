@@ -327,8 +327,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $max = $fieldData['max'] ?? 2147483647;
 
             if ($value < $min || $value > $max) {
+                $label = $fieldData['detailViewLabel'] ?? $fieldData['label'] ?? $this->getLanguage()->translate($fieldName, 'fields', $entity->getEntityType());
+
                 throw new BadRequest(
-                    sprintf($this->getLanguage()->translate('integerValueValidationFailed', 'exceptions'), $min, $max)
+                    sprintf($this->getLanguage()->translate('integerValueValidationFailed', 'exceptions'), $label, $min, $max)
                 );
             }
         }

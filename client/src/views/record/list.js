@@ -1129,8 +1129,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkboxes = false;
             }
 
-            //After investigation,  sometimes listenTo doesn't work so listening directly works, I can't explain why
-            this.collection.on('sync', (c, r, options) => {
+            const collectionCallback = (c, r, options) => {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) return;
                 if (this.noRebuild) {
                     this.noRebuild = null;
@@ -1150,6 +1149,13 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.buildRows(function () {
                     this.render();
                 }.bind(this));
+            };
+
+            //After investigation,  sometimes listenTo doesn't work so listening directly works, I can't explain why
+            this.collection.on('sync', collectionCallback);
+
+            this.listenToOnce(this, 'remove', () => {
+                this.collection.off('sync', collectionCallback);
             });
 
             this.checkedList = [];
