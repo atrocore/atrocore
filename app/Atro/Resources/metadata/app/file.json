@@ -17,21 +17,7 @@
       "jfif",
       "webp",
       "svg"
-    ],
-    "thumbnailSize": {
-      "small": [
-        128,
-        128
-      ],
-      "medium": [
-        256,
-        256
-      ],
-      "large": [
-        1024,
-        1024
-      ]
-    }
+    ]
   },
   "video": {
     "extensions": [

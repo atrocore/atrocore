@@ -418,11 +418,7 @@
       "type": "enum",
       "required": false,
       "default": "small",
-      "options": [
-        "small",
-        "medium",
-        "large"
-      ]
+      "view": "views/entity-field/fields/preview-size"
     },
     "min": {
       "type": "float",

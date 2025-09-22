@@ -81,8 +81,8 @@ class Thumbnail
             return false;
         }
 
-        $imageSizes = $this->getMetadata()->get(['app', 'file', 'image', 'thumbnailSize'], []);
-        if (!$imageSizes[$size]) {
+        $imageSizes = $this->getMetadata()->get("app.thumbnailTypes.$size.size");
+        if (empty($imageSizes)) {
             return false;
         }
 
@@ -92,7 +92,7 @@ class Thumbnail
             return false;
         }
 
-        list($w, $h) = $imageSizes[$size];
+        list($w, $h) = $imageSizes;
 
         $image->resizeToBestFit($w, $h);
 

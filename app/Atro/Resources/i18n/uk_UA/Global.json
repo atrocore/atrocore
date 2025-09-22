@@ -1159,5 +1159,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Ви збираєтеся замінити одне або декілька значень на порожнє. Ви впевнені?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Малий логотип",
+    "small": "Малий",
+    "medium": "Середній",
+    "large": "Великий"
   }
 }
