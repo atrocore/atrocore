@@ -73,16 +73,19 @@ class ThumbnailType extends ReferenceData
 
     public function updateEntity(Entity $entity): bool
     {
-        $this->getMetadata()->set('app', 'thumbnailTypes', [
-            $entity->get('code') => [
-                'size' => [
-                    $entity->get('width'),
-                    $entity->get('height'),
+        if ($entity->isAttributeChanged('width') || $entity->isAttributeChanged('height')) {
+            $this->getMetadata()->set('app', 'thumbnailTypes', [
+                $entity->get('code') => [
+                    'size' => [
+                        $entity->get('width'),
+                        $entity->get('height'),
+                    ],
                 ],
-            ],
-        ]);
+            ]);
+            $this->getMetadata()->save();
 
-        $this->getMetadata()->save();
+            $this->deleteAllThumbnails();
+        }
 
         if ($entity->isAttributeChanged('name')) {
             $this->getLanguage()->set('Global', 'thumbnailTypes', $entity->get('code'), $entity->get('name'));
@@ -97,7 +100,17 @@ class ThumbnailType extends ReferenceData
         $this->getMetadata()->delete('app', 'thumbnailTypes', [$entity->get('code')]);
         $this->getMetadata()->save();
 
+        $this->deleteAllThumbnails();
+
         return true;
+    }
+
+    public function deleteAllThumbnails(): void
+    {
+        $path = 'public/'.trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
+        if (is_dir($path)) {
+            exec('rm -rf '.escapeshellarg($path));
+        }
     }
 
     protected function init()
