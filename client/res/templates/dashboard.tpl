@@ -1,35 +1,29 @@
-
 <div class="page-header dashboard-header">
-    <div class="row">
-        <div class="col-sm-5">
-            {{#if displayTitle}}
-            <h3>{{translate 'Dashboard' category='scopeNames'}}</h3>
-            {{/if}}
-        </div>
-        <div class="col-sm-7 clearfix">
-            {{#unless layoutReadOnly}}
-            <div class="btn-group pull-right dashboard-buttons">
-                <button class="btn btn-default btn-icon" data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><i class="ph ph-pencil-simple"></i></button>
-                <button class="btn btn-default btn-icon" data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><i class="ph ph-plus"></i></button>
-            </div>
-            <button class="btn btn-default pull-right" data-action="reset" style="margin: 0 10px">{{translate 'Reset to Default'}}</button>
-            {{/unless}}
-            {{#ifNotEqual dashboardLayout.length 1}}
-            <div class="btn-group pull-right dashboard-tabs">
+    {{#if displayTitle}}
+        <h3>{{translate 'Dashboard' category='scopeNames'}}</h3>
+    {{/if}}
+    <div class="controls">
+        {{#ifNotEqual dashboardLayout.length 1}}
+            <div class="btn-group dashboard-tabs">
                 {{#each dashboardLayout}}
                     <button class="btn btn-default{{#ifEqual @index ../currentTab}} active{{/ifEqual}}" data-action="selectTab" data-tab="{{@index}}">{{name}}</button>
                 {{/each}}
             </div>
-            <div class="pull-right dashboard-selectbox">
-                <select class=" form-control" data-action="selectTab">
+            <div class="dashboard-selectbox">
+                <select class="form-control" data-action="selectTab">
                     {{#each dashboardLayout}}
-                    <option {{#ifEqual @index ../currentTab}}selected{{/ifEqual}}>{{name}}</option>
+                        <option value="{{@index}}" {{#ifEqual @index ../currentTab}}selected{{/ifEqual}}>{{name}}</option>
                     {{/each}}
                 </select>
             </div>
-            {{/ifNotEqual}}
-        </div>
+        {{/ifNotEqual}}
+        {{#unless layoutReadOnly}}
+            <button data-action="reset">{{translate 'Reset to Default'}}</button>
+            <div class="button-group dashboard-buttons">
+                <button data-action="editTabs" title="{{translate 'Edit Dashboard'}}"><i class="ph ph-pencil-simple"></i></button>
+                <button data-action="addDashlet" title="{{translate 'Add Dashlet'}}"><i class="ph ph-plus"></i></button>
+            </div>
+        {{/unless}}
     </div>
 </div>
 <div class="dashlets grid-stack grid-stack-4 row">{{{dashlets}}}</div>
-

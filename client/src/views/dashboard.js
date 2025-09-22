@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
+Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], function (Dep, Gridstack) {
 
     return Dep.extend({
 
@@ -193,6 +193,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
         afterRender: function () {
             this.initGridstack();
+
+            this.$el.find('.dashboard-selectbox select').selectize?.();
         },
 
         initGridstack: function () {
