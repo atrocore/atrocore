@@ -33,6 +33,10 @@
       "required": true,
       "min": 1
     },
+    "deleteDisabled": {
+      "type": "bool",
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

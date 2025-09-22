@@ -25,11 +25,12 @@ class ThumbnailType extends ReferenceData
 
         foreach ($this->getMetadata()->get("app.thumbnailTypes") ?? [] as $type => $data) {
             $items[] = [
-                "id"     => $type,
-                "code"   => $type,
-                "name"   => $this->translate($type, 'thumbnailTypes'),
-                "width"  => $data["size"][0] ?? null,
-                "height" => $data["size"][1] ?? null,
+                "id"             => $type,
+                "code"           => $type,
+                "name"           => $this->translate($type, 'thumbnailTypes'),
+                "width"          => $data["size"][0] ?? null,
+                "height"         => $data["size"][1] ?? null,
+                "deleteDisabled" => !empty($data["deleteDisabled"]),
             ];
         }
 
