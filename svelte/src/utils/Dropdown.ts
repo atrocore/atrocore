@@ -22,7 +22,7 @@ export default class Dropdown {
     private readonly referenceEl: HTMLElement;
     private readonly floatingEl: HTMLElement;
     private readonly floatingListElSelector: string = 'li';
-    private floatingHandler: Function;
+    private floatingHandler?: Function;
     private params?: DropdownParams;
     private isOpen: boolean = false;
     private readonly autoHide: boolean = true;
@@ -39,6 +39,8 @@ export default class Dropdown {
         if (typeof this.params?.dropdownListElSelector === 'string') {
             this.floatingListElSelector = this.params.dropdownListElSelector;
         }
+
+        referenceEl._dropdown = this;
 
         referenceEl.addEventListener('click', this.onReferenceElClick.bind(this));
     }
@@ -82,7 +84,7 @@ export default class Dropdown {
 
         this.floatingHandler = autoUpdate(this.referenceEl, this.floatingEl, () => {
             const positionOptions = {
-                placement: 'bottom-end',
+                placement: 'bottom-start',
                 strategy: 'fixed',
                 middleware: []
             };
@@ -115,13 +117,19 @@ export default class Dropdown {
                 positionOptions.middleware = [offset(5), flip(), shift()];
             }
 
-            computePosition(this.referenceEl, this.floatingEl, positionOptions, {animationFrame: true}).then(({x, y}) => {
-                Object.assign(this.floatingEl.style, {
+            computePosition(this.referenceEl, this.floatingEl, positionOptions).then(({x, y}) => {
+                const options = {
                     left: `${x}px`,
                     top: `${y}px`
-                });
+                };
+
+                if (positionOptions.strategy === 'fixed') {
+                    options.position = 'fixed';
+                }
+
+                Object.assign(this.floatingEl.style, options);
             });
-        });
+        }, {animationFrame: true});
 
         document.addEventListener('click', this.onClickOutside.bind(this));
         this.floatingEl.addEventListener('click', this.onDropdownClick.bind(this));

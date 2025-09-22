@@ -9916,6 +9916,7 @@ label {
 .page-header-container {
     position: sticky;
     left: 0;
+    z-index: 11;
 }
 
 .page-header {
@@ -10180,12 +10181,6 @@ div.list-kanban > div.kanban-columns-container > table {
 table.table > thead th > a,
 table.table > thead th > div > a {
     color: var(--label-color)
-}
-
-#main main > .list-buttons-container {
-    position: sticky;
-    left: 0;
-    z-index: 11;
 }
 
 #main main > .list-container > .list {

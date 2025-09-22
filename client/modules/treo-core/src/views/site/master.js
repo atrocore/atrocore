@@ -124,40 +124,74 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     }
                 });
             };
+            const tooltipMutationProcessor = (mutation) => {
+                mutation.removedNodes.forEach(node => {
+                    if (!(node instanceof HTMLElement)) return;
+                    const withTooltip = node.querySelectorAll?.('[data-tippy]');
+                    withTooltip?.forEach(el => {
+                        if (el._tippy) {
+                            el._tippy.destroy();
+                        }
+                    });
+
+                    if (node.dataset?.tippy && node._tippy) {
+                        node._tippy.destroy();
+                    }
+                });
+
+                const el = mutation.target;
+
+                if (el.getAttribute('title')) {
+                    el.setAttribute('data-original-title', el.getAttribute('title'));
+                }
+                if (el.getAttribute('data-title-link')) {
+                    el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
+                }
+                if (el.dataset.tippy && el._tippy) {
+                    el._tippy.setContent(getTooltipContent(el));
+                    el.removeAttribute('title');
+                    el.removeAttribute('data-title-link');
+                } else {
+                    initializeTooltips(el);
+                }
+            };
+
+            const initializeDropdowns = (node = document) => {
+                node.querySelectorAll('[data-toggle=dropdown]').forEach(el => {
+                    if (el.closest('#header')) {
+                        return;
+                    }
+
+                    if (el._dropdown) {
+                        return;
+                    }
+
+                    const dropdownMenu = el.parentNode.querySelector('.dropdown-menu');
+                    if (!dropdownMenu) {
+                        return;
+                    }
+
+                    el._dropdown = new window.Dropdown(el, dropdownMenu, {
+                        strategy: 'fixed',
+                    });
+                });
+            }
 
             initializeTooltips();
+            initializeDropdowns();
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
-                    mutation.removedNodes.forEach(node => {
-                        if (!(node instanceof HTMLElement)) return;
-                        const withTooltip = node.querySelectorAll?.('[data-tippy]');
-                        withTooltip?.forEach(el => {
-                            if (el._tippy) {
-                                el._tippy.destroy();
-                            }
-                        });
+                    tooltipMutationProcessor(mutation);
 
-                        if (node.dataset?.tippy && node._tippy) {
-                            node._tippy.destroy();
+                    mutation.removedNodes.forEach(node => {
+                        if (node?._dropdown) {
+                            node._dropdown.destroy();
                         }
                     });
 
                     const el = mutation.target;
-
-                    if (el.getAttribute('title')) {
-                        el.setAttribute('data-original-title', el.getAttribute('title'));
-                    }
-                    if (el.getAttribute('data-title-link')) {
-                        el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
-                    }
-                    if (el.dataset.tippy && el._tippy) {
-                        el._tippy.setContent(getTooltipContent(el));
-                        el.removeAttribute('title');
-                        el.removeAttribute('data-title-link');
-                    } else {
-                        initializeTooltips(el);
-                    }
+                    initializeDropdowns(el);
                 });
             });
 
