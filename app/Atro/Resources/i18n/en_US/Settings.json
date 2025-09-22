@@ -16,7 +16,6 @@
     "recordsPerPage": "Records Per Page",
     "recordsPerPageSmall": "Records Per Page (Small)",
     "globalSearchEntityList": "Global Search Entity List",
-    "assignmentNotifications": "Notifications upon assignment",
     "assignmentEmailNotifications": "Notifications upon assignment",
     "streamEmailNotifications": "Notifications about updates in Activities for internal users",
     "avatarsDisabled": "Disable Avatars",
@@ -26,16 +25,10 @@
     "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)",
     "siteUrl": "Site URL",
     "addressPreview": "Address Preview",
-    "addressFormat": "Address Format",
     "notificationSoundsDisabled": "Disable Notification Sounds",
     "applicationName": "Application Name",
-    "calendarEntityList": "Calendar Entity List",
     "mentionEmailNotifications": "Notifications about mentions in posts",
-    "activitiesEntityList": "Activities Entity List",
-    "historyEntityList": "History Entity List",
-    "b2cMode": "B2C Mode",
     "aclStrictMode": "ACL Strict Mode",
-    "adminNotifications": "System notifications in administration panel",
     "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
     "authTokenPreventConcurrent": "Only one auth token per user",
     "tabIconsDisabled": "Disable navigation menu icons",
@@ -51,13 +44,6 @@
     "customStylesheetPath": "СSS File Path",
     "customStylesheet": "CSS"
   },
-  "options": {
-    "smtpAuthMechanism": {
-      "login": "Login",
-      "plain": "Plain",
-      "crammd5": "CRAM-MD5"
-    }
-  },
   "tooltips": {
     "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",
     "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
@@ -67,7 +53,6 @@
     "authTokenLifetime": " Defines lifetime period for tokens.\n0 means no expiration.",
     "authTokenMaxIdleTime": "Defines how long since the last access tokens can exist.\n0 means no expiration.",
     "userThemesDisabled": "If checked then users won't be able to select another theme.",
-    "b2cMode": "By default AtroCore is adapted for B2B. You can switch it to B2C.",
     "aclStrictMode": "Enabled: Access to scopes will be forbidden if it's not specified in roles.\n\nDisabled: Access to scopes will be allowed if it's not specified in roles.",
     "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
     "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
