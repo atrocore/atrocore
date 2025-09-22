@@ -2,6 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
+      "view": "views/thumbnail-type/fields/name",
       "required": true,
       "trim": true
     },

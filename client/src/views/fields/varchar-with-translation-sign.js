@@ -16,6 +16,10 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
             return this.scope;
         },
 
+        getCategory() {
+            return 'fields';
+        },
+
         getEntityFieldName() {
             return this.name;
         },
@@ -44,7 +48,7 @@ Espo.define('views/fields/varchar-with-translation-sign', 'views/fields/varchar'
                 
                 let scope = 'Translation',
                     viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit',
-                    key = `${this.getEntityScope()}.fields.${this.getEntityFieldName()}`;
+                    key = `${this.getEntityScope()}.${this.getCategory()}.${this.getEntityFieldName()}`;
                 
                 this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
                     let data = res.list[0] ?? {id: null, code: key};
