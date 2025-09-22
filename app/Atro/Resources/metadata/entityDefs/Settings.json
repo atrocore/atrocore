@@ -68,11 +68,6 @@
       "fileTypeId": "a_favicon",
       "tooltip": true
     },
-    "b2cMode": {
-      "type": "bool",
-      "default": false,
-      "tooltip": true
-    },
     "avatarsDisabled": {
       "type": "bool",
       "default": false
@@ -120,18 +115,6 @@
     "notificationSoundsDisabled": {
       "type": "bool"
     },
-    "calendarEntityList": {
-      "type": "multiEnum",
-      "view": "views/settings/fields/calendar-entity-list"
-    },
-    "activitiesEntityList": {
-      "type": "multiEnum",
-      "view": "views/settings/fields/activities-entity-list"
-    },
-    "historyEntityList": {
-      "type": "multiEnum",
-      "view": "views/settings/fields/history-entity-list"
-    },
     "aclStrictMode": {
       "type": "bool",
       "tooltip": true
@@ -143,13 +126,8 @@
       "default": 20,
       "required": true
     },
-    "adminNotifications": {
-      "type": "bool"
-    },
+
     "adminNotificationsNewVersion": {
-      "type": "bool"
-    },
-    "adminNotificationsNewExtensionVersion": {
       "type": "bool"
     },
     "textFilterUseContainsForVarchar": {
@@ -159,13 +137,9 @@
     "scopeColorsDisabled": {
       "type": "bool"
     },
-    "tabColorsDisabled": {
-      "type": "bool"
-    },
     "tabIconsDisabled": {
       "type": "bool"
     },
-
     "emailAddressIsOptedOutByDefault": {
       "type": "bool",
       "tooltip": true

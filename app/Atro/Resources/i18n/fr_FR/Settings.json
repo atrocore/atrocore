@@ -10,7 +10,6 @@
     "companyLogo": "Logo de l'en-tête",
     "favicon": "Favicon",
     "globalSearchEntityList": "Liste des entités de recherche globale",
-    "assignmentNotifications": "Notifications lors de l'affectation",
     "assignmentEmailNotifications": "Notifications lors de l'affectation",
     "streamEmailNotifications": "Notifications sur les mises à jour de Stream pour les utilisateurs internes",
     "avatarsDisabled": "Désactiver les avatars",
@@ -20,14 +19,9 @@
     "authTokenMaxIdleTime": "Jeton d'authentification Temps d'inactivité maximal (heures)",
     "siteUrl": "URL du site",
     "addressPreview": "Aperçu de l'adresse",
-    "addressFormat": "Format de l'adresse",
     "notificationSoundsDisabled": "Désactiver les sons de notification",
     "applicationName": "Nom de l'application",
-    "calendarEntityList": "Liste des entités du calendrier",
     "mentionEmailNotifications": "Notifications sur les mentions dans les messages",
-    "activitiesEntityList": "Activités Liste des entités",
-    "historyEntityList": "Liste des entités historiques",
-    "b2cMode": "Mode B2C",
     "navigationManuBackgroundColor": "Arrière-plan du menu de navigation",
     "textFilterUseContainsForVarchar": "Utilisez l'opérateur 'contains' pour filtrer les champs varchar.",
     "customStylesheetPath": "Chemin d'accès au fichier СSS",
@@ -36,7 +30,6 @@
     "disableEmailDelivery": "Désactiver l'envoi de courrier électronique",
     "recordsPerPageSmall": "Enregistrements par page (petit)",
     "aclStrictMode": "Mode ACL strict",
-    "adminNotifications": "Notifications du système dans le panneau d'administration",
     "authTokenPreventConcurrent": "Un seul jeton d'authentification par utilisateur",
     "tabIconsDisabled": "Désactiver les icônes des onglets",
     "emailAddressIsOptedOutByDefault": "Marquer les nouvelles adresses électroniques comme opt-out",
@@ -70,7 +63,6 @@
     "authTokenLifetime": " Définit la durée de vie des jetons.\n0 signifie qu'il n'y a pas d'expiration.",
     "authTokenMaxIdleTime": "Définit la durée d'existence des derniers jetons d'accès.\n0 signifie qu'il n'y a pas d'expiration.",
     "userThemesDisabled": "Si cette case est cochée, les utilisateurs ne pourront pas sélectionner un autre thème.",
-    "b2cMode": "Par défaut, AtroCore est adapté au B2B. Vous pouvez le passer en B2C.",
     "aclStrictMode": "Activé : L'accès aux champs d'application sera interdit s'il n'est pas spécifié dans les rôles.\n\nDésactivé : L'accès aux champs d'application sera autorisé s'il n'est pas précisé dans les rôles : L'accès aux champs d'application sera autorisé s'il n'est pas spécifié dans les rôles.",
     "textFilterUseContainsForVarchar": "Si cette case n'est pas cochée, l'opérateur \"commence par\" est utilisé. Vous pouvez utiliser le caractère générique \"%\".",
     "authTokenPreventConcurrent": "Les utilisateurs ne pourront pas se connecter simultanément sur plusieurs appareils.",
@@ -105,13 +97,6 @@
     "Activities": "Activités",
     "Theme Configuration": "Configuration du thème",
     "Custom Code": "Code personnalisé"
-  },
-  "options": {
-    "smtpAuthMechanism": {
-      "login": "Connexion",
-      "plain": "Plaine",
-      "crammd5": "CRAM-MD5"
-    }
   },
   "exceptions": {
     "variableKeyInvalid": "La clé doit commencer par une lettre minuscule et ne peut être composée que de lettres et de chiffres.",

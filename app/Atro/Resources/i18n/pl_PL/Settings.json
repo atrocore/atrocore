@@ -13,7 +13,6 @@
     "recordsPerPage": "Rekordy na stronę",
     "recordsPerPageSmall": "Rekordy na stronę (małe)",
     "globalSearchEntityList": "Lista jednostek do globalnego wyszukiwania",
-    "assignmentNotifications": "Powiadomienia o przypisaniach",
     "assignmentEmailNotifications": "Powiadomienia e-mail o przypisaniach",
     "streamEmailNotifications": "Powiadomienia e-mail o aktualizacjach w Strumieniu dla użytkowników wewnętrznych",
     "avatarsDisabled": "Wyłącz awatary",
@@ -23,16 +22,10 @@
     "authTokenMaxIdleTime": "Maksymalny czas bezczynności tokenu autoryzacyjnego (w godzinach)",
     "siteUrl": "Adres URL witryny",
     "addressPreview": "Podgląd adresu",
-    "addressFormat": "Format adresu",
     "notificationSoundsDisabled": "Wyłącz dźwięki powiadomień",
     "applicationName": "Nazwa aplikacji",
-    "calendarEntityList": "Lista jednostek kalendarza",
     "mentionEmailNotifications": "Powiadomienia o wzmiankach w postach",
-    "activitiesEntityList": "Lista jednostek aktywności",
-    "historyEntityList": "Lista jednostek historii",
-    "b2cMode": "Tryb B2C",
     "aclStrictMode": "Tryb ścisłego ACL",
-    "adminNotifications": "Powiadomienia systemowe w panelu administracyjnym",
     "textFilterUseContainsForVarchar": "Użyj operatora 'zawiera' podczas filtrowania pól varchar",
     "authTokenPreventConcurrent": "Tylko jeden token autoryzacyjny na użytkownika",
     "tabIconsDisabled": "Wyłącz ikony zakładek",
@@ -59,13 +52,6 @@
     "error": "Błąd",
     "customHeadCode": "Kod Head"
   },
-  "options": {
-    "smtpAuthMechanism": {
-      "login": "Login",
-      "plain": "Plain",
-      "crammd5": "CRAM-MD5"
-    }
-  },
   "tooltips": {
     "fileNameRegexPattern": "Aby włączyć tylko małe litery o maksymalnej długości 24 znaków, użyj \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Liczba rekordów początkowo wyświetlanych w widokach listy.",
@@ -73,7 +59,6 @@
     "authTokenLifetime": "Określa okres ważności tokenów.\n0 oznacza brak wygaśnięcia.",
     "authTokenMaxIdleTime": "Określa, jak długo od ostatniego dostępu mogą istnieć tokeny.\n0 oznacza brak wygaśnięcia.",
     "userThemesDisabled": "Jeśli zaznaczone, użytkownicy nie będą mogli wybrać innego motywu.",
-    "b2cMode": "Domyślnie AtroCore jest dostosowany do B2B. Możesz przełączyć go na B2C.",
     "aclStrictMode": "Włączone: Dostęp do zakresów będzie zabroniony, jeśli nie jest to określone w rolach.\n\nWyłączone: Dostęp do zakresów będzie dozwolony, jeśli nie jest to określone w rolach.",
     "textFilterUseContainsForVarchar": "Jeśli nie zaznaczone, używany jest operator 'zaczyna się od'. Możesz użyć symbolu wieloznacznego '%'.",
     "authTokenPreventConcurrent": "Użytkownicy nie będą mogli być zalogowani na kilku urządzeniach jednocześnie.",
