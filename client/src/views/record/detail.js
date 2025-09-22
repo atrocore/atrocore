@@ -516,10 +516,10 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.model.isNew()) {
                 this.isNew = true;
                 this.removeButton('delete');
-            }
-
-            if (!this.getAcl().check(this.entityType, 'delete')) {
-                this.removeButton('delete');
+            } else {
+                if (!this.getAcl().check(this.model, 'delete')) {
+                    this.removeButton('delete');
+                }
             }
 
             if (this.duplicateAction) {

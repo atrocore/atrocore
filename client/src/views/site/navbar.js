@@ -288,9 +288,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
 
             let colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
-                this.getPreferences().get('tabColorsDisabled') ||
-                this.getConfig().get('scopeColorsDisabled') ||
-                this.getConfig().get('tabColorsDisabled');
+                this.getConfig().get('scopeColorsDisabled')
             if (Espo.Utils.isObject(tab)) {
                 if (!colorsDisabled) {
                     color = tab.color || null;

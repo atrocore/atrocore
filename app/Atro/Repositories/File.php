@@ -305,14 +305,18 @@ class File extends Base
 
     public function getPathsData(FileEntity $file): array
     {
-        return [
+        $res = [
             'download'   => $this->getDownloadUrl($file),
-            'thumbnails' => [
-                'small'  => $this->getSmallThumbnailUrl($file),
-                'medium' => $this->getMediumThumbnailUrl($file),
-                'large'  => $this->getLargeThumbnailUrl($file)
-            ],
+            'thumbnails' => [],
         ];
+
+        if ($res['download'] !== null) {
+            foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
+                $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+            }
+        }
+
+        return $res;
     }
 
     public function createItem(Entity $entity): void

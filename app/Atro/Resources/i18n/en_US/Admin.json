@@ -2,6 +2,7 @@
   "labels": {
     "Storage": "Storages",
     "FileTypes": "File Types",
+    "ThumbnailTypes": "Thumbnail Types",
     "Folders": "Folders",
     "GeneralSetting": "General Settings",
     "multiLanguagesSettings": "Languages",
@@ -172,6 +173,7 @@
     "incomingWebhook": "The Incoming Webhook entity allows customers to configure external HTTP requests that trigger predefined Actions within the system. Each webhook can be customized with security features such as hash-based verification and IP whitelisting to ensure trusted and controlled execution.",
     "Storage": "Manage physical locations for all uploaded files (Local File System, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Manage file types for additional file validation (e.g. images, documents, videos, etc.) and classification.",
+    "thumbnailTypes": "Manage thumbnail types to change the width or height of a thumbnail, or to create a new one.",
     "folders": "Maintain virtual folders for saving uploaded files.",
     "locale": "Manage locale settings such as language, date and time format, decimal separator, thousand separator, as well as locale-specific measure units.",
     "multiLanguagesSettings": "Configure languages to be used.",
