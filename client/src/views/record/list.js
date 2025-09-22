@@ -1832,6 +1832,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 });
 
                 let view = this.getMetadata().get(['clientDefs', this.scope, 'massRelationView']) || this.massRelationView;
+
                 this.createView('dialog', view, {
                     model: model,
                     mainCollection: this.collection,

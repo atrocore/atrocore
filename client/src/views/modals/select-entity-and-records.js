@@ -205,8 +205,8 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             }
         },
 
-        loadList() {
-            Dep.prototype.loadList.call(this);
+        loadList(callback) {
+            Dep.prototype.loadList.call(this, callback);
 
             this.listenToOnce(this.collection, 'sync', () => this.notify(false));
         },
@@ -317,10 +317,23 @@ Espo.define('views/modals/select-entity-and-records', 'views/modals/select-recor
             let collectionDefs = (this.getMetadata().get(['entityDefs', entity, 'collection']) || {});
             this.collection.sortBy = collectionDefs.sortBy;
             this.collection.asc = collectionDefs.asc;
+            delete this.collection.data.attributes
             this.getModelFactory().getSeed(entity, seed => this.collection.model = seed);
-
-            this.loadList();
+            this.loadList((view) => {
+                this.listenToOnce(view, 'after:render', () => {
+                    this.destroySveltePanels();
+                    this.buildSveltePanels();
+                })
+            });
             this.checkScopeForAssociation();
+        },
+
+        buildTreeButtons(html) {
+            return html;
+        },
+
+        getSelectedViewType() {
+            return 'list';
         },
 
         validate: function () {
