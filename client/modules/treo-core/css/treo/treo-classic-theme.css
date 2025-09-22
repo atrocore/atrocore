@@ -9244,6 +9244,10 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
     padding: 0
 }
 
+.grid-stack > .grid-stack-item:has(.open > .dropdown-menu) {
+    z-index: 1;
+}
+
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     margin: 0;
     position: absolute;
