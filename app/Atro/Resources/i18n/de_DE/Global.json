@@ -1172,5 +1172,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Kleines Logo",
+    "small": "Klein",
+    "medium": "Mittel",
+    "large": "Groß"
   }
 }

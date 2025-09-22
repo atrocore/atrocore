@@ -24,10 +24,12 @@
     },
     "width": {
       "type": "int",
+      "required": true,
       "min": 1
     },
     "height": {
       "type": "int",
+      "required": true,
       "min": 1
     },
     "createdAt": {

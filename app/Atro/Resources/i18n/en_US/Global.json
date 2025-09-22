@@ -1307,5 +1307,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "You are going to replace one or more values with an empty value. Are you sure?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Small logo",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large"
   }
 }
