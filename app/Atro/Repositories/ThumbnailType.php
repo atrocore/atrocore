@@ -31,6 +31,10 @@ class ThumbnailType extends ReferenceData
                 "width"          => $data["size"][0] ?? null,
                 "height"         => $data["size"][1] ?? null,
                 "deleteDisabled" => !empty($data["deleteDisabled"]),
+                "createdAt"      => $data["createdAt"] ?? null,
+                "createdById"    => $data["createdById"] ?? 'system',
+                "modifiedAt"     => $data["modifiedAt"] ?? null,
+                "modifiedById"   => $data["modifiedById"] ?? 'system',
             ];
         }
 
@@ -51,10 +55,14 @@ class ThumbnailType extends ReferenceData
 
         $this->getMetadata()->set('app', 'thumbnailTypes', [
             $entity->get('code') => [
-                'size' => [
+                'size'         => [
                     $entity->get('width'),
                     $entity->get('height'),
                 ],
+                'createdAt'    => date('Y-m-d H:i:s'),
+                'createdById'  => $this->getEntityManager()->getUser()->id,
+                'modifiedAt'   => date('Y-m-d H:i:s'),
+                'modifiedById' => $this->getEntityManager()->getUser()->id,
             ],
         ]);
 
@@ -76,10 +84,12 @@ class ThumbnailType extends ReferenceData
         if ($entity->isAttributeChanged('width') || $entity->isAttributeChanged('height')) {
             $this->getMetadata()->set('app', 'thumbnailTypes', [
                 $entity->get('code') => [
-                    'size' => [
+                    'size'         => [
                         $entity->get('width'),
                         $entity->get('height'),
                     ],
+                    'modifiedAt'   => date('Y-m-d H:i:s'),
+                    'modifiedById' => $this->getEntityManager()->getUser()->id,
                 ],
             ]);
             $this->getMetadata()->save();
