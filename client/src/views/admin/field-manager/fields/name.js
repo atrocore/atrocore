@@ -12,9 +12,13 @@ Espo.define('views/admin/field-manager/fields/name', 'views/fields/varchar-with-
 
     return Dep.extend({
 
-        getTranslationKey() {
-            return `${this.model.get('entityId')}.fields.${this.model.get('code')}`;
-        }
+        getEntityScope() {
+            return this.model.get('entityId');
+        },
+
+        getEntityFieldName() {
+            return this.model.get('code');
+        },
 
     });
 });
