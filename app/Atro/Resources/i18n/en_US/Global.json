@@ -1174,7 +1174,7 @@
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
-    "integerValueValidationFailed": "Integer value must be between %s and %s"
+    "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s"
   },
   "queryBuilderFilter": {
     "add_rule": "Add rule",
