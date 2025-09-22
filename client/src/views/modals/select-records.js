@@ -272,7 +272,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             });
         },
 
-        loadList: function () {
+        loadList: function (callback = null) {
             let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
                 this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
                 'views/record/list';
@@ -295,6 +295,9 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             this.createView('list', viewName, options, function (view) {
+                if(callback) {
+                    callback(view);
+                }
                 this.listenTo(view, 'after:render', () => {
                     if (!this.dialog) {
                         return;
@@ -306,7 +309,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                         } catch (e) {}
                     }
 
-                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container.for-table-view');
+                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
                     if (container) {
                         window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
                     }
@@ -379,6 +382,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     if (window[key]) {
                         try {
                             window[key].$destroy();
+                            delete window[key];
                         } catch (e) {
                         }
                     }
@@ -390,35 +394,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
             let html = '';
 
-            if (this.isHierarchical()) {
-                let treeButtonClass = 'btn-primary';
-                let tableButtonClass = 'btn-default';
-
-                if (this.getSelectedViewType() === 'list') {
-                    treeButtonClass = 'btn-default';
-                    tableButtonClass = 'btn-primary';
-                }
-
-                html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><i class="ph ph-tree-view"></i></a>`
-                html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><i class="ph ph-table"></i></a>`;
-
-                this.setupTree();
-                this.toggleViewType();
-
-                const modalBody = this.$el.find('.modal-body');
-                if (modalBody.length) {
-                    modalBody.off('scroll');
-                    modalBody.on('scroll', function () {
-                        if (this.getSelectedViewType() === 'tree' && modalBody.outerHeight() + modalBody.scrollTop() >= modalBody.get(0).scrollHeight - 50) {
-                            const btnMore = modalBody.find('.jqtree-tree > .show-more span');
-
-                            if (btnMore.length) {
-                                btnMore.click();
-                            }
-                        }
-                    }.bind(this));
-                }
-            }
+            html = this.buildTreeButtons(html);
 
             if (this.createButton) {
                 let buttonLabel = this.translate('Create');
@@ -434,6 +410,49 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 );
             }
 
+            this.buildSveltePanels();
+
+            this.dialog.$el.on('hidden.bs.modal', (e) => {
+                this.destroySveltePanels();
+            });
+        },
+
+        buildTreeButtons(html) {
+            if (!this.isHierarchical()) {
+                return html;
+            }
+            let treeButtonClass = 'btn-primary';
+            let tableButtonClass = 'btn-default';
+
+            if (this.getSelectedViewType() === 'list') {
+                treeButtonClass = 'btn-default';
+                tableButtonClass = 'btn-primary';
+            }
+
+            html += `<a href="javascript:" class="btn action ${treeButtonClass} change-view action" data-view="tree"><i class="ph ph-tree-view"></i></a>`
+            html += `<a href="javascript:" class="btn action ${tableButtonClass} change-view action" data-view="list"><i class="ph ph-table"></i></a>`;
+
+            this.setupTree();
+            this.toggleViewType();
+
+            const modalBody = this.$el.find('.modal-body');
+            if (modalBody.length) {
+                modalBody.off('scroll');
+                modalBody.on('scroll', function () {
+                    if (this.getSelectedViewType() === 'tree' && modalBody.outerHeight() + modalBody.scrollTop() >= modalBody.get(0).scrollHeight - 50) {
+                        const btnMore = modalBody.find('.jqtree-tree > .show-more span');
+
+                        if (btnMore.length) {
+                            btnMore.click();
+                        }
+                    }
+                }.bind(this));
+            }
+            return html;
+
+        },
+
+        buildSveltePanels() {
             let hiddenBoolFilters = this.getMetadata().get(['clientDefs', this.scope, 'hiddenBoolFilterList']) || []
             this.searchManager.mandatoryBoolFilterList = this.boolFilterList.filter(filter => {
                 return hiddenBoolFilters.includes(filter);
@@ -499,10 +518,6 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     window['SvelteRightSideView' + this.dialog.id].$set(rightViewOption)
                 }
             }
-
-            this.dialog.$el.on('hidden.bs.modal', (e) => {
-                this.destroySveltePanels();
-            });
         },
 
         isHierarchical() {
