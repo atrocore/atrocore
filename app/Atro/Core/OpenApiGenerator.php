@@ -738,6 +738,7 @@ class OpenApiGenerator
 
         $this->pushUserActions($result, $schemas);
         $this->pushSettingsActions($result, $schemas);
+        $this->pushFileActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result, $schemas);
@@ -1140,6 +1141,37 @@ class OpenApiGenerator
                 ],
             ],
             'responses'   => self::prepareResponses(['$ref' => '#/components/schemas/Settings'])
+        ];
+    }
+
+    protected function pushFileActions(array &$result, array $schemas): void
+    {
+        $response = self::prepareResponses([]);
+        $response['200']['content'] = [
+            "application/octet-stream" => []
+        ];
+
+        $result['paths']['/File/action/upload-proxy']['post'] = [
+            'tags'        => ['File'],
+            'description' => 'Reupload file content in File entity via URL link',
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'url' => [
+                                    'type' => 'string',
+                                    'example' => 'https://your-website.com/image.png'
+                                ]
+                            ],
+                            'required' => ['url']
+                        ]
+                    ]
+                ],
+            ],
+            'responses' => $response
         ];
     }
 
