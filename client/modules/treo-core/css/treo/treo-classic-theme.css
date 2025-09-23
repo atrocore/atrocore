@@ -4677,10 +4677,6 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
         background-image: none
     }
 
-    .dashboard-header > .row > .clearfix {
-        width: 100%;
-    }
-
     .dashboard-tabs {
         display: none;
     }
@@ -9930,9 +9926,35 @@ label {
     min-height: 33px;
 }
 
-.dashboard-header > .row {
-    margin-left: -9px;
-    margin-right: -9px;
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dashboard-header h3 {
+    margin: 0;
+}
+
+.dashboard-header > .controls {
+    margin: 0 0 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dashboard-header .selectize-control {
+    height: 100%;
+}
+
+.dashboard-header .selectize-input {
+    border-radius: 3px;
+}
+
+.dashboard-header .dashboard-buttons {
+    flex-wrap: nowrap;
 }
 
 .page-header .header-buttons-container {
@@ -11187,10 +11209,6 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button[data-action="loadCounters"] {
     padding: 5px;
-}
-
-.dashboard-header .dashboard-buttons {
-    margin-left: 10px
 }
 
 .panel.dashlet > .panel-heading > .btn-group {
@@ -15706,20 +15724,26 @@ span.became .file-link {
     width: 100%;
 }
 
-.field .unit-group.input-group .unit-input {
+.field .unit-group.input-group .unit-input,
+.field .range-container > input {
     flex: 1;
     min-width: 0;
 }
 
-.field .unit-group.input-group .unit-select {
+.field .unit-group.input-group .unit-select,
+.field .range-container .unit-select {
     display: inline-block;
-    margin-left: 10px;
     width: fit-content;
     min-width: 100px;
     max-width: 50%;
 }
 
-.field .unit-group.input-group .unit-select .selectize-control {
+.field .unit-group.input-group .unit-select {
+    margin-left: 10px;
+}
+
+.field .unit-group.input-group .unit-select .selectize-control,
+.field .range-container .unit-select .selectize-control {
     min-width: auto;
 }
 
@@ -18205,11 +18229,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .datetime-container > .input-group {
     flex: 1;
     min-width: 0;
-}
-
-.range-container .unit-select {
-    flex-basis: 30%;
-    min-width: 150px;
 }
 
 .modal-body > .rebuild-db-container {
