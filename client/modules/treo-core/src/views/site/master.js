@@ -124,7 +124,7 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     }
                 });
             };
-            const tooltipMutationProcessor = (mutation) => {
+            const processTooltipMutation = (mutation) => {
                 mutation.removedNodes.forEach(node => {
                     if (!(node instanceof HTMLElement)) return;
                     const withTooltip = node.querySelectorAll?.('[data-tippy]');
@@ -171,9 +171,48 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                         return;
                     }
 
-                    el._dropdown = new window.Dropdown(el, dropdownMenu, {
-                        strategy: 'fixed',
-                    });
+                    new window.Dropdown(el, dropdownMenu);
+                });
+            }
+
+            const processDropdownMutation = (mutation) => {
+                mutation.removedNodes.forEach(node => {
+                    if (node?._dropdown) {
+                        node._dropdown.destroy();
+                    }
+                });
+
+                const el = mutation.target;
+                initializeDropdowns(el);
+            }
+
+            const processSelectizeMutation = (mutation) => {
+                mutation.removedNodes.forEach(node => {
+                    if (node?._dropdown) {
+                        node._dropdown.destroy();
+                    }
+                })
+
+                mutation.addedNodes.forEach(node => {
+                    if (!(node instanceof HTMLElement)) return;
+
+                    if (node.closest('.query-builder')) return;
+
+                    if (node.classList.contains('selectize-control')) {
+                        const selectize = node.parentNode.querySelector('.selectized')?.selectize;
+                        const input = node.querySelector('.selectize-input');
+                        const dropdown = node.querySelector('.selectize-dropdown');
+                        if (!selectize || !input || input._dropdown || !dropdown) return;
+
+                        const dropdownObj = new window.Dropdown(node, dropdown, { usePositionOnly: true });
+                        selectize.on('dropdown_open', () => {
+                            dropdownObj.open();
+                        });
+
+                        selectize.on('dropdown_close', () => {
+                            dropdownObj.close();
+                        })
+                    }
                 });
             }
 
@@ -182,16 +221,9 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
-                    tooltipMutationProcessor(mutation);
-
-                    mutation.removedNodes.forEach(node => {
-                        if (node?._dropdown) {
-                            node._dropdown.destroy();
-                        }
-                    });
-
-                    const el = mutation.target;
-                    initializeDropdowns(el);
+                    processTooltipMutation(mutation);
+                    processDropdownMutation(mutation);
+                    processSelectizeMutation(mutation);
                 });
             });
 

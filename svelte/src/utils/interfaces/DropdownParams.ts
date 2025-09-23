@@ -10,6 +10,8 @@
 
 export default interface DropdownParams {
     disableAutoHide?: boolean;
+    usePositionOnly?: boolean;
+    isOpen?: boolean;
     dropdownListElSelector?: string;
     placement?: string;
     strategy?: string;

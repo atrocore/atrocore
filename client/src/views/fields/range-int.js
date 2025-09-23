@@ -119,6 +119,11 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                 this.$to.on('change', function () {
                     this.trigger('change');
                 }.bind(this));
+
+                this.initSelectizeClearPlugin();
+                this.$el.find('.unit-select select').selectize({
+                    plugins: ['clear_button']
+                });
             }
         },
 
