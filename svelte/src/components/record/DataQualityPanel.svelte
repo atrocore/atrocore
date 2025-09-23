@@ -1,14 +1,16 @@
 <script lang="ts">
-    import {onMount, tick} from "svelte";
+    import {onDestroy, onMount, tick} from "svelte";
     import {Metadata} from "../../utils/Metadata";
     import {Config} from "../../utils/Config";
     import {Utils} from "../../utils/Utils";
     import {Language} from "../../utils/Language";
     import ContentFilter from "./ContentFilter.svelte";
     import {Storage} from "../../utils/Storage";
+    import {Notifier} from "../../utils/Notifier";
 
     export let scope;
     export let id;
+    export let fetchModel: Function
 
     let qualityCheckSelect;
     let selectizeObject;
@@ -74,9 +76,11 @@
         return `background-color: ${backgroundColor};border: 2px solid ${borderColor};`
     }
 
-    async function loadQualityCheckData() {
+    async function loadQualityCheckData(reload = false) {
         loading = true
-        data = null
+        if (!reload) {
+            data = null
+        }
 
         const resp = await Utils.getRequest('/QualityCheck/action/getEntityData', {
             entityName: scope,
@@ -84,14 +88,43 @@
             qualityCheckId: activeItem
         })
 
-        data = await resp.json()
+        if (resp.status === 200) {
+            data = await resp.json()
+        } else {
+            data = null
+            Notifier.notify('Error occurred', 'error')
+        }
+
         loading = false
     }
 
+    async function recalculateCheck() {
+        Notifier.notify('Please wait...')
+        const resp = await Utils.postRequest('/QualityCheck/action/recalculate', {
+            entityName: scope,
+            entityId: id,
+            fieldName: qualityChecksList.find(item => item.value === activeItem)?.field,
+        })
+
+        if (resp.status === 200) {
+            Notifier.notify('Done', 'success')
+            fetchModel()
+            loadQualityCheckData(true)
+        } else {
+            Notifier.notify('Error occurred', 'error')
+        }
+    }
+
+    function onCheckRecalculated(evt) {
+        if (evt.detail.field === qualityChecksList.find(item => item.value === activeItem)?.field) {
+            loadQualityCheckData()
+        }
+    }
+
     window.addEventListener('record:save', loadQualityCheckData);
+    window.addEventListener('record:check-recalculated', onCheckRecalculated)
 
     onMount(() => {
-
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
             if (defs.dataQualityCheck) {
                 let text;
@@ -103,7 +136,8 @@
 
                 qualityChecksList.push({
                     value: defs.qualityCheckId,
-                    text: text
+                    text: text,
+                    field: field,
                 });
             }
         });
@@ -129,6 +163,11 @@
             });
         })
     })
+
+    onDestroy(() => {
+        window.removeEventListener('record:save', loadQualityCheckData)
+        window.removeEventListener('record:check-recalculated', onCheckRecalculated)
+    });
 </script>
 
 <div>
@@ -140,15 +179,17 @@
         </select>
     </div>
 
-    {#if loading}
-        <img style="width: 40px; margin: 0 auto" class="preloader" src="client/img/atro-loader.svg" alt="loader">
+    {#if data && data.value !== null}
+         <span style="{getValueStyle(data.value)}" on:click={recalculateCheck}
+               class="colored-enum label"
+               aria-expanded="false">{data.value >= 0 ? (data.value + '%') : Language.translate('N/A')}</span>
     {/if}
 
-    {#if data}
-        <span style="{getValueStyle(data.value)}" on:click={loadQualityCheckData}
-              class="colored-enum label"
-              aria-expanded="false">{data.value >= 0 ? (data.value + '%') : Language.translate('N/A')}</span>
-
+    {#if loading}
+        <div style="text-align: center;margin-top: 10px">
+            <img style="width: 40px; " class="preloader" src="client/img/atro-loader.svg" alt="loader">
+        </div>
+    {:else if data}
         <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
             <div style="display: flex;justify-content: space-between;margin-bottom: 15px">
                 <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
@@ -156,7 +197,8 @@
                                translationScope="QualityCheckRule" translationField="status"
                                titleLabel="" onExecute="{onFilterChange}" style="padding-bottom: 0"/>
 
-                <button class="refresh" on:click={loadQualityCheckData} title="{Language.translate('Refresh')}"><i
+                <button class="refresh" on:click={()=>loadQualityCheckData(true)}
+                        title="{Language.translate('Refresh')}"><i
                         class="ph ph-arrows-clockwise"></i>
                 </button>
             </div>
@@ -176,6 +218,7 @@
             {/each}
         </div>
     {/if}
+
 </div>
 
 <style>

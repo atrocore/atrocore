@@ -15,6 +15,7 @@
     export let currentWidth: number = minWidth;
     export let loadSummary: Function;
     export let loadActivities: Function;
+    export let fetchModel: Function;
     export let isCollapsed: boolean = false;
     export let hasStream: boolean = false;
     export let searchManager;
@@ -236,7 +237,7 @@
 
         {#if showDataQualities}
             <div class="data-qualities" class:hidden={activeItem?.name !== 'data-qualities'}>
-                <DataQualityPanel {scope} {id}/>
+                <DataQualityPanel {scope} {id} {fetchModel}/>
             </div>
         {/if}
     </div>

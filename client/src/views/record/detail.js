@@ -2880,6 +2880,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                         view.render();
                     })
+                },
+                fetchModel: () => {
+                    this.model.fetch();
                 }
             }
         }

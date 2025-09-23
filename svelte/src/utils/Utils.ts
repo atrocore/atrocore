@@ -11,6 +11,10 @@ export const Utils = {
         return this.request('PATCH', url, data)
     },
 
+    postRequest(url: string, data: any) {
+        return this.request('POST', url, data)
+    },
+
     getRequest(url: string, data: Record<string, any>) {
         const query = new URLSearchParams(data).toString()
         const finalUrl = query ? `${url}?${query}` : url
