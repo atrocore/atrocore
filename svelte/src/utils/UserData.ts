@@ -3,6 +3,9 @@ import {writable} from 'svelte/store';
 const data = writable({});
 
 interface UserDataInterface {
+    preferences: {
+        language: string | null,
+    }
     user: {
         id: string,
         name: string,

@@ -72,9 +72,6 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                             canReadStream: this.getAcl().check(this.scope, 'stream'),
                         },
                         breadcrumbs: this.getBreadcrumbsItems(),
-                        afterOnMount: () => {
-                            this.setupTourButton();
-                        }
                     },
                     recordButtons: {
                         editButtons: record.buttonList,

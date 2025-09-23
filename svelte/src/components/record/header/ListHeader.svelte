@@ -7,6 +7,7 @@
     import EntityActionButtons from "./interfaces/EntityActionsButtons";
     import EntityHistory from "./navigation/EntityHistory.svelte";
     import EntityCallbacks from "./interfaces/EntityCallbacks";
+    import {Language} from "../../../utils/Language";
 
     export let params: Params;
     export let entityActions: EntityActionButtons;
@@ -35,5 +36,12 @@
 
 <EntityHistory scope={params.scope} />
 <BaseHeader>
+    <h3 class="header-title">{Language.translate(params.scope, 'scopeNamesPlural')}</h3>
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
 </BaseHeader>
+
+<style>
+    h3 {
+        font-size: 20px;
+    }
+</style>

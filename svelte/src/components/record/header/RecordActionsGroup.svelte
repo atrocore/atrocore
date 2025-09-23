@@ -14,6 +14,7 @@
     import RecordCallbacks from "./interfaces/RecordCallbacks";
     import NavigationButtons from "./buttons/NavigationButtons.svelte";
     import ContentFilter from "../ContentFilter.svelte";
+    import TourButton from "./buttons/TourButton.svelte";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -161,6 +162,7 @@
         <div class="header-buttons-container">
             <div class="header-buttons">
                 <div class="header-items">
+                    <TourButton {scope} {mode} />
                     {#each headerButtons as button}
                         {#if button.name === 'filtering'}
                             <!--Skip-->

@@ -177,55 +177,25 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             ];
         },
 
-        initHeaderObserver() {
-            return new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (!node instanceof HTMLElement || !node.classList) {
-                            return;
-                        }
-
-                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
-                            this.setupTourButton();
-                        }
-                    })
-                });
-            })
-        },
-
         setupHeader: function () {
-            let observer = null;
             window.addEventListener('filter:unset-all', (e) => {
                 this.resetSorting();
             });
-            if(window.svelteListHeader) {
-                try{
+
+            if (window.svelteListHeader) {
+                try {
                     window.svelteListHeader.$destroy();
-                }catch (e) {
+                } catch (e) {
 
                 }
             }
+
             window.svelteListHeader = new Svelte.ListHeader({
                 target: document.querySelector('#main .page-header'),
                 props: {
                     params: {
                         breadcrumbs: this.getBreadcrumbsItems(),
                         scope: this.scope,
-                        afterOnMount: () => {
-                            this.setupTourButton();
-                            observer = this.initHeaderObserver();
-                            if (observer) {
-                                observer.observe(document.querySelector('.page-header'), {
-                                    childList: true,
-                                    subtree: true
-                                });
-                            }
-                        },
-                        afterOnDestroy: () => {
-                            if (observer) {
-                                observer.disconnect();
-                            }
-                        },
                     },
                     entityActions: {
                         buttons: this.getMenu().buttons ?? [],

@@ -411,9 +411,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             return;
                         }
 
-                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
-                            this.setupTourButton();
-                        } else if (node.classList.contains('layout-editor-container')) {
+                        if (node.classList.contains('layout-editor-container')) {
                             this.setupLayoutEditorButton();
                         }
                     })
@@ -452,7 +450,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     },
                     breadcrumbs: this.getBreadcrumbsItems(),
                     afterOnMount: () => {
-                        this.setupTourButton();
                         if (hasLayoutEditor) {
                             this.setupLayoutEditorButton();
                         }
