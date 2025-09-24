@@ -13942,8 +13942,6 @@ button.category:focus {
 }
 
 #main main .detail-button-container {
-    position: relative;
-    z-index: 101;
     padding: 10px 0 25px;
 }
 
@@ -17136,7 +17134,7 @@ span.CodeMirror-selectedtext {
     right: 0;
     bottom: 0;
     height: auto;
-    z-index: 8;
+    z-index: 2001;
     border-right: none !important;
     border-bottom-right-radius: 0 !important
 }
@@ -17188,7 +17186,7 @@ span.CodeMirror-selectedtext {
     top: 0;
     left: 0;
     opacity: 1;
-    z-index: 9
+    z-index: 2002;
 }
 
 .editor-toolbar.fullscreen::before {

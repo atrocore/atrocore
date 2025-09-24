@@ -211,6 +211,16 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
             }
 
             items.push({
+                name: 'fullscreen',
+                action: editor => {
+                    EasyMDE.toggleFullScreen(editor);
+                },
+                title: "Toggle Fullscreen",
+                className: "ph ph-arrows-out",
+                noDisable: true
+            });
+
+            items.push({
                 name: 'preview',
                 action: editor => {
                     EasyMDE.togglePreview(editor);
@@ -311,6 +321,19 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                             });
                         };
                         reader.readAsDataURL(file);
+                    },
+                    onToggleFullScreen: (isFullScreen) => {
+                        const scroller = this.editor.codemirror.getScrollerElement();
+
+                        if (isFullScreen) {
+                            if (scroller) scroller.style.maxHeight = '';
+                            this.$el.find('.editor-preview-full.editor-preview')
+                                .css('max-height', '');
+                        } else {
+                            if (scroller) scroller.style.maxHeight = `${this.maxHeight}px`;
+                            this.$el.find('.editor-preview-full.editor-preview')
+                                .css('max-height', `${this.maxHeight}px`);
+                        }
                     }
                 });
 
@@ -338,7 +361,10 @@ Espo.define('views/fields/markdown', ['views/fields/text', 'lib!EasyMDE'], funct
                 this.on('editor:previewToggled', editor => {
                     wrapper?.classList.toggle('preview-enabled');
                     scroller?.classList.toggle('hide');
-                    this.$el.find('.editor-preview-full.editor-preview').css('max-height', `${this.maxHeight}px`);
+
+                    if (!this.editor.isFullscreenActive()) {
+                        this.$el.find('.editor-preview-full.editor-preview').css('max-height', `${this.maxHeight}px`);
+                    }
                 })
             }
         },
