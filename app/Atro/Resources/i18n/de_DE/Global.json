@@ -423,7 +423,8 @@
     "recalculateScript": "Skript neu berechnen",
     "code": "Code",
     "label": "Beschriftung",
-    "color": "Farbe"
+    "color": "Farbe",
+    "editLabels": "Etikett bearbeiten"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

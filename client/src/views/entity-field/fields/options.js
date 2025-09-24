@@ -91,18 +91,8 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
 
         setup() {
             Dep.prototype.setup.call(this);
-            this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
-                let color = (this.model.get('optionColors') ||[])[index] ?? null;
-                if (color && !color.includes('#')) {
-                    color = '#' + color;
-                }
-                return {
-                    code: option,
-                    label: this.getTranslatedOptions()[option] ?? null,
-                    color: color
-                }
-            })
 
+            this.setupOptionDefs();
             this.setupItems();
             this.setupItemViews();
             this.dragndropEventName = `resize.drag-n-drop-table-${this.cid}`;
@@ -117,6 +107,27 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 }
             });
 
+            this.listenTo(this.model, 'sync after:save after:inlineEditSave', () => {
+               this.setupOptionDefs();
+            })
+
+        },
+
+        setupOptionDefs(){
+            this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
+                let color = (this.model.get('optionColors') ||[])[index] ?? null;
+                if (color && !color.includes('#')) {
+                    color = '#' + color;
+                }
+                return {
+                    id: Math.random().toString(),
+                    code: option,
+                    label: this.getTranslatedOptions()[option] ?? null,
+                    color: color
+                }
+            });
+
+            this.originalOptionDefsList = Espo.utils.cloneDeep(this.optionsDefsList);
         },
 
         setupItems() {
@@ -201,7 +212,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 name: 'code',
                 mode: this.mode,
                 params: {
-                    readOnly: (this.model.get(this.name) ?? []).includes(model.get('code')),
                     required: true,
                     trim: true
                 },
@@ -302,6 +312,21 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 optionColors.push(item.color ?? "");
             });
 
+            let changedOptions = [];
+            (this.originalOptionDefsList || []).forEach(item => {
+                let newItem = this.optionsDefsList.find(i => i.id === item.id);
+                if(newItem && newItem.code !== item.code) {
+                    changedOptions.push({
+                        oldValue: item.code,
+                        newValue: newItem.code
+                    })
+                }
+            });
+
+            if(changedOptions.length) {
+                data['changedOptions'] = changedOptions
+            }
+
             data[this.name] = null;
 
             if (options.length) {
@@ -310,7 +335,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             }
 
             data['optionColors'] = optionColors.filter(o => o).length > 0 ? optionColors : null;
-
 
             return data;
         },
@@ -322,9 +346,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 keys.forEach((key) => {
                     const optionsView = this.getView(key);
                     if(!optionsView) {
-                        return;
-                    }
-                    if (mode === 'edit' && optionsView.name === 'code' && (this.model.get(this.name) ?? []).includes(item.code)) {
                         return;
                     }
                     optionsView.setMode(mode);

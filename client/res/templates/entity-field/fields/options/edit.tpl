@@ -5,6 +5,11 @@
                 <div data-name="draggableIcon">
                     <div style="height: 18px; width: 18px"></div>
                 </div>
+                <div class="cell form-group" style="flex: 1">
+                    <label class="control-label" >
+                        <span class="label-text">{{translate 'color'}}</span>
+                    </label>
+                </div>
                 <div class="cell form-group"  style="flex: 1">
                     <label class="control-label" >
                         <span class="label-text">{{translate 'code'}}</span>
@@ -13,11 +18,6 @@
                 <div class="cell  form-group" style="flex: 1">
                     <label class="control-label" >
                         <span class="label-text">{{translate 'label'}}</span>
-                    </label>
-                </div>
-                <div class="cell form-group" style="flex: 1">
-                    <label class="control-label" >
-                        <span class="label-text">{{translate 'color'}}</span>
                     </label>
                 </div>
             </div>
@@ -37,6 +37,11 @@
                        <i class="ph ph-arrows-out-cardinal"></i>
                    </div>
                    <div class="field" style="flex: 1">
+                       <div class="options-container"  data-key="{{colorViewKey}}">
+                           {{{var colorViewKey ../this}}}
+                       </div>
+                   </div>
+                   <div class="field" style="flex: 1">
                        <div class="options-container"  data-key="{{codeViewKey}}">
                            {{{var codeViewKey ../this}}}
                        </div>
@@ -44,11 +49,6 @@
                    <div class="field" style="flex: 1">
                        <div class="options-container"  data-key="{{labelViewKey}}">
                            {{{var labelViewKey ../this}}}
-                       </div>
-                   </div>
-                   <div class="field" style="flex: 1">
-                       <div class="options-container"  data-key="{{colorViewKey}}">
-                           {{{var colorViewKey ../this}}}
                        </div>
                    </div>
                </div>
