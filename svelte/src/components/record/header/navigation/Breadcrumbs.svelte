@@ -49,7 +49,7 @@
     .breadcrumbs-item:not(:last-child):after {
         content: " / ";
         margin: 0 0.25em;
-        color: #1a75d1;
+        color: #999;
     }
 
     .breadcrumbs-item > a {
