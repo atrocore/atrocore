@@ -179,6 +179,15 @@ class Language
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
+                    if($category === 'options') {
+                        $newNames = [];
+                        foreach ($names as $field => $options) {
+                           foreach ($options as $option) {
+                               $newNames[] = "$field.$option";
+                           }
+                        }
+                        $names = $newNames;
+                    }
                     foreach ($names as $name) {
                         $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.$category.$name");
                         if (!empty($label) && $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
