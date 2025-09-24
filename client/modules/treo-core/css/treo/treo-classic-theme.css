@@ -9920,7 +9920,7 @@ label {
 }
 
 .page-header {
-    margin: 14px 0 10px 0;
+    margin: 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px;
@@ -13939,12 +13939,6 @@ button.category:focus {
 
 #header .menu {
     margin-top: 3px;
-}
-
-#main main .detail-button-container {
-    position: relative;
-    z-index: 101;
-    padding: 10px 0 25px;
 }
 
 #main main .detail-button-container .panel-navigation {
