@@ -76,4 +76,9 @@
         z-index: 101;
         margin: 15px 0;
     }
+
+    :global(.header-breadcrumbs) {
+        padding-top: 5px;
+        border-top: 1px solid #f7f7f7;
+    }
 </style>

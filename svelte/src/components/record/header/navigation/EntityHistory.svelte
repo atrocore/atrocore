@@ -124,7 +124,7 @@
 
 <style>
     .entity-history {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         height: 20px;
         overflow: hidden;
     }
@@ -139,7 +139,7 @@
 
     nav > ul > li {
         display: inline;
-        color: #999;
+        color: #777;
         font-size: 12px;
         line-height: 20px;
     }
@@ -152,7 +152,7 @@
         vertical-align: middle;
         margin: 0 .5em;
         mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0xNjUuNjYsMjAyLjM0YTgsOCwwLDAsMS0xMS4zMiwxMS4zMmwtODAtODBhOCw4LDAsMCwxLDAtMTEuMzJsODAtODBhOCw4LDAsMCwxLDExLjMyLDExLjMyTDkxLjMxLDEyOFoiPjwvcGF0aD48L3N2Zz4=");
-        background-color: #333;
+        background-color: #bbb;
         mask-size: 100%;
         mask-repeat: no-repeat;
     }
