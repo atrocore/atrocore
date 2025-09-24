@@ -688,7 +688,7 @@ class EntityField extends ReferenceData
 
             foreach ($deletedOptions as $option) {
                 $this->getLanguage()
-                    ->deleteOption($entity->get('entityId'), 'options', $entity->get('code'), $option);
+                    ->deleteOption($entity->get('entityId'), $entity->get('code'), $option);
                 $saveLanguage = true;
             }
 
@@ -697,7 +697,7 @@ class EntityField extends ReferenceData
                     continue;
                 }
                 $this->getLanguage()
-                    ->setOption($entity->get('entityId'), 'options', $entity->get('code'), $option, $newTranslationOptions->{$option});
+                    ->setOption($entity->get('entityId'), $entity->get('code'), $option, $newTranslationOptions->{$option});
                 $saveLanguage = true;
             }
         }
