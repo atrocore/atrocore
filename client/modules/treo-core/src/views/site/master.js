@@ -199,7 +199,7 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     if (node.closest('.query-builder')) return;
 
                     if (node.classList.contains('selectize-control')) {
-                        const selectize = node.parentNode.querySelector('.selectized')?.selectize;
+                        const selectize = node.parentNode?.querySelector('.selectized')?.selectize;
                         const input = node.querySelector('.selectize-input');
                         const dropdown = node.querySelector('.selectize-dropdown');
                         if (!selectize || !input || input._dropdown || !dropdown) return;

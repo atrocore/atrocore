@@ -149,14 +149,6 @@
               "attribute": "hasAccess"
             }
           ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "hasAccess"
-            }
-          ]
         }
       }
     },

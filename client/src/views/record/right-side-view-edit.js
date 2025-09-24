@@ -84,6 +84,8 @@ Espo.define('views/record/right-side-view-edit', ['views/record/edit', 'view-rec
                     this.setDetailMode()
                 }
             })
+
+            this.setupBeforeFinal();
         },
 
         triggerModeChangedOnModel(mode) {

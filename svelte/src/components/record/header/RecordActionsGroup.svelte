@@ -149,7 +149,7 @@
                 </button>
             {/if}
             {#if recordButtons?.headerButtons && headerButtons.find(item => item.name === 'filtering') }
-                <ContentFilter scope="{scope}" onExecute={executeAction}/>
+                <ContentFilter scope="{scope}" onExecute={executeAction} style="padding-bottom: 0;margin-left: 20px !important;"/>
             {/if}
         {:else if mode === 'edit'}
             {#each additionalEditActions as action}
