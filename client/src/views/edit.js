@@ -145,13 +145,43 @@ Espo.define('views/edit', 'views/main', function (Dep) {
         },
 
         afterRender() {
-            $('.page-header').addClass('detail-page-header');
+            const main = $('#main main');
+            const header = $('.page-header');
+
+            header.addClass('detail-page-header');
 
             Dep.prototype.afterRender.call(this);
 
             this.setupHeader();
 
             this.setupRightSideView();
+
+            let isScrolled = false;
+
+            main.off('scroll.breadcrumbs');
+            main.on('scroll.breadcrumbs', (e) => {
+                if (window.screen.width < 768) {
+                    return;
+                }
+
+                if (e.currentTarget.scrollTop > 0) {
+                    if (!isScrolled) {
+                        isScrolled = true;
+                        setTimeout(() => requestAnimationFrame(() => {
+                            main.css('padding-bottom', header.find('.header-breadcrumbs').outerHeight() || 0);
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
+                        }), 100);
+                    }
+                } else {
+                    if (isScrolled) {
+                        isScrolled = false;
+                        setTimeout(() => requestAnimationFrame(() => {
+                            main.css('padding-bottom', '');
+                            window.dispatchEvent(new CustomEvent('breadcrumbs:header-updated', {detail: !isScrolled}));
+                        }), 100);
+                    }
+                }
+            });
         },
 
         canLoadActivities: function () {

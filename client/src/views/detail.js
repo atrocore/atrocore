@@ -308,6 +308,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             main.off('scroll.breadcrumbs');
             main.on('scroll.breadcrumbs', (e) => {
+                if (window.screen.width < 768) {
+                    return;
+                }
+
                 if (e.currentTarget.scrollTop > 0) {
                     if (!isScrolled) {
                         isScrolled = true;
