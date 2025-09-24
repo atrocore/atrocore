@@ -2,7 +2,15 @@
     {{{list}}}
 </div>
 
+{{#if canShare}}
+    <button data-action="createSharing" class="action share-button"><i class="ph ph-share-network"></i><span>{{ translate 'Share' category='labels' scope='File' }}</span></button>
+{{/if}}
+
 <style>
+    .sharing-panel {
+        padding: 10px 0;
+    }
+
     .sharing-panel > .list {
         margin-top: 0 !important;
         margin-bottom: -5px !important;
@@ -15,6 +23,14 @@
     .sharing-panel > .list > table {
         position: relative;
         top: -6px;
+    }
+
+    .sharing-panel > .list > table .cell[data-name=link] {
+        padding-right: 0;
+    }
+
+    .sharing-panel > .list > table .cell[data-name=buttons] {
+        padding-left: 0;
     }
 
     .modal-body .sharing-panel > .list > table .cell {
@@ -33,7 +49,18 @@
         max-width: 95px;
     }
 
-    .sharing-panel.no-data {
-        padding: 8px 0;
+    .sharing-panel.no-data + .share-button {
+        margin-top: 15px;
+    }
+
+    .share-button {
+        width: 100%;
+    }
+
+    .sharing-panel .copy-link {
+        border: 0;
+        padding: 0;
+        background-color: transparent;
+        color: #000;
     }
 </style>
