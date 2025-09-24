@@ -43,12 +43,18 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 if (!option) {
                     return;
                 }
+
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
                 let scope = 'Translation';
                 let viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit';
                 let key = `${this.model.get('entityId')}.options.${this.model.get('code')}.${option}`;
                 this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
-                    let data = res.list[0] ?? {id: null, code: key};
+                    let data ={id: null, code: key};
+                    res.list.forEach(v  => {
+                        if(v.code === key){
+                            data = v;
+                        }
+                    })
                     this.getModelFactory().create(scope, model => {
                         model.set(data);
 
