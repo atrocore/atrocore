@@ -117,6 +117,11 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                this.setupOptionDefs();
             })
 
+            this.listenTo(this, 'inline-edit-off', () => {
+               this.setupOptionDefs();
+                this.setupItems();
+                this.setupItemViews();
+            })
         },
 
         setupOptionDefs(){
