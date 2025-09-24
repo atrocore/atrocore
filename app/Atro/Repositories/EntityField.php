@@ -334,34 +334,41 @@ class EntityField extends ReferenceData
             $type = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type");
 
             if ($type === 'ReferenceData') {
-                $collection = $this->getEntityManager()->getRepository($entity->get('entityId'))->find();
-                foreach ($collection as $item) {
+                $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $entity->get('entityId') . '.json';
+                if(file_exists($file)) {
+                    $data = json_decode(file_get_contents($file), true);
                     $shouldUpdate = false;
-                    foreach ($entity->get('changedOptions') as $option) {
-                        if (empty($option->newValue) || empty($option->oldValue)) {
-                            continue;
-                        }
+                    foreach ($data as $code => $item) {
+                        foreach ($entity->get('changedOptions') as $option) {
+                            if (empty($option->newValue) || empty($option->oldValue)) {
+                                continue;
+                            }
 
-                        if (!in_array($option->newValue, $entity->get('options'))) {
-                            continue;
-                        }
+                            if (!in_array($option->newValue, $entity->get('options'))) {
+                                continue;
+                            }
 
-                        if ($entity->get('type') === 'enum' && $item->get($entity->get('code')) === $option->oldValue) {
-                            $item->set($entity->get('code'), $option->newValue);
-                            $shouldUpdate = true;
-                        }
+                            if(empty($item[$entity->get('code')])) {
+                                continue;
+                            }
 
-                        if ($entity->get('type') === 'multiEnum' && in_array($option->oldValue, $values = $item->get($entity->get('code')) ?? [])) {
-                            $key = array_search($option->oldValue, $values);
-                            if ($key !== false) {
-                                $values[$key] = $option->newValue;
-                                $item->set($entity->get('code'), $values);
+                            if ($entity->get('type') === 'enum' && $item[$entity->get('code')] === $option->oldValue) {
+                                $data[$code][$entity->get('code')] = $item[$entity->get('code')] = $option->newValue;
                                 $shouldUpdate = true;
+                            }
+
+                            if ($entity->get('type') === 'multiEnum' && in_array($option->oldValue, $values = $item[$entity->get('code')] ?? [])) {
+                                $key = array_search($option->oldValue, $values);
+                                if ($key !== false) {
+                                    $values[$key] = $option->newValue;
+                                    $data[$code][$entity->get('code')] =  $item[$entity->get('code')]  =  $values;
+                                    $shouldUpdate = true;
+                                }
                             }
                         }
                     }
-                    if (!empty($shouldUpdate)) {
-                        $this->getEntityManager()->saveEntity($item);
+                    if($shouldUpdate) {
+                        file_put_contents($file, json_encode($data));
                     }
                 }
             } else {
