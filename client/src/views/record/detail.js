@@ -2481,7 +2481,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             const fieldActions = this.getMetadata().get(['clientDefs', this.scope, 'dynamicFieldActions']) || []
             let layoutHasActionFields = false
 
-            if (fieldActions.length  && this.gridLayout) {
+            if (fieldActions.length && this.gridLayout) {
                 const fields = fieldActions.map(action => action.displayField);
                 this.gridLayout.layout.forEach(panel => {
                     panel.rows.forEach(row => {
@@ -2822,6 +2822,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             return {
                 scope: this.scope,
                 model: this.model,
+                id: this.model.id,
                 mode: this.mode,
                 hasStream: this.canLoadActivities() && !!this.model.id,
                 showSummary: ['edit', 'detail'].includes(this.mode),
@@ -2879,6 +2880,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         }
                         view.render();
                     })
+                },
+                fetchModel: () => {
+                    this.model.fetch();
                 }
             }
         }
