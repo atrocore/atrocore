@@ -333,53 +333,52 @@ class EntityField extends ReferenceData
         if(!$entity->isNew() && !empty($entity->get('changedOptions'))) {
             $type = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type");
 
-            if($type === 'ReferenceData') {
+            if ($type === 'ReferenceData') {
                 $collection = $this->getEntityManager()->getRepository($entity->get('entityId'))->find();
                 foreach ($collection as $item) {
                     $shouldUpdate = false;
                     foreach ($entity->get('changedOptions') as $option) {
-                        if(empty($option->newValue) || empty($option->oldValue)) {
+                        if (empty($option->newValue) || empty($option->oldValue)) {
                             continue;
                         }
 
-                        if(!in_array($option->newValue, $entity->get('options'))) {
+                        if (!in_array($option->newValue, $entity->get('options'))) {
                             continue;
                         }
 
-                        if($entity->get('type') === 'enum' && $item->get($entity->get('code')) === $option->oldValue) {
+                        if ($entity->get('type') === 'enum' && $item->get($entity->get('code')) === $option->oldValue) {
                             $item->set($entity->get('code'), $option->newValue);
                             $shouldUpdate = true;
                         }
 
-                        if($entity->get('type') === 'multiEnum' && in_array($option->oldValue, $values = $item->get($entity->get('code')) ?? [])) {
+                        if ($entity->get('type') === 'multiEnum' && in_array($option->oldValue, $values = $item->get($entity->get('code')) ?? [])) {
                             $key = array_search($option->oldValue, $values);
-                            if($key !== false) {
+                            if ($key !== false) {
                                 $values[$key] = $option->newValue;
                                 $item->set($entity->get('code'), $values);
                                 $shouldUpdate = true;
                             }
                         }
-
                     }
-                    if(!empty($shouldUpdate)) {
+                    if (!empty($shouldUpdate)) {
                         $this->getEntityManager()->saveEntity($item);
                     }
                 }
-            }else{
+            } else {
                 $connection = $this->getEntityManager()->getConnection();
                 $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
                 $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
 
                 foreach ($entity->get('changedOptions') as $option) {
-                    if(empty($option->newValue) || empty($option->oldValue)) {
+                    if (empty($option->newValue) || empty($option->oldValue)) {
                         continue;
                     }
 
-                    if(!in_array($option->newValue, $entity->get('options'))) {
+                    if (!in_array($option->newValue, $entity->get('options'))) {
                         continue;
                     }
 
-                    if($entity->get('type') === 'enum') {
+                    if ($entity->get('type') === 'enum') {
                         $connection->createQueryBuilder()
                             ->update($connection->quoteIdentifier($tableName))
                             ->set($column, ':newValue')
@@ -387,14 +386,14 @@ class EntityField extends ReferenceData
                             ->setParameter('newValue', $option->newValue)
                             ->setParameter('oldValue', $option->oldValue)
                             ->executeStatement();
-                    }else{
+                    } else {
                         $connection->createQueryBuilder()
                             ->update($connection->quoteIdentifier($tableName))
                             ->set($column, "REPLACE($column, :oldValue, :newValue)")
                             ->where("$column LIKE :oldValueWildcard")
                             ->setParameter('newValue', '"' . $option->newValue . '"')
-                            ->setParameter('oldValue','"' .$option->oldValue  . '"')
-                            ->setParameter('oldValueWildcard', '%' . '"' .$option->oldValue  . '"' . '%')
+                            ->setParameter('oldValue', '"' . $option->oldValue . '"')
+                            ->setParameter('oldValueWildcard', '%' . '"' . $option->oldValue . '"' . '%')
                             ->executeStatement();
                     }
                 }
