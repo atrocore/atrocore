@@ -15,6 +15,7 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\ORM\Repositories\RDB;
+use Atro\Core\PseudoTransactionManager;
 use Atro\Core\Utils\Util;
 use Atro\Services\Record;
 use Doctrine\DBAL\ParameterType;
@@ -69,6 +70,27 @@ class Base extends RDB
                     $attributesDefs[$field]['type'] = $defs['type'];
                 }
                 $entity->set('attributesDefs', $attributesDefs);
+            }
+        }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        // update modifiedAt for related entities
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links'], []) as $link => $defs) {
+            if (empty($defs['entity']) || empty($defs['relationName']) || empty($defs['foreign'])) {
+                continue;
+            }
+            if (in_array($defs['foreign'], $this->getMetadata()->get(['scopes', $defs['entity'], 'modifiedExtendedRelations'], []))) {
+                $entity->loadLinkMultipleField($link);
+                foreach ($entity->get($link . 'Ids') ?? [] as $id) {
+                    $this->getPseudoTransactionManager()->pushUpdateEntityJob($defs['entity'], $id, [
+                        'modifiedAt'   => (new \DateTime())->format('Y-m-d H:i') . ':00',
+                        'modifiedById' => $this->getEntityManager()->getUser()->get('id')
+                    ]);
+                }
             }
         }
     }
@@ -208,11 +230,17 @@ class Base extends RDB
 
         $this->addDependency(AttributeFieldConverter::class);
         $this->addDependency('language');
+        $this->addDependency('pseudoTransactionManager');
     }
 
     protected function getAttributeFieldConverter(): AttributeFieldConverter
     {
         return $this->getInjection(AttributeFieldConverter::class);
+    }
+
+    protected function getPseudoTransactionManager(): PseudoTransactionManager
+    {
+        return $this->getInjection('pseudoTransactionManager');
     }
 
     protected function translateException(string $key): string

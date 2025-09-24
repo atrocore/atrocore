@@ -144,7 +144,7 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
             this.createView('dialog', 'views/search/modals/select-filter-search', {
                 scope: foreignScope,
                 filters: filters,
-                disabledUnsetSearch: !searchManager.isFilterSet(),
+                disabledUnsetSearch: !searchManager.isFilterSet() && !searchManager.isTextFilterSet(),
                 additionalBoolFilterList: additionalBoolFilterList,
                 boolFilterData: boolFilterData,
             }, (dialog) => {

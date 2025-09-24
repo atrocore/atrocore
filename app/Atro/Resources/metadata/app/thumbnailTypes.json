@@ -1,0 +1,30 @@
+{
+  "small": {
+    "deleteDisabled": true,
+    "size": [
+      128,
+      128
+    ]
+  },
+  "medium": {
+    "deleteDisabled": true,
+    "size": [
+      256,
+      256
+    ]
+  },
+  "large": {
+    "deleteDisabled": true,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "small-logo": {
+    "deleteDisabled": true,
+    "size": [
+      181,
+      44
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "width"
+        },
+        {
+          "name": "height"
+        }
+      ]
+    ]
+  }
+]

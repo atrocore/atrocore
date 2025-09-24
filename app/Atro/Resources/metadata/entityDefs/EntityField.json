@@ -371,8 +371,8 @@
     },
     "options": {
       "type": "array",
-      "view": "views/admin/field-manager/fields/options-extended",
-      "conditionalProperties": {
+      "view": "views/entity-field/fields/options",
+      "conditionalProperties":  {
         "required": {
           "conditionGroup": [
             {
@@ -380,7 +380,9 @@
               "type": "in",
               "value": [
                 "enum",
-                "multiEnum"
+                "multiEnum",
+                "enumInt",
+                "enumFloat"
               ]
             }
           ]
@@ -399,6 +401,10 @@
       "type": "array",
       "view": "views/admin/field-manager/fields/allowed-options"
     },
+    "translatedOptions": {
+      "type": "jsonObject",
+      "notStorable": true
+    },
     "extensibleEnumOptions": {
       "type": "jsonObject",
       "notStorable": true,
@@ -412,11 +418,7 @@
       "type": "enum",
       "required": false,
       "default": "small",
-      "options": [
-        "small",
-        "medium",
-        "large"
-      ]
+      "view": "views/entity-field/fields/preview-size"
     },
     "min": {
       "type": "float",

@@ -101,6 +101,11 @@
         "description": "listOfSupportedFilesTypes"
       },
       {
+        "url": "#ThumbnailType",
+        "label": "ThumbnailTypes",
+        "description": "thumbnailTypes"
+      },
+      {
         "url": "#Folder",
         "label": "Folders",
         "description": "folders"

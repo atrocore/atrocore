@@ -18,7 +18,6 @@
   "labels": {
     "Preview": "Vorschau",
     "Upload": "Hochladen",
-    "sort": "Sortieren",
     "retry": "Wiederholen?",
     "uploaded": "hochgeladen",
     "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten",

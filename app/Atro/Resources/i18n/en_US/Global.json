@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "ThumbnailType": "Thumbnail Type",
     "ActionLog": "Action Log",
     "IncomingWebhook": "Incoming Webhook",
     "RoleScopeAttribute": "Attribute",
@@ -80,6 +81,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "ThumbnailType": "Thumbnail Types",
     "ActionLog": "Action Logs",
     "IncomingWebhook": "Incoming Webhooks",
     "RoleScopeAttribute": "Attributes",
@@ -465,7 +467,12 @@
     "associationTooltip": "Defines how Associating Item is linked to Associated Item",
     "associatedTitle": "Current item links as :name to:",
     "associatingTitle": "Linked to current item as :name:",
-    "recalculateScript": "Recalculate Script"
+    "itemsInRow": "Items in row",
+    "sort": "Sort",
+    "recalculateScript": "Recalculate Script",
+    "code": "Code",
+    "label": "Label",
+    "color": "Color"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
@@ -614,6 +621,8 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "width": "Width",
+    "height": "Height",
     "start": "Start",
     "end": "End",
     "action": "Action",
@@ -1168,7 +1177,8 @@
     "massUpdateSomeRecordNotProceed": "Some record(s) could not be successfully updated.",
     "massDeleteSomeRecordNotProceed": "Some record(s) could not be successfully removed.",
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
-    "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked."
+    "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
+    "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s"
   },
   "queryBuilderFilter": {
     "add_rule": "Add rule",
@@ -1297,5 +1307,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "You are going to replace one or more values with an empty value. Are you sure?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Small logo",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large"
   }
 }

@@ -22,10 +22,11 @@ export default class Dropdown {
     private readonly referenceEl: HTMLElement;
     private readonly floatingEl: HTMLElement;
     private readonly floatingListElSelector: string = 'li';
-    private floatingHandler: Function;
+    private floatingHandler?: Function;
     private params?: DropdownParams;
     private isOpen: boolean = false;
     private readonly autoHide: boolean = true;
+    private readonly usePositionOnly: boolean = false;
 
     constructor(referenceEl: HTMLElement, floatingEl: HTMLElement, params?: DropdownParams) {
         this.referenceEl = referenceEl;
@@ -40,14 +41,31 @@ export default class Dropdown {
             this.floatingListElSelector = this.params.dropdownListElSelector;
         }
 
-        referenceEl.addEventListener('click', this.onReferenceElClick.bind(this));
+        if (typeof this.params?.usePositionOnly === 'boolean') {
+            this.usePositionOnly = this.params.usePositionOnly;
+        }
+
+        if (typeof this.params?.isOpen === 'boolean') {
+            this.isOpen = this.params.isOpen;
+        }
+
+        referenceEl._dropdown = this;
+
+        if (this.usePositionOnly) {
+            this.updateDropdown();
+        } else {
+            referenceEl.addEventListener('click', this.onReferenceElClick.bind(this));
+        }
     }
 
     destroy() {
         this.floatingHandler?.();
         document.removeEventListener('click', this.onClickOutside.bind(this));
-        this.referenceEl.removeEventListener('click', this.onReferenceElClick.bind(this));
         this.floatingEl.removeEventListener('click', this.onDropdownClick.bind(this));
+
+        if (!this.usePositionOnly) {
+            this.referenceEl.removeEventListener('click', this.onReferenceElClick.bind(this));
+        }
     }
 
     toggle() {
@@ -74,15 +92,13 @@ export default class Dropdown {
     }
 
     private showDropdown() {
-        this.floatingEl.style.display = 'block';
-
         if (this.params?.onDropdownShow) {
             this.params.onDropdownShow(this.floatingEl);
         }
 
         this.floatingHandler = autoUpdate(this.referenceEl, this.floatingEl, () => {
             const positionOptions = {
-                placement: 'bottom-end',
+                placement: 'bottom-start',
                 strategy: 'fixed',
                 middleware: []
             };
@@ -115,13 +131,20 @@ export default class Dropdown {
                 positionOptions.middleware = [offset(5), flip(), shift()];
             }
 
-            computePosition(this.referenceEl, this.floatingEl, positionOptions, {animationFrame: true}).then(({x, y}) => {
-                Object.assign(this.floatingEl.style, {
+            computePosition(this.referenceEl, this.floatingEl, positionOptions).then(({x, y}) => {
+                const options = {
                     left: `${x}px`,
-                    top: `${y}px`
-                });
+                    top: `${y}px`,
+                    display: 'block',
+                };
+
+                if (positionOptions.strategy === 'fixed') {
+                    options.position = 'fixed';
+                }
+
+                Object.assign(this.floatingEl.style, options);
             });
-        });
+        }, {animationFrame: true});
 
         document.addEventListener('click', this.onClickOutside.bind(this));
         this.floatingEl.addEventListener('click', this.onDropdownClick.bind(this));
@@ -155,7 +178,7 @@ export default class Dropdown {
             return;
         }
 
-        if (!event.target instanceof HTMLElement) {
+        if (!(event.target instanceof HTMLElement)) {
             return;
         }
 

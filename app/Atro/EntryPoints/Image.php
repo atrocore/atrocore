@@ -56,7 +56,8 @@ class Image extends AbstractEntryPoint
             if (!method_exists($file, $method)) {
                 throw new NotFound();
             }
-            $contents = file_get_contents('public' . DIRECTORY_SEPARATOR . $file->$method());
+            header("Location: /{$file->$method()}");
+            exit;
         } else {
             $contents = $file->getContents();
         }
@@ -80,8 +81,8 @@ class Image extends AbstractEntryPoint
         return $this->getAcl()->checkEntity($file);
     }
 
-    protected function getImageSize(string $size): ?array
+    protected function getImageSize(string $type): ?array
     {
-        return $this->getMetadata()->get(['app', 'file', 'image', 'thumbnailSize', $size], null);
+        return $this->getMetadata()->get("app.thumbnailTypes.$type.size");
     }
 }

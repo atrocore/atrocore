@@ -237,6 +237,19 @@ class Language
         $this->undelete($scope, $category, $name);
     }
 
+    public function setOption(string $scope, string $category, string $field, string $option, $value): void
+    {
+        $this->changedData[$scope][$category][$field][$option] = $value;
+
+        $currentLanguage = $this->getLanguage();
+        if (!isset($this->data[$currentLanguage])) {
+            $this->init();
+        }
+        $this->data[$currentLanguage][$scope][$category][$field][$option] = $value;
+
+        $this->undeleteOption($scope, $category, $field, $option);
+    }
+
     public function delete(string $scope, string $category, $name): void
     {
         if (is_array($name)) {
@@ -262,12 +275,41 @@ class Language
         }
     }
 
+    public function deleteOption(string $scope, string $category, string $field, $name): void
+    {
+        $this->deletedData[$scope][$category][$field][] = $name;
+
+        $currentLanguage = $this->getLanguage();
+        if (!isset($this->data[$currentLanguage])) {
+            $this->init();
+        }
+
+        if (isset($this->data[$currentLanguage][$scope][$category][$field][$name])) {
+            unset($this->data[$currentLanguage][$scope][$category][$field][$name]);
+        }
+
+        if (isset($this->changedData[$scope][$category][$field][$name])) {
+            unset($this->changedData[$scope][$category][$field][$name]);
+        }
+    }
+
     protected function undelete(string $scope, string $category, string $name): void
     {
         if (isset($this->deletedData[$scope][$category])) {
             foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
                 if ($name === $labelName) {
                     unset($this->deletedData[$scope][$category][$key]);
+                }
+            }
+        }
+    }
+
+    protected function undeleteOption(string $scope, string $category, string $field, string $name): void
+    {
+        if (isset($this->deletedData[$scope][$category][$field])) {
+            foreach ($this->deletedData[$scope][$category][$field] as $key => $labelName) {
+                if ($name === $labelName) {
+                    unset($this->deletedData[$scope][$category][$field][$key]);
                 }
             }
         }

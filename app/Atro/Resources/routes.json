@@ -212,6 +212,34 @@
     "params": {
       "controller": "File",
       "action": "reupload"
+    },
+    "description": "Reupload file content in File entity",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "reupload": {
+                "type": "string",
+                "example": "a01jzn9g1gxe83sztxfqzjr655v"
+              },
+              "fileContents": {
+                "type": "string"
+              }
+            },
+            "required": ["reupload", "fileContents"]
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "example": {
+        "id": "a01jzn9g1gxe83sztxfqzjr655v",
+        "name": "iPhone-17-Pro-Black.png"
+      }
     }
   },
   {

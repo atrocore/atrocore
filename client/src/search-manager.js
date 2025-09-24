@@ -347,6 +347,10 @@ Espo.define('search-manager', [], function () {
             return false;
         },
 
+        isTextFilterSet() {
+          return !!this.data.textFilter
+        },
+
         getDateTimeWhere: function (type, field, value) {
             var where = {
                 field: field

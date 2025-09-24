@@ -410,7 +410,12 @@
     "associationTooltip": "Оберіть як Асоціюючий елемент пов'язаний з Асоційованим елементом",
     "associatedTitle": "Поточний елемент пов'язаний як :name з:",
     "associatingTitle": "Пов'язані з поточним елементом як :name:",
-    "recalculateScript": "Перерахувати скрипт"
+    "sort": "Сортування",
+    "itemsInRow": "Елементів у ряд",
+    "recalculateScript": "Перерахувати скрипт",
+    "code": "Код",
+    "label": "Відображуване ім'я",
+    "color": "Колір"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -1070,7 +1075,8 @@
     "massUpdateSomeRecordNotProceed": "Деякі записи не були оновлені.",
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
-    "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки."
+    "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки.",
+    "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s"
   },
   "queryBuilderFilter": {
     "add_rule": "Додати",
@@ -1153,5 +1159,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Ви збираєтеся замінити одне або декілька значень на порожнє. Ви впевнені?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Малий логотип",
+    "small": "Малий",
+    "medium": "Середній",
+    "large": "Великий"
   }
 }

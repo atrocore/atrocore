@@ -84,11 +84,6 @@
     "auditableDisabled": "Зміни в цьому полі не відображатимуться в панелі Дій."
   },
   "options": {
-    "previewSize": {
-      "small": "Малий",
-      "medium": "Середній",
-      "large": "Великий"
-    },
     "outputType": {
       "text": "Текст",
       "int": "Ціле число",

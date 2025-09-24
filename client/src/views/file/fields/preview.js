@@ -11,6 +11,8 @@
 Espo.define('views/file/fields/preview', 'views/fields/file',
     Dep => Dep.extend({
 
+        readOnly: true,
+
         setup() {
             Dep.prototype.setup.call(this);
 

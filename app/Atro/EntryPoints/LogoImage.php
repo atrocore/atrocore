@@ -35,14 +35,4 @@ class LogoImage extends Image
 
         $this->show($file, $_GET['size'] ?? null);
     }
-
-    protected function getImageSize(string $size): ?array
-    {
-        if ($size == 'small-logo') {
-            return [181, 44];
-        }
-
-        return parent::getImageSize($size);
-    }
 }
-

@@ -9,12 +9,14 @@
 
     export let scope: string;
     export let onExecute: (e: CustomEvent) => void;
-
-
-    let allFilters = ['filled', 'empty', 'optional', 'required']
+    export let allFilters = ['filled', 'empty', 'optional', 'required']
+    export let storageKey = 'fieldFilter'
+    export let translationScope = 'Global'
+    export let translationField = 'fieldFilter'
+    export let titleLabel = Language.translate('fieldValueFilters', 'labels', 'Global')
 
     let filters = [...allFilters]
-    let selectedFilters = Storage.get('fieldFilter', scope) || []
+    let selectedFilters = Storage.get(storageKey, scope) || []
     cleanFilters()
 
     let dropdownButton: HTMLElement;
@@ -28,13 +30,13 @@
 
     function onFilterChange() {
         cleanFilters()
-        Storage.set('fieldFilter', scope, selectedFilters)
+        Storage.set(storageKey, scope, selectedFilters)
 
         onExecute(new CustomEvent('execute', {
             detail: {
                 action: 'applyOverviewFilter'
             }
-        }))
+        }), selectedFilters)
     }
 
     function cleanFilters() {
@@ -66,7 +68,7 @@
 
 </script>
 
-<div class="search-row" style="padding-bottom: 0;margin-left: 20px !important;">
+<div class="search-row" {...$$restProps}>
     <div class="form-group">
         <div class="button-group input-group filter-group">
             <div bind:this={dropdownDiv} class="dropdown" class:has-content={selectedFilters.length>0}>
@@ -75,13 +77,16 @@
                         class="filter-switcher"
                         on:mousedown={event => event.preventDefault()}
                 >
-                    <i class="ph-radio-button" class:ph={selectedFilters.length === 0} class:ph-fill={selectedFilters.length > 0}></i>
+                    <i class="ph-radio-button" class:ph={selectedFilters.length === 0}
+                       class:ph-fill={selectedFilters.length > 0}></i>
                     {#if selectedFilters.length > 0}
-                        <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, 'fieldFilter', 'Global')).join(', ')}</span>
+                        <span class="filter-names">{selectedFilters.map(item => Language.translateOption(item, translationField, translationScope)).join(', ')}</span>
                     {/if}
                 </button>
                 <div class="dropdown-menu" bind:this={dropdownMenu}>
-                    <h5 style="margin-top: 0">{Language.translate('fieldValueFilters', 'labels', 'Global')}</h5>
+                    {#if titleLabel}
+                        <h5 style="margin-top: 0">{titleLabel}</h5>
+                    {/if}
                     <ul style="padding: 0" on:click={event => event.stopPropagation()}>
                         {#each allFilters as filter }
                             <li class="checkbox">
@@ -89,7 +94,7 @@
                                     <input disabled="{!filters.includes(filter)}" type="checkbox"
                                            bind:group={selectedFilters} value="{filter}"
                                            on:change={onFilterChange}>
-                                    {Language.translateOption(filter, 'fieldFilter', 'Global')}
+                                    {Language.translateOption(filter, translationField, translationScope)}
                                 </label>
                             </li>
                         {/each}
@@ -165,5 +170,10 @@
 
     .dropdown ul {
         padding: 0;
+    }
+
+    .dropdown ul li.checkbox {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 </style>

@@ -738,6 +738,7 @@ class OpenApiGenerator
 
         $this->pushUserActions($result, $schemas);
         $this->pushSettingsActions($result, $schemas);
+        $this->pushFileActions($result, $schemas);
 
         foreach ($this->container->get('moduleManager')->getModules() as $module) {
             $module->prepareApiDocs($result, $schemas);
@@ -1143,6 +1144,37 @@ class OpenApiGenerator
         ];
     }
 
+    protected function pushFileActions(array &$result, array $schemas): void
+    {
+        $response = self::prepareResponses([]);
+        $response['200']['content'] = [
+            "application/octet-stream" => []
+        ];
+
+        $result['paths']['/File/action/upload-proxy']['post'] = [
+            'tags'        => ['File'],
+            'description' => 'Reupload file content in File entity via URL link',
+            'requestBody' => [
+                'required' => true,
+                'content'  => [
+                    'application/json' => [
+                        'schema' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'url' => [
+                                    'type' => 'string',
+                                    'example' => 'https://your-website.com/image.png'
+                                ]
+                            ],
+                            'required' => ['url']
+                        ]
+                    ]
+                ],
+            ],
+            'responses' => $response
+        ];
+    }
+
     protected function getFieldSchema(array &$result, string $entityName, string $fieldName, array $fieldData)
     {
         if (!empty($fieldData['openApiDisabled'])) {
@@ -1165,7 +1197,11 @@ class OpenApiGenerator
         switch ($fieldData['type']) {
             case "autoincrement":
             case "int":
-                $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'integer'];
+                $result['components']['schemas'][$entityName]['properties'][$fieldName] = [
+                    'type'    => 'integer',
+                    'minimum' => -2147483648,
+                    'maximum' => 2147483647,
+                ];
                 break;
             case "float":
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'number'];

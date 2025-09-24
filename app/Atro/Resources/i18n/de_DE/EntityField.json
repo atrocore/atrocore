@@ -88,11 +88,6 @@
     "auditableDisabled": "Änderungen in diesem Feld werden nicht als Aktivität angezeigt."
   },
   "options": {
-    "previewSize": {
-      "small": "Klein",
-      "medium": "Mittel",
-      "large": "Groß"
-    },
     "outputType": {
       "text": "Text",
       "int": "Integer",

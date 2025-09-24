@@ -376,7 +376,9 @@
     "Select Image": "Sélectionner une image existante",
     "Upload Image": "Télécharger une image à partir d'un système de fichiers local",
     "copyConfigurations": "Copier les configurations",
-    "fullscreen": "Plein écran"
+    "fullscreen": "Plein écran",
+    "sort": "Trier",
+    "itemsInRow": "Éléments de la ligne"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",

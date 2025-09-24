@@ -259,7 +259,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 models = [models];
                             }
 
-                            let selected = {};
+                            let selected = this.model.get(this.nameHashName) || {};
+                            if (selected._localeId) {
+                                delete selected._localeId;
+                            }
                             models.forEach(function (model) {
                                 if (typeof model.get !== "undefined") {
                                     let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';

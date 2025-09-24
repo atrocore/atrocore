@@ -418,7 +418,12 @@
     "associationTooltip": "Definiert, wie das assoziierende Element mit dem assoziierten Element verknüpft ist",
     "associatedTitle": "Der aktuelle Artikel ist als :name verlinkt von:",
     "associatingTitle": "Mit aktuellem Element als :name verlinkt:",
-    "recalculateScript": "Skript neu berechnen"
+    "itemsInRow": "Anzahl Elemente in der Reihe",
+    "sort": "Sortieren",
+    "recalculateScript": "Skript neu berechnen",
+    "code": "Code",
+    "label": "Beschriftung",
+    "color": "Farbe"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -608,6 +613,8 @@
     "removeAttribute": "Attribut löschen"
   },
   "fields": {
+    "width": "Breite",
+    "height": "Höhe",
     "action": "Aktion",
     "payload": "Payload",
     "hash": "Hash",
@@ -1084,7 +1091,8 @@
     "massUpdateSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich aktualisiert werden.",
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
-    "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden."
+    "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
+    "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen."
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",
@@ -1164,5 +1172,11 @@
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Kleines Logo",
+    "small": "Klein",
+    "medium": "Mittel",
+    "large": "Groß"
   }
 }
