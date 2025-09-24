@@ -39,7 +39,8 @@
     "hasAssociate": "Has Associates",
     "textFilterFields": "Text Filter fields",
     "nonDuplicatableFields": "Non-duplicated fields",
-    "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications"
+    "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
+    "checkForDuplicates": "Check for duplicates"
   },
   "options": {
     "type": {

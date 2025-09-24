@@ -37,7 +37,8 @@
     "hasAssociate": "Hat assoziierte Datensätze",
     "textFilterFields": "Textfilterfelder",
     "nonDuplicatableFields": "Nicht-duplizierbare Felder",
-    "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben"
+    "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
+    "checkForDuplicates": "Prüfung auf Duplikate"
   },
   "options": {
     "type": {
