@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Espo\ORM\Entity;
-use Atro\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Hierarchy;
 
-class Classification extends Base
+class Classification extends Hierarchy
 {
     /**
      * @param Entity $entity

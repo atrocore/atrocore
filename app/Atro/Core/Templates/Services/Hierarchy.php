@@ -450,8 +450,10 @@ class Hierarchy extends Record
     {
         $entity = parent::getEntity($id);
 
-        if (!empty($entity)) {
-            $entity->set('inheritedFields', $this->getInheritedFields($entity));
+        if($this->isHierarchy()) {
+            if (!empty($entity)) {
+                $entity->set('inheritedFields', $this->getInheritedFields($entity));
+            }
         }
 
         return $entity;
@@ -459,6 +461,10 @@ class Hierarchy extends Record
 
     public function createEntity($attachment)
     {
+        if(!$this->isHierarchy()) {
+            return parent::createEntity($attachment);
+        }
+
         $this->prepareChildInputData($attachment);
 
         $entity = parent::createEntity($attachment);
@@ -504,6 +510,10 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
+        if(!$this->isHierarchy()) {
+            return parent::updateEntity($id, $data);
+        }
+
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
@@ -551,6 +561,9 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
+        if(!$this->isHierarchy()) {
+            return parent:: linkEntity($id, $link, $foreignId);
+        }
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -601,6 +614,10 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
+        if(!$this->isHierarchy()) {
+            return parent::unlinkEntity($id, $link, $foreignId);
+        }
+
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -647,6 +664,10 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
+        if(!$this->isHierarchy()) {
+            return parent::deleteEntity($id);
+        }
+
         $childrenIds = $this->getRepository()->getChildrenRecursivelyArray($id);
         while (!empty($childrenIds)) {
             parent::deleteEntity(array_pop($childrenIds));
@@ -658,6 +679,10 @@ class Hierarchy extends Record
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
+
+        if(!$this->isHierarchy()) {
+            return;
+        }
 
         $attributeList = empty($selectParams['select']) ? [] : $selectParams['select'];
 
@@ -709,6 +734,10 @@ class Hierarchy extends Record
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);
+
+        if(!$this->isHierarchy()){
+            return;
+        }
 
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'])) && empty($entity->get('parentId'))) {
             $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
@@ -1054,6 +1083,11 @@ class Hierarchy extends Record
 
         return $result;
 
+    }
+
+    public function isHierarchy(): bool
+    {
+        return $this->getMetadata()->get(['scopes', $this->entityType, 'type']) === 'Hierarchy';
     }
 
     protected function init()
