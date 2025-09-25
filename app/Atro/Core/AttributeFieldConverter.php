@@ -245,6 +245,8 @@ class AttributeFieldConverter
                     if ($attribute['id'] === $classificationAttribute['attribute_id']) {
                         $res[$k]['classification_attribute_id'] = $classificationAttribute['id'];
                         $res[$k]['is_required'] = $classificationAttribute['is_required'];
+                        $res[$k]['is_read_only'] = $classificationAttribute['is_read_only'];
+                        $res[$k]['is_protected'] = $classificationAttribute['is_protected'];
 
                         $attributeData = @json_decode($attribute['data'] ?? '', true);
                         if (empty($attributeData)) {

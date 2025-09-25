@@ -13,6 +13,14 @@
         {
           "name": "isRequired"
         },
+        {
+          "name": "isProtected"
+        }
+      ],
+      [
+        {
+          "name": "isReadOnly"
+        },
         false
       ],
       [

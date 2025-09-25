@@ -34,7 +34,7 @@ class DateType extends AbstractFieldType
             'required'    => !empty($row['is_required'])
         ];
 
-        if (empty($skipValueProcessing)){
+        if (empty($skipValueProcessing)) {
             $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
         }
 
@@ -56,6 +56,7 @@ class DateType extends AbstractFieldType
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
+            'protected'                 => !empty($row['is_protected']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],

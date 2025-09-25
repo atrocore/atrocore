@@ -14,6 +14,8 @@
     "defaultUnit": "Unité par défaut",
     "defaultDate": "Date par défaut",
     "isRequired": "Exigée",
+    "isReadOnly": "Lecture seule",
+    "isProtected": "Protegé",
     "tooltip": "Bulle d'aide",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
