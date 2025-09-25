@@ -343,7 +343,6 @@ class EntityField extends ReferenceData
         }
 
         // update options metadata
-
         $options = $fieldEntity->get('options');
         $key = array_search($oldValue, $options);
         $options[$key] = $newValue;
@@ -366,6 +365,7 @@ class EntityField extends ReferenceData
             $this->getEntityManager()->saveEntity($newLabel);
         }
 
+        // replace values in database
         if ($type === 'ReferenceData') {
             $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $scope . '.json';
             if(file_exists($file)) {

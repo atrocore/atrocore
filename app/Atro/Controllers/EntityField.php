@@ -51,7 +51,9 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if (!$request->isPost() || !property_exists($data, 'scope')
+        if (
+            !$request->isPost()
+            || !property_exists($data, 'scope')
             || !property_exists($data, 'field')
             || !property_exists($data, 'oldValue')
             || !property_exists($data, 'newValue')
