@@ -31,6 +31,7 @@
 
     .sharing-panel > .list > table .cell[data-name=buttons] {
         padding-left: 0;
+        width: 30px;
     }
 
     .modal-body .sharing-panel > .list > table .cell {
