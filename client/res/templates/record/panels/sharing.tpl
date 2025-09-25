@@ -25,7 +25,8 @@
         top: -6px;
     }
 
-    .sharing-panel > .list > table .cell[data-name=link] {
+    .sharing-panel > .list > table .cell[data-name=link],
+    .sharing-panel > .list > table .cell[data-name=available] {
         padding-right: 0;
     }
 

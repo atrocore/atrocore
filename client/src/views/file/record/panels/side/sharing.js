@@ -67,7 +67,7 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                         listLayout: [
                             {
                                 "name": "available",
-                                "widthPx": 30,
+                                "widthPx": 20,
                                 "view": "views/sharing/fields/available-in-side-panel"
                             },
                             {
