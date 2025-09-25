@@ -27,7 +27,6 @@
     "unInheritedFields": "Unvererbbare Felder",
     "relationInheritance": "Beziehungsvererbung",
     "unInheritedRelations": "Unvererbbare Beziehungen",
-    "disableHierarchy": "Hierarchie deaktivieren",
     "auditedDisabledFields": "Keine Protokollierung der Datensatzaktivitäten für Felder",
     "auditedEnabledRelations": "Datensatz-Aktivitäten für Relationen protokolieren",
     "hasAttribute": "Hat Attribute",

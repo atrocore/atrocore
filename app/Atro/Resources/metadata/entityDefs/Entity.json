@@ -268,11 +268,7 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
-            {
-              "type": "isFalse",
-              "attribute": "disableHierarchy"
-            },
-            {
+               {
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
@@ -287,25 +283,6 @@
       "tooltip": true
     },
     "relationInheritance": {
-      "type": "bool",
-      "default": false,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isFalse",
-              "attribute": "disableHierarchy"
-            },
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "Hierarchy"
-            }
-          ]
-        }
-      }
-    },
-    "disableHierarchy": {
       "type": "bool",
       "default": false,
       "conditionalProperties": {
