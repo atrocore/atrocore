@@ -72,9 +72,8 @@ Espo.define('views/file/record/detail', 'views/record/detail',
             this.notify('Loading...');
 
             this.createView('customDownload', 'views/file/modals/custom-download', {
-                scope: 'File',
-                fullFormDisabled: true,
-                attributes: this.model.attributes,
+                fullHeight: false,
+                model: this.model,
             }, view => {
                 view.render();
                 this.notify(false);

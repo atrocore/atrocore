@@ -50,16 +50,3 @@
         </div>
     </div>
 </div>
-
-<div class="preview-panel">
-    <div class="row">
-        <div class="cell col-sm-12 form-group" data-name="preview">
-            <label class="control-label" data-name="preview">
-                <span class="label-text">{{translate "preview" category="fields" scope="File"}}</span>
-            </label>
-            <div class="field" data-name="quality">
-                {{{quality}}}
-            </div>
-        </div>
-    </div>
-</div>
