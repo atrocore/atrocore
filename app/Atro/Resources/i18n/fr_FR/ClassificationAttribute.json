@@ -3,6 +3,8 @@
     "classification": "Classification",
     "attribute": "Attribut",
     "isRequired": "Exigée",
+    "isReadOnly": "Lecture seule",
+    "isProtected": "Protegé",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
     "value": "Valeur par défaut",

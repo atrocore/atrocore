@@ -37,6 +37,8 @@ Espo.define('views/classification-attribute/fields/attribute', 'views/fields/lin
 
             this.model.trigger('change:attribute', model);
             this.model.set('isRequired', model.get('isRequired'))
+            this.model.set('isReadOnly', model.get('isReadOnly'))
+            this.model.set('isProtected', model.get('isProtected'))
         },
 
         setAttributeData() {

@@ -317,6 +317,20 @@
     },
     "isReadOnly": {
       "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "isProtected"
+            }
+          ]
+        }
+      }
+    },
+    "isProtected": {
+      "type": "bool",
       "default": false
     },
     "sortOrder": {

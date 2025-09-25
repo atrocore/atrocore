@@ -65,16 +65,18 @@
       ],
       [
         {
-          "name": "notNull"
-        },
-        false
-      ],
-      [
-        {
           "name": "isRequired"
         },
         {
+          "name": "isProtected"
+        }
+      ],
+      [
+        {
           "name": "isReadOnly"
+        },
+        {
+          "name": "notNull"
         }
       ],
       [
