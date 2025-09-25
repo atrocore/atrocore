@@ -3532,7 +3532,7 @@ button, .btn {
     cursor: pointer;
     touch-action: manipulation;
     white-space: nowrap;
-    padding: 7px 12px;
+    padding: 7px 10px;
     position: relative;
 }
 
@@ -9920,7 +9920,7 @@ label {
 }
 
 .page-header {
-    margin: 14px 0 10px 0;
+    margin: 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px;

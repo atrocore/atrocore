@@ -28,7 +28,6 @@
     "unInheritedFields": "Uninherited fields",
     "relationInheritance": "Relation inheritance",
     "unInheritedRelations": "Uninherited relations",
-    "disableHierarchy": "Disable hierarchy",
     "fields": "Fields",
     "auditedDisabledFields": "No record activity logging for fields",
     "auditedEnabledRelations": "Log record activity for relations",

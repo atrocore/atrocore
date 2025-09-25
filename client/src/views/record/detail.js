@@ -725,8 +725,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
 
         disableActionItems: function () {
@@ -1290,14 +1289,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     this.applyOverviewFilters();
                 });
             }
-
-            this.listenTo(this.model, 'after:change-mode', (type) => {
-                this.setupTourButton(type)
-            });
-
-            this.listenTo(this.model, 'after:save', () => {
-                this.setupTourButton()
-            });
 
             if (this.layoutName === 'detail') {
                 this.listenTo(this.model, 'toggle-required-fields-highlight', () => {

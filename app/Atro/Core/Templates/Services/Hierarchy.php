@@ -30,10 +30,6 @@ class Hierarchy extends Record
 {
     public function getSelectAttributeList($params)
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
-            return parent::getSelectAttributeList($params);
-        }
-
         $res = parent::getSelectAttributeList($params);
         if (is_array($res) && $this->getMetadata()->get(['scopes', $this->getEntityType(), 'type']) == 'Hierarchy') {
             if (!in_array('sortOrder', $res)) {
@@ -271,10 +267,6 @@ class Hierarchy extends Record
             throw new BadRequest("Inheriting available only for entities type Hierarchy.");
         }
 
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'disableHierarchy'], false)) {
-            throw new BadRequest("Inheriting available on enable Hierarchy, hierarchy feature is disable.");
-        }
-
         if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'relationInheritance'])) {
             throw new BadRequest("Relations inheriting is disabled.");
         }
@@ -458,27 +450,15 @@ class Hierarchy extends Record
     {
         $entity = parent::getEntity($id);
 
-        if (!$this->isHierarchyDisabled()) {
-            if (!empty($entity)) {
-                $entity->set('inheritedFields', $this->getInheritedFields($entity));
-            }
+        if (!empty($entity)) {
+            $entity->set('inheritedFields', $this->getInheritedFields($entity));
         }
 
         return $entity;
     }
 
-    public function isHierarchyDisabled()
-    {
-        return $this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
-            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false);
-    }
-
     public function createEntity($attachment)
     {
-        if ($this->isHierarchyDisabled()) {
-            return parent::createEntity($attachment);
-        }
-
         $this->prepareChildInputData($attachment);
 
         $entity = parent::createEntity($attachment);
@@ -524,10 +504,6 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
-        if ($this->isHierarchyDisabled()) {
-            return parent::updateEntity($id, $data);
-        }
-
         if (property_exists($data, '_sortedIds') && property_exists($data, '_id') && property_exists($data, '_link') && $data->_link === 'children') {
             $this->getRepository()->updateHierarchySortOrder($data->_id, $data->_sortedIds);
             return $this->getEntity($id);
@@ -575,10 +551,6 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
-        if ($this->isHierarchyDisabled()) {
-            return parent::linkEntity($id, $link, $foreignId);
-        }
-
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -629,10 +601,6 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        if ($this->isHierarchyDisabled()) {
-            return parent::unlinkEntity($id, $link, $foreignId);
-        }
-
         /**
          * Delegate to Update if ManyToOne or OneToOne relation
          */
@@ -679,10 +647,6 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
-        if ($this->isHierarchyDisabled()) {
-            return parent::deleteEntity($id);
-        }
-
         $childrenIds = $this->getRepository()->getChildrenRecursivelyArray($id);
         while (!empty($childrenIds)) {
             parent::deleteEntity(array_pop($childrenIds));
@@ -694,10 +658,6 @@ class Hierarchy extends Record
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
-
-        if ($this->isHierarchyDisabled()) {
-            return;
-        }
 
         $attributeList = empty($selectParams['select']) ? [] : $selectParams['select'];
 
@@ -750,10 +710,6 @@ class Hierarchy extends Record
     {
         parent::prepareEntityForOutput($entity);
 
-        if ($this->isHierarchyDisabled()) {
-            return;
-        }
-
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'])) && empty($entity->get('parentId'))) {
             $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
             if (!empty($entity->get('parentId'))) {
@@ -791,8 +747,7 @@ class Hierarchy extends Record
             return;
         }
 
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
-            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
             return;
         }
 
@@ -913,9 +868,6 @@ class Hierarchy extends Record
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        if ($this->isHierarchyDisabled()) {
-            return;
-        }
         $entity->set('inheritedFields', $this->getInheritedFields($entity));
     }
 
@@ -941,8 +893,7 @@ class Hierarchy extends Record
 
     public function createPseudoTransactionLinkJobs(string $id, string $link, string $foreignId, string $parentTransactionId = null): void
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy'
-            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'type']) !== 'Hierarchy') {
             return;
         }
 

@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Templates\Repositories\Hierarchy;
+use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Atro\Core\Exceptions\BadRequest;
 use Espo\ORM\Entity;
 
-class Classification extends Hierarchy
+class Classification extends Base
 {
     public function getLinkedWithAttributeGroup(array $classificationsIds, ?string $attributeGroupId): array
     {
