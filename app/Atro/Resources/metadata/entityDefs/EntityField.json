@@ -405,10 +405,6 @@
       "type": "jsonObject",
       "notStorable": true
     },
-    "changedOptions": {
-      "type": "jsonArray",
-      "notStorable": true
-    },
     "extensibleEnumOptions": {
       "type": "jsonObject",
       "notStorable": true,

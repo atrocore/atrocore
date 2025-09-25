@@ -35,54 +35,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 if (this.mode === 'detail') {
                     $(e.currentTarget).find('.label-icon').addClass('hidden');
                 }
-            },
-            'click [data-action="editLabel"]': function(e) {
-                e.preventDefault();
-                let data = $(e.currentTarget).data();
-                let option = this.model.get(this.name)[data.index]
-                if (!option) {
-                    return;
-                }
-
-                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                let scope = 'Translation';
-                let viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) || 'views/modals/edit';
-                let key = `${this.model.get('entityId')}.options.${this.model.get('code')}.${option}`;
-                this.ajaxGetRequest(`${scope}?where[0][type]=textFilter&where[0][value]=${key}`).then(res => {
-                    let data ={id: null, code: key};
-                    res.list.forEach(v  => {
-                        if(v.code === key){
-                            data = v;
-                        }
-                    })
-                    this.getModelFactory().create(scope, model => {
-                        model.set(data);
-
-                        let options = {
-                            scope: scope,
-                            model: model,
-                            id: data.id,
-                            fullFormDisabled: this.getMetadata().get('clientDefs.' + scope + '.modalFullFormDisabled') || false,
-                        };
-
-                        this.createView('modal', viewName, options, view => {
-                            Espo.Ui.notify(false);
-                            if (!view.model.get('code')) {
-                                view.model.set('code', key);
-                            }
-
-                            view.render();
-
-                            this.listenToOnce(view, 'remove', () => {
-                                this.clearView('modal');
-                            });
-
-                            this.listenToOnce(view, 'after:save', () => {
-                                this.model.fetch();
-                            });
-                        });
-                    });
-                });
             }
         },
 
@@ -217,12 +169,14 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             model.set('label', this.optionsDefsList[num].label);
             model.set('color', this.optionsDefsList[num].color);
 
-            this.createView(codeKey, 'views/fields/varchar', {
-                el: this.getSelector() + ' .options-container[data-key="' + codeKey + '"]',
+            this.createView(codeKey, 'views/entity-field/fields/option-code', {
+                el: this.getSelector() + ' .field-container[data-key="' + codeKey + '"]',
                 model: model,
                 name: 'code',
+                fieldModel: this.model,
                 mode: this.mode,
                 params: {
+                    readOnly: (this.model.get(this.name) ?? []).includes(model.get('code')),
                     required: true,
                     trim: true
                 },
@@ -237,12 +191,14 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 });
             });
 
-            this.createView(labelKey, 'views/fields/varchar', {
-                el: this.getSelector() + ' .options-container[data-key="' + labelKey + '"]',
+            this.createView(labelKey, 'views/entity-field/fields/option-label', {
+                el: this.getSelector() + ' .field-container[data-key="' + labelKey + '"]',
                 model: model,
                 name: 'label',
                 mode: this.mode,
                 inlineEditDisabled: true,
+                scope: this.model.get('entityId'),
+                field: this.model.get('code'),
                 params: {
                     trim: true
                 },
@@ -251,13 +207,17 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                     view.render();
                 }
 
+                this.listenTo(model, 'label-update', () => {
+                    this.model.fetch();
+                })
+
                 this.listenTo(view, 'change', () => {
                     this.optionsDefsList[num].label = model.get('label');
                 });
             });
 
             this.createView(colorKey, 'views/fields/color', {
-                el: this.getSelector() + ' .options-container[data-key="' + colorKey + '"]',
+                el: this.getSelector() + ' .field-container[data-key="' + colorKey + '"]',
                 model: model,
                 name: 'color',
                 mode: this.mode,
@@ -323,21 +283,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 optionColors.push(item.color ?? "");
             });
 
-            let changedOptions = [];
-            (this.originalOptionDefsList || []).forEach(item => {
-                let newItem = this.optionsDefsList.find(i => i.id === item.id);
-                if(newItem && newItem.code !== item.code) {
-                    changedOptions.push({
-                        oldValue: item.code,
-                        newValue: newItem.code
-                    })
-                }
-            });
-
-            if(changedOptions.length) {
-                data['changedOptions'] = changedOptions
-            }
-
             data[this.name] = null;
 
             if (options.length) {
@@ -357,6 +302,9 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 keys.forEach((key) => {
                     const optionsView = this.getView(key);
                     if(!optionsView) {
+                        return;
+                    }
+                    if (mode === 'edit' && optionsView.name === 'code' && (this.model.get(this.name) ?? []).includes(item.code)) {
                         return;
                     }
                     optionsView.setMode(mode);

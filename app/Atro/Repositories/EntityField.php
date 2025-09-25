@@ -329,83 +329,98 @@ class EntityField extends ReferenceData
     {
         $this->updateEntityFromVirtualFields($entity);
         parent::afterSave($entity, $options);
+        
+    }
+    
+    
+    public function updateOptionCode($scope, $field, string  $oldValue, string $newValue): bool
+    {
+        $type = $this->getMetadata()->get("scopes.{$scope}.type");
+        $fieldEntity = $this->get($scope. '_'. $field);
 
-        if(!$entity->isNew() && !empty($entity->get('changedOptions'))) {
-            $type = $this->getMetadata()->get("scopes.{$entity->get('entityId')}.type");
+        if (!in_array($oldValue, $fieldEntity->get('options'))) {
+           return false;
+        }
 
-            if ($type === 'ReferenceData') {
-                $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $entity->get('entityId') . '.json';
-                if(file_exists($file)) {
-                    $data = json_decode(file_get_contents($file), true);
-                    $shouldUpdate = false;
-                    foreach ($data as $code => $item) {
-                        foreach ($entity->get('changedOptions') as $option) {
-                            if (empty($option->newValue) || empty($option->oldValue)) {
-                                continue;
-                            }
+        // update options metadata
 
-                            if (!in_array($option->newValue, $entity->get('options'))) {
-                                continue;
-                            }
+        $options = $fieldEntity->get('options');
+        $key = array_search($oldValue, $options);
+        $options[$key] = $newValue;
+        $fieldEntity->set('options', $options);
+        $this->save($fieldEntity);
 
-                            if(empty($item[$entity->get('code')])) {
-                                continue;
-                            }
+        // replace Translations
+        $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.options.$field.$oldValue");
 
-                            if ($entity->get('type') === 'enum' && $item[$entity->get('code')] === $option->oldValue) {
-                                $data[$code][$entity->get('code')] = $item[$entity->get('code')] = $option->newValue;
-                                $shouldUpdate = true;
-                            }
+        if (!empty($label)) {
+            $newLabel = $this->getEntityManager()->getEntity('Translation');
+            $newLabel->set($label->toArray());
+            $newLabel->set(['module' => 'custom', 'isCustomized' => true, 'code' => "$scope.options.$field.$newValue"]);
+            $newLabel->id = md5("$scope.options.$field.$newValue");
 
-                            if ($entity->get('type') === 'multiEnum' && in_array($option->oldValue, $values = $item[$entity->get('code')] ?? [])) {
-                                $key = array_search($option->oldValue, $values);
-                                if ($key !== false) {
-                                    $values[$key] = $option->newValue;
-                                    $data[$code][$entity->get('code')] =  $item[$entity->get('code')]  =  $values;
-                                    $shouldUpdate = true;
-                                }
-                            }
+            if ( $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
+                $this->getEntityManager()->removeEntity($label);
+            }
+
+            $this->getEntityManager()->saveEntity($newLabel);
+        }
+
+        if ($type === 'ReferenceData') {
+            $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $scope . '.json';
+            if(file_exists($file)) {
+                $data = json_decode(file_get_contents($file), true);
+                $shouldUpdate = false;
+                foreach ($data as $code => $item) {
+
+                    if(empty($item[$field])) {
+                        continue;
+                    }
+
+                    if ($fieldEntity->get('type') === 'enum' && $item[$field] === $oldValue) {
+                        $data[$code][$field] = $item[$field] = $newValue;
+                        $shouldUpdate = true;
+                    }
+
+                    if ($fieldEntity->get('type') === 'multiEnum' && in_array($oldValue, $values = $item[$field] ?? [])) {
+                        $key = array_search($oldValue, $values);
+                        if ($key !== false) {
+                            $values[$key] = $newValue;
+                            $data[$code][$field] =  $item[$field]  =  $values;
+                            $shouldUpdate = true;
                         }
                     }
-                    if($shouldUpdate) {
-                        file_put_contents($file, json_encode($data));
-                    }
                 }
-            } else {
-                $connection = $this->getEntityManager()->getConnection();
-                $tableName = $this->getEntityManager()->getMapper()->toDb($entity->get('entityId'));
-                $column = $this->getEntityManager()->getMapper()->toDb($entity->get('code'));
-
-                foreach ($entity->get('changedOptions') as $option) {
-                    if (empty($option->newValue) || empty($option->oldValue)) {
-                        continue;
-                    }
-
-                    if (!in_array($option->newValue, $entity->get('options'))) {
-                        continue;
-                    }
-
-                    if ($entity->get('type') === 'enum') {
-                        $connection->createQueryBuilder()
-                            ->update($connection->quoteIdentifier($tableName))
-                            ->set($column, ':newValue')
-                            ->where("$column = :oldValue")
-                            ->setParameter('newValue', $option->newValue)
-                            ->setParameter('oldValue', $option->oldValue)
-                            ->executeStatement();
-                    } else {
-                        $connection->createQueryBuilder()
-                            ->update($connection->quoteIdentifier($tableName))
-                            ->set($column, "REPLACE($column, :oldValue, :newValue)")
-                            ->where("$column LIKE :oldValueWildcard")
-                            ->setParameter('newValue', '"' . $option->newValue . '"')
-                            ->setParameter('oldValue', '"' . $option->oldValue . '"')
-                            ->setParameter('oldValueWildcard', '%' . '"' . $option->oldValue . '"' . '%')
-                            ->executeStatement();
-                    }
+                if($shouldUpdate) {
+                    file_put_contents($file, json_encode($data));
                 }
             }
+        } else {
+            $connection = $this->getEntityManager()->getConnection();
+            $tableName = $this->getEntityManager()->getMapper()->toDb($scope);
+            $column = $this->getEntityManager()->getMapper()->toDb($field);
+
+            if ($fieldEntity->get('type') === 'enum') {
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier($tableName))
+                    ->set($column, ':newValue')
+                    ->where("$column = :oldValue")
+                    ->setParameter('newValue', $newValue)
+                    ->setParameter('oldValue', $oldValue)
+                    ->executeStatement();
+            } else {
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier($tableName))
+                    ->set($column, "REPLACE($column, :oldValue, :newValue)")
+                    ->where("$column LIKE :oldValueWildcard")
+                    ->setParameter('newValue', '"' . $newValue . '"')
+                    ->setParameter('oldValue', '"' . $oldValue . '"')
+                    ->setParameter('oldValueWildcard', '%' . '"' . $oldValue . '"' . '%')
+                    ->executeStatement();
+            }
         }
+
+        return true;
     }
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])

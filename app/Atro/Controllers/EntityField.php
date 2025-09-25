@@ -45,6 +45,24 @@ class EntityField extends ReferenceData
         return $this->getRecordService()->resetToDefault($data->scope, $data->field);
     }
 
+    public function actionUpdateOptionCode($params, $data, $request): bool
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        if (!$request->isPost() || !property_exists($data, 'scope')
+            || !property_exists($data, 'field')
+            || !property_exists($data, 'oldValue')
+            || !property_exists($data, 'newValue')
+        )
+        {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->updateOptionCode($data->scope, $data->field, $data->oldValue, $data->newValue);
+    }
+
 
     protected function checkControllerAccess()
     {
