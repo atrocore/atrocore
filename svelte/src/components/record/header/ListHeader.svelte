@@ -36,19 +36,13 @@
 
 <EntityHistory scope={params.scope} />
 <BaseHeader>
-    <div class="header-container">
-        <h3 class="header-title">{Language.translate(params.scope, 'scopeNamesPlural')}</h3>
-    </div>
+    <h3 class="header-title">{Language.translate(params.scope, 'scopeNamesPlural')}</h3>
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
 </BaseHeader>
 
 <style>
-    .header-container {
-        border-top: 1px solid #f7f7f7;
-    }
-
     h3 {
         font-size: 20px;
-        margin-top: 35px;
+        margin-top: 40px;
     }
 </style>
