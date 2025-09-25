@@ -43,6 +43,38 @@
         }
       }
     },
+    "isReadOnly": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            },
+            {
+              "type": "isFalse",
+              "attribute": "isProtected"
+            }
+          ]
+        }
+      }
+    },
+    "isProtected": {
+      "type": "bool",
+      "default": false,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "attributeId"
+            }
+          ]
+        }
+      }
+    },
     "isInherited": {
       "type": "bool",
       "notStorable": true,

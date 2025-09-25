@@ -1,7 +1,9 @@
 {
   "fields": {
     "isMultiChannel": "ist Multichannel",
-    "isRequired": "erforderlich",
+    "isRequired": "Erforderlich",
+    "isReadOnly": "Schreibgeschützt",
+    "isProtected": "Geschützt",
     "classification": "Klassifikation",
     "attribute": "Attribute",
     "maxLength": "Maximallänge",
