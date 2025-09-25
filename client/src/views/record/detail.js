@@ -1290,14 +1290,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            this.listenTo(this.model, 'after:change-mode', (type) => {
-                this.setupTourButton(type)
-            });
-
-            this.listenTo(this.model, 'after:save', () => {
-                this.setupTourButton()
-            });
-
             if (this.layoutName === 'detail') {
                 this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
                     this.highlightRequired();

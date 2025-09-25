@@ -34,7 +34,6 @@
         display: block;
         padding: 0;
         margin: 0;
-        line-height: 2;
     }
 
     .breadcrumbs-item {
@@ -44,13 +43,13 @@
 
     .breadcrumbs-item.full-width {
         display: block;
-        margin: 5px 0 10px;
+        margin: 5px 0 0;
     }
 
     .breadcrumbs-item:not(:last-child):after {
         content: " / ";
         margin: 0 0.25em;
-        color: #1a75d1;
+        color: #bbb;
     }
 
     .breadcrumbs-item > a {
