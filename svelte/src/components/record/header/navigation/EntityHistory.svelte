@@ -124,7 +124,7 @@
 
 <style>
     .entity-history {
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         height: 20px;
         overflow: hidden;
     }
@@ -139,7 +139,7 @@
 
     nav > ul > li {
         display: inline;
-        color: #777;
+        color: #888;
         font-size: 12px;
         line-height: 20px;
     }
@@ -162,6 +162,6 @@
     }
 
     nav > ul > li.entity {
-        font-weight: 500;
+        font-style: italic;
     }
 </style>
