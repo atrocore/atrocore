@@ -521,8 +521,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
 
         getSelectedViewType() {
