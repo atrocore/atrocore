@@ -28,6 +28,8 @@ Espo.define('views/fields/script', ['views/fields/base'], Dep => {
 
             this.initStatusContainer()
 
+            this.removeSvelteComponent()
+
             this.svelteComponent = new Svelte.Script({
                 target: this.$el.children()[0],
                 props: {
@@ -40,13 +42,17 @@ Espo.define('views/fields/script', ['views/fields/base'], Dep => {
             });
         },
 
-        remove(dontEmpty) {
+        removeSvelteComponent() {
             if (this.svelteComponent) {
                 try {
                     this.svelteComponent.$destroy()
                 } catch (e) {
                 }
             }
+        },
+
+        remove(dontEmpty) {
+            this.removeSvelteComponent()
 
             Dep.prototype.remove.call(this, dontEmpty)
         }
