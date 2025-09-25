@@ -119,8 +119,8 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
-            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && ((canUseDataRequest() && whereData.length) || hasTextFilter)
+            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
+            && ((canUseDataRequest() && whereData.length) || hasTextFilter)
         ) {
             treeLoading = true;
             if (searchValue) {
@@ -779,8 +779,7 @@
             }
         }
 
-        if (Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' &&
-            !Metadata.get(['scopes', treeScope, 'hierarchyDisabled']) && activeItem.name !== '_bookmark') {
+        if (Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' && activeItem.name !== '_bookmark') {
             sortBy = 'sortOrder'
         } else {
             sortBy = Metadata.get(['entityDefs', treeScope, 'collection', 'sortBy']) || 'name'

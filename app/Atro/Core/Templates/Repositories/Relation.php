@@ -321,7 +321,7 @@ class Relation extends Base
                 continue;
             }
 
-            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy' || $this->getMetadata()->get(['scopes', $entity, 'disableHierarchy'], false)) {
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy' ) {
                 continue;
             }
 

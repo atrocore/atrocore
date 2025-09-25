@@ -308,6 +308,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             main.off('scroll.breadcrumbs');
             main.on('scroll.breadcrumbs', (e) => {
+                if (window.screen.width < 768) {
+                    return;
+                }
+
                 if (e.currentTarget.scrollTop > 0) {
                     if (!isScrolled) {
                         isScrolled = true;
@@ -411,9 +415,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                             return;
                         }
 
-                        if (node.classList.contains('header-title') && (node.tagName ?? '').toLowerCase() === 'h3') {
-                            this.setupTourButton();
-                        } else if (node.classList.contains('layout-editor-container')) {
+                        if (node.classList.contains('layout-editor-container')) {
                             this.setupLayoutEditorButton();
                         }
                     })
@@ -452,7 +454,6 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     },
                     breadcrumbs: this.getBreadcrumbsItems(),
                     afterOnMount: () => {
-                        this.setupTourButton();
                         if (hasLayoutEditor) {
                             this.setupLayoutEditorButton();
                         }
@@ -819,8 +820,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
 
         updatePageTitle: function () {

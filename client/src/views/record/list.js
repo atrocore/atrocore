@@ -1363,8 +1363,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
-            this.changeDropDownPosition();
-
             if (this.dragableListRows && !((this.getParentView() || {}).defs || {}).readOnly) {
                 let allowed = true;
                 (this.collection.models || []).forEach(model => {
@@ -1432,104 +1430,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
             }
-
-            if (!this.hasSetupTourButton) {
-                this.setupTourButton();
-                this.hasSetupTourButton = true
-            }
         },
 
         isHierarchical() {
-            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy'
-                && this.getMetadata().get(`scopes.${this.scope}.disableHierarchy`) !== true;
+            return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
                 btn.click();
             }
-        },
-
-        hasHorizontalScroll() {
-            let list = this.$el.find('.list').get(0);
-            let table = this.$el.find('.full-table').get(0);
-
-            if (list && table) {
-                if (list.clientWidth < table.clientWidth) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        getHeightParentPosition() {
-            let position;
-            let parent = this.getParentView();
-
-            if (parent && parent.viewMode === 'list' && this.$el.find('.list')) {
-                let list = this.$el.find('.list');
-                position = list.offset().top + list.get(0).clientHeight;
-            } else {
-                position = $(document).height();
-            }
-
-            return position;
-        },
-
-        getPositionFromBottom(element) {
-            var rect = element.getBoundingClientRect();
-            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            var elementBottom = rect.bottom + scrollTop;
-            var parentBottom = document.documentElement.scrollHeight;
-
-            return parentBottom - elementBottom;
-        },
-
-        changeDropDownPosition() {
-            let el = this.$el;
-            el.on('show.bs.dropdown', function (e) {
-                let target = e.relatedTarget;
-                if ($(target).hasClass('actions-button')) {
-                    return;
-                }
-                let menu = $(target).siblings('.dropdown-menu');
-                if (target && menu) {
-                    let menuHeight = menu.height();
-                    let positionTop = $(target).offset().top + $(target).outerHeight(true);
-                    let list = this.$el.find('.list');
-                    let listPositionTop = list.offset().top;
-                    const parentPosition = this.getHeightParentPosition()
-                    if ((positionTop + menuHeight) > parentPosition) {
-                        if (menuHeight <= (positionTop - listPositionTop)) {
-                            menu.css({
-                                "top": `-${menuHeight}px`
-                            })
-                        } else {
-                            let rightOffset = $(document).width() - $(target).offset().left - $(target).outerHeight(true),
-                                topOffset = window.innerHeight < (positionTop + menuHeight) ? window.innerHeight - (parentPosition - $(target).offset().top) - menuHeight : positionTop;
-                            menu.css({
-                                'position': 'fixed',
-                                'top': `${topOffset}px`,
-                                'right': `${rightOffset}px`
-                            });
-                        }
-                    }
-
-                    const cellButtons = $(target).closest('.cell[data-name=buttons]');
-                    if (cellButtons.length) {
-                        cellButtons.css('z-index', 1);
-                    }
-                }
-            }.bind(this));
-
-            el.on('hide.bs.dropdown', function (e) {
-                $(e.relatedTarget).next('.dropdown-menu').removeAttr('style');
-
-                const cellButtons = $(e.relatedTarget).closest('.cell[data-name=buttons]');
-                if (cellButtons.length) {
-                    cellButtons.css('z-index', '');
-                }
-            });
         },
 
         initDraggableList() {
