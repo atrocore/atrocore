@@ -8,42 +8,71 @@
         name: string;
         label: string;
         link: string;
+        className?: string;
+    }
+
+    interface EntityHistoryResponse {
+        total: number;
+        collection: ActionHistoryRecord[];
+    }
+
+    interface ActionHistoryRecord {
+        controllerName: string;
+        targetId: string | null;
+        targetName: string | null;
     }
 
     export let scope: string;
-    export let currentIsHeading: boolean = true;
+    export let id: string | null = null;
 
     let items: LastEntityRecord[];
 
-    let lastEntities: string[] = [];
+    let lastEntities: ActionHistoryRecord[] = [];
     let loading = false;
 
-    $: items = lastEntities.reverse().map((item: string) => ({
-        name: item,
-        label: Language.translate(item, 'scopeNamesPlural'),
-        link: `#${item}`,
-    }) as LastEntityRecord).concat({
-        name: scope,
-        label: Language.translate(scope, 'scopeNamesPlural'),
-        link: `#${scope}`,
-    } as LastEntityRecord);
+    $: items = lastEntities.map((item: ActionHistoryRecord) => {
+        let label = '';
+        let link = '';
+        let className = '';
 
-    async function loadLastEntities(): Promise<string[]> {
+        if (item.targetId === null) {
+            label = Language.translate(item.controllerName, 'scopeNamesPlural');
+            link = `#${item.controllerName}`;
+            className = 'entity';
+        } else {
+            label = `${item.targetName || item.targetId}`;
+            link = `#${item.controllerName}/view/${item.targetId}`
+        }
+
+        return {
+            name: item.targetId || item.controllerName,
+            label: label,
+            link: link,
+            className: className,
+        } as LastEntityRecord;
+    });
+
+    async function loadLastEntities(): Promise<EntityHistoryResponse> {
         let userData = UserData.get();
         if (!userData) {
-            return [];
+            return {collection: [], total: 0};
         }
 
         lastEntities = [];
         try {
             let url = '/api/v1/LastViewed/action/getLastEntities'
-            const params = new URLSearchParams({
-                'maxSize': '3',
-                'entity': scope
-            }).toString();
+            let params: Record<string, any> = {
+                'maxSize': '16',
+                'entityName': scope
+            };
 
-            if (params) {
-                url += `?${params}`;
+            if (id) {
+                params.entityId = id;
+            }
+
+            const requestParams = new URLSearchParams(params).toString();
+            if (requestParams) {
+                url += `?${requestParams}`;
             }
 
             const response = await fetch(url, {
@@ -61,7 +90,7 @@
             return await response.json();
         } catch (error) {
             console.error('Error:', error);
-            return [];
+            return {collection: [], total: 0};
         }
     }
 
@@ -69,7 +98,7 @@
         loading = true;
         loadLastEntities()
             .then((list) => {
-                lastEntities = list;
+                lastEntities = list.collection;
             })
             .catch((error) => {
                 console.error("Error: ", error);
@@ -85,16 +114,8 @@
 
     {#if items.length > 0}
         <ul>
-            {#each items as item, index}
-                {#if index !== items.length - 1}
-                    <li><a href={item.link}>{item.label}</a></li>
-                {:else}
-                    {#if currentIsHeading}
-                        <li class="full-width"><h3 class="header-title">{item.label}</h3></li>
-                    {:else}
-                        <li><span>{item.label}</span></li>
-                    {/if}
-                {/if}
+            {#each items as item}
+                <li class={item.className}><a href={item.link}>{item.label}</a></li>
             {/each}
         </ul>
     {/if}
@@ -103,34 +124,35 @@
 
 <style>
     .entity-history {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        height: 20px;
+        overflow: hidden;
     }
 
     nav > ul {
-        display: block;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         margin: 0;
         padding: 0;
     }
 
     nav > ul > li {
         display: inline;
-        color: #000;
+        color: #777;
+        font-size: 12px;
+        line-height: 20px;
     }
 
-    nav > ul > li.full-width {
-        display: block;
-        margin: 10px 0;
-    }
-
-    nav > ul > li:not(:last-child):after {
+    nav > ul > li:not(:first-child):before {
         content: "";
         display: inline-block;
-        width: 16px;
-        height: 16px;
+        width: 12px;
+        height: 14px;
         vertical-align: middle;
-        margin: 0 .2em;
-        mask-image: url('$assets/icons/chevron_right.svg');
-        background-color: #1a75d1;
+        margin: 0 .5em;
+        mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0xNjUuNjYsMjAyLjM0YTgsOCwwLDAsMS0xMS4zMiwxMS4zMmwtODAtODBhOCw4LDAsMCwxLDAtMTEuMzJsODAtODBhOCw4LDAsMCwxLDExLjMyLDExLjMyTDkxLjMxLDEyOFoiPjwvcGF0aD48L3N2Zz4=");
+        background-color: #bbb;
         mask-size: 100%;
         mask-repeat: no-repeat;
     }
@@ -139,7 +161,7 @@
         color: inherit;
     }
 
-    h3 {
-        font-size: 20px;
+    nav > ul > li.entity {
+        font-weight: 500;
     }
 </style>

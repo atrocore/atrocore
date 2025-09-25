@@ -3,7 +3,6 @@ import './styles/style.css';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/dist/border.css';
 
-import {driver} from 'driver.js'
 import tippy from 'tippy.js';
 
 import {Language} from './utils/Language';
@@ -49,7 +48,6 @@ window.SvelteConfig = Config;
 window.SvelteStorage = Storage;
 window.SvelteAcl = Acl;
 window.SvelteCollectionFactory = CollectionFactory;
-window.driver = driver;
 window.tippy = tippy;
 window.Dropdown = Dropdown;
 
