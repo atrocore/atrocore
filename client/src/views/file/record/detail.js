@@ -27,6 +27,18 @@ Espo.define('views/file/record/detail', 'views/record/detail',
                 'label': 'Reupload',
                 'name': 'reupload'
             });
+
+            this.additionalButtons.push({
+                label: 'Download',
+                name: 'download'
+            });
+
+            if (this.getMetadata().get('app.file.image.hasPreviewExtensions').includes(this.model.get('extension'))) {
+                this.dropdownItemList.push({
+                    name: 'customDownload',
+                    label: 'customDownload'
+                });
+            }
         },
 
         actionOpenInTab() {
@@ -55,6 +67,22 @@ Espo.define('views/file/record/detail', 'views/record/detail',
                 });
             });
         },
+
+        actionCustomDownload() {
+            this.notify('Loading...');
+
+            this.createView('customDownload', 'views/file/modals/custom-download', {
+                fullHeight: false,
+                model: this.model,
+            }, view => {
+                view.render();
+                this.notify(false);
+            });
+        },
+
+        actionDownload() {
+            window.open(`/?entryPoint=download&id=${this.model.get('id')}`, "_blank");
+        }
 
     })
 );

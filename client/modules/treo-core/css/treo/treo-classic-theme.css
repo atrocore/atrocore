@@ -18244,3 +18244,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .list-container.for-tree-view > .list-buttons-container .counters-container {
     margin: 0 0 0 auto;
 }
+
+.modal.custom-download .modal-dialog {
+    margin: 0 auto;
+}
