@@ -18,6 +18,10 @@ class HtmlSanitizerSeeder extends AbstractSeeder
 {
     public function run(): void
     {
+        if (file_exists(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'HtmlSanitizer.json')) {
+            return;
+        }
+
         @mkdir(ReferenceData::DIR_PATH);
 
         $standardSanitizer = $this->getStandardSanitizer();
