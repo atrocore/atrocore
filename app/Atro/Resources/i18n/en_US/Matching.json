@@ -2,6 +2,7 @@
   "fields": {
     "minimumMatchingScore": "Minimum Matching Score",
     "targetEntity": "Target Entity",
-    "sourceEntity": "Source Entity"
+    "sourceEntity": "Source Entity",
+    "matchingRules": "Matching Rules"
   }
 }

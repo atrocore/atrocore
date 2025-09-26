@@ -2118,6 +2118,7 @@ class Metadata extends AbstractListener
 
     protected function addDuplicatesRightPanel(array &$data): void
     {
+        return;
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (!empty($scopeDefs['checkForDuplicates'])) {
                 $data['clientDefs'][$scope]['rightSidePanels'][] = [

@@ -12,30 +12,6 @@
       "unique": true,
       "customizable": false
     },
-    "description": {
-      "type": "text"
-    },
-    "minimumMatchingScore": {
-      "type": "int",
-      "required": true,
-      "min": 0,
-      "max": 100,
-      "default": 100
-    },
-    "targetEntity": {
-      "type": "varchar",
-      "view": "views/fields/entity-type"
-    },
-    "sourceEntity": {
-      "type": "varchar",
-      "view": "views/fields/entity-type"
-    },
-    "matchingRules": {
-      "type": "linkMultiple",
-      "layoutDetailDisabled": true,
-      "massUpdateDisabled": true,
-      "noLoad": true
-    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -43,6 +19,20 @@
     "modifiedAt": {
       "type": "datetime",
       "readOnly": true
+    },
+    "matching": {
+      "type": "link",
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "createdBy": {
       "type": "link",
@@ -56,10 +46,10 @@
     }
   },
   "links": {
-    "matchingRules": {
-      "type": "hasMany",
-      "foreign": "matching",
-      "entity": "MatchingRule"
+    "matching": {
+      "type": "belongsTo",
+      "foreign": "matchingRules",
+      "entity": "Matching"
     },
     "createdBy": {
       "type": "belongsTo",
