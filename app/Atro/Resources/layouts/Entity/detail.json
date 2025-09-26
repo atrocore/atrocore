@@ -78,9 +78,7 @@
         {
           "name": "checkForDuplicates"
         },
-        {
-          "name": "checkForDuplicatesFields"
-        }
+        false
       ],
       [
         {

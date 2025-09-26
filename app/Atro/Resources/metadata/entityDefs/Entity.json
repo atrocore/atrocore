@@ -517,28 +517,6 @@
           ]
         }
       }
-    },
-    "checkForDuplicatesFields": {
-      "type": "array",
-      "view": "views/entity/fields/check-for-duplicates-fields",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "checkForDuplicates"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isTrue",
-              "attribute": "checkForDuplicates"
-            }
-          ]
-        }
-      }
     }
   },
   "links": {
