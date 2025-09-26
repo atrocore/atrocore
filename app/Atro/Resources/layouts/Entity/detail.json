@@ -76,11 +76,17 @@
       ],
       [
         {
-          "name": "deleteWithoutConfirmation"
+          "name": "checkForDuplicates"
         },
         {
-          "name": "checkForDuplicates"
+          "name": "checkForDuplicatesFields"
         }
+      ],
+      [
+        {
+          "name": "deleteWithoutConfirmation"
+        },
+        false
       ],
       [
         {

@@ -39,7 +39,8 @@
     "textFilterFields": "Text Filter fields",
     "nonDuplicatableFields": "Non-duplicated fields",
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
-    "checkForDuplicates": "Check for duplicates"
+    "checkForDuplicates": "Check for duplicates",
+    "checkForDuplicatesFields": "Fields to Check for Duplicates"
   },
   "options": {
     "type": {

@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/fields/multi-enum', Dep => {
+Espo.define('views/entity/fields/check-for-duplicates-fields', 'views/fields/multi-enum', Dep => {
 
     return Dep.extend({
 
@@ -18,8 +18,7 @@ Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/
             this.translatedOptions = {};
             $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
                 if (
-                    !['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'].includes(field)
-                    && fieldDefs.type !== 'linkMultiple'
+                    fieldDefs.type !== 'linkMultiple'
                     && fieldDefs.notStorable !== true
                     && fieldDefs.disabled !== true
                     && fieldDefs.emHidden !== true
@@ -33,5 +32,6 @@ Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/
 
             this.originalOptionList = this.params.options;
         }
+
     });
 });
