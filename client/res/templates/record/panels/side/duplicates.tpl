@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="cell col-sm-12 form-group" data-name="{{name}}">
-        <label class="control-label" data-name="{{name}}"><span class="label-text">{{label}}</span></label>
+    <div class="cell col-sm-12 form-group">
+        <label class="control-label"><span class="label-text" data-action="findDuplicates" style="cursor: pointer" title="{{translate 'findDuplicates'}}">{{translate 'Duplicates'}}</span></label>
         <div>
         {{#if duplicatesList}}
           {{#each duplicatesList}}

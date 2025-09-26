@@ -13,20 +13,24 @@ Espo.define('views/record/panels/side/duplicates', 'view', Dep => {
 
             template: "record/panels/side/duplicates",
 
+            events: _.extend({
+                'click [data-action="findDuplicates"]': function (e) {
+                    this.duplicatesList = [];
+                    this.reRender();
+                    this.getDuplicates();
+                },
+            }, Dep.prototype.events),
+
             setup() {
                 Dep.prototype.setup.call(this);
 
                 this.duplicatesList = [];
                 if (this.model.get("id")) {
-                    this.getDuplicates(() => {
-                        this.reRender();
-                    });
+                    this.getDuplicates();
                 } else {
                     this.listenToOnce(this.model, "sync", () => {
                         if (this.model.get("id")) {
-                            this.getDuplicates(() => {
-                                this.reRender();
-                            });
+                            this.getDuplicates();
                         }
                     });
                 }
@@ -34,13 +38,11 @@ Espo.define('views/record/panels/side/duplicates', 'view', Dep => {
 
             data() {
                 return {
-                    name: 'duplicates',
-                    label: this.translate('Duplicates'),
                     duplicatesList: this.duplicatesList
                 };
             },
 
-            getDuplicates(callback) {
+            getDuplicates() {
                 const data = {
                     entityName: this.model.name,
                     entityId: this.model.id
@@ -54,10 +56,7 @@ Espo.define('views/record/panels/side/duplicates', 'view', Dep => {
                             })
                         })
 
-                        callback();
-                    })
-                    .error(() => {
-                        callback()
+                        this.reRender();
                     });
             },
 

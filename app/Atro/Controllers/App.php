@@ -70,7 +70,7 @@ class App extends \Espo\Controllers\App
 
     public function actionFindRecordDuplicates($params, $data, $request)
     {
-        sleep(2);
+        sleep(5);
 
         return [
             [
