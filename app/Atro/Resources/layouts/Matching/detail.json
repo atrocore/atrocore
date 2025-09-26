@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "targetEntity"
+        },
+        {
+          "name": "sourceEntity"
+        }
+      ]
+    ]
+  }
+]

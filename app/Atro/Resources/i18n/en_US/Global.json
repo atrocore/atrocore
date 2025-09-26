@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
     "ActionLog": "Action Log",
     "IncomingWebhook": "Incoming Webhook",
@@ -81,6 +82,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",
     "ActionLog": "Action Logs",
     "IncomingWebhook": "Incoming Webhooks",

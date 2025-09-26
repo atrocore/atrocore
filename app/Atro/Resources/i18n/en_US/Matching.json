@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "minimumMatchingScore": "Minimum Matching Score",
+    "targetEntity": "Target Entity",
+    "sourceEntity": "Source Entity"
+  }
+}
