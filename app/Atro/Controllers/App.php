@@ -53,7 +53,7 @@ class App extends \Espo\Controllers\App
         }
 
         return [
-            "default" => $default
+            "default" => $default,
         ];
     }
 
@@ -66,6 +66,18 @@ class App extends \Espo\Controllers\App
         $this->checkControllerAccess();
 
         return $this->getService('App')->recalculateScriptField($data)->getValueMap();
+    }
+
+    public function actionFindRecordDuplicates($params, $data, $request)
+    {
+        sleep(2);
+
+        return [
+            [
+                'id'   => 'a01k62gjqj7eebtt2fjkwtym711',
+                'name' => 'Test 11',
+            ]
+        ];
     }
 
     protected function getRealtimeManager(): RealtimeManager

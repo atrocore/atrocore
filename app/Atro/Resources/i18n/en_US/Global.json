@@ -473,7 +473,8 @@
     "code": "Code",
     "label": "Label",
     "color": "Color",
-    "editLabels": "Edit labels"
+    "editLabels": "Edit labels",
+    "Duplicates": "Duplicates"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

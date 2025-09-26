@@ -105,6 +105,8 @@ class Metadata extends AbstractListener
 
         $this->addClassificationToEntity($data);
 
+        $this->addDuplicatesRightPanel($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -2110,6 +2112,19 @@ class Metadata extends AbstractListener
                 ];
 
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
+            }
+        }
+    }
+
+    protected function addDuplicatesRightPanel(array &$data): void
+    {
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['checkForDuplicates'])) {
+                $data['clientDefs'][$scope]['rightSidePanels'][] = [
+                    'name'  => 'duplicates',
+                    'label' => 'Duplicates',
+                    'view'  => 'views/record/panels/side/duplicates',
+                ];
             }
         }
     }
