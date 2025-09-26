@@ -16554,6 +16554,7 @@ div.list-kanban > div > table .item .panel .form-group {
 
 .query-builder-container .checkboxes-filter li label {
     color: var(--primary-font-color);
+    font-weight: 400;
 }
 
 .query-builder-container .checkboxes-filter ul {
