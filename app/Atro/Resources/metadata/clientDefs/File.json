@@ -48,11 +48,6 @@
       "label": "Sharing",
       "view": "views/file/record/panels/side/sharing",
       "aclScope": "Sharing"
-    },
-    {
-      "name": "customDownload",
-      "label": "customDownload",
-      "view": "views/file/record/panels/side/download/main"
     }
   ]
 }

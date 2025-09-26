@@ -404,6 +404,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+            if(this.name === 'label') {
+                // debugger
+            }
             if (this.$el.parents('.stream-head-container').size() > 0) {
                 return;
             }

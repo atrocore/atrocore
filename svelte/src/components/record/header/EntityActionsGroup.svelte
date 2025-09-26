@@ -9,6 +9,7 @@
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ViewModeSwitch from "./buttons/ViewModeSwitch.svelte";
     import ActionParams from "./interfaces/ActionParams";
+    import TourButton from "./buttons/TourButton.svelte";
 
     export let scope: string;
     export let viewMode: string;
@@ -75,16 +76,17 @@
         <ActionGroup {actions} {dropdownActions} className="entity-actions" hasMoreButton={true} dropdownPosition="right"/>
     </div>
     <div class="right-group">
-        {#if hasFavoriteButton}
-            <div class="entity-buttons">
+        <div class="entity-buttons">
+            <TourButton {scope} mode="list" style={'primary outline'} />
+            {#if hasFavoriteButton}
                 <FavoriteEntityButton
                         active={isFavoriteEntity}
                         onFavoriteAdd={callbacks.onAddFavorite}
                         onFavoriteRemove={callbacks.onRemoveFavorite}
                         {scope}
                 />
-            </div>
-        {/if}
+            {/if}
+        </div>
 
         <ViewModeSwitch mode={viewMode} {scope} on:view-change={onViewChange}/>
     </div>

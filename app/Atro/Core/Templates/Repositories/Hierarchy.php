@@ -40,10 +40,6 @@ class Hierarchy extends Base
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
-            return parent::findRelated($entity, $relationName, $params);
-        }
-
         if ($relationName === 'children') {
             $params['orderBy'] = $this->hierarchyTableName . '_mm.hierarchy_sort_order';
             $params['order'] = "ASC";
@@ -405,10 +401,6 @@ class Hierarchy extends Base
 
     public function getChildrenArray(string $parentId, bool $withChildrenCount = true, int $offset = null, $maxSize = null, $selectParams = null): array
     {
-        if ($this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)) {
-            return [];
-        }
-
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
         $sortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
@@ -662,9 +654,7 @@ class Hierarchy extends Base
 
     protected function prepareSortOrder(Entity $entity): void
     {
-        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy'
-            || $this->getMetadata()->get(['scopes', $this->entityType, 'disableHierarchy'], false)
-        ) {
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'Hierarchy') {
             return;
         }
 

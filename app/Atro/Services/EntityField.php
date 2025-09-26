@@ -25,6 +25,11 @@ use Espo\ORM\EntityCollection;
 
 class EntityField extends ReferenceData
 {
+
+    public function updateOptionCode(string $scope, string $field, string  $oldValue, string $newValue): bool
+    {
+        return $this->getRepository()->updateOptionCode($scope, $field, $oldValue, $newValue);
+    }
     public function resetToDefault(string $scope, string $field): bool
     {
         if ($this->getMetadata()->get("entityDefs.$scope.fields.$field.isCustom")) {

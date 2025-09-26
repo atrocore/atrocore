@@ -9,6 +9,7 @@
     import RecordActionButtons from "./interfaces/RecordActionsButtons";
     import RecordActionsGroup from "./RecordActionsGroup.svelte";
     import RecordCallbacks from "./interfaces/RecordCallbacks";
+    import EntityHistory from "./navigation/EntityHistory.svelte";
 
     export let params: Params;
     export let anchorNavItems: AnchorNavItem[] = [];
@@ -53,6 +54,7 @@
     });
 </script>
 
+<EntityHistory scope={params.scope} id={params.id} />
 <BaseHeader breadcrumbs={params.breadcrumbs} {currentIsHeading}>
     {#if recordButtons}
         <div class="detail-button-container">
@@ -67,3 +69,11 @@
         </div>
     {/if}
 </BaseHeader>
+
+<style>
+    .detail-button-container {
+        position: relative;
+        z-index: 101;
+        margin: 15px 0;
+    }
+</style>

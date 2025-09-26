@@ -161,13 +161,7 @@
   {
     "label": "hierarchyManagement",
     "rows": [
-      [
-        {
-          "name": "disableHierarchy"
-        },
-        false
-      ],
-      [
+          [
         {
           "name": "multiParents"
         },

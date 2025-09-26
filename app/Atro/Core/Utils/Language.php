@@ -179,6 +179,15 @@ class Language
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
                 foreach ($unsetData as $category => $names) {
+                    if($category === 'options') {
+                        $newNames = [];
+                        foreach ($names as $field => $options) {
+                           foreach ($options as $option) {
+                               $newNames[] = "$field.$option";
+                           }
+                        }
+                        $names = $newNames;
+                    }
                     foreach ($names as $name) {
                         $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.$category.$name");
                         if (!empty($label) && $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
@@ -237,8 +246,10 @@ class Language
         $this->undelete($scope, $category, $name);
     }
 
-    public function setOption(string $scope, string $category, string $field, string $option, $value): void
+    public function setOption(string $scope, string $field, string $option, $value): void
     {
+        $category = 'options';
+
         $this->changedData[$scope][$category][$field][$option] = $value;
 
         $currentLanguage = $this->getLanguage();
@@ -247,7 +258,7 @@ class Language
         }
         $this->data[$currentLanguage][$scope][$category][$field][$option] = $value;
 
-        $this->undeleteOption($scope, $category, $field, $option);
+        $this->undeleteOption($scope, $field, $option);
     }
 
     public function delete(string $scope, string $category, $name): void
@@ -275,8 +286,9 @@ class Language
         }
     }
 
-    public function deleteOption(string $scope, string $category, string $field, $name): void
+    public function deleteOption(string $scope, string $field, $name): void
     {
+        $category = 'options';
         $this->deletedData[$scope][$category][$field][] = $name;
 
         $currentLanguage = $this->getLanguage();
@@ -304,8 +316,9 @@ class Language
         }
     }
 
-    protected function undeleteOption(string $scope, string $category, string $field, string $name): void
+    protected function undeleteOption(string $scope, string $field, string $name): void
     {
+        $category = 'options';
         if (isset($this->deletedData[$scope][$category][$field])) {
             foreach ($this->deletedData[$scope][$category][$field] as $key => $labelName) {
                 if ($name === $labelName) {

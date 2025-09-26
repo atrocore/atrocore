@@ -68,6 +68,7 @@ class TextType extends AbstractFieldType
             'type'                      => $this->type,
             'required'                  => !empty($row['is_required']),
             'readOnly'                  => !empty($row['is_read_only']),
+            'protected'                  => !empty($row['is_protected']),
             'notNull'                   => !empty($row['not_null']),
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
@@ -181,6 +182,7 @@ class TextType extends AbstractFieldType
                 "mainField"                 => $name,
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
+                'protected'                 => !empty($row['is_protected']),
                 'layoutDetailDisabled'      => true
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];

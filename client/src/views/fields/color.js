@@ -61,14 +61,15 @@ Espo.define('views/fields/color', ['views/fields/varchar', 'views/fields/colored
             let input = this.$el.find('input').get(0);
 
             if (input) {
-                let options = {zIndex: 2020, required: false};
+                if(!input.jscolor) {
+                    let options = {zIndex: 2020, required: false};
+                    new jscolor(input, options);
+                    jscolor.init();
 
-                let picker = new jscolor(input, options);
-
-                jscolor.init();
+                }
                 if (this.mode !== 'edit') {
                     input.readOnly = true;
-                    picker.showOnClick = false;
+                    input.jscolor.showOnClick = false;
                 }
             }
         },

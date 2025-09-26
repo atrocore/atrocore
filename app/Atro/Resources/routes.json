@@ -1043,5 +1043,45 @@
         "name": "Yellow Bike"
       }
     }
+  },
+  {
+    "route": "EntityField/action/updateOptionCode",
+    "method": "post",
+    "params": {
+      "controller": "EntityField",
+      "action": "updateOptionCode"
+    },
+    "description": "Update the code of an options from static list and static multi list, it will replace the value in the database",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "field": {
+                "type": "string",
+                "example": "productStatus"
+              },
+              "oldValue": {
+                "type": "string",
+                "example": "draft"
+              },
+              "newValue": {
+                "type": "string",
+                "example": "new"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
   }
 ]

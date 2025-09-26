@@ -3,7 +3,7 @@
   "layouts": true,
   "tab": true,
   "acl": true,
-  "customizable": true,
+  "customizable": false,
   "importable": true,
   "notifications": true,
   "streamDisabled": true,
@@ -11,5 +11,7 @@
   "type": "Base",
   "object": true,
   "hideFieldTypeFilters": true,
-  "emHidden": true
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true
 }

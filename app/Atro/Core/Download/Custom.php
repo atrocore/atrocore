@@ -45,12 +45,12 @@ class Custom
         $this->setFile($file);
         $this->setParams($params);
 
-        Util::createDir($this->getDirPath());
+        Util::createDir('public' . DIRECTORY_SEPARATOR .  $this->getDirPath());
 
         $this->resize()->quality()->format();
         $this->imagick->writeImage($this->getFilePath());
 
-        return $this->getDirPath() . '/' . $this->getName();
+        return $this->getDirPath() . DIRECTORY_SEPARATOR . $this->getName();
     }
 
     protected function setFile(File $file): Custom
@@ -83,12 +83,12 @@ class Custom
             throw new Error('Attachment is required for converter.');
         }
 
-        return $this->config->get('renditionPath', 'upload/rendition/') . $this->file->get('id') . '/' . $this->createSubDir();
+        return $this->config->get('renditionPath', 'upload/rendition/') . $this->file->get('id') . DIRECTORY_SEPARATOR . $this->createSubDir();
     }
 
     protected function getFilePath(): string
     {
-        return $this->getDirPath() . '/' . $this->getName();
+        return 'public' . DIRECTORY_SEPARATOR . $this->getDirPath() . DIRECTORY_SEPARATOR . $this->getName();
     }
 
     protected function createSubDir(): string

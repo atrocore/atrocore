@@ -39,8 +39,10 @@ Espo.define('views/sharing/fields/available-in-side-panel', 'views/fields/bool',
 
             if (this.model.get('available') === true) {
                 this.$el.html(`<i style="color: #0081d1" class="ph ph-check-circle"></i>`);
+                this.$el.closest('tr').find('.cell[data-name="name"] a').css('color', null);
             } else {
                 this.$el.html(`<i style="color: #999" class="ph ph-minus-circle"></i>`);
+                this.$el.closest('tr').find('.cell[data-name="name"] a').css('color', '#999');
             }
         }
 

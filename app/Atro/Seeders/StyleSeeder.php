@@ -17,6 +17,10 @@ class StyleSeeder extends AbstractSeeder
 {
     public function run(): void
     {
+        if (file_exists(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json')) {
+            return;
+        }
+
         @mkdir(ReferenceData::DIR_PATH);
         $styles = $this->getDefaultStyles();
         @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Style.json', json_encode($styles));

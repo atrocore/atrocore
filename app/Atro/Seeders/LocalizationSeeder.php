@@ -17,30 +17,38 @@ class LocalizationSeeder extends AbstractSeeder
 {
     public function run(): void
     {
-        @mkdir(ReferenceData::DIR_PATH);
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Locale.json', json_encode([
-            'en_US' => [
-                'id'                => 'main',
-                'name'              => 'Main',
-                'code'              => 'en_US',
-                'languageCode'      => 'en_US',
-                'dateFormat'        => 'DD.MM.YYYY',
-                'timeZone'          => 'UTC',
-                'weekStart'         => 'monday',
-                'timeFormat'        => 'HH:mm',
-                'thousandSeparator' => '.',
-                'decimalMark'       => ',',
-                'createdAt'         => date('Y-m-d H:i:s')
-            ]
-        ]));
-        @file_put_contents(ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . 'Language.json', json_encode([
-            'en_US' => [
-                'id'        => 'main',
-                'name'      => 'English',
-                'code'      => 'en_US',
-                'role'      => 'main',
-                'createdAt' => date('Y-m-d H:i:s')
-            ]
-        ]));
+        if (!is_dir(ReferenceData::DIR_PATH)) {
+            @mkdir(ReferenceData::DIR_PATH);
+        }
+
+        if (!file_exists(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Locale.json')) {
+            @file_put_contents(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Locale.json', json_encode([
+                'en_US' => [
+                    'id'                => 'main',
+                    'name'              => 'Main',
+                    'code'              => 'en_US',
+                    'languageCode'      => 'en_US',
+                    'dateFormat'        => 'DD.MM.YYYY',
+                    'timeZone'          => 'UTC',
+                    'weekStart'         => 'monday',
+                    'timeFormat'        => 'HH:mm',
+                    'thousandSeparator' => '.',
+                    'decimalMark'       => ',',
+                    'createdAt'         => date('Y-m-d H:i:s'),
+                ],
+            ]));
+        }
+
+        if (!file_exists(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Language.json')) {
+            @file_put_contents(ReferenceData::DIR_PATH.DIRECTORY_SEPARATOR.'Language.json', json_encode([
+                'en_US' => [
+                    'id'        => 'main',
+                    'name'      => 'English',
+                    'code'      => 'en_US',
+                    'role'      => 'main',
+                    'createdAt' => date('Y-m-d H:i:s'),
+                ],
+            ]));
+        }
     }
 }

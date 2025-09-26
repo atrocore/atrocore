@@ -16,16 +16,6 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
 
         template: 'record/panels/sharing',
 
-        buttonList: [
-            {
-                action: 'createSharing',
-                title: 'create',
-                acl: 'create',
-                aclScope: 'Sharing',
-                html: '<i class="ph ph-plus"></i>',
-            }
-        ],
-
         events: _.extend({
             'click .copy-link': function (e) {
                 let link = $(e.currentTarget).data('link');
@@ -39,6 +29,14 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                 this.notify(this.translate('copiedToClipboard', 'labels', 'Sharing'), 'success');
             }
         }, Dep.prototype.events),
+
+        data: function () {
+            const data = Dep.prototype.data.call(this);
+
+            data.canShare = this.getAcl().check('Sharing', 'create');
+
+            return data;
+        },
 
         setup: function () {
             this.scope = this.model.name;
@@ -69,17 +67,16 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                         listLayout: [
                             {
                                 "name": "available",
-                                "width": 15,
+                                "widthPx": 20,
                                 "view": "views/sharing/fields/available-in-side-panel"
                             },
                             {
                                 "name": "name",
                                 "link": true,
-                                "width": 60,
                             },
                             {
                                 "name": "link",
-                                "width": 12,
+                                "widthPx": 30,
                                 "view": "views/sharing/fields/link-in-side-panel"
                             }
                         ],

@@ -3532,7 +3532,7 @@ button, .btn {
     cursor: pointer;
     touch-action: manipulation;
     white-space: nowrap;
-    padding: 7px 12px;
+    padding: 7px 10px;
     position: relative;
 }
 
@@ -9920,7 +9920,7 @@ label {
 }
 
 .page-header {
-    margin: 14px 0 10px 0;
+    margin: 10px 0;
     border-bottom: 0;
     padding-bottom: 2px;
     min-height: 33px;
@@ -13941,12 +13941,6 @@ button.category:focus {
     margin-top: 3px;
 }
 
-#main main .detail-button-container {
-    position: relative;
-    z-index: 101;
-    padding: 10px 0 25px;
-}
-
 #main main .detail-button-container .panel-navigation {
     margin-top: 5px;
 }
@@ -17136,7 +17130,7 @@ span.CodeMirror-selectedtext {
     right: 0;
     bottom: 0;
     height: auto;
-    z-index: 8;
+    z-index: 2001;
     border-right: none !important;
     border-bottom-right-radius: 0 !important
 }
@@ -17188,7 +17182,7 @@ span.CodeMirror-selectedtext {
     top: 0;
     left: 0;
     opacity: 1;
-    z-index: 9
+    z-index: 2002;
 }
 
 .editor-toolbar.fullscreen::before {
@@ -18249,4 +18243,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .list-container.for-tree-view > .list-buttons-container .counters-container {
     margin: 0 0 0 auto;
+}
+
+.modal.custom-download .modal-dialog {
+    margin: 0 auto;
 }

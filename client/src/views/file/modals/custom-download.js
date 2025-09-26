@@ -8,12 +8,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/file/record/panels/side/download/custom', 'view',
+Espo.define('views/file/modals/custom-download', 'views/modal',
     Dep => {
         return Dep.extend({
-            template: "file/record/panels/side/download/custom",
+            template: 'file/modals/custom-download',
+
+            header: 'Custom Download',
+
             downloadModel: {},
-            active: false,
+
+            fileModel: {},
 
             events: {
                 'change input': function (e) {
@@ -23,25 +27,72 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 }
             },
 
-            data() {
-                return {
-                    downloadModel: this.downloadModel
-                };
-            },
+            buttonList: [
+                {
+                    name: 'download',
+                    label: 'Download',
+                    style: 'primary',
+                },
+                {
+                    name: 'cancel',
+                    label: 'Cancel'
+                }
+            ],
 
-            setup() {
+            className: 'dialog custom-download',
+
+            fitHeight: false,
+
+            setup: function () {
                 Dep.prototype.setup.call(this);
 
-                this._createModel();
-                this._createForm();
+                this.getModelFactory().create("downloadModel", model => {
+                    model.set("width", this.model.get("width"));
+                    model.set("height", this.model.get("height"));
+                    model.set("quality", 100);
+                    model.set("mode", "byWidth");
+                    model.set("format", this.model.get("mimeType") === "image/png" ? "png" : "jpeg");
+
+                    this.downloadModel = model;
+                    model.listenTo(model, "change:quality", () => {
+                        if (parseInt(model.get('quality')) > 100) {
+                            model.set("quality", 100);
+                        }
+                        if (parseInt(model.get('quality')) <= 0) {
+                            model.set("quality", 1);
+                        }
+                    });
+
+                    model.listenTo(model, "change:width", () => {
+                        if (parseInt(model.get('width')) < 1) {
+                            model.set("width", 1);
+                        }
+                    });
+
+                    model.listenTo(model, "change:height", () => {
+                        if (parseInt(model.get('height')) < 1) {
+                            model.set("height", 1);
+                        }
+                    });
+
+                    model.listenTo(model, "change:mode", () => {
+                        this.changeMode();
+                    });
+
+                    model.listenTo(model, "change:format", () => {
+                        this.changeFormat();
+                    });
+                });
+
+                this.createViews();
 
                 this.listenToOnce(this, "after:render", () => {
-                    this._changeMode();
-                    this._changeFormat();
+                    this.changeMode();
+                    this.changeFormat();
                 });
             },
 
-            _createForm() {
+            createViews: function () {
                 this.createView("width", "views/fields/int", {
                     el: `${this.options.el} .field[data-name="width"]`,
                     model: this.downloadModel,
@@ -109,89 +160,23 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                         max: 100
                     }
                 });
-
             },
 
-            hide() {
-                this.active = false;
-                this.$el.find(".additional-panel").hide();
-            },
-
-            show() {
-                this.active = true;
-                this.$el.find(".additional-panel").show();
-            },
-
-            buildUrl() {
-                return `?entryPoint=download&id=${this.model.get('id')}` + "&" +
-                    `width=${this.downloadModel.get("width") ?? ''}` + "&" +
-                    `height=${this.downloadModel.get("height") ?? ''}` + "&" +
-                    `quality=${this.downloadModel.get("quality") ?? ''}` + "&" +
-                    `scale=${this.downloadModel.get("mode") ?? ''}` + "&" +
-                    `format=${this.downloadModel.get("format") ?? ''}` + "&" +
-                    `type=custom`;
-
-            },
-
-            _getFormat() {
-                return this.model.get("mimeType") === "image/png" ? "png" : "jpeg";
-            },
-
-            _createModel() {
-                this.getModelFactory().create("downloadModel", model => {
-                    model.set("width", this.model.get("width"));
-                    model.set("height", this.model.get("height"));
-                    model.set("quality", 100);
-                    model.set("mode", "byWidth");
-                    model.set("format", this._getFormat());
-
-                    this.downloadModel = model;
-                    model.listenTo(model, "change:quality", () => {
-                        if (parseInt(model.get('quality')) > 100) {
-                            model.set("quality", 100);
-                        }
-                        if (parseInt(model.get('quality')) <= 0) {
-                            model.set("quality", 1);
-                        }
-                    });
-
-                    model.listenTo(model, "change:width", () => {
-                        if (parseInt(model.get('width')) < 1) {
-                            model.set("width", 1);
-                        }
-                    });
-
-                    model.listenTo(model, "change:height", () => {
-                        if (parseInt(model.get('height')) < 1) {
-                            model.set("height", 1);
-                        }
-                    });
-
-                    model.listenTo(model, "change:mode", () => {
-                        this._changeMode();
-                    });
-
-                    model.listenTo(model, "change:format", () => {
-                        this._changeFormat();
-                    });
-                });
-            },
-
-            _changeMode() {
+            changeMode: function () {
                 let heightView = this.getView("height");
                 let widthView = this.getView("width");
 
                 switch (this.downloadModel.get("mode")) {
                     case "byWidth" :
-                        this._setScaleWidth(heightView, widthView);
+                        this.setScaleWidth(heightView, widthView);
                         break;
 
                     case "byHeight" :
-                        this._setScaleHeight(heightView, widthView);
+                        this.setScaleHeight(heightView, widthView);
                         break;
 
                     case "resize" :
-                        this._setScaleResize(heightView, widthView);
+                        this.setScaleResize(heightView, widthView);
                         break;
                 }
 
@@ -199,7 +184,7 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 widthView.reRender();
             },
 
-            _setScaleWidth(heightView, widthView) {
+            setScaleWidth: function (heightView, widthView) {
                 heightView.setMode('detail');
                 widthView.setMode('edit');
 
@@ -209,7 +194,7 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 }
             },
 
-            _setScaleHeight(heightView, widthView) {
+            setScaleHeight: function (heightView, widthView) {
                 heightView.setMode('edit');
                 widthView.setMode('detail');
 
@@ -219,7 +204,7 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 }
             },
 
-            _setScaleResize(heightView, widthView) {
+            setScaleResize: function (heightView, widthView) {
                 heightView.setMode('edit');
                 widthView.setMode('edit');
 
@@ -231,7 +216,7 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 }
             },
 
-            _changeFormat() {
+            changeFormat: function () {
                 let qualityView = this.getView("quality");
                 if (this.downloadModel.get("format") === "png") {
                     this.downloadModel.set("quality", 100);
@@ -241,6 +226,20 @@ Espo.define('views/file/record/panels/side/download/custom', 'view',
                 }
 
                 qualityView.reRender();
+            },
+
+            buildUrl: function () {
+                return `?entryPoint=download&id=${this.model.get('id')}` + "&" +
+                    `width=${this.downloadModel.get("width") ?? ''}` + "&" +
+                    `height=${this.downloadModel.get("height") ?? ''}` + "&" +
+                    `quality=${this.downloadModel.get("quality") ?? ''}` + "&" +
+                    `scale=${this.downloadModel.get("mode") ?? ''}` + "&" +
+                    `format=${this.downloadModel.get("format") ?? ''}` + "&" +
+                    `type=custom`;
+            },
+
+            actionDownload: function () {
+                window.open(this.buildUrl(), '_blank');
             }
         });
     }

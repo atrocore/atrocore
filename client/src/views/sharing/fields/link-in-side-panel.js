@@ -37,7 +37,7 @@ Espo.define('views/sharing/fields/link-in-side-panel', 'views/fields/varchar', f
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            this.$el.html(`<a href="javascript:" style="color: #000" title="${this.model.get(this.name)}" class="copy-link" data-link="${this.model.get(this.name)}"><i class="ph ph-copy"></i></a>`);
+            this.$el.html(`<button type="button" ${this.model.get('available') === false ? 'disabled' : ''} title="${this.model.get(this.name)}" class="copy-link" data-link="${this.model.get(this.name)}"><i class="ph ph-copy"></i></buttontype>`);
         }
 
     });

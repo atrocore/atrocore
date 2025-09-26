@@ -6,7 +6,7 @@
         "en_US": "Here you can set a visualization of products. You can switch it off at any moment."
       }
     },
-    ".list-buttons-container .btn-group.actions": {
+    ".list-buttons-container .actions": {
       "description": {
         "en_US": "You can select all needed products and then select the action you need. There are standard actions and the ones you create yourself."
       }

@@ -18,7 +18,8 @@
     "Preview": "Aperçu",
     "retry": "Réessayer ?",
     "uploaded": "téléchargé",
-    "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL."
+    "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL.",
+    "Share": "Partager"
   },
   "exceptions": {
     "fileCreateFailed": "La création du fichier a échoué.",
