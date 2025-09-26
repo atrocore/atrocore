@@ -415,7 +415,8 @@
     "recalculateScript": "Перерахувати скрипт",
     "code": "Код",
     "label": "Відображуване ім'я",
-    "color": "Колір"
+    "color": "Колір",
+    "editLabels": "редагувати мітку"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

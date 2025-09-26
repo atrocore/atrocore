@@ -25,6 +25,16 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             'click [data-action="removeOptionList"]': function (e) {
                 var index = parseInt($(e.currentTarget).data('index'));
                 this.removeItem(index);
+            },
+            'mouseenter .list-group-item[data-index]': function (e) {
+                if (this.mode === 'detail') {
+                    $(e.currentTarget).find('.label-icon').removeClass('hidden');
+                }
+            },
+            'mouseleave .list-group-item[data-index]': function (e) {
+                if (this.mode === 'detail') {
+                    $(e.currentTarget).find('.label-icon').addClass('hidden');
+                }
             }
         },
 
@@ -39,18 +49,8 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
 
         setup() {
             Dep.prototype.setup.call(this);
-            this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
-                let color = (this.model.get('optionColors') ||[])[index] ?? null;
-                if (color && !color.includes('#')) {
-                    color = '#' + color;
-                }
-                return {
-                    code: option,
-                    label: this.getTranslatedOptions()[option] ?? null,
-                    color: color
-                }
-            })
 
+            this.setupOptionDefs();
             this.setupItems();
             this.setupItemViews();
             this.dragndropEventName = `resize.drag-n-drop-table-${this.cid}`;
@@ -65,6 +65,32 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 }
             });
 
+            this.listenTo(this.model, 'sync after:save after:inlineEditSave', () => {
+               this.setupOptionDefs();
+            })
+
+            this.listenTo(this, 'inline-edit-off', () => {
+               this.setupOptionDefs();
+                this.setupItems();
+                this.setupItemViews();
+            })
+        },
+
+        setupOptionDefs(){
+            this.optionsDefsList = (this.model.get(this.name) || []).map((option, index) => {
+                let color = (this.model.get('optionColors') ||[])[index] ?? null;
+                if (color && !color.includes('#')) {
+                    color = '#' + color;
+                }
+                return {
+                    id: Math.random().toString(),
+                    code: option,
+                    label: this.getTranslatedOptions()[option] ?? null,
+                    color: color
+                }
+            });
+
+            this.originalOptionDefsList = Espo.utils.cloneDeep(this.optionsDefsList);
         },
 
         setupItems() {
@@ -143,10 +169,11 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             model.set('label', this.optionsDefsList[num].label);
             model.set('color', this.optionsDefsList[num].color);
 
-            this.createView(codeKey, 'views/fields/varchar', {
-                el: this.getSelector() + ' .options-container[data-key="' + codeKey + '"]',
+            this.createView(codeKey, 'views/entity-field/fields/option-code', {
+                el: this.getSelector() + ' .field-container[data-key="' + codeKey + '"]',
                 model: model,
                 name: 'code',
+                fieldModel: this.model,
                 mode: this.mode,
                 params: {
                     readOnly: (this.model.get(this.name) ?? []).includes(model.get('code')),
@@ -164,12 +191,14 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                 });
             });
 
-            this.createView(labelKey, 'views/fields/varchar', {
-                el: this.getSelector() + ' .options-container[data-key="' + labelKey + '"]',
+            this.createView(labelKey, 'views/entity-field/fields/option-label', {
+                el: this.getSelector() + ' .field-container[data-key="' + labelKey + '"]',
                 model: model,
                 name: 'label',
                 mode: this.mode,
                 inlineEditDisabled: true,
+                scope: this.model.get('entityId'),
+                field: this.model.get('code'),
                 params: {
                     trim: true
                 },
@@ -178,13 +207,17 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
                     view.render();
                 }
 
+                this.listenTo(model, 'label-update', () => {
+                    this.model.fetch();
+                })
+
                 this.listenTo(view, 'change', () => {
                     this.optionsDefsList[num].label = model.get('label');
                 });
             });
 
             this.createView(colorKey, 'views/fields/color', {
-                el: this.getSelector() + ' .options-container[data-key="' + colorKey + '"]',
+                el: this.getSelector() + ' .field-container[data-key="' + colorKey + '"]',
                 model: model,
                 name: 'color',
                 mode: this.mode,
@@ -258,7 +291,6 @@ Espo.define('views/entity-field/fields/options', ['views/fields/base', 'model'],
             }
 
             data['optionColors'] = optionColors.filter(o => o).length > 0 ? optionColors : null;
-
 
             return data;
         },

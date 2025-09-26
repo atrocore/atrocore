@@ -472,7 +472,8 @@
     "recalculateScript": "Recalculate Script",
     "code": "Code",
     "label": "Label",
-    "color": "Color"
+    "color": "Color",
+    "editLabels": "Edit labels"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
