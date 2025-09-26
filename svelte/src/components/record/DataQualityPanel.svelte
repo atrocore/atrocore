@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onDestroy, onMount, tick} from "svelte";
+    import {createEventDispatcher, onDestroy, onMount, tick} from "svelte";
     import {Metadata} from "../../utils/Metadata";
     import {Config} from "../../utils/Config";
     import {Utils} from "../../utils/Utils";
@@ -8,12 +8,14 @@
     import {Storage} from "../../utils/Storage";
     import {Notifier} from "../../utils/Notifier";
 
+    const dispatch = createEventDispatcher();
+
     export let scope;
     export let id;
     export let fetchModel: Function
 
+
     let qualityCheckSelect;
-    let selectizeObject;
     let qualityChecksList = [];
 
     let activeItem = null
@@ -121,8 +123,18 @@
         }
     }
 
+    function onShowDetails(evt) {
+        const item = qualityChecksList.find(item => item.field === evt.detail.field)
+        if (item) {
+            activeItem = item.value
+            qualityCheckSelect.selectize.setValue(activeItem)
+            dispatch('show')
+        }
+    }
+
     window.addEventListener('record:save', loadQualityCheckData);
     window.addEventListener('record:check-recalculated', onCheckRecalculated)
+    window.addEventListener('record:show-qc-details', onShowDetails)
 
     onMount(() => {
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
@@ -152,7 +164,7 @@
         loadQualityCheckData()
 
         tick().then(() => {
-            selectizeObject = window.$(qualityCheckSelect).selectize({
+            window.$(qualityCheckSelect).selectize({
                 valueField: 'value',
                 labelField: 'text',
                 searchField: ['text'],
@@ -167,6 +179,7 @@
     onDestroy(() => {
         window.removeEventListener('record:save', loadQualityCheckData)
         window.removeEventListener('record:check-recalculated', onCheckRecalculated)
+        window.removeEventListener('record:show-qc-details', onShowDetails)
     });
 </script>
 
@@ -181,7 +194,7 @@
 
     {#if data && data.value !== null}
          <span style="{getValueStyle(data.value)}" on:click={recalculateCheck}
-               class="colored-enum label"
+               class="colored-enum label" title="{Language.translate('recalculate','labels','QualityCheck')}"
                aria-expanded="false">{data.value >= 0 ? (data.value + '%') : Language.translate('N/A')}</span>
     {/if}
 
@@ -191,13 +204,14 @@
         </div>
     {:else if data}
         <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
-            <div style="display: flex;justify-content: space-between;margin-bottom: 15px">
+            <div style="margin-bottom: 10px; overflow: hidden">
                 <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
                                storageKey="qualityCheckRuleFilters"
                                translationScope="QualityCheckRule" translationField="status"
-                               titleLabel="" onExecute="{onFilterChange}" style="padding-bottom: 0"/>
+                               titleLabel="" onExecute="{onFilterChange}"
+                               style="padding-bottom: 10px; display: inline-block"/>
 
-                <button class="refresh" on:click={()=>loadQualityCheckData(true)}
+                <button class="refresh" on:click={()=>loadQualityCheckData(true)} style="float: right;"
                         title="{Language.translate('Refresh')}"><i
                         class="ph ph-arrows-clockwise"></i>
                 </button>
