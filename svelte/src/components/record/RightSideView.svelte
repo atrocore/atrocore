@@ -237,7 +237,8 @@
 
         {#if showDataQualities}
             <div class="data-qualities" class:hidden={activeItem?.name !== 'data-qualities'}>
-                <DataQualityPanel {scope} {id} {fetchModel}/>
+                <DataQualityPanel {scope} {id} {fetchModel} on:show={() => setActiveItem(items.find(i => i.name === 'data-qualities'))}
+                />
             </div>
         {/if}
     </div>
