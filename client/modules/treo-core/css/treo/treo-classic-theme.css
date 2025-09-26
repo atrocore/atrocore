@@ -13783,7 +13783,7 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .table > tbody > tr.active-dropdown {
-    z-index: 2;
+    z-index: 12;
 }
 
 #main .category-tree button.catalog-link {

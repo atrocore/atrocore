@@ -195,29 +195,101 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
                 mutation.addedNodes.forEach(node => {
                     if (!(node instanceof HTMLElement)) return;
-
                     if (node.closest('.query-builder')) return;
 
+                    const selectizeControls = [];
+
                     if (node.classList.contains('selectize-control')) {
-                        const selectize = node.parentNode?.querySelector('.selectized')?.selectize;
-                        const input = node.querySelector('.selectize-input');
-                        const dropdown = node.querySelector('.selectize-dropdown');
-                        if (!selectize || !input || input._dropdown || !dropdown) return;
-
-                        const dropdownObj = new window.Dropdown(node, dropdown, { usePositionOnly: true });
-                        selectize.on('dropdown_open', () => {
-                            dropdownObj.open();
-                        });
-
-                        selectize.on('dropdown_close', () => {
-                            dropdownObj.close();
-                        })
+                        selectizeControls.push(node);
+                    } else {
+                        selectizeControls.push(...node.querySelectorAll('.selectize-control'));
                     }
+
+                    selectizeControls.forEach(control => {
+                        initializeSelectizeDropdown(control);
+                    });
                 });
             }
 
-            initializeTooltips();
-            initializeDropdowns();
+            const initializeSelectizeDropdown = (control) => {
+                const selectizeElement = control.parentNode?.querySelector('.selectized');
+                const selectize = selectizeElement?.selectize;
+                const input = control.querySelector('.selectize-input');
+                const dropdown = control.querySelector('.selectize-dropdown');
+
+                if (!selectize || !input || !dropdown) return;
+
+                if (input._dropdown) {
+                    input._dropdown.destroy();
+                }
+
+                const dropdownObj = new window.Dropdown(input, dropdown, {usePositionOnly: true});
+                input._dropdown = dropdownObj;
+
+                let isDropdownVisible = false;
+                const updateDropdownPosition = () => {
+                    if (isDropdownVisible) {
+                        dropdownObj.open();
+                    } else {
+                        dropdownObj.close();
+                    }
+                };
+
+                selectize.on('dropdown_open', () => {
+                    isDropdownVisible = true;
+                    setTimeout(() => {
+                        updateDropdownPosition();
+                    }, 0);
+                });
+
+                selectize.on('dropdown_close', () => {
+                    isDropdownVisible = false;
+                    updateDropdownPosition();
+                });
+
+                selectize.on('item_add', () => {
+                    setTimeout(updateDropdownPosition, 0);
+                });
+
+                selectize.on('item_remove', () => {
+                    setTimeout(updateDropdownPosition, 0);
+                });
+                //
+                // selectize.on('option_add', () => {
+                //     setTimeout(updateDropdownPosition, 0);
+                // });
+                //
+                // selectize.on('option_remove', () => {
+                //     setTimeout(updateDropdownPosition, 0);
+                // });
+
+                // let resizeTimeout;
+                const resizeObserver = new ResizeObserver(() => {
+                    // if (isDropdownVisible) {
+                    //     clearTimeout(resizeTimeout);
+                    //     resizeTimeout = setTimeout(updateDropdownPosition, 16); // ~60fps
+                    // }
+
+                    requestAnimationFrame(() => {
+                        updateDropdownPosition()
+                    });
+                });
+
+                resizeObserver.observe(input);
+
+                input._resizeObserver = resizeObserver;
+
+                const originalDestroy = dropdownObj.destroy;
+                dropdownObj.destroy = function() {
+                    if (input._resizeObserver) {
+                        input._resizeObserver.disconnect();
+                        delete input._resizeObserver;
+                    }
+                    // clearTimeout(resizeTimeout);
+                    originalDestroy.call(this);
+                    delete input._dropdown;
+                };
+            };
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
@@ -227,11 +299,15 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                 });
             });
 
+            initializeTooltips();
+            initializeDropdowns();
+
             observer.observe(document.body, {
                 childList: true,
                 subtree: true,
                 attributes: true,
-                attributeFilter: ['title', 'data-title-link']
+                attributeFilter: ['title', 'data-title-link'],
+                characterData: false
             });
         },
 

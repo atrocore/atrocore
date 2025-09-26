@@ -66,6 +66,10 @@ export default class Dropdown {
         if (!this.usePositionOnly) {
             this.referenceEl.removeEventListener('click', this.onReferenceElClick.bind(this));
         }
+
+        if (this.referenceEl._dropdown === this) {
+            delete this.referenceEl._dropdown;
+        }
     }
 
     toggle() {
@@ -142,7 +146,9 @@ export default class Dropdown {
                     options.position = 'fixed';
                 }
 
-                Object.assign(this.floatingEl.style, options);
+                if (document.contains(this.floatingEl)) {
+                    Object.assign(this.floatingEl.style, options);
+                }
             });
         }, {animationFrame: true});
 
@@ -167,7 +173,10 @@ export default class Dropdown {
             return;
         }
 
-        if (!this.floatingEl.parentElement?.contains(event.target as Node)) {
+        const target = event.target as Node;
+        if (!this.floatingEl.contains(target) &&
+            !this.referenceEl.contains(target) &&
+            !this.floatingEl.parentElement?.contains(target)) {
             this.isOpen = false;
             this.updateDropdown();
         }
