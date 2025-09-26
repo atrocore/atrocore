@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "matching"
+        },
+        false
+      ]
+    ]
+  }
+]
