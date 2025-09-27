@@ -475,7 +475,8 @@
             }
           ]
         }
-      }
+      },
+      "view": "views/entity/fields/has-associate"
     },
     "hasAttribute": {
       "type": "bool",
