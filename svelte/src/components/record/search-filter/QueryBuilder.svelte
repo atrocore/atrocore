@@ -46,6 +46,8 @@
 
     let hideRowAction: boolean = false;
 
+    let hasQbRules: boolean = false;
+
     let defaultValue = "-1";
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
@@ -226,11 +228,11 @@
                             ` : ''}
                         </div>
                         <div class="btn-group float-end group-actions">
-                          <button type="button" class="btn btn-sm btn-primary outline" data-add="rule">
+                          <button type="button" class="btn btn-sm btn-default" data-add="rule">
                             ${translate("add_rule")}
                           </button>
                           ${settings.allow_groups === -1 || settings.allow_groups >= level ? `
-                            <button type="button" class="btn btn-sm btn-primary outline" data-add="group">
+                            <button type="button" class="btn btn-sm btn-default" data-add="group">
                               ${translate("add_group")}
                             </button>
                           ` : ''}
@@ -271,7 +273,18 @@
 
         });
 
+        const rulesObj = $queryBuilder[0].queryBuilder.getRules();
+        if (rulesObj && rulesObj.rules) {
+            hasQbRules = rulesObj.rules.length > 0;
+            handleEmptyRules();
+
+            if (rulesObj.rules.length < 2) {
+                $queryBuilder.children('.rules-group-container').children('.rules-group-header').find('.group-conditions .btn').addClass('disabled');
+            }
+        }
+
         model.trigger('afterInitQueryBuilder');
+
         $queryBuilder.on('rulesChanged.queryBuilder', async (e, rule) => {
             try {
                 $queryBuilder.queryBuilder('validate');
@@ -296,6 +309,10 @@
                 }
             });
             $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
+
+            const rulesObj = $queryBuilder[0].queryBuilder.getRules();
+            hasQbRules = rulesObj && rulesObj.rules && rulesObj.rules.length > 0;
+            handleEmptyRules();
 
             model.trigger('rulesChanged', rule);
         });
@@ -962,6 +979,12 @@
         handleAdvancedFilterChecked();
     }
 
+    function handleEmptyRules(): void {
+        if (!advancedFilterChecked) {
+            searchManager.update({queryBuilder: []});
+        }
+    }
+
     onMount(() => {
         // load where params
         const urlParams = new URLSearchParams(window.location.search);
@@ -1077,30 +1100,32 @@
             </span>
 
             <div class="query-builder" bind:this={queryBuilderElement}></div>
-            <div class="filter-action">
-                <div style="display:flex; align-items:center; gap: 10px;">
-                    {#if Acl.check('SavedSearch', 'create')  }
-                        <button class="primary small filter-button" on:click={saveFilter}
-                                disabled={advancedFilterDisabled || queryBuilderRulesChanged}
-                        >
-                            <i class="ph ph-floppy-disk-back"></i>
-                            <span>{Language.translate('Save')}</span>
-                        </button>
-                    {/if}
+            {#if hasQbRules}
+                <div class="filter-action">
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        {#if Acl.check('SavedSearch', 'create')  }
+                            <button class="small filter-button" on:click={saveFilter}
+                                    disabled={advancedFilterDisabled || queryBuilderRulesChanged}
+                            >
+                                <i class="ph ph-floppy-disk-back"></i>
+                                <span>{Language.translate('Save')}</span>
+                            </button>
+                        {/if}
 
-                    <button class="small filter-button" on:click={resetFilter}
-                            disabled={advancedFilterDisabled}
-                    >
-                        <i class="ph-fill ph-eraser"></i>
-                        <span>{Language.translate('Clear')}</span>
+                        <button class="small filter-button" on:click={resetFilter}
+                                disabled={advancedFilterDisabled}
+                        >
+                            <i class="ph-fill ph-eraser"></i>
+                            <span>{Language.translate('Clear')}</span>
+                        </button>
+                    </div>
+
+                    <button class="small filter-button" disabled={!queryBuilderRulesChanged}
+                            on:click={applyFilter}>
+                        <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
                     </button>
                 </div>
-
-                <button class="primary small filter-button" disabled={!queryBuilderRulesChanged}
-                        on:click={applyFilter}>
-                    <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
-                </button>
-            </div>
+            {/if}
         </FilterGroup>
     </div>
 </div>
