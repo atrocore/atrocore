@@ -62,8 +62,16 @@ Espo.define('conditions-checker', [], function () {
 
             var setValue = this.view.model.get(attribute);
 
-            if (attribute === '__currentUserId'){
+            if (attribute === '__currentUserId') {
                 setValue = this.view.getUser().get('id');
+            }
+
+            if (defs.attributeId) {
+                if (type === 'isLinked') {
+                    return !!this.view.model.get('attributesDefs')?.[defs.data?.field || defs.attribute]
+                } else if (type === 'isNotLinked') {
+                    return !this.view.model.get('attributesDefs')?.[defs.data?.field || defs.attribute]
+                }
             }
 
             if (type === 'equals') {

@@ -22,6 +22,9 @@
         <a class="dropdown-toggle small" href="javascript:" data-toggle="dropdown">{{translate groupOperator category='logicalOperators' scope='Admin'}} <span class="ph ph-plus"></span></a>
         <ul class="dropdown-menu">
             <li><a href="javascript:" data-action="addField">{{translate 'Field' scope='DynamicLogic'}}</a></li>
+            {{#if hasAttributes }}
+            <li><a href="javascript:" data-action="addAttribute">{{translate 'Attribute' scope='DynamicLogic'}}</a></li>
+            {{/if}}
             <li><a href="javascript:" data-action="addCurrentUser">{{translate 'currentUser' scope='DynamicLogic'}} (...)</a></li>
             <li><a href="javascript:" data-action="addAnd">(... {{translate 'and' category='logicalOperators' scope='Admin'}} ...)</a></li>
             <li><a href="javascript:" data-action="addOr">(... {{translate 'or' category='logicalOperators' scope='Admin'}} ...)</a></li>

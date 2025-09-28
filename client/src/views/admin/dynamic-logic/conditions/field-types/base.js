@@ -57,11 +57,15 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             this.field = this.options.field;
             this.scope = this.options.scope;
             this.fieldType = this.options.fieldType;
+            this.attributeId = this.options.attributeId;
 
             this.itemData = this.options.itemData;
             this.additionalData = (this.itemData.data || {});
 
             this.typeList = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
+            if (this.attributeId) {
+                this.typeList = ['isLinked', 'isNotLinked', ...this.typeList];
+            }
 
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {
@@ -130,14 +134,14 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             if (valueType === 'custom') {
                 this.clearView('value');
                 var methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
-                if(this[methodName]) {
+                if (this[methodName]) {
                     this[methodName]();
-                }else{
+                } else {
                     defaultFieldCreateValueView();
                 }
-            }else if (valueType === 'field') {
+            } else if (valueType === 'field') {
                 defaultFieldCreateValueView()
-            }  else {
+            } else {
                 this.clearView('value');
             }
         },
@@ -147,7 +151,8 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
 
             var item = {
                 type: this.type,
-                attribute: this.field
+                attribute: this.field,
+
             };
 
             if (valueView) {
