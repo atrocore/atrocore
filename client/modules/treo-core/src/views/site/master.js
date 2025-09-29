@@ -232,9 +232,16 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                         selectize.on('dropdown_close', () => {
                             requestAnimationFrame(() => dropdownObj.close());
                         });
+
+                        selectize.on('item_remove', () => {
+                            requestAnimationFrame(() => dropdownObj.open());
+                        });
                     }
                 });
             };
+
+            initializeTooltips();
+            initializeDropdowns();
 
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
@@ -243,9 +250,6 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     processSelectizeMutation(mutation);
                 });
             });
-
-            initializeTooltips();
-            initializeDropdowns();
 
             observer.observe(document.body, {
                 childList: true,
