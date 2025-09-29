@@ -18,7 +18,9 @@
       "contains": "Enthält",
       "has": "Enthält",
       "notContains": "Enthält nicht",
-      "notHas": "Enthält nicht"
+      "notHas": "Enthält nicht",
+      "isLinked": "Ist verknüpft",
+      "isNotLinked": "Ist nicht verknüpft"
     }
   },
   "labels": {
