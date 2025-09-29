@@ -40,6 +40,10 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             Dep.prototype.setup.call(this);
             this.prepareOriginalName()
             this.afterSetup();
+
+            this.listenTo(this, 'after:render', () => {
+                this.initUnitSelector();
+            })
         },
 
         onInlineEditSave(res, attrs, model) {
@@ -201,9 +205,12 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
 
         initUnitSelector() {
             this.initSelectizeClearPlugin();
-            this.$el.find('.unit-select select').selectize({
-                plugins: ['clear_button']
+            let select = this.$el.find('.unit-select select').selectize({
             });
+
+            if (select.length > 0) {
+                select[0].selectize.disable();
+            }
         },
 
         getConditions(type) {

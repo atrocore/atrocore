@@ -36,6 +36,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
 
         template: 'dashboard',
 
+        initialDashboardLayout: null,
+
         dashboardLayout: null,
 
         currentTab: null,
@@ -171,6 +173,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
             this.currentTab = this.getStorage().get('state', 'dashboardTab') || 0;
             this.setupCurrentTabLayout();
 
+            this.initialDashboardLayout = Espo.Utils.cloneDeep(this.dashboardLayout);
+
             this.dashletIdList = [];
 
             var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
@@ -233,7 +237,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
 
             $gridstack.on('change', function (e, itemList) {
                 this.fetchLayout();
-                this.saveLayout();
+
+                if (JSON.stringify(this.dashboardLayout) !== JSON.stringify(this.initialDashboardLayout)) {
+                    this.saveLayout();
+                }
             }.bind(this));
 
             $gridstack.on('resizestop', function (e, ui) {
@@ -279,6 +286,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
             this.getPreferences().save({
                 dashboardLayout: this.dashboardLayout
             }, {patch: true});
+
+            this.initialDashboardLayout = Espo.Utils.cloneDeep(this.dashboardLayout);
             this.getPreferences().trigger('update');
         },
 
@@ -307,6 +316,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
             if (this.layoutReadOnly) return;
             if (o) {
                 this.getPreferences().save(o, {patch: true});
+
+                this.initialDashboardLayout = Espo.Utils.cloneDeep(this.dashboardLayout);
                 this.getPreferences().trigger('update');
             }
 
@@ -384,6 +395,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                     this.getPreferences().set('dashletsOptions', data.dashletsOptions);
                     this.getPreferences().trigger('update');
                     this.dashboardLayout = data.dashboardLayout;
+                    this.initialDashboardLayout = Espo.Utils.cloneDeep(this.dashboardLayout);
                     this.setup();
                     this.reRender();
                 }.bind(this));
