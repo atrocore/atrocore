@@ -83,6 +83,7 @@
   "exceptions": {
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
     "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути.",
-    "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності."
+    "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності.",
+    "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр."
   }
 }

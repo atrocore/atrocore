@@ -22,7 +22,9 @@
       "contains": "Contient",
       "notContains": "Ne contient pas",
       "has": "Contient",
-      "notHas": "Ne contient pas"
+      "notHas": "Ne contient pas",
+      "isLinked": "Est lié",
+      "isNotLinked": "N'est pas lié"
     }
   }
 }

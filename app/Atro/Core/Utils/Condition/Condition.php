@@ -44,7 +44,7 @@ class Condition
 
     /**
      * @param Entity $entity
-     * @param array $items
+     * @param array  $items
      *
      * @return ConditionGroup
      * @throws Error
@@ -83,7 +83,7 @@ class Condition
 
     /**
      * @param Entity $entity
-     * @param array $item
+     * @param array  $item
      *
      * @return ConditionGroup
      * @throws Error
@@ -96,7 +96,13 @@ class Condition
 
         $attribute = $item['attribute'];
 
-        if (!$entity->hasAttribute($attribute) && !$entity->hasRelation($attribute)) {
+        if (!empty($item['attributeId']) && in_array($item['type'], ['isLinked', 'isNotLinked'])) {
+            $type = $item['type'] === 'isLinked' ? 'isTrue' : 'isFalse';
+
+            return new ConditionGroup($type, [$entity->hasAttributeValue($item['data']['field'] ?? $item['attribute'])]);
+        }
+
+        if (empty($item['attributeId']) && !$entity->hasAttribute($attribute) && !$entity->hasRelation($attribute)) {
             throw new Error("Attribute '{$attribute}' does not exists in '{$entity->getEntityType()}'");
         }
 
@@ -112,8 +118,9 @@ class Condition
             $currentValue = array_column($currentValue->toArray(), 'id');
         }
 
-        if($currentValue === null && $entity->getAttributes()[$attribute]['type'] === 'jsonArray') {
-            $currentValue  = [];
+        if ($currentValue === null && !empty($entity->getAttributes()[$attribute]['type'])
+            && $entity->getAttributes()[$attribute]['type'] === 'jsonArray') {
+            $currentValue = [];
         }
 
         $values[] = $currentValue;
@@ -300,18 +307,18 @@ class Condition
         $currentValue = array_shift($values);
         $needValue = array_shift($values);
 
-        if(is_array($currentValue)) {
+        if (is_array($currentValue)) {
             self::isValidFirstValueIsArray($currentValue);
             self::isValidNotArrayAndObject($needValue);
 
             return in_array($needValue, $currentValue);
         }
 
-        if($currentValue === null) {
+        if ($currentValue === null) {
             $currentValue = [];
         }
 
-        if(!is_string($currentValue)) {
+        if (!is_string($currentValue)) {
             throw new Error('The first value must be of string type');
         }
 
@@ -581,7 +588,7 @@ class Condition
     }
 
     /**
-     * @param int $needCount
+     * @param int   $needCount
      * @param array $values
      *
      * @return bool
