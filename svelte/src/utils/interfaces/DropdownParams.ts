@@ -17,6 +17,7 @@ export default interface DropdownParams {
     strategy?: string;
     onDropdownShow?: (dropdown: HTMLElement) => void;
     onDropdownHide?: (dropdown: HTMLElement) => void;
+    onDestroy?: (trigger: HTMLElement, dropdown: HTMLElement) => void;
     flip?: boolean|Record<string, any>,
     shift?: boolean|Record<string, any>,
     offset?: boolean|Record<string, any>,
