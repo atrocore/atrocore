@@ -434,11 +434,6 @@ class QueryConverter
                 }
             }
 
-            $relationFieldData = Relation::isVirtualRelationField($attribute);
-            if (!empty($relationFieldData)) {
-                continue;
-            }
-
             if (is_array($attribute) && count($attribute) == 2) {
                 if (stripos($attribute[0], 'VALUE:') === 0) {
                     $part = substr($attribute[0], 6);
@@ -478,7 +473,7 @@ class QueryConverter
             if (!empty($fieldDefs['select'])) {
                 $fieldPath = $fieldDefs['select'];
             } else {
-                if (!empty($fieldDefs['notStorable'])) {
+                if (!empty($fieldDefs['notStorable']) || !empty($entity->entityDefs['fields'][$attribute]['attributeId'])) {
                     continue;
                 }
                 if ($attributeType === null) {

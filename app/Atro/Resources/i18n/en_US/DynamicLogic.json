@@ -23,7 +23,9 @@
       "contains": "Contains",
       "notContains": "Not Contains",
       "has": "Contains",
-      "notHas": "Not Contains"
+      "notHas": "Not Contains",
+      "isLinked": "Is Linked",
+      "isNotLinked": "Is Not Linked"
     }
   }
 }

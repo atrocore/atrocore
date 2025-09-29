@@ -195,6 +195,12 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
             }
         },
 
+        onInlineEditSave(res, attrs, model){
+            model.set(this.namePathsData, res[this.namePathsData] || null);
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         handleResize: function () {
             var width = this.$el.width();
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
