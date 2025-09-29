@@ -11,8 +11,8 @@
 Espo.define('views/entity/fields/has-associate', 'views/fields/bool',
     Dep => Dep.extend({
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
+        setup() {
+            Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:type', () => {
                 if (!['Base', 'Hierarchy'].includes(this.model.get('type'))) {
