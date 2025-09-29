@@ -13,7 +13,8 @@ import {
     autoUpdate,
     offset,
     flip,
-    shift
+    shift,
+    size
 } from '@floating-ui/dom';
 
 import DropdownParams from "./interfaces/DropdownParams";
@@ -70,6 +71,14 @@ export default class Dropdown {
         if (this.referenceEl._dropdown === this) {
             delete this.referenceEl._dropdown;
         }
+
+        if (this.params?.onDestroy) {
+            this.params.onDestroy(this.referenceEl, this.floatingEl);
+        }
+    }
+
+    isOpened(): boolean {
+        return this.isOpen;
     }
 
     toggle() {
@@ -99,6 +108,8 @@ export default class Dropdown {
         if (this.params?.onDropdownShow) {
             this.params.onDropdownShow(this.floatingEl);
         }
+
+        this.floatingEl.style.display = 'block';
 
         this.floatingHandler = autoUpdate(this.referenceEl, this.floatingEl, () => {
             const positionOptions = {
@@ -135,11 +146,19 @@ export default class Dropdown {
                 positionOptions.middleware = [offset(5), flip(), shift()];
             }
 
+            positionOptions.middleware.push(size({
+                apply({availableWidth, availableHeight, elements}) {
+                    Object.assign(elements.floating.style, {
+                        maxWidth: `${Math.max(0, availableWidth)}px`,
+                        maxHeight: `${Math.max(0, availableHeight)}px`,
+                    });
+                },
+            }));
+
             computePosition(this.referenceEl, this.floatingEl, positionOptions).then(({x, y}) => {
                 const options = {
                     left: `${x}px`,
                     top: `${y}px`,
-                    display: 'block',
                 };
 
                 if (positionOptions.strategy === 'fixed') {
@@ -157,8 +176,6 @@ export default class Dropdown {
     }
 
     private hideDropdown() {
-        this.floatingEl.style.display = 'none';
-
         if (this.params?.onDropdownHide) {
             this.params.onDropdownHide(this.floatingEl);
         }
@@ -166,6 +183,8 @@ export default class Dropdown {
         this.floatingHandler?.();
         document.removeEventListener('click', this.onClickOutside.bind(this));
         this.floatingEl.removeEventListener('click', this.onDropdownClick.bind(this));
+
+        this.floatingEl.style.display = 'none';
     }
 
     private onClickOutside(event: MouseEvent) {
@@ -177,8 +196,7 @@ export default class Dropdown {
         if (!this.floatingEl.contains(target) &&
             !this.referenceEl.contains(target) &&
             !this.floatingEl.parentElement?.contains(target)) {
-            this.isOpen = false;
-            this.updateDropdown();
+            this.close();
         }
     }
 

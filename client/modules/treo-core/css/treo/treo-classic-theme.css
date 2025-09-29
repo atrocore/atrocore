@@ -3826,7 +3826,8 @@ tbody.collapse.in {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-    background-clip: padding-box
+    background-clip: padding-box;
+    overflow: auto;
 }
 
 .dropdown-menu.pull-right {
@@ -7574,6 +7575,10 @@ button.close {
 
 .selectize-dropdown .create {
     color: rgba(51, 51, 51, 0.5)
+}
+
+.selectize-dropdown:has(.selectize-dropdown-content:empty) {
+    display: none !important;
 }
 
 .selectize-dropdown-content {

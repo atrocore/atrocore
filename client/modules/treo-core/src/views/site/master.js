@@ -188,107 +188,52 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             const processSelectizeMutation = (mutation) => {
                 mutation.removedNodes.forEach(node => {
-                    if (node?._dropdown) {
+                    if (node instanceof HTMLElement && node._dropdown) {
                         node._dropdown.destroy();
                     }
-                })
+                });
 
                 mutation.addedNodes.forEach(node => {
                     if (!(node instanceof HTMLElement)) return;
+
                     if (node.closest('.query-builder')) return;
 
-                    const selectizeControls = [];
-
                     if (node.classList.contains('selectize-control')) {
-                        selectizeControls.push(node);
-                    } else {
-                        selectizeControls.push(...node.querySelectorAll('.selectize-control'));
+                        const mainEl = node.parentNode?.querySelector('.selectized');
+                        const selectize = mainEl?.selectize;
+                        const input = node.querySelector('.selectize-input');
+                        const dropdown = node.querySelector('.selectize-dropdown');
+
+                        if (!selectize || !input || !dropdown) return;
+
+                        if (input._dropdown) {
+                            input._dropdown.destroy();
+                        }
+
+                        // override positioning logic for selectize dropdown
+                        selectize.positionDropdown = () => {
+                            dropdown.style.width = node.offsetWidth + 'px';
+                        };
+
+                        const dropdownObj = new window.Dropdown(input, dropdown, {
+                            usePositionOnly: true,
+                        });
+
+                        requestAnimationFrame(() => {
+                            if (selectize.isOpen) {
+                                dropdownObj.open();
+                            }
+                        });
+
+                        selectize.on('dropdown_open', () => {
+                            requestAnimationFrame(() => dropdownObj.open());
+                        });
+
+                        selectize.on('dropdown_close', () => {
+                            requestAnimationFrame(() => dropdownObj.close());
+                        });
                     }
-
-                    selectizeControls.forEach(control => {
-                        initializeSelectizeDropdown(control);
-                    });
                 });
-            }
-
-            const initializeSelectizeDropdown = (control) => {
-                const selectizeElement = control.parentNode?.querySelector('.selectized');
-                const selectize = selectizeElement?.selectize;
-                const input = control.querySelector('.selectize-input');
-                const dropdown = control.querySelector('.selectize-dropdown');
-
-                if (!selectize || !input || !dropdown) return;
-
-                if (input._dropdown) {
-                    input._dropdown.destroy();
-                }
-
-                const dropdownObj = new window.Dropdown(input, dropdown, {usePositionOnly: true});
-                input._dropdown = dropdownObj;
-
-                let isDropdownVisible = false;
-                const updateDropdownPosition = () => {
-                    if (isDropdownVisible) {
-                        dropdownObj.open();
-                    } else {
-                        dropdownObj.close();
-                    }
-                };
-
-                selectize.on('dropdown_open', () => {
-                    isDropdownVisible = true;
-                    setTimeout(() => {
-                        updateDropdownPosition();
-                    }, 0);
-                });
-
-                selectize.on('dropdown_close', () => {
-                    isDropdownVisible = false;
-                    updateDropdownPosition();
-                });
-
-                selectize.on('item_add', () => {
-                    setTimeout(updateDropdownPosition, 0);
-                });
-
-                selectize.on('item_remove', () => {
-                    setTimeout(updateDropdownPosition, 0);
-                });
-                //
-                // selectize.on('option_add', () => {
-                //     setTimeout(updateDropdownPosition, 0);
-                // });
-                //
-                // selectize.on('option_remove', () => {
-                //     setTimeout(updateDropdownPosition, 0);
-                // });
-
-                // let resizeTimeout;
-                const resizeObserver = new ResizeObserver(() => {
-                    // if (isDropdownVisible) {
-                    //     clearTimeout(resizeTimeout);
-                    //     resizeTimeout = setTimeout(updateDropdownPosition, 16); // ~60fps
-                    // }
-
-                    requestAnimationFrame(() => {
-                        updateDropdownPosition()
-                    });
-                });
-
-                resizeObserver.observe(input);
-
-                input._resizeObserver = resizeObserver;
-
-                const originalDestroy = dropdownObj.destroy;
-                dropdownObj.destroy = function() {
-                    if (input._resizeObserver) {
-                        input._resizeObserver.disconnect();
-                        delete input._resizeObserver;
-                    }
-                    // clearTimeout(resizeTimeout);
-                    originalDestroy.call(this);
-                    delete input._dropdown;
-                };
             };
 
             const observer = new MutationObserver(mutations => {
