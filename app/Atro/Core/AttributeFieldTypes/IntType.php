@@ -70,6 +70,7 @@ class IntType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;

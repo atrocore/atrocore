@@ -404,7 +404,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if(this.name === 'label') {
+            if (this.name === 'label') {
                 // debugger
             }
             if (this.$el.parents('.stream-head-container').size() > 0) {
@@ -611,12 +611,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }.bind(this));
         },
 
-        initScriptFieldAction: function() {
-            if(!this.model.defs.fields[this.name]){
+        initScriptFieldAction: function () {
+            if (!this.model.defs.fields[this.name]) {
                 return;
             }
-            const type =  this.model.defs.fields[this.name].type
-            if(type !== 'script') {
+            const type = this.model.defs.fields[this.name].type
+            if (type !== 'script') {
                 return;
             }
 
@@ -975,10 +975,20 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getConditions(type) {
-            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.${type}.conditionGroup`);
+            const fieldName = this.originalName || this.name;
+
+            if (this.model.get('attributesDefs')?.[fieldName]) {
+                return this.model.get('attributesDefs')[fieldName]['conditionalProperties']?.[type]?.['conditionGroup'];
+            }
+
+            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}.conditionalProperties.${type}.conditionGroup`);
         },
 
         getDisableOptionsRules() {
+            if (this.model.get('attributesDefs')?.[this.name]) {
+                return this.model.get('attributesDefs')[this.name]['conditionalProperties']?.['disableOptions'];
+            }
+
             return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.disableOptions`);
         },
 

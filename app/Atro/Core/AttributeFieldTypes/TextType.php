@@ -73,6 +73,7 @@ class TextType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         if ($this->type === 'varchar') {
@@ -183,7 +184,8 @@ class TextType extends AbstractFieldType
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
-                'layoutDetailDisabled'      => true
+                'layoutDetailDisabled'      => true,
+                'conditionalProperties'     => $this->prepareConditionalProperties($row)
             ];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
         }
