@@ -865,6 +865,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypeList)) {
+                if (property_exists($entity, '_input') && !empty($entity->_input->_duplicatingEntityId) && in_array($name, $this->getMetadata()->get(['scopes', $entity->getEntityType(), 'duplicatableRelations'], []))) {
+                    continue;
+                }
+
                 $fieldName = $name . 'Ids';
                 $columnsFieldsName = $name . 'Columns';
 
