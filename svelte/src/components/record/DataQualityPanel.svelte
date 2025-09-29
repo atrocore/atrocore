@@ -192,10 +192,10 @@
         </select>
     </div>
 
-    {#if data && data.value !== null}
+    {#if data }
          <span style="{getValueStyle(data.value)}" on:click={recalculateCheck}
                class="colored-enum label" title="{Language.translate('recalculate','labels','QualityCheck')}"
-               aria-expanded="false">{data.value >= 0 ? (data.value + '%') : Language.translate('N/A')}</span>
+               aria-expanded="false">{data.value === null ? '...' : (data.value === -1 ? Language.translate('N/A') : (data.value + '%'))}</span>
     {/if}
 
     {#if loading}
@@ -204,7 +204,7 @@
         </div>
     {:else if data}
         <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
-            <div style="margin-bottom: 10px; overflow: hidden">
+            <div style="margin-bottom: 10px; overflow: hidden; padding-left: 1px; padding-right: 1px;">
                 <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
                                storageKey="qualityCheckRuleFilters"
                                translationScope="QualityCheckRule" translationField="status"

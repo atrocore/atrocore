@@ -188,10 +188,10 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
 
             const processSelectizeMutation = (mutation) => {
                 mutation.removedNodes.forEach(node => {
-                    if (node?._dropdown) {
+                    if (node instanceof HTMLElement && node._dropdown) {
                         node._dropdown.destroy();
                     }
-                })
+                });
 
                 mutation.addedNodes.forEach(node => {
                     if (!(node instanceof HTMLElement)) return;
@@ -199,22 +199,46 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     if (node.closest('.query-builder')) return;
 
                     if (node.classList.contains('selectize-control')) {
-                        const selectize = node.parentNode?.querySelector('.selectized')?.selectize;
+                        const mainEl = node.parentNode?.querySelector('.selectized');
+                        const selectize = mainEl?.selectize;
                         const input = node.querySelector('.selectize-input');
                         const dropdown = node.querySelector('.selectize-dropdown');
-                        if (!selectize || !input || input._dropdown || !dropdown) return;
 
-                        const dropdownObj = new window.Dropdown(node, dropdown, { usePositionOnly: true });
+                        if (!selectize || !input || !dropdown) return;
+
+                        if (input._dropdown) {
+                            input._dropdown.destroy();
+                        }
+
+                        // override positioning logic for selectize dropdown
+                        selectize.positionDropdown = () => {
+                            dropdown.style.width = node.offsetWidth + 'px';
+                        };
+
+                        const dropdownObj = new window.Dropdown(input, dropdown, {
+                            usePositionOnly: true,
+                        });
+
+                        requestAnimationFrame(() => {
+                            if (selectize.isOpen) {
+                                dropdownObj.open();
+                            }
+                        });
+
                         selectize.on('dropdown_open', () => {
-                            dropdownObj.open();
+                            requestAnimationFrame(() => dropdownObj.open());
                         });
 
                         selectize.on('dropdown_close', () => {
-                            dropdownObj.close();
-                        })
+                            requestAnimationFrame(() => dropdownObj.close());
+                        });
+
+                        selectize.on('item_remove', () => {
+                            requestAnimationFrame(() => dropdownObj.open());
+                        });
                     }
                 });
-            }
+            };
 
             initializeTooltips();
             initializeDropdowns();
@@ -231,7 +255,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                 childList: true,
                 subtree: true,
                 attributes: true,
-                attributeFilter: ['title', 'data-title-link']
+                attributeFilter: ['title', 'data-title-link'],
+                characterData: false
             });
         },
 
