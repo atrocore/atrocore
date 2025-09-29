@@ -1148,12 +1148,19 @@ class OpenApiGenerator
     {
         $response = self::prepareResponses([]);
         $response['200']['content'] = [
-            "application/octet-stream" => []
+            "application/octet-stream" => [
+                'schema' => [
+                    'type' => 'string',
+                    'format' => 'binary'
+                ]
+            ]
         ];
 
         $result['paths']['/File/action/upload-proxy']['post'] = [
             'tags'        => ['File'],
-            'description' => 'Reupload file content in File entity via URL link',
+            'summary'     => 'Read file from URL',
+            'operationId' => 'uploadProxy',
+            'description' => 'Reading the contents of a file provided via a URL link',
             'requestBody' => [
                 'required' => true,
                 'content'  => [
