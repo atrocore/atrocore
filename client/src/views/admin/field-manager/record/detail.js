@@ -42,6 +42,9 @@ Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', De
                     });
                 });
             });
+        },
+
+        refreshLayout() {
         }
     });
 });
