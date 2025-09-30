@@ -74,8 +74,7 @@
 
     function getStatusStyle(status) {
         const backgroundColor = status === 'passed' ? '#CAF2C2' : (status === 'failed' ? '#FFD6C9' : '#CCCCCC');
-        const borderColor = status === 'passed' ? '#afc89a' : (status === 'failed' ? '#ab655f' : '#888888');
-        return `background-color: ${backgroundColor};border: 2px solid ${borderColor};`
+        return `background-color: ${backgroundColor};`
     }
 
     async function loadQualityCheckData(reload = false) {
@@ -237,16 +236,16 @@
 
 <style>
     .rule-status {
-        width: 20px;
-        height: 20px;
+        width: 11px;
+        height: 11px;
         border-radius: 50%;
-        border-width: 2px;
-        border-style: solid;
         flex-shrink: 0;
+        margin-left: 10px;
     }
 
     .control-label {
         color: var(--label-color);
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: normal;
     }
 </style>
