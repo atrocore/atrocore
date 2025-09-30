@@ -52,6 +52,10 @@ Espo.define('views/admin/field-manager/fields/extensible-enum-options', ['views/
                             canClose: false
                         };
 
+                        if(this._isRemoved) {
+                            return;
+                        }
+
                         this.createView('valueField', 'views/record/detail-bottom', options, view => {
                             view.render();
                             this.listenTo(view.model, 'prepareAttributesForCreateRelated', function (params, link, prepareAttributeCallback) {

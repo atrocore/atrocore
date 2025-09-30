@@ -534,7 +534,7 @@ class File extends Base
                 Imagick::COLORSPACE_GRAY => 'Grayscale',
                 Imagick::COLORSPACE_TRANSPARENT => 'Transparent',
                 Imagick::COLORSPACE_OHTA => 'OHTA',
-//                Imagick::COLORSPACE_LAB => 'LAB',
+                Imagick::COLORSPACE_LAB => 'LAB',
                 Imagick::COLORSPACE_XYZ => 'XYZ',
                 Imagick::COLORSPACE_YCBCR => 'YCbCr',
                 Imagick::COLORSPACE_YCC => 'YCC',
