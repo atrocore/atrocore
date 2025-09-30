@@ -30,7 +30,7 @@ class Util
 
     public static function unsetProperty(\stdClass $object, string $property): void
     {
-        if (property_exists($object, $property)){
+        if (property_exists($object, $property)) {
             unset($object->$property);
         }
     }
@@ -108,7 +108,7 @@ class Util
 
         if (is_array($value)) {
             sort($value);
-            $value = Json::encode(array_map('strval', $value));
+            $value = Json::encode(array_map([Util::class, 'toString'], $value));
         }
 
         if (is_object($value)) {
@@ -276,7 +276,7 @@ class Util
      * Get a full path of the file
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string         $filePath   - File path, Ex. file.json
+     * @param string         $filePath - File path, Ex. file.json
      *
      * @return string
      */
@@ -436,7 +436,7 @@ class Util
      * Unset content items defined in the unset.json
      *
      * @param array          $content
-     * @param string | array $unsets                in format
+     * @param string | array $unsets in format
      *                                              array(
      *                                              'EntityName1' => array( 'unset1', 'unset2' ),
      *                                              'EntityName2' => array( 'unset1', 'unset2' ),
@@ -581,8 +581,9 @@ class Util
         return true;
     }
 
-    static public function isFloatEquals(float  $value1, float $value2, $epsilon = PHP_FLOAT_EPSILON) : bool {
-        return abs($value1 - $value2) < $epsilon ;
+    static public function isFloatEquals(float $value1, float $value2, $epsilon = PHP_FLOAT_EPSILON): bool
+    {
+        return abs($value1 - $value2) < $epsilon;
     }
 
     public static function generateId(): string
