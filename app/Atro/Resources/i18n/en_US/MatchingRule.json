@@ -4,5 +4,10 @@
     "weight": "Weight",
     "targetField": "Target Field",
     "sourceField": "Source Field"
+  },
+  "options": {
+    "type": {
+      "like": "Like"
+    }
   }
 }

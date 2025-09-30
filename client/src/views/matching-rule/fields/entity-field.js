@@ -16,7 +16,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             this.prepareListOptions();
             Dep.prototype.setup.call(this);
             this.onModelReady(() => {
-                this.listenTo(this.model, `change:matchingId`, () => {
+                this.listenTo(this.model, 'change:type change:matchingId', () => {
                     this.model.set(this.name, null);
                     this.prepareListOptions();
                     this.reRender();
@@ -50,7 +50,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             this.translatedOptions = {};
             this.originalOptionList = this.params.options = [];
 
-            if (this.model.get('matchingId') === null) {
+            if (!['like'].includes(this.model.get('type')) || this.model.get('matchingId') === null) {
                 return;
             }
 
