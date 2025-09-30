@@ -13,9 +13,25 @@
       ],
       [
         {
+          "name": "type"
+        },
+        {
           "name": "matching"
+        }
+      ],
+      [
+        {
+          "name": "weight"
         },
         false
+      ],
+      [
+        {
+          "name": "targetField"
+        },
+        {
+          "name": "sourceField"
+        }
       ]
     ]
   }

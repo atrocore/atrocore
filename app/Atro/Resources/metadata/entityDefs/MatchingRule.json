@@ -34,6 +34,85 @@
         }
       }
     },
+    "weight": {
+      "type": "int",
+      "required": true,
+      "min": 0,
+      "default": 1
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "like"
+      ],
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "targetField": {
+      "type": "enum",
+      "view": "views/matching-rule/fields/entity-field",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "like"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "like"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sourceField": {
+      "type": "enum",
+      "view": "views/matching-rule/fields/entity-field",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "like"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "like"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "createdBy": {
       "type": "link",
       "readOnly": true,

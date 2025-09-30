@@ -1,5 +1,8 @@
 {
   "fields": {
-    "matching": "Matching"
+    "matching": "Matching",
+    "weight": "Weight",
+    "targetField": "Target Field",
+    "sourceField": "Source Field"
   }
 }
