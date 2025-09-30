@@ -17,7 +17,6 @@ use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
-use Atro\Core\Utils\Condition\Condition;
 use Atro\Repositories\SavedSearch;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
@@ -71,7 +70,7 @@ abstract class AbstractAction implements TypeInterface
                 if ($sourceEntity->getEntityType() !== $action->get('sourceEntity')) {
                     return false;
                 }
-                return Condition::isCheck(Condition::prepare($sourceEntity, $conditions));
+                return $this->container->get('condition')->check($sourceEntity, $conditions);
             }
             return true;
         } elseif ($action->get('conditionsType') === 'script') {
