@@ -41,7 +41,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 viewDataList: this.viewDataList,
                 operator: this.operator,
                 level: this.level,
-                groupOperator: this.getGroupOperator()
+                groupOperator: this.getGroupOperator(),
+                hasAttributes: !!this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])
             };
         },
 
@@ -52,6 +53,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             },
             'click > div.group-bottom [data-action="addField"]': function (e) {
                 this.actionAddField();
+            },
+            'click > div.group-bottom [data-action="addAttribute"]': function (e) {
+                this.actionAddAttribute();
             },
             'click > div.group-bottom [data-action="addAnd"]': function (e) {
                 this.actionAddGroup('and');
@@ -106,6 +110,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
             var type = additionalData.type || item.type || 'equals';
             var field = additionalData.field || item.attribute;
+            const attributeId = additionalData.attributeId || item.attributeId;
 
             var viewName;
             var fieldType;
@@ -132,10 +137,11 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 itemData: item,
                 scope: this.scope,
                 level: this.level + 1,
-                el: this.getSelector() + ' [data-view-key="'+key+'"]',
+                el: this.getSelector() + ' [data-view-key="' + key + '"]',
                 number: number,
                 type: type,
                 field: field,
+                attributeId: attributeId,
                 fieldType: fieldType
             }, function (view) {
                 if (this.isRendered()) {
@@ -155,7 +161,12 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
             this.viewDataList.forEach(function (item) {
                 var view = this.getView(item.key);
-                list.push(view.fetch());
+                const data = view.fetch()
+                const attributeId = this.getMetadata().get(['entityDefs', this.scope, 'fields', data.data?.field || data.attribute, 'attributeId'])
+                if (attributeId) {
+                    data.attributeId = attributeId
+                }
+                list.push(data);
             }, this);
 
             return {
@@ -168,8 +179,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             var key = this.getKey(number);
             this.clearView(key);
 
-            this.$el.find('[data-view-key="'+key+'"]').remove();
-            this.$el.find('[data-view-ref-key="'+key+'"]').remove();
+            this.$el.find('[data-view-key="' + key + '"]').remove();
+            this.$el.find('[data-view-ref-key="' + key + '"]').remove();
 
             var index = -1;
             this.viewDataList.forEach(function (data, i) {
@@ -197,6 +208,48 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             }, this);
         },
 
+        actionAddAttribute: function () {
+            const viewName = this.getMetadata().get(['clientDefs', 'Attribute', 'modalViews', 'select']) || 'views/modals/select-records';
+
+            this.notify('Loading...');
+            this.createView('dialog', viewName, {
+                scope: 'Attribute',
+                multiple: false,
+                createButton: false,
+                massRelateEnabled: false,
+                boolFilterList: ['onlyForEntity'],
+                boolFilterData: {
+                    onlyForEntity: this.scope
+                },
+                allowSelectAllResult: false,
+            }, dialog => {
+                dialog.render();
+
+                this.notify(false);
+                dialog.once('select', model => {
+                    this.notify('Loading...');
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                        entityName: this.scope,
+                        attributesIds: [model.id]
+                    }, { async: false }).success(res => {
+                        $.each(res, (field, fieldDefs) => {
+                            this.getMetadata().data.entityDefs[this.scope].fields[field] = fieldDefs;
+                            this.getLanguage().data[this.scope].fields[field] = fieldDefs.label;
+
+                            if (this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldDefs.type])) {
+                                this.addField(field, fieldDefs['attributeId']);
+                            }
+                        });
+
+                        this.notify(false);
+
+                        this.clearView('dialog');
+
+                    })
+                });
+            });
+        },
+
         actionAddCurrentUser: function () {
             const field = '__currentUser';
             const type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', 'link', 'typeList'])[0];
@@ -215,7 +268,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             });
         },
 
-        addField: function (field) {
+        addField: function (field, attributeId) {
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
             if (!fieldType && field == 'id') {
                 fieldType = 'id';
@@ -235,7 +288,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             this.createItemView(i, key, {
                 data: {
                     field: field,
-                    type: type
+                    type: type,
+                    attributeId: attributeId
                 }
             });
         },
@@ -253,11 +307,11 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
         },
 
         addItemContainer: function (i) {
-            var $item = $('<div data-view-key="'+this.getKey(i)+'"></div>');
+            var $item = $('<div data-view-key="' + this.getKey(i) + '"></div>');
             this.$el.find('> .item-list').append($item);
 
             var groupOperatorLabel = this.translate(this.getGroupOperator(), 'logicalOperators', 'Admin');
-            var $operatorItem = $('<div class="group-operator" data-view-ref-key="'+this.getKey(i)+'">' + groupOperatorLabel +'</div>');
+            var $operatorItem = $('<div class="group-operator" data-view-ref-key="' + this.getKey(i) + '">' + groupOperatorLabel + '</div>');
             this.$el.find('> .item-list').append($operatorItem);
         },
 
@@ -278,7 +332,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             this.controlAddItemVisibility();
         },
 
-        controlAddItemVisibility: function () {}
+        controlAddItemVisibility: function () {
+        }
 
     });
 

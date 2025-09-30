@@ -426,6 +426,10 @@ class Entity extends ReferenceData
             throw new BadRequest($this->getLanguage()->translate('moreThanOneClassification', 'exceptions'));
         }
 
+        if ($entity->isAttributeChanged('hasAssociate') && !empty($entity->get('hasAssociate')) && !in_array($entity->get('type'), ['Base', 'Hierarchy'])) {
+            throw new BadRequest($this->getLanguage()->translate('entityTypeIsNotSuitableForAssociates', 'exceptions', 'Entity'));
+        }
+
         parent::beforeSave($entity, $options);
     }
 

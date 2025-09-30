@@ -36,6 +36,14 @@
             "view": "views/admin/dynamic-logic/conditions-string/item-base",
             "operatorString": "&le;"
         },
+        "isLinked": {
+          "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+          "operatorString": "&exist;"
+        },
+        "isNotLinked": {
+          "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
+          "operatorString": "&nexist;"
+        },
         "isEmpty": {
             "view": "views/admin/dynamic-logic/conditions-string/item-operator-only-base",
             "operatorString": "= &empty;"
@@ -201,6 +209,12 @@
         },
         "isNotEmpty": {
             "valueType": "empty"
+        },
+        "isLinked": {
+          "valueType": "empty"
+        },
+        "isNotLinked": {
+          "valueType": "empty"
         },
         "equals": {
             "valueType": "field"

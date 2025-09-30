@@ -52,7 +52,46 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
         setup: function () {
             this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
             this.scope = this.params.scope || this.options.scope;
+
+            // load attributes in entityDefs
+            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+                const ids = this.getAttributeIds(this.conditionGroup);
+                if (ids.length > 0) {
+                    const key = 'attributesDefs-' + this.scope + '-' + ids.join(',');
+                    if (!Espo[key]) {
+                        this.wait(true);
+                        this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                            entityName: this.scope,
+                            attributesIds: ids
+                        }, { async: false }).success(res => {
+                            $.each(res, (field, fieldDefs) => {
+                                this.getMetadata().data.entityDefs[this.scope].fields[field] = fieldDefs;
+                                this.getLanguage().data[this.scope].fields[field] = fieldDefs.label;
+                            });
+
+                            Espo[key] = true;
+                            this.wait(false);
+                        })
+                    }
+                }
+            }
             this.createStringView();
+        },
+
+        getAttributeIds(conditionGroup) {
+            var ids = [];
+            for (var i = 0; i < conditionGroup.length; i++) {
+                var condition = conditionGroup[i];
+                if (condition.attribute) {
+                    if (condition.attributeId && ids.indexOf(condition.attributeId) === -1) {
+                        ids.push(condition.attributeId);
+                    }
+                } else if (condition.value && condition.value.length > 0) {
+                    ids = ids.concat(this.getAttributeIds(condition.value));
+                }
+            }
+
+            return ids
         },
 
         createStringView: function () {

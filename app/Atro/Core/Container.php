@@ -62,6 +62,7 @@ class Container
             'metadata'                 => \Atro\Core\Utils\Metadata::class,
             'realtimeManager'          => \Atro\Core\RealtimeManager::class,
             'seederFactory'            => \Atro\Core\SeederFactory::class,
+            'condition'                => \Atro\Core\ConditionChecker::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,

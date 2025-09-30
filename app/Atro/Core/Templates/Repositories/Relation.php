@@ -237,6 +237,16 @@ class Relation extends Base
                 $entity->set('sorting', empty($last) ? 0 : (int)$last->get('sorting') + 10);
             }
         }
+
+        if ($entity->isNew() && !empty($options['duplicateRelationKeys']) && is_array($options['duplicateRelationKeys'])) {
+            $duplicatingRelationEntity = $this->where($options['duplicateRelationKeys'])->findOne();
+
+            if (!empty($duplicatingRelationEntity)) {
+                foreach ($this->prepareDuplicatedRelationFields() as $field) {
+                    $entity->set($field, $duplicatingRelationEntity->get($field));
+                }
+            }
+        }
     }
 
     public function updateAssociatesSortOrder(array $ids): void
@@ -523,6 +533,39 @@ class Relation extends Base
                 }
             }
         }
+    }
+
+    protected function prepareDuplicatedRelationFields(): array
+    {
+        $result = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $defs) {
+            if (!empty($defs['duplicateIgnore']) || !empty($defs['relationField']) || !empty($defs['notStorable']) || !empty($defs['disabled'])) {
+                continue;
+            }
+
+            if (in_array($field, $this->getMetadata()->get(['scopes', $this->entityType, 'nonDuplicatableFields'], []))) {
+                continue;
+            }
+
+            if (in_array($defs['type'], ['link', 'linkMultiple']) && in_array($field, $this->getMetadata()->get(['scopes', $this->entityType, 'duplicatableRelations'], []))) {
+                if ($defs['type'] == 'link') {
+                    $field .= 'Id';
+                }
+
+                if ($defs['type'] == 'linkMultiple') {
+                    if ($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'type']) == 'link') {
+                        continue;
+                    }
+
+                    $field .= 'Ids';
+                }
+            }
+
+            $result[] = $field;
+        }
+
+        return $result;
     }
 
     protected function init()

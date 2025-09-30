@@ -220,15 +220,75 @@
     },
     "hasOwner": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        }
+      }
     },
     "hasAssignedUser": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        }
+      }
     },
     "hasTeam": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notEquals",
+              "attribute": "type",
+              "value": "Relation"
+            }
+          ]
+        }
+      }
     },
     "disableActionHistory": {
       "type": "bool",
@@ -475,7 +535,8 @@
             }
           ]
         }
-      }
+      },
+      "view": "views/entity/fields/has-associate"
     },
     "hasAttribute": {
       "type": "bool",
