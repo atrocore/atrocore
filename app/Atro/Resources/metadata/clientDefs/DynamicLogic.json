@@ -195,6 +195,14 @@
         "color": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+        },
+        "url": {
+          "view": "views/admin/dynamic-logic/conditions/field-types/base",
+          "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty", "contains", "notContains"]
+        },
+        "file": {
+          "view": "views/admin/dynamic-logic/conditions/field-types/link",
+          "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals"]
         }
     },
     "conditionTypes": {

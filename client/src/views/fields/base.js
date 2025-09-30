@@ -286,14 +286,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
-            }
+            } else {
+                if (this.params.protected || this.model.getFieldParam(this.name, 'protected')) {
+                    this.readOnly = true;
+                }
 
-            if (this.params.protected || this.model.getFieldParam(this.name, 'protected')) {
-                this.readOnly = true;
-            }
-
-            if (!this.readOnly) {
-                this.readOnly = this.isReadOnlyViaConditions(this.name);
+                if (!this.readOnly) {
+                    this.readOnly = this.isReadOnlyViaConditions(this.name);
+                }
             }
 
             this.disabledLocked = this.options.disabledLocked || false;
@@ -404,7 +404,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
-            if(this.name === 'label') {
+            if (this.name === 'label') {
                 // debugger
             }
             if (this.$el.parents('.stream-head-container').size() > 0) {
@@ -611,12 +611,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }.bind(this));
         },
 
-        initScriptFieldAction: function() {
-            if(!this.model.defs.fields[this.name]){
+        initScriptFieldAction: function () {
+            if (!this.model.defs.fields[this.name]) {
                 return;
             }
-            const type =  this.model.defs.fields[this.name].type
-            if(type !== 'script') {
+            const type = this.model.defs.fields[this.name].type
+            if (type !== 'script') {
                 return;
             }
 
