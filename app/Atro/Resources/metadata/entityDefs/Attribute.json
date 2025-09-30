@@ -571,7 +571,7 @@
       }
     },
     "conditionalDisableOptions": {
-      "type": "jsonObject",
+      "type": "jsonArray",
       "view": "views/entity-field/fields/conditional-disable-options",
       "conditionalProperties": {
         "visible": {

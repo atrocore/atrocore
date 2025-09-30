@@ -34,7 +34,7 @@ class V2Dot1Dot18 extends Base
             $this->exec("COMMENT ON COLUMN attribute.conditional_read_only IS '(DC2Type:jsonObject)';");
             $this->exec("COMMENT ON COLUMN attribute.conditional_protected IS '(DC2Type:jsonObject)';");
             $this->exec("COMMENT ON COLUMN attribute.conditional_visible IS '(DC2Type:jsonObject)';");
-            $this->exec("COMMENT ON COLUMN attribute.conditional_disable_options IS '(DC2Type:jsonObject)'");
+            $this->exec("COMMENT ON COLUMN attribute.conditional_disable_options IS '(DC2Type:jsonArray)'");
 
             $this->exec("ALTER TABLE classification_attribute ADD enable_conditional_required BOOLEAN DEFAULT 'false' NOT NULL;");
             $this->exec("ALTER TABLE classification_attribute ADD conditional_required TEXT DEFAULT NULL;");
@@ -50,10 +50,10 @@ class V2Dot1Dot18 extends Base
             $this->exec("COMMENT ON COLUMN classification_attribute.conditional_read_only IS '(DC2Type:jsonObject)';");
             $this->exec("COMMENT ON COLUMN classification_attribute.conditional_protected IS '(DC2Type:jsonObject)';");
             $this->exec("COMMENT ON COLUMN classification_attribute.conditional_visible IS '(DC2Type:jsonObject)';");
-            $this->exec("COMMENT ON COLUMN classification_attribute.conditional_disable_options IS '(DC2Type:jsonObject)'");
+            $this->exec("COMMENT ON COLUMN classification_attribute.conditional_disable_options IS '(DC2Type:jsonArray)'");
         } else {
-            $this->exec("ALTER TABLE attribute ADD is_protected TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)';");
-            $this->exec("ALTER TABLE classification_attribute ADD enable_conditional_required TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_read_only TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_protected TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_visible TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_disable_options TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)';");
+            $this->exec("ALTER TABLE attribute ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)';");
+            $this->exec("ALTER TABLE classification_attribute ADD enable_conditional_required TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_read_only TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_protected TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_visible TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_disable_options TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)';");
         }
     }
 
