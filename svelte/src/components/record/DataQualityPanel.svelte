@@ -134,7 +134,7 @@
 
     function highlightCheck() {
         const el = document.querySelector(`.quality-check-highlighter[data-quality-check-id="${activeItem}"]`)
-        if (el){
+        if (el) {
             el.click()
         }
     }
@@ -216,7 +216,7 @@
             <img style="width: 40px; " class="preloader" src="client/img/atro-loader.svg" alt="loader">
         </div>
     {:else if data}
-        <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
+        <div style="margin-top: 10px;">
             <div style="margin-bottom: 10px; overflow: hidden; padding-left: 1px; padding-right: 1px;">
                 <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
                                storageKey="qualityCheckRuleFilters"
@@ -236,17 +236,17 @@
                 </div>
             </div>
             {#each filteredRules as rule}
-                <div style="display: flex;justify-content: space-between; margin-bottom: 10px">
-                    <div style="word-break: break-all">
-                        <label class="control-label">
-                            <span class="label-text">{rule.code}</span>
-                        </label>
+                <div style="margin-bottom: 10px">
+                    <label class="control-label">
+                        <span class="label-text">{rule.code}</span>
+                    </label>
+                    <div style="display: flex;justify-content: space-between;">
                         <p>{rule.name}</p>
-                        {#if rule.error}
-                            <p>{rule.error}</p>
-                        {/if}
+                        <div class="rule-status" style="{getStatusStyle(rule.status)}"></div>
                     </div>
-                    <div class="rule-status" style="{getStatusStyle(rule.status)}"></div>
+                    {#if rule.error}
+                        <p class="rule-error">{rule.error}</p>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -267,6 +267,13 @@
         color: var(--label-color);
         font-size: 12px;
         font-weight: normal;
+    }
+
+    .rule-error {
+        background: #ffeded;
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #e9c8c8;
     }
 
     .highlight-active {
