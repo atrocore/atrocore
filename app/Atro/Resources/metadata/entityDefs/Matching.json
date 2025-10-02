@@ -12,6 +12,24 @@
       "unique": true,
       "customizable": false
     },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "duplicate",
+        "staging"
+      ],
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
     "description": {
       "type": "text"
     },
@@ -22,13 +40,77 @@
       "max": 100,
       "default": 100
     },
-    "targetEntity": {
+    "entity": {
       "type": "varchar",
-      "view": "views/fields/entity-type"
+      "view": "views/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "duplicate"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "duplicate"
+            }
+          ]
+        }
+      }
     },
-    "sourceEntity": {
+    "stageEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type"
+      "view": "views/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        }
+      }
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        }
+      }
     },
     "matchingRules": {
       "type": "linkMultiple",

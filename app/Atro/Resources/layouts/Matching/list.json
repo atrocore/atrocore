@@ -7,9 +7,6 @@
     "name": "code"
   },
   {
-    "name": "sourceEntity"
-  },
-  {
-    "name": "targetEntity"
+    "name": "type"
   }
 ]

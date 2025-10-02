@@ -1,8 +1,15 @@
 {
   "fields": {
     "minimumMatchingScore": "Minimum Matching Score",
-    "targetEntity": "Target Entity",
-    "sourceEntity": "Source Entity",
+    "entity": "Entity",
+    "stageEntity": "Stage Entity",
+    "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplicate",
+      "staging": "Staging"
+    }
   }
 }

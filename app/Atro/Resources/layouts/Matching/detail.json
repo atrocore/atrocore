@@ -19,10 +19,22 @@
       ],
       [
         {
-          "name": "targetEntity"
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "entity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "stageEntity"
         },
         {
-          "name": "sourceEntity"
+          "name": "masterEntity"
         }
       ]
     ]
