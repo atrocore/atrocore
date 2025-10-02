@@ -23,6 +23,7 @@
     let data = null
     let selectedFilters = Storage.get('qualityCheckRuleFilters', scope) || []
     let filteredRules = []
+    let highlightedCheckId = null
 
     $: {
         const reelFilers = selectedFilters.length === 0 ? ['passed', 'failed'] : selectedFilters
@@ -131,9 +132,21 @@
         }
     }
 
+    function highlightCheck() {
+        const el = document.querySelector(`.quality-check-highlighter[data-quality-check-id="${activeItem}"]`)
+        if (el){
+            el.click()
+        }
+    }
+
+    function onCheckHighlighted(evt) {
+        highlightedCheckId = evt.detail.checkId
+    }
+
     window.addEventListener('record:save', loadQualityCheckData);
     window.addEventListener('record:check-recalculated', onCheckRecalculated)
     window.addEventListener('record:show-qc-details', onShowDetails)
+    window.addEventListener('record:check-highlighted', onCheckHighlighted)
 
     onMount(() => {
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
@@ -179,6 +192,7 @@
         window.removeEventListener('record:save', loadQualityCheckData)
         window.removeEventListener('record:check-recalculated', onCheckRecalculated)
         window.removeEventListener('record:show-qc-details', onShowDetails)
+        window.removeEventListener('record:check-highlighted', onCheckHighlighted)
     });
 </script>
 
@@ -210,10 +224,16 @@
                                titleLabel="" onExecute="{onFilterChange}"
                                style="padding-bottom: 10px; display: inline-block"/>
 
-                <button class="refresh" on:click={()=>loadQualityCheckData(true)} style="float: right;"
-                        title="{Language.translate('Refresh')}"><i
-                        class="ph ph-arrows-clockwise"></i>
-                </button>
+                <div style="float: right; display: inline-block">
+                    <button on:click={highlightCheck} style="margin-right: 10px;"
+                            title="{Language.translate('highlight', 'labels', 'QualityCheck')}"><i
+                            class="{'ph ph-highlighter '+ (highlightedCheckId===activeItem ? 'ph-fill highlight-active': '')}"></i>
+                    </button>
+                    <button class="refresh" on:click={()=>loadQualityCheckData(true)} style="float: right;"
+                            title="{Language.translate('Refresh')}"><i
+                            class="ph ph-arrows-clockwise"></i>
+                    </button>
+                </div>
             </div>
             {#each filteredRules as rule}
                 <div style="display: flex;justify-content: space-between; margin-bottom: 10px">
@@ -247,5 +267,9 @@
         color: var(--label-color);
         font-size: 12px;
         font-weight: normal;
+    }
+
+    .highlight-active {
+        color: #06c;
     }
 </style>

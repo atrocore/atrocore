@@ -121,6 +121,7 @@ class ReferenceData extends Repository implements Injectable
 
         $this->validateCode($entity);
         $this->validateUnique($entity);
+        $this->validateMaxLength($entity);
 
         $this->dispatch('beforeSave', $entity, $options);
     }
@@ -156,6 +157,22 @@ class ReferenceData extends Repository implements Injectable
                 if ($item['id'] !== $entity->get('id') && $item[$unique] === $entity->get($unique)) {
                     $fieldName = $this->translate($unique, 'fields', $this->entityName);
                     throw new NotUnique(sprintf($this->translate('notUniqueRecordField', 'exceptions'), $fieldName));
+                }
+            }
+        }
+    }
+
+    public function validateMaxLength(Entity $entity): void
+    {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['maxLength'])) {
+                $fieldValue = (string)$entity->get($field);
+                $length = strlen($fieldValue);
+                $maxLength = (int)$fieldDefs['maxLength'];
+
+                if ($length > $maxLength) {
+                    $fieldLabel = $this->getLanguage()->translate($field, 'fields', $entity->getEntityType());
+                    throw new BadRequest(sprintf($this->getLanguage()->translate('maxLengthIsExceeded', 'exceptions', 'Global'), $fieldLabel, $maxLength, $length));
                 }
             }
         }
