@@ -22,4 +22,6 @@ class Like implements MatchingRuleTypeInterface
     {
         $this->container = $container;
     }
+
+    
 }

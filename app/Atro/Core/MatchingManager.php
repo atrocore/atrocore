@@ -12,6 +12,11 @@
 
 namespace Atro\Core;
 
+use Atro\Core\MatchingRuleType\MatchingRuleTypeInterface;
+use Doctrine\DBAL\Connection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+
 class MatchingManager
 {
     protected Container $container;
@@ -19,5 +24,55 @@ class MatchingManager
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    public function createMatchingType(string $type): MatchingRuleTypeInterface
+    {
+        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
+        if (!class_exists($className)) {
+            throw new \Exception("Class $className not found");
+        }
+
+        return $this->container->get($className);
+    }
+
+    public function findMatches(Entity $matching, Entity $entity): array
+    {
+        $qb = $this->getConnection()->createQueryBuilder();
+
+        echo '<pre>';
+        print_r($entity->toArray());
+        die();
+
+        // $qb->select('*')->from();
+
+
+
+        foreach ($matching->get('matchingRules') ?? [] as $rule) {
+            $ruleType = $rule->get('type');
+
+            echo '<pre>';
+            print_r('123');
+            die();
+
+            $ruleTypeInstance = $this->container->get($ruleType);
+            var_dump($ruleTypeInstance);
+        }
+
+        echo '<pre>';
+        print_r($matching->get('matchingRules')->toArray());
+        die();
+
+        return [];
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
+    }
+
+    protected function getConnection(): Connection
+    {
+        return $this->container->get('connection');
     }
 }
