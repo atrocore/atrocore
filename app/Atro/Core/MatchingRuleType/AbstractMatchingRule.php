@@ -13,9 +13,7 @@
 namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Connection;
-use Espo\ORM\Entity;
 
 abstract class AbstractMatchingRule implements MatchingRuleTypeInterface
 {

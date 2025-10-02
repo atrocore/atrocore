@@ -44,13 +44,12 @@ class MatchingManager
             return [];
         }
 
-        // prepare entity name
-        $entityName = $matching->get('type') === 'duplicate' ? $matching->get('entity') : $matching->get('masterEntity');
+        $masterEntityName = $matching->get('type') === 'duplicate' ? $matching->get('entity') : $matching->get('masterEntity');
 
         $qb = $this->getConnection()->createQueryBuilder();
         $qb
             ->select('id')
-            ->from(Util::toUnderScore($entityName))
+            ->from(Util::toUnderScore($masterEntityName))
             ->where('deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
@@ -61,15 +60,28 @@ class MatchingManager
         }
 
         $rulesParts = [];
-        foreach ($matching->get('matchingRules') ?? [] as $rule) {
+        foreach ($matching->get('matchingRules') as $rule) {
             $rulesParts[] = $this->createMatchingType($rule->get('type'))->prepareMatchingSqlPart($qb, $rule, $entity);
         }
 
         $qb->andWhere(implode(' OR ', $rulesParts));
 
-        echo '<pre>';
-        print_r($qb->fetchAllAssociative());
-        die();
+        $res = $qb->fetchAllAssociative();
+
+
+
+        foreach ($res as $row) {
+            $masterEntity = $this->getEntityManager()->getRepository($masterEntityName)->get();
+            $masterEntity->id = $row['id'];
+            $masterEntity->set(Util::arrayKeysToCamelCase($row));
+
+            foreach ($matching->get('matchingRules') as $rule) {
+                $value = $this->createMatchingType($rule->get('type'))->match($rule, $entity, $masterEntity);
+                echo '<pre>';
+                print_r($value);
+                die();
+            }
+        }
 
         return [];
     }

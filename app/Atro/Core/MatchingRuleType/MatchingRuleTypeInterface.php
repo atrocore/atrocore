@@ -17,5 +17,7 @@ use Espo\ORM\Entity;
 
 interface MatchingRuleTypeInterface
 {
-    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $rule, Entity $entity): string;
+    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $rule, Entity $stageEntity): string;
+
+    public function match(Entity $rule, Entity $stageEntity, Entity $masterEntity): int;
 }
