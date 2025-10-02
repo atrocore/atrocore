@@ -27,10 +27,18 @@
       ],
       [
         {
-          "name": "targetField"
+          "name": "stageEntity"
         },
         {
+          "name": "masterEntity"
+        }
+      ],
+      [
+        {
           "name": "sourceField"
+        },
+        {
+          "name": "targetField"
         }
       ]
     ]

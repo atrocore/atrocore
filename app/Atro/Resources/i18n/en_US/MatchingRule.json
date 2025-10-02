@@ -2,8 +2,9 @@
   "fields": {
     "matching": "Matching",
     "weight": "Weight",
+    "sourceField": "Source Field",
     "targetField": "Target Field",
-    "sourceField": "Source Field"
+    "matchingType": "Matching Type"
   },
   "options": {
     "type": {

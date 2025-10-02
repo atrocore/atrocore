@@ -34,6 +34,41 @@
         }
       }
     },
+    "matchingType": {
+      "type": "enum",
+      "notStorable": true,
+      "readOnly": true
+    },
+    "stageEntity": {
+      "notStorable": true,
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "matchingType",
+              "value": "staging"
+            }
+          ]
+        }
+      }
+    },
+    "masterEntity": {
+      "notStorable": true,
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "matchingType",
+              "value": "staging"
+            }
+          ]
+        }
+      }
+    },
     "weight": {
       "type": "int",
       "required": true,
