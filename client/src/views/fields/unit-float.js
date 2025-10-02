@@ -94,6 +94,10 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
+            this.initUnitSelector();
+        },
+
+        initUnitSelector() {
             Varchar.prototype.initUnitSelector.call(this);
         },
 

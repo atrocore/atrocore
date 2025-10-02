@@ -1290,38 +1290,36 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 });
             }
 
-            this.onModelReady(() => {
-                if (this.layoutName === 'detail') {
-                    this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
-                        this.highlightRequired();
-                    });
+            if (this.layoutName === 'detail') {
+                this.listenTo(this.model, 'toggle-required-fields-highlight', () => {
+                    this.highlightRequired();
+                });
 
-                    this.listenTo(this.model, 'sync', () => {
-                        if (this.layoutHasActionFields()) {
-                            this.fetchDynamicFieldActions(() => {
-                                if (this.mode !== 'edit') {
-                                    this.refreshLayout(true);
-                                }
-                            })
-                        } else {
+                this.listenTo(this.model, 'sync', () => {
+                    if (this.layoutHasActionFields()) {
+                        this.fetchDynamicFieldActions(() => {
                             if (this.mode !== 'edit') {
-                                this.refreshLayout();
+                                this.refreshLayout(true);
                             }
+                        })
+                    } else {
+                        if (this.mode !== 'edit') {
+                            this.refreshLayout();
+                        }
+                    }
+                });
+
+                this.addToLanguageObservables();
+
+                this.listenTo(this, 'change:disabled-languages', (value) => {
+                    this.getUser().set('disabledLanguages', value)
+                    this.refreshLayout(true, () => {
+                        if (this.mode === 'edit' && this.getView('middle')) {
+                            this.setEditMode()
                         }
                     });
-
-                    this.addToLanguageObservables();
-
-                    this.listenTo(this, 'change:disabled-languages', (value) => {
-                        this.getUser().set('disabledLanguages', value)
-                        this.refreshLayout(true, () => {
-                            if (this.mode === 'edit' && this.getView('middle')) {
-                                this.setEditMode()
-                            }
-                        });
-                    })
-                }
-            })
+                })
+            }
 
             this.listenTo(this.model, 'sync', () => {
                 this.putAttributesToModel();
