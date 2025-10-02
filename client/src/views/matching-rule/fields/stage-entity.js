@@ -12,10 +12,37 @@ Espo.define('views/matching-rule/fields/stage-entity', 'views/fields/varchar', D
 
     return Dep.extend({
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            this.onModelReady(() => {
+                this.setValue();
+                this.listenTo(this.model, 'change:matchingId', () => {
+                    this.setValue();
+                })
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            console.log(this.name)
+            if (this.model.get(this.name)) {
+                this.$el.parent().show();
+            } else {
+                this.$el.parent().hide();
+            }
+        },
+
+        setValue() {
+            if (this.model.get('matchingId')) {
+                $.each(this.getConfig().get('referenceData')?.Matching || [], (code, item) => {
+                    if (item.type === 'staging' && item.id === this.model.get('matchingId')) {
+                        this.model.set(this.name, item[this.name]);
+                    }
+                })
+            } else {
+                this.model.set(this.name, null);
+            }
         },
 
     });

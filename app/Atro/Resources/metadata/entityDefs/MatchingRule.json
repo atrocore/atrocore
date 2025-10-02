@@ -35,11 +35,13 @@
       }
     },
     "stageEntity": {
+      "type": "varchar",
       "notStorable": true,
       "view": "views/matching-rule/fields/stage-entity",
       "readOnly": true
     },
     "masterEntity": {
+      "type": "varchar",
       "notStorable": true,
       "view": "views/matching-rule/fields/master-entity",
       "readOnly": true
