@@ -56,11 +56,14 @@ Espo.define('views/fields/int', 'views/fields/base', function (Dep) {
             Dep.prototype.setup.call(this);
 
             const locales = this.getConfig().get('locales')
-            let localeId = this.getUser() ? this.getUser().get('localeId') : null;
+            let localeId = this.getStorage().get('user', 'locale')
             if (!localeId || !locales[localeId]) {
-                localeId = this.getConfig().get('locale')
-                if (!locales[localeId]) {
-                    localeId = 'main'
+                localeId = this.getUser() ? this.getUser().get('localeId') : null;
+                if (!localeId || !locales[localeId]) {
+                    localeId = this.getConfig().get('locale')
+                    if (!locales[localeId]) {
+                        localeId = 'main'
+                    }
                 }
             }
 
