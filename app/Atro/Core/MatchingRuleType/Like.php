@@ -13,6 +13,9 @@
 namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Connection;
+use Espo\ORM\Entity;
 
 class Like implements MatchingRuleTypeInterface
 {
@@ -23,5 +26,18 @@ class Like implements MatchingRuleTypeInterface
         $this->container = $container;
     }
 
-    
+    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $rule, Entity $entity): string
+    {
+        $sqlPart = "REPLACE(LOWER(TRIM(" . $this->getConnection()->quoteIdentifier($rule->get('sourceField')) . ")), ' ', '') = :" . $rule->get('id');
+        $qb->setParameter($rule->get('id'), str_replace(' ', '', strtolower(trim($entity->get($rule->get('targetField'))))));
+
+        $qb->addSelect($this->getConnection()->quoteIdentifier($rule->get('sourceField')));
+
+        return $sqlPart;
+    }
+
+    protected function getConnection(): Connection
+    {
+        return $this->container->get('connection');
+    }
 }

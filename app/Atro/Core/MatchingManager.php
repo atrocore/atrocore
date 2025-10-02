@@ -13,7 +13,9 @@
 namespace Atro\Core;
 
 use Atro\Core\MatchingRuleType\MatchingRuleTypeInterface;
+use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -38,29 +40,35 @@ class MatchingManager
 
     public function findMatches(Entity $matching, Entity $entity): array
     {
-        $qb = $this->getConnection()->createQueryBuilder();
-
-        echo '<pre>';
-        print_r($entity->toArray());
-        die();
-
-        // $qb->select('*')->from();
-
-
-
-        foreach ($matching->get('matchingRules') ?? [] as $rule) {
-            $ruleType = $rule->get('type');
-
-            echo '<pre>';
-            print_r('123');
-            die();
-
-            $ruleTypeInstance = $this->container->get($ruleType);
-            var_dump($ruleTypeInstance);
+        if (empty($matching->get('matchingRules'))) {
+            return [];
         }
 
+        // prepare entity name
+        $entityName = $matching->get('type') === 'duplicate' ? $matching->get('entity') : $matching->get('masterEntity');
+
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb
+            ->select('id')
+            ->from(Util::toUnderScore($entityName))
+            ->where('deleted=:false')
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
+        if ($matching->get('type') === 'duplicate' || $matching->get('masterEntity') === $matching->get('targetEntity')) {
+            $qb
+                ->andWhere('id != :id')
+                ->setParameter('id', $entity->get('id'));
+        }
+
+        $rulesParts = [];
+        foreach ($matching->get('matchingRules') ?? [] as $rule) {
+            $rulesParts[] = $this->createMatchingType($rule->get('type'))->prepareMatchingSqlPart($qb, $rule, $entity);
+        }
+
+        $qb->andWhere(implode(' OR ', $rulesParts));
+
         echo '<pre>';
-        print_r($matching->get('matchingRules')->toArray());
+        print_r($qb->fetchAllAssociative());
         die();
 
         return [];

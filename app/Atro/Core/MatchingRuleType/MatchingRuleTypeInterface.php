@@ -12,5 +12,10 @@
 
 namespace Atro\Core\MatchingRuleType;
 
-interface MatchingRuleTypeInterface {
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\Entity;
+
+interface MatchingRuleTypeInterface
+{
+    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $rule, Entity $entity): string;
 }
