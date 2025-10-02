@@ -16,6 +16,7 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\DataManager;
 use Atro\Core\Utils\Util;
@@ -339,7 +340,11 @@ class EntityField extends ReferenceData
         $fieldEntity = $this->get($scope. '_'. $field);
 
         if (!in_array($oldValue, $fieldEntity->get('options'))) {
-           return false;
+            throw new BadRequest('Such option old option code does not exist.');
+        }
+
+        if (in_array($newValue, $fieldEntity->get('options'))) {
+            throw new BadRequest('Such new option code already exists');
         }
 
         // update options metadata
@@ -351,12 +356,19 @@ class EntityField extends ReferenceData
 
         // replace Translations
         $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.options.$field.$oldValue");
-
         if (!empty($label)) {
-            $newLabel = $this->getEntityManager()->getEntity('Translation');
-            $newLabel->set($label->toArray());
+            $newLabel = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.options.$field.$newValue");
+            if(empty($newLabel)) {
+                $newLabel = $this->getEntityManager()->getEntity('Translation');
+                $newLabel->set($label->toArray());
+                $newLabel->id = md5("$scope.options.$field.$newValue");
+            }else{
+                $id = $newLabel->id;
+                $newLabel->set($label->toArray());
+                $newLabel->id = $id;
+            }
+
             $newLabel->set(['module' => 'custom', 'isCustomized' => true, 'code' => "$scope.options.$field.$newValue"]);
-            $newLabel->id = md5("$scope.options.$field.$newValue");
 
             if ( $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
                 $this->getEntityManager()->removeEntity($label);

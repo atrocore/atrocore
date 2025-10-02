@@ -37,17 +37,17 @@
                        <i class="ph ph-arrows-out-cardinal"></i>
                    </div>
                    <div class="field" style="flex: 1">
-                       <div class="options-container"  data-key="{{colorViewKey}}">
+                       <div class="field-container"  data-key="{{colorViewKey}}">
                            {{{var colorViewKey ../this}}}
                        </div>
                    </div>
                    <div class="field" style="flex: 1">
-                       <div class="options-container"  data-key="{{codeViewKey}}">
+                       <div class="field-container"  data-key="{{codeViewKey}}">
                            {{{var codeViewKey ../this}}}
                        </div>
                    </div>
                    <div class="field" style="flex: 1">
-                       <div class="options-container"  data-key="{{labelViewKey}}">
+                       <div class="field-container"  data-key="{{labelViewKey}}">
                            {{{var labelViewKey ../this}}}
                        </div>
                    </div>
