@@ -4,7 +4,8 @@
     "weight": "Weight",
     "sourceField": "Source Field",
     "targetField": "Target Field",
-    "matchingType": "Matching Type"
+    "stageEntity": "Stage Entity",
+    "masterEntity": "Master Entity"
   },
   "options": {
     "type": {
