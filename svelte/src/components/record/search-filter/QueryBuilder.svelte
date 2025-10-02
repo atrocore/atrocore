@@ -48,6 +48,8 @@
 
     let hasQbRules: boolean = false;
 
+    let isQbValid: boolean = false;
+
     let defaultValue = "-1";
 
     let generalFilterStore = getGeneralFilterStore(uniqueKey);
@@ -273,10 +275,14 @@
 
         });
 
-        const rulesObj = $queryBuilder[0].queryBuilder.getRules();
+        const rulesObj = $queryBuilder[0].queryBuilder.getRules({allow_invalid: true});
         if (rulesObj && rulesObj.rules) {
             hasQbRules = rulesObj.rules.length > 0;
-            handleEmptyRules();
+            isQbValid = rulesObj.valid;
+
+            if (!hasQbRules) {
+                handleEmptyRules();
+            }
 
             if (rulesObj.rules.length < 2) {
                 $queryBuilder.children('.rules-group-container').children('.rules-group-header').find('.group-conditions .btn').addClass('disabled');
@@ -310,9 +316,15 @@
             });
             $queryBuilder.find('.rule-operator-container select:not(.selectized)').selectize();
 
-            const rulesObj = $queryBuilder[0].queryBuilder.getRules();
-            hasQbRules = rulesObj && rulesObj.rules && rulesObj.rules.length > 0;
-            handleEmptyRules();
+            const rulesObj = $queryBuilder[0].queryBuilder.getRules({allow_invalid: true});
+            if (rulesObj) {
+                hasQbRules = rulesObj.rules && rulesObj.rules.length > 0;
+                isQbValid = rulesObj.valid;
+
+                if (!hasQbRules) {
+                    handleEmptyRules();
+                }
+            }
 
             model.trigger('rulesChanged', rule);
         });
@@ -941,6 +953,14 @@
         }
 
         advancedFilterChecked = !advancedFilterChecked;
+
+        if (!advancedFilterChecked && !hasQbRules) {
+            handleEmptyRules();
+
+            handleAdvancedFilterChecked();
+            return;
+        }
+
         if (advancedFilterChecked && queryBuilderRulesChanged) {
             const rules = searchManager.getQueryBuilder();
             const $queryBuilder = window.$(queryBuilderElement);
@@ -1120,7 +1140,7 @@
                         </button>
                     </div>
 
-                    <button class="small filter-button" disabled={!queryBuilderRulesChanged}
+                    <button class="small filter-button" disabled={!queryBuilderRulesChanged || !isQbValid}
                             on:click={applyFilter}>
                         <i class="ph ph-check"></i><span>{Language.translate('Apply')}</span>
                     </button>
