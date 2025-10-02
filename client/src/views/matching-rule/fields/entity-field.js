@@ -33,19 +33,20 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             }
 
             let entityName = null;
-            if (this.name === 'targetField') {
-                $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
-                    if (item.id === this.model.get('matchingId')) {
-                        entityName = item.masterEntity;
+
+            $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
+                if (item.id === this.model.get('matchingId')) {
+                    if (item.type === 'duplicate') {
+                        entityName = item.entity;
+                    } else if (item.type === 'staging') {
+                        if (this.name === 'targetField') {
+                            entityName = item.masterEntity;
+                        } else if (this.name === 'sourceField') {
+                            entityName = item.stageEntity;
+                        }
                     }
-                })
-            } else if (this.name === 'sourceField') {
-                $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
-                    if (item.id === this.model.get('matchingId')) {
-                        entityName = item.stageEntity;
-                    }
-                })
-            }
+                }
+            })
 
             if (!entityName) {
                 return;
