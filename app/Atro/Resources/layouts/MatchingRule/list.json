@@ -8,5 +8,11 @@
   },
   {
     "name": "matching"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "weight"
   }
 ]

@@ -150,5 +150,9 @@
       "type": "belongsTo",
       "entity": "User"
     }
+  },
+  "collection": {
+    "sortBy": "weight",
+    "asc": false
   }
 }
