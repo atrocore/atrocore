@@ -22,28 +22,6 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                     this.reRender();
                 });
             })
-
-            this.listenTo(this.model, `change:${this.name}`, () => {
-                if (this.model.isNew() && this.model.get('entityField') && this.model.get('entityField') !== '_addAttribute') {
-                    let optionName = this.getLanguage().translateOption(this.model.get('type'), 'type', 'QualityCheckRule');
-                    let fieldName = this.translate(this.model.get('entityField'), 'fields', this.model.get('qualityCheckEntity'));
-
-                    let channelId = this.getMetadata().get(`entityDefs.${this.model.get('qualityCheckEntity')}.fields.${this.model.get('entityField')}.channelId`);
-                    if (channelId) {
-                        this.ajaxGetRequest(`Channel/${channelId}`, null, {async: false}).success(channel => {
-                            fieldName += ` / ${channel.name}`;
-                        });
-                    }
-
-                    this.model.set('name', `${optionName}: ${fieldName}`);
-                }
-
-                this.model.set('attributeId', this.getMetadata().get(`entityDefs.${this.model.get('qualityCheckEntity')}.fields.${this.model.get(this.name)}.attributeId`) || null);
-
-                if (this.model.get(this.name) === '_addAttribute') {
-                    this.actionSelectAttribute();
-                }
-            });
         },
 
         prepareListOptions() {
@@ -58,13 +36,13 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             if (this.name === 'targetField') {
                 $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
                     if (item.id === this.model.get('matchingId')) {
-                        entityName = item.targetEntity;
+                        entityName = item.masterEntity;
                     }
                 })
             } else if (this.name === 'sourceField') {
                 $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
                     if (item.id === this.model.get('matchingId')) {
-                        entityName = item.sourceEntity;
+                        entityName = item.stageEntity;
                     }
                 })
             }
