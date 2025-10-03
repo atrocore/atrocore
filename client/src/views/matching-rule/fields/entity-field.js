@@ -36,14 +36,10 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
 
             $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
                 if (item.id === this.model.get('matchingId')) {
-                    if (item.type === 'duplicate') {
-                        entityName = item.entity;
-                    } else if (item.type === 'staging') {
-                        if (this.name === 'targetField') {
-                            entityName = item.masterEntity;
-                        } else if (this.name === 'sourceField') {
-                            entityName = item.stagingEntity;
-                        }
+                    if (this.name === 'targetField') {
+                        entityName = item.masterEntity;
+                    } else if (this.name === 'sourceField') {
+                        entityName = item.stagingEntity;
                     }
                 }
             })
@@ -56,10 +52,10 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
 
             $.each(this.getMetadata().get(['entityDefs', entityName, 'fields'], {}), (field, fieldDefs) => {
                 if (
-                    !fieldDefs.disabled 
-                    && availableTypes.includes(fieldDefs.type) 
-                    && !fieldDefs.importDisabled 
-                    && !fieldDefs.unitField 
+                    !fieldDefs.disabled
+                    && availableTypes.includes(fieldDefs.type)
+                    && !fieldDefs.importDisabled
+                    && !fieldDefs.unitField
                     && !fieldDefs.notStorable
                 ) {
                     this.translatedOptions[field] = this.translate(field, 'fields', entityName);
