@@ -2134,8 +2134,15 @@ class Metadata extends AbstractListener
 
     protected function setMatchingRulesTypes(array &$data): void
     {
-        $data['app']['matchingRules']['like'] = [
-            'fieldTypes' => \Atro\Core\MatchingRuleType\Like::getSupportedFieldTypes(),
-        ];
+        foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
+            $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
+            if (!class_exists($className)) {
+                continue;
+            }
+
+            $data['app']['matchingRules'][$type] = [
+                'fieldTypes' => $className::getSupportedFieldTypes(),
+            ];
+        }
     }
 }

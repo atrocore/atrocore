@@ -52,30 +52,16 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                 return;
             }
 
-            let availableTypes = [
-                // "array",
-                // "bool",
-                // "date",
-                // "datetime",
-                // "enum",
-                // "extensibleEnum",
-                // "extensibleMultiEnum",
-                // "file",
-                // "float",
-                // "int",
-                // "link",
-                "markdown",
-                // "measure",
-                // "multiEnum",
-                "password",
-                "text",
-                "url",
-                "varchar",
-                "wysiwyg"
-            ];
+            let availableTypes = this.getMetadata().get(`app.matchingRules.${this.model.get('type')}.fieldTypes`) || [];
 
             $.each(this.getMetadata().get(['entityDefs', entityName, 'fields'], {}), (field, fieldDefs) => {
-                if (!fieldDefs.disabled && availableTypes.includes(fieldDefs.type) && !fieldDefs.importDisabled) {
+                if (
+                    !fieldDefs.disabled 
+                    && availableTypes.includes(fieldDefs.type) 
+                    && !fieldDefs.importDisabled 
+                    && !fieldDefs.unitField 
+                    && !fieldDefs.notStorable
+                ) {
                     this.translatedOptions[field] = this.translate(field, 'fields', entityName);
                 }
             })
