@@ -31,7 +31,7 @@ abstract class AbstractMatchingRule
 
     abstract public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string;
 
-    abstract public function match(Entity $stageEntity, Entity $masterEntity): int;
+    abstract public function match(Entity $stageEntity, array $masterEntityData): int;
 
     public function setRule(Entity $rule): void
     {

@@ -47,6 +47,14 @@ class MatchingManager
             return;
         }
 
+        // Clear old matches
+        $this->getConnection()->createQueryBuilder()
+            ->delete('matched_record')
+            ->where('matching_id = :matchingId')
+            ->setParameter('matchingId', $matching->id)
+            ->executeQuery();
+
+        // Find possible matches
         $qb = $this->getConnection()->createQueryBuilder();
         $qb
             ->select('id')
@@ -59,36 +67,53 @@ class MatchingManager
                 ->andWhere('id != :id')
                 ->setParameter('id', $entity->get('id'));
         }
-
         $rulesParts = [];
         foreach ($matching->get('matchingRules') as $rule) {
             $rulesParts[] = $this->createMatchingType($rule)->prepareMatchingSqlPart($qb, $entity);
         }
-
         $qb->andWhere(implode(' OR ', $rulesParts));
-
         $possibleMatches = $qb->fetchAllAssociative();
 
-        $matched = [];
+        // Find actual matches
+        $matches = [];
         foreach ($possibleMatches as $row) {
-            $masterEntity = $this->getEntityManager()->getRepository($matching->get('masterEntity'))->get();
-            $masterEntity->id = $row['id'];
-            $masterEntity->set(Util::arrayKeysToCamelCase($row));
-
             $matchingScore = 0;
             foreach ($matching->get('matchingRules') as $rule) {
-                $value = $this->createMatchingType($rule)->match($entity, $masterEntity);
+                $value = $this->createMatchingType($rule)->match($entity, Util::arrayKeysToCamelCase($row));
                 $matchingScore += $value;
             }
 
             if ($matchingScore >= $matching->get('minimumMatchingScore')) {
-                $matched[] = $row;
+                // $matches[] = $row;
+
+                // Save match
+                $this->getConnection()->createQueryBuilder()
+                    ->insert('matched_record')
+                    ->setValue('id', ':id')
+                    ->setValue('matching_id', ':matchingId')
+                    ->setValue('staging_entity', ':stagingEntity')
+                    ->setValue('staging_entity_id', ':stagingEntityId')
+                    ->setValue('master_entity', ':masterEntity')
+                    ->setValue('master_entity_id', ':masterEntityId')
+                    ->setValue('score', ':score')
+                    ->setParameter('id', Util::generateId())
+                    ->setParameter('matchingId', $matching->id)
+                    ->setParameter('stagingEntity', $matching->get('stagingEntity'))
+                    ->setParameter('stagingEntityId', $entity->id)
+                    ->setParameter('masterEntity', $matching->get('masterEntity'))
+                    ->setParameter('masterEntityId', $row['id'])
+                    ->setParameter('score', $matchingScore)
+                    ->executeQuery();
             }
         }
 
         echo '<pre>';
-        print_r($matched);
+        print_r('123');
         die();
+
+        // echo '<pre>';
+        // print_r($matches);
+        // die();
     }
 
     protected function getEntityManager(): EntityManager
