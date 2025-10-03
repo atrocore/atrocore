@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -19,6 +20,16 @@ use Espo\ORM\EntityCollection;
 
 class Matching extends ReferenceData
 {
+    public function beforeSave(OrmEntity $entity, array $options = []): void
+    {
+        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
+            $entity->set('stagingEntity', $entity->get('entity'));
+            $entity->set('masterEntity', $entity->get('entity'));
+        }
+
+        parent::beforeSave($entity, $options);
+    }
+
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
     {
         if ($link === 'matchingRules') {

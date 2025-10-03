@@ -47,12 +47,10 @@ class MatchingManager
             return;
         }
 
-        $masterEntityName = $matching->get('type') === 'duplicate' ? $matching->get('entity') : $matching->get('masterEntity');
-
         $qb = $this->getConnection()->createQueryBuilder();
         $qb
             ->select('id')
-            ->from(Util::toUnderScore($masterEntityName))
+            ->from(Util::toUnderScore($matching->get('masterEntity')))
             ->where('deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
@@ -73,7 +71,7 @@ class MatchingManager
 
         $matched = [];
         foreach ($possibleMatches as $row) {
-            $masterEntity = $this->getEntityManager()->getRepository($masterEntityName)->get();
+            $masterEntity = $this->getEntityManager()->getRepository($matching->get('masterEntity'))->get();
             $masterEntity->id = $row['id'];
             $masterEntity->set(Util::arrayKeysToCamelCase($row));
 
