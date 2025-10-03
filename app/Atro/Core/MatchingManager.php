@@ -41,17 +41,10 @@ class MatchingManager
         return $ruleType;
     }
 
-    /**
-     * Returns array of matched entity IDs
-     *
-     * @param Entity $matching
-     * @param Entity $entity
-     * @return array
-     */
-    public function findMatches(Entity $matching, Entity $entity): array
+    public function findMatches(Entity $matching, Entity $entity): void
     {
         if (empty($matching->get('matchingRules'))) {
-            return [];
+            return;
         }
 
         $masterEntityName = $matching->get('type') === 'duplicate' ? $matching->get('entity') : $matching->get('masterEntity');
@@ -76,9 +69,9 @@ class MatchingManager
 
         $qb->andWhere(implode(' OR ', $rulesParts));
 
-        $possibleMatches = $qb->executeQuery();
+        $possibleMatches = $qb->fetchAllAssociative();
 
-        $matchedIds = [];
+        $matched = [];
         foreach ($possibleMatches as $row) {
             $masterEntity = $this->getEntityManager()->getRepository($masterEntityName)->get();
             $masterEntity->id = $row['id'];
@@ -91,11 +84,13 @@ class MatchingManager
             }
 
             if ($matchingScore >= $matching->get('minimumMatchingScore')) {
-                $matchedIds[] = $row['id'];
+                $matched[] = $row;
             }
         }
 
-        return $matchedIds;
+        echo '<pre>';
+        print_r($matched);
+        die();
     }
 
     protected function getEntityManager(): EntityManager
