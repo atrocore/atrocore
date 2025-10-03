@@ -107,6 +107,8 @@ class Metadata extends AbstractListener
 
         $this->addDuplicatesRightPanel($data);
 
+        $this->setMatchingRulesTypes($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -2128,5 +2130,12 @@ class Metadata extends AbstractListener
                 ];
             }
         }
+    }
+
+    protected function setMatchingRulesTypes(array &$data): void
+    {
+        $data['app']['matchingRules']['like'] = [
+            'fieldTypes' => \Atro\Core\MatchingRuleType\Like::getSupportedFieldTypes(),
+        ];
     }
 }

@@ -17,6 +17,31 @@ use Espo\ORM\Entity;
 
 class Like extends AbstractMatchingRule
 {
+    public static function getSupportedFieldTypes(): array
+    {
+        return [
+            // "array",
+            // "bool",
+            // "date",
+            // "datetime",
+            // "enum",
+            // "extensibleEnum",
+            // "extensibleMultiEnum",
+            // "file",
+            // "float",
+            // "int",
+            // "link",
+            // "measure",
+            // "multiEnum",
+            "markdown",
+            "password",
+            "text",
+            "url",
+            "varchar",
+            "wysiwyg"
+        ];
+    }
+
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
         $sqlPart = "REPLACE(LOWER(TRIM(" . $this->getConnection()->quoteIdentifier($this->rule->get('sourceField')) . ")), ' ', '') = :" . $this->rule->get('id');

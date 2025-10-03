@@ -27,6 +27,8 @@ abstract class AbstractMatchingRule
         $this->container = $container;
     }
 
+    abstract public static function getSupportedFieldTypes(): array;
+
     abstract public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string;
 
     abstract public function match(Entity $stageEntity, Entity $masterEntity): int;
