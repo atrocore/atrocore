@@ -2,7 +2,7 @@
   "fields": {
     "minimumMatchingScore": "Minimum Matching Score",
     "entity": "Entity",
-    "stageEntity": "Stage Entity",
+    "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules"
   },

@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matching-rule/fields/stage-entity', 'views/fields/varchar', Dep => {
+Espo.define('views/matching-rule/fields/staging-entity', 'views/fields/varchar', Dep => {
 
     return Dep.extend({
 

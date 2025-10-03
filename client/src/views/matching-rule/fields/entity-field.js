@@ -42,7 +42,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                         if (this.name === 'targetField') {
                             entityName = item.masterEntity;
                         } else if (this.name === 'sourceField') {
-                            entityName = item.stageEntity;
+                            entityName = item.stagingEntity;
                         }
                     }
                 }

@@ -4,7 +4,7 @@
     "weight": "Weight",
     "sourceField": "Source Field",
     "targetField": "Target Field",
-    "stageEntity": "Stage Entity",
+    "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity"
   },
   "options": {

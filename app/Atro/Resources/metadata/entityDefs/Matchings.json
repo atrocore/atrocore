@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "stagingEntity": {
+      "type": "varchar"
+    },
+    "stagingEntityId": {
+      "type": "varchar"
+    },
+    "masterEntity": {
+      "type": "varchar"
+    },
+    "masterEntityId": {
+      "type": "varchar"
+    },
+    "score": {
+      "type": "int"
+    }
+  }
+}

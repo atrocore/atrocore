@@ -64,7 +64,7 @@
         }
       }
     },
-    "stageEntity": {
+    "stagingEntity": {
       "type": "varchar",
       "view": "views/fields/entity-type",
       "conditionalProperties": {

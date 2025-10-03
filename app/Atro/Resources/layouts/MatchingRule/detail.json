@@ -27,7 +27,7 @@
       ],
       [
         {
-          "name": "stageEntity"
+          "name": "stagingEntity"
         },
         {
           "name": "masterEntity"
