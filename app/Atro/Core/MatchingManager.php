@@ -12,7 +12,7 @@
 
 namespace Atro\Core;
 
-use Atro\Core\MatchingRuleType\MatchingRuleTypeInterface;
+use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -28,14 +28,17 @@ class MatchingManager
         $this->container = $container;
     }
 
-    public function createMatchingType(string $type): MatchingRuleTypeInterface
+    public function createMatchingType(Entity $rule): AbstractMatchingRule
     {
-        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
+        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($rule->get('type'));
         if (!class_exists($className)) {
             throw new \Exception("Class $className not found");
         }
 
-        return $this->container->get($className);
+        $ruleType = $this->container->get($className);
+        $ruleType->setRule($rule);
+
+        return $ruleType;
     }
 
     public function findMatches(Entity $matching, Entity $entity): array
@@ -61,7 +64,7 @@ class MatchingManager
 
         $rulesParts = [];
         foreach ($matching->get('matchingRules') as $rule) {
-            $rulesParts[] = $this->createMatchingType($rule->get('type'))->prepareMatchingSqlPart($qb, $rule, $entity);
+            $rulesParts[] = $this->createMatchingType($rule)->prepareMatchingSqlPart($qb, $entity);
         }
 
         $qb->andWhere(implode(' OR ', $rulesParts));
@@ -76,7 +79,7 @@ class MatchingManager
             $masterEntity->set(Util::arrayKeysToCamelCase($row));
 
             foreach ($matching->get('matchingRules') as $rule) {
-                $value = $this->createMatchingType($rule->get('type'))->match($rule, $entity, $masterEntity);
+                $value = $this->createMatchingType($rule)->match($entity, $masterEntity);
                 echo '<pre>';
                 print_r($value);
                 die();

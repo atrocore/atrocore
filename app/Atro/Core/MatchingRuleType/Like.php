@@ -17,17 +17,17 @@ use Espo\ORM\Entity;
 
 class Like extends AbstractMatchingRule
 {
-    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $rule, Entity $stageEntity): string
+    public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
-        $sqlPart = "REPLACE(LOWER(TRIM(" . $this->getConnection()->quoteIdentifier($rule->get('sourceField')) . ")), ' ', '') = :" . $rule->get('id');
-        $qb->setParameter($rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($rule->get('targetField'))))));
+        $sqlPart = "REPLACE(LOWER(TRIM(" . $this->getConnection()->quoteIdentifier($this->rule->get('sourceField')) . ")), ' ', '') = :" . $this->rule->get('id');
+        $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('targetField'))))));
 
-        $qb->addSelect($this->getConnection()->quoteIdentifier($rule->get('sourceField')));
+        $qb->addSelect($this->getConnection()->quoteIdentifier($this->rule->get('sourceField')));
 
         return $sqlPart;
     }
 
-    public function match(Entity $rule, Entity $stageEntity, Entity $masterEntity): int
+    public function match(Entity $stageEntity, Entity $masterEntity): int
     {
         echo '<pre>';
         print_r('123');

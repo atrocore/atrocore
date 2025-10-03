@@ -14,14 +14,26 @@ namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Espo\ORM\Entity;
 
-abstract class AbstractMatchingRule implements MatchingRuleTypeInterface
+abstract class AbstractMatchingRule
 {
     protected Container $container;
+    protected Entity $rule;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    abstract public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string;
+
+    abstract public function match(Entity $stageEntity, Entity $masterEntity): int;
+
+    public function setRule(Entity $rule): void
+    {
+        $this->rule = $rule;
     }
 
     protected function getConnection(): Connection
