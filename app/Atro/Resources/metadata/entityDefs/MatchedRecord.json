@@ -1,5 +1,8 @@
 {
   "fields": {
+    "matchingId": {
+      "type": "varchar"
+    },
     "stagingEntity": {
       "type": "varchar"
     },

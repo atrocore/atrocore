@@ -54,7 +54,7 @@ class MatchingManager
             ->where('deleted=:false')
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
-        if ($matching->get('type') === 'duplicate' || $matching->get('masterEntity') === $matching->get('targetEntity')) {
+        if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
             $qb
                 ->andWhere('id != :id')
                 ->setParameter('id', $entity->get('id'));
