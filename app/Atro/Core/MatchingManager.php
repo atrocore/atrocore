@@ -69,24 +69,25 @@ class MatchingManager
 
         $qb->andWhere(implode(' OR ', $rulesParts));
 
-        $res = $qb->fetchAllAssociative();
+        $res = [];
 
-
-
-        foreach ($res as $row) {
+        foreach ($qb->fetchAllAssociative() as $row) {
             $masterEntity = $this->getEntityManager()->getRepository($masterEntityName)->get();
             $masterEntity->id = $row['id'];
             $masterEntity->set(Util::arrayKeysToCamelCase($row));
 
+            $matchingScore = 0;
             foreach ($matching->get('matchingRules') as $rule) {
                 $value = $this->createMatchingType($rule)->match($entity, $masterEntity);
-                echo '<pre>';
-                print_r($value);
-                die();
+                $matchingScore += $value;
+            }
+
+            if ($matchingScore >= $matching->get('minimumMatchingScore')) {
+                $res[] = $row['id'];
             }
         }
 
-        return [];
+        return $res;
     }
 
     protected function getEntityManager(): EntityManager

@@ -29,10 +29,13 @@ class Like extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, Entity $masterEntity): int
     {
-        echo '<pre>';
-        print_r('123');
-        die();
-        
+        $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField')))));
+        $masterValue = str_replace(' ', '', strtolower(trim($masterEntity->get($this->rule->get('targetField')))));
+
+        if ($stageValue === $masterValue) {
+            return $this->rule->get('weight') ?? 0;
+        }
+
         return 0;
     }
 }
