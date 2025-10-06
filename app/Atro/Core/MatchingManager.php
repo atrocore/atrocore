@@ -14,6 +14,7 @@ namespace Atro\Core;
 
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Utils\Util;
+use Atro\Entities\MatchingRule;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -28,7 +29,7 @@ class MatchingManager
         $this->container = $container;
     }
 
-    public function createMatchingType(Entity $rule): AbstractMatchingRule
+    public function createMatchingType(MatchingRule $rule): AbstractMatchingRule
     {
         $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($rule->get('type'));
         if (!class_exists($className)) {
@@ -69,23 +70,20 @@ class MatchingManager
         }
         $rulesParts = [];
         foreach ($matching->get('matchingRules') as $rule) {
-            $rulesParts[] = $this->createMatchingType($rule)->prepareMatchingSqlPart($qb, $entity);
+            $rulesParts[] = $rule->prepareMatchingSqlPart($qb, $entity);
         }
         $qb->andWhere(implode(' OR ', $rulesParts));
+
         $possibleMatches = $qb->fetchAllAssociative();
 
         // Find actual matches
-        $matches = [];
         foreach ($possibleMatches as $row) {
             $matchingScore = 0;
             foreach ($matching->get('matchingRules') as $rule) {
-                $value = $this->createMatchingType($rule)->match($entity, Util::arrayKeysToCamelCase($row));
-                $matchingScore += $value;
+                $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
 
             if ($matchingScore >= $matching->get('minimumMatchingScore')) {
-                // $matches[] = $row;
-
                 // Save match
                 $this->getConnection()->createQueryBuilder()
                     ->insert('matched_record')
@@ -106,14 +104,6 @@ class MatchingManager
                     ->executeQuery();
             }
         }
-
-        echo '<pre>';
-        print_r('123');
-        die();
-
-        // echo '<pre>';
-        // print_r($matches);
-        // die();
     }
 
     protected function getEntityManager(): EntityManager
