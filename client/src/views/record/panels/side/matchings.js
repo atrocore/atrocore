@@ -50,6 +50,8 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                 this.createView(item.name, 'views/record/panels/side/matched-records', {
                     name: item.name,
                     model: this.model,
+                    stagingEntity: item.stagingEntity,
+                    masterEntity: item.masterEntity,
                     el: `${this.options.el} .list-container[data-name="${item.name}"]`
                 }, view => {
                     view.render();
@@ -64,7 +66,9 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                     if (item.stagingEntity === this.model.name) {
                         this.matchesList.push({
                             name: code,
-                            label: item.name
+                            label: item.name,
+                            stagingEntity: item.stagingEntity,
+                            masterEntity: item.masterEntity,
                         });
                     }
                 }

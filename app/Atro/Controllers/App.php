@@ -68,18 +68,6 @@ class App extends \Espo\Controllers\App
         return $this->getService('App')->recalculateScriptField($data)->getValueMap();
     }
 
-    public function actionFindRecordDuplicates($params, $data, $request)
-    {
-        sleep(5);
-
-        return [
-            [
-                'id'   => 'a01k62gjqj7eebtt2fjkwtym711',
-                'name' => 'Test 11',
-            ]
-        ];
-    }
-
     protected function getRealtimeManager(): RealtimeManager
     {
         return $this->getContainer()->get('realtimeManager');

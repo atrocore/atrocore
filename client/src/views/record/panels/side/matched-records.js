@@ -18,6 +18,8 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
 
+            console.log(this);
+
             if (this.model.get("id")) {
                 this.getMatchedRecords();
             } else {
@@ -36,41 +38,17 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
         },
 
         getMatchedRecords() {
-            this.matchedRecordsList = [];
-
-            console.log(this.name)
-            
-
-            // this.matchesList.push({
-            //     name: 'qq11',
-            //     label: 'Test Matching 1',
-            //     matchedRecordsList: [
-            //         {
-            //             label: 'Record 1',
-            //             link: `/#${this.model.name}/view/1`
-            //         },
-            //         {
-            //             label: 'Record 2',
-            //             link: `/#${this.model.name}/view/2`
-            //         }
-            //     ]
-            // });
-
-            // const data = {
-            //     entityName: this.model.name,
-            //     entityId: this.model.id
-            // };
-            // this.ajaxGetRequest('App/action/findRecordDuplicates', data)
-            //     .success(list => {
-            //         (list || []).forEach(item => {
-            //             this.duplicatesList.push({
-            //                 label: item.name,
-            //                 link: `/#${this.model.name}/view/${item.id}`
-            //             })
-            //         })
-
-            //         this.reRender();
-            //     });
+            this.ajaxGetRequest('Matching/action/matchedRecords', { ruleCode: this.name, entityName: this.model.name, entityId: this.model.id })
+                .success(list => {
+                    this.matchedRecordsList = [];
+                    (list || []).forEach(item => {
+                        this.matchedRecordsList.push({
+                            label: item.name,
+                            link: `/#${this.model.name}/view/${item.id}`
+                        })
+                    })
+                    this.reRender();
+                });
         },
 
     });
