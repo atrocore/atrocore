@@ -2121,15 +2121,20 @@ class Metadata extends AbstractListener
     protected function addMatchesToRightPanel(array &$data): void
     {
         foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
-            if (empty($matching['isActive']) || empty($matching['stagingEntity'])) {
+            if (empty($matching['isActive'])) {
                 continue;
             }
 
-            $data['clientDefs'][$matching['stagingEntity']]['rightSidePanels'][] = [
-                'name'  => $matching['code'],
-                'label' => $matching['name'],
-                'view'  => 'views/record/panels/side/matches',
-            ];
+            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
+                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
+                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
+                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
+                        'name'  => 'matchedRecords',
+                        'label' => 'matchedRecords',
+                        'view'  => 'views/record/panels/side/matches',
+                    ];
+                }
+            }
         }
     }
 

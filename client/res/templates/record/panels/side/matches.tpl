@@ -1,14 +1,14 @@
 <div class="row">
     <div class="cell col-sm-12 form-group">
-        <label class="control-label"><span class="label-text" data-action="findMatches" style="cursor: pointer" title="{{translate 'findMatches'}}">{{translate 'Duplicates'}}</span></label>
-        <div>
-        {{#if matchesList}}
-          {{#each matchesList}}
-          <a href="{{link}}">{{label}}</a>
-          {{/each}}
-        {{else}}
-          ...
+        {{#if matchesList}}{{#each matchesList}}
+           <label class="control-label"><span class="label-text" data-action="findMatches" data-name="{{name}}" style="cursor: pointer" title="{{translate 'findMatches'}}">{{label}}</span></label>
+           <div class="links" data-name="{{name}}">
+           {{#each matchedRecordsList}}
+              <div><a href="{{link}}">{{label}}</a></div>
+           {{/each}}
+           </div>
+        {{/each}}{{else}}
+        <div>...</div>
         {{/if}}
-        </div>
     </div>
 </div>

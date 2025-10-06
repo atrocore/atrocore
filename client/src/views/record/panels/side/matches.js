@@ -9,57 +9,73 @@
  */
 
 Espo.define('views/record/panels/side/matches', 'view', Dep => {
-        return Dep.extend({
+    return Dep.extend({
 
-            template: "record/panels/side/matches",
+        template: "record/panels/side/matches",
 
-            events: _.extend({
-                'click [data-action="findMatches"]': function (e) {
-                    this.matchesList = [];
-                    this.reRender();
-                    this.getMatches();
-                },
-            }, Dep.prototype.events),
-
-            setup() {
-                Dep.prototype.setup.call(this);
-
-                this.matchesList = [];
-                if (this.model.get("id")) {
-                    this.getMatches();
-                } else {
-                    this.listenToOnce(this.model, "sync", () => {
-                        if (this.model.get("id")) {
-                            this.getMatches();
-                        }
-                    });
-                }
+        events: _.extend({
+            'click [data-action="findMatches"]': function (e) {
+                console.log($(e.currentTarget).data('name'));
+                // this.matchesList = [];
+                // this.reRender();
+                // this.getMatches();
             },
+        }, Dep.prototype.events),
 
-            data() {
-                return {
-                    matchesList: this.matchesList
-                };
-            },
+        setup() {
+            Dep.prototype.setup.call(this);
 
-            getMatches() {
-                // const data = {
-                //     entityName: this.model.name,
-                //     entityId: this.model.id
-                // };
-                // this.ajaxGetRequest('App/action/findRecordDuplicates', data)
-                //     .success(list => {
-                //         (list || []).forEach(item => {
-                //             this.duplicatesList.push({
-                //                 label: item.name,
-                //                 link: `/#${this.model.name}/view/${item.id}`
-                //             })
-                //         })
+            this.matchesList = [];
+            if (this.model.get("id")) {
+                this.getMatches();
+            } else {
+                this.listenToOnce(this.model, "sync", () => {
+                    if (this.model.get("id")) {
+                        this.getMatches();
+                    }
+                });
+            }
+        },
 
-                //         this.reRender();
-                //     });
-            },
+        data() {
+            return {
+                matchesList: this.matchesList
+            };
+        },
 
-        });
-    }
+        getMatches() {
+            this.matchesList.push({
+                name: 'qq11',
+                label: 'Test Matching 1',
+                matchedRecordsList: [
+                    {
+                        label: 'Record 1',
+                        link: `/#${this.model.name}/view/1`
+                    },
+                    {
+                        label: 'Record 2',
+                        link: `/#${this.model.name}/view/2`
+                    }
+                ]
+            });
+
+            // const data = {
+            //     entityName: this.model.name,
+            //     entityId: this.model.id
+            // };
+            // this.ajaxGetRequest('App/action/findRecordDuplicates', data)
+            //     .success(list => {
+            //         (list || []).forEach(item => {
+            //             this.duplicatesList.push({
+            //                 label: item.name,
+            //                 link: `/#${this.model.name}/view/${item.id}`
+            //             })
+            //         })
+
+            //         this.reRender();
+            //     });
+        },
+
+    });
+}
 );
