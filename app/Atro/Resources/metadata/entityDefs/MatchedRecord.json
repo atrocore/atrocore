@@ -18,5 +18,26 @@
     "score": {
       "type": "int"
     }
+  },
+  "indexes": {
+    "matchingId": {
+      "columns": [
+        "matchingId"
+      ]
+    },
+    "stagingEntity": {
+      "columns": [
+        "matchingId",
+        "stagingEntity",
+        "stagingEntityId"
+      ]
+    },
+    "masterEntity": {
+      "columns": [
+        "matchingId",
+        "masterEntity",
+        "matchingId"
+      ]
+    }
   }
 }

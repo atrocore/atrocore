@@ -8,6 +8,14 @@
           "name": "name"
         },
         {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
           "name": "code"
         }
       ],
@@ -19,17 +27,11 @@
       ],
       [
         {
-          "name": "type"
-        },
-        {
           "name": "minimumMatchingScore"
-        }
-      ],
-      [
+        },
         {
           "name": "entity"
-        },
-        false
+        }
       ],
       [
         {

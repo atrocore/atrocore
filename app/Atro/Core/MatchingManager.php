@@ -44,15 +44,23 @@ class MatchingManager
 
     public function findMatches(Entity $matching, Entity $entity): void
     {
+        if (empty($matching->get('isActive'))) {
+            return;
+        }
+
         if (empty($matching->get('matchingRules'))) {
             return;
         }
 
-        // Clear old matches
+        // Clear old matches for entity
         $this->getConnection()->createQueryBuilder()
             ->delete('matched_record')
             ->where('matching_id = :matchingId')
+            ->andWhere('staging_entity = :stagingEntity')
+            ->andWhere('staging_entity_id = :stagingEntityId')
             ->setParameter('matchingId', $matching->id)
+            ->setParameter('stagingEntity', $entity->getEntityName())
+            ->setParameter('stagingEntityId', $entity->id)
             ->executeQuery();
 
         // Find possible matches

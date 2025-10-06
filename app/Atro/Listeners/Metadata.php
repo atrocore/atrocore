@@ -105,7 +105,7 @@ class Metadata extends AbstractListener
 
         $this->addClassificationToEntity($data);
 
-        $this->addDuplicatesRightPanel($data);
+        $this->addMatchingsToRightPanel($data);
 
         $this->setMatchingRulesTypes($data);
 
@@ -2118,7 +2118,7 @@ class Metadata extends AbstractListener
         }
     }
 
-    protected function addDuplicatesRightPanel(array &$data): void
+    protected function addMatchingsToRightPanel(array &$data): void
     {
         return;
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
