@@ -105,7 +105,7 @@ class Metadata extends AbstractListener
 
         $this->addClassificationToEntity($data);
 
-        $this->addMatchingsToRightPanel($data);
+        $this->addMatchesToRightPanel($data);
 
         $this->setMatchingRulesTypes($data);
 
@@ -2118,17 +2118,18 @@ class Metadata extends AbstractListener
         }
     }
 
-    protected function addMatchingsToRightPanel(array &$data): void
+    protected function addMatchesToRightPanel(array &$data): void
     {
-        return;
-        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['checkForDuplicates'])) {
-                $data['clientDefs'][$scope]['rightSidePanels'][] = [
-                    'name'  => 'duplicates',
-                    'label' => 'Duplicates',
-                    'view'  => 'views/record/panels/side/duplicates',
-                ];
+        foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
+            if (empty($matching['isActive']) || empty($matching['stagingEntity'])) {
+                continue;
             }
+
+            $data['clientDefs'][$matching['stagingEntity']]['rightSidePanels'][] = [
+                'name'  => $matching['code'],
+                'label' => $matching['name'],
+                'view'  => 'views/record/panels/side/matches',
+            ];
         }
     }
 
