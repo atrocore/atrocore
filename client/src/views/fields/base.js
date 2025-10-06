@@ -975,11 +975,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getConditions(type) {
-            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.${type}.conditionGroup`);
+            const fieldName = this.originalName || this.name;
+
+            const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`)
+
+            return defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
         },
 
         getDisableOptionsRules() {
-            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}.conditionalProperties.disableOptions`);
+            const defs = this.model.get('attributesDefs')?.[this.name] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.name}`)
+
+            return defs?.['conditionalProperties']?.['disableOptions'];
         },
 
         getDisableOptionsViaConditions() {

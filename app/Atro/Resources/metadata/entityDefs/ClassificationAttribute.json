@@ -381,6 +381,19 @@
       "importDisabled": true,
       "emHidden": true
     },
+    "attributeEntityId": {
+      "type": "varchar",
+      "notStorable": true,
+      "layoutListDisabled": true,
+      "layoutListSmallDisabled": true,
+      "layoutDetailDisabled": true,
+      "layoutDetailSmallDisabled": true,
+      "layoutMassUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "attributeMeasureId": {
       "type": "varchar",
       "notStorable": true,
@@ -504,6 +517,209 @@
                 "markdown",
                 "wysiwyg"
               ]
+            }
+          ]
+        }
+      }
+    },
+    "enableConditionalRequired": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalRequired": {
+      "type": "jsonObject",
+      "view": "views/classification-attribute/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalRequired"
+            }
+          ]
+        }
+      }
+    },
+    "enableConditionalReadOnly": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalReadOnly": {
+      "type": "jsonObject",
+      "view": "views/classification-attribute/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalProtected"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalReadOnly"
+            }
+          ]
+        }
+      }
+    },
+    "enableConditionalProtected": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalProtected": {
+      "type": "jsonObject",
+      "view": "views/classification-attribute/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalProtected"
+            }
+          ]
+        }
+      }
+    },
+    "enableConditionalVisible": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "conditionalVisible": {
+      "type": "jsonObject",
+      "view": "views/classification-attribute/fields/conditions-container",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalVisible"
+            }
+          ]
+        }
+      }
+    },
+    "enableConditionalDisableOptions": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "enum",
+                "multiEnum",
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "conditionalDisableOptions": {
+      "type": "jsonArray",
+      "view": "views/classification-attribute/fields/conditional-disable-options",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "attributeType",
+              "value": [
+                "enum",
+                "multiEnum",
+                "extensibleEnum",
+                "extensibleMultiEnum"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "enableConditionalDisableOptions"
             }
           ]
         }

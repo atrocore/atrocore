@@ -35,12 +35,18 @@
     "htmlSanitizer": "HTML Sanitizer",
     "fullWidth": "Full Width",
     "channel": "Channel",
-    "attributeGroupSortOrder": "Sort Order in Attribute Group"
+    "attributeGroupSortOrder": "Sort Order in Attribute Group",
+    "conditionalRequired": "Required",
+    "conditionalVisible": "Visible",
+    "conditionalReadOnly": "Read-only",
+    "conditionalProtected": "Protected",
+    "conditionalDisableOptions": "Disabled Options"
   },
   "labels": {
     "Classification": "Classification",
     "addNewValue": "Add new value",
-    "extensibleEnumOptions": "List Options"
+    "extensibleEnumOptions": "List Options",
+    "conditionalProperties": "Conditional Properties"
   },
   "options": {
     "type": {

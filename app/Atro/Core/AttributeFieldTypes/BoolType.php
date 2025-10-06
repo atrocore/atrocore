@@ -64,6 +64,7 @@ class BoolType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

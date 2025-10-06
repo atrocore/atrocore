@@ -55,27 +55,30 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
             // load attributes in entityDefs
             if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
-                const ids = this.getAttributeIds(this.conditionGroup);
-                if (ids.length > 0) {
-                    const key = 'attributesDefs-' + this.scope + '-' + ids.join(',');
-                    if (!Espo[key]) {
-                        this.wait(true);
-                        this.ajaxGetRequest('Attribute/action/attributesDefs', {
-                            entityName: this.scope,
-                            attributesIds: ids
-                        }, { async: false }).success(res => {
-                            $.each(res, (field, fieldDefs) => {
-                                this.getMetadata().data.entityDefs[this.scope].fields[field] = fieldDefs;
-                                this.getLanguage().data[this.scope].fields[field] = fieldDefs.label;
-                            });
-
-                            Espo[key] = true;
-                            this.wait(false);
-                        })
-                    }
-                }
+                this.loadAttributesInMetadata(this.getAttributeIds(this.conditionGroup))
             }
             this.createStringView();
+        },
+
+        loadAttributesInMetadata(ids){
+            if (ids.length > 0) {
+                const key = 'attributesDefs-' + this.scope + '-' + ids.join(',');
+                if (!Espo[key]) {
+                    this.wait(true);
+                    this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                        entityName: this.scope,
+                        attributesIds: ids
+                    }, { async: false }).success(res => {
+                        $.each(res, (field, fieldDefs) => {
+                            this.getMetadata().data.entityDefs[this.scope].fields[field] = fieldDefs;
+                            this.getLanguage().data[this.scope].fields[field] = fieldDefs.label;
+                        });
+
+                        Espo[key] = true;
+                        this.wait(false);
+                    })
+                }
+            }
         },
 
         getAttributeIds(conditionGroup) {
