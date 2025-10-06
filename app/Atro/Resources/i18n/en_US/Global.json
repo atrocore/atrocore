@@ -478,7 +478,7 @@
     "editLabels": "Edit labels",
     "Duplicates": "Duplicates",
     "matchedRecords": "Matched Records",
-    "findMatches": "Find Matches"
+    "findMatches": "Click to find matches"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

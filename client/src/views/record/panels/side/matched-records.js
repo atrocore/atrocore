@@ -8,30 +8,22 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/record/panels/side/matches', 'view', Dep => {
+Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
     return Dep.extend({
 
-        template: "record/panels/side/matches",
+        template: "record/panels/side/matched-records",
 
-        events: _.extend({
-            'click [data-action="findMatches"]': function (e) {
-                console.log($(e.currentTarget).data('name'));
-                // this.matchesList = [];
-                // this.reRender();
-                // this.getMatches();
-            },
-        }, Dep.prototype.events),
+        matchedRecordsList: [],
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            this.matchesList = [];
             if (this.model.get("id")) {
-                this.getMatches();
+                this.getMatchedRecords();
             } else {
                 this.listenToOnce(this.model, "sync", () => {
                     if (this.model.get("id")) {
-                        this.getMatches();
+                        this.getMatchedRecords();
                     }
                 });
             }
@@ -39,25 +31,30 @@ Espo.define('views/record/panels/side/matches', 'view', Dep => {
 
         data() {
             return {
-                matchesList: this.matchesList
+                matchedRecordsList: this.matchedRecordsList
             };
         },
 
-        getMatches() {
-            this.matchesList.push({
-                name: 'qq11',
-                label: 'Test Matching 1',
-                matchedRecordsList: [
-                    {
-                        label: 'Record 1',
-                        link: `/#${this.model.name}/view/1`
-                    },
-                    {
-                        label: 'Record 2',
-                        link: `/#${this.model.name}/view/2`
-                    }
-                ]
-            });
+        getMatchedRecords() {
+            this.matchedRecordsList = [];
+
+            console.log(this.name)
+            
+
+            // this.matchesList.push({
+            //     name: 'qq11',
+            //     label: 'Test Matching 1',
+            //     matchedRecordsList: [
+            //         {
+            //             label: 'Record 1',
+            //             link: `/#${this.model.name}/view/1`
+            //         },
+            //         {
+            //             label: 'Record 2',
+            //             link: `/#${this.model.name}/view/2`
+            //         }
+            //     ]
+            // });
 
             // const data = {
             //     entityName: this.model.name,

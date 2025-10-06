@@ -2131,7 +2131,7 @@ class Metadata extends AbstractListener
                     $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
                         'name'  => 'matchedRecords',
                         'label' => 'matchedRecords',
-                        'view'  => 'views/record/panels/side/matches',
+                        'view'  => 'views/record/panels/side/matchings',
                     ];
                 }
             }
