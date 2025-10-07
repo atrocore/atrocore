@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
@@ -305,15 +306,22 @@ class File extends Base
 
     public function getPathsData(FileEntity $file): array
     {
+
         $res = [
             'download'   => $this->getDownloadUrl($file),
             'thumbnails' => [],
         ];
+        try {
 
-        if ($res['download'] !== null) {
-            foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
-                $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+            if ($res['download'] !== null) {
+                foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
+                    $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+                }
             }
+
+            throw  new Error('test ');
+        }catch (\Throwable $e) {
+            $GLOBALS['log']->error('Enable to load path for file: '.$file->get('id'). ' Error: '.$e->getMessage());
         }
 
         return $res;
