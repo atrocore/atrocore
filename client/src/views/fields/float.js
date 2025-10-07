@@ -40,6 +40,12 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         validations: ['required', 'float', 'range'],
 
+        onInlineEditSave(res, attrs, model) {
+            attrs[this.name] = res[this.name] || null
+
+            Dep.prototype.onInlineEditSave.call(this, res, attrs, model);
+        },
+
         getValueForDisplay: function () {
             var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
             return this.formatNumber(value);
@@ -146,18 +152,18 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                       if(rule.operator.type ==='between') {
-                           if((!Array.isArray(value) || value.length !== 2)) {
-                               return 'bad between';
-                           }
-                           return  true;
-                       }
+                        if (rule.operator.type === 'between') {
+                            if ((!Array.isArray(value) || value.length !== 2)) {
+                                return 'bad between';
+                            }
+                            return true;
+                        }
 
-                      if(isNaN(value) || value === null) {
-                          return 'bad float';
-                      }
+                        if (isNaN(value) || value === null) {
+                            return 'bad float';
+                        }
 
-                      return true;
+                        return true;
                     }.bind(this),
                 }
             };
