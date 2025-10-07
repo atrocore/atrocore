@@ -462,7 +462,7 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
 
     public function isAvailable(Storage $storage): bool
     {
-        return false;
+        return true;
     }
 
     protected static function buildFullPath(Storage $storage, ?string $path): string
