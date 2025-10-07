@@ -305,7 +305,6 @@ class File extends Base
 
     public function getPathsData(FileEntity $file): array
     {
-
         $res = [
             'download'   => $this->getDownloadUrl($file),
             'thumbnails' => [],
