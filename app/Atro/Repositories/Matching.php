@@ -30,6 +30,10 @@ class Matching extends ReferenceData
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
+        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'duplicate') {
+            $entity->set('foreignName', $entity->get('name'));
+        }
+
         parent::beforeSave($entity, $options);
     }
 
@@ -61,10 +65,8 @@ class Matching extends ReferenceData
         $conn = $this->getEntityManager()->getConnection();
 
         $select = ['master_entity', 'score', 't.id', 't.name'];
-        if (!empty($this->getConfig()->get('isMultilangActive'))) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
-                $select[] = 't.name_' . strtolower($code);
-            }
+        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
+            $select[] = 't.' . Util::toUnderScore($fieldName);
         }
 
         $res = $conn->createQueryBuilder()
@@ -83,6 +85,35 @@ class Matching extends ReferenceData
 
         return [
             'entityName' => $matching->get('masterEntity'),
+            'list'       => Util::arrayKeysToCamelCase($res)
+        ];
+    }
+
+    public function getForeignMatchedRecords(MatchingEntity $matching, string $entityName, string $entityId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $select = ['staging_entity', 'score', 't.id', 't.name'];
+        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
+            $select[] = 't.' . Util::toUnderScore($fieldName);
+        }
+
+        $res = $conn->createQueryBuilder()
+            ->select(implode(',', $select))
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't', 'mr.staging_entity_id = t.id AND t.deleted = :false')
+            ->where('mr.matching_id = :matchingId')
+            ->andWhere('mr.master_entity = :masterEntity')
+            ->andWhere('mr.master_entity_id = :masterEntityId')
+            ->andWhere('t.id IS NOT NULL')
+            ->setParameter('matchingId', $matching->get('id'))
+            ->setParameter('masterEntity', $entityName)
+            ->setParameter('masterEntityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return [
+            'entityName' => $matching->get('stagingEntity'),
             'list'       => Util::arrayKeysToCamelCase($res)
         ];
     }

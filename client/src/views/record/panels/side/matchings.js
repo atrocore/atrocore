@@ -30,6 +30,11 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                             name: code,
                             label: item.name,
                         });
+                    } else if (item.masterEntity === this.model.name) {
+                        this.matchesList.push({
+                            name: code,
+                            label: item.foreignName,
+                        });
                     }
                 }
             })

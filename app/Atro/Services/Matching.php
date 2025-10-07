@@ -27,10 +27,10 @@ class Matching extends ReferenceData
 
         if ($entityName === $matching->get('stagingEntity')) {
             return $this->getRepository()->getMatchedRecords($matching, $entityName, $entityId);
-        } else {
-            echo '<pre>';
-            print_r('do something else');
-            die();
+        }
+
+        if ($entityName === $matching->get('masterEntity')) {
+            return $this->getRepository()->getForeignMatchedRecords($matching, $entityName, $entityId);
         }
 
         return [];
