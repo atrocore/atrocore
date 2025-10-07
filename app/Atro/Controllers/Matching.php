@@ -25,6 +25,8 @@ class Matching extends ReferenceData
             throw new BadRequest();
         }
 
+        // $service = $this->getServiceFactory()->create('Matching');
+
         return $this
             ->getRecordService()
             ->getMatchedRecords($request->get('ruleCode'), $request->get('entityName'), $request->get('entityId'));

@@ -18,8 +18,6 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
         setup() {
             Dep.prototype.setup.call(this);
 
-            console.log(this);
-
             if (this.model.get("id")) {
                 this.getMatchedRecords();
             } else {
@@ -39,12 +37,12 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
 
         getMatchedRecords() {
             this.ajaxGetRequest('Matching/action/matchedRecords', { ruleCode: this.name, entityName: this.model.name, entityId: this.model.id })
-                .success(list => {
+                .success(res => {
                     this.matchedRecordsList = [];
-                    (list || []).forEach(item => {
+                    (res.list || []).forEach(item => {
                         this.matchedRecordsList.push({
                             label: item.name,
-                            link: `/#${this.model.name}/view/${item.id}`
+                            link: `/#${res.entityName}/view/${item.id}`
                         })
                     })
                     this.reRender();
