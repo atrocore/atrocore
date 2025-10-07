@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
@@ -318,8 +317,6 @@ class File extends Base
                     $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
                 }
             }
-
-            throw  new Error('test ');
         }catch (\Throwable $e) {
             $GLOBALS['log']->error('Enable to load path for file: '.$file->get('id'). ' Error: '.$e->getMessage());
         }
