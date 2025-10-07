@@ -60,11 +60,69 @@ class Matching extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
+    public function getMatchedDuplicates(MatchingEntity $matching, string $entityName, string $entityId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $select = [
+            'score',
+            'm.id as master_id',
+            'm.name as master_name',
+            's.id as staging_id',
+            's.name as staging_name'
+        ];
+        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
+            $select[] = 'm.' . Util::toUnderScore($fieldName) . ' as master_' . Util::toUnderScore($fieldName);
+            $select[] = 's.' . Util::toUnderScore($fieldName) . ' as staging_' . Util::toUnderScore($fieldName);
+        }
+
+        $res = $conn->createQueryBuilder()
+            ->select(implode(',', $select))
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 'm', 'mr.master_entity_id = m.id AND m.deleted = :false')
+            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 's', 'mr.staging_entity_id = s.id AND s.deleted = :false')
+            ->where('mr.matching_id = :matchingId')
+            ->andWhere('mr.staging_entity = :entityName')
+            ->andWhere('mr.master_entity = :entityName')
+            ->andWhere('mr.staging_entity_id = :entityId OR mr.master_entity_id = :entityId')
+            ->setParameter('matchingId', $matching->get('id'))
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($res as $item) {
+            if ($item['staging_id'] === $entityId) {
+                $row = [];
+                foreach ($item as $key => $value) {
+                    if (strpos($key, 'staging_') === false) {
+                        $row[str_replace('master_', '', $key)] = $value;
+                    }
+                }
+                $result[] = $row;
+            } else if ($item['master_id'] === $entityId) {
+                $row = [];
+                foreach ($item as $key => $value) {
+                    if (strpos($key, 'master_') === false) {
+                        $row[str_replace('staging_', '', $key)] = $value;
+                    }
+                }
+                $result[] = $row;
+            }
+        }
+
+        return [
+            'entityName' => $matching->get('masterEntity'),
+            'list'       => Util::arrayKeysToCamelCase($result)
+        ];
+    }
+
     public function getMatchedRecords(MatchingEntity $matching, string $entityName, string $entityId): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['master_entity', 'score', 't.id', 't.name'];
+        $select = ['score', 't.id', 't.name'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }
@@ -93,7 +151,7 @@ class Matching extends ReferenceData
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['staging_entity', 'score', 't.id', 't.name'];
+        $select = ['score', 't.id', 't.name'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }

@@ -25,6 +25,10 @@ class Matching extends ReferenceData
             return [];
         }
 
+        if ($matching->get('type') === 'duplicate') {
+            return $this->getRepository()->getMatchedDuplicates($matching, $entityName, $entityId);
+        }
+
         if ($entityName === $matching->get('stagingEntity')) {
             return $this->getRepository()->getMatchedRecords($matching, $entityName, $entityId);
         }
