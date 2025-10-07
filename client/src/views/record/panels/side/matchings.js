@@ -16,9 +16,6 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
         events: _.extend({
             'click [data-action="findMatches"]': function (e) {
                 console.log($(e.currentTarget).data('name'));
-                // this.matchesList = [];
-                // this.reRender();
-                // this.getMatchings();
             },
         }, Dep.prototype.events),
 
@@ -26,15 +23,16 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
             Dep.prototype.setup.call(this);
 
             this.matchesList = [];
-            if (this.model.get("id")) {
-                this.getMatchings();
-            } else {
-                this.listenToOnce(this.model, "sync", () => {
-                    if (this.model.get("id")) {
-                        this.getMatchings();
+            $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
+                if (item.isActive) {
+                    if (item.stagingEntity === this.model.name) {
+                        this.matchesList.push({
+                            name: code,
+                            label: item.name,
+                        });
                     }
-                });
-            }
+                }
+            })
         },
 
         data() {
@@ -54,20 +52,6 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                 }, view => {
                     view.render();
                 });
-            })
-        },
-
-        getMatchings() {
-            this.matchesList = [];
-            $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
-                if (item.isActive) {
-                    if (item.stagingEntity === this.model.name) {
-                        this.matchesList.push({
-                            name: code,
-                            label: item.name,
-                        });
-                    }
-                }
             })
         },
 

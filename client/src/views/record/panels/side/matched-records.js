@@ -13,7 +13,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
 
         template: "record/panels/side/matched-records",
 
-        matchedRecordsList: [],
+        matchedRecordsList: null,
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -31,6 +31,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
 
         data() {
             return {
+                hasMatchedRecordList: this.matchedRecordsList !== null,
                 matchedRecordsList: this.matchedRecordsList
             };
         },

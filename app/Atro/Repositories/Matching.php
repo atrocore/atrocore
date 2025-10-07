@@ -83,7 +83,7 @@ class Matching extends ReferenceData
 
         return [
             'entityName' => $matching->get('masterEntity'),
-            'list' => Util::arrayKeysToCamelCase($res)
+            'list'       => Util::arrayKeysToCamelCase($res)
         ];
     }
 }
