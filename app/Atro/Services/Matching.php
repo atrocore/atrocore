@@ -18,35 +18,20 @@ use Atro\Core\Templates\Services\ReferenceData;
 
 class Matching extends ReferenceData
 {
-
     public function getMatchedRecords(string $ruleCode, string $entityName, string $entityId): array
     {
-        echo '<pre>';
-        print_r('123');
-        die();
-
-        // $rule = $this
-        //     ->getEntityManager()
-        //     ->getRepository('Atro:MatchingRule')
-        //     ->findOneBy(['code' => $ruleCode]);
-
-        // if (!$rule) {
-        //     return [];
-        // }
-
-        // $entity = $this
-        //     ->getEntityManager()
-        //     ->getRepository($entityName)
-        //     ->find($entityId);
-
-        // if (!$entity) {
-        //     return [];
-        // }
-
-        // $matcher = $this->getMatcherFactory()->create($rule->getType());
-        // $matcher->setRule($rule);
-        // $matcher->setEntity($entity);
-
-        // return $matcher->getMatches();
+        return [
+            'entityName' => 'Product',
+            'list' => [
+                [
+                    'id' => '123-456-789',
+                    'name' => 'Sample Product'
+                ],
+                [
+                    'id' => '987-654-321',
+                    'name' => 'Another Product'
+                ],
+            ],
+        ];
     }
 }
