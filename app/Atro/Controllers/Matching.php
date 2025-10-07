@@ -21,12 +21,12 @@ class Matching extends ReferenceData
 {
     public function actionMatchedRecords($params, $data, $request)
     {
-        if (!$request->isGet() || empty($request->get('ruleCode')) || empty($request->get('entityName')) || empty($request->get('entityId'))) {
+        if (!$request->isGet() || empty($request->get('code')) || empty($request->get('entityName')) || empty($request->get('entityId'))) {
             throw new BadRequest();
         }
 
         return $this
             ->getRecordService()
-            ->getMatchedRecords($request->get('ruleCode'), $request->get('entityName'), $request->get('entityId'));
+            ->getMatchedRecords($request->get('code'), $request->get('entityName'), $request->get('entityId'));
     }
 }

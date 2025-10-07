@@ -18,20 +18,21 @@ use Atro\Core\Templates\Services\ReferenceData;
 
 class Matching extends ReferenceData
 {
-    public function getMatchedRecords(string $ruleCode, string $entityName, string $entityId): array
+    public function getMatchedRecords(string $code, string $entityName, string $entityId): array
     {
-        return [
-            'entityName' => 'Product',
-            'list' => [
-                [
-                    'id' => '123-456-789',
-                    'name' => 'Sample Product'
-                ],
-                [
-                    'id' => '987-654-321',
-                    'name' => 'Another Product'
-                ],
-            ],
-        ];
+        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+        if (empty($matching)) {
+            return [];
+        }
+
+        if ($entityName === $matching->get('stagingEntity')) {
+            return $this->getRepository()->getMatchedRecords($matching, $entityName, $entityId);
+        } else {
+            echo '<pre>';
+            print_r('do something else');
+            die();
+        }
+
+        return [];
     }
 }

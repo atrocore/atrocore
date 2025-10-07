@@ -36,7 +36,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
         },
 
         getMatchedRecords() {
-            this.ajaxGetRequest('Matching/action/matchedRecords', { ruleCode: this.name, entityName: this.model.name, entityId: this.model.id })
+            this.ajaxGetRequest('Matching/action/matchedRecords', { code: this.name, entityName: this.model.name, entityId: this.model.id })
                 .success(res => {
                     this.matchedRecordsList = [];
                     (res.list || []).forEach(item => {
