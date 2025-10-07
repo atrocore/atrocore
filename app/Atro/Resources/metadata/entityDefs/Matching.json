@@ -33,12 +33,37 @@
     "description": {
       "type": "text"
     },
-    "minimumMatchingScore": {
+    "minimumScore": {
       "type": "int",
       "required": true,
       "min": 0,
       "max": 100,
       "default": 100
+    },
+    "foreignName": {
+      "type": "varchar",
+      "trim": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "staging"
+            }
+          ]
+        }
+      }
     },
     "entity": {
       "type": "varchar",

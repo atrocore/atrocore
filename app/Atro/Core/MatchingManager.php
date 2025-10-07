@@ -91,7 +91,7 @@ class MatchingManager
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
 
-            if ($matchingScore >= $matching->get('minimumMatchingScore')) {
+            if ($matchingScore >= $matching->get('minimumScore')) {
                 // Save match
                 $this->getConnection()->createQueryBuilder()
                     ->insert('matched_record')

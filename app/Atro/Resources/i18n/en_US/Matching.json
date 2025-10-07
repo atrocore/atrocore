@@ -1,15 +1,19 @@
 {
   "fields": {
-    "minimumMatchingScore": "Minimum Matching Score",
+    "minimumScore": "Minimum Score",
     "entity": "Entity",
     "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity",
-    "matchingRules": "Matching Rules"
+    "matchingRules": "Matching Rules",
+    "foreignName": "Foreign Name"
   },
   "options": {
     "type": {
       "duplicate": "Duplicate",
       "staging": "Staging"
     }
+  },
+  "tooltips":{
+    "foreignName": "Name for a backward matching, e.g. 'staging' could be foreign name for 'master' matching."
   }
 }
