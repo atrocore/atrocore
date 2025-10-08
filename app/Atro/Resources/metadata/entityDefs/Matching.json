@@ -77,7 +77,7 @@
     },
     "entity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/matching/fields/entity-type",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -101,7 +101,7 @@
     },
     "stagingEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/matching/fields/entity-type",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -125,7 +125,7 @@
     },
     "masterEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/matching/fields/entity-type",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

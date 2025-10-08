@@ -31,5 +31,6 @@
   "clearDeletedAfterDays": 35,
   "actionDisabled": true,
   "emHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true
 }

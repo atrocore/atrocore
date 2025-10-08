@@ -13,6 +13,7 @@
 namespace Atro\Core;
 
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
+use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\MatchingRule;
 use Atro\Repositories\Matching;
@@ -39,6 +40,21 @@ class MatchingManager
         $ruleType->setRule($rule);
 
         return $ruleType;
+    }
+
+    public function findMatchingsAfterEntitySave(Entity $entity): void
+    {
+        if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.matchingDisabled")) {
+            return;
+        }
+
+        if (!in_array($this->getMetadata()->get("scopes.{$entity->getEntityName()}.type"), ['Base', 'Hierarchy'])) {
+            return;
+        }
+
+        echo '<pre>';
+        print_r($entity->getEntityName());
+        die();
     }
 
     public function findMatches(Entity $matching, Entity $entity): void
@@ -77,6 +93,11 @@ class MatchingManager
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 
     protected function getMatchingRepository(): Matching

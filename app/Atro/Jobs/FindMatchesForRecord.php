@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Entities\Job;
+use Atro\Repositories\Matching;
 
 class FindMatchesForRecord extends AbstractJob implements JobInterface
 {
@@ -28,13 +29,17 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
             return;
         }
 
+        $matching = $this->getEntityManager()->getEntity('Matching', $matchingId);
+        if (!$matching) {
+            return;
+        }
+
         $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
         if (!$entity) {
             return;
         }
 
-        $matching = $this->getEntityManager()->getEntity('Matching', $matchingId);
-        if (!$matching) {
+        if (!empty($entity->get(Matching::prepareFieldName($matching->get('code'))))) {
             return;
         }
 
