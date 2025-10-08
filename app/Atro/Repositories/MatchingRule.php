@@ -14,12 +14,23 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Entities\MatchingRule as EntitiesMatchingRule;
+use Espo\ORM\Entity as OrmEntity;
 
 class MatchingRule extends ReferenceData
 {
+    public function validateCode(OrmEntity $entity): void
+    {
+        parent::validateCode($entity);
+
+        if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
+            throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
+        }
+    }
+
     public function createMatchingType(EntitiesMatchingRule $rule): AbstractMatchingRule
     {
         return $this->getInjection('matchingManager')->createMatchingType($rule);

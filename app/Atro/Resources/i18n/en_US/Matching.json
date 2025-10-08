@@ -13,7 +13,10 @@
       "staging": "Staging"
     }
   },
-  "tooltips":{
+  "tooltips": {
     "foreignName": "Name for a backward matching, e.g. 'staging' could be foreign name for 'master' matching."
+  },
+  "exceptions": {
+    "notValidCode": "Code must contain only letters, numbers, and underscores."
   }
 }

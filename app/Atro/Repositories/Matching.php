@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
@@ -36,6 +37,24 @@ class Matching extends ReferenceData
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    public function afterSave(OrmEntity $entity, array $options = []): void
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('code')) {
+            $this->rebuild();
+        }
+    }
+
+    public function validateCode(OrmEntity $entity): void
+    {
+        parent::validateCode($entity);
+
+        if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
+            throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
+        }
     }
 
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
@@ -250,5 +269,10 @@ class Matching extends ReferenceData
             'entityName' => $matching->get('stagingEntity'),
             'list'       => Util::arrayKeysToCamelCase($res)
         ];
+    }
+
+    protected function rebuild(): void
+    {
+        (new \Atro\Core\Application())->getContainer()->get('dataManager')->rebuild();
     }
 }

@@ -105,9 +105,7 @@ class Metadata extends AbstractListener
 
         $this->addClassificationToEntity($data);
 
-        $this->addMatchesToRightPanel($data);
-
-        $this->setMatchingRulesTypes($data);
+        $this->prepareMetadataViaMatchings($data);
 
         $event->setArgument('data', $data);
     }
@@ -2118,13 +2116,41 @@ class Metadata extends AbstractListener
         }
     }
 
-    protected function addMatchesToRightPanel(array &$data): void
+    protected function prepareMetadataViaMatchings(array &$data): void
     {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // set matching rules types
+        foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
+            $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
+            if (!class_exists($className)) {
+                continue;
+            }
+
+            $data['app']['matchingRules'][$type] = [
+                'fieldTypes' => $className::getSupportedFieldTypes(),
+            ];
+        }
+
         foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
+            $data['entityDefs'][$matching['stagingEntity']]['fields']["matching_{$matching['code']}"] = [
+                'type'                 => 'bool',
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
+            ];
+
             if (empty($matching['isActive'])) {
                 continue;
             }
 
+            // add right panel
             foreach (['stagingEntity', 'masterEntity'] as $entityType) {
                 $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
                 if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
@@ -2135,20 +2161,6 @@ class Metadata extends AbstractListener
                     ];
                 }
             }
-        }
-    }
-
-    protected function setMatchingRulesTypes(array &$data): void
-    {
-        foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
-            $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
-            if (!class_exists($className)) {
-                continue;
-            }
-
-            $data['app']['matchingRules'][$type] = [
-                'fieldTypes' => $className::getSupportedFieldTypes(),
-            ];
         }
     }
 }
