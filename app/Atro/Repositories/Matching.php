@@ -98,6 +98,11 @@ class Matching extends ReferenceData
             ->executeQuery();
     }
 
+    public function isMatchingSearchedForRecord(MatchingEntity $matching, Entity $entity) : bool 
+    {
+        return false;        
+    }
+
     public function unmarkAllMatchingSearched(MatchingEntity $matching): void
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -187,7 +192,7 @@ class Matching extends ReferenceData
         }
     }
 
-    public function getMatchedDuplicates(MatchingEntity $matching, string $entityName, string $entityId): array
+    public function getMatchedDuplicates(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -213,14 +218,14 @@ class Matching extends ReferenceData
             ->andWhere('mr.master_entity = :entityName')
             ->andWhere('mr.staging_entity_id = :entityId OR mr.master_entity_id = :entityId')
             ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('entityName', $entityName)
-            ->setParameter('entityId', $entityId)
+            ->setParameter('entityName', $entity->getEntityName())
+            ->setParameter('entityId', $entity->id)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         $result = [];
         foreach ($res as $item) {
-            if ($item['staging_id'] === $entityId) {
+            if ($item['staging_id'] === $entity->id) {
                 $row = [];
                 foreach ($item as $key => $value) {
                     if (strpos($key, 'staging_') === false) {
@@ -228,7 +233,7 @@ class Matching extends ReferenceData
                     }
                 }
                 $result[] = $row;
-            } else if ($item['master_id'] === $entityId) {
+            } else if ($item['master_id'] === $entity->id) {
                 $row = [];
                 foreach ($item as $key => $value) {
                     if (strpos($key, 'master_') === false) {
@@ -245,7 +250,7 @@ class Matching extends ReferenceData
         ];
     }
 
-    public function getMatchedRecords(MatchingEntity $matching, string $entityName, string $entityId): array
+    public function getMatchedRecords(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -263,8 +268,8 @@ class Matching extends ReferenceData
             ->andWhere('mr.staging_entity_id = :stagingEntityId')
             ->andWhere('t.id IS NOT NULL')
             ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('stagingEntity', $entityName)
-            ->setParameter('stagingEntityId', $entityId)
+            ->setParameter('stagingEntity', $entity->getEntityName())
+            ->setParameter('stagingEntityId', $entity->id)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
@@ -274,7 +279,7 @@ class Matching extends ReferenceData
         ];
     }
 
-    public function getForeignMatchedRecords(MatchingEntity $matching, string $entityName, string $entityId): array
+    public function getForeignMatchedRecords(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -292,8 +297,8 @@ class Matching extends ReferenceData
             ->andWhere('mr.master_entity_id = :masterEntityId')
             ->andWhere('t.id IS NOT NULL')
             ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('masterEntity', $entityName)
-            ->setParameter('masterEntityId', $entityId)
+            ->setParameter('masterEntity', $entity->getEntityName())
+            ->setParameter('masterEntityId', $entity->id)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 

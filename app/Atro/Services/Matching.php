@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Services\ReferenceData;
+use Atro\Repositories\Matching as MatchingRepository;
 
 class Matching extends ReferenceData
 {
@@ -25,18 +27,44 @@ class Matching extends ReferenceData
             return [];
         }
 
+        $entity = $this->getEntityManager()->getRepository($entityName)->get($entityId);
+        if (empty($entity)) {
+            return [];
+        }
+
+        if (!$this->getRepository()->isMatchingSearchedForRecord($matching, $entity)) {
+            $this->getMatchingManager()->findMatches($matching, $entity);
+        }
+
         if ($matching->get('type') === 'duplicate') {
-            return $this->getRepository()->getMatchedDuplicates($matching, $entityName, $entityId);
+            return $this->getRepository()->getMatchedDuplicates($matching, $entity);
         }
 
         if ($entityName === $matching->get('stagingEntity')) {
-            return $this->getRepository()->getMatchedRecords($matching, $entityName, $entityId);
+            return $this->getRepository()->getMatchedRecords($matching, $entity);
         }
 
         if ($entityName === $matching->get('masterEntity')) {
-            return $this->getRepository()->getForeignMatchedRecords($matching, $entityName, $entityId);
+            return $this->getRepository()->getForeignMatchedRecords($matching, $entity);
         }
 
         return [];
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('matchingManager');
+    }
+
+    protected function getRepository(): MatchingRepository
+    {
+        return parent::getRepository();
+    }
+
+    protected function getMatchingManager(): MatchingManager
+    {
+        return $this->getInjection('matchingManager');
     }
 }
