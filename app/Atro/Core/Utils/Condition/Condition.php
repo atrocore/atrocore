@@ -460,7 +460,7 @@ class Condition
 
         $currentValue = array_shift($values);
         if (is_object($currentValue)) {
-            throw new Error('The first value should not be an Array or Object type');
+            throw new Error('The first value should not be an Object');
         }
 
         $needValue = array_shift($values);
