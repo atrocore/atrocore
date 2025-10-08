@@ -2135,7 +2135,8 @@ class Metadata extends AbstractListener
         }
 
         foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
-            $data['entityDefs'][$matching['stagingEntity']]['fields']["matching_{$matching['code']}"] = [
+            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching['code']);
+            $data['entityDefs'][$matching['stagingEntity']]['fields'][$fieldName] = [
                 'type'                 => 'bool',
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,

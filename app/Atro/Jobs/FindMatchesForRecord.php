@@ -16,7 +16,7 @@ namespace Atro\Jobs;
 
 use Atro\Entities\Job;
 
-class FindMatchesForEntity extends AbstractJob implements JobInterface
+class FindMatchesForRecord extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {

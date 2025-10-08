@@ -25,6 +25,11 @@ use Espo\ORM\EntityCollection;
 
 class Matching extends ReferenceData
 {
+    public static function prepareFieldName(string $code): string
+    {
+        return "matching_" . Util::toUnderScore(lcfirst($code));
+    }
+
     public function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {

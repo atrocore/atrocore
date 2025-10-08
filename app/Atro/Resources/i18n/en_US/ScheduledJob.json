@@ -20,7 +20,8 @@
       "ComposerAutoUpdate": "Update system automatically",
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
-      "ScanStorage": "Scan Storage"
+      "ScanStorage": "Scan Storage",
+      "FindMatches": "Find matches"
     }
   },
   "tooltips": {
