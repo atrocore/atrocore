@@ -52,9 +52,11 @@ class MatchingManager
             return;
         }
 
-        echo '<pre>';
-        print_r($entity->getEntityName());
-        die();
+        foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
+            if ($matching->get('isActive') && ($matching->get('stagingEntity') === $entity->getEntityName() || $matching->get('masterEntity') === $entity->getEntityName())) {
+                $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+            }
+        }
     }
 
     public function findMatches(Entity $matching, Entity $entity): void

@@ -98,6 +98,20 @@ class Matching extends ReferenceData
             ->executeQuery();
     }
 
+    public function unmarkAllMatchingSearched(MatchingEntity $matching): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->set($column, ':false')
+            ->where("$column = :true")
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();

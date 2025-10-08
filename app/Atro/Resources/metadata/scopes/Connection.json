@@ -9,5 +9,6 @@
   "enabledCopyConfigurations": true,
   "streamDisabled": true,
   "emHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true
 }
