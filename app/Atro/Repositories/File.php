@@ -309,11 +309,15 @@ class File extends Base
             'download'   => $this->getDownloadUrl($file),
             'thumbnails' => [],
         ];
+        try {
 
-        if ($res['download'] !== null) {
-            foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
-                $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+            if ($res['download'] !== null) {
+                foreach ($this->getMetadata()->get('app.thumbnailTypes') ?? [] as $type => $typeData) {
+                    $res['thumbnails'][$type] = $this->getStorage($file)->getThumbnail($file, $type);
+                }
             }
+        }catch (\Throwable $e) {
+            $GLOBALS['log']->error('Enable to load path for file: '.$file->get('id'). ' Error: '.$e->getMessage());
         }
 
         return $res;

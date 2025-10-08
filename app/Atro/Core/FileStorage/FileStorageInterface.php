@@ -59,4 +59,6 @@ interface FileStorageInterface
     public function getThumbnailPdfImageCachePath(File $file): ?string;
 
     public function getContents(File $file): string;
+
+    public function isAvailable(Storage $storage): bool;
 }
