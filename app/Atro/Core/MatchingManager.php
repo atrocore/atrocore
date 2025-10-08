@@ -15,8 +15,7 @@ namespace Atro\Core;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Utils\Util;
 use Atro\Entities\MatchingRule;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
+use Atro\Repositories\Matching;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -53,36 +52,10 @@ class MatchingManager
         }
 
         // Clear old matches for entity
-        $this->getConnection()->createQueryBuilder()
-            ->delete('matched_record')
-            ->where('matching_id = :matchingId')
-            ->andWhere('staging_entity = :stagingEntity')
-            ->andWhere('staging_entity_id = :stagingEntityId')
-            ->setParameter('matchingId', $matching->id)
-            ->setParameter('stagingEntity', $entity->getEntityName())
-            ->setParameter('stagingEntityId', $entity->id)
-            ->executeQuery();
+        $this->getMatchingRepository()->deleteMatchedRecordsForEntity($matching, $entity);
 
         // Find possible matches
-        $qb = $this->getConnection()->createQueryBuilder();
-        $qb
-            ->select('id')
-            ->from(Util::toUnderScore($matching->get('masterEntity')))
-            ->where('deleted=:false')
-            ->setParameter('false', false, ParameterType::BOOLEAN);
-
-        if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
-            $qb
-                ->andWhere('id != :id')
-                ->setParameter('id', $entity->get('id'));
-        }
-        $rulesParts = [];
-        foreach ($matching->get('matchingRules') as $rule) {
-            $rulesParts[] = $rule->prepareMatchingSqlPart($qb, $entity);
-        }
-        $qb->andWhere(implode(' OR ', $rulesParts));
-
-        $possibleMatches = $qb->fetchAllAssociative();
+        $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
 
         // Find actual matches
         foreach ($possibleMatches as $row) {
@@ -92,7 +65,8 @@ class MatchingManager
             }
 
             if ($matchingScore >= $matching->get('minimumScore')) {
-                $this->getEntityManager()->getRepository('Matching')
+                $this
+                    ->getMatchingRepository()
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
             }
         }
@@ -103,8 +77,8 @@ class MatchingManager
         return $this->container->get('entityManager');
     }
 
-    protected function getConnection(): Connection
+    protected function getMatchingRepository(): Matching
     {
-        return $this->container->get('connection');
+        return $this->getEntityManager()->getRepository('Matching');
     }
 }

@@ -18,6 +18,7 @@ use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\ParameterType;
+use Espo\Core\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 
@@ -58,6 +59,43 @@ class Matching extends ReferenceData
         }
 
         return parent::countRelated($entity, $relationName, $params);
+    }
+
+    public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('id')
+            ->from($conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))))
+            ->where('deleted=:false')
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
+        if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
+            $qb
+                ->andWhere('id != :id')
+                ->setParameter('id', $entity->get('id'));
+        }
+        $rulesParts = [];
+        foreach ($matching->get('matchingRules') as $rule) {
+            $rulesParts[] = $rule->prepareMatchingSqlPart($qb, $entity);
+        }
+        $qb->andWhere(implode(' OR ', $rulesParts));
+
+        return $qb->fetchAllAssociative();
+    }
+
+    public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
+    {
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete('matched_record')
+            ->where('matching_id = :matchingId')
+            ->andWhere('(staging_entity = :entityName AND staging_entity_id = :entityId) OR (master_entity = :entityName AND master_entity_id = :entityId)')
+            ->setParameter('matchingId', $matching->id)
+            ->setParameter('entityName', $entity->getEntityName())
+            ->setParameter('entityId', $entity->id)
+            ->executeQuery();
     }
 
     public function createMatchedRecord(MatchingEntity $matching, string $stagingEntityId, string $masterEntityId, int $score): void
