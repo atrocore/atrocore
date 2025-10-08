@@ -64,6 +64,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
             valueList.forEach(function (value, i) {
                 var model = this.model.clone();
                 model.set(this.itemData.attribute, value);
+                if (this.itemData.data?.field && this.itemData.data?.values?.[this.itemData.data.field + 'Names']) {
+                    model.set(this.itemData.data.field + 'Name', this.itemData.data.values[this.itemData.data.field + 'Names'][value]);
+                }
 
                 var key = this.getValueViewKey(i);
                 this.valueViewDataList.push({
@@ -74,7 +77,7 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                 this.createView(key, viewName, {
                     model: model,
                     name: this.field,
-                    el: this.getSelector() + ' [data-view-key="'+key+'"]'
+                    el: this.getSelector() + ' [data-view-key="' + key + '"]'
                 });
             }, this);
         },

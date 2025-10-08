@@ -47,15 +47,60 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link', 'views/admi
 
             if (valueView) {
                 valueView.fetchToModel();
-                item.value = this.model.get(this.field + 'Id');
+                if (['in', 'notIn'].includes(item.type)) {
+                    item.value = this.model.get(this.field + 'Ids');
 
-                var values = {};
-                values[this.field + 'Name'] = this.model.get(this.field + 'Name');
-                item.data.values = values;
+                    const values = {};
+                    values[this.field + 'Ids'] = this.model.get(this.field + 'Ids');
+                    values[this.field + 'Names'] = this.model.get(this.field + 'Names');
+                    item.data.values = values;
+                } else {
+                    item.value = this.model.get(this.field + 'Id');
+
+                    const values = {};
+                    values[this.field + 'Name'] = this.model.get(this.field + 'Name');
+                    item.data.values = values;
+                }
             }
 
             return item;
-        }
+        },
+
+        createValueViewIn: function () {
+            this.createLinkMultipleValueField();
+        },
+
+        createValueViewNotIn: function () {
+            this.createLinkMultipleValueField();
+        },
+
+        createLinkMultipleValueField: function () {
+            if (!this.model.get(this.field + 'Ids')) {
+                const id = this.model.get(this.field + 'Id');
+                const name = this.model.get(this.field + 'Name');
+                if (id) {
+                    this.model.set(this.field + 'Ids', [id]);
+                }
+                if (name) {
+                    this.model.set(this.field + 'Names', { [id]: name });
+                }
+            }
+
+            const viewName = 'views/fields/link-multiple';
+
+            this.createView('value', viewName, {
+                model: this.model,
+                name: this.field,
+                el: this.getSelector() + ' .value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+                foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this);
+        },
 
     });
 
