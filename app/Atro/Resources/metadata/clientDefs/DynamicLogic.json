@@ -169,7 +169,7 @@
         },
         "linkMultiple": {
             "view": "views/admin/dynamic-logic/conditions/field-types/link-multiple",
-            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains","in", "notIn"]
         },
         "foreign": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
@@ -185,7 +185,7 @@
         },
         "extensibleMultiEnum": {
             "view": "views/admin/dynamic-logic/conditions/field-types/extensible-multi-enum",
-            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains"]
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains","in", "notIn"]
         },
         "array": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
