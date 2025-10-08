@@ -519,12 +519,12 @@ class Record extends RecordService
         return true;
     }
 
-    protected function getMandatoryLinksToMerge(): array
+    public function getMandatoryLinksToMerge(): array
     {
         return [];
     }
 
-    protected function getForbiddenLinksToMerge(): array
+    public function getForbiddenLinksToMerge(): array
     {
         $links = [];
         $scopeDefs = $this->getMetadata()->get(['scopes', $this->entityName]);

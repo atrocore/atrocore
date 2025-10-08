@@ -327,6 +327,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         getRelationshipPanels() {
             let relationshipsPanels = [];
+            if (this.versionModel) return relationshipsPanels;
             const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
             for (let link in this.model.defs.links) {
@@ -718,7 +719,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         }
                     }
                 });
-            }, 100 )
+            }, 100)
 
         },
 
@@ -842,7 +843,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
 
-            if(this.merging) {
+            if (this.merging) {
                 this.handleRadioButtonsDisableState(false)
             }
         },
@@ -874,13 +875,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.toggleFieldPanels();
         },
 
+        getModelsForAttributes() {
+            return [...this.collection.models, this.model]
+        },
+
         putAttributesToModel() {
             let hasAttributeValues = false;
             if (!this.getMetadata().get(`scopes.${this.scope}.hasAttribute`)) {
                 return;
             }
 
-            let models = [...this.collection.models, this.model];
+            let models = this.getModelsForAttributes();
 
             models.forEach(model => {
                 model.fetch({ async: false })
@@ -931,6 +936,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     view.parent().hide();
                 }
             })
+        },
+
+        remove(dontEmpty) {
+            if (this.anchorNavigation !== null) {
+                try {
+                    this.anchorNavigation.$destroy();
+                } catch (e) {
+
+                }
+            }
+            Dep.prototype.remove.call(this, dontEmpty);
         }
     });
 });
