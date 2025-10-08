@@ -70,6 +70,8 @@ class MatchingManager
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
             }
         }
+
+        $this->getMatchingRepository()->markMatchingSearched($matching, $entity);
     }
 
     protected function getEntityManager(): EntityManager

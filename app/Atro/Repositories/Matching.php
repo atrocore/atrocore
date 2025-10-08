@@ -27,7 +27,7 @@ class Matching extends ReferenceData
 {
     public static function prepareFieldName(string $code): string
     {
-        return "matching_" . Util::toUnderScore(lcfirst($code));
+        return Util::toCamelCase("matching_" . Util::toUnderScore(lcfirst($code)));
     }
 
     public function beforeSave(OrmEntity $entity, array $options = []): void
@@ -83,6 +83,19 @@ class Matching extends ReferenceData
         }
 
         return parent::countRelated($entity, $relationName, $params);
+    }
+
+    public function markMatchingSearched(MatchingEntity $matching, Entity $entity): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
+            ->set(Util::toUnderScore(self::prepareFieldName($matching->get('code'))), ':true')
+            ->where('id = :id')
+            ->setParameter('id', $entity->id)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
     }
 
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
