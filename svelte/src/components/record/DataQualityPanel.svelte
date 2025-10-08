@@ -143,11 +143,6 @@
         highlightedCheckId = evt.detail.checkId
     }
 
-    window.addEventListener('record:save', loadQualityCheckData);
-    window.addEventListener('record:check-recalculated', onCheckRecalculated)
-    window.addEventListener('record:show-qc-details', onShowDetails)
-    window.addEventListener('record:check-highlighted', onCheckHighlighted)
-
     onMount(() => {
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
             if (defs.dataQualityCheck) {
@@ -170,7 +165,6 @@
             return
         }
 
-        activeItem = qualityChecksList[0].value;
         window.addEventListener('record:save', loadQualityCheckData);
         window.addEventListener('record:check-recalculated', onCheckRecalculated)
         window.addEventListener('record:show-qc-details', onShowDetails)
@@ -200,12 +194,6 @@
         }
     })
 
-    onDestroy(() => {
-        window.removeEventListener('record:save', loadQualityCheckData)
-        window.removeEventListener('record:check-recalculated', onCheckRecalculated)
-        window.removeEventListener('record:show-qc-details', onShowDetails)
-        window.removeEventListener('record:check-highlighted', onCheckHighlighted)
-    });
 </script>
 
 <div>
