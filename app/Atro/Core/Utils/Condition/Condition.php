@@ -459,14 +459,25 @@ class Condition
         self::isValidCountArray(2, $values);
 
         $currentValue = array_shift($values);
-        if (is_array($currentValue) || is_object($currentValue)) {
-            throw new Error('The first value should not be an Array or Object type');
+        if (is_object($currentValue)) {
+            throw new Error('The first value should not be an Object');
         }
+
         $needValue = array_shift($values);
 
         if (!is_array($needValue)) {
             throw new Error('The second value must be an Array type');
         }
+
+        if (is_array($currentValue)){
+            foreach ($currentValue as $value) {
+                if (in_array($value, $needValue)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         return in_array($currentValue, $needValue);
     }
 
