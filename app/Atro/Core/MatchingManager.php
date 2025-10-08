@@ -92,24 +92,8 @@ class MatchingManager
             }
 
             if ($matchingScore >= $matching->get('minimumScore')) {
-                // Save match
-                $this->getConnection()->createQueryBuilder()
-                    ->insert('matched_record')
-                    ->setValue('id', ':id')
-                    ->setValue('matching_id', ':matchingId')
-                    ->setValue('staging_entity', ':stagingEntity')
-                    ->setValue('staging_entity_id', ':stagingEntityId')
-                    ->setValue('master_entity', ':masterEntity')
-                    ->setValue('master_entity_id', ':masterEntityId')
-                    ->setValue('score', ':score')
-                    ->setParameter('id', Util::generateId())
-                    ->setParameter('matchingId', $matching->id)
-                    ->setParameter('stagingEntity', $matching->get('stagingEntity'))
-                    ->setParameter('stagingEntityId', $entity->id)
-                    ->setParameter('masterEntity', $matching->get('masterEntity'))
-                    ->setParameter('masterEntityId', $row['id'])
-                    ->setParameter('score', $matchingScore)
-                    ->executeQuery();
+                $this->getEntityManager()->getRepository('Matching')
+                    ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
             }
         }
     }

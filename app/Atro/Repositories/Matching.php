@@ -60,6 +60,44 @@ class Matching extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
+    public function createMatchedRecord(MatchingEntity $matching, string $stagingEntityId, string $masterEntityId, int $score): void
+    {
+        $hashParts = [
+            $matching->id,
+            $matching->get('stagingEntity'),
+            $stagingEntityId,
+            $matching->get('masterEntity'),
+            $masterEntityId
+        ];
+        sort($hashParts);
+
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->insert('matched_record')
+            ->setValue('id', ':id')
+            ->setValue('matching_id', ':matchingId')
+            ->setValue('staging_entity', ':stagingEntity')
+            ->setValue('staging_entity_id', ':stagingEntityId')
+            ->setValue('master_entity', ':masterEntity')
+            ->setValue('master_entity_id', ':masterEntityId')
+            ->setValue('score', ':score')
+            ->setValue('status', ':status')
+            ->setValue('hash', ':hash')
+            ->setParameter('id', Util::generateId())
+            ->setParameter('matchingId', $matching->id)
+            ->setParameter('stagingEntity', $matching->get('stagingEntity'))
+            ->setParameter('stagingEntityId', $stagingEntityId)
+            ->setParameter('masterEntity', $matching->get('masterEntity'))
+            ->setParameter('masterEntityId', $masterEntityId)
+            ->setParameter('score', $score)
+            ->setParameter('status', 'found')
+            ->setParameter('hash', md5(implode('_', $hashParts)));
+
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
+        }
+    }
+
     public function getMatchedDuplicates(MatchingEntity $matching, string $entityName, string $entityId): array
     {
         $conn = $this->getEntityManager()->getConnection();

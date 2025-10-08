@@ -17,6 +17,13 @@
     },
     "score": {
       "type": "int"
+    },
+    "status": {
+      "type": "varchar"
+    },
+    "hash": {
+      "type": "varchar",
+      "unique": true
     }
   },
   "indexes": {
