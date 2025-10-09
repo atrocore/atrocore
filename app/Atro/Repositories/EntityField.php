@@ -121,18 +121,18 @@ class EntityField extends ReferenceData
         }
 
         $result = array_merge($fieldDefs, [
-            'id' => "{$entityName}_{$fieldName}",
-            'code' => $fieldName,
-            'name' => $label,
-            'entityId' => $entityName,
-            'entityName' => $this->translate($entityName, 'scopeNames'),
-            'tooltipText' => $this->translate($fieldName, 'tooltips', $entityName),
-            'conditionalRequired' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
-            'conditionalReadOnly' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
-            'conditionalProtected' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
-            'conditionalVisible' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
+            'id'                        => "{$entityName}_{$fieldName}",
+            'code'                      => $fieldName,
+            'name'                      => $label,
+            'entityId'                  => $entityName,
+            'entityName'                => $this->translate($entityName, 'scopeNames'),
+            'tooltipText'               => $this->translate($fieldName, 'tooltips', $entityName),
+            'conditionalRequired'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.required"),
+            'conditionalReadOnly'       => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.readOnly"),
+            'conditionalProtected'      => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.protected"),
+            'conditionalVisible'        => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.visible"),
             'conditionalDisableOptions' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.conditionalProperties.disableOptions"),
-            'multilangField' => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
+            'multilangField'            => $this->getMetadata()->get("entityDefs.$entityName.fields.$fieldName.multilangField"),
         ]);
 
         if (!empty($translatedOptions)) {
@@ -176,13 +176,13 @@ class EntityField extends ReferenceData
         $items = [];
         foreach ($entities as $entityName) {
             $items[] = [
-                'id' => "{$entityName}_id",
-                'code' => 'id',
-                'name' => 'ID',
-                'type' => 'varchar',
-                'required' => false,
-                'readOnly' => true,
-                'entityId' => $entityName,
+                'id'         => "{$entityName}_id",
+                'code'       => 'id',
+                'name'       => 'ID',
+                'type'       => 'varchar',
+                'required'   => false,
+                'readOnly'   => true,
+                'entityId'   => $entityName,
                 'entityName' => $this->translate($entityName, 'scopeNames')
             ];
             foreach ($this->getMetadata()->get(['entityDefs', $entityName, 'fields'], []) as $fieldName => $fieldDefs) {
@@ -219,7 +219,7 @@ class EntityField extends ReferenceData
             $attribute = $this->getEntityManager()->getRepository('Attribute')
                 ->where([
                     'entityId' => $entity->get('entityId'),
-                    'code' => $entity->get('code')
+                    'code'     => $entity->get('code')
                 ])
                 ->findOne();
 
@@ -335,7 +335,7 @@ class EntityField extends ReferenceData
 
     protected function clearEntityScriptFields(OrmEntity $entity): void
     {
-        if($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'type']) === 'ReferenceData') {
+        if ($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'type']) === 'ReferenceData') {
             return;
         }
 
@@ -345,14 +345,14 @@ class EntityField extends ReferenceData
 
         $repository = $this->getEntityManager()->getRepository($entity->get('entityId'));
 
-        if($entity->isAttributeChanged('script')) {
+        if ($entity->isAttributeChanged('script')) {
             $repository->clearEntityField($entity->get('code'));
         }
 
         if ($entity->get('isMultilang') && !empty($this->getConfig()->get('isMultilangActive'))) {
-            foreach ( $this->getConfig()->get('inputLanguageList', []) as $code) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
                 if ($entity->isAttributeChanged('script' . ucfirst(Util::toCamelCase(strtolower($code))))) {
-                    $field = $entity->get('code') .  ucfirst(Util::toCamelCase(strtolower($code)));
+                    $field = $entity->get('code') . ucfirst(Util::toCamelCase(strtolower($code)));
                     $repository->clearEntityField($field);
                 }
             }
@@ -360,10 +360,10 @@ class EntityField extends ReferenceData
     }
 
 
-    public function updateOptionCode($scope, $field, string  $oldValue, string $newValue): bool
+    public function updateOptionCode($scope, $field, string $oldValue, string $newValue): bool
     {
         $type = $this->getMetadata()->get("scopes.{$scope}.type");
-        $fieldEntity = $this->get($scope. '_'. $field);
+        $fieldEntity = $this->get($scope . '_' . $field);
 
         if (!in_array($oldValue, $fieldEntity->get('options'))) {
             throw new BadRequest('Such option old option code does not exist.');
@@ -384,11 +384,11 @@ class EntityField extends ReferenceData
         $label = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.options.$field.$oldValue");
         if (!empty($label)) {
             $newLabel = $this->getEntityManager()->getRepository('Translation')->getEntityByCode("$scope.options.$field.$newValue");
-            if(empty($newLabel)) {
+            if (empty($newLabel)) {
                 $newLabel = $this->getEntityManager()->getEntity('Translation');
                 $newLabel->set($label->toArray());
                 $newLabel->id = md5("$scope.options.$field.$newValue");
-            }else{
+            } else {
                 $id = $newLabel->id;
                 $newLabel->set($label->toArray());
                 $newLabel->id = $id;
@@ -396,7 +396,7 @@ class EntityField extends ReferenceData
 
             $newLabel->set(['module' => 'custom', 'isCustomized' => true, 'code' => "$scope.options.$field.$newValue"]);
 
-            if ( $label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
+            if ($label->get('module') === 'custom' && !empty($label->get('isCustomized'))) {
                 $this->getEntityManager()->removeEntity($label);
             }
 
@@ -406,12 +406,12 @@ class EntityField extends ReferenceData
         // replace values in database
         if ($type === 'ReferenceData') {
             $file = ReferenceData::DIR_PATH . DIRECTORY_SEPARATOR . $scope . '.json';
-            if(file_exists($file)) {
+            if (file_exists($file)) {
                 $data = json_decode(file_get_contents($file), true);
                 $shouldUpdate = false;
                 foreach ($data as $code => $item) {
 
-                    if(empty($item[$field])) {
+                    if (empty($item[$field])) {
                         continue;
                     }
 
@@ -424,12 +424,12 @@ class EntityField extends ReferenceData
                         $key = array_search($oldValue, $values);
                         if ($key !== false) {
                             $values[$key] = $newValue;
-                            $data[$code][$field] =  $item[$field]  =  $values;
+                            $data[$code][$field] = $item[$field] = $values;
                             $shouldUpdate = true;
                         }
                     }
                 }
-                if($shouldUpdate) {
+                if ($shouldUpdate) {
                     file_put_contents($file, json_encode($data));
                 }
             }
@@ -662,7 +662,7 @@ class EntityField extends ReferenceData
 
         $typeFields = array_column($this->getMetadata()->get("fields.{$entity->get('type')}.params", []), 'name');
 
-        if(in_array('script', $typeFields) && !empty($entity->get('isMultilang'))) {
+        if (in_array('script', $typeFields) && !empty($entity->get('isMultilang'))) {
             $languages = [];
 
             if (!empty($this->getConfig()->get('isMultilangActive'))) {
@@ -678,7 +678,7 @@ class EntityField extends ReferenceData
             }
 
             foreach ($languages as $language => $languageName) {
-                $typeFields[] = 'script'. ucfirst(Util::toCamelCase(strtolower($language)));
+                $typeFields[] = 'script' . ucfirst(Util::toCamelCase(strtolower($language)));
             }
         }
 
@@ -801,17 +801,17 @@ class EntityField extends ReferenceData
             $fetchedOptions = $entity->getFetched('options') ?? [];
             $newOptions = $entity->get('options') ?? [];
             foreach ($fetchedOptions as $option) {
-                if(!in_array($option,  $newOptions)) {
+                if (!in_array($option, $newOptions)) {
                     $deletedOptions[] = $option;
                 }
 
-                if(!empty($fetchedTranslatedOptions->{$option}) && !empty($newTranslationOptions->{$option}) && $fetchedTranslatedOptions->{$option} !== $newTranslationOptions->{$option}) {
+                if (!empty($fetchedTranslatedOptions->{$option}) && !empty($newTranslationOptions->{$option}) && $fetchedTranslatedOptions->{$option} !== $newTranslationOptions->{$option}) {
                     $updatedOrCreatedOptions[] = $option;
                 }
             }
 
             foreach ($newOptions as $option) {
-                if(!in_array($option,  $fetchedOptions)) {
+                if (!in_array($option, $fetchedOptions)) {
                     $updatedOrCreatedOptions[] = $option;
                 }
             }
@@ -823,7 +823,7 @@ class EntityField extends ReferenceData
             }
 
             foreach ($updatedOrCreatedOptions as $option) {
-                if(empty($newTranslationOptions->{$option})) {
+                if (empty($newTranslationOptions->{$option})) {
                     continue;
                 }
                 $this->getLanguage()
