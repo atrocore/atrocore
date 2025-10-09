@@ -512,6 +512,21 @@ class Attribute extends Base
         return parent::save($entity, $options);
     }
 
+    public  function clearAttributeValue(string $scope, string $attributeId, string $column): void
+    {
+        $table = Util::toUnderScore(lcfirst($scope) . '_attribute_value');
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier($table))
+            ->set($column, ':null')
+            ->where('attribute_id = :attributeId')
+            ->andWhere("$column is NOT NULL AND deleted=:false")
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('attributeId', $attributeId)
+            ->executeQuery();
+    }
+
     /**
      * @inheritDoc
      */
