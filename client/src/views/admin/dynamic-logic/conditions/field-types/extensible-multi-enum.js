@@ -29,8 +29,12 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/extensible-multi-e
         createLinkValueField: function () {
             const ids = this.model.get(this.field);
             const names = this.model.get(this.field + 'Names');
-            this.model.set(this.field, Array.isArray(ids) ? ids[0] : ids);
-            this.model.set(this.field + 'Name', Array.isArray(names) ? names[0] : names);
+            if (Array.isArray(ids) && ids[0]) {
+                this.model.set(this.field, ids[0]);
+                if (names && names[ids[0]]) {
+                    this.model.set(this.field + 'Name', names[ids[0]]);
+                }
+            }
 
             var viewName = this.getValueViewName();
             this.createView('value', viewName, {
@@ -38,6 +42,41 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/extensible-multi-e
                 name: this.field,
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit'
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this);
+        },
+
+        createValueViewIn: function () {
+            this.createExtensibleMultiEnumValueField();
+        },
+
+        createValueViewNotIn: function () {
+            this.createExtensibleMultiEnumValueField();
+        },
+
+        createExtensibleMultiEnumValueField: function () {
+
+            const id = this.model.get(this.field);
+            const name = this.model.get(this.field + 'Name');
+            if (id && typeof id == 'string') {
+                this.model.set(this.field, [id]);
+                if (name) {
+                    this.model.set(this.field + 'Names', { [id]: name });
+                }
+            }
+
+            const viewName = 'views/fields/extensible-multi-enum';
+
+            this.createView('value', viewName, {
+                model: this.model,
+                name: this.field,
+                el: this.getSelector() + ' .value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+                extensibleEnumId: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'extensibleEnumId'])
             }, function (view) {
                 if (this.isRendered()) {
                     view.render();
@@ -61,8 +100,14 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/extensible-multi-e
                 item.value = this.model.get(this.field);
 
                 const values = {};
-                values[this.field] = [this.model.get(this.field)];
-                values[this.field + 'Names'] = [this.model.get(this.field + 'Name')]
+                if (['in', 'notIn'].includes(item.type)) {
+                    values[this.field] = this.model.get(this.field);
+                    values[this.field + 'Names'] = this.model.get(this.field + 'Names')
+                } else {
+                    values[this.field] = [this.model.get(this.field)];
+                    values[this.field + 'Names'] = { [this.model.get(this.field)]: this.model.get(this.field + 'Name') }
+                }
+
                 item.data.values = values;
             }
 

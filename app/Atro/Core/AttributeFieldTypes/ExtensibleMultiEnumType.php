@@ -93,6 +93,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'notSortable'               => true,
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";
