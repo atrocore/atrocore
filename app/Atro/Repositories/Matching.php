@@ -73,6 +73,12 @@ class Matching extends ReferenceData
             return $this->getEntityManager()->getRepository('MatchingRule')->find($selectParams);
         }
 
+        if ($link === 'matchedRecords') {
+            $selectParams['whereClause'] = [['matchingId=' => $entity->get('id')]];
+
+            return $this->getEntityManager()->getRepository('MatchedRecord')->find($selectParams);
+        }
+
         return parent::findRelated($entity, $link, $selectParams);
     }
 
@@ -83,6 +89,12 @@ class Matching extends ReferenceData
             $params['limit'] = \PHP_INT_MAX;
 
             return count($this->findRelated($entity, $relationName, $params));
+        }
+
+        if ($relationName === 'matchedRecords') {
+            $selectParams['whereClause'] = [['matchingId=' => $entity->get('id')]];
+
+            return $this->getEntityManager()->getRepository('MatchedRecord')->count($selectParams);
         }
 
         return parent::countRelated($entity, $relationName, $params);

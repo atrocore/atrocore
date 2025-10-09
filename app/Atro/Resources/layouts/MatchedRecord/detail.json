@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "matching"
+        },
+        false
+      ],
+      [
+        {
+          "name": "staging"
+        },
+        {
+          "name": "master"
+        }
+      ],
+      [
+        {
+          "name": "status"
+        },
+        {
+          "name": "score"
+        }
+      ]
+    ]
+  }
+]

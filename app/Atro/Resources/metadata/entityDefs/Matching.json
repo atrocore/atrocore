@@ -153,6 +153,12 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
+    "matchedRecords": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -177,6 +183,10 @@
       "type": "hasMany",
       "foreign": "matching",
       "entity": "MatchingRule"
+    },
+    "matchedRecords": {
+      "type": "hasMany",
+      "entity": "MatchedRecord"
     },
     "createdBy": {
       "type": "belongsTo",

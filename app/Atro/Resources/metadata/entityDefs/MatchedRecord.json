@@ -1,13 +1,24 @@
 {
   "fields": {
-    "matchingId": {
-      "type": "varchar"
+    "matching": {
+      "type": "link",
+      "entity": "Matching"
+    },
+    "staging": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/matched-record/fields/staging"
     },
     "stagingEntity": {
       "type": "varchar"
     },
     "stagingEntityId": {
       "type": "varchar"
+    },
+    "master": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/matched-record/fields/master"
     },
     "masterEntity": {
       "type": "varchar"
@@ -25,6 +36,10 @@
       "type": "varchar",
       "unique": true
     }
+  },
+  "collection": {
+    "sortBy": "score",
+    "asc": false
   },
   "indexes": {
     "matchingId": {
