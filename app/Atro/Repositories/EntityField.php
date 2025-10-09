@@ -333,7 +333,7 @@ class EntityField extends ReferenceData
         $this->clearEntityScriptFields($entity);
     }
 
-    public function updateOptionCode($scope, $field, string $oldValue, string $newValue): bool
+    public function updateOptionCode(string $scope, string $field, string $oldValue, string $newValue): bool
     {
         $type = $this->getMetadata()->get("scopes.{$scope}.type");
         $fieldEntity = $this->get($scope . '_' . $field);
