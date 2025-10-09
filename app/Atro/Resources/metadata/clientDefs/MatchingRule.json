@@ -1,3 +1,4 @@
 {
+  "iconClass": "rows-plus-bottom",
   "controller": "controllers/record"
 }

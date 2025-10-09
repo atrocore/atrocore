@@ -1,4 +1,5 @@
 {
+  "iconClass": "shuffle",
   "controller": "controllers/record",
   "relationshipPanels": {
     "matchingRules": {
