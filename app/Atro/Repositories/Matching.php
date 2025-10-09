@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
@@ -133,6 +134,9 @@ class Matching extends ReferenceData
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->setParameter('false', false, ParameterType::BOOLEAN)
             ->executeQuery();
+
+        // it needs for immediate start of finding matched records
+        $this->getMatchingManager()->createFindMatchesJob($matching);
     }
 
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
@@ -338,5 +342,17 @@ class Matching extends ReferenceData
     protected function rebuild(): void
     {
         (new \Atro\Core\Application())->getContainer()->get('dataManager')->rebuild();
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('matchingManager');
+    }
+
+    protected function getMatchingManager(): MatchingManager
+    {
+        return $this->getInjection('matchingManager');
     }
 }

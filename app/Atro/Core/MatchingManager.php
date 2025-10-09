@@ -15,6 +15,7 @@ namespace Atro\Core;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\Entities\Matching as MatchingEntity;
 use Atro\Entities\MatchingRule;
 use Atro\Repositories\Matching;
 use Espo\ORM\Entity;
@@ -40,6 +41,37 @@ class MatchingManager
         $ruleType->setRule($rule);
 
         return $ruleType;
+    }
+
+    public function createFindMatchesJob(MatchingEntity $matching): void
+    {
+        $exists = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'name' => 'Find matches immediately',
+                'type' => 'FindMatches',
+                'status' => [
+                    'Pending',
+                    'Running'
+                ]
+            ])
+            ->findOne();
+
+        if (!empty($exists)) {
+            return;
+        }
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => "Find matches immediately",
+            'type'     => 'FindMatches',
+            'status'   => 'Pending',
+            'priority' => 200,
+            'payload'  => [
+                'matchingId' => $matching->id
+            ]
+        ]);
+
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 
     public function findMatchingsAfterEntitySave(Entity $entity): void

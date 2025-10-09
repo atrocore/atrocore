@@ -31,7 +31,9 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                         });
                     }
                 }
-            })
+            });
+
+            this.matchesList.sort((a, b) => a.label.localeCompare(b.label));
         },
 
         data() {

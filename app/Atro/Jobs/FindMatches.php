@@ -20,6 +20,18 @@ class FindMatches extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
+        $exists = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'id!='   => $job->id,
+                'type'   => 'FindMatches',
+                'status' => 'Running'
+            ])
+            ->findOne();
+
+        if (!empty($exists)) {
+            return;
+        }
+
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
             if (empty($matching->get('isActive'))) {
                 continue;
