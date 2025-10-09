@@ -38,6 +38,20 @@ class Record extends RecordService
         if (!empty($_GET['timezone'])) {
             $this->modifyEntityFieldsByTimezone($entity, $_GET['timezone']);
         }
+
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityType(), 'type']) !== 'ReferenceData') {
+            foreach ($entity->entityDefs['fields'] as $field => $fieldDefs) {
+                $fieldDefs = $entity->entityDefs['fields'][$field];
+
+                if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])
+                    && $entity->has($field)
+                    && $entity->get($field) === null
+                ) {
+                    $entity->_realtimeDisabled = true;
+                    $this->getRepository()->calculateScriptFields($entity);
+                }
+            }
+        }
     }
 
     public function modifyEntityFieldsByTimezone(Entity $entity, string $timezone): void

@@ -11,9 +11,11 @@
 
 namespace Atro\Core\ORM\Repositories;
 
+use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\EventManager\Event;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\Interfaces\Injectable;
 use Atro\Core\Utils\Config;
@@ -1095,6 +1097,103 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->getInjection('connection');
+    }
+
+    public function calculateScriptFields(Entity $entity, $save = true): bool
+    {
+        $updated = false;
+        foreach ($entity->entityDefs['fields'] as $field => $fieldDefs) {
+            $fieldDefs = $entity->entityDefs['fields'][$field];
+
+            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
+                $contents = $this->getInjection('container')->get('twig')
+                    ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
+
+                $entity->set($field, $contents);
+                $updated = true;
+            }
+
+        }
+
+        if ($updated && $save) {
+            $this->save($entity, ['recalculatingScriptFields' => true]);
+        }
+
+        return $updated;
+    }
+
+    public  function clearEntityField(string $field): void
+    {
+        $table = Util::toUnderScore(lcfirst($this->entityType));
+        $conn = $this->getEntityManager()->getConnection();
+        $column = $this->getEntityManager()->getMapper()->toDb($field);
+
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier($table))
+            ->set($column, ':null')
+            ->where("$column is NOT NULL AND deleted=:false")
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
+    public function getEntitiesIdsWithNullScriptFields(int $offset = 0, int $limit = 2000): array
+    {
+        // we build the query to retrieve record with at least one script field null or one null attribute values;
+        $table = Util::toUnderScore($this->entityType);
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->select('t.id')
+            ->from($this->getConnection()->quoteIdentifier($table), 't')
+            ->where('t.deleted = :false')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->distinct()
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN);
+
+        $conditions = [];
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
+                $conditions[] = $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
+            }
+        }
+
+        if ($this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute']) && class_exists('\AdvancedDataTypes\Module')) {
+            $atTable = $table . '_attribute_value';
+            $foreignColumn = Util::toUnderScore(lcfirst($this->entityType)) . "_id";
+            $qb->leftJoin('t', $atTable, 'at', "t.id = at.$foreignColumn AND at.deleted = :false")
+                ->leftJoin('at', 'attribute', 'a', 'a.id = at.attribute_id AND a.deleted = :false AND a.type = :script AND a.entity_id = :entityId')
+                ->setParameter('script', 'script')
+                ->setParameter('entityId', $this->entityType);
+
+            /** @var \AdvancedDataTypes\AttributeFieldTypes\ScriptType $scriptType */
+            $scriptType = $this->getEntityManager()->getContainer()->get(AttributeFieldConverter::class)->getFieldType('script');
+
+            foreach (['int', 'float', 'bool', 'date', 'datetime', 'text', 'wysiwyg'] as $outputType) {
+                $column = $scriptType->getColumnByOutputType($outputType);
+
+                if (in_array($outputType, ['text', 'wysiwyg'])) {
+                    if (!empty($this->getConfig()->get('isMultilangActive'))) {
+                        foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                            $langColumn = $column . '_' . strtolower($code);
+                            $conditions[] = "(a.output_type = :$outputType AND (at.$langColumn IS NULL) AND a.is_multilang = :true)";
+                        }
+                    }
+                }
+
+                $conditions[] = "(a.output_type = :$outputType AND at.$column IS NULL )";
+                $qb->setParameter($outputType, $outputType);
+            }
+        }
+
+        if (empty($conditions)) {
+            return [];
+        }
+
+        $qb->andWhere(join(' OR ', $conditions));
+
+        return array_column($qb->fetchAllAssociative(), 'id');
     }
 
     protected function beforeRestore($id)
