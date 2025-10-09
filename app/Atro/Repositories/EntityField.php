@@ -333,33 +333,6 @@ class EntityField extends ReferenceData
         $this->clearEntityScriptFields($entity);
     }
 
-    protected function clearEntityScriptFields(OrmEntity $entity): void
-    {
-        if ($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'type']) === 'ReferenceData') {
-            return;
-        }
-
-        if ($entity->get('type') !== 'script' || $entity->isNew()) {
-            return;
-        }
-
-        $repository = $this->getEntityManager()->getRepository($entity->get('entityId'));
-
-        if ($entity->isAttributeChanged('script')) {
-            $repository->clearEntityField($entity->get('code'));
-        }
-
-        if ($entity->get('isMultilang') && !empty($this->getConfig()->get('isMultilangActive'))) {
-            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
-                if ($entity->isAttributeChanged('script' . ucfirst(Util::toCamelCase(strtolower($code))))) {
-                    $field = $entity->get('code') . ucfirst(Util::toCamelCase(strtolower($code)));
-                    $repository->clearEntityField($field);
-                }
-            }
-        }
-    }
-
-
     public function updateOptionCode($scope, $field, string $oldValue, string $newValue): bool
     {
         $type = $this->getMetadata()->get("scopes.{$scope}.type");
@@ -929,6 +902,32 @@ class EntityField extends ReferenceData
             $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->get('entityId'), 'fields', $entity->get('code')]);
             if (!isset($fieldDefs['auditableEnabled'])) {
                 $entity->set('auditableEnabled', true);
+            }
+        }
+    }
+
+    protected function clearEntityScriptFields(OrmEntity $entity): void
+    {
+        if ($this->getMetadata()->get(['scopes', $entity->get('entityId'), 'type']) === 'ReferenceData') {
+            return;
+        }
+
+        if ($entity->get('type') !== 'script' || $entity->isNew()) {
+            return;
+        }
+
+        $repository = $this->getEntityManager()->getRepository($entity->get('entityId'));
+
+        if ($entity->isAttributeChanged('script')) {
+            $repository->clearEntityField($entity->get('code'));
+        }
+
+        if ($entity->get('isMultilang') && !empty($this->getConfig()->get('isMultilangActive'))) {
+            foreach ($this->getConfig()->get('inputLanguageList', []) as $code) {
+                if ($entity->isAttributeChanged('script' . ucfirst(Util::toCamelCase(strtolower($code))))) {
+                    $field = $entity->get('code') . ucfirst(Util::toCamelCase(strtolower($code)));
+                    $repository->clearEntityField($field);
+                }
             }
         }
     }
