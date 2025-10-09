@@ -49,6 +49,7 @@ class Record extends RecordService
                 ) {
                     $entity->_realtimeDisabled = true;
                     $this->getRepository()->calculateScriptFields($entity);
+                    break;
                 }
             }
         }
