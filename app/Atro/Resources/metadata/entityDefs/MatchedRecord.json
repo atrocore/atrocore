@@ -15,6 +15,7 @@
     },
     "stagingEntity": {
       "type": "varchar",
+      "view": "views/matching/fields/entity-type",
       "protected": true
     },
     "stagingEntityId": {
@@ -31,6 +32,7 @@
     },
     "masterEntity": {
       "type": "varchar",
+      "view": "views/matching/fields/entity-type",
       "protected": true
     },
     "masterEntityId": {

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "staging"
+  },
+  {
+    "name": "master"
+  },
+  {
+    "name": "status"
+  },
+  {
+    "name": "score"
+  }
+]

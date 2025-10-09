@@ -13,7 +13,11 @@ Espo.define('views/matching/fields/entity-type', 'views/fields/entity-type', Dep
     return Dep.extend({
 
         checkAvailability(entityType) {
-            if (Dep.prototype.checkAvailability.call(this, entityType) && !this.getMetadata().get(`scopes.${entityType}.matchingDisabled`)) {
+            if (
+                Dep.prototype.checkAvailability.call(this, entityType)
+                && !this.getMetadata().get(`scopes.${entityType}.matchingDisabled`)
+                && ['Base', 'Hierarchy'].includes(this.getMetadata().get(`scopes.${entityType}.type`))
+            ) {
                 return true;
             }
         },
