@@ -85,15 +85,15 @@ class Matching extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
-    public function markMatchingSearched(MatchingEntity $matching, Entity $entity): void
+    public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId): void
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
             ->set(Util::toUnderScore(self::prepareFieldName($matching->get('code'))), ':true')
             ->where('id = :id')
-            ->setParameter('id', $entity->id)
+            ->setParameter('id', $entityId)
             ->setParameter('true', true, ParameterType::BOOLEAN)
             ->executeQuery();
     }

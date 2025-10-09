@@ -87,9 +87,13 @@ class MatchingManager
                     ->getMatchingRepository()
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
             }
+
+            if ($matching->get('type') === 'duplicate') {
+                $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id']);
+            }
         }
 
-        $this->getMatchingRepository()->markMatchingSearched($matching, $entity);
+        $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id);
     }
 
     protected function getEntityManager(): EntityManager
