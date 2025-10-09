@@ -14,6 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 
 class V2Dot1Dot17 extends Base
 {
@@ -43,6 +44,30 @@ class V2Dot1Dot17 extends Base
                 }
             }
         }
+
+        // add default scheduled job
+        $data = [
+            'id'             => 'CalculateScriptFieldsForEntities',
+            'name'           => 'Calculate script fields',
+            'type'           => 'CalculateScriptFieldsForEntities',
+            'is_active'      => true,
+            'scheduling'     => '0 3 * * *',
+            'created_at'     => date('Y-m-d H:i:s'),
+            'modified_at'    => date('Y-m-d H:i:s'),
+            'created_by_id'  => 'system',
+            'modified_by_id' => 'system',
+        ];
+
+
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->insert($this->getConnection()->quoteIdentifier('scheduled_job'));
+
+        foreach ($data as $columnName => $value) {
+            $qb->setValue($columnName, ":$columnName");
+            $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
+        }
+
+        $qb->executeQuery();
     }
 
     protected function exec(string $sql): void

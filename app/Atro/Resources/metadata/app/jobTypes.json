@@ -58,5 +58,13 @@
   "ActionHandler": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ActionHandler"
+  },
+  "CalculateScriptFieldsForEntities": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntities"
+  },
+  "CalculateScriptFieldsForEntity": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntity"
   }
 }
