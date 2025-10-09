@@ -98,9 +98,25 @@ class Matching extends ReferenceData
             ->executeQuery();
     }
 
-    public function isMatchingSearchedForRecord(MatchingEntity $matching, Entity $entity) : bool 
+    public function isMatchingSearchedForDuplicate(MatchingEntity $matching, Entity $entity): bool
     {
-        return false;        
+        return $this->isMatchingSearchedForStaging($matching, $entity);
+    }
+
+    public function isMatchingSearchedForStaging(MatchingEntity $matching, Entity $entity): bool
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+
+        $res = $conn->createQueryBuilder()
+            ->select("id, $column as val")
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->where('id=:id')
+            ->setParameter('id', $entity->id)
+            ->fetchAssociative();
+
+        return !empty($res['val']);
     }
 
     public function unmarkAllMatchingSearched(MatchingEntity $matching): void

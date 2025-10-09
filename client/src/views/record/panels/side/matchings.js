@@ -13,12 +13,6 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
 
         template: "record/panels/side/matchings",
 
-        events: _.extend({
-            'click [data-action="findMatches"]': function (e) {
-                console.log($(e.currentTarget).data('name'));
-            },
-        }, Dep.prototype.events),
-
         setup() {
             Dep.prototype.setup.call(this);
 
