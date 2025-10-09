@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MatchedRecord": "Matched Record",
     "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
     "ActionLog": "Action Log",
@@ -82,6 +83,7 @@
     "ProductGroup": "Product Group"
   },
   "scopeNamesPlural": {
+    "MatchedRecord": "Matched Records",
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",
     "ActionLog": "Action Logs",

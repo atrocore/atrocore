@@ -2,39 +2,59 @@
   "fields": {
     "matching": {
       "type": "link",
-      "entity": "Matching"
+      "entity": "Matching",
+      "protected": true
     },
     "staging": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/staging"
+      "view": "views/matched-record/fields/staging",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
     },
     "stagingEntity": {
-      "type": "varchar"
+      "type": "varchar",
+      "protected": true
     },
     "stagingEntityId": {
-      "type": "varchar"
+      "type": "varchar",
+      "protected": true
     },
     "master": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/master"
+      "view": "views/matched-record/fields/master",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
     },
     "masterEntity": {
-      "type": "varchar"
+      "type": "varchar",
+      "protected": true
     },
     "masterEntityId": {
-      "type": "varchar"
+      "type": "varchar",
+      "protected": true
     },
     "score": {
-      "type": "int"
+      "type": "int",
+      "protected": true
     },
     "status": {
-      "type": "varchar"
+      "type": "enum",
+      "options": [
+        "found",
+        "confirmed",
+        "rejected"
+      ]
     },
     "hash": {
       "type": "varchar",
-      "unique": true
+      "unique": true,
+      "protected": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "collection": {

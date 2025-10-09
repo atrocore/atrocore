@@ -5,7 +5,8 @@
     "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules",
-    "foreignName": "Foreign Name"
+    "foreignName": "Foreign Name",
+    "matchedRecords": "Matched Records"
   },
   "options": {
     "type": {
