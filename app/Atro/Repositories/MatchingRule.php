@@ -31,6 +31,16 @@ class MatchingRule extends ReferenceData
         }
     }
 
+    public function afterSave(OrmEntity $entity, array $options = []): void
+    {
+        parent::afterSave($entity, $options);
+
+        $matching = $entity->get('matching');
+        if (!empty($matching)) {
+            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+        }
+    }
+
     public function createMatchingType(EntitiesMatchingRule $rule): AbstractMatchingRule
     {
         return $this->getInjection('matchingManager')->createMatchingType($rule);
@@ -41,5 +51,10 @@ class MatchingRule extends ReferenceData
         parent::init();
 
         $this->addDependency('matchingManager');
+    }
+
+    protected function getMatchingRepository(): Matching
+    {
+        return $this->getEntityManager()->getRepository('Matching');
     }
 }

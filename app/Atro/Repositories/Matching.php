@@ -51,6 +51,8 @@ class Matching extends ReferenceData
         if ($entity->isAttributeChanged('code')) {
             $this->rebuild();
         }
+
+        $this->unmarkAllMatchingSearched($entity);
     }
 
     public function validateCode(OrmEntity $entity): void
@@ -156,6 +158,15 @@ class Matching extends ReferenceData
         $qb->andWhere(implode(' OR ', $rulesParts));
 
         return $qb->fetchAllAssociative();
+    }
+
+    public function deleteMatchedRecordsForMatching(MatchingEntity $matching): void
+    {
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->delete('matched_record')
+            ->where('matching_id = :matchingId')
+            ->setParameter('matchingId', $matching->id)
+            ->executeQuery();
     }
 
     public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
