@@ -191,9 +191,11 @@ class Matching extends ReferenceData
             ->delete('matched_record')
             ->where('matching_id = :matchingId')
             ->andWhere('(staging_entity = :entityName AND staging_entity_id = :entityId) OR (master_entity = :entityName AND master_entity_id = :entityId)')
+            ->andWhere('status=:foundStatus')
             ->setParameter('matchingId', $matching->id)
             ->setParameter('entityName', $entity->getEntityName())
             ->setParameter('entityId', $entity->id)
+            ->setParameter('foundStatus', 'found')
             ->executeQuery();
     }
 
