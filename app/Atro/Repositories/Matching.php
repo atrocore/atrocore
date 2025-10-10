@@ -242,7 +242,8 @@ class Matching extends ReferenceData
         $conn = $this->getEntityManager()->getConnection();
 
         $select = [
-            'score',
+            'mr.status',
+            'mr.score',
             'm.id as master_id',
             'm.name as master_name',
             's.id as staging_id',
@@ -253,104 +254,154 @@ class Matching extends ReferenceData
             $select[] = 's.' . Util::toUnderScore($fieldName) . ' as staging_' . Util::toUnderScore($fieldName);
         }
 
-        $res = $conn->createQueryBuilder()
-            ->select(implode(',', $select))
-            ->from('matched_record', 'mr')
-            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 'm', 'mr.master_entity_id = m.id AND m.deleted = :false')
-            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 's', 'mr.staging_entity_id = s.id AND s.deleted = :false')
-            ->where('mr.matching_id = :matchingId')
-            ->andWhere('mr.staging_entity = :entityName')
-            ->andWhere('mr.master_entity = :entityName')
-            ->andWhere('mr.staging_entity_id = :entityId OR mr.master_entity_id = :entityId')
-            ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('entityName', $entity->getEntityName())
-            ->setParameter('entityId', $entity->id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
+        $result = [
+            'entityName' => $matching->get('masterEntity'),
+            'matches'    => []
+        ];
 
-        $result = [];
-        foreach ($res as $item) {
-            if ($item['staging_id'] === $entity->id) {
-                $row = [];
-                foreach ($item as $key => $value) {
-                    if (strpos($key, 'staging_') === false) {
-                        $row[str_replace('master_', '', $key)] = $value;
-                    }
-                }
-                $result[] = $row;
-            } else if ($item['master_id'] === $entity->id) {
-                $row = [];
-                foreach ($item as $key => $value) {
-                    if (strpos($key, 'master_') === false) {
-                        $row[str_replace('staging_', '', $key)] = $value;
-                    }
-                }
-                $result[] = $row;
+        foreach (['confirmed', 'rejected', 'found'] as $status) {
+            $qb = $conn->createQueryBuilder()
+                ->select(implode(',', $select))
+                ->from('matched_record', 'mr')
+                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 'm', 'mr.master_entity_id = m.id AND m.deleted = :false')
+                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 's', 'mr.staging_entity_id = s.id AND s.deleted = :false')
+                ->where('mr.matching_id = :matchingId')
+                ->andWhere('mr.staging_entity = :entityName')
+                ->andWhere('mr.master_entity = :entityName')
+                ->andWhere('mr.staging_entity_id = :entityId OR mr.master_entity_id = :entityId')
+                ->andWhere('mr.status = :status')
+                ->setParameter('matchingId', $matching->get('id'))
+                ->setParameter('entityName', $entity->getEntityName())
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('status', $status)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->orderBy('mr.score', 'DESC');
+
+            if ($status === 'found') {
+                $qb->setFirstResult(0);
+                $qb->setMaxResults(5);
             }
+
+            $res = $qb->fetchAllAssociative();
+
+            $prepared = [];
+            foreach ($res as $item) {
+                if ($item['staging_id'] === $entity->id) {
+                    $row = [];
+                    foreach ($item as $key => $value) {
+                        if (strpos($key, 'staging_') === false) {
+                            $row[str_replace('master_', '', $key)] = $value;
+                        }
+                    }
+                    $prepared[] = $row;
+                } else if ($item['master_id'] === $entity->id) {
+                    $row = [];
+                    foreach ($item as $key => $value) {
+                        if (strpos($key, 'master_') === false) {
+                            $row[str_replace('staging_', '', $key)] = $value;
+                        }
+                    }
+                    $prepared[] = $row;
+                }
+            }
+
+            $result['matches'][] = [
+                'status' => $status,
+                'list'   => Util::arrayKeysToCamelCase($prepared)
+            ];
         }
 
-        return [
-            'entityName' => $matching->get('masterEntity'),
-            'list'       => Util::arrayKeysToCamelCase($result)
-        ];
+        return $result;
     }
 
     public function getMatchedRecords(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['score', 't.id', 't.name'];
+        $select = ['mr.status', 'mr.score', 't.id', 't.name'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }
 
-        $res = $conn->createQueryBuilder()
-            ->select(implode(',', $select))
-            ->from('matched_record', 'mr')
-            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 't', 'mr.master_entity_id = t.id AND t.deleted = :false')
-            ->where('mr.matching_id = :matchingId')
-            ->andWhere('mr.staging_entity = :stagingEntity')
-            ->andWhere('mr.staging_entity_id = :stagingEntityId')
-            ->andWhere('t.id IS NOT NULL')
-            ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('stagingEntity', $entity->getEntityName())
-            ->setParameter('stagingEntityId', $entity->id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        return [
+        $result = [
             'entityName' => $matching->get('masterEntity'),
-            'list'       => Util::arrayKeysToCamelCase($res)
+            'matches'    => []
         ];
+
+        foreach (['confirmed', 'rejected', 'found'] as $status) {
+            $qb = $conn->createQueryBuilder()
+                ->select(implode(',', $select))
+                ->from('matched_record', 'mr')
+                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 't', 'mr.master_entity_id = t.id AND t.deleted = :false')
+                ->where('mr.matching_id = :matchingId')
+                ->andWhere('mr.staging_entity = :stagingEntity')
+                ->andWhere('mr.staging_entity_id = :stagingEntityId')
+                ->andWhere('t.id IS NOT NULL')
+                ->andWhere('mr.status = :status')
+                ->setParameter('matchingId', $matching->get('id'))
+                ->setParameter('stagingEntity', $entity->getEntityName())
+                ->setParameter('stagingEntityId', $entity->id)
+                ->setParameter('status', $status)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->orderBy('mr.score', 'DESC');
+
+            if ($status === 'found') {
+                $qb->setFirstResult(0);
+                $qb->setMaxResults(5);
+            }
+
+            $result['matches'][] = [
+                'status' => $status,
+                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative())
+            ];
+        }
+
+        return $result;
     }
 
     public function getForeignMatchedRecords(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['score', 't.id', 't.name'];
+        $select = ['mr.status', 'mr.score', 't.id', 't.name'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }
 
-        $res = $conn->createQueryBuilder()
-            ->select(implode(',', $select))
-            ->from('matched_record', 'mr')
-            ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't', 'mr.staging_entity_id = t.id AND t.deleted = :false')
-            ->where('mr.matching_id = :matchingId')
-            ->andWhere('mr.master_entity = :masterEntity')
-            ->andWhere('mr.master_entity_id = :masterEntityId')
-            ->andWhere('t.id IS NOT NULL')
-            ->setParameter('matchingId', $matching->get('id'))
-            ->setParameter('masterEntity', $entity->getEntityName())
-            ->setParameter('masterEntityId', $entity->id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->fetchAllAssociative();
-
-        return [
+        $result = [
             'entityName' => $matching->get('stagingEntity'),
-            'list'       => Util::arrayKeysToCamelCase($res)
+            'matches'    => []
         ];
+
+        foreach (['confirmed', 'rejected', 'found'] as $status) {
+            $qb = $conn->createQueryBuilder()
+                ->select(implode(',', $select))
+                ->from('matched_record', 'mr')
+                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't', 'mr.staging_entity_id = t.id AND t.deleted = :false')
+                ->where('mr.matching_id = :matchingId')
+                ->andWhere('mr.master_entity = :masterEntity')
+                ->andWhere('mr.master_entity_id = :masterEntityId')
+                ->andWhere('t.id IS NOT NULL')
+                ->andWhere('mr.status = :status')
+                ->setParameter('matchingId', $matching->get('id'))
+                ->setParameter('masterEntity', $entity->getEntityName())
+                ->setParameter('masterEntityId', $entity->id)
+                ->setParameter('status', $status)
+                ->setParameter('false', false, ParameterType::BOOLEAN)
+                ->orderBy('mr.score', 'DESC');
+
+            if ($status === 'found') {
+                $qb->setFirstResult(0);
+                $qb->setMaxResults(5);
+            }
+
+            $result['matches'][] = [
+                'status' => $status,
+                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative())
+            ];
+        }
+
+        return $result;
     }
 
     protected function rebuild(): void

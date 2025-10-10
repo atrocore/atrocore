@@ -13,7 +13,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
 
         template: "record/panels/side/matched-records",
 
-        matchedRecordsList: null,
+        matches: null,
 
         setup() {
             Dep.prototype.setup.call(this);
@@ -31,21 +31,34 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
 
         data() {
             return {
-                hasMatchedRecordList: this.matchedRecordsList !== null,
-                matchedRecordsList: this.matchedRecordsList
+                hasMatches: this.matches !== null,
+                matches: this.matches
             };
         },
 
         getMatchedRecords() {
             this.ajaxGetRequest('Matching/action/matchedRecords', { code: this.name, entityName: this.model.name, entityId: this.model.id })
                 .success(res => {
-                    this.matchedRecordsList = [];
-                    (res.list || []).forEach(item => {
-                        this.matchedRecordsList.push({
-                            label: item.name,
-                            link: `/#${res.entityName}/view/${item.id}`
-                        })
+                    this.matches = [];
+                    (res.matches || []).forEach(item => {
+                        let row = {
+                            status: this.getLanguage().translateOption(item.status, 'status', 'MatchedRecord'),
+                            list: []
+                        };
+                        (item.list || []).forEach(record => {
+                            row.list.push({
+                                id: record.id,
+                                label: record.name,
+                                link: `/#${res.entityName}/view/${record.id}`,
+                                score: record.score
+                            })
+                        });
+
+                        if (row.list.length > 0) {
+                            this.matches.push(row);
+                        }
                     })
+                    console.log(this.matches);
                     this.reRender();
                 });
         },

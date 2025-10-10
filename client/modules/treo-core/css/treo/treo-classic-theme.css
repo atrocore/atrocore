@@ -18254,3 +18254,38 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .modal.custom-download .modal-dialog {
     margin: 0 auto;
 }
+
+.matched-record-item {
+    padding: 1px 0px;
+}
+
+.matched-record-item-score {
+    width: 2.5em;
+    display: inline-block;
+    text-align: right;
+    margin-right: 8px;
+    font-size: 13px;
+}
+
+.matched-record-status-group-title {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+.matched-record-status-group-title:before {
+    content: "";
+    display: inline-block;
+    height: 1px;
+    background: var(--primary-font-color);
+    flex: 1;
+    margin-right: 10px;
+}
+
+.matched-record-item .inline-edit-link {
+    display: none
+}
+
+.matched-record-item:hover .inline-edit-link {
+    display: inline
+}
