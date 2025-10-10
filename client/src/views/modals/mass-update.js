@@ -98,7 +98,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
-                this.model.set({ ids: this.ids });
+                this.model.set({ids: this.ids});
                 let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope) || [];
 
                 this.fields = [];
@@ -218,6 +218,11 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             let viewName = this.model.getFieldParam(name, 'view') || this.model.getFieldParam(name, 'layoutDetailView') || this.getFieldManager().getViewName(type);
 
+            let params = {}
+            if (['enum', 'multiEnum'].includes(type)) {
+                params.options = this.getMetadata().get(['entityDefs', this.model.name, 'fields', name, 'options']);
+            }
+
             this.createView(name, viewName, {
                 model: this.model,
                 el: this.getSelector() + ' .field[data-name="' + name + '"]',
@@ -225,6 +230,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
                     name: name,
                     isMassUpdate: true
                 },
+                params: params,
                 mode: 'edit'
             }, view => {
                 this.fieldList.push(name);

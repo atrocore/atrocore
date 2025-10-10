@@ -8,8 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/relationship', 'views/search/search-filter-opener'],
-    (Dep, SearchFilterOpener) => Dep.extend({
+Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/relationship', 'views/search/search-filter-opener', 'search-manager'],
+    (Dep, SearchFilterOpener, SearchManager) => Dep.extend({
 
         rowActionsView: 'views/record/row-actions/relationship-view-only',
 
@@ -27,13 +27,13 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
 
             Dep.prototype.setup.call(this);
 
-            if(!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
+            if (!this.defs.hideShowFullList && !this.getPreferences().get('hideShowFullList')) {
                 this.actionList.push({
                     label: 'showFullList',
                     action: 'showFullList'
                 });
 
-                if(this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])){
+                if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
                     this.actionList.push({
                         label: 'showKanban',
                         action: 'showKanban'
@@ -64,8 +64,17 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
         },
 
         setFilter(filter) {
-            let data = this.model.get('data') || {};
-            this.collection.where = data.where || [];
+            let whereData = this.getWhereDataForFilter()
+            if (whereData) {
+                let searchManager = new SearchManager(this.collection, 'entityFilterResult', null, this.getDateTime());
+                searchManager.update({...whereData});
+                if(whereData.boolFilterData) {
+                    searchManager.boolFilterData = whereData.boolFilterData;
+                }
+                this.collection.where = searchManager.getWhere();
+            } else {
+                this.collection.where = this.getWhereForFilter() || [];
+            }
         },
 
         afterRender() {
@@ -74,13 +83,28 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
             $('.panel-entityFilterResult button[data-action="openSearchFilter"]').html(this.getFilterButtonHtml());
         },
 
-        getFilterButtonHtml(field = 'data'){
+        getFilterButtonHtml(field = 'data') {
             return SearchFilterOpener.prototype.getFilterButtonHtml.call(this, field);
         },
 
         openSearchFilter(scope = null, where = [], callback = null) {
-            SearchFilterOpener.prototype.open.call(this, scope, where, callback,  this.additionalBoolFilterList, this.boolFilterData);
+            SearchFilterOpener.prototype.open.call(this, scope, where, callback, this.additionalBoolFilterList, this.boolFilterData);
         },
+
+        getWhereDataForFilter() {
+            let data = this.model.get('data') || {};
+            return data.whereData;
+        },
+
+        getWhereForFilter() {
+            let data = this.model.get('data') || {};
+            return data.where;
+        },
+
+        getBoolFilterData() {
+            let data = this.model.get('data') || {};
+            return data.boolFilterData;
+        }
 
     })
 );

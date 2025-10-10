@@ -11,68 +11,6 @@
 Espo.define('treo-core:search-manager', 'class-replace!treo-core:search-manager', function (SearchManager) {
 
     _.extend(SearchManager.prototype, {
-        getWhere: function () {
-            var where = [];
-
-            if (this.data.textFilter && this.data.textFilter != '') {
-                where.push({
-                    type: 'textFilter',
-                    value: this.data.textFilter
-                });
-            }
-
-            if (this.data.bool) {
-                var o = {
-                    type: 'bool',
-                    value: [],
-                    data: {}
-                };
-                for (var name in this.data.bool) {
-                    if (this.data.bool[name]) {
-                        o.value.push(name);
-                        var boolData = this.data.boolData;
-                        if (boolData && boolData[name]) {
-                            o.data[name] = boolData[name];
-                        }
-                    }
-                }
-                if (o.value.length) {
-                    where.push(o);
-                }
-            }
-
-            if (this.data.primary) {
-                var o = {
-                    type: 'primary',
-                    value: this.data.primary,
-                };
-                if (o.value.length) {
-                    where.push(o);
-                }
-            }
-
-            if (this.data.savedFilters && this.data.savedFilters.length) {
-                this.data.savedFilters.forEach(item => {
-                    if (item?.data?.condition) {
-                        where.push(item.data);
-                    } else {
-                        where = where.concat(this.getAdvancedWhere(item.data))
-                    }
-                });
-            }
-
-            if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
-                where.push(Espo.Utils.clone(this.data.queryBuilder));
-            }
-
-            // to remove when switching to querybuilder everywhere
-            if (this.data.advanced && this.isQueryBuilderApplied()) {
-                where = where.concat(this.getAdvancedWhere(this.data.advanced))
-            }
-
-            return where;
-        },
-
         getAdvancedWhere(data) {
             var groups = {};
             for (var name in data) {

@@ -101,6 +101,7 @@ Espo.define('search-manager', [], function () {
 
         getWhere: function () {
             var where = [];
+
             if (this.data.textFilter && this.data.textFilter != '') {
                 where.push({
                     type: 'textFilter',
@@ -112,10 +113,15 @@ Espo.define('search-manager', [], function () {
                 var o = {
                     type: 'bool',
                     value: [],
+                    data: {}
                 };
                 for (var name in this.data.bool) {
                     if (this.data.bool[name]) {
                         o.value.push(name);
+                        var boolData = this.data.boolData;
+                        if (boolData && boolData[name]) {
+                            o.data[name] = boolData[name];
+                        }
                     }
                 }
                 if (o.value.length) {
@@ -133,15 +139,37 @@ Espo.define('search-manager', [], function () {
                 }
             }
 
-            if (this.data.advanced) {
-                for (var name in this.data.advanced) {
-                    var defs = this.data.advanced[name];
-                    if (!defs) {
-                        continue;
+            if (this.data.savedFilters && this.data.savedFilters.length) {
+                this.data.savedFilters.forEach(item => {
+                    if (item?.data?.condition) {
+                        where.push(item.data);
+                    } else {
+                        where = where.concat(this.getAdvancedWhere(item.data))
                     }
-                    var part = this.getWherePart(name, defs);
-                    where.push(part);
-                }
+                });
+            }
+
+            if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
+                where.push(Espo.Utils.clone(this.data.queryBuilder));
+            }
+
+            // to remove when switching to querybuilder everywhere
+            if (this.data.advanced && this.isQueryBuilderApplied()) {
+                where = where.concat(this.getAdvancedWhere(this.data.advanced))
+            }
+
+            if(this.boolFilterData ){
+                where.forEach(item => {
+                    if (item.type === 'bool') {
+                        let data = {};
+                        item.value.forEach(elem => {
+                            if (elem in this.boolFilterData) {
+                                data[elem] = this.boolFilterData[elem];
+                            }
+                        });
+                        item.data = data;
+                    }
+                });
             }
 
             return where;
@@ -290,23 +318,7 @@ Espo.define('search-manager', [], function () {
                 });
             }
 
-            let where = this.getWhere();
-
-            if(this.boolFilterData ){
-                where.forEach(item => {
-                    if (item.type === 'bool') {
-                        let data = {};
-                        item.value.forEach(elem => {
-                            if (elem in this.boolFilterData) {
-                                data[elem] = this.boolFilterData[elem];
-                            }
-                        });
-                        item.data = data;
-                    }
-                });
-            }
-
-            this.collection.where = where;
+            this.collection.where = this.getWhere();
             this.collection.abortLastFetch();
             this.collection.fetch().then(() => window.Backbone.trigger('after:search', this.collection));
         },
