@@ -29,6 +29,32 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
             }
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            this.$el.find('.edit-matched-record').on('click', event => {
+                const id = $(event.currentTarget).data('id');
+
+                this.notify('Loading...');
+                this.getModelFactory().create('MatchedRecord', model => {
+                    model.id = id;
+                    model.fetch().then(() => {
+                        this.createView('modal', 'views/modals/edit', {
+                            scope: model.name,
+                            id: model.id,
+                            model: model
+                        }, view => {
+                            this.notify(false);
+                            view.render();
+                            this.listenToOnce(view, 'after:save', m => {
+                                this.getMatchedRecords();
+                            });
+                        });
+                    });
+                });
+            });
+        },
+
         data() {
             return {
                 hasMatches: this.matches !== null,
@@ -47,7 +73,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
                         };
                         (item.list || []).forEach(record => {
                             row.list.push({
-                                id: record.id,
+                                mrId: record.mrId,
                                 label: record.name,
                                 link: `/#${res.entityName}/view/${record.id}`,
                                 score: record.score
@@ -58,7 +84,6 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
                             this.matches.push(row);
                         }
                     })
-                    console.log(this.matches);
                     this.reRender();
                 });
         },

@@ -247,7 +247,8 @@ class Matching extends ReferenceData
             'm.id as master_id',
             'm.name as master_name',
             's.id as staging_id',
-            's.name as staging_name'
+            's.name as staging_name',
+            'mr.id as mr_id'
         ];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 'm.' . Util::toUnderScore($fieldName) . ' as master_' . Util::toUnderScore($fieldName);
@@ -318,7 +319,7 @@ class Matching extends ReferenceData
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['mr.status', 'mr.score', 't.id', 't.name'];
+        $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }
@@ -363,7 +364,7 @@ class Matching extends ReferenceData
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $select = ['mr.status', 'mr.score', 't.id', 't.name'];
+        $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
             $select[] = 't.' . Util::toUnderScore($fieldName);
         }
