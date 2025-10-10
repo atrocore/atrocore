@@ -31,7 +31,7 @@ class Matching extends ReferenceData
         return Util::toCamelCase("matching_" . Util::toUnderScore(lcfirst($code)));
     }
 
-    public function beforeSave(OrmEntity $entity, array $options = []): void
+    protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
             $entity->set('stagingEntity', $entity->get('entity'));
@@ -45,7 +45,7 @@ class Matching extends ReferenceData
         parent::beforeSave($entity, $options);
     }
 
-    public function afterSave(OrmEntity $entity, array $options = []): void
+    protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
 

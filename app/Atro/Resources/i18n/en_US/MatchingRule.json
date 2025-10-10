@@ -10,7 +10,8 @@
   "options": {
     "type": {
       "equal": "Equal",
-      "like": "Like"
+      "like": "Like",
+      "contains": "Contains"
     }
   }
 }

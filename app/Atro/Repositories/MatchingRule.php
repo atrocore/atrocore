@@ -31,9 +31,19 @@ class MatchingRule extends ReferenceData
         }
     }
 
-    public function afterSave(OrmEntity $entity, array $options = []): void
+    protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
+
+        $matching = $entity->get('matching');
+        if (!empty($matching)) {
+            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+        }
+    }
+
+    protected function afterRemove(OrmEntity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
 
         $matching = $entity->get('matching');
         if (!empty($matching)) {

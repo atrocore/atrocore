@@ -67,7 +67,8 @@
       "required": true,
       "options": [
         "equal",
-        "like"
+        "like",
+        "contains"
       ],
       "conditionalProperties": {
         "protected": {
@@ -91,7 +92,8 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like"
+                "like",
+                "contains"
               ]
             }
           ]
@@ -103,7 +105,8 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like"
+                "like",
+                "contains"
               ]
             }
           ]
@@ -121,7 +124,8 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like"
+                "like",
+                "contains"
               ]
             }
           ]
@@ -133,7 +137,8 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like"
+                "like",
+                "contains"
               ]
             }
           ]
