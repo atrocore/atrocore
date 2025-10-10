@@ -122,6 +122,9 @@ Espo.define('search-manager', [], function () {
                         if (boolData && boolData[name]) {
                             o.data[name] = boolData[name];
                         }
+                        if(this.boolFilterData && this.boolFilterData[name]) {
+                            o.data[name] = this.boolFilterData[name]
+                        }
                     }
                 }
                 if (o.value.length) {
@@ -156,20 +159,6 @@ Espo.define('search-manager', [], function () {
             // to remove when switching to querybuilder everywhere
             if (this.data.advanced && this.isQueryBuilderApplied()) {
                 where = where.concat(this.getAdvancedWhere(this.data.advanced))
-            }
-
-            if(this.boolFilterData ){
-                where.forEach(item => {
-                    if (item.type === 'bool') {
-                        let data = {};
-                        item.value.forEach(elem => {
-                            if (elem in this.boolFilterData) {
-                                data[elem] = this.boolFilterData[elem];
-                            }
-                        });
-                        item.data = data;
-                    }
-                });
             }
 
             return where;
