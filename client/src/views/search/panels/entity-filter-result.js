@@ -88,7 +88,7 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
         },
 
         openSearchFilter(scope = null, where = [], callback = null) {
-            SearchFilterOpener.prototype.open.call(this, scope, where, callback, this.additionalBoolFilterList, this.boolFilterData);
+            SearchFilterOpener.prototype.open.call(this, scope, where, callback, this.additionalBoolFilterList, this.getBoolFilterData());
         },
 
         getWhereDataForFilter() {
@@ -103,8 +103,17 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
 
         getBoolFilterData() {
             let data = this.model.get('data') || {};
+            let boolFilterData = data.boolFilterData || {};
 
-            return {...(data.boolFilterData || {}), ...(this.boolFilterData || {})};
+            for (let elem in this.boolFilterData) {
+                if(typeof this.boolFilterData[elem] === 'function') {
+                    boolFilterData[elem] = this.boolFilterData[elem]();
+                }else{
+                    boolFilterData[elem] = this.boolFilterData[elem];
+                }
+            }
+
+            return  boolFilterData
         }
     })
 );
