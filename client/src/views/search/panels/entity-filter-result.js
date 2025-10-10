@@ -68,7 +68,7 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
             if (whereData) {
                 let searchManager = new SearchManager(this.collection, 'entityFilterResult', null, this.getDateTime());
                 searchManager.update({...whereData});
-                if(whereData.boolFilterData) {
+                if (whereData.boolFilterData) {
                     searchManager.boolFilterData = whereData.boolFilterData;
                 }
                 this.collection.where = searchManager.getWhere();
@@ -104,8 +104,7 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
         getBoolFilterData() {
             let data = this.model.get('data') || {};
 
-            return { ...(data.boolFilterData || {}), ...(this.boolFilterData || {})};
+            return {...(data.boolFilterData || {}), ...(this.boolFilterData || {})};
         }
-
     })
 );
