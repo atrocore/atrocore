@@ -66,6 +66,7 @@
       "type": "enum",
       "required": true,
       "options": [
+        "equal",
         "like"
       ],
       "conditionalProperties": {
@@ -89,6 +90,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "equal",
                 "like"
               ]
             }
@@ -100,6 +102,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "equal",
                 "like"
               ]
             }
@@ -117,6 +120,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "equal",
                 "like"
               ]
             }
@@ -128,6 +132,7 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "equal",
                 "like"
               ]
             }

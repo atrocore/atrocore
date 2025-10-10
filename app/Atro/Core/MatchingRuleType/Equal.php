@@ -13,14 +13,28 @@
 namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Like extends AbstractMatchingRule
+class Equal extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {
         return [
+            "array",
+            "bool",
+            "date",
+            "datetime",
+            "enum",
+            "extensibleEnum",
+            "extensibleMultiEnum",
+            "file",
+            "float",
+            "int",
+            "link",
+            "measure",
+            "multiEnum",
             "markdown",
             "password",
             "text",
@@ -35,8 +49,10 @@ class Like extends AbstractMatchingRule
         $columnName = Util::toUnderScore($this->rule->get('targetField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
-        $sqlPart = "REPLACE(LOWER(TRIM($escapedColumnName)), ' ', '') = :{$this->rule->get('id')}";
-        $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField'))))));
+        $value = $stageEntity->get($this->rule->get('sourceField'));
+
+        $sqlPart = "$escapedColumnName = :{$this->rule->get('id')}";
+        $qb->setParameter($this->rule->get('id'), $value, Mapper::getParameterType($value));
 
         $qb->addSelect($escapedColumnName);
 
@@ -45,8 +61,8 @@ class Like extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField')))));
-        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('targetField')])));
+        $stageValue = $stageEntity->get($this->rule->get('sourceField'));
+        $masterValue = $masterEntityData[$this->rule->get('targetField')];
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;

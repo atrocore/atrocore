@@ -28,7 +28,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             this.translatedOptions = {};
             this.originalOptionList = this.params.options = [];
 
-            if (!['like'].includes(this.model.get('type')) || this.model.get('matchingId') === null) {
+            if (!['equal','like'].includes(this.model.get('type')) || this.model.get('matchingId') === null) {
                 return;
             }
 
