@@ -18271,13 +18271,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: flex;
     align-items: center;
     font-size: 13px;
+    color: #bbb;
 }
 
 .matched-record-status-group-title:before {
     content: "";
     display: inline-block;
     height: 1px;
-    background: var(--primary-font-color);
+    background: #ddd;
     flex: 1;
     margin-right: 10px;
 }
