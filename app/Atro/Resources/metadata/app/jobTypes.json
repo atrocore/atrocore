@@ -66,5 +66,13 @@
   "FindMatchesForRecord": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\FindMatchesForRecord"
+  },
+  "CalculateScriptFieldsForEntities": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntities"
+  },
+  "CalculateScriptFieldsForEntity": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntity"
   }
 }

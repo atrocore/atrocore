@@ -8,13 +8,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fields/base', 'model'], (Dep, Model) => {
+Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fields/base', 'model', 'views/admin/field-manager/fields/dynamic-logic-conditions'], (Dep, Model, DynamicLogicConditions) => {
 
     return Dep.extend({
 
         detailTemplate: 'entity-field/fields/conditional-disable-options/detail',
 
         editTemplate: 'entity-field/fields/conditional-disable-options/edit',
+
+        entityTypeField: 'entityId',
+
+        typeField: 'type',
+
+        extensibleEnumIdField: 'extensibleEnumId',
 
         events: {
             'click [data-action="editConditions"]': function (e) {
@@ -41,10 +47,31 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
 
         setup() {
             this.optionsDefsList = Espo.Utils.cloneDeep(this.model.get(this.name)) || []
-            this.scope = this.model.get('entityId');
+            this.scope = this.model.get(this.entityTypeField);
+
+            // load attributes in entityDefs
+            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
+                DynamicLogicConditions.prototype.loadAttributesInMetadata.call(this, this.getAttributeIds(this.optionsDefsList))
+            }
 
             this.setupItems();
             this.setupItemViews();
+
+            this.listenTo(this.model, 'change', () => {
+                if (['edit', 'detail'].includes(this.mode)) {
+                    this.reRenderByConditionalProperties();
+                }
+            });
+        },
+
+        getAttributeIds(optionsDefsList) {
+            let attributeIds = [];
+            optionsDefsList.forEach(item => {
+                if (item.conditionGroup) {
+                    attributeIds = attributeIds.concat(DynamicLogicConditions.prototype.getAttributeIds(item.conditionGroup));
+                }
+            });
+            return attributeIds;
         },
 
         setupItems() {
@@ -72,7 +99,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
             let model = new Model();
             model.set('options', this.optionsDefsList[num].options || []);
 
-            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get('type'))) {
+            if (['extensibleEnum', 'extensibleMultiEnum'].includes(this.model.get(this.typeField))) {
                 const requestData = {
                     where: [{
                         type: 'in',
@@ -81,7 +108,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     }]
                 };
 
-                this.ajaxGetRequest('ExtensibleEnumOption', requestData, {async: false}).success(res => {
+                this.ajaxGetRequest('ExtensibleEnumOption', requestData, { async: false }).success(res => {
                     let optionsNames = {};
                     (res.list || []).forEach(item => {
                         optionsNames[item.id] = item.name;
@@ -95,7 +122,7 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     name: 'options',
                     mode: this.mode,
                     params: {
-                        extensibleEnumId: this.model.get('extensibleEnumId'),
+                        extensibleEnumId: this.model.get(this.extensibleEnumIdField),
                     }
                 }, view => {
                     if (this.isRendered()) {

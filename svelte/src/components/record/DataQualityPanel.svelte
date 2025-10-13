@@ -23,6 +23,7 @@
     let data = null
     let selectedFilters = Storage.get('qualityCheckRuleFilters', scope) || []
     let filteredRules = []
+    let highlightedCheckId = null
 
     $: {
         const reelFilers = selectedFilters.length === 0 ? ['passed', 'failed'] : selectedFilters
@@ -131,9 +132,16 @@
         }
     }
 
-    window.addEventListener('record:save', loadQualityCheckData);
-    window.addEventListener('record:check-recalculated', onCheckRecalculated)
-    window.addEventListener('record:show-qc-details', onShowDetails)
+    function highlightCheck() {
+        const el = document.querySelector(`.quality-check-highlighter[data-quality-check-id="${activeItem}"]`)
+        if (el) {
+            el.click()
+        }
+    }
+
+    function onCheckHighlighted(evt) {
+        highlightedCheckId = evt.detail.checkId
+    }
 
     onMount(() => {
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
@@ -157,8 +165,12 @@
             return
         }
 
-        activeItem = qualityChecksList[0].value;
+        window.addEventListener('record:save', loadQualityCheckData);
+        window.addEventListener('record:check-recalculated', onCheckRecalculated)
+        window.addEventListener('record:show-qc-details', onShowDetails)
+        window.addEventListener('record:check-highlighted', onCheckHighlighted)
 
+        activeItem = qualityChecksList[0].value;
 
         loadQualityCheckData()
 
@@ -173,13 +185,15 @@
                 }
             });
         })
+
+        return () => {
+            window.removeEventListener('record:save', loadQualityCheckData)
+            window.removeEventListener('record:check-recalculated', onCheckRecalculated)
+            window.removeEventListener('record:show-qc-details', onShowDetails)
+            window.removeEventListener('record:check-highlighted', onCheckHighlighted)
+        }
     })
 
-    onDestroy(() => {
-        window.removeEventListener('record:save', loadQualityCheckData)
-        window.removeEventListener('record:check-recalculated', onCheckRecalculated)
-        window.removeEventListener('record:show-qc-details', onShowDetails)
-    });
 </script>
 
 <div>
@@ -202,7 +216,7 @@
             <img style="width: 40px; " class="preloader" src="client/img/atro-loader.svg" alt="loader">
         </div>
     {:else if data}
-        <div style="border-top: 2px solid #ddd;margin-top: 10px;padding-top: 10px">
+        <div style="margin-top: 10px;">
             <div style="margin-bottom: 10px; overflow: hidden; padding-left: 1px; padding-right: 1px;">
                 <ContentFilter allFilters="{['passed','failed','skipped']}" scope="{scope}"
                                storageKey="qualityCheckRuleFilters"
@@ -210,23 +224,29 @@
                                titleLabel="" onExecute="{onFilterChange}"
                                style="padding-bottom: 10px; display: inline-block"/>
 
-                <button class="refresh" on:click={()=>loadQualityCheckData(true)} style="float: right;"
-                        title="{Language.translate('Refresh')}"><i
-                        class="ph ph-arrows-clockwise"></i>
-                </button>
+                <div style="float: right; display: inline-block">
+                    <button on:click={highlightCheck} style="margin-right: 10px;"
+                            title="{Language.translate('highlight', 'labels', 'QualityCheck')}"><i
+                            class="{'ph ph-highlighter '+ (highlightedCheckId===activeItem ? 'ph-fill highlight-active': '')}"></i>
+                    </button>
+                    <button class="refresh" on:click={()=>loadQualityCheckData(true)} style="float: right;"
+                            title="{Language.translate('Refresh')}"><i
+                            class="ph ph-arrows-clockwise"></i>
+                    </button>
+                </div>
             </div>
             {#each filteredRules as rule}
-                <div style="display: flex;justify-content: space-between; margin-bottom: 10px">
-                    <div style="word-break: break-all">
-                        <label class="control-label">
-                            <span class="label-text">{rule.code}</span>
-                        </label>
+                <div style="margin-bottom: 10px">
+                    <label class="control-label">
+                        <span class="label-text">{rule.code}</span>
+                    </label>
+                    <div style="display: flex;justify-content: space-between;">
                         <p>{rule.name}</p>
-                        {#if rule.error}
-                            <p>{rule.error}</p>
-                        {/if}
+                        <div class="rule-status" style="{getStatusStyle(rule.status)}"></div>
                     </div>
-                    <div class="rule-status" style="{getStatusStyle(rule.status)}"></div>
+                    {#if rule.error}
+                        <p class="rule-error">{rule.error}</p>
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -247,5 +267,16 @@
         color: var(--label-color);
         font-size: 12px;
         font-weight: normal;
+    }
+
+    .rule-error {
+        background: #ffeded;
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #e9c8c8;
+    }
+
+    .highlight-active {
+        color: #06c;
     }
 </style>

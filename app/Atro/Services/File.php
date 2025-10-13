@@ -56,6 +56,11 @@ class File extends Base
             }
         }
 
+        // when we try to open a file only
+        if(empty($entity->_pathPrepared) && !$entity->isStorageAvailable()) {
+            throw new BadRequest('The Storage ' . $entity->getStorage()->get('name') . ' of this file is not available.');
+        }
+
         if (!empty($downloadUrl = $entity->getDownloadUrl())) {
             $entity->set('downloadUrl', $downloadUrl);
             if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {

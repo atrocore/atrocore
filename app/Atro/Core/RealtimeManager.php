@@ -42,6 +42,10 @@ class RealtimeManager
 
     public function afterEntityChanged(Entity $entity): void
     {
+        if (!empty($entity->_realtimeDisabled)) {
+            return;
+        }
+
         $dir = self::PUBLIC_DIR . DIRECTORY_SEPARATOR . self::LISTENING_DIR . DIRECTORY_SEPARATOR . 'entity' . DIRECTORY_SEPARATOR . $entity->getEntityName();
         $fileName = $dir . DIRECTORY_SEPARATOR . "{$entity->get('id')}.json";
 

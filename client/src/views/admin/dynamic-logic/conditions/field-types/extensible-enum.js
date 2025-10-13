@@ -27,13 +27,52 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/extensible-enum', 
                 valueView.fetchToModel();
                 item.value = this.model.get(this.field);
 
-                var values = {};
-                values[this.field + 'Name'] = this.model.get(this.field + 'Name');
+                const values = {};
+                if (['in', 'notIn'].includes(item.type)) {
+                    values[this.field + 'Names'] = this.model.get(this.field + 'Names');
+                } else {
+                    values[this.field + 'Name'] = this.model.get(this.field + 'Name');
+                }
                 item.data.values = values;
             }
 
             return item;
-        }
+        },
+
+        createValueViewIn: function () {
+            this.createExtensibleMultiEnumValueField();
+        },
+
+        createValueViewNotIn: function () {
+            this.createExtensibleMultiEnumValueField();
+        },
+
+        createExtensibleMultiEnumValueField: function () {
+
+            const id = this.model.get(this.field);
+            const name = this.model.get(this.field + 'Name');
+            if (id && typeof id == 'string') {
+                this.model.set(this.field, [id]);
+            }
+            if (name) {
+                this.model.set(this.field + 'Names', { [id]: name });
+            }
+
+            const viewName = 'views/fields/extensible-multi-enum';
+
+            this.createView('value', viewName, {
+                model: this.model,
+                name: this.field,
+                el: this.getSelector() + ' .value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+                extensibleEnumId: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'extensibleEnumId'])
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this);
+        },
 
     });
 

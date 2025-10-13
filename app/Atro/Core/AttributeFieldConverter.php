@@ -76,7 +76,11 @@ class AttributeFieldConverter
     {
         $id = self::getAttributeIdFromFieldName($item['attribute']);
 
-        if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
+        if (!in_array($id, $result['attributesIds'] ?? [])) {
+            $result['attributesIds'][] = $id;
+        }
+
+        if (!isset($this->attributes[$id])) {
             $this->attributes = [];
             $attributeIds = [];
             foreach ($result['attributesIds'] as $attributeId) {
@@ -247,6 +251,12 @@ class AttributeFieldConverter
                         $res[$k]['is_required'] = $classificationAttribute['is_required'];
                         $res[$k]['is_read_only'] = $classificationAttribute['is_read_only'];
                         $res[$k]['is_protected'] = $classificationAttribute['is_protected'];
+
+                        foreach (['conditional_required', 'conditional_visible', 'conditional_protected', 'conditional_read_only', 'conditional_disable_options'] as $key) {
+                            if (!empty($classificationAttribute["enable_$key"])) {
+                                $res[$k][$key] = $classificationAttribute[$key];
+                            }
+                        }
 
                         $attributeData = @json_decode($attribute['data'] ?? '', true);
                         if (empty($attributeData)) {

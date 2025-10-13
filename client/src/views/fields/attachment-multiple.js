@@ -130,7 +130,7 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                         url: this.pathsDatas[cId]?.download,
                         smallThumbnail: this.pathsDatas[cId]?.thumbnails.small,
                         largeThumbnail: this.pathsDatas[cId]?.thumbnails.large,
-                        isImage: typeHash[cId] !== 'a_document',
+                        isImage: this.isTypeIsImage(typeHash[cId])
                     });
                 }, this);
 

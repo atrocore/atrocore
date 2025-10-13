@@ -165,11 +165,14 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
                         return;
                     }
 
+                    if(whereData) {
+                        whereData.boolFilterData = boolFilterData;
+                    }
+
                     callback({
                         where: where,
                         whereData: whereData
                     });
-
                 });
             });
         }

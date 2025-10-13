@@ -102,4 +102,10 @@ class File extends Base
     {
         return $this->get('mimeType') == 'application/pdf';
     }
+
+    public function isStorageAvailable(): bool
+    {
+        $storageInterface = $this->getEntityManager()->getContainer()->get($this->getStorage()->get('type') . 'Storage');
+        return $storageInterface->isAvailable($this->getStorage());
+    }
 }
