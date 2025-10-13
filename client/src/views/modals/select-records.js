@@ -237,6 +237,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
         setupSearch: function () {
             var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
             searchManager.emptyOnReset = true;
+            SearchManager.boolFilterData = this.boolFilterData
             if (this.filters) {
                 searchManager.update({queryBuilderApplied: true, ...this.filters});
             }
@@ -250,19 +251,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 searchManager.setBool(d);
             }
 
-            let where = searchManager.getWhere();
-            where.forEach(item => {
-                if (item.type === 'bool') {
-                    let data = {};
-                    item.value.forEach(elem => {
-                        if (elem in this.boolFilterData) {
-                            data[elem] = this.boolFilterData[elem];
-                        }
-                    });
-                    item.data = data;
-                }
-            });
-            this.collection.where = where;
+            this.collection.where =  searchManager.getWhere();
 
             this.collection.whereAdditional = this.options.whereAdditional || [];
 
