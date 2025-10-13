@@ -309,7 +309,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
         },
 
-        getDefaultModelId(){
+        getDefaultModelId() {
             return this.getModels()[0].id;
         },
 
@@ -340,7 +340,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         getRelationshipPanels() {
             let relationshipsPanels = [];
-            if (this.versionModel) return relationshipsPanels;
             const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
             for (let link in this.model.defs.links) {
