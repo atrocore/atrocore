@@ -82,7 +82,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             inlineEditDisabled: true,
                         }, view => {
                             view.render();
-                            if(view.isRendered()) {
+                            if (view.isRendered()) {
                                 this.handleAllFieldsRendered(row.key)
                             }
                             this.listenTo(view, 'after:render', () => {
@@ -127,12 +127,12 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.renderedFields = [];
             this.buildFieldViews();
             if (this.merging) {
-                $('input[data-id="' + this.models[0].id + '"]').prop('checked', true);
+                $('input[data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
             }
         },
 
         handleAllFieldsRendered(key) {
-            if(!this.renderedFields.includes(key)){
+            if (!this.renderedFields.includes(key)) {
                 this.renderedFields.push(key);
 
                 if (this.renderedFields.length === (this.fieldList.length * this.models.length)) {
@@ -146,11 +146,11 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.fieldList.forEach(fieldListByGroup => {
                 fieldListByGroup.fieldListInGroup.forEach(fieldData => {
 
-                    if(field && fieldData.field !== field) {
+                    if (field && fieldData.field !== field) {
                         return;
                     }
 
-                    if(fieldData.disabled) {
+                    if (fieldData.disabled) {
                         return;
                     }
 
@@ -190,7 +190,18 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = _.extend({}, attributes, view.fetch());
+                let data
+                if (view.mode === 'detail') {
+                    const name = view.idName || view.originalName || view.name;
+                    data = { [name]: view.model.get(name) }
+                    if (view.unitFieldName){
+                        data[view.unitFieldName] = view.model.get(view.unitFieldName)
+                    }
+                } else {
+                    data = view.fetch();
+                }
+
+                attributes = _.extend({}, attributes, data);
             });
             return attributes;
         },

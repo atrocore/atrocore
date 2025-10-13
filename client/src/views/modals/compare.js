@@ -148,6 +148,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         name: this.currentVersion,
                     }).success(res => {
                         let versionModel = scopeModel.clone();
+                        res['id'] = this.versions.find(v => v.name === this.currentVersion).id;
                         versionModel.set(res);
                         options.versionModel = versionModel;
                         options.versions = this.versions;

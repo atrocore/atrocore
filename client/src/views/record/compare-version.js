@@ -25,9 +25,15 @@ Espo.define('views/record/compare-version', 'views/record/compare', function (De
         buildComparisonTableHeaderColumn() {
             let columns = [];
             columns.push({ name: this.translate('Versions', 'labels'), isFirst: true });
-            columns.push({ name: `<a href="#/${this.scope}/view/${this.model.id}" target="_blank"> ${this.translate('Current', 'labels')}</a>` });
             columns.push({
-                name: this.getParentView().currentVersion,
+                id: this.model.id,
+                name: `<a href="#/${this.scope}/view/${this.model.id}" target="_blank"> ${this.translate('Current', 'labels')}</a>`
+            });
+
+            const parentView = this.getParentView();
+            columns.push({
+                id: this.versionModel.id,
+                name: parentView.currentVersion,
             })
             return columns;
         },
@@ -38,6 +44,25 @@ Espo.define('views/record/compare-version', 'views/record/compare', function (De
 
         getModels() {
             return [this.model, this.versionModel];
+        },
+
+        getDefaultModelId() {
+            return this.versionModel.id;
+        },
+
+        getCompareUrl() {
+            return 'RecordVersion/action/merge'
+        },
+
+        getCompareData(targetId, attributes, relationshipData) {
+            const data = Dep.prototype.getCompareData.call(this, targetId, attributes, relationshipData);
+
+            return {
+                ...data,
+                scope: this.scope,
+                targetId: this.model.id,
+                versionName: this.getParentView().currentVersion
+            }
         }
     });
 });

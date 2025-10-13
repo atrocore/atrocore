@@ -121,16 +121,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 buttons.addClass('disabled');
                 this.handleRadioButtonsDisableState(true);
                 $.ajax({
-                    url: this.scope + '/action/merge',
+                    url: this.getCompareUrl(),
                     type: 'POST',
-                    data: JSON.stringify({
-                        attributes: {
-                            input: attributes,
-                            relationshipData: relationshipData
-                        },
-                        targetId: id,
-                        sourceIds: this.collection.models.filter(m => m.id !== id).map(m => m.id),
-                    }),
+                    data: JSON.stringify(this.getCompareData(id, attributes, relationshipData)),
                     error: (xhr, status, error) => {
                         this.notify(false);
                         buttons.removeClass('disabled');
@@ -152,6 +145,21 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.setupFieldPanels();
 
             this.prepareFieldsData();
+        },
+
+        getCompareUrl() {
+            return this.scope + '/action/merge'
+        },
+
+        getCompareData(targetId, attributes, relationshipData) {
+            return {
+                attributes: {
+                    input: attributes,
+                    relationshipData: relationshipData
+                },
+                targetId: targetId,
+                sourceIds: this.collection.models.filter(m => m.id !== targetId).map(m => m.id),
+            }
         },
 
         getOtherModelsForComparison(model) {
@@ -285,6 +293,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     columns: this.buildComparisonTableHeaderColumn(),
                     instanceComparison: this.instanceComparison,
                     models: this.getModels(),
+                    defaultModelId: this.getDefaultModelId(),
                     merging: this.merging,
                     hideCheckAll: index !== 0,
                     el: `${this.options.el} [data-name="${panel.name}"] .list-container`
@@ -298,6 +307,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     });
                 }, true);
             });
+        },
+
+        getDefaultModelId(){
+            return this.getModels()[0].id;
         },
 
         renderRelationshipsPanels() {
