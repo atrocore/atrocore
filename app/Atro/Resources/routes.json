@@ -229,7 +229,10 @@
                 "type": "string"
               }
             },
-            "required": ["reupload", "fileContents"]
+            "required": [
+              "reupload",
+              "fileContents"
+            ]
           }
         }
       }
@@ -1031,12 +1034,16 @@
                 "example": "myScriptFieldCode"
               }
             },
-            "required": ["id", "field", "scope"]
+            "required": [
+              "id",
+              "field",
+              "scope"
+            ]
           }
         }
       }
     },
-    "response" : {
+    "response": {
       "type": "object",
       "example": {
         "id": "a01k1g09hhce8m8pkmzt3zzyq5v",
@@ -1082,6 +1089,107 @@
     },
     "response": {
       "type": "boolean"
+    }
+  },
+  {
+    "route": "/Matching/action/matchedRecords",
+    "method": "get",
+    "params": {
+      "controller": "Matching",
+      "action": "matchedRecords"
+    },
+    "operationId": "matchedRecords",
+    "tags": [
+      "Matching"
+    ],
+    "summary": "Get matched records for an entity",
+    "description": "Get matched records for an entity",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestParameters": [
+      {
+        "name": "code",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "q123456"
+        }
+      },
+      {
+        "name": "entityName",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      },
+      {
+        "name": "entityId",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "i33221143"
+        }
+      },
+      {
+        "name": "statuses",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "entityName": {
+          "type": "string"
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "list": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "mrId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   }
 ]
