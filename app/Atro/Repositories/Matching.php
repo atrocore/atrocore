@@ -190,129 +190,81 @@ class Matching extends ReferenceData
         $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->delete('matched_record')
             ->where('matching_id = :matchingId')
-            ->andWhere('(staging_entity = :entityName AND staging_entity_id = :entityId) OR (master_entity = :entityName AND master_entity_id = :entityId)')
+            ->andWhere('staging_entity = :entityName AND staging_entity_id = :entityId')
             ->andWhere('status=:foundStatus')
             ->setParameter('matchingId', $matching->id)
             ->setParameter('entityName', $entity->getEntityName())
             ->setParameter('entityId', $entity->id)
             ->setParameter('foundStatus', 'found')
             ->executeQuery();
+
+        // for duplicates
+        if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
+            $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->delete('matched_record')
+                ->where('matching_id = :matchingId')
+                ->andWhere('master_entity = :entityName AND master_entity_id = :entityId')
+                ->andWhere('status=:foundStatus')
+                ->setParameter('matchingId', $matching->id)
+                ->setParameter('entityName', $entity->getEntityName())
+                ->setParameter('entityId', $entity->id)
+                ->setParameter('foundStatus', 'found')
+                ->executeQuery();
+        }
     }
 
     public function createMatchedRecord(MatchingEntity $matching, string $stagingEntityId, string $masterEntityId, int $score): void
     {
-        $hashParts = [
-            $matching->id,
-            $matching->get('stagingEntity'),
-            $stagingEntityId,
-            $matching->get('masterEntity'),
-            $masterEntityId
-        ];
-        sort($hashParts);
-
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->insert('matched_record')
-            ->setValue('id', ':id')
-            ->setValue('matching_id', ':matchingId')
-            ->setValue('staging_entity', ':stagingEntity')
-            ->setValue('staging_entity_id', ':stagingEntityId')
-            ->setValue('master_entity', ':masterEntity')
-            ->setValue('master_entity_id', ':masterEntityId')
-            ->setValue('score', ':score')
-            ->setValue('status', ':status')
-            ->setValue('hash', ':hash')
-            ->setParameter('id', Util::generateId())
-            ->setParameter('matchingId', $matching->id)
-            ->setParameter('stagingEntity', $matching->get('stagingEntity'))
-            ->setParameter('stagingEntityId', $stagingEntityId)
-            ->setParameter('masterEntity', $matching->get('masterEntity'))
-            ->setParameter('masterEntityId', $masterEntityId)
-            ->setParameter('score', $score)
-            ->setParameter('status', 'found')
-            ->setParameter('hash', md5(implode('_', $hashParts)));
-
-        try {
-            $qb->executeQuery();
-        } catch (\Throwable $e) {
-        }
-    }
-
-    public function getMatchedDuplicates(MatchingEntity $matching, Entity $entity): array
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $select = [
-            'mr.status',
-            'mr.score',
-            'm.id as master_id',
-            'm.name as master_name',
-            's.id as staging_id',
-            's.name as staging_name',
-            'mr.id as mr_id'
-        ];
-        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
-            $select[] = 'm.' . Util::toUnderScore($fieldName) . ' as master_' . Util::toUnderScore($fieldName);
-            $select[] = 's.' . Util::toUnderScore($fieldName) . ' as staging_' . Util::toUnderScore($fieldName);
-        }
-
-        $result = [
-            'entityName' => $matching->get('masterEntity'),
-            'matches'    => []
+        $items = [
+            [
+                'stagingEntityId' => $stagingEntityId,
+                'masterEntityId'  => $masterEntityId
+            ]
         ];
 
-        foreach (['confirmed', 'rejected', 'found'] as $status) {
-            $qb = $conn->createQueryBuilder()
-                ->select(implode(',', $select))
-                ->from('matched_record', 'mr')
-                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 'm', 'mr.master_entity_id = m.id AND m.deleted = :false')
-                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 's', 'mr.staging_entity_id = s.id AND s.deleted = :false')
-                ->where('mr.matching_id = :matchingId')
-                ->andWhere('mr.staging_entity = :entityName')
-                ->andWhere('mr.master_entity = :entityName')
-                ->andWhere('mr.staging_entity_id = :entityId OR mr.master_entity_id = :entityId')
-                ->andWhere('mr.status = :status')
-                ->setParameter('matchingId', $matching->get('id'))
-                ->setParameter('entityName', $entity->getEntityName())
-                ->setParameter('entityId', $entity->id)
-                ->setParameter('status', $status)
-                ->setParameter('false', false, ParameterType::BOOLEAN)
-                ->orderBy('mr.score', 'DESC');
-
-            if ($status === 'found') {
-                $qb->setFirstResult(0);
-                $qb->setMaxResults(5);
-            }
-
-            $res = $qb->fetchAllAssociative();
-
-            $prepared = [];
-            foreach ($res as $item) {
-                if ($item['staging_id'] === $entity->id) {
-                    $row = [];
-                    foreach ($item as $key => $value) {
-                        if (strpos($key, 'staging_') === false) {
-                            $row[str_replace('master_', '', $key)] = $value;
-                        }
-                    }
-                    $prepared[] = $row;
-                } else if ($item['master_id'] === $entity->id) {
-                    $row = [];
-                    foreach ($item as $key => $value) {
-                        if (strpos($key, 'master_') === false) {
-                            $row[str_replace('staging_', '', $key)] = $value;
-                        }
-                    }
-                    $prepared[] = $row;
-                }
-            }
-
-            $result['matches'][] = [
-                'status' => $status,
-                'list'   => Util::arrayKeysToCamelCase($prepared)
+        // for duplicates
+        if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
+            $items[] = [
+                'stagingEntityId' => $masterEntityId,
+                'masterEntityId'  => $stagingEntityId
             ];
         }
 
-        return $result;
+        foreach ($items as $item) {
+            $hashParts = [
+                $matching->id,
+                $matching->get('stagingEntity'),
+                $item['stagingEntityId'],
+                $matching->get('masterEntity'),
+                $item['masterEntityId']
+            ];
+
+            $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->insert('matched_record')
+                ->setValue('id', ':id')
+                ->setValue('matching_id', ':matchingId')
+                ->setValue('staging_entity', ':stagingEntity')
+                ->setValue('staging_entity_id', ':stagingEntityId')
+                ->setValue('master_entity', ':masterEntity')
+                ->setValue('master_entity_id', ':masterEntityId')
+                ->setValue('score', ':score')
+                ->setValue('status', ':status')
+                ->setValue('hash', ':hash')
+                ->setParameter('id', Util::generateId())
+                ->setParameter('matchingId', $matching->id)
+                ->setParameter('stagingEntity', $matching->get('stagingEntity'))
+                ->setParameter('stagingEntityId', $item['stagingEntityId'])
+                ->setParameter('masterEntity', $matching->get('masterEntity'))
+                ->setParameter('masterEntityId', $item['masterEntityId'])
+                ->setParameter('score', $score)
+                ->setParameter('status', 'found')
+                ->setParameter('hash', md5(implode('_', $hashParts)));
+
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
+        }
     }
 
     public function getMatchedRecords(MatchingEntity $matching, Entity $entity): array
@@ -329,7 +281,7 @@ class Matching extends ReferenceData
             'matches'    => []
         ];
 
-        foreach (['confirmed', 'rejected', 'found'] as $status) {
+        foreach (['confirmed', 'found', 'rejected'] as $status) {
             $qb = $conn->createQueryBuilder()
                 ->select(implode(',', $select))
                 ->from('matched_record', 'mr')
@@ -374,7 +326,7 @@ class Matching extends ReferenceData
             'matches'    => []
         ];
 
-        foreach (['confirmed', 'rejected', 'found'] as $status) {
+        foreach (['confirmed', 'found', 'rejected'] as $status) {
             $qb = $conn->createQueryBuilder()
                 ->select(implode(',', $select))
                 ->from('matched_record', 'mr')

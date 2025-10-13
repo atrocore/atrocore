@@ -32,13 +32,6 @@ class Matching extends ReferenceData
             return [];
         }
 
-        if ($matching->get('type') === 'duplicate') {
-            if (!$this->getRepository()->isMatchingSearchedForDuplicate($matching, $entity)) {
-                $this->getMatchingManager()->findMatches($matching, $entity);
-            }
-            return $this->getRepository()->getMatchedDuplicates($matching, $entity);
-        }
-
         if ($entityName === $matching->get('stagingEntity')) {
             if (!$this->getRepository()->isMatchingSearchedForStaging($matching, $entity)) {
                 $this->getMatchingManager()->findMatches($matching, $entity);
