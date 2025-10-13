@@ -123,11 +123,11 @@ Espo.define('search-manager', [], function () {
                             o.data[name] = boolData[name];
                         }
                         if(this.boolFilterData && this.boolFilterData[name]) {
-                            // if(typeof this.boolFilterData[name] === 'function') {
-                            //     o.data[name] = this.boolFilterData[name]()
-                            // }else{
+                            if(typeof this.boolFilterData[name] === 'function') {
+                                o.data[name] = this.boolFilterData[name]()
+                            }else{
                                 o.data[name] = this.boolFilterData[name]
-                            // }
+                            }
                         }
                     }
                 }
