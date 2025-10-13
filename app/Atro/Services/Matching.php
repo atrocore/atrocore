@@ -23,11 +23,6 @@ class Matching extends ReferenceData
 {
     public function getMatchedRecords(string $code, string $entityName, string $entityId, array $statuses): array
     {
-        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
-        if (empty($matching)) {
-            return [];
-        }
-
         if (!$this->getAcl()->check($entityName, 'read')) {
             throw new Forbidden();
         }
@@ -39,6 +34,11 @@ class Matching extends ReferenceData
 
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
+        }
+
+        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+        if (empty($matching)) {
+            return [];
         }
 
         if (empty($statuses)) {
