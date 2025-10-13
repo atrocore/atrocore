@@ -6,7 +6,7 @@ const fallbackData = writable({});
 export const Language = {
 
     getData(): any {
-        return get(data);
+        return get(data) ?? {};
     },
 
     setTranslations(newTranslations: any): void {

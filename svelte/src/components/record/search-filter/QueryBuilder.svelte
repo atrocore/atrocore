@@ -1021,7 +1021,7 @@
         }
 
         // set translates
-        window.$.fn.queryBuilder.regional['main'] = Language.getData()?.Global?.queryBuilderFilter ?? {};
+        window.$.fn.queryBuilder.regional['main'] = Language.getData().Global?.queryBuilderFilter ?? {};
         window.$.fn.queryBuilder.defaults({lang_code: 'main'});
 
 
