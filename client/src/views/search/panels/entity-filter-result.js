@@ -104,7 +104,7 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
         getBoolFilterData() {
             let whereData = this.model.get('data')?.whereData || {};
 
-            return {...(this.boolFilterData || {}), ...(whereData.boolFilterData || {})}
+            return {...(this.boolFilterData || {}), ...(whereData.boolFilterData || {})};
         }
     })
 );

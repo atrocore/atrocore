@@ -122,11 +122,11 @@ Espo.define('search-manager', [], function () {
                         if (boolData && boolData[name]) {
                             o.data[name] = boolData[name];
                         }
-                        if(this.boolFilterData && this.boolFilterData[name]) {
-                            if(typeof this.boolFilterData[name] === 'function') {
-                                o.data[name] = this.boolFilterData[name]()
-                            }else{
-                                o.data[name] = this.boolFilterData[name]
+                        if (this.boolFilterData && this.boolFilterData[name]) {
+                            if (typeof this.boolFilterData[name] === 'function') {
+                                o.data[name] = this.boolFilterData[name]();
+                            } else {
+                                o.data[name] = this.boolFilterData[name];
                             }
                         }
                     }
@@ -232,7 +232,7 @@ Espo.define('search-manager', [], function () {
         },
 
         getBool: function () {
-            return  Espo.Utils.clone(this.data.bool);
+            return Espo.Utils.clone(this.data.bool);
         },
 
         getSavedFilters: function () {
@@ -294,13 +294,13 @@ Espo.define('search-manager', [], function () {
             this.set({...this.data, ...newData});
         },
 
-        fetchCollection: function() {
-            if(!this.collection) {
+        fetchCollection: function () {
+            if (!this.collection) {
                 return;
             }
             this.collection.reset();
 
-            if(this.mandatoryBoolFilterList) {
+            if (this.mandatoryBoolFilterList) {
                 let bool = {};
                 for (const filter of this.mandatoryBoolFilterList) {
                     bool[filter] = true;
@@ -318,23 +318,23 @@ Espo.define('search-manager', [], function () {
 
         refreshIsFilterSet() {
             this.isFilterSetValue = this.isFilterSet();
-            if(this.collection) {
+            if (this.collection) {
                 this.collection.trigger('filter-state:changed', this.isFilterSetValue);
                 window.Backbone.trigger('filter-state:changed', this.collection)
             }
         },
 
         isFilterSet() {
-            let filterIsSet = this.data.savedFilters.length > 0 ;
-            if(filterIsSet) {
+            let filterIsSet = this.data.savedFilters.length > 0;
+            if (filterIsSet) {
                 return true;
             }
 
             let queryBuilder = this.data.queryBuilder;
 
-            if(this.data.queryBuilderApplied) {
+            if (this.data.queryBuilderApplied) {
                 filterIsSet = queryBuilder.condition && Array.isArray(queryBuilder.rules) && queryBuilder.rules.length > 0;
-                if(filterIsSet) {
+                if (filterIsSet) {
                     return true;
                 }
             }
@@ -342,10 +342,10 @@ Espo.define('search-manager', [], function () {
             let bool = this.data.bool;
 
             for (const boolKey in bool) {
-                if(Array.isArray(this.mandatoryBoolFilterList) && this.mandatoryBoolFilterList.includes(boolKey)){
+                if (Array.isArray(this.mandatoryBoolFilterList) && this.mandatoryBoolFilterList.includes(boolKey)) {
                     continue;
                 }
-                if(bool[boolKey]){
+                if (bool[boolKey]) {
                     return true;
                 }
             }
@@ -353,7 +353,7 @@ Espo.define('search-manager', [], function () {
         },
 
         isTextFilterSet() {
-          return !!this.data.textFilter
+            return !!this.data.textFilter
         },
 
         getDateTimeWhere: function (type, field, value) {
