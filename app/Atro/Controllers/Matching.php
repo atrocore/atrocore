@@ -27,6 +27,11 @@ class Matching extends ReferenceData
 
         return $this
             ->getRecordService()
-            ->getMatchedRecords($request->get('code'), $request->get('entityName'), $request->get('entityId'));
+            ->getMatchedRecords(
+                $request->get('code'),
+                $request->get('entityName'),
+                $request->get('entityId'),
+                $request->get('statuses') ?? []
+            );
     }
 }

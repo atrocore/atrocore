@@ -172,7 +172,7 @@ class Matching extends ReferenceData
         return $qb->fetchAllAssociative();
     }
 
-    public function getMatchedRecords(MatchingEntity $matching, Entity $entity): array
+    public function getMatchedRecords(MatchingEntity $matching, Entity $entity, array $statuses): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -187,10 +187,19 @@ class Matching extends ReferenceData
         ];
 
         foreach (['confirmed', 'found', 'rejected'] as $status) {
+            if (!in_array($status, $statuses)) {
+                continue;
+            }
+
             $qb = $conn->createQueryBuilder()
                 ->select(implode(',', $select))
                 ->from('matched_record', 'mr')
-                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))), 't', 'mr.master_entity_id = t.id AND t.deleted = :false')
+                ->leftJoin(
+                    'mr',
+                    $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))),
+                    't',
+                    'mr.master_entity_id = t.id AND t.deleted = :false'
+                )
                 ->where('mr.matching_id = :matchingId')
                 ->andWhere('mr.staging_entity = :stagingEntity')
                 ->andWhere('mr.staging_entity_id = :stagingEntityId')
@@ -217,7 +226,7 @@ class Matching extends ReferenceData
         return $result;
     }
 
-    public function getForeignMatchedRecords(MatchingEntity $matching, Entity $entity): array
+    public function getForeignMatchedRecords(MatchingEntity $matching, Entity $entity, array $statuses): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -232,11 +241,19 @@ class Matching extends ReferenceData
         ];
 
         foreach (['confirmed', 'found', 'rejected'] as $status) {
+            if (!in_array($status, $statuses)) {
+                continue;
+            }
+
             $qb = $conn->createQueryBuilder()
                 ->select(implode(',', $select))
                 ->from('matched_record', 'mr')
-                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't',
-                    'mr.staging_entity_id = t.id AND t.deleted = :false')
+                ->leftJoin(
+                    'mr',
+                    $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))),
+                    't',
+                    'mr.staging_entity_id = t.id AND t.deleted = :false'
+                )
                 ->where('mr.matching_id = :matchingId')
                 ->andWhere('mr.master_entity = :masterEntity')
                 ->andWhere('mr.master_entity_id = :masterEntityId')

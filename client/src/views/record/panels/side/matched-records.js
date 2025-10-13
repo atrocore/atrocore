@@ -9,62 +9,66 @@
  */
 
 Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
-    return Dep.extend({
+        return Dep.extend({
 
-        template: "record/panels/side/matched-records",
+            template: "record/panels/side/matched-records",
 
-        matches: null,
+            matches: null,
 
-        setup() {
-            Dep.prototype.setup.call(this);
+            setup() {
+                Dep.prototype.setup.call(this);
 
-            if (this.model.get("id")) {
-                this.getMatchedRecords();
-            } else {
-                this.listenToOnce(this.model, "sync", () => {
-                    if (this.model.get("id")) {
-                        this.getMatchedRecords();
-                    }
-                });
-            }
-        },
+                if (this.model.get("id")) {
+                    this.getMatchedRecords();
+                } else {
+                    this.listenToOnce(this.model, "sync", () => {
+                        if (this.model.get("id")) {
+                            this.getMatchedRecords();
+                        }
+                    });
+                }
+            },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
+            afterRender() {
+                Dep.prototype.afterRender.call(this);
 
-            this.$el.find('.edit-matched-record').on('click', event => {
-                const id = $(event.currentTarget).data('id');
+                this.$el.find('.edit-matched-record').on('click', event => {
+                    const id = $(event.currentTarget).data('id');
 
-                this.notify('Loading...');
-                this.getModelFactory().create('MatchedRecord', model => {
-                    model.id = id;
-                    model.fetch().then(() => {
-                        this.createView('modal', 'views/modals/edit', {
-                            scope: model.name,
-                            id: model.id,
-                            model: model
-                        }, view => {
-                            this.notify(false);
-                            view.render();
-                            this.listenToOnce(view, 'after:save', m => {
-                                this.getMatchedRecords();
+                    this.notify('Loading...');
+                    this.getModelFactory().create('MatchedRecord', model => {
+                        model.id = id;
+                        model.fetch().then(() => {
+                            this.createView('modal', 'views/modals/edit', {
+                                scope: model.name,
+                                id: model.id,
+                                model: model
+                            }, view => {
+                                this.notify(false);
+                                view.render();
+                                this.listenToOnce(view, 'after:save', m => {
+                                    this.getMatchedRecords();
+                                });
                             });
                         });
                     });
                 });
-            });
-        },
+            },
 
-        data() {
-            return {
-                hasMatches: this.matches !== null,
-                matches: this.matches
-            };
-        },
+            data() {
+                return {
+                    hasMatches: this.matches !== null,
+                    matches: this.matches
+                };
+            },
 
-        getMatchedRecords() {
-            this.ajaxGetRequest('Matching/action/matchedRecords', { code: this.name, entityName: this.model.name, entityId: this.model.id })
-                .success(res => {
+            getMatchedRecords() {
+                this.ajaxGetRequest('Matching/action/matchedRecords', {
+                    code: this.name,
+                    entityName: this.model.name,
+                    entityId: this.model.id,
+                    statuses: this.options.selectedFilters || [],
+                }).success(res => {
                     this.matches = [];
                     (res.matches || []).forEach(item => {
                         let row = {
@@ -86,8 +90,8 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
                     })
                     this.reRender();
                 });
-        },
+            },
 
-    });
-}
+        });
+    }
 );

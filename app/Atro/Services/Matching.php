@@ -20,7 +20,7 @@ use Atro\Repositories\Matching as MatchingRepository;
 
 class Matching extends ReferenceData
 {
-    public function getMatchedRecords(string $code, string $entityName, string $entityId): array
+    public function getMatchedRecords(string $code, string $entityName, string $entityId, array $statuses): array
     {
         $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
         if (empty($matching)) {
@@ -32,15 +32,19 @@ class Matching extends ReferenceData
             return [];
         }
 
+        if (empty($statuses)) {
+            $statuses = ["found", "confirmed"];
+        }
+
         if ($entityName === $matching->get('stagingEntity')) {
             if (!$this->getRepository()->isMatchingSearchedForStaging($matching, $entity)) {
                 $this->getMatchingManager()->findMatches($matching, $entity);
             }
-            return $this->getRepository()->getMatchedRecords($matching, $entity);
+            return $this->getRepository()->getMatchedRecords($matching, $entity, $statuses);
         }
 
         if ($entityName === $matching->get('masterEntity')) {
-            return $this->getRepository()->getForeignMatchedRecords($matching, $entity);
+            return $this->getRepository()->getForeignMatchedRecords($matching, $entity, $statuses);
         }
 
         return [];
