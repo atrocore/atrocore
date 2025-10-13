@@ -19,6 +19,7 @@ use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Espo\Core\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
@@ -178,92 +179,32 @@ class Matching extends ReferenceData
 
     public function deleteMatchedRecordsForMatching(MatchingEntity $matching): void
     {
-        $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->delete('matched_record')
-            ->where('matching_id = :matchingId')
-            ->setParameter('matchingId', $matching->id)
-            ->executeQuery();
+        $this->getEntityManager()->getRepository('MatchedRecord')
+            ->where(['matchingId' => $matching->id])
+            ->removeCollection();
     }
 
     public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
     {
-        $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->delete('matched_record')
-            ->where('matching_id = :matchingId')
-            ->andWhere('staging_entity = :entityName AND staging_entity_id = :entityId')
-            ->andWhere('status=:foundStatus')
-            ->setParameter('matchingId', $matching->id)
-            ->setParameter('entityName', $entity->getEntityName())
-            ->setParameter('entityId', $entity->id)
-            ->setParameter('foundStatus', 'found')
-            ->executeQuery();
+        $this->getEntityManager()->getRepository('MatchedRecord')
+            ->where([
+                'matchingId'      => $matching->id,
+                'stagingEntity'   => $entity->getEntityName(),
+                'stagingEntityId' => $entity->id,
+                'foundStatus'     => 'found',
+            ])
+            ->removeCollection();
 
         // for duplicates
         if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
-            $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->delete('matched_record')
-                ->where('matching_id = :matchingId')
-                ->andWhere('master_entity = :entityName AND master_entity_id = :entityId')
-                ->andWhere('status=:foundStatus')
-                ->setParameter('matchingId', $matching->id)
-                ->setParameter('entityName', $entity->getEntityName())
-                ->setParameter('entityId', $entity->id)
-                ->setParameter('foundStatus', 'found')
-                ->executeQuery();
-        }
-    }
-
-    public function createMatchedRecord(MatchingEntity $matching, string $stagingEntityId, string $masterEntityId, int $score): void
-    {
-        $items = [
-            [
-                'stagingEntityId' => $stagingEntityId,
-                'masterEntityId'  => $masterEntityId
-            ]
-        ];
-
-        // for duplicates
-        if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
-            $items[] = [
-                'stagingEntityId' => $masterEntityId,
-                'masterEntityId'  => $stagingEntityId
-            ];
-        }
-
-        foreach ($items as $item) {
-            $hashParts = [
-                $matching->id,
-                $matching->get('stagingEntity'),
-                $item['stagingEntityId'],
-                $matching->get('masterEntity'),
-                $item['masterEntityId']
-            ];
-
-            $qb = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                ->insert('matched_record')
-                ->setValue('id', ':id')
-                ->setValue('matching_id', ':matchingId')
-                ->setValue('staging_entity', ':stagingEntity')
-                ->setValue('staging_entity_id', ':stagingEntityId')
-                ->setValue('master_entity', ':masterEntity')
-                ->setValue('master_entity_id', ':masterEntityId')
-                ->setValue('score', ':score')
-                ->setValue('status', ':status')
-                ->setValue('hash', ':hash')
-                ->setParameter('id', Util::generateId())
-                ->setParameter('matchingId', $matching->id)
-                ->setParameter('stagingEntity', $matching->get('stagingEntity'))
-                ->setParameter('stagingEntityId', $item['stagingEntityId'])
-                ->setParameter('masterEntity', $matching->get('masterEntity'))
-                ->setParameter('masterEntityId', $item['masterEntityId'])
-                ->setParameter('score', $score)
-                ->setParameter('status', 'found')
-                ->setParameter('hash', md5(implode('_', $hashParts)));
-
-            try {
-                $qb->executeQuery();
-            } catch (\Throwable $e) {
-            }
+            $this->getEntityManager()->getRepository('MatchedRecord')
+                ->where([
+                    'matchingId'     => $matching->id,
+                    'masterEntity'   => $entity->getEntityName(),
+                    'masterEntityId' => $entity->id,
+                    'foundStatus'    => 'found',
+                ])
+                ->removeCollection();
         }
     }
 

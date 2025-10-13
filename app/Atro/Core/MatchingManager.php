@@ -17,6 +17,7 @@ use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
 use Atro\Entities\MatchingRule;
+use Atro\Repositories\MatchedRecord;
 use Atro\Repositories\Matching;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -116,7 +117,7 @@ class MatchingManager
 
             if ($matchingScore >= $matching->get('minimumScore')) {
                 $this
-                    ->getMatchingRepository()
+                    ->getMatchedRecordRepository()
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
             }
 
@@ -141,5 +142,10 @@ class MatchingManager
     protected function getMatchingRepository(): Matching
     {
         return $this->getEntityManager()->getRepository('Matching');
+    }
+
+    protected function getMatchedRecordRepository(): MatchedRecord
+    {
+        return $this->getEntityManager()->getRepository('MatchedRecord');
     }
 }
