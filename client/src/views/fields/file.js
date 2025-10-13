@@ -382,7 +382,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 url: this.getFilePathsData(model).download,
                 smallThumbnail: this.getFilePathsData(model).thumbnails.small + cachePart,
                 largeThumbnail: this.getFilePathsData(model).thumbnails.large + cachePart,
-                isImage: model.get('typeId') !== 'a_document',
+                isImage: (this.getMetadata().get(['app', 'file', 'image', 'extensions']) || []).includes(model.get('extension'))
             };
         }
 
