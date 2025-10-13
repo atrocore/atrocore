@@ -18,7 +18,7 @@ use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Interfaces\Injectable;
-use Espo\Entities\User;
+use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 class Container
@@ -63,6 +63,7 @@ class Container
             'realtimeManager'          => \Atro\Core\RealtimeManager::class,
             'seederFactory'            => \Atro\Core\SeederFactory::class,
             'condition'                => \Atro\Core\ConditionChecker::class,
+            'matchingManager'          => \Atro\Core\MatchingManager::class,
             'crypt'                    => \Espo\Core\Utils\Crypt::class,
             'classParser'              => \Espo\Core\Utils\File\ClassParser::class,
             'acl'                      => \Espo\Core\Factories\Acl::class,

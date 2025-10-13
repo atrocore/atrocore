@@ -1,0 +1,115 @@
+{
+  "fields": {
+    "matching": {
+      "type": "link",
+      "entity": "Matching",
+      "protected": true
+    },
+    "staging": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/matched-record/fields/staging",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "stagingEntity": {
+      "type": "varchar",
+      "view": "views/matching/fields/entity-type",
+      "protected": true
+    },
+    "stagingEntityId": {
+      "type": "varchar",
+      "protected": true
+    },
+    "master": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/matched-record/fields/master",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "view": "views/matching/fields/entity-type",
+      "protected": true
+    },
+    "masterEntityId": {
+      "type": "varchar",
+      "protected": true
+    },
+    "score": {
+      "type": "int",
+      "protected": true
+    },
+    "status": {
+      "type": "enum",
+      "options": [
+        "found",
+        "confirmed",
+        "rejected"
+      ]
+    },
+    "hash": {
+      "type": "varchar",
+      "unique": true,
+      "protected": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "score",
+    "asc": false
+  },
+  "indexes": {
+    "matchingId": {
+      "columns": [
+        "matchingId"
+      ]
+    },
+    "stagingEntity": {
+      "columns": [
+        "matchingId",
+        "stagingEntity",
+        "stagingEntityId"
+      ]
+    },
+    "masterEntity": {
+      "columns": [
+        "matchingId",
+        "masterEntity",
+        "matchingId"
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "matching": "Matching",
+    "weight": "Weight",
+    "sourceField": "Source Field",
+    "targetField": "Target Field",
+    "stagingEntity": "Staging Entity",
+    "masterEntity": "Master Entity"
+  },
+  "options": {
+    "type": {
+      "equal": "Equal",
+      "like": "Like",
+      "contains": "Contains"
+    }
+  }
+}

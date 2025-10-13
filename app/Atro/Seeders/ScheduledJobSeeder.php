@@ -30,7 +30,7 @@ class ScheduledJobSeeder extends AbstractSeeder
                     'modified_at'    => date('Y-m-d H:i:s'),
                     'created_by_id'  => 'system',
                     'modified_by_id' => 'system',
-                ]
+                ],
             ],
             [
                 'tableName' => 'scheduled_job',
@@ -44,7 +44,7 @@ class ScheduledJobSeeder extends AbstractSeeder
                     'modified_at'    => date('Y-m-d H:i:s'),
                     'created_by_id'  => 'system',
                     'modified_by_id' => 'system',
-                ]
+                ],
             ],
             [
                 'tableName' => 'scheduled_job',
@@ -58,7 +58,7 @@ class ScheduledJobSeeder extends AbstractSeeder
                     'modified_at'    => date('Y-m-d H:i:s'),
                     'created_by_id'  => 'system',
                     'modified_by_id' => 'system',
-                ]
+                ],
             ],
             [
                 'tableName' => 'scheduled_job',
@@ -85,9 +85,23 @@ class ScheduledJobSeeder extends AbstractSeeder
                         'modified_at'    => date('Y-m-d H:i:s'),
                         'created_by_id'  => 'system',
                         'modified_by_id' => 'system',
-                    ]
+                    ],
                 ],
-            ]
+                [
+                    'tableName' => 'scheduled_job',
+                    'data'      => [
+                        'id'             => 'FindMatches',
+                        'name'           => 'Find matches',
+                        'type'           => 'FindMatches',
+                        'is_active'      => true,
+                        'scheduling'     => '0 */2 * * *',
+                        'created_at'     => date('Y-m-d H:i:s'),
+                        'modified_at'    => date('Y-m-d H:i:s'),
+                        'created_by_id'  => 'system',
+                        'modified_by_id' => 'system',
+                    ],
+                ],
+            ],
         ];
 
         foreach ($toInsertRecords as $row) {
@@ -101,7 +115,8 @@ class ScheduledJobSeeder extends AbstractSeeder
 
             try {
                 $qb->executeQuery();
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
         }
     }
 }

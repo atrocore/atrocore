@@ -14,5 +14,6 @@
   "hasAssignedUser": true,
   "hasTeam": true,
   "streamDisabled": true,
-  "attributesDisabled": true
+  "attributesDisabled": true,
+  "matchingDisabled": true
 }

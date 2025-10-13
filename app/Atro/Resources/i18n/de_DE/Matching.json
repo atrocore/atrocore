@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "foreignName": "Fremdname"
+  },
+  "tooltips": {
+    "foreignName": "Name für eine Rückwärtsübereinstimmung, z. B. könnte „Staging“ ein Fremdname für eine „Master“-Übereinstimmung sein."
+  }
+}

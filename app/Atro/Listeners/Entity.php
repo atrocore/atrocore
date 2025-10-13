@@ -50,6 +50,9 @@ class Entity extends AbstractListener
 
         // create classification attributes if it needs
         $this->createClassificationAttributesForRecord($entity);
+
+        // find mathings if it needs
+        $this->getContainer()->get('matchingManager')->findMatchingsAfterEntitySave($entity);
     }
 
     public function beforeRemove(Event $event): void

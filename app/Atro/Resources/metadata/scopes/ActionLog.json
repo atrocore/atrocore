@@ -16,5 +16,6 @@
   "disableActionHistory": true,
   "attributesDisabled": true,
   "autoDeleteAfterDays": 21,
-  "clearDeletedAfterDays": 35
+  "clearDeletedAfterDays": 35,
+  "matchingDisabled": true
 }

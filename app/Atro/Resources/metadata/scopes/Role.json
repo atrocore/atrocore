@@ -11,5 +11,6 @@
   "actionDisabled": true,
   "duplicatableRelations": [
     "scopes"
-  ]
+  ],
+  "matchingDisabled": true
 }

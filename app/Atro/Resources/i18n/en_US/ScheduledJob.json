@@ -21,6 +21,7 @@
       "UpdateCurrencyExchangeViaECB": "Update currency exchange via ECB",
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage",
+      "FindMatches": "Find matches",
       "CalculateScriptFieldsForEntities": "Calculate script fields"
     }
   },

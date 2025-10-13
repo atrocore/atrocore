@@ -561,6 +561,23 @@
     "deleteValuesAfterUnlinkingClassification": {
       "type": "bool",
       "view": "views/entity/fields/delete-values-after-unlinking-classification"
+    },
+    "checkForDuplicates": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "links": {

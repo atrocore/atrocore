@@ -1,0 +1,52 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "foreignName"
+        }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        {
+          "name": "isActive"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "minimumScore"
+        },
+        {
+          "name": "entity"
+        }
+      ],
+      [
+        {
+          "name": "stagingEntity"
+        },
+        {
+          "name": "masterEntity"
+        }
+      ]
+    ]
+  }
+]

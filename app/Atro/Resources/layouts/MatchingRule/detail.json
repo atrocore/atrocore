@@ -1,0 +1,46 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "code"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "matching"
+        }
+      ],
+      [
+        {
+          "name": "weight"
+        },
+        false
+      ],
+      [
+        {
+          "name": "stagingEntity"
+        },
+        {
+          "name": "masterEntity"
+        }
+      ],
+      [
+        {
+          "name": "sourceField"
+        },
+        {
+          "name": "targetField"
+        }
+      ]
+    ]
+  }
+]

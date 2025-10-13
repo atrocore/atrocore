@@ -15,5 +15,6 @@
   "bookmarkDisabled": true,
   "emHidden": true,
   "openApiHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true
 }

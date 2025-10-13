@@ -76,6 +76,12 @@
       ],
       [
         {
+          "name": "checkForDuplicates"
+        },
+        false
+      ],
+      [
+        {
           "name": "deleteWithoutConfirmation"
         },
         false

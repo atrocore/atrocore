@@ -8,5 +8,6 @@
   "streamDisabled": true,
   "bookmarkDisabled": true,
   "actionDisabled": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "matchingDisabled": true
 }

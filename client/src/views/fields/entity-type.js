@@ -50,7 +50,6 @@ Espo.define('views/fields/entity-type', 'views/fields/enum', function (Dep) {
             }.bind(this)).sort(function (v1, v2) {
                 return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
             }.bind(this));
-            this.params.options.unshift('');
         },
 
         setup: function () {

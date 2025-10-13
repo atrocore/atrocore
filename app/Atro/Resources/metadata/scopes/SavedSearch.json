@@ -4,12 +4,17 @@
   "layouts": false,
   "tab": false,
   "acl": true,
-  "customizable":false,
+  "customizable": false,
   "isActiveUnavailable": true,
   "streamDisabled": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "actionDisabled": true,
   "emHidden": true,
-  "aclLevelList": ["no","own","all"]
+  "aclLevelList": [
+    "no",
+    "own",
+    "all"
+  ],
+  "matchingDisabled": true
 }

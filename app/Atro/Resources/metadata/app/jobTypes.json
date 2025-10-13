@@ -59,6 +59,14 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\ActionHandler"
   },
+  "FindMatches": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\FindMatches"
+  },
+  "FindMatchesForRecord": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\FindMatchesForRecord"
+  },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,
     "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntities"
