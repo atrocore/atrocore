@@ -499,6 +499,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         },
 
         afterRender: function () {
+            if(this.name === 'productStatus') {
+                debugger
+            }
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {

@@ -221,6 +221,7 @@ Espo.define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.createView(name, viewName, {
                 model: this.model,
                 el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                disableConditions: true,
                 defs: {
                     name: name,
                     isMassUpdate: true
