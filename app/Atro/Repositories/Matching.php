@@ -114,11 +114,6 @@ class Matching extends ReferenceData
             ->executeQuery();
     }
 
-    public function isMatchingSearchedForDuplicate(MatchingEntity $matching, Entity $entity): bool
-    {
-        return $this->isMatchingSearchedForStaging($matching, $entity);
-    }
-
     public function isMatchingSearchedForStaging(MatchingEntity $matching, Entity $entity): bool
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -175,37 +170,6 @@ class Matching extends ReferenceData
         $qb->andWhere(implode(' OR ', $rulesParts));
 
         return $qb->fetchAllAssociative();
-    }
-
-    public function deleteMatchedRecordsForMatching(MatchingEntity $matching): void
-    {
-        $this->getEntityManager()->getRepository('MatchedRecord')
-            ->where(['matchingId' => $matching->id])
-            ->removeCollection();
-    }
-
-    public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
-    {
-        $this->getEntityManager()->getRepository('MatchedRecord')
-            ->where([
-                'matchingId'      => $matching->id,
-                'stagingEntity'   => $entity->getEntityName(),
-                'stagingEntityId' => $entity->id,
-                'foundStatus'     => 'found',
-            ])
-            ->removeCollection();
-
-        // for duplicates
-        if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
-            $this->getEntityManager()->getRepository('MatchedRecord')
-                ->where([
-                    'matchingId'     => $matching->id,
-                    'masterEntity'   => $entity->getEntityName(),
-                    'masterEntityId' => $entity->id,
-                    'foundStatus'    => 'found',
-                ])
-                ->removeCollection();
-        }
     }
 
     public function getMatchedRecords(MatchingEntity $matching, Entity $entity): array

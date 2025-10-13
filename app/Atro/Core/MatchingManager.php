@@ -92,7 +92,7 @@ class MatchingManager
         }
     }
 
-    public function findMatches(Entity $matching, Entity $entity): void
+    public function findMatches(MatchingEntity $matching, Entity $entity): void
     {
         if (empty($matching->get('isActive'))) {
             return;
@@ -103,7 +103,7 @@ class MatchingManager
         }
 
         // Clear old matches for entity
-        $this->getMatchingRepository()->deleteMatchedRecordsForEntity($matching, $entity);
+        $this->getMatchedRecordRepository()->deleteMatchedRecordsForEntity($matching, $entity);
 
         // Find possible matches
         $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
