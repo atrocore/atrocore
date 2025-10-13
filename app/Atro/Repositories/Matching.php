@@ -29,7 +29,7 @@ class Matching extends ReferenceData
 {
     public static function prepareFieldName(string $code): string
     {
-        return Util::toCamelCase("matching_" . Util::toUnderScore(lcfirst($code)));
+        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($code)));
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
@@ -178,12 +178,12 @@ class Matching extends ReferenceData
 
         $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
-            $select[] = 't.' . Util::toUnderScore($fieldName);
+            $select[] = 't.'.Util::toUnderScore($fieldName);
         }
 
         $result = [
             'entityName' => $matching->get('masterEntity'),
-            'matches'    => []
+            'matches'    => [],
         ];
 
         foreach (['confirmed', 'found', 'rejected'] as $status) {
@@ -210,7 +210,7 @@ class Matching extends ReferenceData
 
             $result['matches'][] = [
                 'status' => $status,
-                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative())
+                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative()),
             ];
         }
 
@@ -223,19 +223,20 @@ class Matching extends ReferenceData
 
         $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
         foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
-            $select[] = 't.' . Util::toUnderScore($fieldName);
+            $select[] = 't.'.Util::toUnderScore($fieldName);
         }
 
         $result = [
             'entityName' => $matching->get('stagingEntity'),
-            'matches'    => []
+            'matches'    => [],
         ];
 
         foreach (['confirmed', 'found', 'rejected'] as $status) {
             $qb = $conn->createQueryBuilder()
                 ->select(implode(',', $select))
                 ->from('matched_record', 'mr')
-                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't', 'mr.staging_entity_id = t.id AND t.deleted = :false')
+                ->leftJoin('mr', $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))), 't',
+                    'mr.staging_entity_id = t.id AND t.deleted = :false')
                 ->where('mr.matching_id = :matchingId')
                 ->andWhere('mr.master_entity = :masterEntity')
                 ->andWhere('mr.master_entity_id = :masterEntityId')
@@ -255,7 +256,7 @@ class Matching extends ReferenceData
 
             $result['matches'][] = [
                 'status' => $status,
-                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative())
+                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative()),
             ];
         }
 
