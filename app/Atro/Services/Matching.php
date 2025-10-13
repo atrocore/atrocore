@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Services\ReferenceData;
 use Atro\Repositories\Matching as MatchingRepository;
@@ -27,9 +28,17 @@ class Matching extends ReferenceData
             return [];
         }
 
+        if (!$this->getAcl()->check($entityName, 'read')) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getEntityManager()->getRepository($entityName)->get($entityId);
         if (empty($entity)) {
             return [];
+        }
+
+        if (!$this->getAcl()->check($entity, 'read')) {
+            throw new Forbidden();
         }
 
         if (empty($statuses)) {
@@ -40,6 +49,7 @@ class Matching extends ReferenceData
             if (!$this->getRepository()->isMatchingSearchedForStaging($matching, $entity)) {
                 $this->getMatchingManager()->findMatches($matching, $entity);
             }
+
             return $this->getRepository()->getMatchedRecords($matching, $entity, $statuses);
         }
 
