@@ -39,13 +39,13 @@ class CalculateScriptFieldsForEntities extends AbstractJob implements JobInterfa
                 $last = $offset + count($ids);
                 $jobEntity = $this->getEntityManager()->getEntity('Job');
                 $jobEntity->set([
-                    'name' => "Calculate script fields of $entityName ($offset - $last)",
-                    'type' => 'CalculateScriptFieldsForEntity',
-                    'priority' => 20,
+                    'name'           => "Calculate script fields of $entityName ($offset - $last)",
+                    'type'           => 'CalculateScriptFieldsForEntity',
+                    'priority'       => 20,
                     'scheduledJobId' => $job->get('scheduledJobId'),
-                    'payload' => [
+                    'payload'        => [
                         'scope' => $entityName,
-                        'ids' => $ids,
+                        'ids'   => $ids,
                     ]
                 ]);
                 $this->getEntityManager()->saveEntity($jobEntity);

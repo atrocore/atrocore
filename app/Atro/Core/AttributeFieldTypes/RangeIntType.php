@@ -62,6 +62,7 @@ class RangeIntType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         $entity->fields[$name . 'From'] = [
@@ -96,7 +97,8 @@ class RangeIntType extends AbstractFieldType
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
             'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('From'),
-            'layoutDetailDisabled'      => true
+            'layoutDetailDisabled'      => true,
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         $entity->fields[$name . 'To'] = [
@@ -131,7 +133,8 @@ class RangeIntType extends AbstractFieldType
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
             'label'                     => $row[$this->prepareKey('name', $row)] . ' ' . $this->language->translate('To'),
-            'layoutDetailDisabled'      => true
+            'layoutDetailDisabled'      => true,
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         if ($this->type === 'float') {
@@ -209,7 +212,8 @@ class RangeIntType extends AbstractFieldType
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
-                'layoutDetailDisabled'      => true
+                'layoutDetailDisabled'      => true,
+                'conditionalProperties'     => $this->prepareConditionalProperties($row)
             ];
         }
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

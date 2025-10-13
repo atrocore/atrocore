@@ -19,12 +19,23 @@
     "datetimeValue": "Default Value: Date-time",
     "boolValue": "Default Value: Boolean",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "enableConditionalRequired": "Enable Required",
+    "enableConditionalVisible": "Enable Visible",
+    "enableConditionalReadOnly": "Enable Read-only",
+    "enableConditionalProtected": "Enable Protected",
+    "enableConditionalDisableOptions": "Enable Disabled Options",
+    "conditionalRequired": "Required",
+    "conditionalVisible": "Visible",
+    "conditionalReadOnly": "Read-only",
+    "conditionalProtected": "Protected",
+    "conditionalDisableOptions": "Disabled Options"
   },
   "labels": {
     "classificationAttribute": "Attribute from Classification",
     "unlinkRelatedAttribute": "Delete and retain for records",
-    "cascadeUnlinkRelatedAttribute": "Delete and from records"
+    "cascadeUnlinkRelatedAttribute": "Delete and from records",
+    "conditionalProperties": "Conditional Properties"
   },
   "options": {
     "scope": {

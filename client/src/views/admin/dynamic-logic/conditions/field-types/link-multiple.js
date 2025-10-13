@@ -78,6 +78,42 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
             }, this);
         },
 
+        createValueViewIn: function () {
+            this.createLinkMultipleValueField();
+        },
+
+        createValueViewNotIn: function () {
+            this.createLinkMultipleValueField();
+        },
+
+        createLinkMultipleValueField: function () {
+            if (!this.model.get(this.field + 'Ids')) {
+                const id = this.model.get(this.field + 'Id');
+                const name = this.model.get(this.field + 'Name');
+                if (id) {
+                    this.model.set(this.field + 'Ids', [id]);
+                }
+                if (name) {
+                    this.model.set(this.field + 'Names', { [id]: name });
+                }
+            }
+
+            const viewName = 'views/fields/link-multiple';
+
+            this.createView('value', viewName, {
+                model: this.model,
+                name: this.field,
+                el: this.getSelector() + ' .value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+                foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            }, this);
+        },
+
         fetch: function () {
             var valueView = this.getView('value');
 
@@ -91,14 +127,22 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
 
             if (valueView) {
                 valueView.fetchToModel();
-                item.value = this.model.get(this.field + 'Id');
-
                 const values = {};
-                const names = {};
-                names[this.model.get(this.field + 'Id')] = this.model.get(this.field + 'Name');
-                values[this.field + 'Names'] = names;
-                values[this.field + 'Ids'] = [this.model.get(this.field + 'Id')];
+
+                if (['in', 'notIn'].includes(item.type)) {
+                    item.value = this.model.get(this.field + 'Ids');
+
+                    values[this.field + 'Ids'] = this.model.get(this.field + 'Ids');
+                    values[this.field + 'Names'] = this.model.get(this.field + 'Names');
+                } else {
+                    item.value = this.model.get(this.field + 'Id');
+
+                    values[this.field + 'Names'] = { [this.model.get(this.field + 'Id')]: this.model.get(this.field + 'Name') };
+                    values[this.field + 'Ids'] = [this.model.get(this.field + 'Id')];
+                }
+
                 item.data.values = values;
+
             }
 
             return item;

@@ -40,6 +40,7 @@ class ClassificationAttribute extends Base
         $attribute = $this->getEntityManager()->getRepository('Attribute')->get($entity->get('attributeId'));
 
         if (!empty($attribute)) {
+            $entity->set('attributeEntityId', $attribute->get('entityId'));
             $entity->set('attributeType', $attribute->get('type'));
             $entity->set('attributeGroupId', $attribute->get('attributeGroupId'));
             $entity->set('attributeGroupName', $attribute->get('attributeGroupName'));

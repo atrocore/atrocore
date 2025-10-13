@@ -460,6 +460,11 @@ class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, H
         return $this->getPdfImagesDir($file->getStorage()) . DIRECTORY_SEPARATOR . $file->get('id');
     }
 
+    public function isAvailable(Storage $storage): bool
+    {
+        return true;
+    }
+
     protected static function buildFullPath(Storage $storage, ?string $path): string
     {
         $res = trim($storage->get('path'), DIRECTORY_SEPARATOR);

@@ -49,7 +49,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
         if (in_array($item['type'], ['isLinked', 'isNotLinked'])) {
             // we select records that are linked or not linked with the attribute
-            $operator = $item['type'] === 'isLinked' ? 'EXISTS': 'NOT EXISTS';
+            $operator = $item['type'] === 'isLinked' ? 'EXISTS' : 'NOT EXISTS';
             $tableName = Util::toUnderScore(lcfirst($entity->getEntityType()));
             $attributeAlias = Util::generateUniqueHash();
             $aliasMiddle = Util::generateUniqueHash();
@@ -64,9 +64,9 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
                 ->setParameter("false", false, ParameterType::BOOLEAN);
 
             $item = [
-                'type' => 'innerSql',
+                'type'  => 'innerSql',
                 'value' => [
-                    'sql' => "$operator ({$subQb->getSQL()})",
+                    'sql'        => "$operator ({$subQb->getSQL()})",
                     'parameters' => $subQb->getParameters(),
                 ]
 
@@ -75,12 +75,12 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         }
 
         $where = [
-            'type' => 'and',
+            'type'  => 'and',
             'value' => [
                 [
-                    'type' => 'equals',
+                    'type'      => 'equals',
                     'attribute' => 'attributeId',
-                    'value' => $attributeId
+                    'value'     => $attributeId
                 ],
             ]
         ];
@@ -105,22 +105,22 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
         $innerSql = str_replace($mainTableAlias, "t_{$attributeId}", $qb1->getSql());
 
         $item = [
-            'type' => 'innerSql',
+            'type'  => 'innerSql',
             'value' => [
-                "sql" => "$mainTableAlias.id $operator ($innerSql)",
+                "sql"        => "$mainTableAlias.id $operator ($innerSql)",
                 "parameters" => $qb1->getParameters()
             ]
         ];
 
-        if($operator === 'NOT IN') {
+        if ($operator === 'NOT IN') {
             // we ensure that the results are also linked to the attributes
             $item = [
-                'type' => 'and',
+                'type'  => 'and',
                 'value' => [
                     $item,
                     [
-                        'type' => 'isLinked',
-                        'attribute' => $attributeId,
+                        'type'        => 'isLinked',
+                        'attribute'   => $attributeId,
                         'isAttribute' => true
                     ]
                 ]
@@ -161,7 +161,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
         $item['value'] = [
             "innerSql" => [
-                "sql" => str_replace(
+                "sql"        => str_replace(
                     $this->em->getRepository($entity->getEntityType())->getMapper()->getQueryConverter()->getMainTableAlias(),
                     'sbq_' . Util::generateId(), $qb1->getSql()
                 ),
@@ -173,6 +173,33 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
     protected function convertWhere(IEntity $entity, array $attribute, array $item): array
     {
         return [];
+    }
+
+    protected function prepareConditionalProperties(array $row): ?array
+    {
+        $keyMap = [
+            'conditional_required'        => 'required',
+            'conditional_visible'         => 'visible',
+            'conditional_protected'       => 'protected',
+            'conditional_read_only'       => 'readOnly',
+            'conditional_disable_options' => 'disableOptions'
+        ];
+
+        $conditions = [];
+        foreach ($keyMap as $key => $property) {
+            if (!empty($row[$key])) {
+                $value = @json_decode($row[$key], true);
+                if (!empty($value)) {
+                    $conditions[$property] = $value;
+                }
+            }
+        }
+
+        if (empty($conditions)) {
+            return null;
+        }
+
+        return $conditions;
     }
 
     protected function getSelectManagerFactory(): SelectManagerFactory

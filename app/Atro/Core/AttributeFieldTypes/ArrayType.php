@@ -64,6 +64,7 @@ class ArrayType extends AbstractFieldType
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
             'notSortable'               => true,
+            'conditionalProperties'     => $this->prepareConditionalProperties($row)
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

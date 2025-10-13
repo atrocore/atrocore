@@ -80,6 +80,7 @@ class LinkType extends AbstractFieldType
                 'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
+                'conditionalProperties'     => $this->prepareConditionalProperties($row)
             ];
 
             if (!empty($attributeData['dropdown'])) {

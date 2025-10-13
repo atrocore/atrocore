@@ -54,5 +54,50 @@
     ],
     "style": "default",
     "label": "Details"
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "enableConditionalVisible"
+        },
+        {
+          "name": "conditionalVisible"
+        }
+      ],
+      [
+        {
+          "name": "enableConditionalRequired"
+        },
+        {
+          "name": "conditionalRequired"
+        }
+      ],
+      [
+        {
+          "name": "enableConditionalProtected"
+        },
+        {
+          "name": "conditionalProtected"
+        }
+      ],
+      [
+        {
+          "name": "enableConditionalReadOnly"
+        },
+        {
+          "name": "conditionalReadOnly"
+        }
+      ],
+      [
+        {
+          "name": "enableConditionalDisableOptions"
+        },
+        {
+          "name": "conditionalDisableOptions"
+        }
+      ]
+    ]
   }
 ]

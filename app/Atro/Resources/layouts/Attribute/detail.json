@@ -162,5 +162,40 @@
         false
       ]
     ]
+  },
+  {
+    "label": "conditionalProperties",
+    "rows": [
+      [
+        {
+          "name": "conditionalVisible"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalRequired"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalProtected"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalReadOnly"
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditionalDisableOptions"
+        },
+        false
+      ]
+    ]
   }
 ]
