@@ -76,7 +76,11 @@ class AttributeFieldConverter
     {
         $id = self::getAttributeIdFromFieldName($item['attribute']);
 
-        if (!isset($this->attributes[$id]) && !empty($result['attributesIds'])) {
+        if (!in_array($id, $result['attributesIds'] ?? [])) {
+            $result['attributesIds'][] = $id;
+        }
+
+        if (!isset($this->attributes[$id])) {
             $this->attributes = [];
             $attributeIds = [];
             foreach ($result['attributesIds'] as $attributeId) {

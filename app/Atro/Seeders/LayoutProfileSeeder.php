@@ -20,6 +20,7 @@ class LayoutProfileSeeder extends AbstractSeeder
         $defaultId = 'default';
         $menus = $this->getDefaultMenu();
         $favList = $this->getFavorites();
+        $defaultDashboards = $this->getDefaultDashboards();
 
         try {
             // create default profile
@@ -32,17 +33,15 @@ class LayoutProfileSeeder extends AbstractSeeder
                     'is_default'       => ':true',
                     'navigation'       => ':navigation',
                     'dashboard_layout' => ':dashboardLayout',
+                    'dashlets_options' => ':dashletsOptions',
                     'favorites_list'   => ':favorites_list'
                 ])->setParameters([
                     'id'              => $defaultId,
                     'name'            => 'Standard',
                     'navigation'      => json_encode($menus),
                     'favorites_list'  => json_encode($favList),
-                    'dashboardLayout' => json_encode([
-                        [
-                            'name'   => 'My AtroPIM',
-                            'layout' => []
-                        ]]),
+                    'dashboardLayout' => json_encode($defaultDashboards['layout']),
+                    'dashletsOptions'  => json_encode($defaultDashboards['options']),
                 ])
                 ->setParameter('true', true, ParameterType::BOOLEAN)
                 ->executeStatement();
@@ -96,5 +95,84 @@ class LayoutProfileSeeder extends AbstractSeeder
         }
 
         return $favList;
+    }
+
+    private function getDefaultDashboards(): array
+    {
+        $data = [
+            'layout' => [
+                [
+                    'name' => 'My AtroPIM',
+                    'layout' => [
+                        [
+                            'id' => 'd678833',
+                            'name' => 'Records',
+                            'x' => 0,
+                            'y' => 0,
+                            'width' => 2,
+                            'height' => 4
+                        ],
+                        [
+                            'id' => 'd811129',
+                            'name' => 'Stream',
+                            'x' => 2,
+                            'y' => 0,
+                            'width' => 2,
+                            'height' => 4
+                        ],
+                        [
+                            'id' => 'd556889',
+                            'name' => 'DataSyncErrorsExport',
+                            'x' => 0,
+                            'y' => 4,
+                            'width' => 2,
+                            'height' => 2
+                        ],
+                        [
+                            'id' => 'd403401',
+                            'name' => 'DataSyncErrorsImport',
+                            'x' => 2,
+                            'y' => 4,
+                            'width' => 2,
+                            'height' => 2
+                        ]
+                    ]
+                ]
+            ],
+            'options' => [
+                'd678833' => [
+                    'autorefreshInterval' => 0.5,
+                    'displayRecords' => 20,
+                    'entityType' => 'Account',
+                    'sortBy' => 'createdAt',
+                    'sortDirection' => 'desc',
+                    'title' => 'Customer',
+                    'entityFilter' => [
+                        'where' => [
+                            [
+                                'condition' => 'AND',
+                                'valid' => true,
+                                'rules' => [
+                                    [
+                                        'id' => 'role',
+                                        'field' => 'role',
+                                        'operator' => 'in',
+                                        'type' => 'string',
+                                        'value' => ['customer']
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'whereScope' => 'Account'
+                    ]
+                ]
+            ]
+        ];
+
+        if (class_exists('\Pim\Module')) {
+            return \Pim\Module::DASHLETS_DATA;
+        }
+
+        return $data;
     }
 }

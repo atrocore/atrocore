@@ -8,20 +8,14 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/fields/multi-enum', function (Dep) {
+Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/fields/multi-enum', Dep => {
 
     return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
         setupOptions() {
-            this.params.options = [];
-            this.translatedOptions = {};
-
             const scope = this.model.get('code');
 
+            this.translatedOptions = {};
             $.each((this.getMetadata().get(['entityDefs', scope, 'fields']) || {}), (field, fieldDefs) => {
                 if (
                     !['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'].includes(field)
@@ -30,10 +24,14 @@ Espo.define('views/admin/entity-manager/fields/non-duplicatable-fields', 'views/
                     && fieldDefs.disabled !== true
                     && fieldDefs.emHidden !== true
                 ) {
-                    this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', scope);
                 }
             });
+
+            this.translatedOptions = Object.fromEntries(Object.entries(this.translatedOptions).sort(([keyA], [keyB]) => keyA.localeCompare(keyB)));
+            this.params.options = Object.keys(this.translatedOptions);
+
+            this.originalOptionList = this.params.options;
         }
     });
 });

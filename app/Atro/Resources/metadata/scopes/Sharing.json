@@ -11,5 +11,6 @@
   "streamDisabled": true,
   "hideFieldTypeFilters": true,
   "bookmarkDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "matchingDisabled": true
 }

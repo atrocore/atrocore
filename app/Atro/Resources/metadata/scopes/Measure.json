@@ -11,5 +11,6 @@
   "streamDisabled": true,
   "object": true,
   "hideFieldTypeFilters": true,
-  "emHidden": true
+  "emHidden": true,
+  "matchingDisabled": true
 }

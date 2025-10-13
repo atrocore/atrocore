@@ -4,9 +4,16 @@
     "layouts": false,
     "tab": true,
     "acl": true,
-    "aclActionList": ["read"],
-    "aclLevelList": ["all", "team", "no"],
+    "aclActionList": [
+        "read"
+    ],
+    "aclLevelList": [
+        "all",
+        "team",
+        "no"
+    ],
     "streamDisabled": true,
     "customizable": false,
-    "hideFieldTypeFilters": true
+    "hideFieldTypeFilters": true,
+    "matchingDisabled": true
 }

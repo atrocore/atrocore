@@ -50,6 +50,9 @@ class Entity extends AbstractListener
 
         // create classification attributes if it needs
         $this->createClassificationAttributesForRecord($entity);
+
+        // find mathings if it needs
+        $this->getContainer()->get('matchingManager')->findMatchingsAfterEntitySave($entity);
     }
 
     public function beforeRemove(Event $event): void
@@ -210,12 +213,10 @@ class Entity extends AbstractListener
 
     protected function recalculateScriptField(OrmEntity $entity): void
     {
-        foreach ($entity->entityDefs['fields'] ?? [] as $field => $fieldDefs) {
-            if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
-                $contents = $this->getTwig()
-                    ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
-                $entity->set($field, $contents);
-            }
+        if ($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'type']) === 'ReferenceData') {
+            return;
         }
+
+        $this->getEntityManager()->getRepository($entity->getEntityType())->calculateScriptFields($entity, false);
     }
 }

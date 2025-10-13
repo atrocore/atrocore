@@ -11,5 +11,6 @@
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
   "streamDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "matchingDisabled": true
 }

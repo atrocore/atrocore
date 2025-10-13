@@ -27,7 +27,7 @@ use Espo\ORM\Entity;
 
 class Attribute extends Base
 {
-    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit', 'entityId'];
+    protected $mandatorySelectAttributeList = ['sortOrder', 'attributeGroupSortOrder', 'extensibleEnumId', 'data', 'measureId', 'defaultUnit', 'entityId', 'outputType'];
 
     public function getAttributesDefs(string $entityName, array $attributesIds): array
     {

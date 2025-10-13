@@ -574,7 +574,10 @@
 
         let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
             return new Promise((resolve) => {
-                const view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
+                let  view =  Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
+                if(attribute.type === 'script') {
+                    view = `views/fields/${attribute.outputType}`
+                }
                 let exitingFilter = filters.find(f => f.id === name);
                 if (exitingFilter) {
                     resolve(exitingFilter);

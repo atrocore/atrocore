@@ -14,6 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 
 class V2Dot1Dot18 extends Base
 {
@@ -55,6 +56,26 @@ class V2Dot1Dot18 extends Base
             $this->exec("ALTER TABLE attribute ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)';");
             $this->exec("ALTER TABLE classification_attribute ADD enable_conditional_required TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_required LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_read_only TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_read_only LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_protected TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_protected LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_visible TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_visible LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', ADD enable_conditional_disable_options TINYINT(1) DEFAULT '0' NOT NULL, ADD conditional_disable_options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)';");
         }
+
+        $data = [
+            'id'             => 'FindMatches',
+            'name'           => 'Find matches',
+            'type'           => 'FindMatches',
+            'is_active'      => true,
+            'scheduling'     => '0 */2 * * *',
+            'created_at'     => date('Y-m-d H:i:s'),
+            'modified_at'    => date('Y-m-d H:i:s'),
+            'created_by_id'  => 'system',
+            'modified_by_id' => 'system',
+        ];
+
+        $qb = $this->getConnection()->createQueryBuilder()
+            ->insert($this->getConnection()->quoteIdentifier('scheduled_job'));
+        foreach ($data as $columnName => $value) {
+            $qb->setValue($columnName, ":$columnName");
+            $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
+        }
+        $qb->executeQuery();
     }
 
     protected function exec(string $sql): void

@@ -424,7 +424,9 @@
     "code": "Code",
     "label": "Beschriftung",
     "color": "Farbe",
-    "editLabels": "Etikett bearbeiten"
+    "editLabels": "Etikett bearbeiten",
+    "matchedRecords": "Übereinstimmende Datensätze",
+    "noMatches": "Keine Übereinstimmungen"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

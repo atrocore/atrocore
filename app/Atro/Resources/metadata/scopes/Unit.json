@@ -12,5 +12,6 @@
   "object": true,
   "hasActive": true,
   "hideFieldTypeFilters": true,
-  "emHidden": true
+  "emHidden": true,
+  "matchingDisabled": true
 }

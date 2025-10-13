@@ -1,0 +1,178 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "code": {
+      "type": "varchar",
+      "required": true,
+      "trim": true,
+      "unique": true,
+      "customizable": false,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "matching": {
+      "type": "link",
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "stagingEntity": {
+      "type": "varchar",
+      "notStorable": true,
+      "view": "views/matching-rule/fields/staging-entity",
+      "readOnly": true
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "notStorable": true,
+      "view": "views/matching-rule/fields/master-entity",
+      "readOnly": true
+    },
+    "weight": {
+      "type": "int",
+      "required": true,
+      "min": 0,
+      "default": 1
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": [
+        "equal",
+        "like",
+        "contains"
+      ],
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "targetField": {
+      "type": "enum",
+      "view": "views/matching-rule/fields/entity-field",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "equal",
+                "like",
+                "contains"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "equal",
+                "like",
+                "contains"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sourceField": {
+      "type": "enum",
+      "view": "views/matching-rule/fields/entity-field",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "equal",
+                "like",
+                "contains"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "equal",
+                "like",
+                "contains"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "matching": {
+      "type": "belongsTo",
+      "foreign": "matchingRules",
+      "entity": "Matching"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "weight",
+    "asc": false
+  }
+}

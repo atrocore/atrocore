@@ -105,6 +105,8 @@ class Metadata extends AbstractListener
 
         $this->addClassificationToEntity($data);
 
+        $this->prepareMetadataViaMatchings($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -252,6 +254,7 @@ class Metadata extends AbstractListener
 
             $data['scopes'][$relationshipEntity]['acl'] = false;
             $data['scopes'][$relationshipEntity]['streamDisabled'] = true;
+            $data['scopes'][$relationshipEntity]['matchingDisabled'] = true;
         }
     }
 
@@ -2110,6 +2113,55 @@ class Metadata extends AbstractListener
                 ];
 
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
+            }
+        }
+    }
+
+    protected function prepareMetadataViaMatchings(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        // set matching rules types
+        foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
+            $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
+            if (!class_exists($className)) {
+                continue;
+            }
+
+            $data['app']['matchingRules'][$type] = [
+                'fieldTypes' => $className::getSupportedFieldTypes(),
+            ];
+        }
+
+        foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
+            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching['code']);
+            $data['entityDefs'][$matching['stagingEntity']]['fields'][$fieldName] = [
+                'type'                 => 'bool',
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true
+            ];
+
+            if (empty($matching['isActive'])) {
+                continue;
+            }
+
+            // add right panel
+            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
+                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
+                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
+                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
+                        'name'  => 'matchedRecords',
+                        'label' => 'matchedRecords',
+                        'view'  => 'views/record/panels/side/matchings',
+                    ];
+                }
             }
         }
     }

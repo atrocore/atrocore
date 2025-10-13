@@ -53,7 +53,7 @@ class App extends \Espo\Controllers\App
         }
 
         return [
-            "default" => $default
+            "default" => $default,
         ];
     }
 

@@ -52,7 +52,7 @@ class SavedSearch extends Base
             foreach ($whereData['bool'] as $name => $isSet) {
                 if ($isSet) {
                     $o['value'][] = $name;
-                    $boolData = $whereData['boolData'] ?? null;
+                    $boolData = $whereData['boolFilterData'] ?? null;
                     if (!empty($boolData[$name])) {
                         $o['data'][$name] = $boolData[$name];
                     }
