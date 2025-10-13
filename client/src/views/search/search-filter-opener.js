@@ -165,8 +165,17 @@ Espo.define('views/search/search-filter-opener', ['view', 'search-manager'], fun
                         return;
                     }
 
-                    if(whereData) {
-                        whereData.boolFilterData = boolFilterData;
+                    if(whereData && boolFilterData) {
+                        whereData.boolFilterData = {};
+                        for(let el in (whereData.bool || {}) ) {
+                            if(whereData.bool[el] && boolFilterData[el]){
+                                if(typeof boolFilterData[el] === 'function') {
+                                    whereData.boolFilterData[el] = boolFilterData[el]();
+                                }else {
+                                    whereData.boolFilterData[el] = boolFilterData[el];
+                                }
+                            }
+                        }
                     }
 
                     callback({
