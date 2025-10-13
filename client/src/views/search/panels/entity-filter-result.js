@@ -19,7 +19,6 @@ Espo.define('views/search/panels/entity-filter-result', ['views/record/panels/re
 
         boolFilterData: {},
 
-
         setup() {
             this.defs.create = false;
             this.defs.select = false;
