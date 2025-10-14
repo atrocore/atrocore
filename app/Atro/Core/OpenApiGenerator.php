@@ -87,7 +87,7 @@ class OpenApiGenerator
             if ($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute'])) {
                 $attributes = $this->getEntityManager()->getRepository('Attribute')->getEntityAttributes($entityName);
                 foreach ($attributes as $attribute) {
-                    $this->getFieldSchema($result, $entityName, AttributeFieldConverter::prepareFieldName($attribute), ['type' => $attribute['type'], 'outputType' => $attribute['output_type']]);
+                    $this->getFieldSchema($result, $entityName, AttributeFieldConverter::prepareFieldName($attribute), ['type' => $attribute['type'], 'outputType' => $attribute['output_type'] ?? null]);
                 }
                 $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object"];
             }

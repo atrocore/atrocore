@@ -1153,7 +1153,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         $conditions = [];
 
-        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields']) as $field => $fieldDefs) {
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []) as $field => $fieldDefs) {
             if (!empty($fieldDefs['type']) && $fieldDefs['type'] === 'script' && !empty($fieldDefs['script'])) {
                 $conditions[] = $this->getEntityManager()->getMapper()->toDb($field) . ' IS NULL';
             }
