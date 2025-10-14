@@ -527,6 +527,17 @@ class Attribute extends Base
             ->executeQuery();
     }
 
+    public function getEntityAttributes(string $scope): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('id, code, type, output_type')
+            ->from('attribute')
+            ->where('entity_id = :entityName and deleted = :false')
+            ->setParameter('entityName', $scope)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+    }
+
     /**
      * @inheritDoc
      */

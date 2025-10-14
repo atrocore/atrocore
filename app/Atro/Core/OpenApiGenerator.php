@@ -17,6 +17,7 @@ use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer;
 use Atro\Core\Utils\Util;
+use Espo\ORM\EntityManager;
 
 class OpenApiGenerator
 {
@@ -73,6 +74,15 @@ class OpenApiGenerator
             foreach ($data['fields'] as $fieldName => $fieldData) {
                 $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
             }
+
+            if ($this->getMetadata()->get(['scopes', $entityName, 'hasAttribute'])) {
+                $attributes = $this->getEntityManager()->getRepository('Attribute')->getEntityAttributes($entityName);
+                foreach ($attributes as $attribute) {
+                    $this->getFieldSchema($result, $entityName, AttributeFieldConverter::prepareFieldName($attribute), ['type' => $attribute['type'], 'outputType' => $attribute['output_type']]);
+                }
+                $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object"];
+            }
+
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
         }
 
@@ -1194,6 +1204,10 @@ class OpenApiGenerator
             }
         }
 
+        if($fieldData['type'] === 'script') {
+            $fieldData['type'] = $fieldData['outputType'] ?? 'text';
+        }
+
         if (!empty($fieldData['required'])) {
             if (empty($result['components']['schemas'][$entityName]['required'])) {
                 $result['components']['schemas'][$entityName]['required'] = [];
@@ -1393,5 +1407,10 @@ class OpenApiGenerator
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 }
