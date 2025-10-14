@@ -237,7 +237,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
         setupSearch: function () {
             var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
             searchManager.emptyOnReset = true;
-            SearchManager.boolFilterData = this.boolFilterData
+            searchManager.boolFilterData = this.boolFilterData
             if (this.filters) {
                 searchManager.update({queryBuilderApplied: true, ...this.filters});
             }
