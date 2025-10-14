@@ -153,10 +153,9 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Public Demo Instance
 
-- URL: https://demo.atropim.com/
+- URL: https://demo.atrocore.com/
 - Login: admin
 - Password: admin
-> This is a Demo Instance of AtroCore with a PIM module installed (AtroPIM Demo).
 
 
 ## Resources
