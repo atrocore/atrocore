@@ -1223,7 +1223,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->setParameter('name', $versionName)
             ->setParameter('entityId', $entity->get('id'))
             ->setParameter('now', date('Y-m-d H:i:s'))
-            ->setParameter('userId', $this->getEntityManager()->getContainer()->get('user')->get('id'))
+            ->setParameter('userId', $this->getEntityManager()->getUser()->get('id'))
             ->setParameter('data', json_encode($data))
             ->setParameter('metadata', json_encode([
                 'fields'     => $entity->fields,
@@ -1239,7 +1239,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         return $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('a.id, a.name, a.created_at')
-            ->from(Util::toUnderScore("{$entityType}Version"), 'a')
+            ->from(Util::toUnderScore(lcfirst("{$entityType}Version")), 'a')
             ->where(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
             ->setParameter('entityId', $entityId)
             ->orderby('a.created_at', 'DESC')
@@ -1253,7 +1253,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
         return $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select('*')
-            ->from(Util::toUnderScore("{$entityType}Version"))
+            ->from(Util::toUnderScore(lcfirst("{$entityType}Version")))
             ->where('name = :name')
             ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
             ->setParameter('name', $versionName)
