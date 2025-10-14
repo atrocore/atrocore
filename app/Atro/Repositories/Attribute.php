@@ -529,8 +529,14 @@ class Attribute extends Base
 
     public function getEntityAttributes(string $scope): array
     {
+        $select = ['id', 'code', 'type'];
+
+        if(class_exists('\AdvancedDataTypes\Module')) {
+            $select[] = 'output_type';
+        }
+
         return $this->getConnection()->createQueryBuilder()
-            ->select('id, code, type, output_type')
+            ->select(join(',', $select))
             ->from('attribute')
             ->where('entity_id = :entityName and deleted = :false')
             ->setParameter('entityName', $scope)
