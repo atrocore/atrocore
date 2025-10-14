@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
+Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:views/site/master'], (Dep, Master) => {
 
     return Dep.extend({
 

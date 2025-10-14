@@ -8,9 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import {$} from "../../../../lib/backbone-min";
-
-Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
+Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:views/site/master'], (Dep, Master) => {
 
     return Dep.extend({
 
