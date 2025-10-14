@@ -89,7 +89,7 @@ class OpenApiGenerator
                 foreach ($attributes as $attribute) {
                     $this->getFieldSchema($result, $entityName, AttributeFieldConverter::prepareFieldName($attribute), ['type' => $attribute['type'], 'outputType' => $attribute['output_type'] ?? null]);
                 }
-                $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object"];
+                $result['components']['schemas'][$entityName]['properties']['attributesDefs'] = ["type" => "object", "forRead" => true];
             }
 
             $schemas[$entityName] = $result['components']['schemas'][$entityName];
@@ -232,6 +232,30 @@ class OpenApiGenerator
 
             if (!empty($languageParam)) {
                 $result['paths']["/{$scopeName}"]['get']['parameters'][] = $languageParam;
+            }
+
+            if($this->getMetadata()->get(['scopes', $scopeName, 'hasAttribute'])) {
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+                    "name"        => "attributes",
+                    "in"          => "query",
+                    "required"    => false,
+                    "description" => "Attributes Ids according to $scopeName attributes",
+                    "schema"      => [
+                        "type"    => "string",
+                        "example" => "a01k4pyczndebktndtacfv3055c,a01k4pwfb59e76tcrndz11n7s6b"
+                    ]
+                ];
+
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+                    "name"        => "allAttributes",
+                    "in"          => "query",
+                    "required"    => false,
+                    "description" => "Load data with all the existing attributes for $scopeName",
+                    "schema"      => [
+                        "type"    => "boolean",
+                        "example" => "true"
+                    ]
+                ];
             }
 
             $result['paths']["/{$scopeName}/{id}"]['get'] = [
