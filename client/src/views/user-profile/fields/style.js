@@ -8,6 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
+import {$} from "../../../../lib/backbone-min";
+
 Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
 
     return Dep.extend({
@@ -24,31 +26,52 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
             });
         },
 
-        reloadStyle(style){
+        reloadStyle(style) {
             let master = new Master();
-            if(style){
+            if (style) {
                 master.initStyleVariables(style);
-                if (style?.navigationIconColor) {
-                    let colorConverter = new ColorConverter(style?.navigationIconColor);
-                    this.filter = colorConverter.solve().filter;
-                    $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
-                }else{
-                    $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
+
+                this.navFilter = null;
+                this.toolbarFilter = null;
+
+                if (style?.navigationMenuFontColor) {
+                    this.navFilter = master.getIconFilter(style?.navigationMenuFontColor);
                 }
 
-                if(!this.getConfig().get('companyLogoId')) {
-                    if(style.logo) {
+                if (style?.toolbarFontColor) {
+                    this.toolbarFilter = master.getIconFilter(style?.toolbarFontColor);
+                }
+
+                if (this.navFilter) {
+                    $(".short-label img[src^=\"client/img/icons\"]").css('filter', this.navFilter.replace("filter:", '').replace(';', ''));
+                } else {
+                    $(".short-label img[src^=\"client/img/icons\"]").css('filter', '');
+                }
+
+                if (this.toolbarFilter) {
+                    $(".label-wrapper img[src^=\"client/img/icons\"]").css('filter', this.toolbarFilter.replace("filter:", '').replace(';', ''));
+                } else {
+                    $(".label-wrapper img[src^=\"client/img/icons\"]").css('filter', '');
+                }
+
+                if (!this.getConfig().get('companyLogoId')) {
+                    if (style.logo) {
                         $('.navbar-brand img').attr('src', style.logo);
-                    }else{
+                    } else {
                         $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
                     }
                 }
-            }else{
+            } else {
                 master.removeStyleVariables();
-                if(!this.getConfig().get('companyLogoId')) {
+
+                if (!this.getConfig().get('companyLogoId')) {
                     $('.navbar-brand img').attr('src', 'client/modules/treo-core/img/core_logo_dark.svg');
                 }
+
                 $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', '');
+
+                this.getSessionStorage().clear('navigationIconColor');
+                this.getSessionStorage().clear('toolbarIconColor');
             }
         },
 
@@ -93,10 +116,16 @@ Espo.define('views/user-profile/fields/style', ['views/fields/link', 'treo-core:
                 $('#custom-stylesheet').remove();
             }
 
-            if(this.filter && style?.id) {
-                this.getStorage().set('icons', 'navigationIconColor', this.filter);
-            }else{
-                this.getStorage().clear('icons', 'navigationIconColor')
+            if (this.navFilter && style?.id) {
+                this.getSessionStorage().set('navigationIconColor', this.navFilter);
+            } else {
+                this.getSessionStorage().clear('navigationIconColor')
+            }
+
+            if (this.toolbarFilter && style?.id) {
+                this.getSessionStorage().set('toolbarIconColor', this.toolbarFilter);
+            } else {
+                this.getSessionStorage().clear('toolbarIconColor')
             }
         },
 

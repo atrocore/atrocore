@@ -138,14 +138,14 @@
 
 <style>
     button, .locale-switcher {
-        color: var(--nav-font-color);
+        color: var(--toolbar-font-color);
         background-color: var( --toolbar-background-color);
         border-color: rgba(var(--nav-font-color-rgb, 0, 0, 0), 0.2);
         cursor: pointer;
     }
 
     select, option, optgroup {
-        color: var(--nav-font-color);
+        color: var(--toolbar-font-color);
         background-color: var(--toolbar-background-color);
     }
 

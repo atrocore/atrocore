@@ -337,16 +337,16 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             }
 
             let filter = null;
-            if (this.getStorage().get('icons', 'navigationIconColor')) {
-                filter = this.getStorage().get('icons', 'navigationIconColor');
+            if (this.getSessionStorage().get('navigationIconColor')) {
+                filter = this.getSessionStorage().get('navigationIconColor');
             } else {
                 let style = this.getThemeManager().getStyle();
 
-                if (style && style['navigationIconColor']) {
+                if (style && style['navigationMenuFontColor']) {
                     let colorConverter = new ColorConverter(style['navigationIconColor']);
 
                     filter = colorConverter.solve().filter;
-                    this.getStorage().set('icons', 'navigationIconColor', filter)
+                    this.getSessionStorage().set('navigationIconColor', filter)
                 }
             }
 
