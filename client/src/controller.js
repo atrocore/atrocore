@@ -222,6 +222,11 @@ Espo.define('controller', [], function () {
         },
 
         getTabIcon() {
+            const faviconId = this.getConfig().get('faviconId');
+            if (faviconId) {
+                return `/?entryPoint=LogoImage&id=${faviconId}`;
+            }
+
             return 'client/modules/treo-core/img/favicon.svg';
         },
 
