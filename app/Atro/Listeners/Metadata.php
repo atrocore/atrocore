@@ -2084,7 +2084,7 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['fields']['classifications'] = [];
                 }
                 $data['entityDefs'][$scope]['fields']['classifications']['type'] = "linkMultiple";
-                $data['entityDefs'][$scope]['fields']['classifications']['view'] = "pim:views/fields/classifications";
+                $data['entityDefs'][$scope]['fields']['classifications']['view'] = "views/fields/classifications";
                 $data['entityDefs'][$scope]['fields']['classifications']['customizable'] = false;
 
                 $data['entityDefs'][$scope]['links']['classifications'] = [
@@ -2095,7 +2095,7 @@ class Metadata extends AbstractListener
                 ];
 
                 if (!empty($scopeDefs['singleClassification'])) {
-                    $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'pim:views/fields/classifications-single';
+                    $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'views/fields/classifications-single';
                     $data['entityDefs'][$scope]['links']['classifications']['layoutRelationshipsDisabled'] = true;
                 } else {
                     $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
