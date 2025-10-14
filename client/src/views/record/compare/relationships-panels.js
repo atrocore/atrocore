@@ -35,6 +35,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                 this.relationshipView = 'views/record/compare/relationship-instance';
             }
 
+            this.versionModel = this.options.versionModel;
+            if (this.versionModel) {
+                this.relationshipView = 'views/record/compare/relationship-version';
+            }
+
             this.listenTo(this, 'after:render', () => {
                 this.renderedPanels = [];
                 this.relationshipsPanels.forEach(panelData => {
@@ -51,6 +56,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                         models: this.options.models,
                         distantModels: this.distantModels,
                         collection: this.collection,
+                        versionModel: this.versionModel,
                         columns: this.columns,
                         defs: panelData.defs,
                         merging: this.options.merging,

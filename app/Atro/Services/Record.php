@@ -391,7 +391,7 @@ class Record extends RecordService
         ];
     }
 
-    public function merge($id, array $sourceIdList, \stdClass $attributes)
+    public function merge($id, array $sourceIdList, \stdClass $attributes, bool $keepSources = false)
     {
         if (empty($id)) {
             throw new Error();
@@ -412,6 +412,11 @@ class Record extends RecordService
 
         $sourceList = array();
         foreach ($sourceIdList as $sourceId) {
+            if (is_object($sourceId)) {
+                $source = $sourceId;
+                $sourceList[] = $source;
+                continue;
+            }
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
@@ -421,28 +426,98 @@ class Record extends RecordService
 
         $this->beforeMerge($entity, $sourceList, $attributes);
 
-        $connection = $this->getEntityManager()->getConnection();
+        if (empty($keepSources)) {
+            $connection = $this->getEntityManager()->getConnection();
 
-        $types = ['Post', 'EmailSent', 'EmailReceived'];
+            $types = ['Post', 'EmailSent', 'EmailReceived'];
 
-        foreach ($sourceList as $source) {
-            $connection->createQueryBuilder()
-                ->update($connection->quoteIdentifier('note'), 'n')
-                ->set('parent_id', ':entityId')
-                ->set('parent_type', ':entityType')
-                ->where('n.type IN (:types)')
-                ->andWhere('n.parent_id = :sourceId')
-                ->andWhere('n.parent_type = :sourceType')
-                ->andWhere('n.deleted = :false')
-                ->setParameter('entityId', $entity->id)
-                ->setParameter('entityType', $entity->getEntityType())
-                ->setParameter('types', $types, Mapper::getParameterType($types))
-                ->setParameter('sourceId', $source->id)
-                ->setParameter('sourceType', $source->getEntityType())
-                ->setParameter('false', false, Mapper::getParameterType(false))
-                ->executeQuery();
+            foreach ($sourceList as $source) {
+                $connection->createQueryBuilder()
+                    ->update($connection->quoteIdentifier('note'), 'n')
+                    ->set('parent_id', ':entityId')
+                    ->set('parent_type', ':entityType')
+                    ->where('n.type IN (:types)')
+                    ->andWhere('n.parent_id = :sourceId')
+                    ->andWhere('n.parent_type = :sourceType')
+                    ->andWhere('n.deleted = :false')
+                    ->setParameter('entityId', $entity->id)
+                    ->setParameter('entityType', $entity->getEntityType())
+                    ->setParameter('types', $types, Mapper::getParameterType($types))
+                    ->setParameter('sourceId', $source->id)
+                    ->setParameter('sourceType', $source->getEntityType())
+                    ->setParameter('false', false, Mapper::getParameterType(false))
+                    ->executeQuery();
+            }
         }
 
+        foreach ($this->getMergeLinkList($relationshipData) as $link) {
+            $method = 'applyMergeFor' . ucfirst($link);
+            if (method_exists($this, $method)) {
+                $this->$method($entity, $sourceList);
+                continue;
+            }
+
+            foreach ($sourceList as $source) {
+                $linkedList = [];
+                if (!empty($source->get('__relationships'))) {
+                    $linkedIds = $source->get('__relationships')[$link]['ids'] ?? [];
+                    $foreignScope = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links', $link, 'entity']);
+                    if (!empty($linkedIds) && !empty($foreignScope)) {
+                        $linkedList = $this->getEntityManager()->getRepository($foreignScope)->findByIds($linkedIds);
+                    }
+                } else {
+                    $linkedList = $repository->findRelated($source, $link);
+                }
+                foreach ($linkedList as $linked) {
+                    $repository->relate($entity, $link, $linked);
+                }
+            }
+        }
+
+        $upsertData = [];
+        foreach ($relationshipData as $data) {
+            if (empty($data['scope'])) {
+                continue;
+            }
+            if (!empty($data['toUpsert'])) {
+                foreach ($data['toUpsert'] as $payload) {
+                    $input = new \stdClass();
+                    $input->entity = $data['scope'];
+                    $input->payload = (object)$payload;
+                    $upsertData[] = $input;
+                }
+            }
+
+            if (!empty($data['toDelete'])) {
+                $this->getRecordService($data['scope'])->massRemove([
+                    'ids' => $data['toDelete']
+                ]);
+            }
+        }
+
+        $this->getRecordService('MassActions')->upsert($upsertData);
+
+        try {
+            $attributes->input->_skipCheckForConflicts = true;
+            $this->updateEntity($id, $attributes->input);
+        } catch (NotModified $e) {
+
+        }
+
+        if (empty($keepSources)) {
+            foreach ($sourceList as $source) {
+                $this->getEntityManager()->removeEntity($source);
+            }
+        }
+
+
+        $this->afterMerge($entity, $sourceList, $attributes);
+
+        return true;
+    }
+
+    public function getMergeLinkList(array $relationshipData): array
+    {
         $mergeLinkList = [];
         $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
         $customMergeLinkList = array_keys($relationshipData);
@@ -478,60 +553,7 @@ class Record extends RecordService
             }
         }
 
-
-        foreach ($mergeLinkList as $link) {
-            $method = 'applyMergeFor' . ucfirst($link);
-            if (method_exists($this, $method)) {
-                $this->$method($entity, $sourceList);
-                continue;
-            }
-
-            foreach ($sourceList as $source) {
-                $linkedList = $repository->findRelated($source, $link);
-                foreach ($linkedList as $linked) {
-                    $repository->relate($entity, $link, $linked);
-
-                }
-            }
-        }
-
-        $upsertData = [];
-        foreach ($relationshipData as $data) {
-            if (empty($data['scope'])) {
-                continue;
-            }
-            if (!empty($data['toUpsert'])) {
-                foreach ($data['toUpsert'] as $payload) {
-                    $input = new \stdClass();
-                    $input->entity = $data['scope'];
-                    $input->payload = (object)$payload;
-                    $upsertData[] = $input;
-                }
-            }
-
-            if (!empty($data['toDelete'])) {
-                $this->getRecordService($data['scope'])->massRemove([
-                    'ids' => $data['toDelete']
-                ]);
-            }
-        }
-
-        $this->getRecordService('MassActions')->upsert($upsertData);
-
-        try {
-            $attributes->input->_skipCheckForConflicts = true;
-            $this->updateEntity($id, $attributes->input);
-        } catch (NotModified $e) {
-
-        }
-
-        foreach ($sourceList as $source) {
-            $this->getEntityManager()->removeEntity($source);
-        }
-
-        $this->afterMerge($entity, $sourceList, $attributes);
-
-        return true;
+        return $mergeLinkList;
     }
 
     protected function getMandatoryLinksToMerge(): array

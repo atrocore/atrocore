@@ -38,32 +38,41 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         setup: function () {
             this.model = this.options.model;
             this.scope = this.options.scope ?? this.model.urlRoot;
-            this.className = this.options.className ?? this.className ;
+            this.className = this.options.className ?? this.className;
             this.mode = this.options.mode ?? 'detail'
+
             this.instances = this.getMetadata().get(['app', 'comparableInstances']);
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
+
+            this.versionComparison = this.options.versionComparison ?? false;
+            this.versions = this.options.versions ?? [];
+            this.currentVersion = this.versions[0]?.name
+
             this.collection = this.options.collection ?? this.collection;
 
             Modal.prototype.setup.call(this)
 
             if (this.instanceComparison) {
-                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
-               this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
+                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
+                this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
+            } else if(this.versionComparison){
+                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'views/record/compare-version'
+                this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with previous versions'));
             } else {
-                this.recordView = this.options.recordView  ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
+                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
                 this.header = this.options.header ?? (this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison'));
             }
 
             this.listenTo(this, 'after:render', () => this.setupRecord());
 
-            this.buttonList =  [
+            this.buttonList = [
                 {
                     name: 'merge',
                     style: 'primary',
                     label: 'Merge',
                     disabled: true,
                     onClick: (dialog) => {
-                      this.trigger('merge', dialog)
+                        this.trigger('merge', dialog)
                     }
                 },
                 {
@@ -95,14 +104,14 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         options.distantModels = [];
                         for (const index in attrs) {
                             let attr = attrs[index];
-                            if('_error' in attr){
-                                if(attr._error.includes('404 Body')) {
+                            if ('_error' in attr) {
+                                if (attr._error.includes('404 Body')) {
                                     message = this.translate('recordDontExistInInstance', 'messages') + ' ' + this.instances[index].name;
-                                }else if(attr._error.includes('401 Body')) {
+                                } else if (attr._error.includes('401 Body')) {
                                     message = this.translate('badTokenInstance', 'messages') + ' ' + this.instances[index].name;
-                                }else if(attr._error.includes('403 Body')) {
+                                } else if (attr._error.includes('403 Body')) {
                                     message = this.translate('dontHaveAccessInInstance', 'messages') + ' ' + this.instances[index].name;
-                                }else {
+                                } else {
                                     message = this.translate('En error occur with the instance: ') + attr._error;
                                 }
                                 this.notify(message);
@@ -113,9 +122,9 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                             for (let key in attr) {
                                 let instanceUrl = this.instances[index].atrocoreUrl;
                                 let value = attr[key];
-                                if(key.includes('PathsData')){
-                                    if( value && ('thumbnails' in value)){
-                                        for (let size in value['thumbnails']){
+                                if (key.includes('PathsData')) {
+                                    if (value && ('thumbnails' in value)) {
+                                        for (let size in value['thumbnails']) {
                                             attr[key]['thumbnails'][size] = instanceUrl + '/' + value['thumbnails'][size]
                                         }
                                     }
@@ -130,12 +139,60 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         this.createModalView(options);
                     });
                 });
+            }
+            else if (this.versionComparison) {
+                this.getModelFactory().create(this.scope, scopeModel => {
+                    this.ajaxGetRequest(`RecordVersion/action/getVersion`, {
+                        scope: this.scope,
+                        entityId: this.model.id,
+                        name: this.currentVersion,
+                    }).success(res => {
+                        let versionModel = scopeModel.clone();
+                        res['id'] = this.versions.find(v => v.name === this.currentVersion).id;
+                        versionModel.set(res);
+                        options.versionModel = versionModel;
+                        options.versions = this.versions;
+                        this.collection.push(versionModel);
+                        this.createModalView(options);
+                    });
+                });
+
+                if (this.$el.find('.version-selector').length === 0) {
+                    const container = $('<div class="version-selector" style="max-width: 400px; display: inline-block;margin-right: 20px"></div>');
+
+                    container.insertAfter(this.$el.find('.modal-footer > .extra-content'))
+                    this.getModelFactory().create(this.scope + 'Version', model => {
+                        model.set('name', this.currentVersion)
+                        this.createView('versionSelector', 'views/fields/enum', {
+                            el: container.get(0),
+                            name: 'name',
+                            model: model,
+                            scope: this.scope,
+                            inlineEditDisabled: true,
+                            mode: 'edit',
+                            required: true,
+                            params: {
+                                options: this.versions.map(v => v.name),
+                            }
+                        }, (view) => {
+                            view.render();
+                            view.on('change', () => {
+                                this.currentVersion = model.get('name')
+                                const recordView = this.getView('modalRecord')
+                                if (recordView){
+                                    recordView.remove()
+                                }
+                                this.setupRecord()
+                            })
+                        });
+                    })
+                }
             } else {
                 if (this.collection.models.length < 2) {
                     this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
                     setTimeout(() => this.notify(false), 2000);
                     return;
-                }else if (this.collection.models.length > 10){
+                } else if (this.collection.models.length > 10) {
                     let message = this.translate('weCannotCompareMoreThan');
                     this.notify(message.replace('%s', 10));
                     setTimeout(() => this.notify(false), 2000);
