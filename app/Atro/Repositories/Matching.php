@@ -19,9 +19,8 @@ use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 

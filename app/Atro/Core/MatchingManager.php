@@ -33,7 +33,7 @@ class MatchingManager
 
     public function createMatchingType(MatchingRule $rule): AbstractMatchingRule
     {
-        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($rule->get('type'));
+        $className = "\\Atro\\Core\\MatchingRuleType\\".ucfirst($rule->get('type'));
         if (!class_exists($className)) {
             throw new \Exception("Class $className not found");
         }
@@ -48,12 +48,12 @@ class MatchingManager
     {
         $exists = $this->getEntityManager()->getRepository('Job')
             ->where([
-                'name' => 'Find matches immediately',
-                'type' => 'FindMatches',
+                'name'   => 'Find matches immediately',
+                'type'   => 'FindMatches',
                 'status' => [
                     'Pending',
-                    'Running'
-                ]
+                    'Running',
+                ],
             ])
             ->findOne();
 
@@ -68,8 +68,8 @@ class MatchingManager
             'status'   => 'Pending',
             'priority' => 200,
             'payload'  => [
-                'matchingId' => $matching->id
-            ]
+                'matchingId' => $matching->id,
+            ],
         ]);
 
         $this->getEntityManager()->saveEntity($jobEntity);
@@ -110,15 +110,19 @@ class MatchingManager
 
         // Find actual matches
         foreach ($possibleMatches as $row) {
+            $maxMatchingScore = 0;
             $matchingScore = 0;
             foreach ($matching->get('matchingRules') as $rule) {
+                $maxMatchingScore += $rule->get('weight');
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
 
-            if ($matchingScore >= $matching->get('minimumScore')) {
+            $percentageScore = $matchingScore / $maxMatchingScore * 100;
+
+            if ($percentageScore >= $matching->get('minimumScore')) {
                 $this
                     ->getMatchedRecordRepository()
-                    ->createMatchedRecord($matching, $entity->id, $row['id'], $matchingScore);
+                    ->createMatchedRecord($matching, $entity->id, $row['id'], $percentageScore);
             }
 
             if ($matching->get('type') === 'duplicate') {

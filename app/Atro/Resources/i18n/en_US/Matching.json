@@ -1,6 +1,6 @@
 {
   "fields": {
-    "minimumScore": "Minimum Score",
+    "minimumScore": "Minimum Score, %",
     "entity": "Entity",
     "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity",
