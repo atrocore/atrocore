@@ -253,7 +253,7 @@ class OpenApiGenerator
                     "description" => "Load data with all the existing attributes for $scopeName",
                     "schema"      => [
                         "type"    => "boolean",
-                        "example" => "true"
+                        "example" => "false"
                     ]
                 ];
             }
