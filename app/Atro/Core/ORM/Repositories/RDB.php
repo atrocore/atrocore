@@ -1211,7 +1211,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             ->values([
                 'id'                                      => ':id',
                 'name'                                    => ':name',
-                lcfirst($entity->getEntityType()) . '_id' => ':entityId',
+                Util::toUnderScore(lcfirst($entity->getEntityType())) . '_id' => ':entityId',
                 'data'                                    => ':data',
                 'metadata'                                => ':metadata',
                 'created_at'                              => ':now',
