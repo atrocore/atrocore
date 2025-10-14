@@ -1207,7 +1207,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     public function createVersionForEntity(Entity $entity, string $versionName, array $data)
     {
         $this->getEntityManager()->getConnection()->createQueryBuilder()
-            ->insert(Util::toUnderScore("{$entity->getEntityType()}Version"))
+            ->insert(Util::toUnderScore(lcfirst("{$entity->getEntityType()}Version")))
             ->values([
                 'id'                                      => ':id',
                 'name'                                    => ':name',
