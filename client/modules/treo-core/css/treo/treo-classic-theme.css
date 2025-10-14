@@ -18282,11 +18282,3 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     flex: 1;
     margin-right: 10px;
 }
-
-.matched-record-item .inline-edit-link {
-    display: none
-}
-
-.matched-record-item:hover .inline-edit-link {
-    display: inline
-}

@@ -555,7 +555,7 @@ class Entity extends ReferenceData
         // prepare auditedDisabledFields
         $fields = [];
         $scope = $entity->get('code') ?? $entity->get('name');
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [] as $field => $fieldDef) {
             if (!empty($fieldDef['auditableDisabled'])) {
                 $fields[] = $field;
             }
@@ -571,7 +571,7 @@ class Entity extends ReferenceData
 
         //prepare auditedEnabledRelations
         $fields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $fieldDef) {
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [] as $field => $fieldDef) {
             if ($fieldDef['type'] !== 'linkMultiple') {
                 continue;
             }
@@ -596,7 +596,7 @@ class Entity extends ReferenceData
         $entity->set('auditedEnabledRelations', $fields);
 
         $fields = [];
-        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
+        foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields']) ?? [] as $field => $defs) {
             if (!empty($defs['type']) && !empty($defs['duplicateIgnore'])) {
                 $fields[] = $field;
             }

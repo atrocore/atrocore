@@ -32,27 +32,21 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
             afterRender() {
                 Dep.prototype.afterRender.call(this);
 
-                this.$el.find('.edit-matched-record').on('click', event => {
-                    const id = $(event.currentTarget).data('id');
-
-                    this.notify('Loading...');
-                    this.getModelFactory().create('MatchedRecord', model => {
-                        model.id = id;
-                        model.fetch().then(() => {
-                            this.createView('modal', 'views/modals/edit', {
-                                scope: model.name,
-                                id: model.id,
-                                model: model
-                            }, view => {
-                                this.notify(false);
-                                view.render();
-                                this.listenToOnce(view, 'after:save', m => {
-                                    this.getMatchedRecords();
-                                });
+                (this.matches || []).forEach(item => {
+                    (item.list || []).forEach(record => {
+                        this.createView(record.mrId, 'views/matched-record/record/row-actions/right-sidebar', {
+                            name: record.mrId,
+                            model: this.model,
+                            status: record.status,
+                            el: `${this.options.el} .matched-record-item-actions[data-name="${record.mrId}"]`
+                        }, view => {
+                            view.render();
+                            this.listenToOnce(view, 'after:save', () => {
+                                this.getMatchedRecords();
                             });
                         });
-                    });
-                });
+                    })
+                })
             },
 
             data() {
@@ -77,6 +71,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
                         };
                         (item.list || []).forEach(record => {
                             row.list.push({
+                                status: item.status,
                                 mrId: record.mrId,
                                 label: record.name,
                                 link: `/#${res.entityName}/view/${record.id}`,
