@@ -84,6 +84,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         defaultFilterValue: null,
 
+        disableConditions: false,
+
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -975,6 +977,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getConditions(type) {
+            if (this.disableConditions) {
+                return;
+            }
             const fieldName = this.originalName || this.name;
 
             const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`)
