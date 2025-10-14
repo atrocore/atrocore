@@ -51,9 +51,18 @@ class OpenApiGenerator
         /** @var Config $config */
         $config = $this->container->get('config');
 
-        $languages = [];
-        if (!empty($config->get('isMultilangActive'))) {
-            $languages = $config->get('inputLanguageList', []);
+        $languageParam = null;
+        if (!empty($config->get('isMultilangActive')) && !empty($languages = $config->get('inputLanguageList', []))) {
+            $languageParam = [
+                "name"        => "language",
+                "in"          => "header",
+                "required"    => false,
+                "description" => self::HEADER_LANGUAGE_DESCRIPTION,
+                "schema"      => [
+                    "type" => "string",
+                    "enum" => $languages,
+                ],
+            ];
         }
 
         foreach ($this->getMetadata()->get(['entityDefs'], []) as $entityName => $data) {
@@ -123,16 +132,6 @@ class OpenApiGenerator
                 "operationId" => "getListOf{$scopeName}Items",
                 'security'    => [['Authorization-Token' => []]],
                 'parameters'  => [
-                    [
-                        "name"        => "language",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                        "schema"      => [
-                            "type" => "string",
-                            "enum" => $languages,
-                        ]
-                    ],
                     [
                         "name"        => "timezone",
                         "in"          => "query",
@@ -231,6 +230,10 @@ class OpenApiGenerator
                 ]),
             ];
 
+            if (!empty($languageParam)) {
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] = $languageParam;
+            }
+
             $result['paths']["/{$scopeName}/{id}"]['get'] = [
                 'tags'        => [$scopeName],
                 "summary"     => "Returns a record of the $scopeName",
@@ -238,16 +241,6 @@ class OpenApiGenerator
                 "operationId" => "get{$scopeName}Item",
                 'security'    => [['Authorization-Token' => []]],
                 'parameters'  => [
-                    [
-                        "name"        => "language",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                        "schema"      => [
-                            "type" => "string",
-                            "enum" => $languages,
-                        ]
-                    ],
                     [
                         "name"        => "timezone",
                         "in"          => "query",
@@ -269,6 +262,10 @@ class OpenApiGenerator
                 ],
                 "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
             ];
+
+            if (!empty($languageParam)) {
+                $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
+            }
 
             if ($scopeName !== 'ActionHistoryRecord') {
                 $result['paths']["/{$scopeName}"]['post'] = [
@@ -357,16 +354,6 @@ class OpenApiGenerator
                     'security'    => [['Authorization-Token' => []]],
                     'parameters'  => [
                         [
-                            "name"        => "language",
-                            "in"          => "header",
-                            "required"    => false,
-                            "description" => self::HEADER_LANGUAGE_DESCRIPTION,
-                            "schema"      => [
-                                "type" => "string",
-                                "enum" => $languages,
-                            ]
-                        ],
-                        [
                             "name"        => "timezone",
                             "in"          => "query",
                             "required"    => false,
@@ -408,6 +395,10 @@ class OpenApiGenerator
                         ]
                     ]),
                 ];
+
+                if (!empty($languageParam)) {
+                    $result['paths']["/{$scopeName}/{id}/{link}"]['get']['parameters'][] = $languageParam;
+                }
 
                 $result['paths']["/{$scopeName}/action/massUpdate"]['put'] = [
                     'tags'        => [$scopeName],
