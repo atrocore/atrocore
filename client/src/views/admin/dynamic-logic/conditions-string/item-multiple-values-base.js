@@ -60,6 +60,11 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
             var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
 
+            if (this.field === '__currentUser') {
+                fieldType = 'link'
+                viewName = 'views/fields/user-with-avatar'
+            }
+
             this.valueViewDataList = [];
             if (['extensibleMultiEnum','linkMultiple'].includes(fieldType)){
                 var model = this.model.clone();
