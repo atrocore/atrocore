@@ -394,6 +394,10 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
             return this.relationship.name;
         },
 
+        getSelectedModelIdForData(selectedModelId) {
+            return selectedModelId;
+        },
+
         fetch() {
             let selectedModelId = $('input[name="check-all"]:checked').val();
             let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
@@ -416,7 +420,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 }
 
                 let attr = {};
-                attr[this.getModelRelationColumnId()] = selectedModelId;
+                attr[this.getModelRelationColumnId()] = this.getSelectedModelIdForData(selectedModelId);
                 attr[this.getRelationshipRelationColumnId()] = linkedEntity.id;
 
 

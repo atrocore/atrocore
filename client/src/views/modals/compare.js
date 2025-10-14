@@ -46,7 +46,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.versionComparison = this.options.versionComparison ?? false;
             this.versions = this.options.versions ?? [];
-            this.currentVersion = this.versions[0].name
+            this.currentVersion = this.versions[0]?.name
 
             this.collection = this.options.collection ?? this.collection;
 
@@ -152,6 +152,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         versionModel.set(res);
                         options.versionModel = versionModel;
                         options.versions = this.versions;
+                        this.collection.push(versionModel);
                         this.createModalView(options);
                     });
                 });

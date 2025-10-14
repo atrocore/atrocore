@@ -561,7 +561,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
             $entity->set($fieldName, '');
         }
 
-        if(!empty($fieldData['len'])) {
+        if (!empty($fieldData['len'])) {
             $fieldData['maxLength'] = (int)$fieldData['len'];
         }
 
@@ -1122,7 +1122,7 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
         return $updated;
     }
 
-    public  function clearEntityField(string $field): void
+    public function clearEntityField(string $field): void
     {
         $table = Util::toUnderScore(lcfirst($this->entityType));
         $conn = $this->getEntityManager()->getConnection();
@@ -1202,5 +1202,62 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
     protected function afterRestore($entity)
     {
+    }
+
+    public function createVersionForEntity(Entity $entity, string $versionName, array $data)
+    {
+        $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->insert(Util::toUnderScore("{$entity->getEntityType()}Version"))
+            ->values([
+                'id'                                      => ':id',
+                'name'                                    => ':name',
+                lcfirst($entity->getEntityType()) . '_id' => ':entityId',
+                'data'                                    => ':data',
+                'metadata'                                => ':metadata',
+                'created_at'                              => ':now',
+                'modified_at'                             => ':now',
+                'created_by_id'                           => ':userId',
+                'modified_by_id'                          => ':userId',
+            ])
+            ->setParameter('id', Util::generateId())
+            ->setParameter('name', $versionName)
+            ->setParameter('entityId', $entity->get('id'))
+            ->setParameter('now', date('Y-m-d H:i:s'))
+            ->setParameter('userId', $this->getEntityManager()->getContainer()->get('user')->get('id'))
+            ->setParameter('data', json_encode($data))
+            ->setParameter('metadata', json_encode([
+                'fields'     => $entity->fields,
+                'entityDefs' => $entity->entityDefs,
+                'relations'  => $entity->relations,
+            ]))
+            ->executeStatement();
+    }
+
+    public function getAvailableVersionsData(string $entityId): array
+    {
+        $entityType = $this->entityType;
+
+        return $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('a.id, a.name, a.created_at')
+            ->from(Util::toUnderScore("{$entityType}Version"), 'a')
+            ->where(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
+            ->setParameter('entityId', $entityId)
+            ->orderby('a.created_at', 'DESC')
+            ->fetchAllAssociative();
+    }
+
+
+    public function getVersionData(string $entityId, string $versionName): array
+    {
+        $entityType = $this->entityType;
+
+        return $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from(Util::toUnderScore("{$entityType}Version"))
+            ->where('name = :name')
+            ->andWhere(Util::toUnderScore(lcfirst($entityType) . 'Id') . ' = :entityId')
+            ->setParameter('name', $versionName)
+            ->setParameter('entityId', $entityId)
+            ->fetchAssociative();
     }
 }

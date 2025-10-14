@@ -16,6 +16,7 @@ Espo.define('views/record/compare-version', 'views/record/compare', function (De
         init() {
             Dep.prototype.init.call(this);
             this.versionModel = this.options.versionModel;
+            this.disableModelFetch = true
         },
 
         getOtherModelsForComparison(currentModel) {

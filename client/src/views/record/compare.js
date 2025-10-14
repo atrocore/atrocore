@@ -36,6 +36,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         hidePanelNavigation: false,
 
+        disableModelFetch: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -324,6 +326,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 distantModels: this.getDistantModels(),
                 instanceComparison: this.instanceComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
+                versionModel: this.options.versionModel,
                 merging: this.merging,
                 el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
                 selectedFilters: this.selectedFilters
@@ -900,7 +903,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let models = this.getModelsForAttributes();
 
             models.forEach(model => {
-                model.fetch({ async: false })
+                if (!this.disableModelFetch) {
+                    model.fetch({ async: false })
+                }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {
                         delete this.model.defs.fields[name];
