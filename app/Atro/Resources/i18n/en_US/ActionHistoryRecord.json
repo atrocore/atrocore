@@ -4,9 +4,13 @@
     "action": "Action",
     "createdAt": "Date",
     "controllerName": "Controller Name",
+    "controllerAction": "Controller Action",
     "authToken": "Auth Token",
     "ipAddress": "IP Address",
     "authLogRecord": "Auth Log Record",
+    "target": "Target",
+    "targetName": "Target Name",
+    "targetId": "Target ID",
     "data": "Data"
   }
 }

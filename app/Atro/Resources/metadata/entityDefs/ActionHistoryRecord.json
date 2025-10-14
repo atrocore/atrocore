@@ -2,55 +2,65 @@
   "fields": {
     "data": {
       "type": "jsonObject",
-      "readOnly": true
+      "protected": true
     },
     "action": {
       "type": "varchar",
-      "readOnly": true,
+      "protected": true,
       "len": 8
     },
     "controllerName": {
       "type": "varchar",
-      "readOnly": true
+      "protected": true
     },
     "controllerAction": {
       "type": "varchar",
-      "readOnly": true
+      "protected": true
     },
     "target": {
       "type": "varchar",
       "notStorable": true,
-      "view": "views/action-history-record/fields/target"
-    },
-    "targetId": {
-      "type": "varchar",
-      "readOnly": true,
-      "len": 61
+      "view": "views/action-history-record/fields/target",
+      "protected": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
     },
     "targetName": {
       "type": "varchar",
-      "notStorable": true
+      "notStorable": true,
+      "protected": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "importDisabled": true,
+      "exportDisabled": true
+    },
+    "targetId": {
+      "type": "varchar",
+      "protected": true,
+      "len": 61
     },
     "createdAt": {
       "type": "datetime"
     },
     "user": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     },
     "ipAddress": {
       "type": "varchar",
-      "readOnly": true,
+      "protected": true,
       "len": 42,
       "maxLength": "39"
     },
     "authToken": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     },
     "authLogRecord": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     }
   },
   "links": {

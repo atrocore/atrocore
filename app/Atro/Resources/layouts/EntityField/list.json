@@ -16,6 +16,9 @@
     "name": "readOnly"
   },
   {
+    "name": "protected"
+  },
+  {
     "name": "isMultilang"
   },
   {
