@@ -754,7 +754,22 @@ class OpenApiGenerator
             $module->prepareApiDocs($result, $schemas);
         }
 
+        $this->removeForRead($result);
+
         return $result;
+    }
+
+    protected function removeForRead(array &$array): void
+    {
+        foreach ($array as $key => &$value) {
+            if (is_array($value)) {
+                $this->removeForRead($value);
+            }
+
+            if ($key === 'forRead') {
+                unset($array[$key]);
+            }
+        }
     }
 
     public static function prepareResponses(array $success): array
