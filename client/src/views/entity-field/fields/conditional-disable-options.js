@@ -123,7 +123,8 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     mode: this.mode,
                     params: {
                         extensibleEnumId: this.model.get(this.extensibleEnumIdField),
-                    }
+                    },
+                    inlineEditDisabled: this.options.inlineEditDisabled,
                 }, view => {
                     if (this.isRendered()) {
                         view.render();
@@ -142,7 +143,8 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
                     params: {
                         options: this.model.get('options'),
                         translatedOptions: this.model.get('translatedOptions')
-                    }
+                    },
+                    inlineEditDisabled: this.options.inlineEditDisabled,
                 }, view => {
                     if (this.isRendered()) {
                         view.render();
