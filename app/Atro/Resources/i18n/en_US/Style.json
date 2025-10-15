@@ -25,7 +25,8 @@
     "statusIconColor": "Status Icon Color",
     "customHeadCode": "Head Code",
     "highlightingColorForRequired": "Highlighting color for required data",
-    "toolbarBackgroundColor": "Toolbar background color"
+    "toolbarBackgroundColor": "Toolbar background color",
+    "toolbarFontColor": "Toolbar font color"
   },
   "tooltips": {
     "customStylesheetPath": "Your custom CSS styles will be written to this file. You can make changes in it directly too.",

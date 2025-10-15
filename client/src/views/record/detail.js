@@ -751,11 +751,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.isRendered()) {
-                this.$detailButtonContainer.find('li > .action[data-action="' + name + '"]').parent().addClass('hidden');
-                this.$detailButtonContainer.find('button.action[data-action="' + name + '"]').addClass('hidden');
-                if (this.isDropdownItemListEmpty()) {
-                    this.$dropdownItemListButton.addClass('hidden');
-                }
+                window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             }
         },
 
@@ -774,11 +770,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             if (this.isRendered()) {
-                this.$detailButtonContainer.find('li > .action[data-action="' + name + '"]').parent().removeClass('hidden');
-                this.$detailButtonContainer.find('button.action[data-action="' + name + '"]').removeClass('hidden');
-                if (!this.isDropdownItemListEmpty()) {
-                    this.$dropdownItemListButton.removeClass('hidden');
-                }
+                window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             }
         },
 
@@ -1254,11 +1246,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.setupActionItems();
                 window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             })
-
-            this.on('after:render', function () {
-                this.$detailButtonContainer = this.$el.find('.detail-button-container');
-                this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
-            }, this);
 
             if (this.collection) {
                 this.stopListening(this.model, 'destroy');
@@ -1999,8 +1986,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     break;
                 }
             }
+
             if (this.isRendered()) {
-                this.$el.find('.detail-button-container .action[data-action="' + name + '"]').remove();
+                window.dispatchEvent(new CustomEvent('record:buttons-update', { detail: this.getRecordButtons() }));
             }
         },
 

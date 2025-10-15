@@ -22,7 +22,8 @@
     "error": "Помилка",
     "actionIconColor": "Колір іконок дій",
     "customHeadCode": "Код Head",
-    "toolbarBackgroundColor": "Колір фону панелі інструментів"
+    "toolbarBackgroundColor": "Колір фону тулбару",
+    "toolbarFontColor": "Колір тексту на тулбарі"
   },
   "tooltips": {
     "customStylesheetPath": "Ваші користувацькі стилі CSS будуть записані в цей файл. Ви також можете вносити зміни в нього безпосередньо.",

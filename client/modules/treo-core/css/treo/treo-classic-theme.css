@@ -37,6 +37,7 @@ body {
     --field-hover-color: #f8f8f8;
     --field-inline-edit-color: #f2f2f2;
     --toolbar-background-color: #f5f5f5;
+    --toolbar-font-color: #000;
 }
 
 * {
@@ -4442,6 +4443,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     -webkit-overflow-scrolling: touch;
     flex: 1;
+    color: var(--nav-font-color);
 }
 
 .navbar-collapse.in {
@@ -4560,12 +4562,14 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     background-image: none;
     border: 1px solid transparent;
     border-radius: 0;
-    color: var(--nav-font-color);
+    color: var(--toolbar-font-color);
     line-height: 1;
 }
 
+.navbar-toggle:hover,
 .navbar-toggle:focus {
-    outline: 0
+    color: var(--toolbar-font-color);
+    outline: 0;
 }
 
 .navbar-toggle .icon-bar {
@@ -4975,13 +4979,21 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+    color: var(--toolbar-font-color);
+    background-color: transparent;
+}
+
+.navbar-inverse .menu .navbar-nav > li > a:hover, .navbar-inverse .menu .navbar-nav > li > a:focus {
     color: var(--nav-font-color);
-    background-color: transparent
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
     color: var(--nav-font-color);
     background-color: #3f535c
+}
+
+.navbar-inverse .menu .navbar-nav > .active > a, .navbar-inverse .menu .navbar-nav > .active > a:hover, .navbar-inverse .menu .navbar-nav > .active > a:focus {
+    color: var(--nav-font-color);
 }
 
 .navbar-inverse .navbar-nav > .disabled > a, .navbar-inverse .navbar-nav > .disabled > a:hover, .navbar-inverse .navbar-nav > .disabled > a:focus {
@@ -9760,7 +9772,6 @@ body > #header .navbar-brand span.home-icon {
     }
 
     #header .navbar-right > li > a {
-        color: var(--nav-font-color);
         padding: 5px 10px;
     }
 
@@ -9768,12 +9779,6 @@ body > #header .navbar-brand span.home-icon {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 10px
-    }
-
-    .navbar-inverse .navbar-nav > li > a:hover,
-    .navbar-inverse .navbar-nav > li > a:focus {
-        color: var(--nav-font-color);
-        background-color: none;
     }
 
     #header .navbar-form {
@@ -11597,7 +11602,7 @@ body > footer > p, body > footer > p a, body > footer > p a:hover, body > footer
 }
 
 .navbar-form.global-search-container .input-group .global-search-button {
-    color: var(--nav-font-color);
+    color: var(--toolbar-font-color);
 }
 
 #global-search-panel > .panel > .panel-body {
@@ -12771,7 +12776,7 @@ button.small .ph-fill,
     font-size: 13px;
     width: 150px;
     background-color: transparent;
-    color: var(--nav-font-color);
+    color: var(--toolbar-font-color);
 }
 
 #header .navbar-header > a {
@@ -13257,6 +13262,10 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .navbar-inverse .navbar-nav > li > a {
+    color: var(--toolbar-font-color);
+}
+
+.navbar-inverse .menu .navbar-nav > li > a {
     color: var(--nav-font-color);
 }
 
@@ -13594,22 +13603,6 @@ ul.dropdown-menu > li.checkbox {
 
 #login label[for='login']::before {
     content: "\e033";
-}
-
-#login #btn-login {
-    background-color: #2895ea;
-    border-color: #2895ea;
-    color: #fff;
-}
-
-#login #btn-login:hover {
-    background-color: #005cb3;
-    border-color: #005cb3;
-}
-
-#login #btn-login:active {
-    background-color: #415e77;
-    border-color: #3d5970;
 }
 
 #login .btn-link {
@@ -14202,6 +14195,7 @@ button.category:focus {
     top: 45px;
     z-index: 2000;
     background: var(--nav-menu-background);
+    color: var(--nav-font-color);
     display: block;
     height: calc(100vh - 44px);
     overflow-x: visible !important;
@@ -17791,7 +17785,7 @@ span[data-img-src]::after {
     align-items: center;
     position: relative;
     height: 100%;
-    color: var(--nav-font-color);
+    color: var(--toolbar-font-color);
     text-decoration: none;
 }
 

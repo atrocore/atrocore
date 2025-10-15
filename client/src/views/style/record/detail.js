@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:views/site/master', 'color-converter'], (Dep, Master, ColorConverter) => {
+Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:views/site/master'], (Dep, Master) => {
 
     return Dep.extend({
 
@@ -38,10 +38,17 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
                 } else {
                     $('#custom-stylesheet').remove();
                 }
-                if(this.filter) {
-                    this.getStorage().set('icons', 'navigationIconColor', this.filter);
-                }else{
-                    this.getStorage().clear('icons', 'navigationIconColor')
+
+                if (this.navFilter) {
+                    this.getSessionStorage().set('navigationIconColor', this.navFilter);
+                } else {
+                    this.getSessionStorage().clear('navigationIconColor')
+                }
+
+                if (this.toolbarFilter) {
+                    this.getSessionStorage().set('toolbarIconColor', this.toolbarFilter);
+                } else {
+                    this.getSessionStorage().clear('toolbarIconColor')
                 }
 
                 const referenceData = this.getConfig().get('referenceData') || {}
@@ -55,12 +62,22 @@ Espo.define('views/style/record/detail', ['views/record/detail', 'treo-core:view
         reloadStyle(style) {
             let master = new Master();
             master.initStyleVariables(style);
-            if (style.navigationIconColor ) {
-                let colorConverter = new ColorConverter(style['navigationIconColor']);
-                this.filter = colorConverter.solve().filter;
-                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter', this.filter.replace("filter:", '').replace(';',''));
-            }else{
-                $(".label-wrapper img[src^=\"client/img/icons\"], .short-label img[src^=\"client/img/icons\"]").css('filter','');
+
+            this.navFilter = null;
+            this.toolbarFilter = null;
+
+            if (style.navigationMenuFontColor) {
+                this.navFilter = master.getIconFilter(style.navigationMenuFontColor);
+                $(".short-label img[src^=\"client/img/icons\"]").css('filter', this.navFilter.replace("filter:", '').replace(';', ''));
+            } else {
+                $(".short-label img[src^=\"client/img/icons\"]").css('filter', '');
+            }
+
+            if (style.toolbarFontColor) {
+                this.toolbarFilter = master.getIconFilter(style.toolbarFontColor);
+                $(".label-wrapper img[src^=\"client/img/icons\"]").css('filter', this.toolbarFilter.replace("filter:", '').replace(';', ''));
+            } else {
+                $(".label-wrapper img[src^=\"client/img/icons\"]").css('filter', '');
             }
         },
 
