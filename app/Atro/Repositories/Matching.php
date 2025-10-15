@@ -33,12 +33,12 @@ class Matching extends ReferenceData
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
-        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
+        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'bidirectional') {
             $entity->set('stagingEntity', $entity->get('entity'));
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
-        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'duplicate') {
+        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'bidirectional') {
             $entity->set('foreignName', $entity->get('name'));
         }
 

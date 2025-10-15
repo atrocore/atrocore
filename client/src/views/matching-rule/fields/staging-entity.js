@@ -36,7 +36,7 @@ Espo.define('views/matching-rule/fields/staging-entity', 'views/fields/varchar',
         setValue() {
             if (this.model.get('matchingId')) {
                 $.each(this.getConfig().get('referenceData')?.Matching || [], (code, item) => {
-                    if (item.type === 'staging' && item.id === this.model.get('matchingId')) {
+                    if (item.type === 'unidirectional' && item.id === this.model.get('matchingId')) {
                         this.model.set(this.name, item[this.name]);
                     }
                 })

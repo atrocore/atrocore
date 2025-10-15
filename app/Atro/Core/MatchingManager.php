@@ -125,7 +125,7 @@ class MatchingManager
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $percentageScore);
             }
 
-            if ($matching->get('type') === 'duplicate') {
+            if ($matching->get('type') === 'bidirectional') {
                 $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id']);
             }
         }

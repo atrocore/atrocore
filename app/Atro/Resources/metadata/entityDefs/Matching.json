@@ -26,8 +26,8 @@
       "type": "enum",
       "required": true,
       "options": [
-        "duplicate",
-        "staging"
+        "bidirectional",
+        "unidirectional"
       ],
       "conditionalProperties": {
         "protected": {
@@ -60,7 +60,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         },
@@ -69,7 +69,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         }
@@ -84,7 +84,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "duplicate"
+              "value": "bidirectional"
             }
           ]
         },
@@ -93,7 +93,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "duplicate"
+              "value": "bidirectional"
             }
           ]
         }
@@ -108,7 +108,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         },
@@ -117,7 +117,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         }
@@ -132,7 +132,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         },
@@ -141,7 +141,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "staging"
+              "value": "unidirectional"
             }
           ]
         }
