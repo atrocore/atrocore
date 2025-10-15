@@ -4979,13 +4979,21 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+    color: var(--toolbar-font-color);
+    background-color: transparent;
+}
+
+.navbar-inverse .menu .navbar-nav > li > a:hover, .navbar-inverse .menu .navbar-nav > li > a:focus {
     color: var(--nav-font-color);
-    background-color: transparent
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
     color: var(--nav-font-color);
     background-color: #3f535c
+}
+
+.navbar-inverse .menu .navbar-nav > .active > a, .navbar-inverse .menu .navbar-nav > .active > a:hover, .navbar-inverse .menu .navbar-nav > .active > a:focus {
+    color: var(--nav-font-color);
 }
 
 .navbar-inverse .navbar-nav > .disabled > a, .navbar-inverse .navbar-nav > .disabled > a:hover, .navbar-inverse .navbar-nav > .disabled > a:focus {
@@ -9771,12 +9779,6 @@ body > #header .navbar-brand span.home-icon {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 10px
-    }
-
-    .navbar-inverse .navbar-nav > li > a:hover,
-    .navbar-inverse .navbar-nav > li > a:focus {
-        color: var(--nav-font-color);
-        background-color: none;
     }
 
     #header .navbar-form {

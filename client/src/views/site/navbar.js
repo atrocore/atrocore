@@ -343,7 +343,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 let style = this.getThemeManager().getStyle();
 
                 if (style && style['navigationMenuFontColor']) {
-                    let colorConverter = new ColorConverter(style['navigationIconColor']);
+                    let colorConverter = new ColorConverter(style['navigationMenuFontColor']);
 
                     filter = colorConverter.solve().filter;
                     this.getSessionStorage().set('navigationIconColor', filter)
