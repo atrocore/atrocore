@@ -10,8 +10,8 @@
   },
   "options": {
     "type": {
-      "duplicate": "Duplicate",
-      "staging": "Staging"
+      "duplicate": "Bidirectional",
+      "staging": "Unidirectional"
     }
   },
   "tooltips": {

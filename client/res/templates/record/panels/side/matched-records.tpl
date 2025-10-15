@@ -6,8 +6,8 @@
       {{#each list}}
         <div class="matched-record-item">
           <span class="matched-record-item-score">{{score}}%</span>
-          <a href="{{link}}">{{label}}</a>
-          <div class="pull-right inline-actions matched-record-item-actions" data-name="{{mrId}}"></div>
+          <a href="{{link}}" class="matched-record-link">{{label}}</a>
+          <div class="pull-right matched-record-item-actions" data-name="{{mrId}}"></div>
         </div>
       {{/each}}
       </div>

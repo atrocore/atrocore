@@ -18255,8 +18255,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     margin: 0 auto;
 }
 
+.matched-record-status-group {
+    margin-top: 5px;
+}
+
 .matched-record-item {
-    padding: 1px 0px;
+    padding: 2px 0;
 }
 
 .matched-record-item-score {
@@ -18274,11 +18278,24 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: #bbb;
 }
 
-.matched-record-status-group-title:before {
+.matched-record-status-group-title:after {
     content: "";
     display: inline-block;
     height: 1px;
     background: #ddd;
     flex: 1;
-    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.matched-record-item-actions .dropdown-toggle {
+    padding: 0;
+}
+
+.matched-record-item .matched-record-link {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 2.5em - 35px);
+    vertical-align: middle;
 }
