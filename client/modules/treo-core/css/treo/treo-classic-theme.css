@@ -13603,22 +13603,6 @@ ul.dropdown-menu > li.checkbox {
     content: "\e033";
 }
 
-#login #btn-login {
-    background-color: #2895ea;
-    border-color: #2895ea;
-    color: #fff;
-}
-
-#login #btn-login:hover {
-    background-color: #005cb3;
-    border-color: #005cb3;
-}
-
-#login #btn-login:active {
-    background-color: #415e77;
-    border-color: #3d5970;
-}
-
 #login .btn-link {
     color: #000
 }
