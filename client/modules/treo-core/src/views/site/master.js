@@ -8,8 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/master',
-    Dep => Dep.extend({
+Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/master', 'color-converter'],
+    (Dep, ColorConverter) => Dep.extend({
 
         styleVariableMap: {
             navigationManuBackgroundColor: '--nav-menu-background',
@@ -34,7 +34,8 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
             statusIconColor: '--status-icon-color',
             highlightingColorForRequired: '--highlighting-color-for-required',
             highlightingColorForDataQuality: '--highlighting-color-for-data-quality',
-            toolbarBackgroundColor: '--toolbar-background-color'
+            toolbarBackgroundColor: '--toolbar-background-color',
+            toolbarFontColor: '--toolbar-font-color',
         },
 
         rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],
@@ -63,6 +64,13 @@ Espo.define('treo-core:views/site/master', 'class-replace!treo-core:views/site/m
                     }
                 });
             }
+        },
+
+        getIconFilter: function(color) {
+            if (!color) return null;
+
+            let colorConverter = new ColorConverter(color);
+            return colorConverter.solve().filter;
         },
 
         afterRender() {
