@@ -30,8 +30,7 @@ class MatchedRecord extends Base
             ])
             ->removeCollection();
 
-        // for duplicates
-        if ($matching->get('stagingEntity') === $matching->get('masterEntity')) {
+        if ($matching->get('type') === 'bidirectional') {
             $this
                 ->where([
                     'matchingId'     => $matching->id,
@@ -48,7 +47,7 @@ class MatchedRecord extends Base
         string $stagingId,
         string $masterId,
         int $score,
-        bool $skipDuplicates = false
+        bool $skipBidirectional = false
     ): void {
         $hashParts = [
             $matching->id,
@@ -87,8 +86,7 @@ class MatchedRecord extends Base
         } catch (UniqueConstraintViolationException $e) {
         }
 
-        // for duplicates
-        if (!$skipDuplicates && $matching->get('stagingEntity') === $matching->get('masterEntity')) {
+        if (!$skipBidirectional && $matching->get('type') === 'bidirectional') {
             $this->createMatchedRecord($matching, $masterId, $stagingId, $score, true);
         }
     }
