@@ -1012,6 +1012,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.defaultUnit = this.params.defaultUnit;
             }
 
+            this.disableConditions = this.options.disableConditions || this.disableConditions;
+
             // @todo hotfix. For some reasons model does not contain correct data.
             this.listenTo(this.model, 'sync', (model, data) => {
                 if (data[this.name] && data[this.name] !== model.get(this.name)) {
