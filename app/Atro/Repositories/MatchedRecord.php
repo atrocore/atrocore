@@ -26,7 +26,7 @@ class MatchedRecord extends Base
                 'matchingId'      => $matching->id,
                 'stagingEntity'   => $entity->getEntityName(),
                 'stagingEntityId' => $entity->id,
-                'foundStatus'     => 'found',
+                'status'          => 'found',
             ])
             ->removeCollection();
 
@@ -36,7 +36,7 @@ class MatchedRecord extends Base
                     'matchingId'     => $matching->id,
                     'masterEntity'   => $entity->getEntityName(),
                     'masterEntityId' => $entity->id,
-                    'foundStatus'    => 'found',
+                    'status'         => 'found',
                 ])
                 ->removeCollection();
         }
