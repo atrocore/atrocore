@@ -473,7 +473,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
                 }
 
-                p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+                if(p.collapseByDefault) {
+                    p.expanded = false;
+                }else{
+                    p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+                }
 
                 if (this.isInSmallView) {
                     p.canClose = false;
@@ -606,7 +610,6 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
             let panelBody = this.$el.find(`.panel-body[data-name="${name}"]`);
             let panelIndex = this.panelList.findIndex(panel => panel.name === name);
             let panel = this.panelList[panelIndex];
-// debugger
             if (!panel.alreadyLoaded && panel.avoidLoadingOnCollapse && !panelBody.hasClass('in')) {
                 panelBody.html('<img class="preloader" style="height:12px;margin-top: 5px" src="client/img/atro-loader.svg">');
                 panel.alreadyLoaded = true;
