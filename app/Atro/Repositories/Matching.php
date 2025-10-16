@@ -150,23 +150,35 @@ class Matching extends ReferenceData
     {
         $conn = $this->getEntityManager()->getConnection();
 
+        $table = Util::toUnderScore(lcfirst($matching->get('masterEntity')));
+
+        $alias = 'mt';
+
         $qb = $conn->createQueryBuilder();
+
         $qb
-            ->select('id')
-            ->from($conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))))
-            ->where('deleted=:false')
+            ->select("{$alias}.*")
+            ->from($conn->quoteIdentifier($table), $alias)
+            ->where("{$alias}.deleted=:false")
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
         if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
             $qb
-                ->andWhere('id != :id')
+                ->andWhere("{$alias}.id != :id")
                 ->setParameter('id', $entity->get('id'));
         }
         $rulesParts = [];
-        foreach ($matching->get('matchingRules') as $rule) {
-            $rulesParts[] = $rule->prepareMatchingSqlPart($qb, $entity);
+        foreach ($matching->get('matchingRules') ?? [] as $rule) {
+            $sqlPart = $rule->prepareMatchingSqlPart($qb, $entity);
+            if (!empty($sqlPart)) {
+                $rulesParts[] = $sqlPart;
+            }
         }
-        $qb->andWhere(implode(' OR ', $rulesParts));
+        if (!empty($rulesParts)) {
+            $qb->andWhere(implode(' OR ', $rulesParts));
+        }
+
+        $sql = $qb->getSQL();
 
         return $qb->fetchAllAssociative();
     }

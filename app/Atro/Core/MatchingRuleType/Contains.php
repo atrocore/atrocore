@@ -32,13 +32,13 @@ class Contains extends AbstractMatchingRule
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
+        $alias = $qb->getQueryPart('from')[0]['alias'];
+
         $columnName = Util::toUnderScore($this->rule->get('targetField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
-        $sqlPart = "$escapedColumnName IS NOT NULL AND $escapedColumnName LIKE :{$this->rule->get('id')}";
+        $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
         $qb->setParameter($this->rule->get('id'), "%" . $stageEntity->get($this->rule->get('sourceField')) . "%");
-
-        $qb->addSelect($escapedColumnName);
 
         return $sqlPart;
     }

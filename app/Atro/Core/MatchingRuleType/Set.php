@@ -12,6 +12,9 @@
 
 namespace Atro\Core\MatchingRuleType;
 
+use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
@@ -44,16 +47,40 @@ class Set extends AbstractMatchingRule
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
-        $sqlPart = '';
-//        $columnName = Util::toUnderScore($this->rule->get('targetField'));
-//        $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
-//
-//        $sqlPart = "$escapedColumnName IS NOT NULL AND $escapedColumnName LIKE :{$this->rule->get('id')}";
-//        $qb->setParameter($this->rule->get('id'), "%".$stageEntity->get($this->rule->get('sourceField'))."%");
-//
-//        $qb->addSelect($escapedColumnName);
+        $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        return $sqlPart;
+        $table = Util::toUnderScore(lcfirst($this->rule->getMatching()->get('masterEntity')));
+
+        $subQb = $this->getConnection()->createQueryBuilder();
+        $subAlias = Util::generateId();
+        $subQb
+            ->select("{$subAlias}.id")
+            ->from($this->getConnection()->quoteIdentifier($table), $subAlias)
+            ->where("$subAlias.deleted = :false")
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
+        $rulesParts = [];
+        foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+            if ($rule->get('type') === 'set') {
+                echo 'STOP! Has to be finished!';
+                die();
+            }
+
+            $sqlPart = $rule->prepareMatchingSqlPart($subQb, $stageEntity);
+            if (!empty($sqlPart)) {
+                $rulesParts[] = $sqlPart;
+            }
+        }
+
+        if (!empty($rulesParts)) {
+            $subQb->andWhere(implode(' OR ', $rulesParts));
+        }
+
+        foreach ($subQb->getParameters() as $name => $value) {
+            $qb->setParameter($name, $value, Mapper::getParameterType($value));
+        }
+
+        return "{$alias}.id IN ({$subQb->getSQL()})";
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): int
