@@ -19,12 +19,10 @@ use Espo\ORM\Entity;
 
 abstract class AbstractMatchingRule
 {
-    protected Container $container;
     protected Entity $rule;
 
-    public function __construct(Container $container)
+    public function __construct(private readonly Container $container)
     {
-        $this->container = $container;
     }
 
     abstract public static function getSupportedFieldTypes(): array;
@@ -36,6 +34,11 @@ abstract class AbstractMatchingRule
     public function setRule(Entity $rule): void
     {
         $this->rule = $rule;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->rule->get('weight') ?? 0;
     }
 
     protected function getConnection(): Connection

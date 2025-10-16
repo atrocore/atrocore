@@ -32,13 +32,28 @@
     },
     "matching": {
       "type": "link",
-      "required": true,
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            }
+          ]
+        },
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "matchingRuleSetId"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "matchingRuleSetId"
             }
           ]
         }
@@ -58,9 +73,32 @@
     },
     "weight": {
       "type": "int",
-      "required": true,
       "min": 0,
-      "default": 1
+      "default": 1,
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "set"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "equal",
+                "like",
+                "contains"
+              ]
+            }
+          ]
+        }
+      }
     },
     "type": {
       "type": "enum",
@@ -68,7 +106,8 @@
       "options": [
         "equal",
         "like",
-        "contains"
+        "contains",
+        "set"
       ],
       "conditionalProperties": {
         "protected": {
@@ -145,6 +184,27 @@
         }
       }
     },
+    "matchingRuleSet": {
+      "type": "link",
+      "readOnly": true
+    },
+    "matchingRules": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "set"
+            }
+          ]
+        }
+      }
+    },
     "createdBy": {
       "type": "link",
       "readOnly": true,
@@ -161,6 +221,16 @@
       "type": "belongsTo",
       "foreign": "matchingRules",
       "entity": "Matching"
+    },
+    "matchingRuleSet": {
+      "type": "belongsTo",
+      "foreign": "matchingRules",
+      "entity": "Matching"
+    },
+    "matchingRules": {
+      "type": "hasMany",
+      "foreign": "matchingRuleSet",
+      "entity": "MatchingRule"
     },
     "createdBy": {
       "type": "belongsTo",

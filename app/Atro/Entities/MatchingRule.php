@@ -36,4 +36,11 @@ class MatchingRule extends ReferenceData
             ->createMatchingType($this)
             ->match($stageEntity, $masterEntityData);
     }
+
+    public function getWeight(): int
+    {
+        return $this->getEntityManager()->getRepository('MatchingRule')
+            ->createMatchingType($this)
+            ->getWeight();
+    }
 }
