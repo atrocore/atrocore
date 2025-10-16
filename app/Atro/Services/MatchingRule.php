@@ -16,6 +16,6 @@ namespace Atro\Services;
 
 use Atro\Core\Templates\Services\ReferenceData;
 
-class MatchingRule extends ReferenceData {
-
+class MatchingRule extends ReferenceData
+{
 }

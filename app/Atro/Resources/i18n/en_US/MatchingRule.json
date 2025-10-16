@@ -5,13 +5,21 @@
     "sourceField": "Source Field",
     "targetField": "Target Field",
     "stagingEntity": "Staging Entity",
-    "masterEntity": "Master Entity"
+    "masterEntity": "Master Entity",
+    "matchingRuleSet": "Set",
+    "matchingRules": "Matching Rules",
+    "operator": "Operator"
   },
   "options": {
     "type": {
       "equal": "Equal",
       "like": "Like",
-      "contains": "Contains"
+      "contains": "Contains",
+      "set": "Set"
+    },
+    "operator": {
+      "and": "AND",
+      "or": "OR"
     }
   }
 }

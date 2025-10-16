@@ -17,11 +17,30 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Atro\Entities\MatchingRule as EntitiesMatchingRule;
+use Atro\Entities\Matching as MatchingEntity;
+use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 
 class MatchingRule extends ReferenceData
 {
+    public function getMatching(MatchingRuleEntity $rule): ?MatchingEntity
+    {
+        while (true) {
+            $matchingRule = null;
+            if (!empty($rule->get('matchingRuleSetId'))) {
+                $matchingRule = $this->getEntityManager()->getRepository('MatchingRule')->get($rule->get('matchingRuleSetId'));
+            }
+            if (!empty($matchingRule)) {
+                $rule = $matchingRule;
+            } else {
+                break;
+            }
+        }
+
+        return $this->getEntityManager()->getRepository('Matching')->get($rule->get('matchingId'));
+    }
+
     public function validateCode(OrmEntity $entity): void
     {
         parent::validateCode($entity);
@@ -29,6 +48,54 @@ class MatchingRule extends ReferenceData
         if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
             throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
         }
+    }
+
+    public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
+    {
+        if ($link === 'matchingRules') {
+            $selectParams['whereClause'] = [['matchingRuleSetId=' => $entity->get('id')]];
+
+            return $this->getEntityManager()->getRepository('MatchingRule')->find($selectParams);
+        }
+
+        return parent::findRelated($entity, $link, $selectParams);
+    }
+
+    public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
+    {
+        if ($relationName === 'matchingRules') {
+            $params['offset'] = 0;
+            $params['limit'] = \PHP_INT_MAX;
+
+            return count($this->findRelated($entity, $relationName, $params));
+        }
+
+        return parent::countRelated($entity, $relationName, $params);
+    }
+
+    public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
+    {
+        return $this->getInjection('matchingManager')->createMatchingType($rule);
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('matchingManager');
+    }
+
+    protected function getAllItems(array $params = []): array
+    {
+        $items = parent::getAllItems($params);
+        foreach ($items as &$item) {
+            if (!array_key_exists('matchingRuleSetId', $item)) {
+                $item['matchingRuleSetId'] = null;
+            }
+        }
+        unset($item);
+
+        return $items;
     }
 
     protected function afterSave(OrmEntity $entity, array $options = []): void
@@ -39,28 +106,50 @@ class MatchingRule extends ReferenceData
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
         }
+
+        $this->recalculateWeightForSets();
     }
 
+    protected function beforeRemove(OrmEntity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        if ($entity->get('type') === 'set') {
+            foreach ($entity->get('matchingRules') ?? [] as $rule) {
+                $this->getEntityManager()->removeEntity($rule);
+            }
+        }
+    }
+
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array $options
+     *
+     * @return void
+     */
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        $matching = $entity->get('matching');
+        $matching = $this->getMatching($entity);
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
         }
+
+        $this->recalculateWeightForSets();
     }
 
-    public function createMatchingType(EntitiesMatchingRule $rule): AbstractMatchingRule
+    protected function recalculateWeightForSets(): void
     {
-        return $this->getInjection('matchingManager')->createMatchingType($rule);
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('matchingManager');
+        foreach ($this->find() as $rule) {
+            if ($rule->get('type') === 'set') {
+                $ruleWeight = $this->createMatchingType($rule)->getWeight();
+                if ($rule->get('weight') !== $ruleWeight) {
+                    $rule->set('weight', $ruleWeight);
+                    $this->getEntityManager()->saveEntity($rule);
+                }
+            }
+        }
     }
 
     protected function getMatchingRepository(): Matching

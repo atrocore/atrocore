@@ -32,13 +32,13 @@ class Like extends AbstractMatchingRule
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
+        $alias = $qb->getQueryPart('from')[0]['alias'];
+
         $columnName = Util::toUnderScore($this->rule->get('targetField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
-        $sqlPart = "REPLACE(LOWER(TRIM($escapedColumnName)), ' ', '') = :{$this->rule->get('id')}";
+        $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
         $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField'))))));
-
-        $qb->addSelect($escapedColumnName);
 
         return $sqlPart;
     }

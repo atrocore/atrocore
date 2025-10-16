@@ -46,15 +46,15 @@ class Equal extends AbstractMatchingRule
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
+        $alias = $qb->getQueryPart('from')[0]['alias'];
+
         $columnName = Util::toUnderScore($this->rule->get('targetField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $value = $stageEntity->get($this->rule->get('sourceField'));
 
-        $sqlPart = "$escapedColumnName = :{$this->rule->get('id')}";
+        $sqlPart = "{$alias}.{$escapedColumnName} = :{$this->rule->get('id')}";
         $qb->setParameter($this->rule->get('id'), $value, Mapper::getParameterType($value));
-
-        $qb->addSelect($escapedColumnName);
 
         return $sqlPart;
     }

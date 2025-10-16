@@ -1,4 +1,12 @@
 {
   "iconClass": "rows-plus-bottom",
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "relationshipPanels": {
+    "matchingRules": {
+      "select": false,
+      "limit": 2000,
+      "rowActionsView": "views/record/row-actions/relationship-no-unlink",
+      "hideShowFullList": true
+    }
+  }
 }

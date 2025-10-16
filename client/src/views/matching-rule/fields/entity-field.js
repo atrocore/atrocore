@@ -24,18 +24,37 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             })
         },
 
+        findMatchingId(matchingRuleSetId) {
+            let res = null;
+            $.each((this.getConfig().get('referenceData')?.MatchingRule || {}), (code, item) => {
+                if (item.id === matchingRuleSetId) {
+                    if (item.matchingRuleSetId) {
+                        res = this.findMatchingId(item.matchingRuleSetId);
+                    } else {
+                        res = item.matchingId;
+                    }
+                }
+            });
+
+            return res;
+        },
+
         prepareListOptions() {
             this.translatedOptions = {};
             this.originalOptionList = this.params.options = [];
 
-            if (!['equal', 'like', 'contains'].includes(this.model.get('type')) || this.model.get('matchingId') === null) {
+            if (!['equal', 'like', 'contains'].includes(this.model.get('type'))) {
                 return;
             }
 
             let entityName = null;
+            let matchingId = this.model.get('matchingId');
+            if (this.model.get('matchingRuleSetId')) {
+                matchingId = this.findMatchingId(this.model.get('matchingRuleSetId'));
+            }
 
             $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
-                if (item.id === this.model.get('matchingId')) {
+                if (item.id === matchingId) {
                     if (this.name === 'targetField') {
                         entityName = item.masterEntity;
                     } else if (this.name === 'sourceField') {
