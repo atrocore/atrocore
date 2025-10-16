@@ -61,11 +61,6 @@ class Set extends AbstractMatchingRule
 
         $rulesParts = [];
         foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
-            if ($rule->get('type') === 'set') {
-                echo 'STOP! Has to be finished!';
-                die();
-            }
-
             $sqlPart = $rule->prepareMatchingSqlPart($subQb, $stageEntity);
             if (!empty($sqlPart)) {
                 $rulesParts[] = $sqlPart;
