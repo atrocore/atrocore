@@ -80,13 +80,31 @@ class Set extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-//        $stageValue = $stageEntity->get($this->rule->get('sourceField'));
-//        $masterValue = $masterEntityData[$this->rule->get('targetField')];
-//
-//        if (!empty($stageValue) && !empty($masterValue) && strpos($masterValue, $stageValue) !== false) {
-//            return $this->rule->get('weight') ?? 0;
-//        }
+        $weight = 0;
+        if ($this->rule->get('operator') === 'or') {
+            // convert EntityCollection to array
+            $rules = [];
+            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+                $rules[] = $rule;
+            }
 
-        return 0;
+            // Sort rules by 'weight' in descending order
+            usort($rules, function ($a, $b) {
+                return $b->get('weight') <=> $a->get('weight');
+            });
+
+            foreach ($rules as $rule) {
+                $weight = $rule->match($stageEntity, $masterEntityData);
+                if ($weight > 0) {
+                    return $weight;
+                }
+            }
+        } elseif ($this->rule->get('operator') === 'and') {
+            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+                $weight += $rule->match($stageEntity, $masterEntityData);
+            }
+        }
+
+        return $weight;
     }
 }

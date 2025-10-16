@@ -178,8 +178,6 @@ class Matching extends ReferenceData
             $qb->andWhere(implode(' OR ', $rulesParts));
         }
 
-        $sql = $qb->getSQL();
-
         return $qb->fetchAllAssociative();
     }
 
