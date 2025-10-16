@@ -1242,7 +1242,20 @@ class OpenApiGenerator
             if (empty($result['components']['schemas'][$entityName]['required'])) {
                 $result['components']['schemas'][$entityName]['required'] = [];
             }
-            $result['components']['schemas'][$entityName]['required'][] = $fieldName;
+
+            switch ($fieldData['type']) {
+                case 'link':
+                case 'file':
+                case 'linkParent':
+                    $result['components']['schemas'][$entityName]['required'][] = "{$fieldName}Id";
+                    break;
+                case 'linkMultiple':
+                    $result['components']['schemas'][$entityName]['required'][] = "{$fieldName}Ids";
+                    break;
+                default:
+                    $result['components']['schemas'][$entityName]['required'][] = $fieldName;
+                    break;
+            }
         }
 
         switch ($fieldData['type']) {
@@ -1309,7 +1322,6 @@ class OpenApiGenerator
                         'properties' => $this->getEnumOptionProperties()
                     ]
                 ];
-                break;
                 break;
             case "linkMultiple":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"] = [
