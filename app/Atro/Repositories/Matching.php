@@ -214,6 +214,7 @@ class Matching extends ReferenceData
                 ->andWhere('mr.staging_entity_id = :stagingEntityId')
                 ->andWhere('t.id IS NOT NULL')
                 ->andWhere('mr.status = :status')
+                ->andWhere('mr.deleted = :false')
                 ->setParameter('matchingId', $matching->get('id'))
                 ->setParameter('stagingEntity', $entity->getEntityName())
                 ->setParameter('stagingEntityId', $entity->id)
