@@ -73,6 +73,7 @@
     },
     "weight": {
       "type": "int",
+      "view": "views/matching-rule/fields/weight",
       "min": 0,
       "default": 0,
       "conditionalProperties": {
@@ -195,6 +196,33 @@
       "noLoad": true,
       "conditionalProperties": {
         "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "set"
+            }
+          ]
+        }
+      }
+    },
+    "operator": {
+      "type": "enum",
+      "options": [
+        "and",
+        "or"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "set"
+            }
+          ]
+        },
+        "required": {
           "conditionGroup": [
             {
               "type": "equals",

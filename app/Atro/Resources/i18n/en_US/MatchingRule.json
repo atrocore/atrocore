@@ -7,7 +7,8 @@
     "stagingEntity": "Staging Entity",
     "masterEntity": "Master Entity",
     "matchingRuleSet": "Set",
-    "matchingRules": "Matching Rules"
+    "matchingRules": "Matching Rules",
+    "operator": "Operator"
   },
   "options": {
     "type": {
@@ -15,6 +16,10 @@
       "like": "Like",
       "contains": "Contains",
       "set": "Set"
+    },
+    "operator": {
+      "and": "AND",
+      "or": "OR"
     }
   }
 }

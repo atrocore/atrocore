@@ -24,14 +24,20 @@ class Set extends AbstractMatchingRule
 
     public function getWeight(): int
     {
-        $weight = 60;
+        $weight = 0;
 
-//        /** @var MatchingRule $rule */
-//        foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
-//            if ($rule->getWeight() > $weight) {
-//                $weight = $rule->getWeight();
-//            }
-//        }
+        if ($this->rule->get('operator') === 'or') {
+            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+                $ruleWeight = $rule->getWeight();
+                if ($ruleWeight > $weight) {
+                    $weight = $ruleWeight;
+                }
+            }
+        } elseif ($this->rule->get('operator') === 'and') {
+            foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+                $weight += $rule->getWeight();
+            }
+        }
 
         return $weight;
     }

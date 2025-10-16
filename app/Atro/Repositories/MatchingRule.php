@@ -71,13 +71,6 @@ class MatchingRule extends ReferenceData
     {
         $items = parent::getAllItems($params);
         foreach ($items as &$item) {
-            /** @var \Atro\Entities\MatchingRule $entity */
-            $entity = $this->entityFactory->create($this->entityName);
-            $entity->set($item);
-            $entity->setAsFetched();
-
-            $item['weight'] = $entity->getWeight();
-
             if (!array_key_exists('matchingRuleSetId', $item)) {
                 $item['matchingRuleSetId'] = null;
             }
@@ -95,6 +88,8 @@ class MatchingRule extends ReferenceData
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
         }
+
+        $this->recalculateWeightForSets();
     }
 
     protected function beforeRemove(OrmEntity $entity, array $options = [])
@@ -115,6 +110,21 @@ class MatchingRule extends ReferenceData
         $matching = $entity->get('matching');
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+        }
+
+        $this->recalculateWeightForSets();
+    }
+
+    protected function recalculateWeightForSets(): void
+    {
+        foreach ($this->find() as $rule) {
+            if ($rule->get('type') === 'set') {
+                $ruleWeight = $rule->getWeight();
+                if ($rule->get('weight') !== $ruleWeight) {
+                    $rule->set('weight', $ruleWeight);
+                    $this->getEntityManager()->saveEntity($rule);
+                }
+            }
         }
     }
 

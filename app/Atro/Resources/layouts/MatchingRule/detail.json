@@ -21,6 +21,12 @@
       ],
       [
         {
+          "name": "operator"
+        },
+        false
+      ],
+      [
+        {
           "name": "weight"
         },
         false
