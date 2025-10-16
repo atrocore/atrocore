@@ -14,13 +14,15 @@ namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
+use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 abstract class AbstractMatchingRule
 {
-    protected Entity $rule;
+    protected MatchingRuleEntity $rule;
 
     public function __construct(private readonly Container $container)
     {
@@ -32,7 +34,7 @@ abstract class AbstractMatchingRule
 
     abstract public function match(Entity $stageEntity, array $masterEntityData): int;
 
-    public function setRule(Entity $rule): void
+    public function setRule(MatchingRuleEntity $rule): void
     {
         $this->rule = $rule;
     }
@@ -50,5 +52,10 @@ abstract class AbstractMatchingRule
     protected function getConfig(): Config
     {
         return $this->container->get('config');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->container->get('entityManager');
     }
 }

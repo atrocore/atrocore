@@ -18,6 +18,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
 use Atro\Core\Templates\Entities\ReferenceData;
+use Atro\Repositories\MatchingRule as MatchingRuleRepository;
 
 class MatchingRule extends ReferenceData
 {
@@ -25,22 +26,32 @@ class MatchingRule extends ReferenceData
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
-        return $this->getEntityManager()->getRepository('MatchingRule')
+        return $this->getRepository()
             ->createMatchingType($this)
             ->prepareMatchingSqlPart($qb, $stageEntity);
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        return $this->getEntityManager()->getRepository('MatchingRule')
+        return $this->getRepository()
             ->createMatchingType($this)
             ->match($stageEntity, $masterEntityData);
     }
 
+    public function getMatching(): ?Matching
+    {
+        return $this->getRepository()->getMatching($this);
+    }
+
     public function getWeight(): int
     {
-        return $this->getEntityManager()->getRepository('MatchingRule')
+        return $this->getRepository()
             ->createMatchingType($this)
             ->getWeight();
+    }
+
+    protected function getRepository(): MatchingRuleRepository
+    {
+        return $this->getEntityManager()->getRepository('MatchingRule');
     }
 }

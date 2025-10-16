@@ -17,12 +17,30 @@ namespace Atro\Repositories;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Templates\Repositories\ReferenceData;
-use Atro\Entities\MatchingRule as EntitiesMatchingRule;
+use Atro\Entities\Matching as MatchingEntity;
+use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityCollection;
 
 class MatchingRule extends ReferenceData
 {
+    public function getMatching(MatchingRuleEntity $rule): ?MatchingEntity
+    {
+        while (true) {
+            $matchingRule = null;
+            if (!empty($rule->get('matchingRuleSetId'))) {
+                $matchingRule = $this->getEntityManager()->getRepository('MatchingRule')->get($rule->get('matchingRuleSetId'));
+            }
+            if (!empty($matchingRule)) {
+                $rule = $matchingRule;
+            } else {
+                break;
+            }
+        }
+
+        return $this->getEntityManager()->getRepository('Matching')->get($rule->get('matchingId'));
+    }
+
     public function validateCode(OrmEntity $entity): void
     {
         parent::validateCode($entity);
@@ -55,7 +73,7 @@ class MatchingRule extends ReferenceData
         return parent::countRelated($entity, $relationName, $params);
     }
 
-    public function createMatchingType(EntitiesMatchingRule $rule): AbstractMatchingRule
+    public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
     {
         return $this->getInjection('matchingManager')->createMatchingType($rule);
     }
@@ -103,11 +121,17 @@ class MatchingRule extends ReferenceData
         }
     }
 
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array $options
+     *
+     * @return void
+     */
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        $matching = $entity->get('matching');
+        $matching = $this->getMatching($entity);
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
         }
