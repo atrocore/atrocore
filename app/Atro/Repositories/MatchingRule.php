@@ -19,6 +19,7 @@ use Atro\Core\MatchingRuleType\AbstractMatchingRule;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Entities\MatchingRule as EntitiesMatchingRule;
 use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\EntityCollection;
 
 class MatchingRule extends ReferenceData
 {
@@ -31,24 +32,27 @@ class MatchingRule extends ReferenceData
         }
     }
 
-    protected function afterSave(OrmEntity $entity, array $options = []): void
+    public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
     {
-        parent::afterSave($entity, $options);
+        if ($link === 'matchingRules') {
+            $selectParams['whereClause'] = [['matchingRuleSetId=' => $entity->get('id')]];
 
-        $matching = $entity->get('matching');
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+            return $this->getEntityManager()->getRepository('MatchingRule')->find($selectParams);
         }
+
+        return parent::findRelated($entity, $link, $selectParams);
     }
 
-    protected function afterRemove(OrmEntity $entity, array $options = [])
+    public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
-        parent::afterRemove($entity, $options);
+        if ($relationName === 'matchingRules') {
+            $params['offset'] = 0;
+            $params['limit'] = \PHP_INT_MAX;
 
-        $matching = $entity->get('matching');
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+            return count($this->findRelated($entity, $relationName, $params));
         }
+
+        return parent::countRelated($entity, $relationName, $params);
     }
 
     public function createMatchingType(EntitiesMatchingRule $rule): AbstractMatchingRule
@@ -61,6 +65,57 @@ class MatchingRule extends ReferenceData
         parent::init();
 
         $this->addDependency('matchingManager');
+    }
+
+    protected function getAllItems(array $params = []): array
+    {
+        $items = parent::getAllItems($params);
+        foreach ($items as &$item) {
+            /** @var \Atro\Entities\MatchingRule $entity */
+            $entity = $this->entityFactory->create($this->entityName);
+            $entity->set($item);
+            $entity->setAsFetched();
+
+            $item['weight'] = $entity->getWeight();
+
+            if (!array_key_exists('matchingRuleSetId', $item)) {
+                $item['matchingRuleSetId'] = null;
+            }
+        }
+        unset($item);
+
+        return $items;
+    }
+
+    protected function afterSave(OrmEntity $entity, array $options = []): void
+    {
+        parent::afterSave($entity, $options);
+
+        $matching = $entity->get('matching');
+        if (!empty($matching)) {
+            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+        }
+    }
+
+    protected function beforeRemove(OrmEntity $entity, array $options = [])
+    {
+        parent::beforeRemove($entity, $options);
+
+        if ($entity->get('type') === 'set') {
+            foreach ($entity->get('matchingRules') ?? [] as $rule) {
+                $this->getEntityManager()->removeEntity($rule);
+            }
+        }
+    }
+
+    protected function afterRemove(OrmEntity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $matching = $entity->get('matching');
+        if (!empty($matching)) {
+            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+        }
     }
 
     protected function getMatchingRepository(): Matching

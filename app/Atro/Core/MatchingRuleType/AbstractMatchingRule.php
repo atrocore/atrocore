@@ -13,6 +13,7 @@
 namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
+use Atro\Core\Utils\Config;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
@@ -44,5 +45,10 @@ abstract class AbstractMatchingRule
     protected function getConnection(): Connection
     {
         return $this->container->get('connection');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 }

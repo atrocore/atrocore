@@ -12,7 +12,6 @@
 
 namespace Atro\Core\MatchingRuleType;
 
-use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
@@ -25,7 +24,16 @@ class Set extends AbstractMatchingRule
 
     public function getWeight(): int
     {
-        return 0;
+        $weight = 60;
+
+//        /** @var MatchingRule $rule */
+//        foreach ($this->rule->get('matchingRules') ?? [] as $rule) {
+//            if ($rule->getWeight() > $weight) {
+//                $weight = $rule->getWeight();
+//            }
+//        }
+
+        return $weight;
     }
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
