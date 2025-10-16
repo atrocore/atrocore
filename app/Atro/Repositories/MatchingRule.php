@@ -119,7 +119,7 @@ class MatchingRule extends ReferenceData
     {
         foreach ($this->find() as $rule) {
             if ($rule->get('type') === 'set') {
-                $ruleWeight = $rule->getWeight();
+                $ruleWeight = $this->createMatchingType($rule)->getWeight();
                 if ($rule->get('weight') !== $ruleWeight) {
                     $rule->set('weight', $ruleWeight);
                     $this->getEntityManager()->saveEntity($rule);
