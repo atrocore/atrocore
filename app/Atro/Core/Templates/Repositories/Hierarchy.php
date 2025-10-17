@@ -80,6 +80,7 @@ class Hierarchy extends Base
             $primarySortBy = 'sort_order';
             $sortOrder = (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
         }
+
         $secondarySortBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy']);
         $secondarySortBy = Util::toUnderScore(!empty($secondarySortBy) ? $secondarySortBy : 'name');
 
@@ -746,14 +747,15 @@ class Hierarchy extends Base
     {
         $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
         $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
-        $defaultSortBy = Util::toUnderScore($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy'], 'name'));
+
         if (!empty($selectParams['orderBy'])) {
             $primarySortBy = Util::toUnderScore($selectParams['orderBy']);
-            $secondarySortBy = 'sort_order';
         } else {
             $primarySortBy = 'sort_order';
-            $secondarySortBy = $defaultSortBy;
         }
+
+        $secondarySortBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'sortBy']);
+        $secondarySortBy = Util::toUnderScore(!empty($secondarySortBy) ? $secondarySortBy : 'name');
 
         $sortOrder = $selectParams['order'] ?? (!empty($this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'asc'])) ? 'ASC' : 'DESC');
         $withDeleted = !empty($selectParams['withDeleted']) && $selectParams['withDeleted'] === true;
