@@ -25,7 +25,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
 
         prepareListOptions() {
             this.params.options = ['id'];
-            this.translatedOptions = {'id': this.translate('id', 'fields', 'Global')};
+            this.translatedOptions = { 'id': this.translate('id', 'fields', 'Global') };
 
             let entity = this.options.scope;
             let hasAttribute = this.getMetadata().get(`scopes.${entity}.hasAttribute`);
@@ -50,7 +50,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
             }
 
             $.each(this.getMetadata().get(['entityDefs', entity, 'fields'], {}), (field, fieldDefs) => {
-                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type)  && !fieldDefs.attributeId) {
+                if (!fieldDefs.disabled && !notAvailableFieldsList.includes(field) && !notAvailableTypes.includes(fieldDefs.type) && !fieldDefs.exportDisabled && !fieldDefs.attributeId) {
                     this.params.options.push(field);
                     this.translatedOptions[field] = this.translate(field, 'fields', entity);
                 }
@@ -97,7 +97,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                     this.ajaxGetRequest('Attribute/action/attributesDefs', {
                         entityName: entity,
                         attributesIds: [model.id]
-                    }, {async: false}).success(res => {
+                    }, { async: false }).success(res => {
                         $.each(res, (field, fieldDefs) => {
                             if (!fieldDefs.importDisabled) {
                                 this.params.options.push(field);
