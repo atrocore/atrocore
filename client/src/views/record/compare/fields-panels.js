@@ -194,11 +194,50 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 if (view.mode === 'detail') {
                     const name = view.idName || view.originalName || view.name;
                     data = { [name]: view.model.get(name) }
-                    if (view.unitFieldName){
+                    if (view.unitFieldName) {
                         data[view.unitFieldName] = view.model.get(view.unitFieldName)
                     }
                 } else {
                     data = view.fetch();
+                }
+
+                if (view.unitFieldName && data[view.unitFieldName] === '') {
+                    data[view.unitFieldName] = null;
+                }
+
+                const fieldName = view.originalName || view.name;
+                const attributeId = self.model.defs.fields[fieldName]?.attributeId;
+                if (attributeId) {
+                    const isLinkedOnModel = !!self.model.get('attributesDefs')[fieldName]
+
+                    // if value is empty
+                    if (Object.values(data).every(value => value == null || (Array.isArray(value) && value.length === 0))) {
+                        if (view.model === self.model) {
+                            if (!isLinkedOnModel) {
+                                return;
+                            }
+                        } else {
+                            const isLinkedOnSelection = !!view.model.get('attributesDefs')[fieldName]
+
+                            if (!isLinkedOnSelection) {
+                                if (isLinkedOnModel) {
+                                    if (!attributes.__attributesToRemove) {
+                                        attributes.__attributesToRemove = []
+                                    }
+                                    attributes.__attributesToRemove.push(fieldName);
+                                }
+                                return;
+                            }
+                        }
+                    }
+
+                    if (!isLinkedOnModel) {
+                        if (!attributes['__attributes']) {
+                            attributes['__attributes'] = []
+                        }
+                        attributes['__attributes'].push(attributeId);
+                    }
+
                 }
 
                 attributes = _.extend({}, attributes, data);

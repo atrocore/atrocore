@@ -21,7 +21,7 @@ class CalculateScriptFieldsForEntities extends AbstractJob implements JobInterfa
     {
         foreach ($this->getMetadata()->get('scopes') as $entityName => $scopeDefs) {
 
-            if ($scopeDefs['type'] === 'ReferenceData') {
+            if (empty($scopeDefs['type']) || $scopeDefs['type'] === 'ReferenceData') {
                 continue;
             }
 
