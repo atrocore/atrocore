@@ -152,6 +152,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         versionModel.set(res);
                         options.versionModel = versionModel;
                         options.versions = this.versions;
+                        this.collection.reset();
+                        this.collection.push(this.model);
                         this.collection.push(versionModel);
                         this.createModalView(options);
                     });

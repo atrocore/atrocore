@@ -650,6 +650,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         handlePanelRendering(name) {
             if (this.renderedPanels.includes(name)) {
+                this.notify(false)
                 return;
             }
             this.renderedPanels.push(name);
@@ -871,9 +872,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     ' data-original-title="Click to filter" style="color: black;">\n' +
                     '                <i class="ph ph-funnel"></i>\n' +
                     '            </a>');
-                filterButton.on('click', () => this.trigger('open-filter'))
                 this.getParentView().$el.find('.modal-footer').append(filterButton);
+            } else {
+                filterButton.off('click');
             }
+            filterButton.on('click', () => this.trigger('open-filter'))
 
             if (this.isOverviewFilterApply()) {
                 filterButton.css('color', 'white').addClass('btn-danger').removeClass('btn-default')

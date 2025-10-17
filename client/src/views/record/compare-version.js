@@ -39,16 +39,12 @@ Espo.define('views/record/compare-version', 'views/record/compare', function (De
             return columns;
         },
 
-        getModelsForAttributes() {
-            return [this.model]
-        },
-
         getModels() {
             return [this.model, this.versionModel];
         },
 
         getDefaultModelId() {
-            return this.versionModel.id;
+            return this.model.id;
         },
 
         getCompareUrl() {
