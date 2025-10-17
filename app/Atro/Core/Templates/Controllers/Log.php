@@ -44,17 +44,13 @@ class Log extends AbstractController
 
         $where = $this->prepareWhereQuery($request->get('where'));
         $offset = $request->get('offset');
-        $maxSize = $request->get('maxSize');
+        $maxSize = $request->get('maxSize') ?? self::MAX_SIZE_LIMIT;
         $asc = $request->get('asc', 'true') === 'true';
         $sortBy = $request->get('sortBy');
         $q = $request->get('q');
         $textFilter = $request->get('textFilter');
         $collectionOnly = $request->get('collectionOnly') === 'true';
         $totalOnly = $request->get('totalOnly') === 'true';
-
-        if (empty($maxSize)) {
-            $maxSize = self::MAX_SIZE_LIMIT;
-        }
 
         $params = [
             'where'          => $where,
