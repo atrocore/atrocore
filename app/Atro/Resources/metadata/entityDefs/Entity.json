@@ -168,12 +168,9 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
+              "type": "equals",
               "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
+              "value": "Log"
             }
           ]
         }

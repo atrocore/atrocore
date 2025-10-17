@@ -17,15 +17,12 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\PseudoTransactionManager;
 
 abstract class AbstractRecordController extends AbstractController
 {
     const MAX_SIZE_LIMIT = 200;
 
     public static $defaultAction = 'list';
-
-    protected $defaultRecordServiceName = 'Record';
 
     public function actionRead($params, $data, $request)
     {
@@ -185,23 +182,6 @@ abstract class AbstractRecordController extends AbstractController
             'list'           => $result->collection->getValueMapList(),
             'additionalData' => $result->additionalData
         ];
-    }
-
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
-    {
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
-        }
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
-        }
-        if ($request->get('filterList')) {
-            $params['filterList'] = $request->get('filterList');
-        }
-
-        if ($request->get('select') && is_string($request->get('select'))) {
-            $params['select'] = explode(',', $request->get('select'));
-        }
     }
 
     public function actionListLinked($params, $data, $request)
@@ -678,35 +658,4 @@ abstract class AbstractRecordController extends AbstractController
 
         return $result;
     }
-
-    protected function prepareWhereQuery($where)
-    {
-        if (is_string($where)) {
-            $where = json_decode(str_replace(['"{', '}"', '\"', '\n', '\t'], ['{', '}', '"', '', ''], $where), true);
-        }
-
-        return $where;
-    }
-
-    protected function getRecordService(?string $name = null)
-    {
-        if (empty($name)) {
-            $name = $this->name;
-        }
-
-        if ($this->getServiceFactory()->checkExists($name)) {
-            $service = $this->getServiceFactory()->create($name);
-        } else {
-            $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
-            $service->setEntityType($name);
-        }
-
-        return $service;
-    }
-
-    protected function getPseudoTransactionManager(): PseudoTransactionManager
-    {
-        return $this->getContainer()->get('pseudoTransactionManager');
-    }
-
 }
