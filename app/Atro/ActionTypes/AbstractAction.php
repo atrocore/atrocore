@@ -134,13 +134,6 @@ abstract class AbstractAction implements TypeInterface
 
     protected  function getWhere(Entity $action): ?array
     {
-        if (!empty($action->get('data')->whereData)) {
-            $where  =  SavedSearch::getWhereFromWhereData(@json_decode(@json_encode($action->get('data')->whereData), true), $this->getEntityManager());
-            if(!empty($where)){
-                return $where;
-            }
-        }
-
          return !empty($action->get('data')->where) ? $action->get('data')->where : null;
     }
 
