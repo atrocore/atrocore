@@ -147,13 +147,13 @@ Espo.define('search-manager', [], function () {
             }
 
             if (this.data.savedFilters && this.data.savedFilters.length) {
-                this.data.savedFilters.forEach(item => {
-                    if (item?.data?.condition) {
-                        where.push(item.data);
-                    } else {
-                        where = where.concat(this.getAdvancedWhere(item.data))
-                    }
-                });
+                var o = {
+                    type: 'savedSearch',
+                    value: []
+                };
+
+                o.value = this.data.savedFilters.map(item => item.id);
+                where.push(o);
             }
 
             if (this.data.queryBuilder.condition && this.isQueryBuilderApplied()) {
