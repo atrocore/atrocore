@@ -98,7 +98,8 @@ class MatchingManager
             return;
         }
 
-        if (empty($matching->get('matchingRules'))) {
+        $matchingRules = $matching->get('matchingRules') ?? [];
+        if (empty($matchingRules[0])) {
             return;
         }
 
@@ -112,7 +113,7 @@ class MatchingManager
         foreach ($possibleMatches as $row) {
             $maxMatchingScore = 0;
             $matchingScore = 0;
-            foreach ($matching->get('matchingRules') as $rule) {
+            foreach ($matchingRules as $rule) {
                 $maxMatchingScore += $rule->get('weight');
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
