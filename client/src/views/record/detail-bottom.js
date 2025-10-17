@@ -473,7 +473,11 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                     this.recordHelper.setPanelStateParam(p.name, p.hidden || false);
                 }
 
-                p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+                if(p.collapseByDefault) {
+                    p.expanded = false;
+                }else{
+                    p.expanded = !(this.getStorage().get('collapsed-panels', this.scope) || []).includes(p.name);
+                }
 
                 if (this.isInSmallView) {
                     p.canClose = false;
