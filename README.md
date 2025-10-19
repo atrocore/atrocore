@@ -48,7 +48,7 @@ We also offer SaaS Editions, hosted in the cloud, which include some or all prem
 
 ## Feature Overview
 
-![Feature Overview](_assets/atrocore-feature-overview-tags.svg)
+![Feature Overview](_assets/atrocore-feature-overview-tags.png)
 
 Please refer to [this page](https://www.atrocore.com/en/atrocore) to read the full feature description.
 
@@ -78,7 +78,7 @@ The following full-fledged software products are already available on the AtroCo
 
 ## Technologies
 
-![Architecture and Technologies](_assets/architecture-and-technologies.svg)
+![Architecture and Technologies](_assets/architecture-and-technologies.png)
 
 
 ## Integrations
