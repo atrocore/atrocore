@@ -75,7 +75,6 @@
       "type": "int",
       "view": "views/matching-rule/fields/weight",
       "min": 0,
-      "default": 0,
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [
