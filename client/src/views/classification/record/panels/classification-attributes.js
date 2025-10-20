@@ -401,7 +401,13 @@ Espo.define('views/classification/record/panels/classification-attributes',
 
         fetchCollectionGroups(callback) {
             this.getHelper().layoutManager.get(this.scope, this.layoutName,this.model.name, data => {
-                let list = [];
+                let list = [
+                    "conditionalVisible",
+                    "conditionalRequired",
+                    "conditionalProtected",
+                    "conditionalReadOnly",
+                    "conditionalDisableOptions"
+                ];
                 data.layout.forEach(item => {
                     if (item.name) {
                         let field = item.name;
