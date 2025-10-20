@@ -109,9 +109,9 @@ Espo.define('conditions-checker', [], function () {
             } else if (type === 'lessThanOrEquals') {
                 return setValue <= value;
             } else if (type === 'in') {
-                return ~value.indexOf(setValue);
+                return this.checkIn(value, setValue);
             } else if (type === 'notIn') {
-                return !~value.indexOf(setValue);
+                return !this.checkIn(value, setValue);
             } else if (type === 'isToday') {
                 var dateTime = this.view.getDateTime();
                 if (!setValue) return;
@@ -145,6 +145,19 @@ Espo.define('conditions-checker', [], function () {
             }
             return false;
         },
+
+        checkIn(value, setValue) {
+            if (Array.isArray(setValue)) {
+                for (let v of setValue) {
+                    if (value.includes(v)) {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            return value.includes(setValue);
+        }
     });
 
     return ConditionsChecker;
