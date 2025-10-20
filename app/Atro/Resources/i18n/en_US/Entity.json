@@ -45,7 +45,7 @@
     "type": {
       "Base": "Base",
       "Hierarchy": "Hierarchy",
-      "ReferenceData": "Reference Data",
+      "ReferenceData": "Reference",
       "Log": "Log"
     },
     "sortDirection": {
