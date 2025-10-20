@@ -140,7 +140,6 @@
     "Store": "Magasin",
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
-    "AuthFailLogRecord": "Enregistrement du journal d'échec de l'authentification",
     "HtmlSanitizer": "HTML Sanitizer",
     "SystemIcon": "Icône du système"
   },
@@ -493,7 +492,6 @@
     "FileType": "Types de fichiers",
     "Account": "Comptes",
     "DocumentFolder": "Dossiers de documents",
-    "AuthFailLogRecord": "Enregistrements du journal d'échec de l'authentification",
     "AuthLogRecord": "Enregistrements du journal d'authentification",
     "Dashboard": "Tableaux de bord",
     "Note": "Notes",
