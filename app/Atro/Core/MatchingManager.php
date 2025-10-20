@@ -20,6 +20,7 @@ use Atro\Entities\MatchingRule;
 use Atro\Repositories\MatchedRecord;
 use Atro\Repositories\Matching;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 
 class MatchingManager
@@ -75,6 +76,16 @@ class MatchingManager
         $this->getEntityManager()->saveEntity($jobEntity);
     }
 
+    public function collectAllMatchingFields(?EntityCollection $matchingRules, string $fieldName, array &$fields): void
+    {
+        foreach ($matchingRules ?? [] as $rule) {
+            if (!empty($rule->get($fieldName)) && !in_array($rule->get($fieldName), $fields)) {
+                $fields[] = $rule->get($fieldName);
+            }
+            $this->collectAllMatchingFields($rule->get('matchingRules'), $fieldName, $fields);
+        }
+    }
+
     public function findMatchingsAfterEntitySave(Entity $entity): void
     {
         if ($this->getMetadata()->get("scopes.{$entity->getEntityName()}.matchingDisabled")) {
@@ -86,8 +97,28 @@ class MatchingManager
         }
 
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
-            if ($matching->get('isActive') && ($matching->get('stagingEntity') === $entity->getEntityName() || $matching->get('masterEntity') === $entity->getEntityName())) {
-                $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+            if (empty($matching->get('isActive'))) {
+                continue;
+            }
+
+            if ($matching->get('masterEntity') === $entity->getEntityName()) {
+                $fields = [];
+                $this->collectAllMatchingFields($matching->get('matchingRules'), 'targetField', $fields);
+                foreach ($fields as $field) {
+                    if ($entity->isAttributeChanged($field)) {
+                        $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
+                        break;
+                    }
+                }
+            } elseif ($matching->get('stagingEntity') === $entity->getEntityName()) {
+                $fields = [];
+                $this->collectAllMatchingFields($matching->get('matchingRules'), 'sourceField', $fields);
+                foreach ($fields as $field) {
+                    if ($entity->isAttributeChanged($field)) {
+                        $this->getMatchingRepository()->unmarkMatchingSearchedForEntity($matching, $entity);
+                        break;
+                    }
+                }
             }
         }
     }
