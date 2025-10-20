@@ -49,7 +49,7 @@ body {
     background: #ddd;
 }
 
-article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section {
     display: block
 }
 
@@ -6439,7 +6439,7 @@ button.close {
     padding: 20px;
 }
 
-.modal-body .row {
+.modal-body .row:not(.dynamic-logic-edit-item-row) {
     margin: 0;
 }
 
@@ -10578,8 +10578,10 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
+.cell[data-mode=edit] > .field > .field,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
-.record > .edit .cell > .field > input[type=radio]:not([disabled]){
+.record > .edit .cell > .field > input[type=radio]:not([disabled]),
+.record > .edit .cell > .field > .field {
     margin: 0 10px;
     line-height: inherit;
 }
