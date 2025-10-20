@@ -13,10 +13,6 @@
     "authTokenIsActive": "Le jeton d'authentification est actif",
     "actionHistoryRecords": "Historique de l'action"
   },
-  "presetFilters": {
-    "denied": "Refusé",
-    "accepted": "Accepté"
-  },
   "options": {
     "denialReason": {
       "CREDENTIALS": "Informations d'identification invalides",

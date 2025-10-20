@@ -13,10 +13,6 @@
     "authTokenIsActive": "Токен аутентификации активен",
     "actionHistoryRecords": "История действий"
   },
-  "presetFilters": {
-    "denied": "Отказано",
-    "accepted": "Согласен"
-  },
   "options": {
     "denialReason": {
       "CREDENTIALS": "Недопустимые учетные данные"
