@@ -118,7 +118,7 @@ class MatchingManager
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
 
-            $percentageScore = $matchingScore / $maxMatchingScore * 100;
+            $percentageScore = $maxMatchingScore > 0 ? $matchingScore / $maxMatchingScore * 100 : 0;
 
             if ($percentageScore >= $matching->get('minimumScore')) {
                 $this
