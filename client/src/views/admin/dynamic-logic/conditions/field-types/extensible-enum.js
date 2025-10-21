@@ -66,6 +66,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/extensible-enum', 
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
+                disableConditions: true,
                 extensibleEnumId: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'extensibleEnumId'])
             }, function (view) {
                 if (this.isRendered()) {
