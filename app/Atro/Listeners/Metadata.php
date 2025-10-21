@@ -535,7 +535,11 @@ class Metadata extends AbstractListener
                 if (in_array($fieldDefs['type'], ['rangeInt', 'rangeFloat'])) {
                     $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
+                    $notStorable = !empty($data['entityDefs'][$entityType]['fields'][$field . 'From']['notStorable']);
+                }else{
+                    $notStorable = !empty($fieldDefs['notStorable']);
                 }
+
                 $unitFieldName = $field . 'Unit';
                 $data['entityDefs'][$entityType]['fields'][$unitFieldName] = [
                     "type"        => "link",
@@ -544,7 +548,7 @@ class Metadata extends AbstractListener
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
-                    "notStorable" => !empty($fieldDefs['notStorable']),
+                    "notStorable" => $notStorable,
                     "emHidden"    => true
                 ];
 
@@ -555,7 +559,7 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$entityType]['links'][$unitFieldName] = [
                     "type"                        => "belongsTo",
                     "entity"                      => "Unit",
-                    "skipOrmDefs"                 => !empty($fieldDefs['notStorable']),
+                    "skipOrmDefs"                 => $notStorable,
                     'layoutRelationshipsDisabled' => true,
                 ];
 
