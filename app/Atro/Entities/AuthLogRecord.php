@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -9,17 +10,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\Entities;
 
-namespace Atro\Controllers;
+use Atro\Core\Templates\Entities\Archive;
 
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Controllers\Base;
-
-class ActionLog extends Base
+class AuthLogRecord extends Archive
 {
-    public function actionCreate($params, $data, $request)
-    {
-        throw new NotFound();
-    }
+    protected $entityType = "AuthLogRecord";
 }

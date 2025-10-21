@@ -13,10 +13,6 @@
     "authTokenIsActive": "Auth Token is Active",
     "actionHistoryRecords": "Action History"
   },
-  "presetFilters": {
-    "denied": "Denied",
-    "accepted": "Accepted"
-  },
   "options": {
     "denialReason": {
       "CREDENTIALS": "Invalid credentials",

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -9,38 +10,41 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Controllers;
+declare(strict_types=1);
+
+namespace Atro\Core\Templates\Services;
 
 use Atro\Core\Exceptions\Forbidden;
+use Atro\Services\Record;
 
-class ActionHistoryRecord extends AbstractRecordController
+class Archive extends Record
 {
-    public function actionUpdate($params, $data, $request)
+    public function createEntity($attachment)
     {
         throw new Forbidden();
     }
 
-    public function actionCreate($params, $data, $request)
+    public function updateEntity($id, $data)
     {
         throw new Forbidden();
     }
 
-    public function actionListLinked($params, $data, $request)
+    public function deleteEntity($id)
     {
         throw new Forbidden();
     }
 
-    public function actionMassUpdate($params, $data, $request)
+    public function restoreEntity($id)
     {
         throw new Forbidden();
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function follow($id, $userId = null)
     {
         throw new Forbidden();
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function unfollow($id, $userId = null)
     {
         throw new Forbidden();
     }

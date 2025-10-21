@@ -23,6 +23,8 @@ abstract class AbstractController
 
     private ?string $requestMethod;
 
+    protected string $defaultRecordServiceName = 'Record';
+
     public static $defaultAction = 'index';
 
     public function __construct(Container $container, ?string $requestMethod = null, ?string $controllerName = null)
@@ -96,5 +98,47 @@ abstract class AbstractController
     protected function getEventManager(): \Atro\Core\EventManager\Manager
     {
         return $this->getContainer()->get('eventManager');
+    }
+
+    protected function prepareWhereQuery($where)
+    {
+        if (is_string($where)) {
+            $where = json_decode(str_replace(['"{', '}"', '\"', '\n', '\t'], ['{', '}', '"', '', ''], $where), true);
+        }
+
+        return $where;
+    }
+
+    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    {
+        if ($request->get('primaryFilter')) {
+            $params['primaryFilter'] = $request->get('primaryFilter');
+        }
+        if ($request->get('boolFilterList')) {
+            $params['boolFilterList'] = $request->get('boolFilterList');
+        }
+        if ($request->get('filterList')) {
+            $params['filterList'] = $request->get('filterList');
+        }
+
+        if ($request->get('select') && is_string($request->get('select'))) {
+            $params['select'] = explode(',', $request->get('select'));
+        }
+    }
+
+    protected function getRecordService(?string $name = null)
+    {
+        if (empty($name)) {
+            $name = $this->name;
+        }
+
+        if ($this->getServiceFactory()->checkExists($name)) {
+            $service = $this->getServiceFactory()->create($name);
+        } else {
+            $service = $this->getServiceFactory()->create($this->defaultRecordServiceName);
+            $service->setEntityType($name);
+        }
+
+        return $service;
     }
 }

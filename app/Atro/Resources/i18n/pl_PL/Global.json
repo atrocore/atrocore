@@ -50,7 +50,6 @@
     "Admin": "Administrator",
     "Global": "Globalny",
     "AuthLogRecord": "Rekord dziennika autoryzacji",
-    "AuthFailLogRecord": "Rekord dziennika nieudanych autoryzacji",
     "HtmlSanitizer": "HTML Sanitizer",
     "SystemIcon": "Ikona systemu"
   },
@@ -73,7 +72,6 @@
     "Account": "Konta",
     "DocumentFolder": "Foldery dokumentów",
     "KnowledgeBaseCategory": "Kategorie bazy wiedzy",
-    "AuthFailLogRecord": "Rekordy dziennika nieudanych autoryzacji",
     "AuthLogRecord": "Rekordy dziennika autoryzacji",
     "Dashboard": "Pulpity",
     "Note": "Notatki",

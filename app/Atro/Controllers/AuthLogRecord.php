@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -9,11 +10,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+namespace Atro\Controllers;
 
-use Atro\Core\Templates\Services\Archive;
+use Atro\Core\Templates\Controllers\Archive;
+use Atro\Core\Exceptions\Forbidden;
 
-class ActionLog extends Archive
+class AuthLogRecord extends Archive
 {
-    protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
+    protected function checkControllerAccess()
+    {
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+    }
 }

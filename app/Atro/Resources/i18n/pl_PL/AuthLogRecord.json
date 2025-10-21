@@ -12,10 +12,6 @@
 		"requestMethod": "Metoda żądania",
 		"authTokenIsActive": "Token autoryzacyjny jest aktywny"
 	},
-	"presetFilters": {
-		"denied": "Odrzucone",
-		"accepted": "Zaakceptowane"
-	},
 	"options": {
 		"denialReason": {
 			"CREDENTIALS": "Nieprawidłowe dane logowania",

@@ -505,7 +505,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         setupActionItems: function () {
-            if (this.getMetadata().get(['scopes', this.model.name, 'disabled'])) {
+            if (this.getMetadata().get(['scopes', this.model.name, 'disabled']) || this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.buttonList = []
                 this.dropdownItemList = []
                 this.buttonEditList = []

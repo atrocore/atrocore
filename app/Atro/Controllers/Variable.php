@@ -24,7 +24,7 @@ class Variable extends AbstractController
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->findEntities($params);
+        return $this->getVariableService()->findEntities($params);
     }
 
     public function actionCreate($params, $data, $request)
@@ -37,7 +37,7 @@ class Variable extends AbstractController
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->createEntity($data);
+        return $this->getVariableService()->createEntity($data);
     }
 
     public function actionRead($params, $data, $request)
@@ -50,7 +50,7 @@ class Variable extends AbstractController
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->readEntity($params['id']);
+        return $this->getVariableService()->readEntity($params['id']);
     }
 
     public function actionPatch($params, $data, $request)
@@ -63,7 +63,7 @@ class Variable extends AbstractController
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->updateEntity($params['id'], $data);
+        return $this->getVariableService()->updateEntity($params['id'], $data);
     }
 
     public function actionDelete($params, $data, $request)
@@ -76,10 +76,10 @@ class Variable extends AbstractController
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->deleteEntity($params['id']);
+        return $this->getVariableService()->deleteEntity($params['id']);
     }
 
-    protected function getRecordService(): \Atro\Services\Variable
+    protected function getVariableService(): \Atro\Services\Variable
     {
         return $this->getService('Variable');
     }

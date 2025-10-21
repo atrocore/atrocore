@@ -1,13 +1,52 @@
 [
-    {
-        "label":"",
-        "rows":[
-            [{"name":"username"}, {"name":"isDenied"}],
-            [{"name":"ipAddress"}, {"name":"denialReason"}],
-            [{"name":"createdAt"}, false],
-            [{"name":"requestUrl"}, {"name":"requestMethod"}],
-            [{"name":"user"}, {"name":"authToken"}],
-            [{"name":"authTokenIsActive"}, false]
-        ]
-    }
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "username"
+        },
+        {
+          "name": "isDenied"
+        }
+      ],
+      [
+        {
+          "name": "ipAddress"
+        },
+        {
+          "name": "denialReason"
+        }
+      ],
+      [
+        {
+          "name": "createdAt"
+        },
+        false
+      ],
+      [
+        {
+          "name": "requestUrl"
+        },
+        {
+          "name": "requestMethod"
+        }
+      ],
+      [
+        {
+          "name": "user"
+        },
+        {
+          "name": "authToken"
+        }
+      ],
+      [
+        {
+          "name": "authTokenIsActive"
+        },
+        false
+      ]
+    ]
+  }
 ]

@@ -13,10 +13,6 @@
     "authTokenIsActive": "Токен аутентифікації активний",
     "actionHistoryRecords": "Історія дій"
   },
-  "presetFilters": {
-    "denied": "Відмовлено",
-    "accepted": "Згоден"
-  },
   "options": {
     "denialReason": {
       "CREDENTIALS": "Недопустимі облікові дані",
