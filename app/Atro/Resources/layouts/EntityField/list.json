@@ -26,5 +26,9 @@
   },
   {
     "name": "entity"
+  },
+  {
+    "name": "conditionalProperties",
+    "widthPx": 250
   }
 ]

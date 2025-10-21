@@ -4,6 +4,13 @@
   "boolFilterList": [
     "onlyMy"
   ],
+  "additionalSelectAttributes": [
+    "conditionalVisible",
+    "conditionalRequired",
+    "conditionalProtected",
+    "conditionalReadOnly",
+    "conditionalDisableOptions"
+  ],
   "kanbanViewMode": false,
   "color": null,
   "modalViews": {

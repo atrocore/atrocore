@@ -61,6 +61,8 @@ class EntityField extends ReferenceData
             return null;
         }
 
+        unset($fieldDefs['conditionalProperties']);
+
         if (in_array($fieldName, ['id', 'createdAt', 'createdBy', 'modifiedAt', 'modifiedBy', 'followers'])) {
             $fieldDefs['customizable'] = false;
         }

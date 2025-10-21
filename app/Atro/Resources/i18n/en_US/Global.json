@@ -729,7 +729,8 @@
     "association": "Association",
     "reverseAssociation": "Reverse Association",
     "sorting": "Sort Order",
-    "associateEverything": "Associate every record with every other record"
+    "associateEverything": "Associate every record with every other record",
+    "conditionalProperties": "Conditional Properties"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."

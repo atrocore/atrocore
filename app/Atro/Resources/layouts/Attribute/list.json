@@ -22,6 +22,10 @@
     "name": "code"
   },
   {
+    "name": "conditionalProperties",
+    "widthPx": 200
+  },
+  {
     "name": "isMultilang"
   }
 ]

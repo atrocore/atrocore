@@ -49,7 +49,7 @@ body {
     background: #ddd;
 }
 
-article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section {
     display: block
 }
 
@@ -6439,7 +6439,7 @@ button.close {
     padding: 20px;
 }
 
-.modal-body .row {
+.modal-body .row:not(.dynamic-logic-edit-item-row) {
     margin: 0;
 }
 
@@ -10578,8 +10578,10 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
+.cell[data-mode=edit] > .field > .field,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
-.record > .edit .cell > .field > input[type=radio]:not([disabled]){
+.record > .edit .cell > .field > input[type=radio]:not([disabled]),
+.record > .edit .cell > .field > .field {
     margin: 0 10px;
     line-height: inherit;
 }
@@ -18292,4 +18294,45 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-overflow: ellipsis;
     max-width: calc(100% - 2.5em - 35px);
     vertical-align: middle;
+}
+
+.list .conditions-container:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.list .conditions-container summary {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.list .conditions-container summary::before {
+    content: '';
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23000000' viewBox='0 0 256 256'%3E%3Cpath d='M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z'%3E%3C/path%3E%3C/svg%3E");
+    background-color: var(--primary-font-color);
+    margin-right: 5px;
+}
+
+.list .conditions-container[open] summary {
+    margin-bottom: 5px;
+}
+
+.list .conditions-container[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.list .conditions-container[open] summary + .conditions {
+    margin-inline-start: 5px;
+    font-size: 13px;
+    line-height: 16px;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 5px;
 }
