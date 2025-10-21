@@ -96,7 +96,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 this.searchPanel = false;
             }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled']) || this.getMetadata().get(['scopes', this.scope, 'disabled']) || this.getMetadata().get(['scopes', this.scope, 'type']) === 'Log') {
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled']) || this.getMetadata().get(['scopes', this.scope, 'disabled']) || this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
                 this.createButton = false;
             }
 

@@ -86,7 +86,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 this.removeDisabled = this.options.removeDisabled;
             }
 
-            if (this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Log') {
+            if (this.getMetadata().get(['scopes', this.model.name, 'type']) === 'Archive') {
                 this.editDisabled = true;
                 this.removeDisabled = true;
             }
