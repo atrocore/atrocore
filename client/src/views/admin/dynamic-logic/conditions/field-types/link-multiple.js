@@ -70,6 +70,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
+                disableConditions: true,
                 foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
             }, function (view) {
                 if (this.isRendered()) {
@@ -106,6 +107,7 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link-multiple', 'v
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
+                disableConditions: true,
                 foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
             }, function (view) {
                 if (this.isRendered()) {

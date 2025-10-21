@@ -123,7 +123,8 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
                     name: fieldName,
                     el: this.getSelector() + ' .value-container',
                     mode: 'edit',
-                    readOnlyDisabled: true
+                    readOnlyDisabled: true,
+                    disableConditions: true
                 }, function (view) {
                     if (this.isRendered()) {
                         view.render();
