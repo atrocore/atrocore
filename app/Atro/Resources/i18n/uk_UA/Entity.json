@@ -44,7 +44,8 @@
     "type": {
       "Base": "Base",
       "Hierarchy": "Ієрархія",
-      "ReferenceData": "Довідник"
+      "ReferenceData": "Довідник",
+      "Archive": "Архів"
     },
     "sortDirection": {
       "asc": "За зростанням",

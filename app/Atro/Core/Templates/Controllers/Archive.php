@@ -18,7 +18,7 @@ use Atro\Controllers\AbstractController;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 
-class Log extends AbstractController
+class Archive extends AbstractController
 {
     const MAX_SIZE_LIMIT = 200;
 

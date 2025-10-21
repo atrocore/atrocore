@@ -12,9 +12,9 @@
 
 namespace Atro\Repositories;
 
-use Atro\Core\Templates\Repositories\Log;
+use Atro\Core\Templates\Repositories\Archive;
 
-class AuthLogRecord extends Log
+class AuthLogRecord extends Archive
 {
     protected $processFieldsAfterSaveDisabled = true;
 

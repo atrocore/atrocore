@@ -12,10 +12,10 @@
 
 namespace Atro\Controllers;
 
-use Atro\Core\Templates\Controllers\Log;
+use Atro\Core\Templates\Controllers\Archive;
 use Atro\Core\Exceptions\Forbidden;
 
-class AuthLogRecord extends Log
+class AuthLogRecord extends Archive
 {
     protected function checkControllerAccess()
     {

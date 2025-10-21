@@ -12,10 +12,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Core\Templates\Entities;
+namespace Atro\Core\Templates\Services;
 
-use Espo\Core\ORM\Entity;
+use Atro\Services\Record;
 
-class Log extends Entity
+class Archive extends Record
 {
 }

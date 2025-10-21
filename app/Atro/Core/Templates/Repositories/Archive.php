@@ -16,7 +16,7 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Services\Record;
 
-class Log extends Base
+class Archive extends Base
 {
     public function hasDeletedRecordsToClear(): bool
     {

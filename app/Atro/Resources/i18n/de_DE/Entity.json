@@ -43,7 +43,8 @@
     "type": {
       "Base": "Basis",
       "Hierarchy": "Hierarchie",
-      "ReferenceData": "Referenz"
+      "ReferenceData": "Referenz",
+      "Archive": "Archiv"
     },
     "sortDirection": {
       "asc": "Aufsteigend",
