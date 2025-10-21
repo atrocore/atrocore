@@ -99,7 +99,7 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                         attributesIds: [model.id]
                     }, { async: false }).success(res => {
                         $.each(res, (field, fieldDefs) => {
-                            if (!fieldDefs.importDisabled) {
+                            if (!fieldDefs.exportDisabled) {
                                 this.params.options.push(field);
                                 this.translatedOptions[field] = fieldDefs.label;
                                 if (fieldDefs.channelName) {
@@ -110,6 +110,25 @@ Espo.define('views/export/fields/field-list', 'views/fields/multi-enum',
                                 this.selected.push(field);
 
                                 this.getMetadata().data.entityDefs[entity].fields[field] = fieldDefs;
+
+                                if (fieldDefs.unitField && ['int', 'float', 'varchar'].includes(fieldDefs.type)) {
+                                    fieldDefs = Espo.utils.clone(fieldDefs);
+
+                                    field = 'unit' + Espo.utils.upperCaseFirst(field);
+                                    this.params.options.push(field);
+
+                                    const parts = fieldDefs.label.split(' ');
+                                    parts.pop();
+                                    fieldDefs.label = parts.join(' ');
+
+                                    this.translatedOptions[field] = fieldDefs.label;
+                                    if (fieldDefs.channelName) {
+                                        this.translatedOptions[field] = `${fieldDefs.label} / ${fieldDefs.channelName}`;
+                                    }
+
+                                    this.model.get(this.name).push(field);
+                                    this.selected.push(field);
+                                }
                             }
                         });
 

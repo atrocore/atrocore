@@ -99,11 +99,7 @@ Espo.define('views/fields/unit-float', ['views/fields/float', 'views/fields/unit
 
         initUnitSelector() {
             Varchar.prototype.initUnitSelector.call(this);
-        },
-
-        getConditions(type){
-            return Varchar.prototype.getConditions.call(this, type);
-        },
+        }
 
     });
 });

@@ -25,9 +25,8 @@ Espo.define('views/notification-rule/fields/notification-template', 'views/field
             Dep.prototype.setup.call(this);
         },
 
-        getConditions(type) {
-            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.realName}.conditionalProperties.${type}.conditionGroup`);
-        },
-
+        getFieldForConditions() {
+            return this.realName;
+        }
     });
 });
