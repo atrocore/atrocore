@@ -14,8 +14,38 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Services;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Services\Record;
 
 class Archive extends Record
 {
+    public function createEntity($attachment)
+    {
+        throw new Forbidden();
+    }
+
+    public function updateEntity($id, $data)
+    {
+        throw new Forbidden();
+    }
+
+    public function deleteEntity($id)
+    {
+        throw new Forbidden();
+    }
+
+    public function restoreEntity($id)
+    {
+        throw new Forbidden();
+    }
+
+    public function follow($id, $userId = null)
+    {
+        throw new Forbidden();
+    }
+
+    public function unfollow($id, $userId = null)
+    {
+        throw new Forbidden();
+    }
 }
