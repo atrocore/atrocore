@@ -154,7 +154,8 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy"
+                "Hierarchy",
+                "Archive"
               ]
             }
           ]
@@ -170,7 +171,7 @@
             {
               "type": "equals",
               "attribute": "type",
-              "value": "Log"
+              "value": "Archive"
             }
           ]
         }
