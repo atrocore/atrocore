@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -9,11 +10,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+declare(strict_types=1);
 
-use Atro\Core\Templates\Services\Archive;
+namespace Atro\Core\Templates\Entities;
 
-class ActionLog extends Archive
+use Espo\Core\ORM\Entity;
+
+class Archive extends Entity
 {
-    protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
 }

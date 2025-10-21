@@ -101,10 +101,6 @@ class Base extends RDB
             return false;
         }
 
-        if (!empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']))) {
-            return true;
-        }
-
         $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;
 
         $tableName = $this->getEntityManager()->getMapper()->toDb($this->entityName);
@@ -140,35 +136,6 @@ class Base extends RDB
     {
         if (empty($this->seed)) {
             return;
-        }
-
-        $autoDeleteAfterDays = $this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']);
-
-        if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
-            $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
-
-            // delete using massActions
-            /** @var $service Record * */
-            $service = $this->getEntityManager()->getContainer()->get('serviceFactory')->create($this->entityName);
-            $where = [];
-
-            if ($this->seed->hasField('modifiedAt')) {
-                $where[] = [
-                    'attribute' => 'modifiedAt',
-                    'type'      => 'before',
-                    'value'     => $date->format('Y-m-d H:i:s')
-                ];
-            } elseif ($this->seed->hasField('createdAt')) {
-                $where[] = [
-                    'attribute' => 'createdAt',
-                    'type'      => 'before',
-                    'value'     => $date->format('Y-m-d H:i:s')
-                ];
-            }
-
-            if (!empty($where)) {
-                $service->massRemove(['where' => $where]);
-            }
         }
 
         $clearDays = $this->getMetadata()->get(['scopes', $this->entityName, 'clearDeletedAfterDays']) ?? 60;

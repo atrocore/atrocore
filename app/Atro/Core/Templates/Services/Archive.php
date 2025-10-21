@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -11,15 +12,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Controllers;
+namespace Atro\Core\Templates\Services;
 
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Controllers\Base;
+use Atro\Services\Record;
 
-class ActionLog extends Base
+class Archive extends Record
 {
-    public function actionCreate($params, $data, $request)
-    {
-        throw new NotFound();
-    }
 }

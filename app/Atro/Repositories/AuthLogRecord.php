@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -9,11 +10,17 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+namespace Atro\Repositories;
 
-use Atro\Core\Templates\Services\Archive;
+use Atro\Core\Templates\Repositories\Archive;
 
-class ActionLog extends Archive
+class AuthLogRecord extends Archive
 {
-    protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
+    protected $processFieldsAfterSaveDisabled = true;
+
+    protected $processFieldsBeforeSaveDisabled = true;
+
+    protected $processFieldsAfterRemoveDisabled = true;
+
+    protected bool $cacheable = false;
 }
