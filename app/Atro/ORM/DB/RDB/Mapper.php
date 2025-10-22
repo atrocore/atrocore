@@ -45,7 +45,7 @@ class Mapper implements MapperInterface
         $this->container = $container;
 
         $this->connection = $container->get('connection');
-        $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
+        $this->queryConverter = new QueryConverter($this->entityFactory, $container->get('connection'));
     }
 
     public function selectById(IEntity $entity, string $id, $params = []): ?IEntity
@@ -97,7 +97,10 @@ class Mapper implements MapperInterface
             throw $e;
         }
 
-        $qb = $this->connection->createQueryBuilder();
+        // The connection used for saving and for selecting can be different. That's why it's better to use the connection from the Query Converter.
+        $conn = $this->getQueryConverter()->getConnection();
+
+        $qb = $conn->createQueryBuilder();
 
         foreach ($queryData['select'] ?? [] as $item) {
             $qb->addSelect($item);
@@ -107,7 +110,7 @@ class Mapper implements MapperInterface
             $qb->distinct();
         }
 
-        $qb->from($this->connection->quoteIdentifier($queryData['table']['tableName']), $queryData['table']['tableAlias']);
+        $qb->from($conn->quoteIdentifier($queryData['table']['tableName']), $queryData['table']['tableAlias']);
         $qb->andWhere($queryData['where']);
 
         if (!empty($queryData['joins'])) {
