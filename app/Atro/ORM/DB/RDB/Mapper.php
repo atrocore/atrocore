@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB;
 
+use Atro\Core\Container;
 use Atro\Core\Utils\Config;
 use Atro\ORM\DB\MapperInterface;
 use Atro\ORM\DB\RDB\Query\QueryConverter;
@@ -30,19 +31,21 @@ use Espo\ORM\IEntity;
 
 class Mapper implements MapperInterface
 {
+    protected Container $container;
     protected EntityManager $em;
     protected Connection $connection;
     protected EntityFactory $entityFactory;
-    protected Metadata $metadata;
     protected QueryConverter $queryConverter;
     private array $singleParentHierarchy = [];
 
-    public function __construct(EntityManager $entityManager, EntityFactory $entityFactory, Metadata $metadata)
+    public function __construct(EntityManager $entityManager, EntityFactory $entityFactory, Container $container)
     {
         $this->em = $entityManager;
-        $this->connection = $entityManager->getConnection();
         $this->entityFactory = $entityFactory;
-        $this->metadata = $metadata;
+        $this->container = $container;
+
+        $this->connection = $container->get('connection');
+
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
@@ -173,7 +176,7 @@ class Mapper implements MapperInterface
     protected function isSingleParentHierarchy(IEntity $entity): bool
     {
         if (!isset($this->singleParentHierarchy[$entity->getEntityType()])) {
-            $scopeDefs = $this->metadata->get(['scopes', $entity->getEntityType()], []);
+            $scopeDefs = $this->getMetadata()->get(['scopes', $entity->getEntityType()], []);
             $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy'  && empty($scopeDefs['multiParents']);
         }
 
@@ -750,7 +753,7 @@ class Mapper implements MapperInterface
 
     public function getMetadata(): Metadata
     {
-        return $this->metadata;
+        return $this->container->get('metadata');
     }
 
     public function getEntityFactory(): EntityFactory
@@ -760,7 +763,7 @@ class Mapper implements MapperInterface
 
     protected function getConfig(): Config
     {
-        return $this->metadata->getConfig();
+        return $this->container->get('config');
     }
 
     private function error(string $message): void

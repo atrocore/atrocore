@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\ORM\DB\MapperInterface;
 use Atro\Services\Record;
 
 class Archive extends Base
@@ -67,5 +68,19 @@ class Archive extends Base
         }
 
         parent::clearDeletedRecords();
+    }
+
+    public function getMapper(): MapperInterface
+    {
+        $className = '\ClickhouseIntegration\ORM\DB\ClickHouse\Mapper';
+        if (!class_exists($className)) {
+            return parent::getMapper();
+        }
+
+        if (empty($this->mapper)) {
+            $this->mapper = $this->getEntityManager()->getMapper($className);
+        }
+
+        return $this->mapper;
     }
 }
