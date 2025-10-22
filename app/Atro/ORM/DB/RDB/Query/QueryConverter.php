@@ -1072,7 +1072,7 @@ class QueryConverter
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array(), $withDeleted = false)
+    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = [], $withDeleted = false)
     {
         $joinSqlList = [];
         foreach ($joins as $item) {

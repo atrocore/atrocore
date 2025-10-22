@@ -70,17 +70,17 @@ class Archive extends Base
         parent::clearDeletedRecords();
     }
 
-    public function getMapper(): MapperInterface
-    {
-        $className = '\ClickhouseIntegration\ORM\DB\ClickHouse\Mapper';
-        if (!class_exists($className)) {
-            return parent::getMapper();
-        }
-
-        if (empty($this->mapper)) {
-            $this->mapper = $this->getEntityManager()->getMapper($className);
-        }
-
-        return $this->mapper;
-    }
+//    public function getMapper(): MapperInterface
+//    {
+//        $className = '\ClickhouseIntegration\ORM\DB\ClickHouse\Mapper';
+//        if (!class_exists($className)) {
+//            return parent::getMapper();
+//        }
+//
+//        if (empty($this->mapper)) {
+//            $this->mapper = $this->getEntityManager()->getMapper($className);
+//        }
+//
+//        return $this->mapper;
+//    }
 }

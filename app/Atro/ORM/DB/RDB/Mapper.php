@@ -45,7 +45,6 @@ class Mapper implements MapperInterface
         $this->container = $container;
 
         $this->connection = $container->get('connection');
-
         $this->queryConverter = new QueryConverter($this->entityFactory, $this->connection);
     }
 
