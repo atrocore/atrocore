@@ -427,6 +427,9 @@ class QueryConverter
             $attributeType = null;
             if (is_string($attribute)) {
                 $attributeType = $entity->getAttributeType($attribute);
+                if ($attributeType === 'foreign' && $this->isArchiveEntityType($entity)) {
+                    continue;
+                }
             }
             if ($skipTextColumns) {
                 if ($attributeType === $entity::TEXT) {
@@ -520,6 +523,10 @@ class QueryConverter
 
     protected function getBelongsToJoins(IEntity $entity, $select = null, $skipList = array(), $withDeleted = false)
     {
+        if ($this->isArchiveEntityType($entity)) {
+            return [];
+        }
+
         $joinsArr = array();
 
         $relationsToJoin = array();
@@ -1074,6 +1081,10 @@ class QueryConverter
 
     protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = [], $withDeleted = false)
     {
+        if ($this->isArchiveEntityType($entity)) {
+            return [];
+        }
+
         $joinSqlList = [];
         foreach ($joins as $item) {
             $itemConditions = [];
@@ -1457,5 +1468,10 @@ class QueryConverter
     public function getMainTableAlias(): string
     {
         return self::TABLE_ALIAS;
+    }
+
+    protected function isArchiveEntityType(IEntity $entity): bool
+    {
+        return $entity instanceof \Atro\Core\Templates\Entities\Archive;
     }
 }
