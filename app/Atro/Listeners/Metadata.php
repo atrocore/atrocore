@@ -536,7 +536,7 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field . 'From']['measureId'] = $fieldDefs['measureId'];
                     $data['entityDefs'][$entityType]['fields'][$field . 'To']['measureId'] = $fieldDefs['measureId'];
                     $notStorable = !empty($data['entityDefs'][$entityType]['fields'][$field . 'From']['notStorable']);
-                }else{
+                } else {
                     $notStorable = !empty($fieldDefs['notStorable']);
                 }
 
@@ -609,6 +609,7 @@ class Metadata extends AbstractListener
                         "required"           => false,
                         "filterDisabled"     => true,
                         "massUpdateDisabled" => true,
+                        "importDisabled"     => true,
                         "emHidden"           => true
                     ];
 
