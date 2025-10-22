@@ -170,6 +170,9 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
                         if (mode !== view.mode) {
                             view.model = this.models[index].clone();
+                            if (typeof view.onModelChanged === 'function') {
+                                view.onModelChanged()
+                            }
                             view.reRender();
                         }
                     });

@@ -288,25 +288,25 @@ class Metadata extends AbstractListener
 
         foreach ($visible as $field => $types) {
             $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['visible']['conditionGroup'][] = [
-                'type' => 'in',
+                'type'      => 'in',
                 'attribute' => 'type',
-                'value' => $types,
+                'value'     => $types,
             ];
         }
 
         foreach ($required as $field => $types) {
             $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['required']['conditionGroup'][] = [
-                'type' => 'in',
+                'type'      => 'in',
                 'attribute' => 'type',
-                'value' => $types,
+                'value'     => $types,
             ];
         }
 
         foreach ($readOnly as $field => $types) {
             $data['entityDefs']['EntityField']['fields'][$field]['conditionalProperties']['readOnly']['conditionGroup'][] = [
-                'type' => 'in',
+                'type'      => 'in',
                 'attribute' => 'type',
-                'value' => $types,
+                'value'     => $types,
             ];
         }
 
@@ -1678,20 +1678,20 @@ class Metadata extends AbstractListener
                 "notStorable"  => true
             ];
             // field for the notification template selected for this transport
-            $data['entityDefs']['NotificationRule']['fields'][$transport.'TemplateId'] = [
+            $data['entityDefs']['NotificationRule']['fields'][$transport . 'TemplateId'] = [
                 "type"                  => "varchar",
                 "virtualField"          => true,
                 "notStorable"           => true,
                 "filterDisabled"        => true,
                 "view"                  => "views/notification-rule/fields/notification-template",
-                "name"                  => $transport.'Template',
+                "name"                  => $transport . 'Template',
                 "t_type"                => $transport,
                 "conditionalProperties" => [
                     "required" => [
                         "conditionGroup" => [
                             [
                                 "type"      => "isTrue",
-                                "attribute" => $transport.'Active',
+                                "attribute" => $transport . 'Active',
                             ],
                         ],
                     ],
@@ -1742,7 +1742,7 @@ class Metadata extends AbstractListener
                 if (!isset($users[$notificationProfileId])) {
                     try {
                         $users[$notificationProfileId] = NotificationRule::getNotificationProfileUsers($notificationProfileId,
-                        $this->getConfig(), $this->getConnection());
+                            $this->getConfig(), $this->getConnection());
 
                         if (!empty($users[$notificationProfileId])) {
                             $notificationProfilesIds[] = $notificationProfileId;
@@ -1877,16 +1877,16 @@ class Metadata extends AbstractListener
                             "emHidden"                  => true
                         ],
                         "associateEverything"     => [
-                            "type"                      => "bool",
-                            "view"                      => "views/associated-record/fields/associate-everything",
-                            "notStorable"               => true,
-                            "layoutListDisabled"        => true,
-                            "layoutListSmallDisabled"   => true,
-                            "layoutMassUpdateDisabled"  => true,
-                            "filterDisabled"            => true,
-                            "exportDisabled"            => true,
-                            "importDisabled"            => true,
-                            "emHidden"                  => true
+                            "type"                     => "bool",
+                            "view"                     => "views/associated-record/fields/associate-everything",
+                            "notStorable"              => true,
+                            "layoutListDisabled"       => true,
+                            "layoutListSmallDisabled"  => true,
+                            "layoutMassUpdateDisabled" => true,
+                            "filterDisabled"           => true,
+                            "exportDisabled"           => true,
+                            "importDisabled"           => true,
+                            "emHidden"                 => true
                         ],
                         "sorting"                 => [
                             "type"            => "int",
@@ -2100,7 +2100,9 @@ class Metadata extends AbstractListener
 
                 if (!empty($scopeDefs['singleClassification'])) {
                     $data['entityDefs'][$scope]['fields']['classifications']['view'] = 'views/fields/classifications-single';
+                    $data['entityDefs'][$scope]['fields']['classifications']['ignoreTypeForMerge'] = true;
                     $data['entityDefs'][$scope]['links']['classifications']['layoutRelationshipsDisabled'] = true;
+                    $data['entityDefs'][$scope]['links']['classifications']['notMergeable'] = true;
                 } else {
                     $data['clientDefs'][$scope]['boolFilterList'][] = 'multipleClassifications';
                 }
