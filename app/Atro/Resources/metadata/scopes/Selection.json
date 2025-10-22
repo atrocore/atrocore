@@ -1,0 +1,10 @@
+{
+  "entity": true,
+  "object": true,
+  "acl": true,
+  "tab": false,
+  "type": "Base",
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false
+}

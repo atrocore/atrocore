@@ -1,0 +1,11 @@
+{
+  "controller": "controllers/record",
+  "relationshipPanels": {
+    "selectionRecords": {
+      "rowActionsView": "views/record/row-actions/relationship-remove-only",
+      "hideShowFullList": true,
+      "select": false,
+      "unlink": false
+    }
+  }
+}
