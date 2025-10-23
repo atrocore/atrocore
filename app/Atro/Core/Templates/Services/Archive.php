@@ -55,20 +55,22 @@ class Archive extends Record
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        $links = $this->getMetadata()->get("entityDefs.{$collection->getEntityName()}.links") ?? [];
-        foreach ($links as $link => $defs) {
-            if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo') {
-                $ids = array_values(array_unique(array_column($collection->toArray(), $link.'Id')));
-                if (!empty($ids)) {
-                    $foreign = $this->getEntityManager()->getRepository($defs['entity'])
-                        ->where(['id' => $ids])
-                        ->find();
-                    foreach ($collection as $entity) {
-                        if (!empty($entity->get($link.'Id'))) {
-                            foreach ($foreign as $foreignEntity) {
-                                if ($entity->get($link.'Id') === $foreignEntity->get('id')) {
-                                    $entity->set($link.'Name', $foreignEntity->get('name'));
-                                    $entity->_collectionPrepared = true;
+        if ($this->hasClickHouseIntegration()) {
+            $links = $this->getMetadata()->get("entityDefs.{$collection->getEntityName()}.links") ?? [];
+            foreach ($links as $link => $defs) {
+                if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo') {
+                    $ids = array_values(array_unique(array_column($collection->toArray(), $link.'Id')));
+                    if (!empty($ids)) {
+                        $foreign = $this->getEntityManager()->getRepository($defs['entity'])
+                            ->where(['id' => $ids])
+                            ->find();
+                        foreach ($collection as $entity) {
+                            if (!empty($entity->get($link.'Id'))) {
+                                foreach ($foreign as $foreignEntity) {
+                                    if ($entity->get($link.'Id') === $foreignEntity->get('id')) {
+                                        $entity->set($link.'Name', $foreignEntity->get('name'));
+                                        $entity->_collectionPrepared = true;
+                                    }
                                 }
                             }
                         }
@@ -82,7 +84,7 @@ class Archive extends Record
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($entity->_collectionPrepared)) {
+        if ($this->hasClickHouseIntegration() && empty($entity->_collectionPrepared)) {
             foreach ($this->getMetadata()->get("entityDefs.{$entity->getEntityName()}.links") ?? [] as $field => $defs) {
                 if (!empty($defs['type']) && !empty($defs['entity']) && $defs['type'] === 'belongsTo' && !empty($entity->get($field.'Id'))) {
                     $foreign = $this->getEntityManager()->getRepository($defs['entity'])->get($entity->get($field.'Id'));
@@ -92,5 +94,10 @@ class Archive extends Record
                 }
             }
         }
+    }
+
+    protected function hasClickHouseIntegration(): bool
+    {
+        return class_exists('\ClickHouseIntegration\ORM\DB\ClickHouse\Query\QueryConverter');
     }
 }
