@@ -25,12 +25,14 @@
     },
     "action": {
       "type": "link",
-      "readOnly": true
+      "readOnly": true,
+      "filterDisabled": true
     },
     "incomingWebhook": {
       "type": "link",
       "entity": "IncomingWebhook",
       "readOnly": true,
+      "filterDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -45,6 +47,7 @@
     "scheduledJob": {
       "type": "link",
       "readOnly": true,
+      "filterDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
