@@ -291,7 +291,7 @@ class OpenApiGenerator
                 $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
             }
 
-            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Log') {
+            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive') {
                 $result['paths']["/{$scopeName}"]['post'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Create a record of the $scopeName",
@@ -369,7 +369,7 @@ class OpenApiGenerator
                 ];
             }
 
-            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Log'])) {
+            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive'])) {
                 $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns linked entities for the $scopeName",
