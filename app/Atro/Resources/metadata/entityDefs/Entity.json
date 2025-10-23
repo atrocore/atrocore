@@ -560,6 +560,11 @@
       "type": "bool",
       "view": "views/entity/fields/delete-values-after-unlinking-classification"
     },
+    "linkAttributesWithClassificationAutomatically": {
+      "type": "bool",
+      "view": "views/entity/fields/link-attributes-with-classification-automatically",
+      "tooltip": true
+    },
     "checkForDuplicates": {
       "type": "bool",
       "conditionalProperties": {

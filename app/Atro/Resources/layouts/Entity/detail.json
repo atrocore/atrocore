@@ -152,7 +152,9 @@
         {
           "name": "deleteValuesAfterUnlinkingClassification"
         },
-        false
+        {
+          "name": "linkAttributesWithClassificationAutomatically"
+        }
       ],
       [
         {

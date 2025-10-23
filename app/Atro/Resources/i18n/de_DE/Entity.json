@@ -37,7 +37,8 @@
     "textFilterFields": "Textfilterfelder",
     "nonDuplicatableFields": "Nicht-duplizierbare Felder",
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
-    "checkForDuplicates": "Prüfung auf Duplikate"
+    "checkForDuplicates": "Prüfung auf Duplikate",
+    "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen"
   },
   "options": {
     "type": {
@@ -77,7 +78,8 @@
     "streamDisabled": "Wenn diese Option aktiviert ist, wird auf der Seite mit den Datensatzdetails kein Aktivitätenbereich angezeigt. Sie können dann auch keine Notizen hinzufügen.",
     "disableActionHistory": "Wenn diese Option aktiviert ist, werden keine Benutzeraktionen für die Datensätze dieser Entität protokolliert.",
     "auditedDisabledFields": "Änderungen in diesen Feldern werden nicht als Aktivität angezeigt.",
-    "auditedEnabledRelations": "CÄnderungen in diesen Relationen werden als Aktivität angezeigt. "
+    "auditedEnabledRelations": "CÄnderungen in diesen Relationen werden als Aktivität angezeigt. ",
+    "linkAttributesWithClassificationAutomatically": "Wenn ein Attribut direkt mit einem Datensatz verknüpft ist und dieser Datensatz mit einer Klassifikation verknüpft ist, wird das Attribut ebenfalls mit dieser Klassifikation verknüpft."
   },
   "exceptions": {
     "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
