@@ -183,6 +183,7 @@
     "previewFor": "Script value for",
     "intPart": "(Integer)",
     "floatPart": "(Float)",
+    "varcharPart": "(String)",
     "unitPart": "(Unit)",
     "inheritAllForChildren": "Inherit all for children items",
     "inheritAllFromParent": "Inherit all from parent",

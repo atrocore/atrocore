@@ -135,7 +135,11 @@ class TextType extends AbstractFieldType
 
         if ($this->type === 'varchar' && isset($row['measure_id']) && empty($row['is_multilang'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+            $entity->entityDefs['fields'][$name]['mainField'] = $name;
+            $entity->entityDefs['fields'][$name]['unitField'] = true;
             $entity->entityDefs['fields'][$name]['layoutDetailView'] = "views/fields/unit-{$this->type}";
+            $entity->entityDefs['fields'][$name]['detailViewLabel'] = $entity->entityDefs['fields'][$name]['label'];
+            $entity->entityDefs['fields'][$name]['label'] = "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate("{$this->type}Part");
 
             $entity->fields[$name . 'UnitId'] = [
                 'type'        => 'varchar',
