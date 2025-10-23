@@ -9,6 +9,7 @@
         label: string;
         link: string;
         className?: string;
+        tooltip?: string;
     }
 
     interface EntityHistoryResponse {
@@ -34,6 +35,7 @@
         let label = '';
         let link = '';
         let className = '';
+        let tooltip = '';
 
         if (item.targetId === null) {
             label = Language.translate(item.controllerName, 'scopeNamesPlural');
@@ -42,6 +44,7 @@
         } else {
             label = `${item.targetName || item.targetId}`;
             link = `#${item.controllerName}/view/${item.targetId}`
+            tooltip = Language.translate(item.controllerName, 'scopeNames');
         }
 
         return {
@@ -49,6 +52,7 @@
             label: label,
             link: link,
             className: className,
+            tooltip: tooltip,
         } as LastEntityRecord;
     });
 
@@ -115,7 +119,7 @@
     {#if items.length > 0}
         <ul>
             {#each items as item}
-                <li class={item.className}><a href={item.link}>{item.label}</a></li>
+                <li class={item.className}><a title={item.tooltip} href={item.link}>{item.label}</a></li>
             {/each}
         </ul>
     {/if}
