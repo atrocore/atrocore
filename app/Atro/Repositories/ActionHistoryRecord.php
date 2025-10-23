@@ -19,7 +19,7 @@ class ActionHistoryRecord extends Archive
 {
     public function getMapper(): MapperInterface
     {
-        $className = '\ClickhouseIntegration\ORM\DB\ClickHouse\Mapper';
+        $className = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
         if (!class_exists($className)) {
             return parent::getMapper();
         }
