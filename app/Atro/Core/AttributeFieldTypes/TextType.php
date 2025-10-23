@@ -37,7 +37,7 @@ class TextType extends AbstractFieldType
     {
         $id = $row['id'];
         $name = AttributeFieldConverter::prepareFieldName($row);
-        $attributeData = @json_decode($row['data'], true)['field'] ?? null;
+        $attributeData = !empty($row['data']) ? @json_decode($row['data'], true)['field'] ?? null : null;
 
         $entity->fields[$name] = [
             'type'        => $this->type,

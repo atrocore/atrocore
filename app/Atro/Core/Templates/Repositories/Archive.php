@@ -19,10 +19,12 @@ use Atro\Services\Record;
 
 class Archive extends Base
 {
+    protected bool $moveDataOnFind = true;
+
     public function find(array $params = [])
     {
         $className = '\ClickHouseIntegration\Console\SyncEntity';
-        if (class_exists($className)) {
+        if (class_exists($className) && $this->moveDataOnFind) {
             $this->getInjection('container')->get($className)->moveData($this->entityName);
         }
 

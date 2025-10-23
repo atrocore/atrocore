@@ -23,4 +23,6 @@ class AuthLogRecord extends Archive
     protected $processFieldsAfterRemoveDisabled = true;
 
     protected bool $cacheable = false;
+
+    protected bool $moveDataOnFind = false;
 }
