@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -13,7 +14,6 @@ declare(strict_types=1);
 
 namespace Atro\ORM\DB\RDB\Query;
 
-use Atro\Core\Templates\Repositories\Relation;
 use Atro\Core\Utils\Language;
 use Doctrine\DBAL\Connection;
 use Atro\Core\Utils\Util;
@@ -42,7 +42,7 @@ class QueryConverter
             'groupBy',
             'havingClause',
             'skipTextColumns',
-            'maxTextColumnsLength'
+            'maxTextColumnsLength',
         ];
 
     public static array $sqlOperators
@@ -62,7 +62,7 @@ class QueryConverter
             '<='  => '<=',
             '>'   => '>',
             '<'   => '<',
-            '='   => '='
+            '='   => '=',
         ];
 
     protected array $functionList
@@ -95,7 +95,7 @@ class QueryConverter
             'UPPER',
             'TRIM',
             'LENGTH',
-            'VARCHAR'
+            'VARCHAR',
         ];
 
     protected array $matchFunctionList = ['MATCH_BOOLEAN', 'MATCH_NATURAL_LANGUAGE', 'MATCH_QUERY_EXPANSION'];
@@ -104,7 +104,7 @@ class QueryConverter
         = [
             'MATCH_BOOLEAN'          => 'IN BOOLEAN MODE',
             'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
-            'MATCH_QUERY_EXPANSION'  => 'WITH QUERY EXPANSION'
+            'MATCH_QUERY_EXPANSION'  => 'WITH QUERY EXPANSION',
         ];
 
     protected EntityFactory $entityFactory;
@@ -237,7 +237,7 @@ class QueryConverter
         $result = [
             'table'       => [
                 'tableName'  => $this->toDb($entity->getEntityType()),
-                'tableAlias' => self::TABLE_ALIAS
+                'tableAlias' => self::TABLE_ALIAS,
             ],
             'select'      => $selectPart,
             'joins'       => $joinsPart,
@@ -511,7 +511,7 @@ class QueryConverter
                 'table'     => $this->quoteIdentifier($this->toDb($r['entity'])),
                 'alias'     => $alias,
                 'condition' => self::TABLE_ALIAS . "." . $this->toDb($key) . " = " . $alias . "." . $this->toDb($foreignKey) .
-                    (!$withDeleted ? " and " . $alias . ".deleted = :false" : "")
+                    (!$withDeleted ? " and " . $alias . ".deleted = :false" : ""),
             ];
         }
 
@@ -808,8 +808,8 @@ class QueryConverter
                 $value = array(
                     'selectParams' => array(
                         'select'      => ['id'],
-                        'whereClause' => $value
-                    )
+                        'whereClause' => $value,
+                    ),
                 );
                 if (!empty($params['joins'])) {
                     $value['selectParams']['joins'] = $params['joins'];
@@ -1072,7 +1072,7 @@ class QueryConverter
         return preg_replace('/[^A-Za-z0-9_:.]+/', '', $string);
     }
 
-    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = array(), $withDeleted = false)
+    protected function getJoins(IEntity $entity, array $joins, $left = false, $joinConditions = [], $withDeleted = false)
     {
         $joinSqlList = [];
         foreach ($joins as $item) {
@@ -1223,8 +1223,8 @@ class QueryConverter
                     'fromAlias' => self::TABLE_ALIAS,
                     'table'     => $this->toDb($this->sanitize($name)),
                     'alias'     => $alias,
-                    'condition' => implode(" AND ", $conditionsParts)
-                ]
+                    'condition' => implode(" AND ", $conditionsParts),
+                ],
             ];
         }
 
@@ -1280,14 +1280,14 @@ class QueryConverter
                     'fromAlias' => self::TABLE_ALIAS,
                     'table'     => $this->quoteIdentifier($relTable),
                     'alias'     => $midAlias,
-                    'condition' => $condition
+                    'condition' => $condition,
                 ];
                 $res[] = [
                     'type'      => $left ? 'left' : 'inner',
                     'fromAlias' => self::TABLE_ALIAS,
                     'table'     => $this->quoteIdentifier($distantTable),
                     'alias'     => $alias,
-                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5"
+                    'condition' => "{$alias}.{$this->toDb($foreignKey)} = {$midAlias}.{$this->toDb($distantKey)} AND {$alias}.deleted = :deleted_mm5",
                 ];
 
                 $this->parameters['deleted_mm5'] = false;
@@ -1318,8 +1318,8 @@ class QueryConverter
                         'fromAlias' => self::TABLE_ALIAS,
                         'table'     => $this->quoteIdentifier($distantTable),
                         'alias'     => $alias,
-                        'condition' => $condition
-                    ]
+                        'condition' => $condition,
+                    ],
                 ];
 
             case IEntity::BELONGS_TO:
@@ -1425,7 +1425,7 @@ class QueryConverter
                     'key'        => $key,
                     'foreignKey' => $foreignKey,
                     'nearKey'    => $nearKey,
-                    'distantKey' => $distantKey
+                    'distantKey' => $distantKey,
                 );
             case IEntity::BELONGS_TO_PARENT:
                 $key = $relationName . 'Id';
@@ -1433,7 +1433,7 @@ class QueryConverter
                 return array(
                     'key'        => $key,
                     'typeKey'    => $typeKey,
-                    'foreignKey' => 'id'
+                    'foreignKey' => 'id',
                 );
         }
 
@@ -1457,5 +1457,10 @@ class QueryConverter
     public function getMainTableAlias(): string
     {
         return self::TABLE_ALIAS;
+    }
+
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 }

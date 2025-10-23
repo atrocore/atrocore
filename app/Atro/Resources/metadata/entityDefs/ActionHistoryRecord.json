@@ -46,7 +46,8 @@
     },
     "user": {
       "type": "link",
-      "protected": true
+      "protected": true,
+      "filterDisabled": true
     },
     "ipAddress": {
       "type": "varchar",
@@ -56,11 +57,13 @@
     },
     "authToken": {
       "type": "link",
-      "protected": true
+      "protected": true,
+      "filterDisabled": true
     },
     "authLogRecord": {
       "type": "link",
-      "protected": true
+      "protected": true,
+      "filterDisabled": true
     }
   },
   "links": {

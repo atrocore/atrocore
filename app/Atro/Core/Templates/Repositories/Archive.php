@@ -14,10 +14,21 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\ORM\DB\MapperInterface;
 use Atro\Services\Record;
 
 class Archive extends Base
 {
+    public function find(array $params = [])
+    {
+        $className = '\ClickHouseIntegration\Console\SyncEntity';
+        if (class_exists($className)) {
+            $this->getInjection('container')->get($className)->moveData($this->entityName);
+        }
+
+        return parent::find($params);
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {
@@ -67,5 +78,26 @@ class Archive extends Base
         }
 
         parent::clearDeletedRecords();
+    }
+
+    public function getMapper(): MapperInterface
+    {
+        $className = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
+        if (!class_exists($className)) {
+            return parent::getMapper();
+        }
+
+        if (empty($this->mapper)) {
+            $this->mapper = $this->getEntityManager()->getMapper($className);
+        }
+
+        return $this->mapper;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->addDependency('container');
     }
 }
