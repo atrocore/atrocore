@@ -21,9 +21,9 @@ class Archive extends Base
 {
     public function find(array $params = [])
     {
-        $handler = '\ClickHouseIntegration\Console\SyncEntity';
-        if (class_exists($handler)) {
-            (new $handler($this->getInjection('container')))->moveData($this->entityName, true);
+        $className = '\ClickHouseIntegration\Console\SyncEntity';
+        if (class_exists($className)) {
+            $this->getInjection('container')->get($className)->moveData($this->entityName);
         }
 
         return parent::find($params);
