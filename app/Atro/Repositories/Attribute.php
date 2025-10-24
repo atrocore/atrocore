@@ -242,6 +242,41 @@ class Attribute extends Base
             ],
         ]);
         $this->getEntityManager()->saveEntity($note);
+
+        if ($this->shouldLinkAddedAttributeToClassification($entityName)) {
+            $this->addAttributeToClassification($this->getEntityManager()->getEntity($entityName, $entityId), $attributeId);
+        }
+    }
+
+    public function shouldLinkAddedAttributeToClassification(string $entityName): bool
+    {
+        return !empty($this->getMetadata()->get(['scopes', $entityName, 'hasClassification'])) &&
+            !empty($this->getMetadata()->get(['scopes', $entityName, 'linkAttributesWithClassificationAutomatically']));
+    }
+
+    public function addAttributeToClassification(IEntity $entity, string $attributeId): void
+    {
+        $classifications = $entity->get('classifications');
+
+        if (!empty($classifications) && count($classifications) === 1) {
+            $classification = $classifications[0];
+
+            $exists = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                ->select('id')
+                ->from('classification_attribute')
+                ->where('attribute_id=:attributeId')
+                ->andWhere('classification_id=:classificationId')
+                ->setParameter('attributeId', $attributeId)
+                ->setParameter('classificationId', $classification->get('id'))
+                ->fetchOne();
+
+            if (empty($exists)) {
+                $input = new \stdClass();
+                $input->classificationId = $classification->get('id');
+                $input->attributeId = $attributeId;
+                $this->getInjection('container')->get('serviceFactory')->create('ClassificationAttribute')->createEntity($input);
+            }
+        }
     }
 
     public function upsertAttributeValue(IEntity $entity, string $fieldName, $value, bool $insertOnly = false): void
@@ -277,7 +312,7 @@ class Attribute extends Base
             $sql = "INSERT INTO {$name}_attribute_value (id, {$name}_id, attribute_id, $valColumn) VALUES (:id, :entityId, :attributeId, :value)";
             if (!$insertOnly) {
                 if (Converter::isPgSQL($this->getConnection())) {
-                    $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn";
+                    $sql .= " ON CONFLICT (deleted, {$name}_id, attribute_id) DO UPDATE SET $valColumn = EXCLUDED.$valColumn RETURNING xmax";
                 } else {
                     $sql .= " ON DUPLICATE KEY UPDATE $valColumn = VALUES($valColumn)";
                 }
@@ -303,6 +338,19 @@ class Attribute extends Base
 
             try {
                 $stmt->execute();
+
+                if ($this->shouldLinkAddedAttributeToClassification($entity->getEntityType())) {
+                    if (Converter::isPgSQL($this->getConnection())) {
+                        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+                        $wasInserted = $result['xmax'] == 0;
+                    } else {
+                        $wasInserted = $stmt->rowCount() === 1;
+                    }
+
+                    if ($wasInserted) {
+                        $this->addAttributeToClassification($entity, $entity->fields[$fieldName]['attributeId']);
+                    }
+                }
             } catch (\PDOException $e) {
                 $GLOBALS['log']->error('Upsert attribute error: ' . $e->getMessage());
             }
@@ -512,7 +560,7 @@ class Attribute extends Base
         return parent::save($entity, $options);
     }
 
-    public  function clearAttributeValue(string $scope, string $attributeId, string $column): void
+    public function clearAttributeValue(string $scope, string $attributeId, string $column): void
     {
         $table = Util::toUnderScore(lcfirst($scope) . '_attribute_value');
         $conn = $this->getEntityManager()->getConnection();
@@ -531,7 +579,7 @@ class Attribute extends Base
     {
         $select = ['id', 'code', 'type'];
 
-        if(class_exists('\AdvancedDataTypes\Module')) {
+        if (class_exists('\AdvancedDataTypes\Module')) {
             $select[] = 'output_type';
         }
 
