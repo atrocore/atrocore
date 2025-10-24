@@ -98,6 +98,6 @@ class Archive extends Record
 
     protected function hasClickHouseIntegration(): bool
     {
-        return class_exists('\ClickHouseIntegration\ORM\DB\ClickHouse\Query\QueryConverter');
+        return class_exists('\ClickHouseIntegration\ORM\DB\ClickHouse\Query\QueryConverter') && !empty($this->getConfig()->get('clickhouse')['active']);
     }
 }

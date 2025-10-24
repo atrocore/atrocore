@@ -24,7 +24,7 @@ class Archive extends Base
     public function find(array $params = [])
     {
         $className = '\ClickHouseIntegration\Console\SyncEntity';
-        if (class_exists($className) && $this->moveDataOnFind) {
+        if (class_exists($className) && $this->moveDataOnFind && !empty($this->getConfig()->get('clickhouse')['active'])) {
             $this->getInjection('container')->get($className)->moveData($this->entityName);
         }
 
@@ -85,7 +85,7 @@ class Archive extends Base
     public function getMapper(): MapperInterface
     {
         $className = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
-        if (!class_exists($className)) {
+        if (!class_exists($className) || empty($this->getConfig()->get('clickhouse')['active'])) {
             return parent::getMapper();
         }
 
