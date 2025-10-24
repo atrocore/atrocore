@@ -15,7 +15,7 @@ Espo.define('views/fields/conditional-properties', 'views/fields/base',
 
         detailTemplate: "fields/condition-properties/list",
 
-        inlineEditDisabled: false,
+        inlineEditDisabled: true,
 
         data: function () {
             const data = Dep.prototype.data.call(this) || {};
@@ -31,7 +31,7 @@ Espo.define('views/fields/conditional-properties', 'views/fields/base',
             this.onModelReady(() => {
                 this.listenTo(this, 'after:render', () => {
                     (this.getConditionTypes() || []).forEach(conditionType => {
-                        const viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionType, 'view'])
+                        const viewName = this.getMetadata().get(['entityDefs', this.model.name, 'fields', conditionType, 'view'])
                             || 'views/admin/field-manager/fields/dynamic-logic-conditions';
 
                         this.createView(`conditions-${this.model.id}-${conditionType}`, viewName, {

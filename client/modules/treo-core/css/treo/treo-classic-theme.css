@@ -18340,8 +18340,9 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23000000' viewBox='0 0 256 256'%3E%3Cpath d='M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z'%3E%3C/path%3E%3C/svg%3E");
-    background-color: var(--primary-font-color);
+    background-color: currentColor;
     margin-right: 5px;
+    flex-shrink: 0;
 }
 
 .list .conditions-container[open] summary {

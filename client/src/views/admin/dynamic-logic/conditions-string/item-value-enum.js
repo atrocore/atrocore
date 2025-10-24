@@ -45,6 +45,8 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-value-enum', 'view
                 model: this.model,
                 name: this.field,
                 el: this.getSelector() + '[data-view-key="'+key+'"]',
+                inlineEditDisabled: true,
+                disableConditions: true,
                 params: {
                     options: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'options']) || []
                 }
