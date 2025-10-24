@@ -69,11 +69,10 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
             this.clearView('tooltip');
 
             if (this.$el.length) {
-                const streamCode = this.$el.closest('code.was, code.became');
                 const avatar = this.$el.find('img.avatar');
                 const link = this.$el.find('.user-link');
 
-                if (streamCode.length && avatar.length) {
+                if ((!this.$el.hasClass('field') && !this.$el.hasClass('cell')) && avatar.length) {
                     avatar.remove();
                 }
 
@@ -116,7 +115,7 @@ Espo.define('views/fields/user-with-avatar', 'views/fields/user', function (Dep)
                                         model: model
                                     }, view => view.getHtml(html => instance.setContent(html)));
                                 })
-                            })
+                            });
                         },
                         trigger: 'mouseenter',
                     });
