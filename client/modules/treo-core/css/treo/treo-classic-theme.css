@@ -1,4 +1,29 @@
-@import './fonts.css';
+@import "phosphor-regular.css?v=210";
+@import "phosphor-fill.css?v=210";
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../fonts/Roboto.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../fonts/Roboto-Italic.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Sans Arabic';
+    src: url('../../fonts/NotoSansArabic.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
 
 html {
     font-family: 'Roboto', 'Noto Sans Arabic', sans-serif;
