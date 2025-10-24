@@ -154,7 +154,8 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy"
+                "Hierarchy",
+                "Archive"
               ]
             }
           ]
@@ -168,12 +169,9 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "in",
+              "type": "equals",
               "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
+              "value": "Archive"
             }
           ]
         }
@@ -561,6 +559,11 @@
     "deleteValuesAfterUnlinkingClassification": {
       "type": "bool",
       "view": "views/entity/fields/delete-values-after-unlinking-classification"
+    },
+    "linkAttributesWithClassificationAutomatically": {
+      "type": "bool",
+      "view": "views/entity/fields/link-attributes-with-classification-automatically",
+      "tooltip": true
     },
     "checkForDuplicates": {
       "type": "bool",

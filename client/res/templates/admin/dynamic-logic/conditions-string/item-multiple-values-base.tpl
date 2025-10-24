@@ -1,2 +1,1 @@
-{{translate field category='fields' scope=scope}} {{{operatorString}}}
-({{#each valueViewDataList}}<span data-name="{{key}}">{{{var key ../this}}}</span>{{#unless isEnd}}, {{/unless}}{{/each}})
+{{translate field category='fields' scope=scope}} {{{operatorString}}} ({{#each valueViewDataList}}<span data-view-key="{{key}}">{{{var key ../this}}}</span>{{#unless isEnd}}, {{/unless}}{{/each}})

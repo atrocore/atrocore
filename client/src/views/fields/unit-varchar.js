@@ -204,11 +204,7 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             this.$el.find('.unit-select select').selectize({
                 plugins: ['clear_button']
             });
-        },
-
-        getConditions(type) {
-            return this.getMetadata().get(`entityDefs.${this.model.name}.fields.${this.originalName}.conditionalProperties.${type}.conditionGroup`);
-        },
+        }
 
     });
 });

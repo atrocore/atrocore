@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AtroCore Software
  *
@@ -11,10 +12,10 @@
 
 declare(strict_types=1);
 
-namespace Atro\Controllers;
+namespace Atro\Core\Templates\Entities;
 
-use Atro\Core\Templates\Controllers\Base;
+use Espo\Core\ORM\Entity;
 
-class SavedSearch extends Base
+class Archive extends Entity
 {
 }

@@ -984,6 +984,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
 
+            if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
+                this.rowActionsView = 'views/record/row-actions/view-only';
+                this.massActionList = ['export'];
+            }
+
             if (this.options.searchManager) {
                 this.searchManager = this.options.searchManager;
             }

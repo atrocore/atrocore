@@ -12,6 +12,9 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Atro\Core\Utils\Metadata;
+use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
 
 class V2Dot1Dot21 extends Base
 {
@@ -22,38 +25,30 @@ class V2Dot1Dot21 extends Base
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE selection (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', description TEXT DEFAULT NULL, PRIMARY KEY(id))");
-            $this->exec("CREATE TABLE selection_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', name VARCHAR(255) DEFAULT NULL, entity_type VARCHAR(255) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))");
-            $this->exec("ALTER TABLE selection ADD created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-            $this->exec("ALTER TABLE selection ADD modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-            $this->exec("ALTER TABLE selection ADD created_by_id VARCHAR(36) DEFAULT NULL");
-            $this->exec("ALTER TABLE selection ADD modified_by_id VARCHAR(36) DEFAULT NULL");
-            $this->exec("CREATE INDEX IDX_SELECTION_CREATED_BY_ID ON selection (created_by_id, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_MODIFIED_BY_ID ON selection (modified_by_id, deleted)");
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
 
-            $this->exec("CREATE TABLE selection_selection_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, selection_id VARCHAR(36) DEFAULT NULL, selection_record_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
-            $this->exec("CREATE UNIQUE INDEX IDX_SELECTION_SELECTION_RECORD_UNIQUE_RELATION ON selection_selection_record (deleted, selection_id, selection_record_id)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_CREATED_BY_ID ON selection_selection_record (created_by_id, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_MODIFIED_BY_ID ON selection_selection_record (modified_by_id, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_SELECTION_ID ON selection_selection_record (selection_id, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_SELECTION_RECORD_ID ON selection_selection_record (selection_record_id, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_CREATED_AT ON selection_selection_record (created_at, deleted)");
-            $this->exec("CREATE INDEX IDX_SELECTION_SELECTION_RECORD_MODIFIED_AT ON selection_selection_record (modified_at, deleted)");
+        /** @var Metadata $metadata */
+        $metadata = (new \Atro\Core\Application())->getContainer()->get('metadata');
 
-            $this->exec("CREATE TABLE user_followed_selection (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, selection_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
-            $this->exec("CREATE UNIQUE INDEX IDX_USER_FOLLOWED_SELECTION_UNIQUE_RELATION ON user_followed_selection (deleted, selection_id, user_id)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_CREATED_BY_ID ON user_followed_selection (created_by_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_MODIFIED_BY_ID ON user_followed_selection (modified_by_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_SELECTION_ID ON user_followed_selection (selection_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_USER_ID ON user_followed_selection (user_id, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_CREATED_AT ON user_followed_selection (created_at, deleted)");
-            $this->exec("CREATE INDEX IDX_USER_FOLLOWED_SELECTION_MODIFIED_AT ON user_followed_selection (modified_at, deleted)");
-        } else {
-            $this->exec("CREATE TABLE selection (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', description LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_SELECTION_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_SELECTION_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE selection_record (id VARCHAR(36) NOT NULL,  name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', entity_type VARCHAR(255) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE selection_selection_record (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, selection_id VARCHAR(36) DEFAULT NULL, selection_record_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_SELECTION_SELECTION_RECORD_UNIQUE_RELATION (deleted, selection_id, selection_record_id), INDEX IDX_SELECTION_SELECTION_RECORD_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_SELECTION_SELECTION_RECORD_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_SELECTION_SELECTION_RECORD_SELECTION_ID (selection_id, deleted), INDEX IDX_SELECTION_SELECTION_RECORD_SELECTION_RECORD_ID (selection_record_id, deleted), INDEX IDX_SELECTION_SELECTION_RECORD_CREATED_AT (created_at, deleted), INDEX IDX_SELECTION_SELECTION_RECORD_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE user_followed_selection (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, selection_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_SELECTION_UNIQUE_RELATION (deleted, selection_id, user_id), INDEX IDX_USER_FOLLOWED_SELECTION_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_SELECTION_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_SELECTION_SELECTION_ID (selection_id, deleted), INDEX IDX_USER_FOLLOWED_SELECTION_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_SELECTION_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_SELECTION_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+        foreach ($metadata->get('entityDefs') ?? [] as $scope => $entityDefs) {
+            $tableName = Util::toUnderScore(lcfirst($scope));
+            if ($toSchema->hasTable($tableName)) {
+                $table = $toSchema->getTable($tableName);
+                foreach ($entityDefs['fields'] as $field => $fieldDefs) {
+                    if (in_array($fieldDefs['type'] ?? null, ['rangeInt', 'rangeFloat']) && !empty($fieldDefs['measureId'])) {
+                        $column = Util::toUnderScore(lcfirst($field) . 'UnitId');
+                        if (!$table->hasColumn($column)) {
+                            $table->addColumn($column, 'string', ['length' => 36, 'notnull' => false]);
+                            $table->addIndex([$column, 'deleted'], strtoupper('idx_' . $tableName . '_' . $column));
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+            $this->exec($sql);
         }
     }
 

@@ -26,6 +26,10 @@ Espo.define('views/fields/classifications-single', ['views/fields/link', 'views/
 
             Dep.prototype.setup.call(this);
 
+            this.setupModel();
+        },
+
+        setupModel() {
             this.listenTo(this.model, 'change:' + this.idName, () => {
                 let name = {}
                 if (this.model.get(this.idName)) {
@@ -41,8 +45,13 @@ Espo.define('views/fields/classifications-single', ['views/fields/link', 'views/
 
         setupTempFields: function () {
             const classificationId = this.model.get(this.originalIdName)?.at(-1);
-            this.model.set(this.idName, classificationId ?? null, {silent: true});
-            this.model.set(this.nameName, (this.model.get(this.originalNameName) ?? [])[classificationId] ?? null, {silent: true});
+            this.model.set(this.idName, classificationId ?? null, { silent: true });
+            this.model.set(this.nameName, (this.model.get(this.originalNameName) ?? [])[classificationId] ?? null, { silent: true });
+        },
+
+        onModelChanged() {
+            this.setupTempFields()
+            this.setupModel()
         },
 
         clearLink: function () {

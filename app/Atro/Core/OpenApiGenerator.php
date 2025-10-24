@@ -291,7 +291,7 @@ class OpenApiGenerator
                 $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
             }
 
-            if ($scopeName !== 'ActionHistoryRecord') {
+            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive') {
                 $result['paths']["/{$scopeName}"]['post'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Create a record of the $scopeName",
@@ -302,11 +302,11 @@ class OpenApiGenerator
                         'required' => true,
                         'content'  => [
                             'application/json' => [
-                                'schema' => $schema
-                            ]
+                                'schema' => $schema,
+                            ],
                         ],
                     ],
-                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
                 ];
 
                 $putSchema = $schema;
@@ -324,52 +324,52 @@ class OpenApiGenerator
                             "in"       => "path",
                             "required" => true,
                             "schema"   => [
-                                "type" => "string"
-                            ]
+                                "type" => "string",
+                            ],
                         ],
                     ],
                     'requestBody' => [
                         'required' => true,
                         'content'  => [
                             'application/json' => [
-                                'schema' => $putSchema
-                            ]
+                                'schema' => $putSchema,
+                            ],
                         ],
                     ],
-                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"])
+                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
+                ];
+
+                $result['paths']["/{$scopeName}/{id}"]['delete'] = [
+                    'tags'        => [$scopeName],
+                    "summary"     => "Delete a record of the $scopeName",
+                    "description" => "Delete a record of the $scopeName",
+                    "operationId" => "delete{$scopeName}Item",
+                    'security'    => [['Authorization-Token' => []]],
+                    'parameters'  => [
+                        [
+                            "name"     => "id",
+                            "in"       => "path",
+                            "required" => true,
+                            "schema"   => [
+                                "type" => "string",
+                            ],
+                        ],
+                        [
+                            "name"        => "permanently",
+                            "in"          => "header",
+                            "required"    => false,
+                            "description" => "Set to TRUE if you want to delete the record permanently",
+                            "schema"      => [
+                                "type"    => "boolean",
+                                "example" => false,
+                            ],
+                        ],
+                    ],
+                    "responses"   => self::prepareResponses(['type' => 'boolean']),
                 ];
             }
 
-            $result['paths']["/{$scopeName}/{id}"]['delete'] = [
-                'tags'        => [$scopeName],
-                "summary"     => "Delete a record of the $scopeName",
-                "description" => "Delete a record of the $scopeName",
-                "operationId" => "delete{$scopeName}Item",
-                'security'    => [['Authorization-Token' => []]],
-                'parameters'  => [
-                    [
-                        "name"     => "id",
-                        "in"       => "path",
-                        "required" => true,
-                        "schema"   => [
-                            "type" => "string"
-                        ]
-                    ],
-                    [
-                        "name"        => "permanently",
-                        "in"          => "header",
-                        "required"    => false,
-                        "description" => "Set to TRUE if you want to delete the record permanently",
-                        "schema"      => [
-                            "type"    => "boolean",
-                            "example" => false,
-                        ]
-                    ],
-                ],
-                "responses"   => self::prepareResponses(['type' => 'boolean'])
-            ];
-
-            if (!empty($scopeData['type']) && $scopeData['type'] !== 'ReferenceData' && $scopeName !== 'ActionHistoryRecord') {
+            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive'])) {
                 $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns linked entities for the $scopeName",

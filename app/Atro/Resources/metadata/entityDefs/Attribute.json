@@ -593,6 +593,11 @@
           ]
         }
       }
+    },
+    "conditionalProperties": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "view": "views/fields/conditional-properties"
     }
   },
   "links": {

@@ -70,7 +70,6 @@
     "Admin": "Admin",
     "Global": "Global",
     "AuthLogRecord": "Auth Log Record",
-    "AuthFailLogRecord": "Auth Fail Log Record",
     "PreviewTemplate": "Preview Template",
     "NotificationTemplate": "Notification Template",
     "NotificationProfile": "Notification Profile",
@@ -121,7 +120,6 @@
     "Account": "Accounts",
     "DocumentFolder": "Document Folders",
     "KnowledgeBaseCategory": "Knowledge Base Categories",
-    "AuthFailLogRecord": "Auth Fail Log Records",
     "AuthLogRecord": "Auth Log Records",
     "Dashboard": "Dashboards",
     "Note": "Notes",
@@ -185,6 +183,7 @@
     "previewFor": "Script value for",
     "intPart": "(Integer)",
     "floatPart": "(Float)",
+    "varcharPart": "(String)",
     "unitPart": "(Unit)",
     "inheritAllForChildren": "Inherit all for children items",
     "inheritAllFromParent": "Inherit all from parent",
@@ -729,7 +728,8 @@
     "association": "Association",
     "reverseAssociation": "Reverse Association",
     "sorting": "Sort Order",
-    "associateEverything": "Associate every record with every other record"
+    "associateEverything": "Associate every record with every other record",
+    "conditionalProperties": "Conditional Properties"
   },
   "tooltips": {
     "groupEnd": "Select to use this item to mark the end of the grouped navigation items. All items after this item will be ungrouped."

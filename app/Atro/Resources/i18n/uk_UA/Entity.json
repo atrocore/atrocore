@@ -38,13 +38,15 @@
     "disableAttributeLinking": "Заборонено пряме зв'язування атрибутів",
     "hasAssociate": "має пов'язані записи",
     "nonDuplicatableFields": "Недубльовані поля",
-    "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій"
+    "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
+    "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації"
   },
   "options": {
     "type": {
       "Base": "Base",
       "Hierarchy": "Ієрархія",
-      "ReferenceData": "Довідкові дані"
+      "ReferenceData": "Довідник",
+      "Archive": "Архів"
     },
     "sortDirection": {
       "asc": "За зростанням",
@@ -78,7 +80,8 @@
     "streamDisabled": "Якщо відмічено, на сторінці деталей запису не відображатиметься панель Дій. Ви також не зможете додавати нотатки.",
     "disableActionHistory": "Якщо позначено, жодні дії користувача над записами цієї сутності не будуть реєструватися.",
     "auditedDisabledFields": "міни в цих полях не відображатимуться в панелі Дій.",
-    "auditedEnabledRelations": "міни в цих зв'язках відображатимуться в панелі Дій."
+    "auditedEnabledRelations": "міни в цих зв'язках відображатимуться в панелі Дій.",
+    "linkAttributesWithClassificationAutomatically": "Якщо атрибут безпосередньо пов'язаний із записом, а цей запис пов'язаний із класифікацією, то атрибут також буде пов'язаний із цією класифікацією."
   },
   "exceptions": {
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",

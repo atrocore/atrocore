@@ -104,7 +104,9 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                 this.createView(key, viewName, {
                     model: model,
                     name: this.field,
-                    el: this.getSelector() + ' [data-view-key="' + key + '"]'
+                    el: this.getSelector() + ' [data-view-key="' + key + '"]',
+                    inlineEditDisabled: true,
+                    disableConditions: true
                 });
             }, this);
         },

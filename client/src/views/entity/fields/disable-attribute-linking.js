@@ -27,7 +27,7 @@ Espo.define('views/entity/fields/disable-attribute-linking', 'views/fields/bool'
         },
 
         afterRender(){
-            Dep.prototype.setup.call(this);
+            Dep.prototype.afterRender.call(this);
 
             this.hide();
 

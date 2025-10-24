@@ -11,9 +11,9 @@
 
 namespace Atro\Services;
 
-use Atro\Core\Templates\Services\Base;
+use Atro\Core\Templates\Services\Archive;
 
-class ActionLog extends Base
+class ActionLog extends Archive
 {
     protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
 }

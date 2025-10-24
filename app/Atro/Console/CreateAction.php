@@ -75,8 +75,5 @@ EOD;
         file_put_contents($fileName, str_replace('{{name}}', $className, $content));
 
         self::show("Action handler class '" . self::DIR . "/{$className}.php' has been created successfully.", self::SUCCESS);
-
-        // refresh ui handlers
-        exec('php console.php regenerate ui handlers');
     }
 }

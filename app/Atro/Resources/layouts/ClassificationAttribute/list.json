@@ -16,5 +16,9 @@
   },
   {
     "name": "value"
+  },
+  {
+    "name": "conditionalProperties",
+    "widthPx": 250
   }
 ]

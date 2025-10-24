@@ -94,11 +94,6 @@ Espo.define('views/fields/unit-int', ['views/fields/int', 'views/fields/unit-var
             Dep.prototype.afterRender.call(this);
 
             Varchar.prototype.initUnitSelector.call(this);
-        },
-
-        getConditions(type){
-            return Varchar.prototype.getConditions.call(this, type);
-        },
-
+        }
     });
 });

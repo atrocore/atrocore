@@ -210,7 +210,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 const type = fieldDef['type'];
 
-                if (!this.isValidType(type, field) || !this.isFieldEnabled(this.model, field)) {
+                if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
                     return;
                 }
 

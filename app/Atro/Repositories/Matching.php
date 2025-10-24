@@ -146,6 +146,34 @@ class Matching extends ReferenceData
         $this->getMatchingManager()->createFindMatchesJob($matching);
     }
 
+    public function unmarkMatchingSearchedForEntity(MatchingEntity $matching, Entity $entity): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $conn->createQueryBuilder()
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
+            ->set($column, ':false')
+            ->where('id = :id')
+            ->setParameter('id', $entity->id)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => "Find matches for {$entity->getEntityName()}: {$entity->get('name')}",
+            'type'     => 'FindMatchesForRecord',
+            'status'   => 'Pending',
+            'priority' => 25,
+            'payload'  => [
+                'matchingId' => $matching->id,
+                'entityName' => $entity->getEntityName(),
+                'entityId'   => $entity->id
+            ]
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
+    }
+
     public function findPossibleMatchesForEntity(MatchingEntity $matching, Entity $entity): array
     {
         $conn = $this->getEntityManager()->getConnection();

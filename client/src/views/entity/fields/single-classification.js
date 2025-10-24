@@ -27,7 +27,7 @@ Espo.define('views/entity/fields/single-classification', 'views/fields/bool', De
         },
 
         afterRender(){
-            Dep.prototype.setup.call(this);
+            Dep.prototype.afterRender.call(this);
 
             this.hide();
 
