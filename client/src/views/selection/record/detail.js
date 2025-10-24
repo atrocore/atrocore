@@ -1,4 +1,3 @@
-<?php
 /**
  * AtroCore Software
  *
@@ -9,21 +8,9 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+Espo.define('views/selection/record/detail', 'views/record/detail', function (Dep) {
 
-namespace Atro\Services;
-
-use Atro\Core\Templates\Services\Base;
-use Espo\ORM\Entity;
-
-;
-
-class Selection extends Base
-{
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-    }
-}
+    return Dep.extend({
+        bottomView: 'views/selection/record/detail-bottom'
+    });
+});

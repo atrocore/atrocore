@@ -5,5 +5,8 @@
   },
   {
     "name": "entityType"
+  },
+  {
+    "name": "selection"
   }
 ]

@@ -20,36 +20,73 @@ use Espo\ORM\EntityCollection;
 
 class SelectionRecord extends Base
 {
-  protected $mandatorySelectAttributeList = ['entityId', 'entityType'];
+    protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityType'];
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
         $entityIds = [];
-        foreach ($collection as $entity) {
-            $entityIds[$entity->get('entityType')][] = $entity;
+        foreach ($collection as $key => $entity) {
+            $entityIds[$entity->get('entityType')][$key] = $entity;
         }
+
+        $loadEntity = !empty($selectParams['select']) && in_array('entity', $selectParams['select']);
 
         foreach ($entityIds as $entityType => $records) {
             $ids = array_map(fn($entity) => $entity->get('entityId'), $records);
-            $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
-            foreach ($entities as $entity) {
-               if($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
-                   $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
-               }
-               foreach ($records as $record) {
-                   if($record->get('entityId') === $entity->get('id')) {
-                       $record->set('name', $entity->get('name'));
-                       $record->set('entity', $entity->toArray());
-                   }
-               }
+            if ($loadEntity) {
+                $entities = $this->getEntityManager()->getRepository($entityType)->where(['id' => $ids])->find();
+                $retrievedIds = [];
+                foreach ($entities as $entity) {
+                    $retrievedIds[] = $entity->get('id');
+                }
+
+                foreach ($records as $key => $record) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
+                        unset($collection[$key]);
+                        $this->getRepository()->remove($record);
+                        $this->getEntityManager()->getRepository('SelectionSelectionRecord')->where(['selectionRecordId' => $record->get('id')])->removeCollection();
+                    }
+                    foreach ($entities as $entity) {
+                        if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
+                            $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+                        }
+
+                        if ($record->get('entityId') === $entity->get('id')) {
+                            $record->set('name', $entity->get('name') ?? $entity->get('id'));
+                            $record->set('entity', $entity->toArray());
+                        }
+                    }
+                }
+            } else {
+                $select = ['id'];
+
+                if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name'])) {
+                    $select[] = 'name';
+                }
+
+                $entities = $this->getEntityManager()->getRepository($entityType)->select($select)->where(['id' => $ids])->find();
+
+                $retrievedIds = [];
+
+                foreach ($entities as $entity) {
+                    $retrievedIds[] = $entity->get('id');
+                }
+
+                foreach ($records as $key => $record) {
+                    if (!in_array($record->get('entityId'), $retrievedIds)) {
+                        unset($collection[$key]);
+                        $this->getRepository()->remove($record);
+                        $this->getEntityManager()->getRepository('SelectionSelectionRecord')->where(['selectionRecordId' => $record->get('id')])->removeCollection();
+                    }
+                    foreach ($entities as $entity) {
+                        if ($record->get('entityId') === $entity->get('id')) {
+                            $record->set('name', $entity->get('name') ?? $entity->get('id'));
+                        }
+                    }
+                }
             }
         }
-    }
-
-    public function loadSelectionRecordDetails(Entity $entity): void
-    {
-
     }
 }

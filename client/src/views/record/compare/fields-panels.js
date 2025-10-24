@@ -74,12 +74,12 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             },
                             params: {
                                 required: !!model.getFieldParam(field, 'required'),
-                                readOnly: mode === 'detail' || model.getFieldParam(field, 'readOnly'),
+                                readOnly:  model.getFieldParam(field, 'readOnly'),
                                 disableAttributeRemove: true
                             },
                             mode: mode,
-                            disabled: fieldData.disabled,
-                            inlineEditDisabled: true,
+                            // disabled: fieldData.disabled,
+                            inlineEditDisabled: false,
                         }, view => {
                             view.render();
                             if (view.isRendered()) {

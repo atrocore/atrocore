@@ -94,7 +94,6 @@ Espo.define('views/main', 'view', function (Dep) {
 
         getMenu: function () {
             var menu = {};
-
             if (this.menu) {
                 ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                     (this.menu[type] || []).forEach(function (item) {

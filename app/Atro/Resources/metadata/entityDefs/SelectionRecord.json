@@ -2,7 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "notStorable": true
+      "view": "views/selection-record/fields/name"
     },
     "entityType": {
       "type": "enum",
