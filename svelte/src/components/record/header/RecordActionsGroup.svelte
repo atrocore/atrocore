@@ -131,7 +131,6 @@
 
     onMount(() => {
         reloadDynamicActions();
-        debugger
     })
 </script>
 
