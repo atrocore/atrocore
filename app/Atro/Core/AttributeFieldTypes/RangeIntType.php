@@ -163,6 +163,8 @@ class RangeIntType extends AbstractFieldType
 
         if (isset($row['measure_id'])) {
             $entity->entityDefs['fields'][$name]['measureId'] = $row['measure_id'];
+            $attributesDefs[$name . 'To']['measureId'] = $entity->entityDefs['fields'][$name . 'To']['measureId'] = $row['measure_id'];
+            $attributesDefs[$name . 'From']['measureId'] = $entity->entityDefs['fields'][$name . 'From']['measureId'] = $row['measure_id'];
 
             $entity->fields[$name . 'UnitId'] = [
                 'type'        => 'varchar',
