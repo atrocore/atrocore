@@ -74,6 +74,11 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         afterRender() {
+            if ('windowControlsOverlay' in navigator) {
+                const visible = navigator.windowControlsOverlay.visible;
+                console.log('Overlay visible:', visible);
+            }
+
             let style = this.getThemeManager().getStyle();
             this.initStyleVariables(style);
 
