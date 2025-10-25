@@ -153,6 +153,15 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - Login: admin
 - Password: admin
 
+##📌 Help Us Grow
+
+If you find AtroCore useful:
+
+⭐ Star the repo
+🗣️ Share it with your network
+🛠️ Contribute to the project
+
+
 
 ## Resources
 
