@@ -22,30 +22,24 @@ Our software has been in active development since 2018. It all began with a simp
 
 We are now able to confidently assure our customers that their requirements, extending well beyond just PIM, can be fully addressed without compromise. Our software offers a robust, comprehensive, and highly flexible toolbox designed to meet a wide range of business needs.
 
-## Usable for:
+## Use Cases:
 
 - Master Data Management
 - Product Information Management
-- Application Development Platform
 - System Integration Platform
 - Business Process Management
 - Data Warehouse Software
-- Enterprise Content Management (ECM)
 - Digital Asset Management
 - Reference Data Management
-
-### Enterprise Edition?
-
-From small businesses to large enterprises, every user use the same core – AtroCore. This core can be extended with additional free and premium modules as needed.
-We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
-
+- Low-code Platform for Custom Business Apps
 
 ### Free vs Paid
 
-- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available.
-- These free modules are sufficient to meet the needs of the vast majority of users.
-- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
+Every user, from small businesses to large enterprises, uses the same free core: AtroCore. This core can be extended with additional free and premium modules as needed.
+We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
+- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available. These free modules are more than enough for the needs of most users.
+- Selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
 
 ## Feature Overview
 
@@ -67,7 +61,7 @@ AtroCore is the best fit **for businesses**, who want to:
 * Extend and enhance the capabilities of existing software infrastructure
 * Deliver added value and an optimal experience for employees, customers, and partners.
 
-### Who is our Typical Customer?
+### Who is our Typical Adopter?
 
 Companies whose needs go beyond the limitations of standard software solutions.
 
