@@ -1,6 +1,9 @@
 [![GitHub Stars](https://img.shields.io/github/stars/atrocore/atrocore?style=flat&logo=github&color=yellow)](https://github.com/atrocore/atrocore/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/atrocore/atrocore?style=flat&logo=github&color=orange)](https://github.com/atrocore/atrocore/network/members)
 [![GitHub last commit](https://img.shields.io/github/last-commit/atrocore/atrocore)](https://github.com/atrocore/atrocore/commits/master)
 [![License](https://img.shields.io/github/license/atrocore/atrocore)](https://github.com/atrocore/atrocore/blob/master/LICENSE.txt)
+[![Built with PHP](https://img.shields.io/badge/PHP-8.1%2B-blue?logo=php)](https://www.php.net/)
+[![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/atrocore/what-is-atrocore)
 
 <p align="center" width="100%">
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
