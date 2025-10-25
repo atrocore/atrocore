@@ -3,11 +3,12 @@
 </p>
 
 AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and System Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
-
+<!--
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
+-->
 
 AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks – for example, we use Doctrine DBAL for database interaction. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. 
 
@@ -35,7 +36,7 @@ We are now able to confidently assure our customers that their requirements, ext
 
 ### Enterprise Edition?
 
-From small businesses to large enterprises, every user use the same core platform – AtroCore. This core can be extended with additional free and premium modules as needed.
+From small businesses to large enterprises, every user use the same core – AtroCore. This core can be extended with additional free and premium modules as needed.
 We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
 
@@ -138,11 +139,12 @@ We recommend to use Docker Image to play with the system, and standard installat
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Contributing
+
 - **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
 - **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
-## Look and Feel
+## Screenshots
 |                                                                                          |                                                                                          |
 | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                         |
