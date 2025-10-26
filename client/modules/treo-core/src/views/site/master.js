@@ -53,6 +53,9 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                     });
                 }
             }
+
+            // TODO: change theme color on updating variable
+            $('head').append(`<meta name="theme-color" content="${style['toolbarBackgroundColor']}">`);
         },
 
         removeStyleVariables() {
@@ -74,10 +77,6 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         afterRender() {
-            if ('windowControlsOverlay' in navigator) {
-                const visible = navigator.windowControlsOverlay.visible;
-                console.log('Overlay visible:', visible);
-            }
 
             let style = this.getThemeManager().getStyle();
             this.initStyleVariables(style);
