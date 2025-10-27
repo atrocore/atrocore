@@ -246,6 +246,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         },
@@ -258,6 +262,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -276,6 +284,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         },
@@ -288,6 +300,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -306,6 +322,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         },
@@ -318,6 +338,10 @@
                 "Relation",
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -327,6 +351,21 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -335,6 +374,10 @@
               "value": [
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -430,6 +473,22 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -439,6 +498,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -447,6 +510,22 @@
     "hasActive": {
       "type": "bool",
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -456,6 +535,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -464,6 +547,22 @@
     "hasArchive": {
       "type": "bool",
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -473,6 +572,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -499,6 +602,22 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -508,6 +627,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -565,6 +688,21 @@
       "notStorable": true,
       "tooltip": true,
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -573,6 +711,10 @@
               "value": [
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -584,6 +726,21 @@
       "notStorable": true,
       "tooltip": true,
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -592,6 +749,10 @@
               "value": [
                 "Archive"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -622,6 +783,22 @@
     "hasAssociate": {
       "type": "bool",
       "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -631,6 +808,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
