@@ -54,8 +54,13 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 }
             }
 
-            // TODO: change theme color on updating variable
-            $('head').append(`<meta name="theme-color" content="${style['toolbarBackgroundColor']}">`);
+            const themeColor = $('head meta[name="theme-color"]');
+            if (themeColor.length) {
+                themeColor.attr('content', style['toolbarBackgroundColor']);
+            } else {
+                // TODO: change theme color on updating variable
+                $('head').append(`<meta name="theme-color" content="${style['toolbarBackgroundColor']}">`);
+            }
         },
 
         removeStyleVariables() {
