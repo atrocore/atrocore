@@ -293,7 +293,7 @@
                                 <span class="title">{Language.translate(group.name, 'scopeNames')}</span>
                             {/if}
                             <ul class="disabled connected" data-name="{group.name}">
-                                {#each group.fields as field (field.name)}
+                                {#each group.fields.sort((a, b) => a.label.localeCompare(b.label)) as field (field.name)}
                                     <li {...getDataAttributeProps(field)}>
                                         <div class="left">
                                             <label style={field.attributeId ? 'font-style: italic' : ''}>{field.label}</label>
