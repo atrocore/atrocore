@@ -92,6 +92,14 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -135,9 +143,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -189,9 +200,12 @@
               "attribute": "id"
             },
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -208,9 +222,12 @@
               "attribute": "id"
             },
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -223,18 +240,24 @@
         "protected": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         }
@@ -247,18 +270,24 @@
         "protected": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         }
@@ -271,18 +300,24 @@
         "protected": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
             }
           ]
         }
@@ -290,7 +325,20 @@
     },
     "disableActionHistory": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            }
+          ]
+        }
+      }
     },
     "multiParents": {
       "type": "bool",
@@ -326,7 +374,7 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
-               {
+            {
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
@@ -380,7 +428,21 @@
     },
     "disabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hasActive": {
       "type": "bool",
@@ -501,13 +563,39 @@
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-disabled-fields",
       "notStorable": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            }
+          ]
+        }
+      }
     },
     "auditedEnabledRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-enabled-relations",
       "notStorable": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            }
+          ]
+        }
+      }
     },
     "onlyEditableEmFields": {
       "type": "array",
@@ -516,7 +604,20 @@
     "nonDuplicatableFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/non-duplicatable-fields",
-      "notStorable": true
+      "notStorable": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hasAssociate": {
       "type": "bool",
