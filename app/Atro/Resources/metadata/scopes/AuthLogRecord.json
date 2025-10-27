@@ -8,11 +8,10 @@
   "streamDisabled": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
-  "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "actionDisabled": true,
   "emHidden": true,
   "openApiHidden": true,
   "hideFieldTypeFilters": true,
-    "matchingDisabled": true
+  "matchingDisabled": true
 }
