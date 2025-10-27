@@ -424,7 +424,14 @@
     "color": "Farbe",
     "editLabels": "Etikett bearbeiten",
     "matchedRecords": "Übereinstimmende Datensätze",
-    "noMatches": "Keine Übereinstimmungen"
+    "noMatches": "Keine Übereinstimmungen",
+    "pwaHideTitle": "Um die Benutzerfreundlichkeit zu verbessern, empfehlen wir Ihnen, die erweiterten Anwendungssteuerelemente in der Titelleiste oben rechts in Ihrem App-Fenster zu aktivieren. Klicken Sie dazu auf die Pfeiltaste.",
+    "openWindow": "Neues Fenster öffnen",
+    "copyUrl": "URL kopieren",
+    "copiedToClipboard": "In die Zwischenablage kopiert",
+    "goBack": "Zurückgehen",
+    "goForward": "Weitergehen",
+    "reloadPage": "Seite neu laden"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",

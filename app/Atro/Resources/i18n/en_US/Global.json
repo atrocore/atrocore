@@ -479,7 +479,14 @@
     "editLabels": "Edit labels",
     "Duplicates": "Duplicates",
     "matchedRecords": "Matched Records",
-    "noMatches": "No matches"
+    "noMatches": "No matches",
+    "pwaHideTitle": "To improve the user experience, we recommend enabling advanced application controls in the title bar at the top right of your app window. To do this, click on the arrow button.",
+    "openWindow": "Open new window",
+    "copyUrl": "Copy URL",
+    "copiedToClipboard": "Copied to clipboard",
+    "goBack": "Go back",
+    "goForward": "Go forward",
+    "reloadPage": "Reload page"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",

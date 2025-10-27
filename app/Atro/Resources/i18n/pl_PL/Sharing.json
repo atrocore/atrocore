@@ -6,8 +6,5 @@
 		"allowedUsage": "Dozwolone użycie",
 		"link": "Link",
 		"viewLink": "Link do podglądu"
-	},
-	"labels": {
-		"copiedToClipboard": "Skopiowano do schowka"
 	}
 }

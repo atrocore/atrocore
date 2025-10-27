@@ -40,6 +40,52 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
 
         rgbVariables: ['navigationManuBackgroundColor', 'navigationMenuFontColor'],
 
+        events: {
+            'click #title-bar [data-action=copyUrl]': function () {
+                this.copyToClipboard(window.location.href);
+                this.notify('Copied', 'success');
+            },
+            'click #title-bar [data-action=openWindow]': function (e) {
+                e.preventDefault();
+
+                window.open('/', '_blank', `width=${window.screen.height};height=${window.screen.height}`);
+            },
+            'click #title-bar [data-action=reload]': function () {
+                window.location.reload();
+            },
+            'click #title-bar [data-action=goBack]': function () {
+                window.history.back();
+            },
+            'click #title-bar [data-action=goForward]': function () {
+                window.history.forward();
+            }
+        },
+
+        data: function () {
+            return {
+                faviconUrl: this.getFavicon()
+            };
+        },
+
+        setup: function () {
+            window.addEventListener('appinstalled',  () => {
+                if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
+                    this.createView('hideTitleModal', 'views/modals/hide-title-bar', {}, view => {
+                        view.render();
+                    });
+                }
+            });
+        },
+
+        getFavicon: function () {
+            const faviconId = this.getConfig().get('faviconId');
+            if (faviconId) {
+                return `/?entryPoint=LogoImage&id=${faviconId}`;
+            }
+
+            return 'client/modules/treo-core/img/favicon.svg';
+        },
+
         initStyleVariables(style) {
             if ($(":root").length > 0) {
                 if (style) {
