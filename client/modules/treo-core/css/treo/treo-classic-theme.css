@@ -10550,7 +10550,7 @@ td.cell > .field {
     min-height: auto;
 }
 
-main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
+main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):not(.colored-enum),
 .cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label) {
     width: 100%;
 }
