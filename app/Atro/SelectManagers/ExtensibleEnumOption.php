@@ -62,7 +62,7 @@ class ExtensibleEnumOption extends Base
         }
     }
 
-    public function applyOnlyForExtensibleEnum(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $enumId): void
+    private function applyOnlyForExtensibleEnum(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $enumId): void
     {
         $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
         if (empty($params['aggregation'])) {
