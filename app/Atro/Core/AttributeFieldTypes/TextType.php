@@ -191,13 +191,15 @@ class TextType extends AbstractFieldType
                 'layoutDetailDisabled'      => true,
                 'conditionalProperties'     => $this->prepareConditionalProperties($row)
             ];
+            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
-        }
-        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
 
-        $entity->entityDefs['fields'][$name . 'UnitId'] = [
-            'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
-        ];
+            $entity->entityDefs['fields'][$name . 'UnitId'] = [
+                'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
+            ];
+        } else {
+            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
+        }
     }
 
     public function getAttributeLabel(array $row, string $languageCode, array $languages): string
