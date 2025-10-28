@@ -14,7 +14,12 @@ declare(strict_types=1);
 namespace Atro\SelectManagers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\SelectManagers\Base;
+use Espo\ORM\IEntity;
+use function React\Promise\map;
 
 class ExtensibleEnumOption extends Base
 {
@@ -25,12 +30,20 @@ class ExtensibleEnumOption extends Base
             throw new BadRequest('For choosing default option, you need to select List.');
         }
 
-        $this->addExtensibleEnumIdWhere($data['extensibleEnumId'], $result);
+        $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($data) {
+            $this->applyOnlyForExtensibleEnum($qb, $relEntity, $params, $mapper, $data['extensibleEnumId']);
+        };
     }
 
     protected function boolFilterOnlyForExtensibleEnum(array &$result): void
     {
-        $this->addExtensibleEnumIdWhere($this->getBoolFilterParameter('onlyForExtensibleEnum'), $result);
+        $enumId = (string)$this->getBoolFilterParameter('onlyForExtensibleEnum');
+        if (empty($enumId)) {
+            return;
+        }
+        $result['callbacks'][] = function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($enumId) {
+            $this->applyOnlyForExtensibleEnum($qb, $relEntity, $params, $mapper, $enumId);
+        };
     }
 
     protected function boolFilterOnlyAllowedOptions(array &$result): void
@@ -51,14 +64,16 @@ class ExtensibleEnumOption extends Base
         }
     }
 
-    private function addExtensibleEnumIdWhere($extensibleEnumId, &$result)
+    public function applyOnlyForExtensibleEnum(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper, string $enumId): void
     {
-        $where = [[
-            "type"      => "linkedWith",
-            "attribute" => "extensibleEnums",
-            "value"     => [$extensibleEnumId]
-        ]];
-
-        $result['whereClause'][] = $this->convertWhere($where, false, $result);
+        $tableAlias = $mapper->getQueryConverter()->getMainTableAlias();
+        if (empty($params['aggregation'])) {
+            $qb->addSelect("ee_eeo.sorting");
+        }
+        $qb->innerJoin($tableAlias, 'extensible_enum_extensible_enum_option', "ee_eeo", "$tableAlias.id = ee_eeo.extensible_enum_option_id")
+            ->innerJoin('ee_eeo', 'extensible_enum', "ee", "ee.id = ee_eeo.extensible_enum_id")
+            ->andWhere("ee_eeo.deleted = :false and ee.deleted = :false and ee.id = :enumId")
+            ->setParameter('false', false, Mapper::getParameterType(false))
+            ->setParameter('enumId', $enumId);
     }
 }
