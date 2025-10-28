@@ -39,7 +39,8 @@
     "textFilterFields": "Text Filter fields",
     "nonDuplicatableFields": "Non-duplicated fields",
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
-    "checkForDuplicates": "Check for duplicates"
+    "checkForDuplicates": "Check for duplicates",
+    "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically"
   },
   "options": {
     "type": {
@@ -79,7 +80,8 @@
     "streamDisabled": "If checked, no Activities panel is displayed on the Record Details page. You will not be able to add notes.",
     "disableActionHistory": "If checked, no user actions on the records of this entity will be logged.",
     "auditedDisabledFields": "Changes in these fields are not displayed as Activity.",
-    "auditedEnabledRelations": "Changes in these relations are displayed as Activity."
+    "auditedEnabledRelations": "Changes in these relations are displayed as Activity.",
+    "linkAttributesWithClassificationAutomatically": "If an attribute is directly linked to a record, and that record is linked to a classification, then the attribute will also be linked to that classification."
   },
   "exceptions": {
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",

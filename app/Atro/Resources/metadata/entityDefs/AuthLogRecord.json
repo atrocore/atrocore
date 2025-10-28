@@ -7,13 +7,11 @@
     },
     "user": {
       "type": "link",
-      "readOnly": true,
-      "filterDisabled": true
+      "readOnly": true
     },
     "authToken": {
       "type": "link",
-      "readOnly": true,
-      "filterDisabled": true
+      "readOnly": true
     },
     "ipAddress": {
       "type": "varchar",

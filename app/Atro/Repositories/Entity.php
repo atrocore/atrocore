@@ -386,11 +386,6 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
-        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false &&
-            empty($this->getMetadata()->get("scopes.{$entity->get('code')}.onlyEditableEmFields"))) {
-            throw new Forbidden();
-        }
-
         if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
             if (!is_array($modifiedExtendedRelations)) {
                 $modifiedExtendedRelations = [];

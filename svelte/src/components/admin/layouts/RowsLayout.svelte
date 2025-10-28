@@ -250,7 +250,7 @@
     <div id="layout" class="row" bind:this={layoutElement}>
         <div class="col-sm-5">
             <div class="well">
-                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> {#if hasAttributes}<a href="#" on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>{/if}</header>
+                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> {#if hasAttributes && params.type !== 'leftSidebar'}<a href="#" on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>{/if}</header>
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
                         {#each selectedFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
@@ -260,7 +260,7 @@
                                 </div>
                                 {#if params.editable}
                                     <div class="right">
-                                        {#if isAdmin()}
+                                        {#if isAdmin() && !item.attributeId}
                                             <a href="javascript:" data-action="change-label" class="change-label"
                                                on:click|preventDefault={() => openLabelDialog(item)}>
                                                 <i class="ph ph-globe-simple"></i>

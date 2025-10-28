@@ -634,7 +634,7 @@
                                                                on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
                                                                 <i class="ph ph-x"></i>
                                                             </a>
-                                                            {#if isAdmin()}
+                                                            {#if isAdmin() && !cell.attributeId}
                                                                 <a href="#" data-action="change-label" class="change-label"
                                                                    on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
                                                                     <i class="ph ph-globe-simple"></i>

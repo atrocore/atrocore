@@ -12,6 +12,8 @@ Espo.define('views/entity-field/fields/conditional-disable-options', ['views/fie
 
     return Dep.extend({
 
+        listTemplate: 'entity-field/fields/conditional-disable-options/detail',
+
         detailTemplate: 'entity-field/fields/conditional-disable-options/detail',
 
         editTemplate: 'entity-field/fields/conditional-disable-options/edit',
