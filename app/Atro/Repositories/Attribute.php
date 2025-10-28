@@ -51,7 +51,7 @@ class Attribute extends Base
         $repository = $this->getEntityManager()->getRepository($entityName);
 
         $sp = $this->getInjection('container')->get('serviceFactory')->create($entityName)->getSelectParams([
-            'where' => $where,
+            'where' => json_decode(json_encode($where), true),
         ]);
         $sp['select'] = ['id'];
 
@@ -71,7 +71,7 @@ class Attribute extends Base
             $qb->setParameter($parameterName, $value, Mapper::getParameterType($value));
         }
 
-        if (class_exists("\\Pim\\Module")) {
+        if (class_exists("\\Pim\\Module") && !empty($channels)) {
             $channelSqlParts = [];
             foreach ($channels as $channelId) {
                 if ($channelId === 'withoutChannel') {
