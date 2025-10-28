@@ -130,7 +130,7 @@ abstract class AbstractFieldType implements AttributeFieldTypeInterface
 
     protected function prepareKey(string $nameKey, array $row): string
     {
-        if (!empty($localeId = $this->user->get('localeId'))) {
+        if (!empty($localeId = Language::detectLocale($this->config, $this->user))) {
             $currentLocale = $this->em->getEntity('Locale', $localeId);
             if (!empty($currentLocale)) {
                 $languageNameKey = $nameKey . '_' . strtolower($currentLocale->get('languageCode'));
