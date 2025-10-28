@@ -23,22 +23,38 @@ class Archive extends Record
 {
     public function createEntity($attachment)
     {
-        throw new Forbidden();
+        if ($this->getUser()->get('id') !== 'system') {
+            throw new Forbidden();
+        }
+
+        return parent::createEntity($attachment);
     }
 
     public function updateEntity($id, $data)
     {
-        throw new Forbidden();
+        if ($this->getUser()->get('id') !== 'system') {
+            throw new Forbidden();
+        }
+
+        return parent::updateEntity($id, $data);
     }
 
     public function deleteEntity($id)
     {
-        throw new Forbidden();
+        if ($this->getUser()->get('id') !== 'system') {
+            throw new Forbidden();
+        }
+
+        return parent::deleteEntity($id);
     }
 
     public function restoreEntity($id)
     {
-        throw new Forbidden();
+        if ($this->getUser()->get('id') !== 'system') {
+            throw new Forbidden();
+        }
+
+        return parent::restoreEntity($id);
     }
 
     public function follow($id, $userId = null)
