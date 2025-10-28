@@ -15,11 +15,9 @@ namespace Atro\SelectManagers;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\SelectManagers\Base;
 use Espo\ORM\IEntity;
-use function React\Promise\map;
 
 class ExtensibleEnumOption extends Base
 {
