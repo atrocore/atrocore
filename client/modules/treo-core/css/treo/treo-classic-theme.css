@@ -10550,7 +10550,7 @@ td.cell > .field {
     min-height: auto;
 }
 
-main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
+main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):not(.colored-enum),
 .cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label) {
     width: 100%;
 }
@@ -10603,10 +10603,10 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
-.cell[data-mode=edit] > .field > .field,
+.cell[data-mode=edit] > .field > .field-value-container,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
-.record > .edit .cell > .field > .field {
+.record > .edit .cell > .field > .field-value-container {
     margin: 0 10px;
     line-height: inherit;
 }
