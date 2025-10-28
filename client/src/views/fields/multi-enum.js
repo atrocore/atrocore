@@ -190,9 +190,16 @@ Espo.define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], 
                         valueList[i] = '__emptystring__';
                     }
                     if (!~(this.params.options || []).indexOf(value)) {
+                        var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                        if (this.translatedOptions) {
+                            if (value in this.translatedOptions) {
+                                label = this.translatedOptions[value];
+                            }
+                        }
+
                         data.push({
                             value: value,
-                            label: value
+                            label: label
                         });
                     }
                 }
