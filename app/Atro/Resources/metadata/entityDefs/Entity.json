@@ -165,8 +165,7 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy",
-                "Archive"
+                "Hierarchy"
               ]
             }
           ]
