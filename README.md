@@ -1,13 +1,21 @@
+[![GitHub Stars](https://img.shields.io/github/stars/atrocore/atrocore?style=flat&logo=github&color=yellow)](https://github.com/atrocore/atrocore/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/atrocore/atrocore?style=flat&logo=github&color=orange)](https://github.com/atrocore/atrocore/network/members)
+[![GitHub last commit](https://img.shields.io/github/last-commit/atrocore/atrocore)](https://github.com/atrocore/atrocore/commits/master)
+[![License](https://img.shields.io/github/license/atrocore/atrocore)](https://github.com/atrocore/atrocore/blob/master/LICENSE.txt)
+[![Built with PHP](https://img.shields.io/badge/PHP-8.1%2B-blue?logo=php)](https://www.php.net/)
+[![Documentation](https://img.shields.io/badge/Docs-Help%20Center-blueviolet)](https://help.atrocore.com/atrocore/what-is-atrocore)
+
 <p align="center" width="100%">
 <img src="_assets/atrocore-logo.svg" alt="AtroCore Logo" height="48">
 </p>
 
 AtroCore is a powerful open-source data platform designed for [Master Data Management (MDM) and System Integration](https://www.atrocore.com/en). Highly configurable and feature-rich out of the box, AtroCore enables cost-effective, agile application development with minimal coding. Ideal for businesses seeking scalable, customizable solutions for managing and integrating enterprise data.
-
+<!--
 | Host            | URL                                             |
 | ----------------| ----------------------------------------------- |
 | Main Repository | https://gitlab.atrocore.com/atrocore/atrocore   |
 | Mirror (GitHub) | https://github.com/atrocore/atrocore            | 
+-->
 
 AtroCore is a powerful, multi-layered system designed by developers who care about clean architecture and long-term maintainability. Inspired by modern frameworks like Symfony, it’s built with native PHP and enhanced by carefully selected components to solve specific tasks – for example, we use Doctrine DBAL for database interaction. The system primarily works with PostgreSQL, MySQL, or MariaDB as its main database engine. 
 
@@ -21,30 +29,24 @@ Our software has been in active development since 2018. It all began with a simp
 
 We are now able to confidently assure our customers that their requirements, extending well beyond just PIM, can be fully addressed without compromise. Our software offers a robust, comprehensive, and highly flexible toolbox designed to meet a wide range of business needs.
 
-## Usable for:
+## Use Cases:
 
 - Master Data Management
 - Product Information Management
-- Application Development Platform
 - System Integration Platform
 - Business Process Management
 - Data Warehouse Software
-- Enterprise Content Management (ECM)
 - Digital Asset Management
 - Reference Data Management
-
-### Enterprise Edition?
-
-From small businesses to large enterprises, every user use the same core platform – AtroCore. This core can be extended with additional free and premium modules as needed.
-We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
-
+- Low-code Platform for Custom Business Apps
 
 ### Free vs Paid
 
-- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available.
-- These free modules are sufficient to meet the needs of the vast majority of users.
-- Only selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
+Every user, from small businesses to large enterprises, uses the same free core: AtroCore. This core can be extended with additional free and premium modules as needed.
+We also offer SaaS Editions, hosted in the cloud, which include some or all premium modules depending on the edition.
 
+- The core modules, including AtroCore, AtroPIM, Import, Export, and several others, are open-source and freely available. These free modules are more than enough for the needs of most users.
+- Selected enterprise-level features, such as AI integration, advanced reporting, and automated data quality management, are offered through Premium Modules.
 
 ## Feature Overview
 
@@ -66,7 +68,7 @@ AtroCore is the best fit **for businesses**, who want to:
 * Extend and enhance the capabilities of existing software infrastructure
 * Deliver added value and an optimal experience for employees, customers, and partners.
 
-### Who is our Typical Customer?
+### Who is our Typical Adopter?
 
 Companies whose needs go beyond the limitations of standard software solutions.
 
@@ -138,11 +140,12 @@ We recommend to use Docker Image to play with the system, and standard installat
 AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 
 ## Contributing
+
 - **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
 - **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
 - **Contribute features:** You are encouraged to create new features. Please contact us before you start.
 
-## Look and Feel
+## Screenshots
 |                                                                                          |                                                                                          |
 | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [![Dashboard](_assets/dashboard.png)](_assets/dashboard.png)                             | [![Files](_assets/files.png)](_assets/files.png)                                         |
@@ -165,3 +168,12 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - Read our Release Notes - https://help.atrocore.com/release-notes/core
 - Please visit our Community - https://community.atrocore.com
 - Сontact us - https://www.atrocore.com/contact
+
+
+## 📌Help Us Grow
+
+If you find AtroCore useful:
+
+- ⭐ Star the repo
+- 🗣️ Share it with your network
+- 🛠️ Contribute to the project

@@ -312,7 +312,8 @@
     "Apply filter": "Zastosuj filtr",
     "Reset filter": "Resetuj filtr",
     "Dashboard": "Pulpit",
-    "fullscreen": "Pełny ekran"
+    "fullscreen": "Pełny ekran",
+    "copiedToClipboard": "Skopiowano do schowka"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",

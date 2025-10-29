@@ -74,6 +74,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
         noCreateScopeList: ['User', 'Team', 'Role'],
 
+        sortBy: null,
+
+        sortAsc: null,
+
         events: _.extend({
             'click [data-action="loadData"]': function (e) {
                 this.actionLoadData();
@@ -234,6 +238,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
                         selectAllByDefault: this.getSelectAllByDefault(),
+                        sortBy: this.sortBy,
+                        sortAsc: this.sortAsc
                     }, function (dialog) {
                         dialog.render();
                         self.notify(false);

@@ -634,7 +634,7 @@
                                                                on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
                                                                 <i class="ph ph-x"></i>
                                                             </a>
-                                                            {#if isAdmin()}
+                                                            {#if isAdmin() && !cell.attributeId}
                                                                 <a href="#" data-action="change-label" class="change-label"
                                                                    on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
                                                                     <i class="ph ph-globe-simple"></i>
@@ -678,7 +678,7 @@
                                 <span class="title">{Language.translate(group.name, 'scopeNames')}</span>
                             {/if}
                             <ul class="disabled cells clearfix" data-name="{group.name}">
-                                {#each group.fields as field (field.name)}
+                                {#each group.fields.sort((a, b) => a.label.localeCompare(b.label)) as field (field.name)}
                                     <li class="cell" data-name={field.name}
                                         on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
                                         {field.label}

@@ -187,6 +187,13 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 collection.maxSize = this.getMetadata().get(`clientDefs.${this.scope}.limit`) || this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
+                if (this.options.sortBy) {
+                    collection.sortBy = this.options.sortBy;
+                }
+                if (this.options.sortAsc != null) {
+                    collection.asc = this.options.sortAsc;
+                }
+
                 this.defaultSortBy = collection.sortBy;
                 this.defaultAsc = collection.asc;
 
@@ -239,7 +246,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             searchManager.emptyOnReset = true;
             searchManager.boolFilterData = this.boolFilterData
             if (this.filters) {
-                searchManager.update({queryBuilderApplied: true, ...this.filters});
+                searchManager.update({ queryBuilderApplied: true, ...this.filters });
             }
 
             var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
@@ -251,7 +258,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 searchManager.setBool(d);
             }
 
-            this.collection.where =  searchManager.getWhere();
+            this.collection.where = searchManager.getWhere();
 
             this.collection.whereAdditional = this.options.whereAdditional || [];
 
@@ -284,7 +291,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             this.createView('list', viewName, options, function (view) {
-                if(callback) {
+                if (callback) {
                     callback(view);
                 }
                 this.listenTo(view, 'after:render', () => {
@@ -295,7 +302,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     if (window['SvelteFilterSearchBar' + this.dialog.id]) {
                         try {
                             window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
-                        } catch (e) {}
+                        } catch (e) {
+                        }
                     }
 
                     const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
@@ -563,7 +571,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 ids.push(model.get('id'));
             });
 
-            this.ajaxGetRequest(`${this.scope}/action/TreeData`, {ids: ids}).then(response => {
+            this.ajaxGetRequest(`${this.scope}/action/TreeData`, { ids: ids }).then(response => {
                 $shown.html(response.total);
                 $total.html(response.total);
                 this.setupTree(response.tree);
@@ -629,7 +637,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             if (this.getSelectedViewType() !== 'tree') {
                 return;
             }
-            this.offsets = {root: 0};
+            this.offsets = { root: 0 };
 
             const $tree = this.$el.find('.records-tree');
             let treeData = {
@@ -710,7 +718,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     return this.loadMore(parent, previous);
                 }
 
-                this.offsets = {root: 0};
+                this.offsets = { root: 0 };
 
                 if (this.multiple) {
                     e.preventDefault();
@@ -793,7 +801,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             if (this.getSelectedViewType() === 'tree') {
                 let ids = [];
                 this.selectedItems.forEach(id => {
-                    ids.push({id: id, name: this.selectedItemsNames[id]});
+                    ids.push({ id: id, name: this.selectedItemsNames[id] });
                 });
                 this.trigger('select', ids, duplicate);
             } else {

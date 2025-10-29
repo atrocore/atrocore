@@ -267,7 +267,7 @@
                 <header>{Language.translate('Available Fields', 'Admin')}</header>
                 <div class="rows-wrapper">
                     <ul class="disabled connected">
-                        {#each disabledItems as item (item.name)}
+                        {#each disabledItems.sort((a, b) => a.label.localeCompare(b.label)) as item (item.name)}
                             <li {...getDataAttributeProps(item)}>
                                 <div class="left">
                                     <label title="{item.label}">{item.label}</label>

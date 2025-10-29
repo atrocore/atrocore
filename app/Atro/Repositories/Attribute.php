@@ -39,6 +39,54 @@ class Attribute extends Base
         $this->addDependency('container');
     }
 
+    public function getAllAttributesIdsForEntity(string $entityName, array $where, array $channels = []): array
+    {
+        if (!$this->getMetadata()->get("scopes.$entityName.hasAttribute")) {
+            return [];
+        }
+
+        $tableName = Util::toUnderScore(lcfirst($entityName));
+
+        /* @var $repository Base */
+        $repository = $this->getEntityManager()->getRepository($entityName);
+
+        $sp = $this->getInjection('container')->get('serviceFactory')->create($entityName)->getSelectParams([
+            'where' => json_decode(json_encode($where), true),
+        ]);
+        $sp['select'] = ['id'];
+
+        $qb1 = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
+
+        $qb = $repository->getConnection()->createQueryBuilder()
+            ->select('a.id, a.sort_order')
+            ->distinct()
+            ->from("{$tableName}_attribute_value", 'av')
+            ->innerJoin('av', "attribute", 'a', 'av.attribute_id = a.id AND a.deleted=:false')
+            ->where("av.{$tableName}_id in ({$qb1->getSQL()})")
+            ->andWhere('av.deleted=:false')
+            ->orderBy('a.sort_order', 'ASC')
+            ->setParameter('false', false, ParameterType::BOOLEAN);
+
+        foreach ($qb1->getParameters() as $parameterName => $value) {
+            $qb->setParameter($parameterName, $value, Mapper::getParameterType($value));
+        }
+
+        if (class_exists("\\Pim\\Module") && !empty($channels)) {
+            $channelSqlParts = [];
+            foreach ($channels as $channelId) {
+                if ($channelId === 'withoutChannel') {
+                    $channelSqlParts[] = "a.channel_id IS NULL";
+                } else {
+                    $channelSqlParts[] = "a.channel_id = :$channelId";
+                    $qb->setParameter($channelId, $channelId);
+                }
+            }
+            $qb->andWhere(implode(' OR ', $channelSqlParts));
+        }
+
+        return array_column($qb->fetchAllAssociative(), 'id');
+    }
+
     public function getAttributesByIds(array $attributesIds): array
     {
         $conn = $this->getConnection();
@@ -607,6 +655,27 @@ class Attribute extends Base
             $this
                 ->getAclManager()
                 ->clearAclCache();
+        }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        // Remove attribute from layouts
+        $this->removeFromLayout('LayoutListItem', $entity->get('id'));
+    }
+
+    protected function removeFromLayout(string $layoutName, string $attributeId): void
+    {
+        $repository = $this->getEntityManager()->getRepository($layoutName);
+
+        $layoutItem = $repository
+            ->where(['attributeId' => $attributeId])
+            ->findOne();
+
+        if (!empty($layoutItem)) {
+            $repository->remove($layoutItem);
         }
     }
 

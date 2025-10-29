@@ -92,6 +92,14 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -135,9 +143,12 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -154,8 +165,7 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy",
-                "Archive"
+                "Hierarchy"
               ]
             }
           ]
@@ -189,9 +199,12 @@
               "attribute": "id"
             },
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -208,9 +221,12 @@
               "attribute": "id"
             },
             {
-              "type": "notEquals",
+              "type": "in",
               "attribute": "type",
-              "value": "ReferenceData"
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
             }
           ]
         }
@@ -220,21 +236,19 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notEquals",
-              "attribute": "type",
-              "value": "Relation"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -244,21 +258,19 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notEquals",
-              "attribute": "type",
-              "value": "Relation"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -268,21 +280,19 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notEquals",
-              "attribute": "type",
-              "value": "Relation"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
-              "type": "notEquals",
+              "type": "notIn",
               "attribute": "type",
-              "value": "Relation"
+              "value": [
+                "Relation",
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -290,7 +300,24 @@
     },
     "disableActionHistory": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "multiParents": {
       "type": "bool",
@@ -326,7 +353,7 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
-               {
+            {
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
@@ -380,7 +407,25 @@
     },
     "disabled": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "hasActive": {
       "type": "bool",
@@ -394,6 +439,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -411,6 +460,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -446,6 +499,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -501,13 +558,47 @@
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-disabled-fields",
       "notStorable": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "auditedEnabledRelations": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/audited-enabled-relations",
       "notStorable": true,
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "onlyEditableEmFields": {
       "type": "array",
@@ -516,7 +607,20 @@
     "nonDuplicatableFields": {
       "type": "array",
       "view": "views/admin/entity-manager/fields/non-duplicatable-fields",
-      "notStorable": true
+      "notStorable": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "Archive"
+              ]
+            }
+          ]
+        }
+      }
     },
     "hasAssociate": {
       "type": "bool",
@@ -530,6 +634,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }

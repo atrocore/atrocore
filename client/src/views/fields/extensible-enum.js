@@ -33,6 +33,10 @@ Espo.define('views/fields/extensible-enum', ['views/fields/link', 'views/fields/
             }
         },
 
+        sortBy: 'ee_eeo.sorting',
+
+        sortAsc: true,
+
         setup: function () {
             this.idName = this.name;
             this.nameName = this.name + 'Name';

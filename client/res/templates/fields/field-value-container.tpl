@@ -1,1 +1,1 @@
-<div class="field" data-name="valueField" style="border-bottom: none; padding: 0;">{{{valueField}}}</div>
+<div class="field field-value-container" data-name="valueField" style="border-bottom: none; padding: 0;">{{{valueField}}}</div>
