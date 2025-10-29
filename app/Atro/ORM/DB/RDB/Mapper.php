@@ -768,7 +768,7 @@ class Mapper implements MapperInterface
         return $this->container->get('config');
     }
 
-    private function error(string $message): void
+    protected function error(string $message): void
     {
         if (!empty($GLOBALS['debug'])) {
             $GLOBALS['log']->error($message);
