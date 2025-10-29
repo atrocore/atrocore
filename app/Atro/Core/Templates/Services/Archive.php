@@ -26,6 +26,16 @@ class Archive extends Record
         throw new Forbidden();
     }
 
+    public function updateEntity($id, $data)
+    {
+        throw new Forbidden();
+    }
+
+    public function deleteEntity($id)
+    {
+        throw new Forbidden();
+    }
+
     public function follow($id, $userId = null)
     {
         throw new Forbidden();
