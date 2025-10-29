@@ -236,22 +236,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Relation",
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -274,22 +258,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Relation",
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -312,22 +280,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Relation",
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -350,21 +302,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -472,22 +409,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -509,22 +430,6 @@
     "hasActive": {
       "type": "bool",
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -546,22 +451,6 @@
     "hasArchive": {
       "type": "bool",
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -601,22 +490,6 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -687,21 +560,6 @@
       "notStorable": true,
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -725,21 +583,6 @@
       "notStorable": true,
       "tooltip": true,
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Archive"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
@@ -782,22 +625,6 @@
     "hasAssociate": {
       "type": "bool",
       "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isTrue",
-              "attribute": "customizable"
-            }
-          ]
-        },
         "visible": {
           "conditionGroup": [
             {
