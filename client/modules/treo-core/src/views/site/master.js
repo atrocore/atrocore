@@ -100,11 +100,14 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 }
             }
 
-            const themeColor = $('head meta[name="theme-color"]');
-            if (themeColor.length) {
-                themeColor.attr('content', style['toolbarBackgroundColor']);
+            const rootStyle = getComputedStyle(document.documentElement);
+            const titleBarColor = rootStyle.getPropertyValue(this.styleVariableMap['toolbarBackgroundColor']);
+            const themeColorEl = $('head meta[name="theme-color"]');
+
+            if (themeColorEl.length) {
+                themeColorEl.attr('content', titleBarColor);
             } else {
-                $('head').append(`<meta name="theme-color" content="${style['toolbarBackgroundColor']}">`);
+                $('head').append(`<meta name="theme-color" content="${titleBarColor}">`);
             }
         },
 
