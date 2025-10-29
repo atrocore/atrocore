@@ -658,6 +658,27 @@ class Attribute extends Base
         }
     }
 
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        // Remove attribute from layouts
+        $this->removeFromLayout('LayoutListItem', $entity->get('id'));
+    }
+
+    protected function removeFromLayout(string $layoutName, string $attributeId): void
+    {
+        $repository = $this->getEntityManager()->getRepository($layoutName);
+
+        $layoutItem = $repository
+            ->where(['attributeId' => $attributeId])
+            ->findOne();
+
+        if (!empty($layoutItem)) {
+            $repository->remove($layoutItem);
+        }
+    }
+
     protected function getAcl()
     {
         return $this->getInjection('container')->get('acl');
