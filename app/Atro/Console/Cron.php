@@ -87,6 +87,9 @@ class Cron extends AbstractConsole
             exec("$php console.php daemon job-manager $id >/dev/null 2>&1 &");
         }
 
+        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
+        $auth->useNoAuth();
+
         // check auth tokens
         $this->authTokenControl();
 
@@ -111,9 +114,6 @@ class Cron extends AbstractConsole
      */
     protected function runCronManager(): void
     {
-        $auth = new \Espo\Core\Utils\Auth($this->getContainer());
-        $auth->useNoAuth();
-
         $scheduledJobs = $this->getEntityManager()->getRepository('ScheduledJob')
             ->where(['isActive' => true])
             ->find();
