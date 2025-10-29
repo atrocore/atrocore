@@ -26,7 +26,7 @@ Espo.define('views/file/record/panels/side/sharing', 'views/record/panels/relati
                 document.execCommand("copy");
                 $temp.remove();
 
-                this.notify(this.translate('copiedToClipboard', 'labels', 'Sharing'), 'success');
+                this.notify(this.translate('copiedToClipboard'), 'success');
             }
         }, Dep.prototype.events),
 

@@ -378,7 +378,8 @@
     "copyConfigurations": "Copier les configurations",
     "fullscreen": "Plein écran",
     "sort": "Trier",
-    "itemsInRow": "Éléments de la ligne"
+    "itemsInRow": "Éléments de la ligne",
+    "copiedToClipboard": "Copié dans le presse-papiers"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",
