@@ -250,7 +250,7 @@
     <div id="layout" class="row" bind:this={layoutElement}>
         <div class="col-sm-5">
             <div class="well">
-                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> {#if hasAttributes && params.type !== 'leftSidebar'}<a href="#" on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>{/if}</header>
+                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> {#if hasAttributes && !['leftSidebar', 'relationships'].includes(params.type)}<a href="#" on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>{/if}</header>
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
                         {#each selectedFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
