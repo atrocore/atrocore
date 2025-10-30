@@ -45,7 +45,7 @@
                 </tr>
            {{/if}}
             {{#each fieldListInGroup }}
-                <tr class="list-row {{#if  different}} danger {{/if}}" data-field="{{field}}">
+                <tr class="list-row {{#if  different}}danger{{/if}}" data-field="{{field}}">
                     <td class="cell " title="{{translate label scope=../../scope category='fields'}}">
                         {{#if attributeId}}
                         <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
@@ -61,7 +61,7 @@
                        </div>
                     </td>
                     {{/if}}
-                    <td class="cell  {{#unless ../shouldNotCenter}} text-center {{/unless}}">
+                    <td class="cell {{#if shouldNotCenter}}no-center{{/if}}">
                         <div class="{{class}}  field">Loading...</div>
                     </td>
                     {{/each}}

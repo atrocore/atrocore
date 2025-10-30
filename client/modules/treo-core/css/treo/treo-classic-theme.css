@@ -10550,7 +10550,7 @@ td.cell > .field {
     min-height: auto;
 }
 
-main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]),
+main[data-mode=edit] .cell > .field > *:not([type=checkbox]):not([type=radio]):not(.colored-enum),
 .cell > .field > *:not([type=checkbox]):not([type=radio]):not(a):not(.label) {
     width: 100%;
 }
@@ -10603,10 +10603,10 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
-.cell[data-mode=edit] > .field > .field,
+.cell[data-mode=edit] > .field > .field-value-container,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
-.record > .edit .cell > .field > .field {
+.record > .edit .cell > .field > .field-value-container {
     margin: 0 10px;
     line-height: inherit;
 }
@@ -18362,3 +18362,283 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     border-radius: 3px;
     padding: 5px;
 }
+
+#title-bar {
+    display: none;
+    app-region: drag;
+    text-align: right;
+    background-color: var(--toolbar-background-color);
+    color: var(--toolbar-font-color);
+}
+
+#title-bar .title-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 8px;
+    gap: 10px;
+    max-width: 50%;
+}
+
+#title-bar .title-container .title {
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#title-bar .icons-container {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    app-region: no-drag;
+    flex-shrink: 0;
+}
+
+#title-bar .icons-container img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#title-bar .icons-container a {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    line-height: 0;
+    color: var(--toolbar-font-color);
+}
+
+#title-bar .icons-container a > i {
+    font-size: 18px;
+}
+
+#title-bar .icons-container:hover img {
+    display: none;
+}
+
+#title-bar .icons-container:hover a {
+    display: block;
+}
+
+#title-bar .buttons-container {
+    margin-left: auto;
+    margin-right: 0;
+    position: relative;
+    padding-left: 8px;
+}
+
+#title-bar .buttons-container:before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 55%;
+    background-color: var(--primary-border-color);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+}
+
+#title-bar button {
+    app-region: no-drag;
+    border: 0;
+    height: 100%;
+    color: inherit;
+}
+
+#title-bar button:not(:hover):not(:focus):not(:active) {
+    background: transparent;
+}
+
+#title-bar button:hover,
+#title-bar button:focus {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+#title-bar button:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+#title-bar button i {
+    font-size: 18px;
+}
+
+.hide-title-bar .modal-dialog {
+    margin: 0 auto;
+    max-width: 500px;
+}
+
+.hide-title-bar .modal-body {
+    padding: 20px;
+    background: #fafafa;
+}
+
+.hide-title-bar .modal-body img {
+    margin: 20px auto;
+    display: block;
+    max-width: 100%;
+}
+
+@media (display-mode: window-controls-overlay) {
+    #title-bar {
+        display: flex;
+        gap: 10px;
+        height: env(titlebar-area-height, 30px);
+        width: env(titlebar-area-width, 100%);
+    }
+
+    .modal {
+        top: 80px;
+    }
+}
+
+.compare-records .hidden-cell {
+    display: none !important;
+}
+
+.compare-records thead tr th[colspan="*"] {
+    text-align: center;
+}
+
+.compare-records .fields-compare-panel {
+    display: inline-block;
+}
+
+.compare-records .compare-panel {
+    background-color: white;
+    width: 100%;
+    padding: 0;
+}
+
+.compare-records .compare-panel table td, .compare-panel table th {
+    max-width: 300px;
+}
+
+.compare-records .file-link {
+    white-space: normal;
+}
+
+.compare-records .compare-panel table tbody tr.danger {
+    border-left: 3px solid red;
+}
+
+.compare-records .compare-panel table col.col-min-width {
+    min-width: 200px;
+}
+
+.compare-records .compare-panel table tbody tr.danger td:first-child {
+    border-left: 3px solid red;
+}
+
+.compare-records .compare-panel table tbody tr.danger > td {
+    background-color: transparent;
+}
+
+.compare-records th span.danger {
+    color: red;
+}
+
+.compare-records .compare-panel .panel-body {
+    padding: 0 0 0 0 !important;
+}
+
+.compare-records .compare-panel .panel-body > div:last-child > .list:last-child {
+    margin-bottom: 0;
+}
+
+.compare-records .compare-panel .panel-body div.list {
+    overflow-x: auto;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.compare-records .compare-panel .panel-body div.list-container {
+    padding: 0;
+}
+
+.compare-records .compare-panel .table {
+    table-layout: fixed;
+}
+
+.compare-records .compare-panel tr td:first-child {
+    width: 250px !important;
+}
+
+.compare-records .compare-panel tr td:first-child {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.compare-records .compare-panel td {
+    min-width: 150px !important;
+}
+
+.compare-records .compare-panel .attachment-preview a {
+    display: flex;
+    justify-content: center;
+}
+
+.compare-records [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border {
+    border-top: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.compare-records [data-name="relationshipsPanels"] table {
+    table-layout: auto;
+}
+
+.compare-records.detail .button-container {
+    padding: 10px !important;
+}
+
+.compare-records .compare-panel .center-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-width: 0 !important;
+}
+
+.compare-records .compare-panel table td.cell {
+    overflow: inherit;
+    position: relative;
+}
+
+.compare-records .compare-panel table td.cell .field {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.compare-records .compare-panel table tr td.cell.no-center .field {
+    text-align: initial !important;
+}
+
+.compare-records .compare-panel table td.cell .field .selectize-control{
+    text-align: initial;
+}
+
+.compare-records .compare-panel table td.cell .inline-actions {
+    position: absolute;
+    right: 5px;
+    top: -10px;
+    z-index: 1000;
+}
+
+.compare-records .compare-panel table td.cell:first-child {
+    overflow: hidden;
+}
+
+.compare-records .compare-panel .panel-default > .panel-heading {
+    border-bottom: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.compare-records .compare-panel .panel-default > .panel-heading .panel-title {
+    font-weight: bold;
+}
+

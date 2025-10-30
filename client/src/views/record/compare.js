@@ -60,7 +60,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
-            this.merging = this.options.merging;
+            this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
             this.hidePanelNavigation = false;
@@ -81,63 +81,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.listenTo(this, 'merge', (dialog) => {
-                let relationshipsPanels = this.getView('relationshipsPanels');
-                if (!this.merging) {
-                    this.notify('Loading...')
-                    this.merging = true;
-                    this.renderFieldsPanels();
-                    this.handleRadioButtonsDisableState(false)
-                    relationshipsPanels.merging = true;
-                    relationshipsPanels.changeViewMode('edit');
-                    this.notify(false)
-                    return;
-                }
-
-                this.notify('Loading...');
-
-                let attributes = {};
-
-
-                for (const panel of this.fieldPanels) {
-                    let fieldsPanels = this.getView(panel.name);
-
-                    if (fieldsPanels.validate()) {
-                        this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
-                        return;
-                    }
-
-                    attributes = { ...attributes, ...fieldsPanels.fetch() };
-                }
-
-
-                let buttons = this.getParentView().$el.find('.modal-footer button');
-
-                let relationshipData = relationshipsPanels.fetch();
-
-                if (relationshipsPanels.validate()) {
-                    this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
-                    return;
-                }
-
-                let id = $('input[type="radio"][name="check-all"]:checked').val();
-                buttons.addClass('disabled');
-                this.handleRadioButtonsDisableState(true);
-                $.ajax({
-                    url: this.getCompareUrl(),
-                    type: 'POST',
-                    data: JSON.stringify(this.getCompareData(id, attributes, relationshipData)),
-                    error: (xhr, status, error) => {
-                        this.notify(false);
-                        buttons.removeClass('disabled');
-                        this.handleRadioButtonsDisableState(false);
-                    }
-                }).done(() => {
-                    this.notify('Merged', 'success');
-                    this.trigger('merge-success');
-                    dialog.close();
-                });
-
-
+                this.applyMerge(() => dialog.close());
             });
 
             this.listenTo(this, 'open-filter', () => {
@@ -147,6 +91,67 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.setupFieldPanels();
 
             this.prepareFieldsData();
+        },
+
+        applyMerge(doneCallback) {
+            let relationshipsPanels = this.getView('relationshipsPanels');
+            if (!this.merging) {
+                this.notify('Loading...')
+                this.merging = true;
+                this.renderFieldsPanels();
+                this.handleRadioButtonsDisableState(false)
+                relationshipsPanels.merging = true;
+                relationshipsPanels.changeViewMode('edit');
+                this.notify(false)
+                return;
+            }
+
+            this.notify('Loading...');
+
+            let attributes = {};
+
+
+            for (const panel of this.fieldPanels) {
+                let fieldsPanels = this.getView(panel.name);
+
+                if (fieldsPanels.validate()) {
+                    this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
+                    return;
+                }
+
+                attributes = {...attributes, ...fieldsPanels.fetch()};
+            }
+
+
+            let buttons = this.getParentView().$el.find('.modal-footer button');
+
+            let relationshipData = relationshipsPanels.fetch();
+
+            if (relationshipsPanels.validate()) {
+                this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
+                return;
+            }
+
+            let id = $('input[type="radio"][name="check-all"]:checked').val();
+            buttons.addClass('disabled');
+            this.handleRadioButtonsDisableState(true);
+            $.ajax({
+                url: this.getCompareUrl(),
+                type: 'POST',
+                selectionId: this.selectionModel?.id,
+                data: JSON.stringify(this.getCompareData(id, attributes, relationshipData)),
+                error: (xhr, status, error) => {
+                    this.notify(false);
+                    buttons.removeClass('disabled');
+                    this.handleRadioButtonsDisableState(false);
+                }
+            }).done(() => {
+                this.notify('Merged', 'success');
+                this.trigger('merge-success');
+                if (doneCallback) {
+                    doneCallback();
+                }
+            });
         },
 
         getCompareUrl() {
@@ -160,12 +165,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     relationshipData: relationshipData
                 },
                 targetId: targetId,
-                sourceIds: this.collection.models.filter(m => m.id !== targetId).map(m => m.id),
+                sourceIds: this.getModels().filter(m => m.id !== targetId).map(m => m.id),
             }
         },
 
         getOtherModelsForComparison(model) {
-            return this.collection.models.filter(model => model.id !== this.model.id);
+            return this.getModels().filter(model => model.id !== this.model.id);
         },
 
         setupFieldPanels() {
@@ -175,20 +180,21 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 filter: (field) => !field.attributeId
             }];
 
-            if (this.getMetadata().get(['scopes', this.scope, 'hasAttribute'])) {
-                this.putAttributesToModel();
 
-                $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
-                    this.fieldPanels.push({
-                        name: panel.id,
-                        title: panel.name,
-                        sortOrder: panel.sortOrder,
-                        filter: (field) => field.attributeId && field.attributePanelId === panel.id
-                    })
+            this.putAttributesToModel();
 
-                    this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
-                });
-            }
+            $.each((this.getConfig().get('referenceData')?.AttributePanel || {}), (code, panel) => {
+                this.fieldPanels.push({
+                    name: panel.id,
+                    title: panel.name,
+                    sortOrder: panel.sortOrder,
+                    isAttributePanel: true,
+                    filter: (field) => field.attributeId && field.attributePanelId === panel.id
+                })
+
+                this.fieldPanels.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
+            });
+
         },
 
         prepareFieldsData() {
@@ -225,7 +231,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let fieldValueRows = [{
                     id: modelCurrent.id,
                     key: field + 'Current',
-                    shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && modelCurrent.get(field),
+                    shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!modelCurrent.get(field),
                     class: 'current'
                 }];
 
@@ -233,7 +239,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return fieldValueRows.push({
                         id: element.id,
                         key: field + 'Other' + index, index,
-                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && element.get(field),
+                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!element.get(field),
                         class: `other${index}`
                     })
                 });
@@ -253,7 +259,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
                 });
             }, this);
-
 
             this.fieldsArr.sort((v1, v2) =>
                 v1.label.localeCompare(v2.label)
@@ -316,6 +321,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         renderRelationshipsPanels() {
+            if (this.isComparisonAcrossScopes()) {
+                return;
+            }
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
@@ -337,11 +345,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
+                    this.trigger('after:relationship-panels-render')
                 });
+
             }, true);
         },
 
         getRelationshipPanels() {
+            if (this.isComparisonAcrossScopes()) {
+                return [];
+            }
+
             let relationshipsPanels = [];
             const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
 
@@ -423,6 +437,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         data() {
             let column = this.buildComparisonTableHeaderColumn()
+
             return {
                 fieldPanels: this.fieldPanels,
                 columns: column,
@@ -522,23 +537,25 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             });
         },
 
         buildComparisonTableHeaderColumn() {
             let columns = [];
-            let hasName = !!this.getMetadata().get(['entityDefs', this.scope, 'fields', 'name', 'type'])
 
             columns.push({
-                name: hasName ? this.translate('Name') : 'ID',
+                name: this.translate('Name'),
                 isFirst: true,
             });
 
-            this.collection.models.forEach(model => columns.push({
-                id: model.id,
-                name: `<a href="#/${this.scope}/view/${model.id}" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
-            }));
+            this.getModels().forEach((model) => {
+                let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type'])
+                return columns.push({
+                    id: model.id,
+                    name: `<a href="#/${model.name}/view/${model.id}" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                });
+            });
 
             return columns;
         },
@@ -681,6 +698,18 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         getModels() {
             return this.collection.models ?? [];
+        },
+
+        isComparisonAcrossScopes() {
+            let scope = null;
+            for (const model of this.getModels()) {
+                if (scope === null) {
+                    scope = this.model.name;
+                }
+                if (scope !== this.model.name) {
+                    return true;
+                }
+            }
         },
 
         getDistantModels() {
@@ -894,20 +923,23 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getModelsForAttributes() {
-            return [...this.collection.models, this.model]
+            return [...this.getModels(), this.model].filter((model) => {
+                return this.getMetadata().get(`scopes.${model.name}.hasAttribute`);
+            });
         },
 
         putAttributesToModel() {
             let hasAttributeValues = false;
-            if (!this.getMetadata().get(`scopes.${this.scope}.hasAttribute`)) {
-                return;
-            }
 
             let models = this.getModelsForAttributes();
 
+            if (models.length === 0) {
+                return;
+            }
+
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({ async: false })
+                    model.fetch({async: false})
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {

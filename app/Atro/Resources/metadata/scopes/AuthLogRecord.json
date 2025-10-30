@@ -8,7 +8,6 @@
   "streamDisabled": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
-  "clearDeletedAfterDays": 35,
   "actionDisabled": true,
   "emHidden": true,
   "openApiHidden": true,

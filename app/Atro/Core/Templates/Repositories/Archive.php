@@ -15,17 +15,26 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\ORM\DB\MapperInterface;
-use Atro\Services\Record;
+use Espo\Services\RecordService;
 
 class Archive extends Base
 {
+    protected const MAPPER_CLASS = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
+
     protected bool $moveDataOnFind = true;
+
+    public function hasClickHouse(): bool
+    {
+        return class_exists(self::MAPPER_CLASS) && !empty($this->getConfig()->get('clickhouse')['active']);
+    }
 
     public function find(array $params = [])
     {
-        $className = '\ClickHouseIntegration\Console\SyncEntity';
-        if (class_exists($className) && $this->moveDataOnFind && !empty($this->getConfig()->get('clickhouse')['active'])) {
-            $this->getInjection('container')->get($className)->moveData($this->entityName);
+        if ($this->hasClickHouse() && $this->moveDataOnFind) {
+            $this
+                ->getInjection('container')
+                ->get('\ClickHouseIntegration\Console\SyncEntity')
+                ->moveData($this->entityName);
         }
 
         return parent::find($params);
@@ -33,20 +42,16 @@ class Archive extends Base
 
     public function hasDeletedRecordsToClear(): bool
     {
-        if (empty($this->seed)) {
+        if (empty($this->seed) || $this->hasClickHouse()) {
             return false;
         }
 
-        if (!empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']))) {
-            return true;
-        }
-
-        return parent::hasDeletedRecordsToClear();
+        return !empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']));
     }
 
     public function clearDeletedRecords(): void
     {
-        if (empty($this->seed)) {
+        if (empty($this->seed) || $this->hasClickHouse()) {
             return;
         }
 
@@ -55,42 +60,28 @@ class Archive extends Base
         if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
             $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
 
-            // delete using massActions
-            /** @var Record $service */
-            $service = $this->getEntityManager()->getContainer()->get('serviceFactory')->create($this->entityName);
-            $where = [];
-
+            $qb = $this->getConnection()->createQueryBuilder();
+            $qb->delete($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($this->entityName)));
             if ($this->seed->hasField('modifiedAt')) {
-                $where[] = [
-                    'attribute' => 'modifiedAt',
-                    'type'      => 'before',
-                    'value'     => $date->format('Y-m-d H:i:s'),
-                ];
+                $qb->where('modified_at < :date OR modified_at IS NULL');
             } elseif ($this->seed->hasField('createdAt')) {
-                $where[] = [
-                    'attribute' => 'createdAt',
-                    'type'      => 'before',
-                    'value'     => $date->format('Y-m-d H:i:s'),
-                ];
+                $qb->where('created_at < :date OR modified_at IS NULL');
+            } else {
+                return;
             }
-
-            if (!empty($where)) {
-                $service->massRemove(['where' => $where]);
-            }
+            $qb->setParameter('date', $date->format('Y-m-d H:i:s'));
+            $qb->executeQuery();
         }
-
-        parent::clearDeletedRecords();
     }
 
     public function getMapper(): MapperInterface
     {
-        $className = '\ClickHouseIntegration\ORM\DB\ClickHouse\Mapper';
-        if (!class_exists($className) || empty($this->getConfig()->get('clickhouse')['active'])) {
+        if (!$this->hasClickHouse()) {
             return parent::getMapper();
         }
 
         if (empty($this->mapper)) {
-            $this->mapper = $this->getEntityManager()->getMapper($className);
+            $this->mapper = $this->getEntityManager()->getMapper(self::MAPPER_CLASS);
         }
 
         return $this->mapper;
@@ -101,5 +92,10 @@ class Archive extends Base
         parent::init();
 
         $this->addDependency('container');
+    }
+
+    protected function getService(string $serviceName): RecordService
+    {
+        return $this->getInjection('container')->get('serviceFactory')->create($serviceName);
     }
 }

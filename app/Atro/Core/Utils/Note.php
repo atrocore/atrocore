@@ -369,7 +369,7 @@ class Note
         if (!isset($this->relationEntityData[$key])) {
             $this->relationEntityData[$key] = [];
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []) as $link => $defs) {
-                if ($defs['type'] === 'belongsTo' && !empty($defs['foreign']) && !empty($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'recordRelatedChangesInStream']))) {
+                if (!empty($defs['type']) && $defs['type'] === 'belongsTo' && !empty($defs['foreign']) && !empty($this->getMetadata()->get(['entityDefs', $defs['entity'], 'fields', $defs['foreign'], 'recordRelatedChangesInStream']))) {
                     $this->relationEntityData[$key][$link] = $defs['entity'];
                 }
             }

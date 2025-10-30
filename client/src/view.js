@@ -166,7 +166,10 @@ Espo.define('view', [], function () {
                 prefix += ' | ';
             }
 
-            $('head title').text(title ? prefix + title : prefix);
+            const resultTitle = title ? prefix + title : prefix;
+
+            $('head title').text(resultTitle);
+            $('#title-bar .title-container .title').text(resultTitle);
         },
 
         translate: function (label, category, scope) {

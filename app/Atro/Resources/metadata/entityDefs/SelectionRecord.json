@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "view": "views/selection-record/fields/name"
+    },
+    "entityType": {
+      "type": "enum",
+      "view": "views/fields/entity-type",
+      "trim": true,
+      "required": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "view": "views/selection-record/fields/entity-id",
+      "trim": true,
+      "required": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "entityType"
+            }
+          ]
+        }
+      }
+    },
+    "entity": {
+      "type": "jsonArray",
+      "notStorable": true
+    },
+    "selections": {
+      "type": "linkMultiple"
+    }
+  },
+  "links": {
+    "selections": {
+      "type": "hasMany",
+      "relationName": "SelectionSelectionRecord",
+      "entity": "Selection",
+      "foreign": "selectionRecords"
+    }
+  }
+}

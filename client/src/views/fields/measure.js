@@ -36,6 +36,8 @@ Espo.define('views/fields/measure', ['views/fields/extensible-enum', 'views/fiel
 
         selectBoolFilterList: ['fromMeasure'],
 
+        sortBy: null,
+
         boolFilterData: {
             fromMeasure() {
                 return {

@@ -156,14 +156,15 @@ class IntType extends AbstractFieldType
                 'protected'                 => !empty($row['is_protected']),
                 'layoutDetailDisabled'      => true
             ];
+            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
 
             $entity->entityDefs['fields'][$name . 'UnitId'] = [
                 'label' => "{$row[$this->prepareKey('name', $row)]} " . $this->language->translate('unitPart'),
             ];
+        } else {
+            $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
         }
-
-        $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
     }
 
     public function select(array $row, string $alias, QueryBuilder $qb, Mapper $mapper, array $params): void

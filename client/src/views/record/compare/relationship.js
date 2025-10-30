@@ -209,7 +209,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         {
                             type: 'linkedWith',
                             attribute: this.relationship.foreign,
-                            value: this.collection.models.map(m => m.id)
+                            value: this.models.map(m => m.id)
                         }
                     ]
                 };
@@ -217,7 +217,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                 data.totalOnly = true;
                 this.ajaxGetRequest(this.relationship.scope, data).success((res) => {
 
-                    data.maxSize = 500 * this.collection.models.length;
+                    data.maxSize = 500 * this.models.length;
 
                     if (res.total > data.maxSize) {
                         this.hasToManyRecords = true;
@@ -231,12 +231,12 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         this.ajaxGetRequest(this.relationship.scope, data),
 
                         this.ajaxGetRequest(this.relationName, {
-                            maxSize: 500 * this.collection.models.length,
+                            maxSize: 500 * this.models.length,
                             where: [
                                 {
                                     type: 'in',
                                     attribute: modelRelationColumnId,
-                                    value: this.collection.models.map(m => m.id)
+                                    value: this.models.map(m => m.id)
                                 }
                             ]
                         })]
@@ -247,7 +247,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                         this.linkedEntities = Object.values(uniqueList)
                         this.linkedEntities.forEach(item => {
                             this.relationModels[item.id] = [];
-                            this.collection.models.forEach((model, key) => {
+                            this.models.forEach((model, key) => {
                                 let m = relationModel.clone()
                                 m.set(this.isLinkedColumns, false);
                                 relationList.forEach(relationItem => {

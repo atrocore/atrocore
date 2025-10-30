@@ -66,6 +66,10 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         boolFilterData: {},
 
+        sortBy: null,
+
+        sortAsc: null,
+
         getBoolFilterData() {
             let data = {};
             this.selectBoolFilterList.forEach(item => {
@@ -240,7 +244,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         boolFilterData: this.getBoolFilterData(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         multiple: true,
-                        massRelateEnabled: true
+                        massRelateEnabled: true,
+                        sortBy: this.sortBy,
+                        sortAsc: this.sortAsc
                     }, function (view) {
                         view.render();
                         this.notify(false);
@@ -302,7 +308,9 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 primaryFilterName: this.getSelectPrimaryFilterName(),
                 createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                 mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                forceSelectAllAttributes: this.forceSelectAllAttributes
+                forceSelectAllAttributes: this.forceSelectAllAttributes,
+                sortBy: this.sortBy,
+                sortAsc: this.sortAsc
             }, function (view) {
                 view.render();
                 this.notify(false);
@@ -951,12 +959,12 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         createQueryBuilderFilter(type = null) {
             let operators = ['in', 'not_in'];
-            if(this.getForeignScope() === 'User') {
-               operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
+            if (this.getForeignScope() === 'User') {
+                operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
             }
 
-            if(this.getForeignScope() === 'Team') {
-               operators =  operators.concat(['is_my_team', 'is_not_my_team'])
+            if (this.getForeignScope() === 'Team') {
+                operators = operators.concat(['is_my_team', 'is_not_my_team'])
             }
 
             operators = operators.concat(['is_null', 'is_not_null']);
@@ -1070,7 +1078,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             return name;
         },
 
-        addCustomDataToView: function(view, rule) {
+        addCustomDataToView: function (view, rule) {
             view.getSelectFilters = this.getSelectFilters.bind(this);
             view.selectBoolFilterList = this.selectBoolFilterList;
             view.boolFilterData = {};
