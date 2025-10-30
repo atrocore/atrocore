@@ -111,7 +111,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
 
-                this.getRouter().navigate('#' + scope + '/view/' + id, { trigger: false });
+                this.getRouter().navigate('#' + scope + '/view/' + id);
                 this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="showMore"]': function () {

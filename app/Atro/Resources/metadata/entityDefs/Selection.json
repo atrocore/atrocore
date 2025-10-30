@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "trim": true,
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "selectionRecords": {
+      "type": "linkMultiple"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "selectionRecords": {
+      "type": "hasMany",
+      "relationName": "SelectionSelectionRecord",
+      "entity": "SelectionRecord",
+      "foreign": "selections"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  }
+}
