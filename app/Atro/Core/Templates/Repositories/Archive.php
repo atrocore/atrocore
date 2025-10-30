@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Core\Templates\Repositories;
 
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\MapperInterface;
 use Espo\Services\RecordService;
 
@@ -42,7 +43,7 @@ class Archive extends Base
 
     public function hasDeletedRecordsToClear(): bool
     {
-        if (empty($this->seed) || $this->hasClickHouse()) {
+        if (empty($this->seed)) {
             return false;
         }
 
@@ -51,27 +52,29 @@ class Archive extends Base
 
     public function clearDeletedRecords(): void
     {
-        if (empty($this->seed) || $this->hasClickHouse()) {
+        if (empty($this->seed)) {
             return;
         }
 
-        $autoDeleteAfterDays = $this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']);
+        if ($this->hasClickHouse()) {
+            $this
+                ->getInjection('container')
+                ->get('\ClickHouseIntegration\Console\ClearEntity')
+                ->clearData($this->entityName);
 
-        if (!empty($autoDeleteAfterDays) && $autoDeleteAfterDays > 0) {
-            $date = (new \DateTime())->modify("-$autoDeleteAfterDays days");
-
-            $qb = $this->getConnection()->createQueryBuilder();
-            $qb->delete($this->getConnection()->quoteIdentifier($this->getMapper()->toDb($this->entityName)));
-            if ($this->seed->hasField('modifiedAt')) {
-                $qb->where('modified_at < :date OR modified_at IS NULL');
-            } elseif ($this->seed->hasField('createdAt')) {
-                $qb->where('created_at < :date OR modified_at IS NULL');
-            } else {
-                return;
-            }
-            $qb->setParameter('date', $date->format('Y-m-d H:i:s'));
-            $qb->executeQuery();
+            return;
         }
+
+        $autoDeleteAfterDays = (int)$this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']);
+        if (empty($autoDeleteAfterDays) || $autoDeleteAfterDays < 1) {
+            return;
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->delete(Util::toUnderScore(lcfirst($this->entityName)))
+            ->where('created_at < :date')
+            ->setParameter('date', (new \DateTime())->modify("-$autoDeleteAfterDays days")->format('Y-m-d H:i:s'))
+            ->executeQuery();
     }
 
     public function getMapper(): MapperInterface
