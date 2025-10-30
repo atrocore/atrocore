@@ -27,7 +27,6 @@
   "enabledCopyConfigurations": true,
   "notificationDisabled": true,
   "bookmarkDisabled": true,
-  "clearDeletedAfterDays": 35,
   "actionDisabled": true,
   "hideFieldTypeFilters": true,
   "matchingDisabled": true
