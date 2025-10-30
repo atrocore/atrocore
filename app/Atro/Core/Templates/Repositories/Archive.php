@@ -47,7 +47,7 @@ class Archive extends Base
             return false;
         }
 
-        return !empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays']));
+        return !empty($this->getMetadata()->get(['scopes', $this->entityName, 'autoDeleteAfterDays'])) || $this->hasClickHouse();
     }
 
     public function clearDeletedRecords(): void
