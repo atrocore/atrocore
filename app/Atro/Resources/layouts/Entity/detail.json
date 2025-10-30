@@ -90,9 +90,7 @@
         {
           "name": "clearDeletedAfterDays"
         },
-        {
-          "name": "autoDeleteAfterDays"
-        }
+        false
       ],
       [
         {
@@ -159,6 +157,12 @@
       [
         {
           "name": "hasAssociate"
+        },
+        false
+      ],
+      [
+        {
+          "name": "autoDeleteAfterDays"
         },
         false
       ]
