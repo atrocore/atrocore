@@ -16,7 +16,6 @@ namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\MapperInterface;
-use Espo\Services\RecordService;
 
 class Archive extends Base
 {
@@ -95,10 +94,5 @@ class Archive extends Base
         parent::init();
 
         $this->addDependency('container');
-    }
-
-    protected function getService(string $serviceName): RecordService
-    {
-        return $this->getInjection('container')->get('serviceFactory')->create($serviceName);
     }
 }
