@@ -569,7 +569,8 @@
     "massDelete": "Масове видалення",
     "download": "Завантажити",
     "compare": "Порівняйте",
-    "removeAttribute": "Видалити атрибут"
+    "removeAttribute": "Видалити атрибут",
+    "select": "Виберіть"
   },
   "fields": {
     "classifications": "Класифікації",

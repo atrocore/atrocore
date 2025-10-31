@@ -327,7 +327,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         showMore: true,
 
-        massActionList: ['remove', 'compare', 'merge', 'massUpdate', 'export'],
+        massActionList: ['remove', 'compare', 'merge', 'select', 'massUpdate', 'export'],
 
         checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
 
@@ -851,6 +851,29 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         massActionMerge: function (data, e) {
             return this.massActionCompare(data, e, true);
+        },
+
+        massActionSelect: function(data, e) {
+            if (!this.getAcl().check(this.entityType, 'read')) {
+                this.notify('Access denied', 'error');
+                return false;
+            }
+
+            if (this.checkedList.length < 2) {
+                this.notify('Select 2 or more records', 'error');
+                return;
+            }
+            if (this.checkedList.length > 10) {
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
+                return;
+            }
+            this.notify(this.translate('Loading'))
+            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                scope: this.entityType,
+                entityIds: this.checkedList
+            }).then(result => {
+                this.getRouter().navigate('#Selection/view/'+result.id, {trigger: true});
+            });
         },
 
         processMassActionResult(result) {

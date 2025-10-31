@@ -621,7 +621,8 @@
     "massRestore": "Massenwiederherstellung",
     "download": "Nachladen",
     "compare": "Vergleichen Sie",
-    "removeAttribute": "Attribut löschen"
+    "removeAttribute": "Attribut löschen",
+    "select": "Wählen"
   },
   "fields": {
     "width": "Breite",

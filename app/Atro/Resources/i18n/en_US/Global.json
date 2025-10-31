@@ -634,7 +634,8 @@
     "massDelete": "Mass Delete",
     "download": "Download",
     "compare": "Compare",
-    "removeAttribute": "Delete Attribute"
+    "removeAttribute": "Delete Attribute",
+    "select": "Select"
   },
   "fields": {
     "__currentUser": "Current User",
