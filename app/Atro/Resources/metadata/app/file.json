@@ -6,7 +6,8 @@
       "gif",
       "png",
       "webp",
-      "svg"
+      "svg",
+      "avif"
     ],
     "hasPreviewExtensions": [
       "jpg",
@@ -16,7 +17,8 @@
       "pdf",
       "jfif",
       "webp",
-      "svg"
+      "svg",
+      "avif"
     ]
   },
   "video": {

@@ -37,10 +37,10 @@ class Thumbnail extends AbstractEntryPoint
         $thumbnailPath = $this->getThumbnailCreator()->preparePath($file, $size);
 
         if (!$this->getThumbnailCreator()->hasThumbnail($file, $size)) {
-            if ($this->getThumbnailCreator()->isSvg($file)) {
+            if (!$this->getThumbnailCreator()->isThumbnailSupported($file)) {
                 $this
                     ->getFileManager()
-                    ->putContents('public'.DIRECTORY_SEPARATOR.$thumbnailPath, $file->getContents());
+                    ->putContents('public' . DIRECTORY_SEPARATOR . $thumbnailPath, $file->getContents());
             } else {
                 if ($this->getThumbnailCreator()->isPdf($originFilePath)) {
                     $originFilePath = $this->getThumbnailCreator()->createImageFromPdf($file, $originFilePath);

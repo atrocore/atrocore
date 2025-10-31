@@ -18,7 +18,7 @@
     "ext-exif": "*",
     "ext-imagick": "*",
     "ext-fileinfo": "*",
-    "gumlet/php-image-resize": "~1.9.2@stable",
+    "gumlet/php-image-resize": "~2.1.2@stable",
     "composer/semver": "~3.3.2@stable",
     "doctrine/dbal": "~3.2.2@stable",
     "atrocore/slim": "~2.6.2",
