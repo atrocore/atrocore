@@ -1454,8 +1454,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync after:inlineEditSave', function () {
+            this.listenTo(this.model, 'sync after:inlineEditSave', function (model, data) {
                 this.attributes = this.model.getClonedAttributes();
+
+
+                if (data) {
+                    Object.keys(data).forEach(field => {
+                        if (!Array.isArray(this.attributes[field]) && !(this.attributes[field] !== null && typeof this.attributes[field] === 'object')) {
+                            if (data[field] && data[field] !== this.attributes[field]) {
+                                this.attributes[field] = data[field];
+                            }
+                        }
+                    });
+                }
             }, this);
 
             this.listenTo(this.model, 'change', () => {

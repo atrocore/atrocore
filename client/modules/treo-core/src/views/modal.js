@@ -36,8 +36,10 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                 const adjustHeight = () => {
                     const el = this.$el.find('.modal-content')[0]
                     if (!el) {
-                        return
+                        return;
                     }
+
+                    const titleBarHeight = $('#title-bar').outerHeight();
                     const contentComputed = getComputedStyle(el);
                     const windowHeight = window.innerHeight;
                     const windowWidth = window.innerWidth;
@@ -53,6 +55,10 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                         let marginTop = parseInt(contentComputed.marginTop);
                         let marginBottom = parseInt(contentComputed.marginBottom);
                         let height = windowHeight - diffHeight - marginTop - marginBottom;
+
+                        if ('windowControlsOverlay' in navigator && navigator.windowControlsOverlay.visible) {
+                            height -= titleBarHeight;
+                        }
 
                         cssParams.height = height + 'px';
                         cssParams.maxHeight = height + 'px';
@@ -75,6 +81,7 @@ Espo.define('treo-core:views/modal', 'class-replace!treo-core:views/modal', func
                     }
                 };
                 $(window).off('resize.adjust-modal-height').on('resize.adjust-modal-height', adjustHeight);
+                $(window).off('geometrychange.adjust-modal-height').on('geometrychange.adjust-modal-height', adjustHeight);
                 adjustHeight();
             });
         },
