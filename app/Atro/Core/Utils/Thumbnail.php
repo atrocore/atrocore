@@ -39,7 +39,7 @@ class Thumbnail
             $thumbnailPath .= DIRECTORY_SEPARATOR . trim($file->get('thumbnailsPath'));
         }
 
-        if ($this->isSvg($file)) {
+        if (!$this->isThumbnailSupported($file)) {
             return $thumbnailPath . DIRECTORY_SEPARATOR . $file->get('name');
         }
 
@@ -109,6 +109,19 @@ class Thumbnail
         return $file->get('mimeType') === 'image/svg+xml';
     }
 
+    public function isThumbnailSupported(FileEntity $file): bool
+    {
+        if ($file->get('mimeType') === 'image/avif') {
+            return gd_info()['AVIF Support'] ?? false;
+        }
+
+        if ($this->isSvg($file)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function isPdf(string $fileName): bool
     {
         $parts = explode('.', $fileName);
@@ -122,7 +135,7 @@ class Thumbnail
         $storage = $this->getEntityManager()->getRepository('File')->getStorage($file);
 
         $dirPath = $storage->getThumbnailPdfImageCachePath($file);
-        if (!is_dir($dirPath)){
+        if (!is_dir($dirPath)) {
             $this->getFileManager()->mkdir($dirPath, 0777, true);
         }
 
