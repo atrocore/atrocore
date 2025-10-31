@@ -1192,7 +1192,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             model.set(attrs);
             model._previousAttributes = res;
             model._updatedById = this.getUser().id; // block realtime
-            if (res.isUpdatedByWorkflow) {
+            if (res.isBackendModified) {
                 model._fetchAfterInlineEditClose = true;
             }
 
