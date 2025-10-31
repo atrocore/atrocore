@@ -697,7 +697,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 }
             }
-
+debugger
             this.notify('Loading...');
             this.createView('quickCreate', viewName, {
                 scope: scope,

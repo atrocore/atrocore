@@ -2,8 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "trim": true,
-      "required": true
+      "trim": true
     },
     "description": {
       "type": "text"

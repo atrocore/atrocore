@@ -8,26 +8,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/panels/selection-record/merge', 'views/selection/record/panels/selection-record/compare', function (Dep) {
+Espo.define('views/selection/record/detail/merge', 'views/selection/record/detail/compare', function (Dep) {
 
     return Dep.extend({
         merging: true,
 
         actionMerge()  {
             this.applyMerge();
-        },
-
-        getActionList() {
-            if(!this.merging) {
-                return [];
-            }
-            return [
-                {
-                    label: 'Merge',
-                    action: 'merge',
-                    name: 'selectionRecords'
-                }
-            ];
         }
     });
 });

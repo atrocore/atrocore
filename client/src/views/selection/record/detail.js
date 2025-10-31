@@ -11,6 +11,14 @@
 Espo.define('views/selection/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
-        bottomView: 'views/selection/record/detail-bottom'
+       setup: function() {
+           Dep.prototype.setup.call(this);
+
+           this.additionalButtons.push( {
+               action: 'addItem',
+               name: 'addItem',
+               label: this.translate('addItem')
+           });
+       }
     });
 });

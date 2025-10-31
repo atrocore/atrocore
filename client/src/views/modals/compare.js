@@ -35,6 +35,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         fullHeight: true,
 
+        selectionId: null,
+
         setup: function () {
             this.model = this.options.model;
             this.scope = this.options.scope ?? this.model.urlRoot;
@@ -80,6 +82,14 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     label: 'Cancel',
                     onClick: (dialog) => {
                         this.trigger('cancel', dialog)
+                    }
+                },
+                {
+                    "name":"selectionView",
+                    "label":"Selection View",
+                    "hidden": true,
+                    onClick: (dialog) => {
+                        window.location.href = '/#Selection/view/' + this.selectionId
                     }
                 }
             ];
@@ -193,17 +203,22 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 if (this.collection.models.length < 2) {
                     this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
                     setTimeout(() => this.notify(false), 2000);
-                    return;
                 } else if (this.collection.models.length > 10) {
                     let message = this.translate('weCannotCompareMoreThan');
                     this.notify(message.replace('%s', 10));
                     setTimeout(() => this.notify(false), 2000);
-                    return;
                 } else {
-                    options.model = this.collection.models[0];
-                    this.createModalView(options);
+                    let data = {scope: this.scope}
+                    data['entityIds'] = this.collection.models.map(m => m.id)
+                    this.ajaxPostRequest('selection/action/createSelectionWithRecords', data).then(result => {
+                        options.model = this.collection.models[0];
+                        this.selectionId = options.selectionId = result.id;
+                        $('button[data-name="selectionView"]').removeClass('hidden');
+                        this.createModalView(options);
+                        this.wait(false);
+                    });
                 }
-                this.wait(false);
+
             }
         },
 
@@ -213,13 +228,17 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
-                })
+                });
 
                 this.listenTo(this, 'cancel', (dialog) => {
                     view.trigger('cancel', dialog);
-                })
+                });
             });
         },
+
+        createSelection() {
+
+        }
 
     });
 });
