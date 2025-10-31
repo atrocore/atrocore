@@ -49,7 +49,8 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
                             url: '#Admin/Layouts',
                             label: this.translate('Layout Manager', 'labels', 'Admin')
                         }
-                    ]
+                    ],
+                    scope: 'LayoutManager'
                 }
             })
         }

@@ -48,7 +48,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                 this.selectTab(tab);
             },
             'change select[data-action="selectTab"]': function (e) {
-                var tab = $(e.currentTarget).prop('selectedIndex');
+                var tab = e.currentTarget.value;
                 this.selectTab(tab);
             },
             'click button[data-action="addDashlet"]': function () {
@@ -100,8 +100,15 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                         this.storeCurrentTab(0);
                         this.currentTab = 0;
                         this.setupCurrentTabLayout();
-                        this.reRender();
 
+                        if (this.header) {
+                            this.header.$set({
+                                selectedTabIndex: Number.parseInt(this.currentTab),
+                                tabs: (this.dashboardLayout || []).map(tab => tab.name)
+                            });
+                        }
+
+                        this.initGridstack();
                     }, this);
                 }.bind(this));
             },
@@ -146,6 +153,12 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
             tabLayout = GridStackUI.Utils.sort(tabLayout);
 
             this.currentTabLayout = tabLayout;
+
+            if (this.header) {
+                this.header.$set({
+                    selectedTabIndex: Number.parseInt(this.currentTab),
+                });
+            }
         },
 
         storeCurrentTab: function (tab) {
@@ -153,9 +166,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
         },
 
         selectTab: function (tab) {
-            this.$el.find('.page-header button[data-action="selectTab"]').removeClass('active');
-            this.$el.find('.page-header button[data-action="selectTab"][data-tab="' + tab + '"]').addClass('active');
-
             this.currentTab = tab;
             this.storeCurrentTab(tab);
 
@@ -166,7 +176,7 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
             }, this);
             this.dashletIdList = [];
 
-            this.reRender();
+            this.initGridstack();
         },
 
         setup: function () {
@@ -192,16 +202,40 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                         gridStack.destroy();
                     }
                 }
+
+                if (this.header) {
+                    this.header.$destroy();
+                }
             }, this);
         },
 
         afterRender: function () {
+            const headerEl = this.$el.find('.page-header').get(0);
+            if (headerEl) {
+                const tabs = (this.dashboardLayout || []).map(tab => tab.name);
+                this.header = new Svelte.DashboardHeader({
+                    target: headerEl,
+                    props: {
+                        tabs: tabs,
+                        selectedTabIndex: Number.parseInt(this.currentTab),
+                        readOnly: !!this.layoutReadOnly,
+                    }
+                });
+            }
+
             this.initGridstack();
 
             this.$el.find('.dashboard-selectbox select').selectize?.();
         },
 
         initGridstack: function () {
+            // if (this.$gridstack) {
+            //     var gridStack = this.$gridstack.data('gridstack');
+            //     if (gridStack) {
+            //         gridStack.destroy();
+            //     }
+            // }
+
             var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
 
             var draggable = false;
@@ -397,7 +431,15 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                     this.dashboardLayout = data.dashboardLayout;
                     this.initialDashboardLayout = Espo.Utils.cloneDeep(this.dashboardLayout);
                     this.setup();
-                    this.reRender();
+
+                    if (this.header) {
+                        this.header.$set({
+                            tabs: (this.dashboardLayout || []).map(tab => tab.name),
+                            selectedTabIndex: Number.parseInt(this.currentTab),
+                        });
+                    }
+
+                    this.initGridstack();
                 }.bind(this));
             }, this);
         },

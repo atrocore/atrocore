@@ -1,4 +1,3 @@
-
 /*
  * This file is part of EspoCRM and/or AtroCore.
  *
@@ -100,6 +99,20 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            new Svelte.BaseHeader({
+                target: $(`${this.options.el} .page-header`).get(0),
+                props: {
+                    breadcrumbs: [
+                        {
+                            label: this.getLanguage().translate('Administration'),
+                            url: '#Admin'
+                        }
+                    ],
+                    scope: 'Administration'
+                }
+            });
+
             new Svelte.TreePanel({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
                 anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),

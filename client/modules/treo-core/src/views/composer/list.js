@@ -195,6 +195,7 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 target: document.querySelector('.page-header'),
                 props: {
                     breadcrumbs: this.getBreadcrumbsItems(),
+                    scope: 'Composer'
                 }
             })
         },
