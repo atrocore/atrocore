@@ -20,17 +20,11 @@ use Espo\ORM\EntityCollection;
 
 class Selection extends Base
 {
-    public function createSelectionWithRecords(string $scope, array $entityIds, ?string $selectionId)
+    public function createSelectionWithRecords(string $scope, array $entityIds)
     {
-        if(!empty($selectionId)) {
-            $selection = $this->getEntityManager()->getEntity('Selection', $selectionId);
-        }
 
-        if(empty($selection)) {
-            $selection = $this->getEntityManager()->getEntity('Selection');
-            $this->getEntityManager()->saveEntity($selection);
-        }
-
+        $selection = $this->getEntityManager()->getEntity('Selection');
+        $this->getEntityManager()->saveEntity($selection);
 
         foreach ($entityIds as $entityId) {
             $record = $this->getEntityManager()->getEntity('SelectionRecord');

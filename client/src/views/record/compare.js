@@ -736,7 +736,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.hidePanelNavigation) {
                 return;
             }
-            debugger
+
             let panelList = this.getRelationshipPanels().map(m => {
                 m.title = m.label;
                 return m;
