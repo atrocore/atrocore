@@ -26,13 +26,17 @@ use Exception;
 class Condition
 {
     /**
-     * @param ConditionGroup $condition
+     * @param ConditionGroup|null $condition
      *
      * @return bool
      * @throws Error
      */
-    public static function isCheck(ConditionGroup $condition): bool
+    public static function isCheck(?ConditionGroup $condition): ?bool
     {
+        if ($condition === null) {
+            return null;
+        }
+
         $method = 'check' . ucfirst($condition->getType());
 
         if (method_exists(self::class, $method)) {
@@ -44,12 +48,12 @@ class Condition
 
     /**
      * @param Entity $entity
-     * @param array  $items
+     * @param array $items
      *
-     * @return ConditionGroup
+     * @return ConditionGroup|null
      * @throws Error
      */
-    public static function prepare(Entity $entity, array $items): ConditionGroup
+    public static function prepare(Entity $entity, array $items): ?ConditionGroup
     {
         if (empty($items)) {
             throw new Error('Empty items in condition');
@@ -57,26 +61,42 @@ class Condition
         $result = null;
         if (isset($items['type'])) {
             if ($items['type'] != 'and' && $items['type'] != 'or' && $items['type'] != 'not') {
-                $result = self::prepareConditionGroup($entity, $items);
+                $group = self::prepareConditionGroup($entity, $items);
+                if ($group !== null) {
+                    $result = $group;
+                }
             } elseif ($items['type'] == 'not') {
-                $result = new ConditionGroup($items['type'], [self::prepare($entity, $items['value'])]);
+                $group = self::prepare($entity, $items['value']);
+                if ($group !== null) {
+                    $result = new ConditionGroup($items['type'], [$group]);
+                }
             } else {
                 if (empty($items['value'])) {
                     throw new Error('Empty value or in condition');
                 }
                 $valuesConditionGroup = [];
                 foreach ($items['value'] as $value) {
-                    $valuesConditionGroup[] = self::prepare($entity, $value);
+                    $group = self::prepare($entity, $value);
+                    if ($group !== null) {
+                        $valuesConditionGroup[] = $group;
+                    }
                 }
-                $result = new ConditionGroup($items['type'], $valuesConditionGroup);
+                if (!empty($valuesConditionGroup)) {
+                    $result = new ConditionGroup($items['type'], $valuesConditionGroup);
+                }
             }
         } else {
             $type = 'and';
             $valuesConditionGroup = [];
             foreach ($items as $value) {
-                $valuesConditionGroup[] = self::prepare($entity, $value);
+                $group = self::prepare($entity, $value);
+                if ($group !== null) {
+                    $valuesConditionGroup[] = $group;
+                }
             }
-            $result = new ConditionGroup($type, $valuesConditionGroup);
+            if (!empty($valuesConditionGroup)) {
+                $result = new ConditionGroup($type, $valuesConditionGroup);
+            }
         }
         return $result;
     }
@@ -88,7 +108,7 @@ class Condition
      * @return ConditionGroup
      * @throws Error
      */
-    private static function prepareConditionGroup(Entity $entity, array $item): ConditionGroup
+    private static function prepareConditionGroup(Entity $entity, array $item): ?ConditionGroup
     {
         if (!isset($item['attribute'])) {
             throw new Error('Empty attribute or in condition');
@@ -96,10 +116,14 @@ class Condition
 
         $attribute = $item['attribute'];
 
-        if (!empty($item['attributeId']) && in_array($item['type'], ['isLinked', 'isNotLinked'])) {
-            $type = $item['type'] === 'isLinked' ? 'isTrue' : 'isFalse';
+        if (!empty($item['attributeId'])) {
+            if (in_array($item['type'], ['isLinked', 'isNotLinked'])) {
+                $type = $item['type'] === 'isLinked' ? 'isTrue' : 'isFalse';
 
-            return new ConditionGroup($type, [$entity->hasAttributeValue($item['data']['field'] ?? $item['attribute'])]);
+                return new ConditionGroup($type, [$entity->hasAttributeValue($item['data']['field'] ?? $item['attribute'])]);
+            } elseif (!$entity->has($attribute)) {
+                return null;
+            }
         }
 
         if (empty($item['attributeId']) && !$entity->hasAttribute($attribute) && !$entity->hasRelation($attribute)) {
