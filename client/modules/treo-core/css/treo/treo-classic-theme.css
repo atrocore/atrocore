@@ -10355,6 +10355,38 @@ table.table > thead th > div > a {
     width: auto;
 }
 
+.panel .panel-heading .panel-title .list-actions-container{
+    margin-left: 8px;
+    text-transform: none;
+}
+
+@media screen and (min-width: 768px) {
+    .relationship-container > .list > .table .record-checkbox{
+        visibility: hidden;
+    }
+
+    .relationship-container > .list > .table tr:hover .record-checkbox{
+        visibility: visible;
+    }
+
+    .relationship-container > .list > .table .record-checkbox:checked{
+        visibility: visible;
+    }
+
+    .relationship-container > .list > .table .select-all{
+        visibility: hidden;
+    }
+
+    .relationship-container > .list > .table tr:hover .select-all{
+        visibility: visible;
+    }
+
+    .relationship-container > .list > .table .select-all:checked{
+        visibility: visible;
+    }
+}
+
+
 .panel .table.full-table {
     position: relative;
 }

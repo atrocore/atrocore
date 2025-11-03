@@ -54,6 +54,10 @@ Espo.define('collection', [], function () {
 
         lengthCorrection: 0,
 
+        whereForRelation: null,
+
+        isRelation: false,
+
         _user: null,
 
         initialize: function (models, options) {
@@ -208,6 +212,17 @@ Espo.define('collection', [], function () {
 
         getWhere: function () {
             return (this.where || []).concat(this.whereAdditional || []);
+        },
+
+        getWhereForCheckedRecords: function () {
+            if (this.isRelation) {
+                return this.getWhere().concat(this.whereForRelation || [{
+                    attribute: 'id',
+                    type: 'in',
+                    value: this.map(model => model.get('id'))
+                }]);
+            }
+            return this.getWhere()
         },
 
         getUser: function () {
