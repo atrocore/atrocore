@@ -1278,7 +1278,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.scope,
                 counters: this.getCounters(),
                 loading: this.isListLoading(),
-                selected: false,
+                selected: this.allResultIsChecked ? true : this.checkedList,
                 massActions: this.getMassActions(),
                 isRelationship: !!this.options.panelView,
                 hasSelectAllCheckbox: this.hasExternalSelectAllCheckbox() && this.isAllowedSelectAllResult(),
