@@ -21,8 +21,6 @@ use Espo\ORM\IEntity;
 
 class File extends Base
 {
-    protected bool $hasOnlyHiddenFilter = false;
-
     protected function boolFilterLinkedWithFolder(array &$result): void
     {
         $result['callbacks'][] = [$this, 'filterLinkedWithFolder'];
@@ -44,17 +42,6 @@ class File extends Base
         $qb->setParameter('foldersIds', $ids, Connection::PARAM_STR_ARRAY);
     }
 
-    public function applyAdditional(array &$result, array $params)
-    {
-        parent::applyAdditional($result, $params);
-
-        if (!$this->hasOnlyHiddenFilter) {
-            $result['whereClause'][] = [
-                'hidden' => false
-            ];
-        }
-    }
-
     protected function boolFilterOnlyType(&$result)
     {
         $typeId = $this->getBoolFilterParameter('onlyType');
@@ -65,19 +52,5 @@ class File extends Base
         $result['whereClause'][] = [
             'typeId' => $typeId
         ];
-    }
-
-    protected function boolFilterOnlyHidden(&$result)
-    {
-        $this->hasOnlyHiddenFilter = true;
-
-        $result['whereClause'][] = [
-            'hidden' => true
-        ];
-    }
-
-    protected function boolFilterHiddenAndUnHidden(&$result)
-    {
-        $this->hasOnlyHiddenFilter = true;
     }
 }
