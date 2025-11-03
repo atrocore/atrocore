@@ -194,7 +194,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                 this.showLoadingNotification();
                 model.fetch({
                     headers: {
-                        'Entity-History': 'true',
+                        'Entity-History': sessionStorage.tabId || 'true'
                     }
                 });
 
@@ -210,7 +210,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     model.fetch({
                         main: true,
                         headers: {
-                            'Entity-History': 'true',
+                            'Entity-History': sessionStorage.tabId || 'true'
                         }
                     });
 

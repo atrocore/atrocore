@@ -12,7 +12,7 @@
 </script>
 
 {#if !disableNavigationHistory}
-    <NavigationHistory {scope} {id} />
+    <NavigationHistory {scope} {id} tabId={sessionStorage.tabId} />
 {/if}
 
 <div class="header-wrapper">

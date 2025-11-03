@@ -48,7 +48,14 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             'click #title-bar [data-action=openWindow]': function (e) {
                 e.preventDefault();
 
-                window.open('/', '_blank', `width=${window.screen.height};height=${window.screen.height}`);
+                const screenX = window.screenX;
+                const screenY = window.screenY;
+                const width = window.outerWidth;
+                const height = window.outerHeight;
+
+                window.open('/', '_blank',
+                    `width=${width},height=${height},left=${screenX},top=${screenY},noopener`
+                );
             },
             'click #title-bar [data-action=reload]': function () {
                 window.location.reload();
@@ -68,6 +75,8 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         setup: function () {
+            const tabId = sessionStorage.tabId ||= crypto.randomUUID();
+
             window.addEventListener('appinstalled',  () => {
                 if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
                     this.createView('hideTitleModal', 'views/modals/hide-title-bar', {}, view => {

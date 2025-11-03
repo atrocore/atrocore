@@ -25,6 +25,7 @@
 
     export let scope: string;
     export let id: string | null = null;
+    export let tabId: string | null = null;
 
     let items: LastEntityRecord[];
 
@@ -64,14 +65,18 @@
 
         lastEntities = [];
         try {
-            let url = '/api/v1/LastViewed/action/getLastEntities'
+            let url = '/api/v1/LastViewed/action/getNavigationHistory'
             let params: Record<string, any> = {
-                'maxSize': '16',
+                'maxSize': '32',
                 'entityName': scope
             };
 
             if (id) {
                 params.entityId = id;
+            }
+
+            if (tabId) {
+                params.tabId = tabId;
             }
 
             const requestParams = new URLSearchParams(params).toString();
