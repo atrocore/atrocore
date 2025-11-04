@@ -14,26 +14,25 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Templates\Controllers\Base;
 
 class Selection extends Base
 {
-   public function actionCreateSelectionWithRecords($params, $data, $request)
-   {
-       if (!$request->isPost() || empty($data->scope) || empty($data->entityIds)) {
-           throw new BadRequest();
-       }
+    public function actionCreateSelectionWithRecords($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($data->scope) || empty($data->entityIds)) {
+            throw new BadRequest();
+        }
 
-       $selection =  $this->getRecordService()->createSelectionWithRecords($data->scope, $data->entityIds);
+        $selection = $this->getRecordService()->createSelectionWithRecords($data->scope, $data->entityIds);
 
-       return $selection->getValueMap();
-   }
+        return $selection->getValueMap();
+    }
 
     public function actionTree($params, $data, $request): array
     {
-        if (!$request->isGet() || empty($request->get('link')) || (empty($request->get('selectedScope')) && empty($request->get('scope'))  )) {
+        if (!$request->isGet() || empty($request->get('link')) || (empty($request->get('selectedScope')) && empty($request->get('scope')))) {
             throw new BadRequest();
         }
 

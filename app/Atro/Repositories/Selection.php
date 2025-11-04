@@ -40,7 +40,7 @@ class Selection extends Base
                     $date->setTimezone(new \DateTimeZone($locale->get('timeZone')));
                 }
 
-                $entity->set('name', $date->format('Y-m-d H:i') . ' By ' . $user->get('name'));
+                $entity->set('name', $date->format('Y-m-d H:i') . ' by ' . $user->get('name'));
             }
         }
 
