@@ -28,11 +28,6 @@
       "importDisabled": true,
       "emHidden": true
     },
-    "hidden": {
-      "type": "bool",
-      "notNull": true,
-      "default": false
-    },
     "sortOrder": {
       "type": "int",
       "default": null,

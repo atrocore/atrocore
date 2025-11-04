@@ -13,38 +13,8 @@ declare(strict_types=1);
 
 namespace Atro\SelectManagers;
 
-use Atro\ORM\DB\RDB\Mapper;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\Core\SelectManagers\Base;
-use Espo\ORM\IEntity;
 
 class Folder extends Base
 {
-    protected bool $hasOnlyHiddenFilter = false;
-
-    public function applyAdditional(array &$result, array $params)
-    {
-        parent::applyAdditional($result, $params);
-
-        if (!$this->hasOnlyHiddenFilter) {
-            $result['whereClause'][] = [
-                'hidden' => false
-            ];
-        }
-    }
-
-    protected function boolFilterOnlyHidden(&$result)
-    {
-        $this->hasOnlyHiddenFilter = true;
-
-        $result['whereClause'][] = [
-            'hidden' => true
-        ];
-    }
-
-    protected function boolFilterHiddenAndUnHidden(&$result)
-    {
-        $this->hasOnlyHiddenFilter = true;
-    }
 }
