@@ -8,7 +8,7 @@
       "unlink": false,
       "canClose": false,
       "sortBy": "id",
-      "asc": false
+      "asc": true
     }
   },
   "views": {
