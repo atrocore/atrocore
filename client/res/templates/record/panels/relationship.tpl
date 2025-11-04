@@ -1,1 +1,1 @@
-<div class="list-container">{{{list}}}</div>
+<div class="list-container relationship-container">{{{list}}}</div>
