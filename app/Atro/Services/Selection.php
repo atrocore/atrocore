@@ -53,8 +53,8 @@ class Selection extends Base
         foreach ($collection as $entity) {
             $entity->_loadEntity = $loadEntities;
         }
-        parent::prepareCollectionForOutput($collection, $selectParams);
 
+        parent::prepareCollectionForOutput($collection, $selectParams);
     }
 
     public function prepareEntityForOutput(Entity $entity)
@@ -69,14 +69,15 @@ class Selection extends Base
     public function getTreeItems(string $link, string $scope, array $params): array
     {
         $repository = $this->getEntityManager()->getRepository($scope);
-
         $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+
         if (!empty($params['distinct'])) {
             $selectParams['distinct'] = true;
         }
 
         $fields = ['id', 'name'];
         $localizedNameField = $this->getLocalizedNameField($scope);
+
         if (!empty($localizedNameField)) {
             $fields[] = $localizedNameField;
         }
@@ -84,6 +85,7 @@ class Selection extends Base
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
         }
+
         $selectParams['select'] = $fields;
         $collection = $repository->find($selectParams);
         $total = $repository->count($selectParams);
