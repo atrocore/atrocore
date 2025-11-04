@@ -28,28 +28,40 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 let selectionRecordId = $(e.currentTarget).data('selection-record-id');
                 let entityType = $(e.currentTarget).data('entity-type');
 
-                if(!id || !entityType || !selectionRecordId) {
+                if (!id || !entityType || !selectionRecordId) {
                     return;
                 }
+
                 const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+
                 this.createView('select', viewName, {
                     scope: entityType,
                     createButton: false,
                     multiple: false
-                }, function (dialog) {
+                }, (dialog) => {
                     dialog.render();
                     dialog.once('select', model => {
                         this.notify('Loading...');
                         this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
                             entityId: model.id
-                        }).then(() =>  this.getParentView().refreshContent());
+                        }).then(() => this.getParentView().refreshContent());
                     });
                 });
             },
             'click div.inline-actions a.remove-entity': function (e) {
-                let id = $(e.currentTarget).data('id');
-                let entityType = $(e.currentTarget).data('entity-type');
-                this.getParentView().deleteSelectionRecords(entityType, id);
+                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+                if(!selectionRecordId) {
+                    return;
+                }
+                this.notify('Removing...');
+                $.ajax({
+                    url: `SelectionRecord/${selectionRecordId}`,
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    success: () => {
+                        this.getParentView().refreshContent()
+                    }
+                });
             }
         }, Dep.prototype.events),
 
@@ -83,7 +95,6 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 panelList = this.getPanelWithFields().concat(panelList);
                 this.trigger('detailPanelsLoaded', {list: panelList});
             });
-
 
 
             this.listenTo(this, 'after:fields-panel-rendered', () => {

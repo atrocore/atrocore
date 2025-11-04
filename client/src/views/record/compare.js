@@ -572,7 +572,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    name: `<a href="#/${model.name}/view/${model.id}" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                    name: `<a href="#/${model.name}/view/${model.id}" style="padding-right: 20px" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 });
             });
 
