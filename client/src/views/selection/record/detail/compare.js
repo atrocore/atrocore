@@ -31,6 +31,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
             this.hidePanelNavigation = true;
             Dep.prototype.setup.call(this);
 
+            this.listenTo(this, 'selection-record:loaded', models => {
+                this.selectionModel.trigger('selection-record:loaded', models);
+            })
+
             this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {

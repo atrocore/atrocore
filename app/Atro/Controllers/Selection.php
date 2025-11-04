@@ -33,7 +33,7 @@ class Selection extends Base
 
     public function actionTree($params, $data, $request): array
     {
-        if (!$request->isGet() || empty($request->get('link')) || empty($request->get('selectedScope'))) {
+        if (!$request->isGet() || empty($request->get('link')) || (empty($request->get('selectedScope')) && empty($request->get('scope'))  )) {
             throw new BadRequest();
         }
 
@@ -50,7 +50,7 @@ class Selection extends Base
             'maxSize'     => empty($request->get('maxSize')) ? $this->getConfig()->get('recordsPerPageSmall', 20) : (int)$request->get('maxSize')
         ];
 
-        return $this->getRecordService()->getTreeItems((string)$request->get('link'), (string)$request->get('selectedScope'), $params);
+        return $this->getRecordService()->getTreeItems((string)$request->get('link'), (string)($request->get('selectedScope') ?? $request->get('scope')), $params);
     }
 
 }

@@ -78,7 +78,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     this.models = models;
                     this.model = models[0];
                     this.scope = this.model.name;
-
                     this.setupFieldPanels();
                     this.prepareFieldsData();
                     this.wait(false)
@@ -1025,7 +1024,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     .then(result => {
                         let entityByScope = {};
                         let order = 0;
-
+                        this.trigger('selection-record:loaded', result.list);
                         for (const entityData of result.list) {
                             if (!entityByScope[entityData.entityType]) {
                                 entityByScope[entityData.entityType] = [];

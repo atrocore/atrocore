@@ -31,7 +31,9 @@
 
     export let canBuildTree = true;
 
-    export let selectedScope: string;
+    export let selectedScope: string|null = null;
+
+    export let canOpenNode: boolean = true;
 
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
@@ -208,6 +210,11 @@
                     $li.addClass('jqtree-selected');
                 }
 
+                if(callbacks?.shouldBeSelected && callbacks.shouldBeSelected(activeItem.name, node.id)) {
+                    $tree.tree('addToSelection', node);
+                    $li.addClass('jqtree-selected');
+                }
+
                 if (activeItem.name === '_admin'
                     && ((Metadata.get(['scopes', getHashScope()])
                         && (node.id.includes('#' + getHashScope() + '/'))
@@ -270,7 +277,6 @@
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
                 }
             }
-
         })
         $tree.on('tree.move', e => {
             e.preventDefault();
@@ -414,7 +420,10 @@
     }
 
     function generateUrl(node) {
-        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}&selectedScope=${selectedScope}`;
+        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
+        if(selectedScope) {
+            url += `&selectedScope=${selectedScope}`;
+        }
         if (sortBy) {
             url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
         }
@@ -558,6 +567,9 @@
     }
 
     function openNodes($tree, ids, onFinished) {
+        if(!canOpenNode) {
+            return;
+        }
         if (!Array.isArray(ids) || ids.length === 0) {
             onFinished()
             return

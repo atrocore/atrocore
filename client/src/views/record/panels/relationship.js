@@ -300,6 +300,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
                 this.collection = collection;
 
+                this.model.trigger('init-collection:'+this.link, collection);
+
                 this.setFilter(this.filter);
 
                 if (this.fetchOnModelAfterRelate) {

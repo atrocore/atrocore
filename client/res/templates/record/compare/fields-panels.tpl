@@ -6,7 +6,7 @@
             <col style="width: 250px;">
             {{else}}
             {{#if ../merging}}
-            <col style="width: 50px">
+            <col style="width: 30px">
             {{/if}}
             <col class="col-min-width">
             {{/if}}
