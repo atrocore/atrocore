@@ -26,12 +26,22 @@
                 </th>
             {{/if}}
             {{/unless}}
-            <th class="text-center">
+            <th class="text-center  {{#unless isFirst}} inline-actions {{/unless}}" style="position: relative" >
                 {{{name}}}
                 {{#if _error}}
                 <br>
                 <span class="danger"> ({{_error}})</span>
                 {{/if}}
+                {{#unless isFirst}}
+                    <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 5px;">
+                        <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 10px">
+                            <i class="ph ph-swap"></i>
+                        </a>
+                        <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
+                            <i class="ph ph-trash-simple"></i>
+                        </a>
+                    </div>
+                {{/unless}}
             </th>
             {{/each}}
         </tr>

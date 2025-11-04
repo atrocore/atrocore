@@ -6,7 +6,9 @@
       "hideShowFullList": true,
       "select": false,
       "unlink": false,
-      "canClose": false
+      "canClose": false,
+      "sortBy": "id",
+      "asc": false
     }
   },
   "views": {

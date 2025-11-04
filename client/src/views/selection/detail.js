@@ -304,28 +304,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                             }
 
                             if (selected) {
-                                let recordsToDelete = this.selectionRecords.filter(record => record.entityId === data.id && record.entityType === entitySelectionModel.get('entityId'));
-                                let promises = [];
-                                for (const record of recordsToDelete) {
-                                    promises.push(new Promise((resolve, reject) => {
-                                        $.ajax({
-                                            url: `SelectionRecord/${record.id}`,
-                                            type: 'DELETE',
-                                            contentType: 'application/json',
-                                            success: () => {
-                                                resolve();
-                                            },
-                                            error: () => {
-                                                reject()
-                                            },
-                                        });
-                                    }))
-                                }
-                                this.notify(this.translate('Removing...'));
-                                Promise.all(promises).then(() => {
-                                    this.refreshContent();
-                                    this.notify(this.notify(this.translate('Done'), 'success'));
-                                });
+                               this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
                             } else {
                                 this.notify(this.translate('Adding...'));
                                 this.ajaxPostRequest(`SelectionRecord`, {
@@ -375,14 +354,42 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                                 this.listenTo(view, 'change', () => {
                                     window.treePanelComponent.setSelectedScope(view.$elementName.attr('value'));
                                     window.treePanelComponent.setCanBuildTree(true);
-                                    // window.treePanelComponent.rebuildTree()
-
+                                    window.treePanelComponent.rebuildTree()
                                 })
                             })
                         }
                     },
                 }
             })
+        },
+
+        deleteSelectionRecords(entityType, id) {
+            let recordsToDelete = this.selectionRecords.filter(record => record.entityId === id && record.entityType === entityType);
+            let promises = [];
+            for (const record of recordsToDelete) {
+                promises.push(new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: `SelectionRecord/${record.id}`,
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        success: () => {
+                            resolve();
+                        },
+                        error: () => {
+                            reject()
+                        },
+                    });
+                }))
+            }
+            this.notify(this.translate('Removing...'));
+            Promise.all(promises).then(() => {
+                this.refreshContent();
+                this.notify(this.notify(this.translate('Done'), 'success'));
+            });
+        },
+
+        replaceSelectionRecords(entityType, id, replaceId) {
+
         }
     });
 });

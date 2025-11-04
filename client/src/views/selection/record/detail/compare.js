@@ -22,6 +22,37 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
 
         hidePanelNavigation: true,
 
+        events: _.extend({
+            'click div.inline-actions a.swap-entity': function (e) {
+                let id = $(e.currentTarget).data('id');
+                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+                let entityType = $(e.currentTarget).data('entity-type');
+
+                if(!id || !entityType || !selectionRecordId) {
+                    return;
+                }
+                const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                this.createView('select', viewName, {
+                    scope: entityType,
+                    createButton: false,
+                    multiple: false
+                }, function (dialog) {
+                    dialog.render();
+                    dialog.once('select', model => {
+                        this.notify('Loading...');
+                        this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
+                            entityId: model.id
+                        }).then(() =>  this.getParentView().refreshContent());
+                    });
+                });
+            },
+            'click div.inline-actions a.remove-entity': function (e) {
+                let id = $(e.currentTarget).data('id');
+                let entityType = $(e.currentTarget).data('entity-type');
+                this.getParentView().deleteSelectionRecords(entityType, id);
+            }
+        }, Dep.prototype.events),
+
         setup() {
 
             this.wait(true);
@@ -52,6 +83,22 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 panelList = this.getPanelWithFields().concat(panelList);
                 this.trigger('detailPanelsLoaded', {list: panelList});
             });
+
+
+
+            this.listenTo(this, 'after:fields-panel-rendered', () => {
+
+                this.getView('fieldsOverviews').$el.find('th.inline-actions').each(function (e) {
+                    $(this).on('mouseenter', function (e) {
+                        e.stopPropagation();
+                        $(this).find('div.inline-actions').removeClass('hidden')
+                    }.bind(this)).on('mouseleave', function (e) {
+                        e.stopPropagation();
+                        $(this).find('div.inline-actions').addClass('hidden')
+                    }.bind(this));
+                });
+            });
+
         },
 
         executeAction: function (action, data = null, e = null) {
@@ -74,7 +121,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                         label: this.translate('addItem')
                     }
                 ],
-                buttons:[],
+                buttons: [],
                 dropdownButtons: [
                     {
                         label: this.translate('Remove'),

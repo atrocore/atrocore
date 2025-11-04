@@ -323,9 +323,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     view.render();
                     if (view.isRendered()) {
                         this.handlePanelRendering(panel.name);
+                        this.trigger('after:fields-panel-rendered');
                     }
                     this.listenTo(view, 'all-fields-rendered', () => {
                         this.handlePanelRendering(panel.name);
+                        this.trigger('after:fields-panel-rendered');
                     });
                 }, true);
             });
@@ -568,6 +570,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type'])
                 return columns.push({
                     id: model.id,
+                    entityType: model.name,
+                    selectionRecordId: model.get('_selectionRecordId'),
                     name: `<a href="#/${model.name}/view/${model.id}" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 });
             });
@@ -1020,7 +1024,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         loadModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true`, {async: false})
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=false`, {async: false})
                     .then(result => {
                         let entityByScope = {};
                         let order = 0;
@@ -1030,6 +1034,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                                 entityByScope[entityData.entityType] = [];
                             }
                             entityData.entity._order = order;
+                            entityData.entity._selectionRecordId = entityData.id;
 
                             entityByScope[entityData.entityType].push(entityData.entity);
                             order++
