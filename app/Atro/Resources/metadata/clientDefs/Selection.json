@@ -13,8 +13,5 @@
   },
   "views": {
     "detail": "views/selection/detail"
-  },
-  "recordViews": {
-    "detail": "views/selection/record/detail"
   }
 }

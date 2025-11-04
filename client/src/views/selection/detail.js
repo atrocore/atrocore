@@ -304,7 +304,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                             }
 
                             if (selected) {
-                               this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
+                                this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
                             } else {
                                 this.notify(this.translate('Adding...'));
                                 this.ajaxPostRequest(`SelectionRecord`, {
@@ -386,10 +386,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                 this.refreshContent();
                 this.notify(this.notify(this.translate('Done'), 'success'));
             });
-        },
-
-        replaceSelectionRecords(entityType, id, replaceId) {
-
         }
     });
 });
