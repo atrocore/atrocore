@@ -23,6 +23,13 @@ class LayoutProfileSeeder extends AbstractSeeder
         $defaultDashboards = $this->getDefaultDashboards();
 
         try {
+            // remove default layout profile if exists
+            $this->getConnection()->createQueryBuilder()
+                ->delete('layout_profile')
+                ->where('id = :id')
+                ->setParameter('id', $defaultId)
+                ->executeQuery();
+
             // create default profile
             $this->getConnection()->createQueryBuilder()
                 ->insert('layout_profile')
