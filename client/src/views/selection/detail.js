@@ -322,16 +322,19 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                                 })
                             }
                         },
+
                         treeLoad: (treeScope, treeData) => {
                             if (view.treeLoad && typeof view.treeLoad === 'function') {
                                 view.treeLoad(data);
                             }
                         },
+
                         treeReset: () => {
                             if (typeof view.treeReset === 'function') {
                                 view.treeReset(data);
                             }
                         },
+
                         treeWidthChanged: (width) => {
                             view.onTreeResize(width)
                         },
