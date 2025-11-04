@@ -57,7 +57,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             if (this.instanceComparison) {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
                 this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
-            } else if(this.versionComparison){
+            } else if (this.versionComparison) {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'views/record/compare-version'
                 this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with previous versions'));
             } else {
@@ -85,8 +85,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     }
                 },
                 {
-                    "name":"selectionView",
-                    "label":"Selection View",
+                    "name": "selectionView",
+                    "label": "Selection View",
                     "hidden": true,
                     onClick: (dialog) => {
                         window.location.href = '/#Selection/view/' + this.selectionId
@@ -149,8 +149,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                         this.createModalView(options);
                     });
                 });
-            }
-            else if (this.versionComparison) {
+            } else if (this.versionComparison) {
                 this.getModelFactory().create(this.scope, scopeModel => {
                     this.ajaxGetRequest(`RecordVersion/action/getVersion`, {
                         scope: this.scope,
@@ -191,7 +190,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                             view.on('change', () => {
                                 this.currentVersion = model.get('name')
                                 const recordView = this.getView('modalRecord')
-                                if (recordView){
+                                if (recordView) {
                                     recordView.remove()
                                 }
                                 this.setupRecord()
@@ -235,11 +234,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             });
         },
-
-        createSelection() {
-
-        }
-
     });
 });
 
