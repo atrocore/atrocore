@@ -1001,7 +1001,6 @@
                 </div>
                 {#if activeItem.name === '_self'}
                     <div class="entity-selector" style="margin-top: 20px;" use:createEntitySelectorView   bind:this={entitySelectorElement}>
-
                     </div>
                 {/if}
 
