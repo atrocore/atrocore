@@ -1008,7 +1008,6 @@
                 <div class="panel-group category-tree" bind:this={treeElement}>
                 </div>
             {/if}
-
         {/if}
     </div>
 </BaseSidebar>
