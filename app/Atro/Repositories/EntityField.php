@@ -854,8 +854,11 @@ class EntityField extends ReferenceData
             "modifiedExtendedEnabled" => "modifiedExtendedRelations"
         ];
 
+        $needToUpdate = false;
         foreach ($virtualToEntityFields as $field => $entityField) {
             if ($entity->isAttributeChanged($field)) {
+                $needToUpdate = true;
+
                 $values = $entityEntity->get($entityField) ?? [];
                 if (!empty($entity->get($field))) {
                     if (!in_array($entity->get('code'), $values)) {
@@ -871,9 +874,13 @@ class EntityField extends ReferenceData
                         $values[] = $value;
                     }
                 }
+
                 $entityEntity->set($entityField, $values);
-                $this->getEntityManager()->getRepository('Entity')->save($entityEntity);
             }
+        }
+
+        if ($needToUpdate) {
+            $this->getEntityManager()->getRepository('Entity')->save($entityEntity);
         }
     }
 

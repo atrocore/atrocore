@@ -61,7 +61,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
             });
         },
 
-        getSelectionRecordEntityIds ()  {
+        getSelectionRecordEntityIds() {
             let selectionRecordIds = {};
             for (let item of this.selectionRecords) {
                 if (!selectionRecordIds[item.entityType]) {
@@ -300,33 +300,33 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                         selectNode: data => {
                             let selected = false;
                             if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
-                                selected =  this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id);
+                                selected = this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id);
                             }
 
-                            if(selected) {
-                                let recordsToDelete = this.selectionRecords.filter(record  => record.entityId === data.id && record.entityType === entitySelectionModel.get('entityId'));
+                            if (selected) {
+                                let recordsToDelete = this.selectionRecords.filter(record => record.entityId === data.id && record.entityType === entitySelectionModel.get('entityId'));
                                 let promises = [];
                                 for (const record of recordsToDelete) {
-                                   promises.push(new Promise((resolve, reject) => {
-                                       $.ajax({
-                                           url: `SelectionRecord/${record.id}`,
-                                           type: 'DELETE',
-                                           contentType: 'application/json',
-                                           success: () => {
+                                    promises.push(new Promise((resolve, reject) => {
+                                        $.ajax({
+                                            url: `SelectionRecord/${record.id}`,
+                                            type: 'DELETE',
+                                            contentType: 'application/json',
+                                            success: () => {
                                                 resolve();
-                                           },
-                                           error: () => {
+                                            },
+                                            error: () => {
                                                 reject()
-                                           },
-                                       });
-                                   }))
+                                            },
+                                        });
+                                    }))
                                 }
                                 this.notify(this.translate('Removing...'));
                                 Promise.all(promises).then(() => {
                                     this.refreshContent();
                                     this.notify(this.notify(this.translate('Done'), 'success'));
                                 });
-                            }else{
+                            } else {
                                 this.notify(this.translate('Adding...'));
                                 this.ajaxPostRequest(`SelectionRecord`, {
                                     entityType: entitySelectionModel.get('entityId'),

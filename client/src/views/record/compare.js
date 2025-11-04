@@ -72,7 +72,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         setup() {
             this.selectionId = this.options.selectionId || this.selectionId;
 
-            if(this.selectionId) {
+            if (this.selectionId) {
                 this.wait(true);
                 this.loadModels(this.selectionId).then(models => {
                     this.models = models;
@@ -82,7 +82,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     this.prepareFieldsData();
                     this.wait(false)
                 });
-            }else{
+            } else {
                 this.setupFieldPanels();
                 this.prepareFieldsData();
             }
@@ -1051,9 +1051,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                         Promise.all(promises)
                             .then(() => {
-                            models.sort((a, b) => a._order - b._order);
-                            initialResolve(models);
-                        });
+                                models.sort((a, b) => a._order - b._order);
+                                initialResolve(models);
+                            });
                     });
             })
         }

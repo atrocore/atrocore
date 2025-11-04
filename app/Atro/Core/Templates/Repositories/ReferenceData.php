@@ -395,21 +395,24 @@ class ReferenceData extends Repository implements Injectable
         }
 
         // text filter
-        if (!empty($params['whereClause'][0]['OR'])) {
-            $filtered = [];
-            foreach ($params['whereClause'][0]['OR'] as $k => $v) {
-                $field = str_replace('*', '', $k);
-                $search = str_replace('%', '', $v);
-                foreach ($items as $item) {
-                    if (!isset($item[$field])) {
-                        continue;
-                    }
-                    if (!isset($filtered[$item['code']]) && is_string($item[$field]) && strpos($item[$field], $search) !== false) {
-                        $filtered[$item['code']] = $item;
+        foreach ($params['whereClause'] ?? [] as $key => $row) {
+            if (!empty($params['whereClause'][$key]['OR'])) {
+                $filtered = [];
+
+                foreach ($params['whereClause'][$key]['OR'] as $k => $v) {
+                    $field = str_replace('*', '', $k);
+                    $search = str_replace('%', '', $v);
+                    foreach ($items as $item) {
+                        if (!isset($item[$field])) {
+                            continue;
+                        }
+                        if (!isset($filtered[$item['code']]) && is_string($item[$field]) && stripos($item[$field], $search) !== false) {
+                            $filtered[$item['code']] = $item;
+                        }
                     }
                 }
+                $items = array_values($filtered);
             }
-            $items = array_values($filtered);
         }
 
         // sort data

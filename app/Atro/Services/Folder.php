@@ -14,24 +14,11 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Hierarchy;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 class Folder extends Hierarchy
 {
-    public function findLinkedEntities($id, $link, $params)
-    {
-        if ($link === 'parents' || $link === 'children' || $link === 'files') {
-            $params['where'][] = [
-                'type'  => 'bool',
-                'value' => ['hiddenAndUnHidden']
-            ];
-        }
-
-        return parent::findLinkedEntities($id, $link, $params);
-    }
-
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);

@@ -508,7 +508,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         massActionExport: function () {
             let data = {};
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.collection.getWhereForCheckedRecords();
                 data.selectData = this.collection.data || {};
                 data.byWhere = true;
             } else {
@@ -552,7 +552,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var data = {};
 
                 if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
+                    data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
                     data.byWhere = true;
                 } else {
@@ -618,7 +618,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             };
 
             if (this.allResultIsChecked) {
-                requestData.where = this.collection.getWhere();
+                requestData.where = this.collection.getWhereForCheckedRecords();
                 requestData.massAction = true;
             } else if (this.checkedList && this.checkedList.length > 0) {
                 requestData.where = [{ type: "in", attribute: "id", value: this.checkedList }];
@@ -655,7 +655,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var ids = [];
                 var data = { permanently: permanently };
                 if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
+                    data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
                     data.byWhere = true;
                 } else {
@@ -711,7 +711,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var ids = [];
                 var data = {};
                 if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
+                    data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
                     data.byWhere = true;
                 } else {
@@ -779,7 +779,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var ids = [];
             var data = {};
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.collection.getWhereForCheckedRecords();
                 data.selectData = this.collection.data || {};
                 data.byWhere = true;
             } else {
@@ -817,7 +817,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             var ids = [];
             var data = {};
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.collection.getWhereForCheckedRecords();
                 data.selectData = this.collection.data || {};
                 data.byWhere = true;
             } else {
@@ -910,7 +910,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.createView('massUpdate', massUpdateView, {
                 scope: this.entityType,
                 ids: ids,
-                where: this.collection.getWhere(),
+                where: this.collection.getWhereForCheckedRecords(),
                 selectData: this.collection.data,
                 byWhere: this.allResultIsChecked
             }, function (view) {
@@ -1301,8 +1301,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.scope,
                 counters: this.getCounters(),
                 loading: this.isListLoading(),
-                selected: false,
+                selected: this.allResultIsChecked ? true : this.checkedList,
                 massActions: this.getMassActions(),
+                isRelationship: !!this.options.panelView,
                 hasSelectAllCheckbox: this.hasExternalSelectAllCheckbox() && this.isAllowedSelectAllResult(),
                 executeMassAction: (action, data) => {
                     this.executeMassAction(action, data)
@@ -1777,7 +1778,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     scope: (foreignEntities[0].addRelationCustomDefs || {}).entity || foreignEntities[0].entity,
                     type: type,
                     checkedList: this.checkedList,
-                    where: this.collection.getWhere(),
+                    where: this.collection.getWhereForCheckedRecords(),
                     allResultIsChecked: this.allResultIsChecked
                 }, view => {
                     view.render(() => {

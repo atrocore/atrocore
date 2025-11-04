@@ -17,8 +17,11 @@
     export let uniqueKey: string = 'default';
     export let selected: string[] | boolean = false;
     export let hasSelectAllCheckbox: boolean = false;
-    export let executeMassAction = (action: string, id?: Record<string, any>): void => {};
-    export let handleSelectAll = (e: Event): void => {};
+    export let isRelationship: boolean = false;
+    export let executeMassAction = (action: string, id?: Record<string, any>): void => {
+    };
+    export let handleSelectAll = (e: Event): void => {
+    };
 
     export function reset(): void {
         filter.unsetAll();
@@ -53,6 +56,8 @@
     function onSelectAllClick(e: Event): void {
         handleSelectAll(e);
     }
+
+    $: canShowAction = massActions.length > 0 && (isRelationship ? (typeof selected === 'boolean' ? selected : selected.length > 0) : true);
 </script>
 
 <div class="actions-row">
@@ -62,7 +67,7 @@
         </div>
     {/if}
 
-    {#if massActions.length > 0}
+    {#if canShowAction}
         <div class="actions">
             <button type="button" class="dropdown-toggle actions-button" data-toggle="dropdown"
                     disabled={typeof selected === 'boolean' ? !selected : selected.length === 0}
@@ -72,11 +77,13 @@
             <ul class="dropdown-menu">
                 {#each massActions as action}
                     {#if typeof action === 'string'}
-                        <li><a class="mass-action" href="javascript:" data-action={action} on:click={onMassActionClick}>{Language.translate(action, 'massActions', scope)}</a></li>
+                        <li><a class="mass-action" href="javascript:" data-action={action}
+                               on:click={onMassActionClick}>{Language.translate(action, 'massActions', scope)}</a></li>
                     {:else if action.divider}
                         <li class="divider"></li>
                     {:else}
-                        <li><a class="mass-action" href="javascript:" data-action={action.action} data-id={action.id} on:click={onMassActionClick}>{action.label}</a></li>
+                        <li><a class="mass-action" href="javascript:" data-action={action.action} data-id={action.id}
+                               on:click={onMassActionClick}>{action.label}</a></li>
                     {/if}
                 {/each}
             </ul>
@@ -97,25 +104,30 @@
         </div>
     {/if}
 
-    <div class="list-details">
-        <slot></slot>
+    {#if !isRelationship}
+        <div class="list-details">
+            <slot></slot>
 
-        {#if counters.length > 0}
-            <div class="counters-container">
-                {#if loading}
-                    <Preloader heightPx={14}/>
-                {:else}
-                    {#each counters as group}
-                        <div class="group">
-                            {#each group as counter, i}
-                                <span class="counter" data-name={counter.name}><span class="counter-label">{counter.label}</span>: <span class="counter-value">{counter.value}</span></span>{#if i < group.length - 1}<span class="separator">|</span>{/if}
-                            {/each}
-                        </div>
-                    {/each}
-                {/if}
-            </div>
-        {/if}
-    </div>
+            {#if counters.length > 0}
+                <div class="counters-container">
+                    {#if loading}
+                        <Preloader heightPx={14}/>
+                    {:else}
+                        {#each counters as group}
+                            <div class="group">
+                                {#each group as counter, i}
+                                    <span class="counter" data-name={counter.name}><span
+                                            class="counter-label">{counter.label}</span>: <span
+                                            class="counter-value">{counter.value}</span></span>
+                                    {#if i < group.length - 1}<span class="separator">|</span>{/if}
+                                {/each}
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
+            {/if}
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -155,6 +167,7 @@
     .separator {
         margin: 0 5px;
     }
+
     @media screen and (max-width: 768px) {
         .filter-search-bar {
             order: -1;
