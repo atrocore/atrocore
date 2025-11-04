@@ -298,6 +298,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                     canOpenNode: false,
                     callbacks: {
                         selectNode: data => {
+                            if (window.treePanelComponent.getActiveItem() !== '_self') {
+                                view.selectNode(data);
+                                return;
+                            }
+
                             let selected = false;
                             if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
                                 selected = this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id);
@@ -332,6 +337,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                         },
 
                         shouldBeSelected: (activeItem, nodeId) => {
+                            if (activeItem !== '_self') {
+                                return;
+                            }
                             if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
                                 return this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(nodeId);
                             }

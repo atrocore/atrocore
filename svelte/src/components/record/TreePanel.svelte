@@ -80,6 +80,10 @@
         selectedScope = value;
     }
 
+    export function getActiveItem() {
+        return activeItem.name;
+    }
+
     export function handleCollectionSearch(searchedCollection) {
         if (collection && searchedCollection.name === scope) {
             Storage.set('treeWhereData', scope, searchedCollection.where)
