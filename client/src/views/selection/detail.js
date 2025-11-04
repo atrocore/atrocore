@@ -8,17 +8,33 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/detail', 'views/detail', function (Dep) {
+Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
         selectionViewMode: 'standard',
 
+        availableModes: ['standard', 'compare', 'merge'],
+
         hidePanelNavigation: true,
+
+        init: function () {
+            Dep.prototype.init.call(this);
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('selectionViewMode') && this.availableModes.includes(urlParams.get('selectionViewMode'))) {
+                this.selectionViewMode = urlParams.get('selectionViewMode');
+            }
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.setupCustomButtons();
+
+            this.listenTo(this.model, 'sync', () => {
+                this.setupCustomButtons()
+            })
+
             this.listenTo(this.model, 'after:change-mode', (mode) => {
                 if (mode === 'detail') {
                     this.setupCustomButtons();
@@ -29,17 +45,20 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
 
         setupCustomButtons() {
             this.addMenuItem('buttons', {
-                'name': 'merge',
-                'action': 'showSelectionView',
+                name: 'merge',
+                action: 'showSelectionView',
                 style: this.selectionViewMode === 'merge' ? 'primary' : null,
-                'html': '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge')
+                html: '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge'),
+                disabled: this.comparisonAcrossEntities()
+
             }, true, false, true);
 
             this.addMenuItem('buttons', {
                 name: 'compare',
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'compare' ? 'primary' : null,
-                html: '<i class="ph ph-arrows-left-right"></i> ' + this.translate('Compare')
+                html: '<i class="ph ph-arrows-left-right"></i> ' + this.translate('Compare'),
+                disabled: this.comparisonAcrossEntities()
             }, true, false, true);
 
             this.addMenuItem('buttons', {
@@ -61,8 +80,10 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
         },
 
         refreshContent() {
+            if(this.comparisonAcrossEntities()) {
+                this.selectionViewMode = 'standard';
+            }
             this.reloadStyle(this.selectionViewMode);
-
             this.clearView('record');
             this.setupRecord();
         },
@@ -74,6 +95,12 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
             })
 
             $(`.action[data-name="${selected}"]`).addClass('primary');
+
+            if(this.comparisonAcrossEntities()) {
+                ['compare', 'merge'].forEach(name => {
+                    $(`.action[data-name="${name}"]`).addClass('disabled');
+                })
+            }
         },
 
         setupRecord: function () {
@@ -98,7 +125,7 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
                 view.render();
 
                 this.listenTo(view, 'detailPanelsLoaded', data => {
-                    if(!this.panelsList) {
+                    if (!this.panelsList) {
                         this.standardPanelList = data.list;
                     }
                     this.panelsList = data.list;
@@ -122,7 +149,36 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
                     });
                 }
 
+                if (this.selectionViewMode === 'merge') {
+                    this.listenTo(view, 'merge-success', () => {
+                        this.refreshContent()
+                    })
+                }
+
+                if (this.isRendered()) {
+                    this.setupCustomButtons();
+                    window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                        detail: Object.assign({
+                            headerButtons: this.getMenu()
+                        }, view.getRecordButtons())
+                    }));
+                }
+
+                this.listenToOnce(this, 'after:render', () => {
+                    window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                        detail: Object.assign({
+                            headerButtons: this.getMenu()
+                        }, view.getRecordButtons())
+                    }));
+                })
             });
+        },
+
+        comparisonAcrossEntities() {
+            if(Array.isArray(this.model.get('entities'))) {
+                return this.model.get('entities').length > 1;
+            }
+            return true;
         },
 
         getRecordViewName: function () {
@@ -169,9 +225,70 @@ Espo.define('views/selection/detail', 'views/detail', function (Dep) {
                 this.listenToOnce(view, 'after:save', () => {
                     if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', 'selections');
-                        this.refreshContent();
+                        this.model.fetch().then(() => {
+                            this.refreshContent();
+                        })
                     }
                 });
+            });
+        },
+
+        afterRender() {
+            this.treeAllowed = false
+            Dep.prototype.afterRender.call(this);
+            let entities = this.model.get('entities') || [];
+            window.treePanelComponent = new Svelte.TreePanel({
+                target: $(`${this.options.el} .content-wrapper`).get(0),
+                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
+                props: {
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'detail',
+                    showApplyQuery: false,
+                    showApplySortOrder: false,
+                    canBuildTree: entities.length > 0,
+                    selectedScope: entities.length > 0 ? this.model.get('entities')[0] : null,
+                    callbacks: {
+                        selectNode: data => {
+                            // view.selectNode(data);
+                        },
+                        treeLoad: (treeScope, treeData) => {
+                            // if (view.treeLoad) {
+                            //     view.treeLoad(treeScope, treeData);
+                            // }
+                        },
+                        treeReset: () => {
+                            // view.treeReset()
+                        },
+                        treeWidthChanged: (width) => {
+                            // view.onTreeResize(width)
+                        },
+
+                        onEntitySelectorAvailable: (element) => {
+                            let model = new Model();
+                            if(entities.length) {
+                                model.set('entityId', entities[0]);
+                                model.set('entityName', this.translate(entities[0], 'scopeNames'));
+                            }
+                            this.createView('entitySelect', 'views/fields/link', {
+                                el: `${this.options.el} .content-wrapper .entity-selector`,
+                                model: model,
+                                name: 'entity',
+                                foreignScope: 'Entity',
+                                mode: 'edit'
+                            }, (view) => {
+                                view.render();
+                                this.listenTo(view, 'change', () =>{
+                                    window.treePanelComponent.setSelectedScope(view.$elementName.attr('value'));
+                                    window.treePanelComponent.setCanBuildTree(true);
+                                    window.treePanelComponent.rebuildTree()
+
+                                })
+                            })
+                        }
+                    },
+
+                }
             });
         }
     });

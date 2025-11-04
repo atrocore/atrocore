@@ -25,6 +25,11 @@
     "modifiedBy": {
       "type": "link",
       "readOnly": true
+    },
+    "entities": {
+      "type": "jsonArray",
+      "readOnly": true,
+      "notStorable": true
     }
   },
   "links": {

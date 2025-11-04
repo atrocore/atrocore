@@ -1,6 +1,5 @@
 <script lang="ts">
-    import {onMount, tick} from 'svelte';
-    import {fade} from 'svelte/transition';
+    import {onMount, tick, afterUpdate} from 'svelte';
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
     import {Language} from "../../utils/Language";
@@ -26,8 +25,17 @@
 
     export let isAdminPage: boolean = false;
 
+    export let showApplyQuery: boolean = true;
+
+    export let showApplySortOrder: boolean = true
+
+    export let canBuildTree = true;
+
+    export let selectedScope: string;
+
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
+    let entitySelectorElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
     let treeItems: [] = [];
@@ -60,6 +68,14 @@
                 return {name: item, label: Language.translate(item, 'fields', sortScope)}
             })
         }
+    }
+
+    export function setCanBuildTree(value: boolean) {
+        canBuildTree = value;
+    }
+
+    export function setSelectedScope(value: string) {
+        selectedScope = value;
     }
 
     export function handleCollectionSearch(searchedCollection) {
@@ -107,6 +123,10 @@
     }
 
     function buildTree(data = null): void {
+        if(!canBuildTree && activeItem.name === '_self') {
+            return;
+        }
+
         if (!activeItem) {
             return;
         }
@@ -394,7 +414,7 @@
     }
 
     function generateUrl(node) {
-        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
+        let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}&selectedScope=${selectedScope}`;
         if (sortBy) {
             url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
         }
@@ -820,6 +840,7 @@
             applyAdvancedFilter = true;
         }
 
+        applyAdvancedFilter = showApplyQuery && applyAdvancedFilter;
 
         if (collection) {
             Storage.set('treeWhereData', scope, collection.where)
@@ -853,6 +874,12 @@
             })
         });
     });
+
+    function createEntitySelectorView(node) {
+        if(callbacks?.onEntitySelectorAvailable) {
+            callbacks.onEntitySelectorAvailable(node);
+        }
+    }
 
     function onSidebarResize(e: CustomEvent): void {
         Storage.set('panelWidth', scope, currentWidth.toString());
@@ -922,23 +949,25 @@
                             </button>
                         </div>
                     </div>
-                    {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
-                        <div style="margin-top:  20px;">
-                             <span class="icons-wrapper">
-                                <span class="toggle" class:active={applyAdvancedFilter}
-                                      on:click|stopPropagation|preventDefault={handleFilterToggle}
-                                >
-                                    {#if applyAdvancedFilter}
-                                        <i class="ph-fill ph-toggle-right"></i>
-                                    {:else}
-                                        <i class="ph-fill ph-toggle-left"></i>
-                                    {/if}
+                    {#if showApplyQuery }
+                        {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
+                            <div style="margin-top:  20px;">
+                                 <span class="icons-wrapper">
+                                    <span class="toggle" class:active={applyAdvancedFilter}
+                                          on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                    >
+                                        {#if applyAdvancedFilter}
+                                            <i class="ph-fill ph-toggle-right"></i>
+                                        {:else}
+                                            <i class="ph-fill ph-toggle-left"></i>
+                                        {/if}
+                                    </span>
+                                     {Language.translate('applyMainSearchAndFilter')}
                                 </span>
-                                 {Language.translate('applyMainSearchAndFilter')}
-                            </span>
-                        </div>
+                            </div>
+                        {/if}
                     {/if}
-                    {#if activeItem.name !== '_admin' }
+                    {#if showApplySortOrder && activeItem.name !== '_admin' }
                         <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
                             <div class="button-group" style="display:flex; align-items: stretch;">
                                 <button type="button" class="sort-btn" data-tippy="true"
@@ -958,10 +987,16 @@
                         </div>
                     {/if}
                 </div>
+                {#if activeItem.name === '_self'}
+                    <div class="entity-selector" style="margin-top: 20px;" use:createEntitySelectorView   bind:this={entitySelectorElement}>
+
+                    </div>
+                {/if}
 
                 <div class="panel-group category-tree" bind:this={treeElement}>
                 </div>
             {/if}
+
         {/if}
     </div>
 </BaseSidebar>

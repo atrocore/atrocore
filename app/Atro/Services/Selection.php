@@ -14,15 +14,20 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Services\Base;
+use Atro\Core\Utils\Util;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use Espo\ORM\IEntity;
 
 class Selection extends Base
 {
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
-
         $selection = $this->getEntityManager()->getEntity('Selection');
         $this->getEntityManager()->saveEntity($selection);
 
@@ -40,5 +45,66 @@ class Selection extends Base
         }
 
         return $selection;
+    }
+
+    public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
+    {
+        $loadEntities = !empty($selectParams['select']) && in_array('entities', $selectParams['select']);
+        foreach ($collection as $entity) {
+            $entity->_loadEntity = $loadEntities;
+        }
+        parent::prepareCollectionForOutput($collection, $selectParams);
+
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        if (!property_exists($entity, '_loadEntity') || !empty($entity->_loadEntity)) {
+            $entity->set('entities', $this->getRepository()->getEntities($entity->id));
+        }
+
+        parent::prepareEntityForOutput($entity);
+    }
+
+    public function getTreeItems(string $link, string $scope, array $params): array
+    {
+        $repository = $this->getEntityManager()->getRepository($scope);
+
+        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
+        if (!empty($params['distinct'])) {
+            $selectParams['distinct'] = true;
+        }
+
+        $fields = ['id', 'name'];
+        $localizedNameField = $this->getLocalizedNameField($scope);
+        if (!empty($localizedNameField)) {
+            $fields[] = $localizedNameField;
+        }
+
+        if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
+            $fields[] = $selectParams['orderBy'];
+        }
+        $selectParams['select'] = $fields;
+        $collection = $repository->find($selectParams);
+        $total = $repository->count($selectParams);
+        $offset = $params['offset'];
+        $result = [];
+
+        foreach ($collection as $key => $item) {
+            $value = $this->getLocalizedNameValue($item, $scope);
+            $result[] = [
+                'id'             => $item->get('id'),
+                'name'           => !empty($value) ? $value : $item->get('id'),
+                'offset'         => $offset + $key,
+                'total'          => $total,
+                'disabled'       => false,
+                'load_on_demand' => false
+            ];
+        }
+
+        return [
+            'list'  => $result,
+            'total' => $total
+        ];
     }
 }

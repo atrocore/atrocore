@@ -15,6 +15,7 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 
@@ -44,5 +45,21 @@ class Selection extends Base
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    public function getEntities(string $selectionId): array
+    {
+        $result = $this->getConnection()->createQueryBuilder()
+            ->from('selection_record', 'sr')
+            ->select('distinct sr.entity_type')
+            ->join('sr', 'selection_selection_record', 'ssr', 'sr.id = ssr.selection_record_id and ssr.deleted = :false')
+            ->join('ssr', 'selection', 's', 'ssr.selection_id = s.id')
+            ->where('s.id = :selectionId and sr.deleted = :false')
+            ->setParameter('selectionId', $selectionId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        return array_column($result, 'entity_type');
+
     }
 }

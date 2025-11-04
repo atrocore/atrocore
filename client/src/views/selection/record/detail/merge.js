@@ -11,9 +11,20 @@
 Espo.define('views/selection/record/detail/merge', 'views/selection/record/detail/compare', function (Dep) {
 
     return Dep.extend({
+
         merging: true,
 
-        actionMerge()  {
+        getRecordButtons() {
+            return Object.assign( Dep.prototype.getRecordButtons.call(this), {
+                buttons: [{
+                    label: this.translate('Merge'),
+                    name: 'merge',
+                    style: 'primary'
+                }]
+            });
+        },
+
+        actionMerge() {
             this.applyMerge();
         }
     });

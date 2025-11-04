@@ -23,6 +23,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
         hidePanelNavigation: true,
 
         setup() {
+
             this.wait(true);
             this.models = [];
             this.selectionModel = this.options.model;
@@ -47,12 +48,41 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 panelList = this.getPanelWithFields().concat(panelList);
                 this.trigger('detailPanelsLoaded', {list: panelList});
             });
+        },
 
+        executeAction: function (action, data = null, e = null) {
+            var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (typeof this[method] == 'function') {
+                this[method].call(this, data, e);
+            }
         },
 
         getModels() {
             return this.models;
         },
+
+        getRecordButtons() {
+            return {
+                additionalButtons: [
+                    {
+                        action: 'addItem',
+                        name: 'addItem',
+                        label: this.translate('addItem')
+                    }
+                ],
+                buttons:[],
+                dropdownButtons: [
+                    {
+                        label: this.translate('Remove'),
+                        name: 'delete'
+                    },
+                    {
+                        label: this.translate('Duplicate'),
+                        name: 'duplicate'
+                    }
+                ]
+            }
+        }
     });
 
 

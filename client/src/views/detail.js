@@ -336,6 +336,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             var method = 'action' + Espo.Utils.upperCaseFirst(action);
             if (typeof this[method] == 'function') {
                 this[method].call(this, data, event);
+                event.stopPropagation();
                 return;
             }
 
