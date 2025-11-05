@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Atro\SelectManagers;
 
 use Atro\ConnectionType\HttpConnectionInterface;
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class Connection extends Base
 {

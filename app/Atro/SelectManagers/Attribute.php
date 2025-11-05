@@ -14,7 +14,7 @@ namespace Atro\SelectManagers;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\IEntity;
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class Attribute extends Base
 {
