@@ -161,6 +161,10 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                         return;
                     }
 
+                    if (!el.getAttribute('title')) {
+                        return;
+                    }
+
                     if (!el.getAttribute('data-original-title')) {
                         el.setAttribute('data-original-title', el.getAttribute('title'));
                     }
@@ -221,10 +225,18 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 if (el.getAttribute('data-title-link')) {
                     el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
                 }
+
                 if (el.dataset.tippy && el._tippy) {
-                    el._tippy.setContent(getTooltipContent(el));
-                    el.removeAttribute('title');
-                    el.removeAttribute('data-title-link');
+                    const tooltipContent = getTooltipContent(el);
+                    if (tooltipContent) {
+                        el._tippy.setContent(getTooltipContent(el));
+                        el.removeAttribute('title');
+                        el.removeAttribute('data-title-link');
+                    } else {
+                        el._tippy.destroy();
+                        el.removeAttribute('data-tippy');
+                        el.removeAttribute('title');
+                    }
                 } else {
                     initializeTooltips(el);
                 }
