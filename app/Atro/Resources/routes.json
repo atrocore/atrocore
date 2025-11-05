@@ -112,6 +112,15 @@
     }
   },
   {
+    "route": "/App/logNavigation/:id",
+    "method": "post",
+    "params": {
+      "controller": "App",
+      "action": "logNavigation",
+      "id": ":id"
+    }
+  },
+  {
     "route": "/MassActions/action/upsert",
     "method": "post",
     "params": {

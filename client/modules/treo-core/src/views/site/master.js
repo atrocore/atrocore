@@ -43,7 +43,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         events: {
             'click #title-bar [data-action=copyUrl]': function () {
                 this.copyToClipboard(window.location.href);
-                this.notify('Copied', 'success');
+                this.notify('copiedToClipboard', 'success');
             },
             'click #title-bar [data-action=openWindow]': function (e) {
                 e.preventDefault();

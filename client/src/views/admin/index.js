@@ -91,6 +91,9 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
                 this.iframeUrl += '?' + iframeParams.join('&');
             }
 
+            this.once('after:render', function () {
+                this.logToNavigationHistory('Administration');
+            });
         },
 
         updatePageTitle: function () {
@@ -109,7 +112,8 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
                             url: '#Admin'
                         }
                     ],
-                    scope: 'Administration'
+                    scope: 'App',
+                    id: 'Administration'
                 }
             });
 

@@ -50,9 +50,10 @@ Espo.define('treo-core:views/admin/layouts/index', 'class-replace!treo-core:view
                             label: this.translate('Layout Manager', 'labels', 'Admin')
                         }
                     ],
-                    scope: 'LayoutManager'
+                    scope: 'App',
+                    id: 'LayoutManager'
                 }
-            })
+            });
         }
     })
 );

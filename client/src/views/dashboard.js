@@ -42,81 +42,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
 
         currentTab: null,
 
-        events: {
-            'click button[data-action="selectTab"]': function (e) {
-                var tab = parseInt($(e.currentTarget).data('tab'));
-                this.selectTab(tab);
-            },
-            'change select[data-action="selectTab"]': function (e) {
-                var tab = e.currentTarget.value;
-                this.selectTab(tab);
-            },
-            'click button[data-action="addDashlet"]': function () {
-                this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
-                    view.render();
-                    this.listenToOnce(view, 'add', function (name) {
-                        this.addDashlet(name);
-                    }, this);
-                }, this);
-            },
-            'click button[data-action="editTabs"]': function () {
-                this.createView('editTabs', 'views/modals/edit-dashboard', {
-                    dashboardLayout: this.dashboardLayout
-                }, function (view) {
-                    view.render();
-
-                    this.listenToOnce(view, 'after:save', function (data) {
-                        view.close();
-                        var dashboardLayout = [];
-
-                        dashboardLayout = dashboardLayout.filter(function (item, i) {
-                            return dashboardLayout.indexOf(item) == i;
-                        });
-
-                        (data.dashboardTabList).forEach(function (name) {
-                            var layout = [];
-                            this.dashboardLayout.forEach(function (d) {
-                                if (d.name == name) {
-                                    layout = d.layout;
-                                }
-                            }, this);
-
-                            if (name in data.renameMap) {
-                                name = data.renameMap[name];
-                            }
-                            dashboardLayout.push({
-                                name: name,
-                                layout: layout
-                            });
-                        }, this);
-
-                        this.dashletIdList.forEach(function (item) {
-                            this.clearView('dashlet-' + item);
-                        }, this);
-
-                        this.dashboardLayout = dashboardLayout;
-                        this.saveLayout();
-
-                        this.storeCurrentTab(0);
-                        this.currentTab = 0;
-                        this.setupCurrentTabLayout();
-
-                        if (this.header) {
-                            this.header.$set({
-                                selectedTabIndex: Number.parseInt(this.currentTab),
-                                tabs: (this.dashboardLayout || []).map(tab => tab.name)
-                            });
-                        }
-
-                        this.initGridstack();
-                    }, this);
-                }.bind(this));
-            },
-            'click button[data-action="reset"]': function () {
-                this.resetDashboard();
-            }
-        },
-
         data: function () {
             return {
                 displayTitle: this.options.displayTitle,
@@ -195,6 +120,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                 this.dashletsReadOnly = true;
             }
 
+            this.once('after:render', function () {
+                this.logToNavigationHistory('Dashboard');
+            });
+
             this.once('remove', function () {
                 if (this.$gridstack) {
                     var gridStack = this.$gridstack.data('gridstack');
@@ -219,6 +148,73 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                         tabs: tabs,
                         selectedTabIndex: Number.parseInt(this.currentTab),
                         readOnly: !!this.layoutReadOnly,
+                        onSelectTab: (index) => {
+                            this.selectTab(index);
+                        },
+                        onReset: () => {
+                            this.resetDashboard();
+                        },
+                        onAddDashlet: () => {
+                            this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
+                                view.render();
+                                this.listenToOnce(view, 'add', function (name) {
+                                    this.addDashlet(name);
+                                }, this);
+                            }, this);
+                        },
+                        onEditTabs: () => {
+                            this.createView('editTabs', 'views/modals/edit-dashboard', {
+                                dashboardLayout: this.dashboardLayout
+                            }, function (view) {
+                                view.render();
+
+                                this.listenToOnce(view, 'after:save', function (data) {
+                                    view.close();
+                                    var dashboardLayout = [];
+
+                                    dashboardLayout = dashboardLayout.filter(function (item, i) {
+                                        return dashboardLayout.indexOf(item) == i;
+                                    });
+
+                                    (data.dashboardTabList).forEach(function (name) {
+                                        var layout = [];
+                                        this.dashboardLayout.forEach(function (d) {
+                                            if (d.name == name) {
+                                                layout = d.layout;
+                                            }
+                                        }, this);
+
+                                        if (name in data.renameMap) {
+                                            name = data.renameMap[name];
+                                        }
+                                        dashboardLayout.push({
+                                            name: name,
+                                            layout: layout
+                                        });
+                                    }, this);
+
+                                    this.dashletIdList.forEach(function (item) {
+                                        this.clearView('dashlet-' + item);
+                                    }, this);
+
+                                    this.dashboardLayout = dashboardLayout;
+                                    this.saveLayout();
+
+                                    this.storeCurrentTab(0);
+                                    this.currentTab = 0;
+                                    this.setupCurrentTabLayout();
+
+                                    if (this.header) {
+                                        this.header.$set({
+                                            selectedTabIndex: Number.parseInt(this.currentTab),
+                                            tabs: (this.dashboardLayout || []).map(tab => tab.name)
+                                        });
+                                    }
+
+                                    this.initGridstack();
+                                }, this);
+                            }.bind(this));
+                        }
                     }
                 });
             }
@@ -229,13 +225,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
         },
 
         initGridstack: function () {
-            // if (this.$gridstack) {
-            //     var gridStack = this.$gridstack.data('gridstack');
-            //     if (gridStack) {
-            //         gridStack.destroy();
-            //     }
-            // }
-
             var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
 
             var draggable = false;
@@ -254,15 +243,17 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack', 'lib!Selectize'], funct
                 disableResize: disableResize
             });
 
-            var grid = $gridstack.data('gridstack');
+            $gridstack.off('change');
+
+            const grid = $gridstack.data('gridstack');
             grid.removeAll();
 
             this.currentTabLayout.forEach(function (o) {
-                var $item = this.prepareGridstackItem(o.id, o.name);
+                const $item = this.prepareGridstackItem(o.id, o.name);
                 grid.addWidget($item, o.x, o.y, o.width, o.height);
             }, this);
 
-            $gridstack.find(' .grid-stack-item').css('position', 'absolute');
+            $gridstack.find('.grid-stack-item').css('position', 'absolute');
 
             this.currentTabLayout.forEach(function (o) {
                 if (!o.id || !o.name) return;

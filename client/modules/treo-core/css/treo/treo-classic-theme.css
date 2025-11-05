@@ -13325,6 +13325,10 @@ input#sn-checkbox-open-in-new-window {
     margin-bottom: 5px;
 }
 
+.dashlets .panel-default > .panel-heading {
+    border-top-width: 1px;
+}
+
 .composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
 .middle .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
 .bottom .panel-default > .panel-heading:not(.note-toolbar) > .btn-group {
@@ -18491,6 +18495,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
     .modal {
         top: 80px;
+    }
+
+
+    #header ul.tabs {
+        height: calc(100vh - 155px);
     }
 }
 

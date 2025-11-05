@@ -6,7 +6,7 @@
     export let breadcrumbs: BreadcrumbsItem[] = [];
     export let disableNavigationHistory: boolean = false;
     export let currentIsHeading: boolean = true;
-    export let scope: string;
+    export let scope: string | null = null;
     export let id: string | null = null;
 
 </script>

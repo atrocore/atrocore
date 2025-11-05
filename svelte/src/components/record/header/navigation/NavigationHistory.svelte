@@ -21,6 +21,7 @@
         controllerName: string;
         targetId: string | null;
         targetName: string | null;
+        targetUrl: string | null;
     }
 
     export let scope: string;
@@ -38,7 +39,23 @@
         let className = '';
         let tooltip = '';
 
-        if (item.targetId === null) {
+        if (item.controllerName === 'App' && item.targetId) {
+            let category = 'labels';
+            let scope = 'Admin'
+            if (!Language.has(item.targetId, category, scope)) {
+                category = 'scopeNames';
+                scope = 'Global'
+
+                if (!Language.has(item.targetId, category, scope)) {
+                    category = 'labels';
+                }
+            }
+
+            label = Language.translate(item.targetId, category, scope);
+            if (item.targetUrl) {
+                link = item.targetUrl;
+            }
+        } else if (item.targetId === null) {
             label = Language.translate(item.controllerName, 'scopeNamesPlural');
             link = `#${item.controllerName}`;
             className = 'entity';
@@ -68,11 +85,11 @@
             let url = '/api/v1/LastViewed/action/getNavigationHistory'
             let params: Record<string, any> = {
                 'maxSize': '32',
-                'entityName': scope
+                'entity': scope
             };
 
             if (id) {
-                params.entityId = id;
+                params.id = id;
             }
 
             if (tabId) {
