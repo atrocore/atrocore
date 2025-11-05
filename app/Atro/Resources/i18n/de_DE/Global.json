@@ -431,7 +431,10 @@
     "copiedToClipboard": "In die Zwischenablage kopiert",
     "goBack": "Zurückgehen",
     "goForward": "Weitergehen",
-    "reloadPage": "Seite neu laden"
+    "reloadPage": "Seite neu laden",
+    "Compare": "Vergleichen",
+    "Standard": "Standard",
+    "addItem": "Entität hinzufügen"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -617,7 +620,8 @@
     "massRestore": "Massenwiederherstellung",
     "download": "Nachladen",
     "compare": "Vergleichen Sie",
-    "removeAttribute": "Attribut löschen"
+    "removeAttribute": "Attribut löschen",
+    "select": "Wählen"
   },
   "fields": {
     "width": "Breite",

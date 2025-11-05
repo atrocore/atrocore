@@ -21,6 +21,7 @@ use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Atro\Core\Utils\Util;
@@ -469,7 +470,10 @@ class Record extends RecordService
                     $linkedList = $repository->findRelated($source, $link);
                 }
                 foreach ($linkedList as $linked) {
-                    $repository->relate($entity, $link, $linked);
+                    try {
+                        $repository->relate($entity, $link, $linked);
+                    }catch (UniqueConstraintViolationException $e) {
+                    }
                 }
             }
         }

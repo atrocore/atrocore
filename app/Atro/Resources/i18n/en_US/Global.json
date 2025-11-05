@@ -486,7 +486,10 @@
     "copiedToClipboard": "Copied to clipboard",
     "goBack": "Go back",
     "goForward": "Go forward",
-    "reloadPage": "Reload page"
+    "reloadPage": "Reload page",
+    "Compare": "Compare",
+    "Standard": "Standard",
+    "addItem": "Add Item"
   },
   "messages": {
     "removeRelatedRecords": "Are you sure you want to remove all the records for the selected Association from the current record? All related records will be retained.",
@@ -630,7 +633,8 @@
     "massDelete": "Mass Delete",
     "download": "Download",
     "compare": "Compare",
-    "removeAttribute": "Delete Attribute"
+    "removeAttribute": "Delete Attribute",
+    "select": "Select"
   },
   "fields": {
     "__currentUser": "Current User",
