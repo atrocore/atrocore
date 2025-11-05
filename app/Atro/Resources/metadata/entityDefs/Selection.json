@@ -2,8 +2,7 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "trim": true,
-      "required": true
+      "trim": true
     },
     "description": {
       "type": "text"
@@ -26,6 +25,11 @@
     "modifiedBy": {
       "type": "link",
       "readOnly": true
+    },
+    "entities": {
+      "type": "jsonArray",
+      "readOnly": true,
+      "notStorable": true
     }
   },
   "links": {

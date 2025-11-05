@@ -1,6 +1,6 @@
 <div class="detail compare-records" id="{{id}}">
     <div class="row">
-        <div class="fields-compare-panel">
+        <div class="fields-compare-panel col-md-12">
             {{#each fieldPanels }}
             <div class="compare-panel list col-md-12">
                 <div class="panel panel-default panel-{{name}}" data-name="{{name}}">

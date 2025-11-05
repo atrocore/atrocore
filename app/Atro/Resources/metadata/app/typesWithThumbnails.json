@@ -2,6 +2,7 @@
   "image/jpeg",
   "image/png",
   "image/gif",
+  "image/avif",
   "application/pdf",
   "image/webp",
   "image/svg+xml"

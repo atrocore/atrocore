@@ -23,7 +23,7 @@ class ConditionChecker
         $this->container = $container;
     }
 
-    public function check(Entity $entity, array $conditions): bool
+    public function check(Entity $entity, array $conditions): ?bool
     {
         $entity->fields['__currentUserId'] = ['type' => 'varchar', 'notStorable' => true];
         $entity->set('__currentUserId', $this->container->get('user')->get('id'));

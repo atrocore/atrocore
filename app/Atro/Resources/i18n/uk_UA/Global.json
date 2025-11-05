@@ -421,7 +421,10 @@
     "copiedToClipboard": "Скопійовано в буфер обміну",
     "goBack": "Назад",
     "goForward": "Вперед",
-    "reloadPage": "Перезавантажити"
+    "reloadPage": "Перезавантажити",
+    "Compare": "Порівняйте",
+    "Standard": "Стандартний",
+    "addItem": "додати товар"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -532,7 +535,6 @@
     "assignedToMe": "Призначений мені",
     "ownedByMe": "Належить мені",
     "onlyMy": "Тільки мої",
-    "onlyHidden": "Тільки приховані",
     "followed": "Ви підписані",
     "onlyArchived": "Без неархівних",
     "withArchived": "З архівом",
@@ -566,7 +568,8 @@
     "massDelete": "Масове видалення",
     "download": "Завантажити",
     "compare": "Порівняйте",
-    "removeAttribute": "Видалити атрибут"
+    "removeAttribute": "Видалити атрибут",
+    "select": "Виберіть"
   },
   "fields": {
     "classifications": "Класифікації",

@@ -1200,5 +1200,46 @@
         }
       }
     }
+  },
+  {
+    "route": "/Selection/action/createSelectionWithRecords",
+    "method": "post",
+    "params": {
+      "controller": "Selection",
+      "action": "createSelectionWithRecords"
+    },
+    "summary": "Create a selection with multiple records for an entity at once",
+    "description": "Create a selection with multiple records for an entity at once",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "entityIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": ["example-id"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "$ref": "#/components/schemas/Selection"
+    }
   }
 ]

@@ -2164,9 +2164,10 @@ class Metadata extends AbstractListener
                 $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
                 if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
                     $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
-                        'name'  => 'matchedRecords',
-                        'label' => 'matchedRecords',
-                        'view'  => 'views/record/panels/side/matchings',
+                        'name'     => 'matchedRecords',
+                        'label'    => 'matchedRecords',
+                        'view'     => 'views/record/panels/side/matchings',
+                        'aclScope' => 'MatchedRecord',
                     ];
                 }
             }

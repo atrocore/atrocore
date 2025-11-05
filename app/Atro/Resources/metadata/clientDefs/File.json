@@ -5,13 +5,10 @@
   "plateViewMode": true,
   "boolFilterList": [
     "onlyMy",
-    "onlyType",
-    "onlyHidden",
-    "hiddenAndUnHidden"
+    "onlyType"
   ],
   "hiddenBoolFilterList": [
-    "onlyType",
-    "hiddenAndUnHidden"
+    "onlyType"
   ],
   "views": {
     "list": "views/file/list",

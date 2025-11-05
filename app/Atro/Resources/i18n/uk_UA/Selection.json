@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "description": "Опис",
+    "selectionRecords": "Записи вибору"
+  }
+}

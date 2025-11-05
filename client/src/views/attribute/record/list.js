@@ -38,7 +38,7 @@ Espo.define('views/attribute/record/list', 'views/record/list',
                 var ids = [];
                 var data = { permanently: permanently };
                 if (this.allResultIsChecked) {
-                    data.where = this.collection.getWhere();
+                    data.where = this.collection.getWhereForCheckedRecords();
                     data.selectData = this.collection.data || {};
                     data.byWhere = true;
                 } else {

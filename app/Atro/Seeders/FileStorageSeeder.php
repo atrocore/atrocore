@@ -61,7 +61,7 @@ class FileStorageSeeder extends AbstractSeeder
             [
                 'id'                  => 'a_image',
                 'name'                => 'Image',
-                'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp', 'webp']
+                'extensions'          => ['jpg', 'jpeg', 'gif', 'tiff', 'png', 'bmp', 'webp','avif']
             ],
             [
                 'id'                  => 'a_favicon',
