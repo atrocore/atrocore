@@ -52,6 +52,7 @@
             }
 
             label = Language.translate(item.targetId, category, scope);
+            className = 'entity';
             if (item.targetUrl) {
                 link = item.targetUrl;
             }

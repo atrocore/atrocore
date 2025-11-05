@@ -445,7 +445,7 @@ Espo.define('view', [], function () {
 
             this.ajaxPostRequest('App/logNavigation/' + name,
                 {
-                    url: window.location.pathname + window.location.hash
+                    url: window.location.pathname + (window.location.hash || '#')
                 },
                 {
                     headers: {
