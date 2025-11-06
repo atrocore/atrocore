@@ -106,41 +106,63 @@ class LayoutProfileSeeder extends AbstractSeeder
 
     private function getDefaultDashboards(): array
     {
-        $data = [
+        $gettingStartedLayout = [
+            'name'   => 'Getting started',
             'layout' => [
                 [
-                    'name' => 'My AtroPIM',
+                    'id'     => 'first-steps',
+                    'name'   => 'FirstSteps',
+                    'x'      => 0,
+                    'y'      => 0,
+                    'width'  => 2,
+                    'height' => 4
+                ],
+                [
+                    'id'     => 'entities',
+                    'name'   => 'Entities',
+                    'x'      => 2,
+                    'y'      => 0,
+                    'width'  => 2,
+                    'height' => 4
+                ]
+            ]
+        ];
+
+        $data = [
+            'layout'  => [
+                [
+                    'name'   => 'Insights',
                     'layout' => [
                         [
-                            'id' => 'd678833',
-                            'name' => 'Records',
-                            'x' => 0,
-                            'y' => 0,
-                            'width' => 2,
+                            'id'     => 'd678833',
+                            'name'   => 'Records',
+                            'x'      => 0,
+                            'y'      => 0,
+                            'width'  => 2,
                             'height' => 4
                         ],
                         [
-                            'id' => 'd811129',
-                            'name' => 'Stream',
-                            'x' => 2,
-                            'y' => 0,
-                            'width' => 2,
+                            'id'     => 'd811129',
+                            'name'   => 'Stream',
+                            'x'      => 2,
+                            'y'      => 0,
+                            'width'  => 2,
                             'height' => 4
                         ],
                         [
-                            'id' => 'd556889',
-                            'name' => 'DataSyncErrorsExport',
-                            'x' => 0,
-                            'y' => 4,
-                            'width' => 2,
+                            'id'     => 'd556889',
+                            'name'   => 'DataSyncErrorsExport',
+                            'x'      => 0,
+                            'y'      => 4,
+                            'width'  => 2,
                             'height' => 2
                         ],
                         [
-                            'id' => 'd403401',
-                            'name' => 'DataSyncErrorsImport',
-                            'x' => 2,
-                            'y' => 4,
-                            'width' => 2,
+                            'id'     => 'd403401',
+                            'name'   => 'DataSyncErrorsImport',
+                            'x'      => 2,
+                            'y'      => 4,
+                            'width'  => 2,
                             'height' => 2
                         ]
                     ]
@@ -149,23 +171,23 @@ class LayoutProfileSeeder extends AbstractSeeder
             'options' => [
                 'd678833' => [
                     'autorefreshInterval' => 0.5,
-                    'displayRecords' => 20,
-                    'entityType' => 'Account',
-                    'sortBy' => 'createdAt',
-                    'sortDirection' => 'desc',
-                    'title' => 'Customer',
-                    'entityFilter' => [
-                        'where' => [
+                    'displayRecords'      => 20,
+                    'entityType'          => 'Account',
+                    'sortBy'              => 'createdAt',
+                    'sortDirection'       => 'desc',
+                    'title'               => 'Customer',
+                    'entityFilter'        => [
+                        'where'      => [
                             [
                                 'condition' => 'AND',
-                                'valid' => true,
-                                'rules' => [
+                                'valid'     => true,
+                                'rules'     => [
                                     [
-                                        'id' => 'role',
-                                        'field' => 'role',
+                                        'id'       => 'role',
+                                        'field'    => 'role',
                                         'operator' => 'in',
-                                        'type' => 'string',
-                                        'value' => ['customer']
+                                        'type'     => 'string',
+                                        'value'    => ['customer']
                                     ]
                                 ]
                             ]
@@ -177,8 +199,10 @@ class LayoutProfileSeeder extends AbstractSeeder
         ];
 
         if (class_exists('\Pim\Module')) {
-            return \Pim\Module::DASHLETS_DATA;
+            $data = \Pim\Module::DASHLETS_DATA;
         }
+
+        array_unshift($data['layout'], $gettingStartedLayout);
 
         return $data;
     }
