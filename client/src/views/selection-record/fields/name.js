@@ -17,6 +17,7 @@ Espo.define('views/selection-record/fields/name', 'views/fields/varchar',
                 let data = Dep.prototype.data.call(this);
                 data['scope'] = this.model.get('entityType');
                 data['entityId'] = this.model.get('entityId');
+                data['id'] = this.model.get('id');
 
                 return data;
             }
