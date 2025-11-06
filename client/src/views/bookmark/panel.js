@@ -219,6 +219,7 @@ Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep
                     let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
                     this.createView('dialog', view, {
                         models: models,
+                        selectionId: result.id,
                         scope: group.key,
                         mode: "details",
                         merging: merging
@@ -227,7 +228,7 @@ Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep
                         this.notify(false)
                     });
                 });
-            })
+            });
         }
-    })
+    });
 });
