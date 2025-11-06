@@ -109,11 +109,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             })
 
                             this.listenTo(view, 'after:render', () => {
-                                // setTimeout(() => {
-                                //     if(field === 'longDescription') {
-                                //         view.getInlineActionsContainer().remove();
-                                //     }
-                                // },1000)
                                 this.handleAllFieldsRendered(row.key);
                                 if (this.instanceComparison && index !== 0) {
                                     let instance = model.get('_instance');
