@@ -87,8 +87,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
                             view.render();
 
-                            view.initInlineTime = () => {}
-
                             if (view.isRendered()) {
                                 this.handleAllFieldsRendered(row.key)
                             }
