@@ -1008,6 +1008,9 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
                 'type' => 'int'
             ];
+            $data['entityDefs'][$relationEntityName]['fields']['route'] = [
+                'type' => 'text'
+            ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
