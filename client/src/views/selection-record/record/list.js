@@ -19,7 +19,7 @@ Espo.define('views/selection-record/record/list', 'views/record/list', function 
                 }
                 e.preventDefault();
                 var id = $(e.currentTarget).data('id');
-                debugger
+
                 var recordModel = this.collection.get(id);
 
                 var scope = recordModel.get('entityType');
