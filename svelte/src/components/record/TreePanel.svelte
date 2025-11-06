@@ -173,8 +173,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="ph ph-caret-right"></i>'),
-            openedIcon: window.$('<i class="ph ph-caret-down"></i>'),
+            closedIcon: window.$('<i class="ph ph-folder"></i>'),
+            openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
