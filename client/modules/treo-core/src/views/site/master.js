@@ -75,7 +75,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         setup: function () {
-            // const tabId = sessionStorage.tabId ||= crypto.randomUUID();
+            const tabId = sessionStorage.tabId ||= crypto.randomUUID();
 
             window.addEventListener('appinstalled',  () => {
                 if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
