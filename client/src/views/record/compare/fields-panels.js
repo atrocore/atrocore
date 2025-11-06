@@ -67,6 +67,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
                         let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
 
+                        model
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                             model: this.merging ? model.clone() : model,
@@ -79,13 +80,32 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                                 disableAttributeRemove: true
                             },
                             mode: mode,
-                            // disabled: fieldData.disabled,
-                            inlineEditDisabled: false,
+                            inheritanceActionDisabled: true,
+                            revisionHistoryActionDisabled: true
                         }, view => {
+                            let viewKey = row.key;
+
                             view.render();
+
                             if (view.isRendered()) {
                                 this.handleAllFieldsRendered(row.key)
                             }
+                            this.listenTo(view, 'edit', () => {
+                                this.fieldList.forEach(fieldListByGroup => {
+                                    fieldListByGroup.fieldListInGroup.forEach(fieldData => {
+                                        fieldData.fieldValueRows.forEach((row, index) => {
+                                            if(row.key === viewKey){
+                                                return
+                                            }
+                                            let fieldView = this.getView(row.key);
+                                            if(fieldView && fieldView.mode === 'edit') {
+                                                fieldView.inlineEditClose();
+                                            }
+                                        })
+                                    })
+                                })
+                            })
+
                             this.listenTo(view, 'after:render', () => {
                                 this.handleAllFieldsRendered(row.key);
                                 if (this.instanceComparison && index !== 0) {

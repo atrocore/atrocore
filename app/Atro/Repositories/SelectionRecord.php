@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
 
 
@@ -39,6 +42,20 @@ class SelectionRecord extends Base
 
        $entity->set('name', $record->get('name') ?? $record->get('id'));
 
+       if($entity->isNew() && !empty($entity->get('selectionsIds'))) {
+           $id = md5($entity->get('selectionsIds')[0] . $entity->get('entityId') .$entity->get('entityType'));
+           $entity->set('id', $id);
+       }
+
        parent::beforeSave($entity, $options);
+   }
+
+   public function save(Entity $entity, array $options = [])
+   {
+       try {
+           return parent::save($entity, $options);
+       }catch (NotUnique $e) {
+           throw new BadRequest("Selection record already exists");
+       }
    }
 }

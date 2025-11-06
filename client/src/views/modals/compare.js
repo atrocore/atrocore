@@ -51,6 +51,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.currentVersion = this.versions[0]?.name
 
             this.collection = this.options.collection ?? this.collection;
+            this.models = this.options.models || this.models;
+            this.selectionId = this.options.selectionId || this.selectionId;
 
             Modal.prototype.setup.call(this)
 
@@ -83,16 +85,29 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     onClick: (dialog) => {
                         this.trigger('cancel', dialog)
                     }
-                },
-                {
-                    "name": "selectionView",
-                    "label": "Selection View",
-                    "hidden": true,
-                    onClick: (dialog) => {
-                        window.location.href = '/#Selection/view/' + this.selectionId
-                    }
                 }
             ];
+
+            if (this.selectionId) {
+                this.buttonList.push({
+                    "name": "selectionView",
+                    "label": "Selection View",
+                    "disabled": true,
+                    onClick: (dialog) => {
+
+                        const link = '#Selection/view/' + this.selectionId  ;
+                        this.getRouter().navigate(link);
+                        let options = {
+                            id: this.selectionId,
+                            selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
+                            models: this.getModels()
+                        }
+                        dialog.close();
+                        this.clearView('modalRecord');
+                        this.getRouter().dispatch('Selection', 'view', options);
+                    }
+                })
+            }
         },
 
         setupRecord() {
@@ -102,6 +117,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 model: this.model,
                 instanceComparison: this.instanceComparison,
                 collection: this.options.collection,
+                models: this.options.models,
+                selectionId: this.options.selectionId,
                 scope: this.scope,
                 merging: this.options.merging
             };
@@ -199,25 +216,19 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     })
                 }
             } else {
-                if (this.collection.models.length < 2) {
+                if (this.getModels().length < 2) {
                     this.notify(this.translate('youShouldHaveAtLeastOneRecord'));
                     setTimeout(() => this.notify(false), 2000);
-                } else if (this.collection.models.length > 10) {
+                } else if (this.getModels().length > 10) {
                     let message = this.translate('weCannotCompareMoreThan');
                     this.notify(message.replace('%s', 10));
                     setTimeout(() => this.notify(false), 2000);
                 } else {
-                    let data = {scope: this.scope}
-                    data['entityIds'] = this.collection.models.map(m => m.id)
-                    this.ajaxPostRequest('selection/action/createSelectionWithRecords', data).then(result => {
-                        options.model = this.collection.models[0];
-                        this.selectionId = options.selectionId = result.id;
-                        $('button[data-name="selectionView"]').removeClass('hidden');
-                        this.createModalView(options);
-                        this.wait(false);
-                    });
-                }
+                    options.model = this.getModels()[0];
+                    this.createModalView(options);
+                    this.wait(false);
 
+                }
             }
         },
 
@@ -234,6 +245,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             });
         },
+
+        getModels() {
+            return this.models ?? this.collection?.models ?? [];
+        }
     });
 });
 

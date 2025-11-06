@@ -53,47 +53,26 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
         },
 
-        init() {
-            Dep.prototype.init.call(this);
-
-            this.scope = this.name = this.options.scope;
-            this.collection = this.options.collection;
-
+        setup() {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
             this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
-            this.hidePanelNavigation = false;
             this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
-        },
-
-        setup() {
             this.selectionId = this.options.selectionId || this.selectionId;
+            this.scope = this.name = this.options.scope;
+            this.collection = this.options.collection;
+            this.models = this.options.models || this.models;
+            this.model = this.getModels().length ? this.getModels()[0] : null;
 
-            if (this.selectionId) {
-                this.wait(true);
-                this.loadModels(this.selectionId).then(models => {
-                    this.models = models;
-                    this.model = models[0];
-                    this.scope = this.model.name;
-                    this.setupFieldPanels();
-                    this.prepareFieldsData();
-                    this.wait(false)
-                });
-            } else {
-                this.setupFieldPanels();
-                this.prepareFieldsData();
-            }
+            this.setupFieldPanels();
+            this.prepareFieldsData();
 
             this.listenTo(this, 'cancel', (dialog) => {
-                let relationshipsPanels = this.getView('relationshipsPanels');
                 if (this.merging) {
-                    this.merging = false;
-                    relationshipsPanels.changeViewMode('detail');
-                    this.renderFieldsPanels();
-                    relationshipsPanels.merging = false;
+                    this.cancelMerging();
                     return;
                 }
                 dialog.close();
@@ -107,6 +86,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.openOverviewFilter();
             });
 
+
+        },
+
+        cancelMerging() {
+            if (this.merging) {
+                let relationshipsPanels = this.getView('relationshipsPanels');
+                this.merging = false;
+                relationshipsPanels.changeViewMode('detail');
+                this.renderFieldsPanels();
+                relationshipsPanels.merging = false;
+            }
         },
 
         applyMerge(doneCallback) {
@@ -572,7 +562,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    name: `<a href="#/${model.name}/view/${model.id}" style="padding-right: 20px" target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                    label: model.get('name') ?? model.get('id'),
+                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 });
             });
 
@@ -684,7 +675,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             return value === undefined || value === null || value === '' || (Array.isArray(value) && !value.length);
         },
 
-        handlePanelRendering(name) {
+        handlePanelRendering: function (name) {
             if (this.renderedPanels.includes(name)) {
                 this.notify(false)
                 return;
@@ -695,6 +686,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.handleRadioButtonsDisableState(false);
                 $('button[data-name="merge"]').removeClass('disabled');
                 $('button[data-name="merge"]').attr('disabled', false);
+                $('button[data-name="selectionView"]').removeClass('disabled');
+                $('button[data-name="selectionView"]').attr('disabled', false);
                 $('.button-container a').removeClass('disabled');
             }
         },
@@ -916,7 +909,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         afterRender() {
             Dep.prototype.afterRender.call(this);
             let filterButton = $('a[data-action="openOverviewFilter"]');
-            if (!filterButton.length) {
+            if (!filterButton.length && this.getParentView()) {
                 filterButton = $('<a href="javascript:" class="btn btn-default action pull-right" data-action="openOverviewFilter"' +
                     ' data-original-title="Click to filter" style="color: black;">\n' +
                     '                <i class="ph ph-funnel"></i>\n' +
@@ -925,6 +918,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             } else {
                 filterButton.off('click');
             }
+
             filterButton.on('click', () => this.trigger('open-filter'))
 
             if (this.isOverviewFilterApply()) {
@@ -943,6 +937,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getModelsForAttributes() {
+
             return [...this.getModels(), this.model].filter((model) => {
                 return this.getMetadata().get(`scopes.${model.name}.hasAttribute`);
             });
@@ -1019,48 +1014,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
             }
             Dep.prototype.remove.call(this, dontEmpty);
-        },
-
-        loadModels(selectionId) {
-            let models = [];
-            return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=true`, {async: false})
-                    .then(result => {
-                        let entityByScope = {};
-                        let order = 0;
-                        this.trigger('selection-record:loaded', result.list);
-                        for (const entityData of result.list) {
-                            if (!entityByScope[entityData.entityType]) {
-                                entityByScope[entityData.entityType] = [];
-                            }
-                            entityData.entity._order = order;
-                            entityData.entity._selectionRecordId = entityData.id;
-
-                            entityByScope[entityData.entityType].push(entityData.entity);
-                            order++
-                        }
-                        let promises = [];
-                        for (const scope in entityByScope) {
-                            promises.push(new Promise((resolve) => {
-                                this.getModelFactory().create(scope, model => {
-                                    for (const data of entityByScope[scope]) {
-                                        let currentModel = Espo.utils.cloneDeep(model);
-                                        currentModel.set(data);
-                                        currentModel._order = data._order;
-                                        models.push(currentModel);
-                                    }
-                                    resolve();
-                                })
-                            }));
-                        }
-
-                        Promise.all(promises)
-                            .then(() => {
-                                models.sort((a, b) => a._order - b._order);
-                                initialResolve(models);
-                            });
-                    });
-            })
         }
     });
 });

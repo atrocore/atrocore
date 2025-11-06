@@ -943,33 +943,75 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.notify('Select 2 or more records', 'error');
                 return;
             }
-            if (this.checkedList.length > 10) {
-                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', 10), 'error');
+
+            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+
+            if (this.checkedList.length >  maxComparableItem) {
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
                 return;
             }
 
-            let collection = this.collection.clone();
-            collection.url = this.entityType;
-            collection.where = [
-                {
-                    attribute: 'id',
-                    type: 'in',
-                    value: this.checkedList
-                }
-            ];
+            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                scope: this.entityType,
+                entityIds: this.checkedList
+            }).then(result => {
+                this.loadSelectionRecordModels(result.id).then((models) => {
+                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
+                        models: models,
+                        selectionId: result.id,
+                        scope: this.entityType,
+                        merging: merging
+                    }, function (dialog) {
+                        dialog.render();
+                        this.notify(false);
+                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                    })
+                })
+            });
 
             this.notify(this.translate('Loading'))
-            collection.fetch().success(() => {
-                let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                this.createView('dialog', view, {
-                    collection: collection,
-                    scope: this.entityType,
-                    merging: merging
-                }, function (dialog) {
-                    dialog.render();
-                    this.notify(false);
-                    this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                })
+
+        },
+
+        loadSelectionRecordModels(selectionId) {
+            let models = [];
+            return new Promise((initialResolve, reject) => {
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=true`, {async: false})
+                    .then(result => {
+                        let entityByScope = {};
+                        let order = 0;
+                        for (const entityData of result.list) {
+                            if (!entityByScope[entityData.entityType]) {
+                                entityByScope[entityData.entityType] = [];
+                            }
+                            entityData.entity._order = order;
+                            entityData.entity._selectionRecordId = entityData.id;
+
+                            entityByScope[entityData.entityType].push(entityData.entity);
+                            order++
+                        }
+                        let promises = [];
+                        for (const scope in entityByScope) {
+                            promises.push(new Promise((resolve) => {
+                                this.getModelFactory().create(scope, model => {
+                                    for (const data of entityByScope[scope]) {
+                                        let currentModel = Espo.utils.cloneDeep(model);
+                                        currentModel.set(data);
+                                        currentModel._order = data._order;
+                                        models.push(currentModel);
+                                    }
+                                    resolve();
+                                })
+                            }));
+                        }
+
+                        Promise.all(promises)
+                            .then(() => {
+                                models.sort((a, b) => a._order - b._order);
+                                initialResolve(models);
+                            });
+                    });
             });
         },
 
