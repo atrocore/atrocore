@@ -10350,6 +10350,10 @@ table.table > thead th > div > a {
     text-transform: none;
 }
 
+.panel .panel-heading .panel-title .list-actions-container .dropdown-menu{
+    z-index: 99999;
+}
+
 @media screen and (min-width: 768px) {
     .relationship-container > .list > .table .record-checkbox{
         visibility: hidden;

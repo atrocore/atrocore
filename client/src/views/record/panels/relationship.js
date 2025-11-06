@@ -110,6 +110,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 }
             }
 
+            if (!('checkboxes' in this.defs)) {
+                this.defs.checkboxes = true;
+            }
+
             if (this.scope === 'File') {
                 this.defs.create = false;
             }
@@ -335,6 +339,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         layoutName: layoutName,
                         layoutRelatedScope: this.getLayoutRelatedScope(),
                         listLayout: listLayout,
+                        checkboxes: this.defs.checkboxes,
                         rowActionsView: (this.defs.readOnly || this.readOnly) ? false : (this.defs.rowActionsView || this.rowActionsView),
                         rowActionsColumnWidth: this.rowActionsColumnWidth,
                         buttonsDisabled: true,
