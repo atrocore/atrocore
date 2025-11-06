@@ -25,10 +25,14 @@
       {
         "rows": [
           [
-            {"name": "title"}
+            {
+              "name": "title"
+            }
           ],
           [
-            {"name": "entityListType"}
+            {
+              "name": "entityListType"
+            }
           ]
         ]
       }

@@ -13,7 +13,9 @@ Espo.define('views/dashlets/entities', 'views/dashlets/abstract/base', function 
         },
 
         getEntities: function () {
-            const type = this.getOption('type');
+            const type = this.getOption('entityListType');
+
+            console.log(type)
 
             let list = [];
 

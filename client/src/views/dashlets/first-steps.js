@@ -17,12 +17,14 @@ Espo.define('views/dashlets/first-steps', 'views/dashlets/abstract/base', functi
 
                 this.optionsData.completedSteps = completedSteps;
 
+                this.reRender();
+
                 if (this.id) {
                     this.getPreferences().save({
                         dashletsOptions: {
                             [this.id]: this.optionsData
                         }
-                    }, {patch: true})
+                    })
                 }
             }
         },

@@ -110,7 +110,7 @@ class LayoutProfileSeeder extends AbstractSeeder
             'name'   => 'Getting started',
             'layout' => [
                 [
-                    'id'     => 'first-steps',
+                    'id'     => 'd681015',
                     'name'   => 'FirstSteps',
                     'x'      => 0,
                     'y'      => 0,
@@ -118,7 +118,7 @@ class LayoutProfileSeeder extends AbstractSeeder
                     'height' => 4
                 ],
                 [
-                    'id'     => 'entities',
+                    'id'     => 'd685698',
                     'name'   => 'Entities',
                     'x'      => 2,
                     'y'      => 0,
@@ -194,6 +194,9 @@ class LayoutProfileSeeder extends AbstractSeeder
                         ],
                         'whereScope' => 'Account'
                     ]
+                ],
+                'd685698' => [
+                    'entityListType' => 'all'
                 ]
             ]
         ];
