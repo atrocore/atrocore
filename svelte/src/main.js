@@ -37,6 +37,7 @@ import FilterSearchBar from "./components/record/search/FilterSearchBar.svelte";
 import LocaleSwitcher from "./components/Navbar/LocaleSwitcher.svelte";
 import ContentFilter from "./components/record/ContentFilter.svelte";
 import AnchorNavigation from "./components/record/header/navigation/AnchorNavigation.svelte";
+import DashboardHeader from "./components/record/header/DashboardHeader.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -66,6 +67,7 @@ export {
     ListActionsContainer,
     PlateActionsContainer,
     DetailHeader,
+    DashboardHeader,
     FilterSearchBar,
     Gallery,
     LocaleSwitcher,
