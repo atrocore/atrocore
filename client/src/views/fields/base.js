@@ -86,6 +86,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         disableConditions: false,
 
+        disabledInlineActions: false,
+
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');

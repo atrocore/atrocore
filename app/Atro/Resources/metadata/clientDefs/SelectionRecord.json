@@ -1,5 +1,6 @@
 {
   "recordViews": {
     "list": "views/selection-record/record/list"
-  }
+  },
+  "modalFullFormDisabled": true
 }

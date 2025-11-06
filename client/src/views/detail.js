@@ -428,8 +428,9 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             let observer = null;
 
             const record = this.getView('record');
+
             const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
-            const recordButtons = Object.assign(record.getRecordButtons(), {
+            const recordButtons = Object.assign(record?.getRecordButtons() || {}, {
                 headerButtons: this.getMenu(),
                 isOverviewFilterActive: this.isOverviewFilterApply(),
                 followers: this.model.get('followersNames') ?? {},

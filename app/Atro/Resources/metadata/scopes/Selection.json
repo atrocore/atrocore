@@ -2,7 +2,7 @@
   "entity": true,
   "object": true,
   "acl": true,
-  "tab": false,
+  "tab": true,
   "type": "Base",
   "hasOwner": false,
   "hasAssignedUser": false,

@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Ім'я",
-    "entityId": "Сутність",
-    "entityType": "Тип"
+    "entityId": "Запис",
+    "entityType": "Сутність"
   }
 }

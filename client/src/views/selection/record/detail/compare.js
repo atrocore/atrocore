@@ -44,7 +44,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                         this.notify('Loading...');
                         this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
                             entityId: model.id
-                        }).then(() => this.getParentView().refreshContent());
+                        }).then(() => this.getParentView().afterChangedSelectedRecords([selectionRecordId]));
                     });
                 });
             },
@@ -59,15 +59,13 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: () => {
-                        this.getParentView().refreshContent()
+                        this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
                     }
                 });
             }
         }, Dep.prototype.events),
 
         setup() {
-
-            this.wait(true);
             this.models = [];
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
@@ -124,26 +122,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
         },
 
         getRecordButtons() {
-            return {
-                additionalButtons: [
-                    {
-                        action: 'addItem',
-                        name: 'addItem',
-                        label: this.translate('addItem')
-                    }
-                ],
-                buttons: [],
-                dropdownButtons: [
-                    {
-                        label: this.translate('Remove'),
-                        name: 'delete'
-                    },
-                    {
-                        label: this.translate('Duplicate'),
-                        name: 'duplicate'
-                    }
-                ]
-            }
+            return this.getParentView().getCompareButtons();
         }
     });
 

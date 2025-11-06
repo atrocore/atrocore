@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/bookmark/panel', 'view', function (Dep) {
+Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep, List) {
     return Dep.extend({
         template: 'bookmark/panel',
 
@@ -209,20 +209,16 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
 
         compareEntities(groupKey, merging = false) {
             let group = this.groups.find(group => group.key === groupKey);
-            this.getCollectionFactory().create(group.key, collection => {
-                collection.sortBy = 'name';
-                collection.where = [
-                    {
-                        "type": "bool",
-                        "value": ['onlyBookmarked']
-                    }
-                ];
+            let collection = this.getView('bookmark' + group.key).collection;
 
-                this.notify(this.translate('Loading'))
-                collection.fetch().success(() => {
+            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                scope: group.key,
+                entityIds: collection.models.map(v => v.id)
+            }).then(result => {
+                List.prototype.loadSelectionRecordModels.call(this, result.id).then(models => {
                     let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
                     this.createView('dialog', view, {
-                        collection: collection,
+                        models: models,
                         scope: group.key,
                         mode: "details",
                         merging: merging
@@ -231,7 +227,7 @@ Espo.define('views/bookmark/panel', 'view', function (Dep) {
                         this.notify(false)
                     });
                 });
-            });
+            })
         }
     })
 });

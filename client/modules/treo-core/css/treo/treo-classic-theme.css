@@ -18674,3 +18674,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-weight: bold;
 }
 
+.compare-records th.inline-actions > a {
+    padding-right: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 100%;
+}
