@@ -1,7 +1,7 @@
 <div class="content-wrapper">
     <aside class="tree-panel-anchor"></aside>
     <div class="admin-page">
-        <div class="page-header"><h3>{{translate 'Administration' scope='Admin'}}</h3></div>
+        <div class="page-header"></div>
         <div class="admin-content">
             <div class="row">
                 <div class="col-md-7">

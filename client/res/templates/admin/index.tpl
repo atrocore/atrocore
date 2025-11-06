@@ -1,4 +1,4 @@
-<div class="page-header"><h3>{{translate 'Administration' scope='Admin'}}</h3></div>
+<div class="page-header"></div>
 
 <div class="content-wrapper">
 	<aside class="tree-panel-anchor"></aside>

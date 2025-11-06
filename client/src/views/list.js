@@ -466,7 +466,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         Espo.Ui.notify(this.translate('loading', 'messages'));
                         this.collection.fetch({
                             headers: {
-                                'Entity-History': 'true'
+                                'Entity-History': sessionStorage.tabId || 'true'
                             }
                         }).then(_ =>  view.notify(false));
                     }.bind(this));

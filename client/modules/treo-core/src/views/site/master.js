@@ -43,12 +43,19 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         events: {
             'click #title-bar [data-action=copyUrl]': function () {
                 this.copyToClipboard(window.location.href);
-                this.notify('Copied', 'success');
+                this.notify('copiedToClipboard', 'success');
             },
             'click #title-bar [data-action=openWindow]': function (e) {
                 e.preventDefault();
 
-                window.open('/', '_blank', `width=${window.screen.height};height=${window.screen.height}`);
+                const screenX = window.screenX;
+                const screenY = window.screenY;
+                const width = window.outerWidth;
+                const height = window.outerHeight;
+
+                window.open('/', '_blank',
+                    `width=${width},height=${height},left=${screenX},top=${screenY},noopener`
+                );
             },
             'click #title-bar [data-action=reload]': function () {
                 window.location.reload();
@@ -68,6 +75,8 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         setup: function () {
+            const tabId = sessionStorage.tabId ||= crypto.randomUUID();
+
             window.addEventListener('appinstalled',  () => {
                 if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
                     this.createView('hideTitleModal', 'views/modals/hide-title-bar', {}, view => {
@@ -152,6 +161,10 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                         return;
                     }
 
+                    if (!el.getAttribute('title')) {
+                        return;
+                    }
+
                     if (!el.getAttribute('data-original-title')) {
                         el.setAttribute('data-original-title', el.getAttribute('title'));
                     }
@@ -212,10 +225,18 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 if (el.getAttribute('data-title-link')) {
                     el.setAttribute('data-original-title-link', el.getAttribute('data-title-link'));
                 }
+
                 if (el.dataset.tippy && el._tippy) {
-                    el._tippy.setContent(getTooltipContent(el));
-                    el.removeAttribute('title');
-                    el.removeAttribute('data-title-link');
+                    const tooltipContent = getTooltipContent(el);
+                    if (tooltipContent) {
+                        el._tippy.setContent(getTooltipContent(el));
+                        el.removeAttribute('title');
+                        el.removeAttribute('data-title-link');
+                    } else {
+                        el._tippy.destroy();
+                        el.removeAttribute('data-tippy');
+                        el.removeAttribute('title');
+                    }
                 } else {
                     initializeTooltips(el);
                 }

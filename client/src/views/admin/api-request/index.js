@@ -129,6 +129,8 @@ Espo.define('views/admin/api-request/index', ['view', 'lib!JsTree'], function (D
                         }
                     }
                 });
+
+                this.logToNavigationHistory('apiRequest');
             })
         },
 

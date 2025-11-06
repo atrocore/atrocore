@@ -3586,6 +3586,7 @@ button:hover, button:focus, button.focus,
     text-decoration: none;
 }
 
+.dashboard-header button.active,
 button:active,
 .open > button.dropdown-toggle:hover,
 .open > button.dropdown-toggle:focus,
@@ -9962,22 +9963,14 @@ label {
 }
 
 .dashboard-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
     margin-bottom: 20px;
 }
 
-.dashboard-header h3 {
-    margin: 0;
-}
-
-.dashboard-header > .controls {
-    margin: 0 0 0 auto;
+.dashboard-header .header-wrapper {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
 }
 
 .dashboard-header .selectize-control {
@@ -9988,9 +9981,6 @@ label {
     border-radius: 3px;
 }
 
-.dashboard-header .dashboard-buttons {
-    flex-wrap: nowrap;
-}
 
 .page-header .header-buttons-container {
     margin-left: auto;
@@ -13365,6 +13355,10 @@ input#sn-checkbox-open-in-new-window {
     border-top-width: 2px;
     border-bottom: 0;
     margin-bottom: 5px;
+}
+
+.dashlets .panel-default > .panel-heading {
+    border-top-width: 1px;
 }
 
 .composer .panel-default > .panel-heading:not(.note-toolbar) > .btn-group,
@@ -18122,6 +18116,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     width: 100%;
 }
 
+.admin-page .page-header {
+    margin-bottom: 20px;
+}
+
+.admin-page .page-header h3 {
+    font-size: 24px !important;
+}
+
 .admin-page .row {
     margin-right: 0;
 }
@@ -18525,6 +18527,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
     .modal {
         top: 80px;
+    }
+
+
+    #header ul.tabs {
+        height: calc(100vh - 155px);
     }
 }
 
