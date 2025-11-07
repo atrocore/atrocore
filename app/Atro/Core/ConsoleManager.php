@@ -114,7 +114,8 @@ class ConsoleManager
             "storages --scan"                   => Console\ScanStorages::class,
             "storage <id> --scan"               => Console\ScanStorage::class,
             "create action <className>"         => Console\CreateAction::class,
-            "create condition type <className>" => Console\CreateConditionType::class
+            "create condition type <className>" => Console\CreateConditionType::class,
+            "rebuild routes for <entityName>"   => Console\RebuildRoutesForEntity::class,
         ];
 
         if ($this->getConfig()->get('isInstalled')) {

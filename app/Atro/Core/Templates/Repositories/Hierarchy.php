@@ -38,7 +38,6 @@ class Hierarchy extends Base
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
-
     /**
      * Build routes for entity and all its children.
      *
@@ -47,6 +46,16 @@ class Hierarchy extends Base
      */
     public function buildRoutes(string $id): void
     {
+        // remove old routes
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->tableName)
+            ->set('routes', ':null')
+            ->where('routes LIKE :like OR id = :id')
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('like', "%|$id|%")
+            ->setParameter('id', $id)
+            ->executeQuery();
+
         $routes = $this->prepareRoutes($id);
         if ($routes === ['']) {
             $routes = [];
