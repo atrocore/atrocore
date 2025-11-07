@@ -28,6 +28,8 @@ use Atro\Core\Exceptions\NotModified;
 
 class Hierarchy extends Record
 {
+    protected $mandatorySelectAttributeList = ['routes'];
+
     public function getSelectAttributeList($params)
     {
         $res = parent::getSelectAttributeList($params);
