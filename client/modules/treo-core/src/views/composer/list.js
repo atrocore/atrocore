@@ -41,6 +41,10 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 }
             });
 
+            this.once('after:render', () => {
+                this.logToNavigationHistory('Composer');
+            });
+
             this.listenToOnce(this, 'remove', () => {
                 if (this.logCheckInterval) {
                     window.clearInterval(this.logCheckInterval);
@@ -195,6 +199,8 @@ Espo.define('treo-core:views/composer/list', 'views/list',
                 target: document.querySelector('.page-header'),
                 props: {
                     breadcrumbs: this.getBreadcrumbsItems(),
+                    scope: 'App',
+                    id: 'Composer'
                 }
             })
         },

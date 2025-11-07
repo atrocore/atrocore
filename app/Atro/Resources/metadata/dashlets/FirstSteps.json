@@ -1,0 +1,27 @@
+{
+  "view": "views/dashlets/first-steps",
+  "options": {
+    "fields": {
+      "title": {
+        "type": "varchar",
+        "required": true
+      },
+      "completedSteps": {
+        "type": "jsonArray"
+      }
+    },
+    "defaults": {
+      "displayRecords": 200,
+      "autorefreshInterval": 0
+    },
+    "layout": [
+      {
+        "rows": [
+          [
+            {"name": "title"}
+          ]
+        ]
+      }
+    ]
+  }
+}

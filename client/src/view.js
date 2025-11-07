@@ -436,6 +436,23 @@ Espo.define('view', [], function () {
                     };
                 })();
             });
+        },
+
+        logToNavigationHistory(name) {
+            if (!name) {
+                return;
+            }
+
+            this.ajaxPostRequest('App/logNavigation/' + name,
+                {
+                    url: window.location.pathname + (window.location.hash || '#')
+                },
+                {
+                    headers: {
+                        'Entity-History': sessionStorage.tabId || 'true'
+                    }
+                }
+            );
         }
     });
 

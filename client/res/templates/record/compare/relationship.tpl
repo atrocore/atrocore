@@ -12,7 +12,7 @@
         <thead>
             <tr>
             {{#each columns}}
-            <th colspan="{{itemColumnCount}}" class="text-center">
+            <th colspan="{{itemColumnCount}}" class="text-center {{#unless isFirst}} inline-actions {{/unless}}">
                 {{{name}}}
                 {{#if _error}}
                 <br>

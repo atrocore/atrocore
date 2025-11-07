@@ -77,6 +77,10 @@ Espo.define('views/admin/layouts/index', ['view', 'views/admin/layouts/layout-ut
                 })
             });
 
+            this.once('after:render', function () {
+                this.logToNavigationHistory('LayoutManager');
+            });
+
             this.scope = this.options.scope;
             this.type = this.options.type;
             this.layoutProfileId = this.options.layoutProfileId;

@@ -413,6 +413,7 @@
     "Unset Selection": "Unset Selection",
     "Report a bug": "Report a bug",
     "Visit Community": "Visit Community",
+    "Help Center": "Help Center",
     "fieldStatus": "Field Value",
     "language": "Language",
     "scopeFilter": "Channel",
@@ -747,7 +748,9 @@
   },
   "dashlets": {
     "Stream": "Activities",
-    "Records": "Record List"
+    "Records": "Record List",
+    "FirstSteps": "First Steps",
+    "Entities": "Entities"
   },
   "notificationMessages": {
     "own": "You were set as Owner for {entityType} {entity}.",
@@ -1198,6 +1201,32 @@
     "massRestoreSomeRecordNotProceed": "Some record(s) could not be successfully restored.",
     "entityCannotBeBookmarked": "The records of this entity cannot be bookmarked.",
     "integerValueValidationFailed": "Integer value for field/attribute '%s' must be between %s and %s"
+  },
+  "firstStepsDashlet": {
+    "title": {
+      "readDocumentation": "Read the Documentation",
+      "customizeDesign": "Customize System Design",
+      "configureLocale": "Configure Locale Settings",
+      "addLanguages": "Add Additional Languages",
+      "configureRoles": "Set Up Roles",
+      "createUsers": "Create Users",
+      "configureDataModel": "Configure Your Data Model",
+      "importData": "Import Data",
+      "configureFileTypes": "Configure File Types",
+      "configureLayouts": "Configure Layouts"
+    },
+    "description": {
+      "readDocumentation": "Explore our comprehensive documentation for Administrators and Users to better understand how to configure and use the system effectively.",
+      "customizeDesign": "Upload your company logo and favicon, and choose a system style. Tailor the user interface to match your corporate branding.",
+      "configureLocale": "Set up the default locale for the user interface, including the system language, date formats, thousand separator, and other regional preferences.",
+      "addLanguages": "Enable and configure additional languages to create and manage multilingual content across the system.",
+      "configureRoles": "Define user roles to control access and responsibilities within the system.",
+      "createUsers": "Add system users, assign roles, and define administrators to manage access and permissions.",
+      "configureDataModel": "Review the default data entities provided out of the box. Create new entities (data tables), new fields or define relationships between entities as needed.",
+      "importData": "Set up your first import feed to bring data into the system from CSV or XLSX files.",
+      "configureFileTypes": "Check which standard file types are available by default. If necessary, adjust their settings and configure new file types to validate and manage user uploads.",
+      "configureLayouts": "Customize lists, details, and other views for any entity to fit your workflow and UI data presentation preferences."
+    }
   },
   "queryBuilderFilter": {
     "add_rule": "Add rule",

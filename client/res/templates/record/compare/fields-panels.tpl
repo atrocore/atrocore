@@ -26,15 +26,15 @@
                 </th>
             {{/if}}
             {{/unless}}
-            <th class="text-center  {{#unless isFirst}} inline-actions {{/unless}}" style="position: relative" >
+            <th class="text-center  {{#unless isFirst}} inline-actions {{/unless}}" style="position: relative; {{#unless isFirst}} padding: 0 25px {{/unless}}" title="{{label}}">
                 {{{name}}}
                 {{#if _error}}
                 <br>
                 <span class="danger"> ({{_error}})</span>
                 {{/if}}
                 {{#unless isFirst}}
-                    <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 5px;">
-                        <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 10px">
+                    <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
+                        <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
                             <i class="ph ph-swap"></i>
                         </a>
                         <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
@@ -64,15 +64,15 @@
                         {{/if}}
                     </td>
                     {{#each fieldValueRows}}
-                    {{#if ../../../merging}}
-                    <td>
-                       <div class="center-child" >
-                           <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
-                       </div>
-                    </td>
-                    {{/if}}
+                        {{#if ../../../merging}}
+                        <td>
+                           <div class="center-child" >
+                               <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+                           </div>
+                        </td>
+                        {{/if}}
                     <td class="cell {{#if shouldNotCenter}}no-center{{/if}}">
-                        <div class="{{class}}  field">Loading...</div>
+                        <div class="{{class}}  field">{{{var key ../../../this}}}</div>
                     </td>
                     {{/each}}
                 </tr>

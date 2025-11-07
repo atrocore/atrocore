@@ -17,7 +17,8 @@
     "title": "Titel",
     "mode": "Modus",
     "users": "Benutzer",
-    "savedFilter": "Gespeicherter Filter"
+    "savedFilter": "Gespeicherter Filter",
+    "entityListType": "Typ der Entitätsliste"
   },
   "options": {
     "mode": {
@@ -27,6 +28,11 @@
       "basicDay": "Tag",
       "agendaDay": "Tag (Agenda)",
       "timeline": "Zeitachse"
+    },
+    "entityListType": {
+      "all": "Alle",
+      "navigation": "Navigationselemente",
+      "favorites": "Favoriten"
     }
   },
   "messages": {

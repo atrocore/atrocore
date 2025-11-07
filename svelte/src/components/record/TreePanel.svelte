@@ -35,6 +35,8 @@
 
     export let canOpenNode: boolean = true;
 
+    export let showEntitySelector: boolean = false;
+
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
     let entitySelectorElement: HTMLElement;
@@ -1003,8 +1005,8 @@
                         </div>
                     {/if}
                 </div>
-                {#if activeItem.name === '_self'}
-                    <div class="entity-selector" style="margin-top: 20px;" use:createEntitySelectorView   bind:this={entitySelectorElement}>
+                {#if activeItem.name === '_self' && showEntitySelector}
+                    <div class="entity-selector" style="margin: 20px 0;" use:createEntitySelectorView   bind:this={entitySelectorElement}>
                     </div>
                 {/if}
 

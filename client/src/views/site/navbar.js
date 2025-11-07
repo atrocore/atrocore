@@ -436,6 +436,13 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 icon: '<i class="ph ph-users-three"></i>'
             });
 
+            list.push({
+                link: 'https://help.atrocore.com',
+                label: this.getLanguage().translate('Help Center'),
+                targetBlank: true,
+                icon: '<i class="ph ph-lifebuoy"></i>'
+            });
+
             setInterval(() => {
                 const $composerLi = $('a[data-action="composerUpdate"]').parent();
                 const $rebuildLi = $('a[data-action="rebuildDatabase"]').parent();

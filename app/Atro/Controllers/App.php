@@ -17,6 +17,14 @@ use Atro\Core\RealtimeManager;
 
 class App extends \Espo\Controllers\App
 {
+    public function postActionLogNavigation($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        return true;
+    }
     public function postActionStartEntityListening($params, $data, $request)
     {
         if (empty($data->entityName) || empty($data->entityId)) {

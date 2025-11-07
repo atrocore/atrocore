@@ -15,13 +15,7 @@ Espo.define('views/selection/record/detail/merge', 'views/selection/record/detai
         merging: true,
 
         getRecordButtons() {
-            return Object.assign( Dep.prototype.getRecordButtons.call(this), {
-                buttons: [{
-                    label: this.translate('Merge'),
-                    name: 'merge',
-                    style: 'primary'
-                }]
-            });
+            return this.getParentView().getMergeButtons();
         },
 
         actionMerge() {

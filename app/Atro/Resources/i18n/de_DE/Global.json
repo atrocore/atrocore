@@ -369,6 +369,7 @@
     "Unset Selection": "Nicht eingestellte Auswahl",
     "Report a bug": "Einen Fehler melden",
     "Visit Community": "Gemeinschaft besuchen",
+    "Help Center": "Hilfe-Center",
     "fieldStatus": "Feld Wert",
     "language": "Sprache",
     "scopeFilter": "Kanal",
@@ -1105,6 +1106,32 @@
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
     "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen."
+  },
+  "firstStepsDashlet": {
+    "title": {
+      "readDocumentation": "Lesen Sie die Dokumentation",
+      "customizeDesign": "Passen Sie das Systemdesign an",
+      "configureLocale": "Konfigurieren Sie die Ländereinstellungen",
+      "addLanguages": "Fügen Sie weitere Sprachen hinzu",
+      "configureRoles": "Richten Sie Rollen ein",
+      "createUsers": "Benutzer erstellen",
+      "configureDataModel": "Ihr Datenmodell konfigurieren",
+      "importData": "Daten importieren",
+      "configureFileTypes": "Dateitypen konfigurieren",
+      "configureLayouts": "Layouts konfigurieren"
+    },
+    "description": {
+      "readDocumentation": "Lesen Sie unsere umfassende Dokumentation für Administratoren und Benutzer, um besser zu verstehen, wie Sie das System effektiv konfigurieren und nutzen können.",
+      "customizeDesign": "Laden Sie Ihr Firmenlogo und Ihr Favicon hoch und wählen Sie einen Systemstil. Passen Sie die Benutzeroberfläche an Ihr Unternehmensbranding an.",
+      "configureLocale": "Richten Sie die Standard-Ländereinstellungen für die Benutzeroberfläche ein, einschließlich der Systemsprache, Datumsformate, Tausendertrennzeichen und anderer regionaler Einstellungen.",
+      "addLanguages": "Aktivieren und konfigurieren Sie weitere Sprachen, um mehrsprachige Inhalte im gesamten System zu erstellen und zu verwalten.",
+      "configureRoles": "Definieren Sie Benutzerrollen, um den Zugriff und die Verantwortlichkeiten innerhalb des Systems zu steuern.",
+      "createUsers": "Fügen Sie Systembenutzer hinzu, weisen Sie Rollen zu und definieren Sie Administratoren, um Zugriff und Berechtigungen zu verwalten.",
+      "configureDataModel": "Überprüfen Sie die standardmäßig bereitgestellten Datenentitäten. Erstellen Sie bei Bedarf neue Entitäten (Datentabellen) und neue Felder oder definieren Sie Beziehungen zwischen Entitäten.",
+      "importData": "Richten Sie Ihren ersten Import-Feed ein, um Daten aus CSV- oder XLSX-Dateien in das System zu übertragen.",
+      "configureFileTypes": "Überprüfen Sie, welche Standarddateitypen standardmäßig verfügbar sind. Passen Sie bei Bedarf deren Einstellungen an und konfigurieren Sie neue Dateitypen, um Benutzer-Uploads zu validieren und zu verwalten.",
+      "configureLayouts": "Passen Sie Listen, Details und andere Ansichten für jede Entität an Ihren Workflow und Ihre Präferenzen für die Darstellung von UI-Daten an."
+    }
   },
   "queryBuilderFilter": {
     "add_rule": "neue Regel",

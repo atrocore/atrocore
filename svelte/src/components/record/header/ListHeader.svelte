@@ -5,7 +5,6 @@
     import Params from "./interfaces/Params"
     import EntityActionsGroup from "./EntityActionsGroup.svelte";
     import EntityActionButtons from "./interfaces/EntityActionsButtons";
-    import EntityHistory from "./navigation/EntityHistory.svelte";
     import EntityCallbacks from "./interfaces/EntityCallbacks";
     import {Language} from "../../../utils/Language";
 
@@ -34,8 +33,7 @@
     })
 </script>
 
-<EntityHistory scope={params.scope} />
-<BaseHeader>
+<BaseHeader scope={params.scope}>
     <h3 class="header-title">{Language.translate(params.scope, 'scopeNamesPlural')}</h3>
     <EntityActionsGroup {viewMode} scope={params.scope} {entityActions} {onViewChange} {callbacks} {isFavoriteEntity} />
 </BaseHeader>

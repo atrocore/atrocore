@@ -16,7 +16,8 @@
     "sortDirection": "Сортування (напрямок)",
     "expandedLayout": "Макет",
     "dateFilter": "Фільтр дати",
-    "savedFilter": "Збережений фільтр"
+    "savedFilter": "Збережений фільтр",
+    "entityListType": "Тип списку сутностей"
   },
   "options": {
     "mode": {
@@ -26,6 +27,11 @@
       "basicDay": "День",
       "agendaDay": "День (порядок денний)",
       "timeline": "Розклад"
+    },
+    "entityListType": {
+      "all": "Усі",
+      "navigation": "Елементи навігації",
+      "favorites": "Обрані елементи"
     }
   },
   "messages": {

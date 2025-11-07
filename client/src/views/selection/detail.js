@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, Model) {
+Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/list'], function (Dep, Model, List) {
 
     return Dep.extend({
 
@@ -22,11 +22,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
 
         selectionRecordCollection: null,
 
+        models: [],
+
+        treeAllowed: true,
+
+        selectionRecordModels: [],
+
         init: function () {
             Dep.prototype.init.call(this);
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('selectionViewMode') && this.availableModes.includes(urlParams.get('selectionViewMode'))) {
-                this.selectionViewMode = urlParams.get('selectionViewMode');
+            if (this.options.params.selectionViewMode && this.availableModes.includes(this.options.params.selectionViewMode)) {
+                this.selectionViewMode = this.options.params.selectionViewMode;
+                this.selectionRecordModels = this.options.params.models;
             }
         },
 
@@ -63,14 +69,33 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
 
         getSelectionRecordEntityIds() {
             let selectionRecordIds = {};
-            for (let item of this.selectionRecords) {
-                if (!selectionRecordIds[item.entityType]) {
-                    selectionRecordIds[item.entityType] = [];
-                }
+            if (this.selectionViewMode === 'standard') {
+                for (let item of this.selectionRecords) {
+                    if (!selectionRecordIds[item.entityType]) {
+                        selectionRecordIds[item.entityType] = [];
+                    }
 
-                selectionRecordIds[item.entityType].push(item.entityId);
+                    selectionRecordIds[item.entityType].push(item.entityId);
+                }
+            } else {
+                for (let model of this.selectionRecordModels) {
+                    if (!selectionRecordIds[model.name]) {
+                        selectionRecordIds[model.name] = [];
+                    }
+
+                    selectionRecordIds[model.name].push(model.id);
+                }
             }
+
             return selectionRecordIds;
+        },
+
+        getTotalRecords() {
+            if (this.selectionViewMode === 'standard') {
+                return this.selectionRecords.length;
+            } else {
+                return this.selectionRecordModels.length;
+            }
         },
 
         setupCustomButtons() {
@@ -104,9 +129,39 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                 return;
             }
 
-            this.selectionViewMode = data.name;
+            // if we change from compare to merge or vis-versa
+            if (['compare', 'merge'].includes(this.selectionViewMode) && ['compare', 'merge'].includes(data.name)) {
+                this.selectionViewMode = data.name;
+                let record = this.getMainRecord();
+                if (record) {
+                    this.reloadStyle(this.selectionViewMode);
+                    data.name === 'merge' ? record.applyMerge() : record.cancelMerging();
+                    this.setupCustomButtons();
+                    window.dispatchEvent(new CustomEvent('record:buttons-update', {
+                        detail: Object.assign({
+                            headerButtons: this.getMenu()
+                        }, data.name === 'merge' ? this.getMergeButtons() : this.getCompareButtons())
+                    }));
+                    return;
+                }
+            }
 
-            this.refreshContent();
+            this.selectionViewMode = data.name;
+            if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                this.notify(this.translate('Loading...'));
+                this.reloadModels(() => this.refreshContent())
+            } else {
+                this.refreshContent();
+            }
+        },
+
+        reloadModels(callback) {
+            List.prototype.loadSelectionRecordModels.call(this, this.model.id).then(models => {
+                this.selectionRecordModels = models;
+                if (callback) {
+                    callback();
+                }
+            });
         },
 
         refreshContent() {
@@ -114,12 +169,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                 this.selectionViewMode = 'standard';
             }
             this.reloadStyle(this.selectionViewMode);
-            this.clearView('record');
+
             this.setupRecord();
         },
 
         reloadStyle(selected) {
-
             ['compare', 'standard', 'merge'].forEach(name => {
                 $(`.action[data-name="${name}"]`).removeClass('primary');
             })
@@ -134,26 +188,24 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
         },
 
         setupRecord: function () {
-
             const o = {
                 model: this.model,
+                selectionId: this.model.id,
                 el: '#main main > .record',
-                scope: this.scope
+                scope: this.scope,
+                rootUrl: this.options.params.rootUrl,
+                hasNext: this.hasNext,
+                models: this.selectionRecordModels
             };
+
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
             }, this);
-            if (this.options.params && this.options.params.rootUrl) {
-                o.rootUrl = this.options.params.rootUrl;
-            }
-            if (!this.navigateButtonsDisabled) {
-                o.hasNext = this.hasNext;
-            }
-
-            this.treeAllowed = !o.isWide && this.isTreeAllowed();
 
             this.notify(this.translate('Loading...'));
+
             this.createView('record', this.getRecordViewName(), o, view => {
+
                 view.render();
 
                 this.listenTo(view, 'detailPanelsLoaded', data => {
@@ -197,14 +249,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                     this.notify(false);
                 }
 
-                this.listenToOnce(this, 'after:render', () => {
+                this.listenToOnce(view, 'after:render', () => {
                     window.dispatchEvent(new CustomEvent('record:buttons-update', {
                         detail: Object.assign({
                             headerButtons: this.getMenu()
                         }, view.getRecordButtons())
                     }));
                     this.notify(false);
-                })
+                });
             });
         },
 
@@ -228,6 +280,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
         },
 
         actionAddItem() {
+            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+
+            if (this.getTotalRecords() >=  maxComparableItem) {
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
+                return;
+            }
+
             this.setupCustomButtons();
             let scope = 'SelectionRecord';
             let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
@@ -260,8 +319,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                     if (this.mode !== 'edit') {
                         this.model.trigger('after:relate', 'selections');
                         this.model.fetch().then(() => {
-                            this.refreshContent();
-                        })
+                            if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                                this.notify(this.translate('Loading...'));
+                                this.reloadModels(() => this.refreshContent())
+                            } else {
+                                this.refreshContent();
+                            }
+                        });
                     }
                 });
             });
@@ -281,6 +345,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                 }
             }
             let entities = this.model.get('entities') || [];
+            this.selectedScope = this.selectedScope ?? (entities.length > 0 ? this.model.get('entities')[0] : null)
             let view = this.getMainRecord();
             let entitySelectionModel = new Model();
 
@@ -294,8 +359,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                     showApplyQuery: false,
                     showApplySortOrder: false,
                     canBuildTree: entities.length > 0,
-                    selectedScope: entities.length > 0 ? this.model.get('entities')[0] : null,
+                    selectedScope: this.selectedScope,
                     canOpenNode: false,
+                    showEntitySelector: true,
                     callbacks: {
                         selectNode: data => {
                             if (window.treePanelComponent.getActiveItem() !== '_self') {
@@ -311,38 +377,65 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
                             if (selected) {
                                 this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
                             } else {
+                                let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+
+                                if (this.getTotalRecords() >=  maxComparableItem) {
+                                    this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
+                                    return;
+                                }
+
+                                if (entitySelectionModel.get('entityId')
+                                    && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]
+                                    && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id)) {
+                                    return;
+                                }
+
                                 this.notify(this.translate('Adding...'));
                                 this.ajaxPostRequest(`SelectionRecord`, {
                                     entityType: entitySelectionModel.get('entityId'),
                                     entityId: data.id,
                                     selectionsIds: [this.model.id]
                                 }).then(_ => {
-                                    this.refreshContent();
-                                    this.notify(this.notify(this.translate('Done'), 'success'));
+                                    this.model.fetch().then(_ => {
+                                        if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                                            this.notify(this.translate('Loading...'));
+                                            this.reloadModels(() => {
+                                                this.refreshContent();
+                                                window.treePanelComponent.rebuildTree();
+                                            });
+                                            this.notify(this.notify(this.translate('Done'), 'success'));
+                                        } else {
+                                            this.refreshContent();
+                                            this.notify(this.notify(this.translate('Done'), 'success'));
+                                        }
+                                    });
                                 })
                             }
                         },
 
                         treeLoad: (treeScope, treeData) => {
-                            if (view.treeLoad && typeof view.treeLoad === 'function') {
+                            if (view && view.treeLoad && typeof view.treeLoad === 'function') {
                                 view.treeLoad(data);
                             }
                         },
 
                         treeReset: () => {
-                            if (typeof view.treeReset === 'function') {
+                            if (view && typeof view.treeReset === 'function') {
                                 view.treeReset(data);
                             }
                         },
 
                         treeWidthChanged: (width) => {
-                            view.onTreeResize(width)
+                            if(view && typeof view.onTreeResize === 'function') {
+                                view.onTreeResize(width)
+                            }
                         },
 
                         shouldBeSelected: (activeItem, nodeId) => {
                             if (activeItem !== '_self') {
                                 return;
                             }
+
                             if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
                                 return this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(nodeId);
                             }
@@ -351,19 +444,22 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
 
                         onEntitySelectorAvailable: (element) => {
                             if (entities.length) {
-                                entitySelectionModel.set('entityId', entities[0]);
-                                entitySelectionModel.set('entityName', this.translate(entities[0], 'scopeNames'));
+                                entitySelectionModel.set('entityId', this.selectedScope);
+                                entitySelectionModel.set('entityName', this.translate(this.selectedScope, 'scopeNames'));
                             }
+
                             this.createView('entitySelect', 'views/fields/link', {
                                 el: `${this.options.el} .content-wrapper .entity-selector`,
                                 model: entitySelectionModel,
                                 name: 'entity',
                                 foreignScope: 'Entity',
-                                mode: 'edit'
+                                mode: 'edit',
+                                createDisabled: true
                             }, (view) => {
                                 view.render();
                                 this.listenTo(view, 'change', () => {
                                     window.treePanelComponent.setSelectedScope(view.$elementName.attr('value'));
+                                    this.selectedScope = view.$elementName.attr('value');
                                     window.treePanelComponent.setCanBuildTree(true);
                                     window.treePanelComponent.rebuildTree()
                                 })
@@ -375,12 +471,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
         },
 
         deleteSelectionRecords(entityType, id) {
-            let recordsToDelete = this.selectionRecords.filter(record => record.entityId === id && record.entityType === entityType);
+            let recordsToDelete = [];
+            if (this.selectionViewMode === 'standard') {
+                recordsToDelete = this.selectionRecords.filter(record => record.entityId === id && record.entityType === entityType).map(r => r.id);
+            } else {
+                recordsToDelete = this.selectionRecordModels.filter(m => m.id === id && m.name === entityType).map(m => m.get('_selectionRecordId'));
+            }
+
             let promises = [];
-            for (const record of recordsToDelete) {
+            for (const recordId of recordsToDelete) {
                 promises.push(new Promise((resolve, reject) => {
                     $.ajax({
-                        url: `SelectionRecord/${record.id}`,
+                        url: `SelectionRecord/${recordId}`,
                         type: 'DELETE',
                         contentType: 'application/json',
                         success: () => {
@@ -394,8 +496,63 @@ Espo.define('views/selection/detail', ['views/detail', 'model'], function (Dep, 
             }
             this.notify(this.translate('Removing...'));
             Promise.all(promises).then(() => {
+                this.model.fetch().then(_ => {
+                    this.afterRemoveSelectedRecords(recordsToDelete)
+                });
+            });
+        },
+
+        afterRemoveSelectedRecords(selectedRecordIds) {
+            if (this.selectionViewMode !== 'standard') {
+                this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
+                window.treePanelComponent.rebuildTree();
+            } else {
+                this.selectionRecords = this.selectionRecords.filter(record => !selectedRecordIds.includes(record.id))
+            }
+
+            this.refreshContent();
+            this.notify(this.notify(this.translate('Done'), 'success'));
+        },
+
+        afterChangedSelectedRecords(_) {
+            this.notify(this.translate('Loading...'));
+            this.reloadModels(() => {
                 this.refreshContent();
-                this.notify(this.notify(this.translate('Done'), 'success'));
+                window.treePanelComponent.rebuildTree();
+            });
+            this.notify(this.notify(this.translate('Done'), 'success'));
+        },
+
+        getCompareButtons() {
+            return {
+                additionalButtons: [
+                    {
+                        action: 'addItem',
+                        name: 'addItem',
+                        label: this.translate('addItem')
+                    }
+                ],
+                buttons: [],
+                dropdownButtons: [
+                    {
+                        label: this.translate('Remove'),
+                        name: 'delete'
+                    },
+                    {
+                        label: this.translate('Duplicate'),
+                        name: 'duplicate'
+                    }
+                ]
+            }
+        },
+
+        getMergeButtons() {
+            return Object.assign(this.getCompareButtons(), {
+                buttons: [{
+                    label: this.translate('Merge'),
+                    name: 'merge',
+                    style: 'primary'
+                }]
             });
         }
     });
