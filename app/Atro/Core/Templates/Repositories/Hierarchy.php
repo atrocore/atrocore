@@ -42,7 +42,7 @@ class Hierarchy extends Base
     {
         $res = $entity->get('routes');
         if ($res === null) {
-            $res = $this->rebuildRoutes($entity->get('id'));
+            $res = $this->buildRoutes($entity->get('id'));
         }
 
         $routes = [];
