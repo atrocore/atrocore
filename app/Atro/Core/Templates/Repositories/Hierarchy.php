@@ -38,8 +38,39 @@ class Hierarchy extends Base
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
+
+    /**
+     * Build routes for entity and all its children.
+     *
+     * @param string $id
+     * @return void
+     */
     public function buildRoutes(string $id): void
     {
+        $routes = $this->prepareRoutes($id);
+        if ($routes === ['']) {
+            $routes = [];
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->tableName)
+            ->set('routes', ':routes')
+            ->where('id = :id')
+            ->setParameter('routes', json_encode($routes))
+            ->setParameter('id', $id)
+            ->executeQuery();
+
+        // build routes for children
+        $children = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->hierarchyTableName, 'h')
+            ->where('h.parent_id=:id')
+            ->setParameter('id', $id)
+            ->fetchAllAssociative();
+
+        foreach ($children as $child) {
+            $this->buildRoutes($child['entity_id']);
+        }
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
@@ -874,6 +905,32 @@ class Hierarchy extends Base
         $result = $this->getMapper()->count($this->entityFactory->create($this->entityName), $selectParams);
 
         return $result;
+    }
+
+    protected function prepareRoutes(string $id): array
+    {
+        $parents = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->hierarchyTableName, 'h')
+            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id')
+            ->where('h.entity_id=:id')
+            ->setParameter('id', $id)
+            ->fetchAllAssociative();
+
+        if (empty($parents)) {
+            return [""];
+        }
+
+        $routes = [];
+
+        foreach ($parents as $parent) {
+            $parentRoutes = $this->prepareRoutes($parent['parent_id']);
+            foreach ($parentRoutes as $route) {
+                $routes[] = substr($route, 0, -1) . "|{$parent['parent_id']}|";
+            }
+        }
+
+        return $routes;
     }
 
     protected function init()
