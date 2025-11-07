@@ -1026,6 +1026,13 @@ class Metadata extends AbstractListener
                 "emHidden"           => true,
             ];
 
+            if (
+                $this->getConfig()->get('isInstalled')
+                && $this->getConfig()->get('database')['driver'] === 'pdo_pgsql'
+            ) {
+                $data['entityDefs'][$scope]['indexes']['routes'] = ['columns' => ['routes', 'deleted']];
+            }
+
             $data['entityDefs'][$scope]['fields']['routesNames'] = [
                 "type"                 => "jsonArray",
                 "notStorable"          => true,

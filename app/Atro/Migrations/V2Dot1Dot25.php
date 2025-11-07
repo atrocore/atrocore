@@ -39,19 +39,22 @@ class V2Dot1Dot25 extends Base
             }
 
             if ($defs['type'] === 'Hierarchy') {
-                $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($scope)));
+                $tableName = Util::toUnderScore(lcfirst($scope));
+                $preparedTableName = $this->getConnection()->quoteIdentifier($tableName);
+
                 if ($this->isPgSQL()) {
-                    $this->exec("ALTER TABLE $tableName ADD routes TEXT DEFAULT NULL");
-                    $this->exec("COMMENT ON COLUMN $tableName.routes IS '(DC2Type:jsonArray)'");
+                    $this->exec("ALTER TABLE $preparedTableName ADD routes TEXT DEFAULT NULL");
+                    $this->exec("COMMENT ON COLUMN $preparedTableName.routes IS '(DC2Type:jsonArray)'");
+                    $this->exec("CREATE INDEX IDX_" . strtoupper($tableName) . "_ROUTES ON $preparedTableName (routes, deleted)");
                 } else {
-                    $this->exec("ALTER TABLE $tableName ADD routes LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
+                    $this->exec("ALTER TABLE $preparedTableName ADD routes LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
                 }
 
                 while (true) {
                     $res = $this->getConnection()->createQueryBuilder()
                         ->select('t.*')
-                        ->from($tableName, 't')
-                        ->leftJoin('t', Util::toUnderScore(lcfirst($scope)).'_hierarchy', 'h', 't.id=h.entity_id')
+                        ->from($preparedTableName, 't')
+                        ->leftJoin('t', $tableName.'_hierarchy', 'h', 't.id=h.entity_id')
                         ->where('h.id IS NULL AND t.routes IS NULL')
                         ->setFirstResult(0)
                         ->setMaxResults(20000)
