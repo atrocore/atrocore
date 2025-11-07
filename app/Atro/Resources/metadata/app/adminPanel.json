@@ -6,12 +6,14 @@
         "url": "#Admin/clearCache",
         "label": "Clear Cache",
         "description": "clearCache",
+        "icon": "ph ph-database",
         "listDisabled": true
       },
       {
         "url": "#Admin/rebuildDb",
         "label": "rebuildDb",
         "description": "rebuildDb",
+        "icon": "ph ph-wrench",
         "listDisabled": true
       }
     ]
@@ -22,72 +24,98 @@
       {
         "url": "#Admin/settings",
         "label": "Settings",
-        "description": "settings"
+        "description": "settings",
+        "icon": "ph ph-gear",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/system-settings"
       },
       {
         "url": "#Locale",
         "label": "Locale",
-        "description": "locale"
+        "description": "locale",
+        "icon": "ph ph-globe",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/locales"
       },
       {
         "url": "#Admin/authentication",
         "label": "Authentication",
-        "description": "authentication"
+        "description": "authentication",
+        "icon": "ph ph-lock-key-open",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/authentication"
       },
       {
         "url": "#Connection",
         "label": "Connection",
-        "description": "connection"
+        "description": "connection",
+        "icon": "ph ph-network",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/connections"
       },
       {
         "url": "#Job",
         "label": "Jobs",
-        "description": "jobs"
+        "description": "jobs",
+        "icon": "ph ph-list-checks",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/system-jobs"
       },
       {
         "url": "#ScheduledJob",
         "label": "Scheduled Jobs",
-        "description": "scheduledJob"
+        "description": "scheduledJob",
+        "icon": "ph ph-clock",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/system-jobs/scheduled-jobs"
       },
       {
         "url": "#Action",
         "label": "Action",
-        "description": "action"
+        "description": "action",
+        "icon": "ph ph-person-simple-run",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/actions"
       },
       {
         "url": "#Measure",
         "label": "Measure",
-        "description": "measure"
+        "description": "measure",
+        "icon": "ph ph-ruler",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/measure-units"
       },
       {
         "url": "#Measure/view/currency",
         "label": "Currency",
-        "description": "currency"
+        "description": "currency",
+        "icon": "ph ph-currency-eur"
       },
       {
         "url": "#NotificationProfile",
         "label": "notificationProfiles",
-        "description": "notificationProfiles"
+        "description": "notificationProfiles",
+        "icon": "ph ph-bell-simple-ringing",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/notifications"
       },
       {
         "url": "#Composer/list",
         "label": "Composer",
-        "description": "composer"
+        "description": "composer",
+        "icon": "ph ph-puzzle-piece",
+        "docsUrl": "https://help.atrocore.com/installation-and-maintenance/modules-and-updates"
       },
       {
         "url": "#Language",
         "label": "multiLanguages",
-        "description": "multiLanguagesSettings"
+        "description": "multiLanguagesSettings",
+        "icon": "ph ph-globe",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/languages"
       },
       {
         "url": "#ExtensibleEnum",
         "label": "lists",
-        "description": "lists"
+        "description": "lists",
+        "icon": "ph ph-list-plus",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/lists"
       },
       {
         "url": "#Matching",
         "label": "matchings",
-        "description": "matchings"
+        "description": "matchings",
+        "icon": "ph ph-shuffle"
       }
     ],
     "order": 0
@@ -98,22 +126,28 @@
       {
         "url": "#Storage",
         "label": "Storage",
-        "description": "Storage"
+        "description": "Storage",
+        "icon": "ph ph-hard-drives",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/file-management#storages"
       },
       {
         "url": "#FileType",
         "label": "FileTypes",
-        "description": "listOfSupportedFilesTypes"
+        "description": "listOfSupportedFilesTypes",
+        "icon": "ph ph-files",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/file-management#file-types"
       },
       {
         "url": "#ThumbnailType",
         "label": "ThumbnailTypes",
-        "description": "thumbnailTypes"
+        "description": "thumbnailTypes",
+        "icon": "ph ph-images-square"
       },
       {
         "url": "#Folder",
         "label": "Folders",
-        "description": "folders"
+        "description": "folders",
+        "icon": "ph ph-folder"
       }
     ]
   },
@@ -123,27 +157,36 @@
       {
         "url": "#User",
         "label": "Users",
-        "description": "users"
+        "description": "users",
+        "icon": "ph ph-user",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/users"
       },
       {
         "url": "#Team",
         "label": "Teams",
-        "description": "teams"
+        "description": "teams",
+        "icon": "ph ph-users-three",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/teams"
       },
       {
         "url": "#Role",
         "label": "Roles",
-        "description": "roles"
+        "description": "roles",
+        "icon": "ph ph-user-gear",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/roles"
       },
       {
         "url": "#Admin/authTokens",
         "label": "Auth Tokens",
-        "description": "authTokens"
+        "description": "authTokens",
+        "icon": "ph ph-key"
       },
       {
         "url": "#ActionHistoryRecord",
         "label": "Action History",
-        "description": "actionHistory"
+        "description": "actionHistory",
+        "icon": "ph ph-clock-counter-clockwise",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/access-management/action-history"
       }
     ],
     "order": 10
@@ -154,32 +197,42 @@
       {
         "url": "#Admin/userInterface",
         "label": "User Interface",
-        "description": "userInterface"
+        "description": "userInterface",
+        "icon": "ph ph-browsers",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/user-interface"
       },
       {
         "url": "#Admin/layouts",
         "label": "Layout Manager",
-        "description": "layoutManager"
+        "description": "layoutManager",
+        "icon": "ph ph-layout",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/user-interface/layouts"
       },
       {
         "url": "#LayoutProfile",
         "label": "layoutProfiles",
-        "description": "layoutProfiles"
+        "description": "layoutProfiles",
+        "icon": "ph ph-blueprint"
       },
       {
         "url": "#Entity",
         "label": "Entity Manager",
-        "description": "entityManager"
+        "description": "entityManager",
+        "icon": "ph ph-cylinder",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/entity-management"
       },
       {
         "url": "#Translation",
         "label": "Label Manager",
-        "description": "labelManager"
+        "description": "labelManager",
+        "icon": "ph ph-text-t",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/user-interface/labels"
       },
       {
         "url": "#Style",
         "label": "style",
-        "description": "style"
+        "description": "style",
+        "icon": "ph ph-paint-brush"
       }
     ],
     "order": 20
@@ -190,17 +243,20 @@
       {
         "url": "#Account",
         "label": "Accounts",
-        "description": "accounts"
+        "description": "accounts",
+        "icon": "ph ph-user-circle"
       },
       {
         "url": "#Contact",
         "label": "Contacts",
-        "description": "contacts"
+        "description": "contacts",
+        "icon": "ph ph-address-book-tabs"
       },
       {
         "url": "#Address",
         "label": "Addresses",
-        "description": "addresses"
+        "description": "addresses",
+        "icon": "ph ph-map-pin-area"
       }
     ],
     "order": 40
@@ -211,17 +267,23 @@
       {
         "url": "#EmailTemplate",
         "label": "emailTemplates",
-        "description": "emailTemplates"
+        "description": "emailTemplates",
+        "icon": "ph ph-envelope-open",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/notifications#email-templates"
       },
       {
         "url": "#PreviewTemplate",
         "label": "previewTemplate",
-        "description": "previewTemplate"
+        "description": "previewTemplate",
+        "icon": "ph ph-code-simple",
+        "docsUrl": "https://help.atrocore.com/atrocore/html-css-preview"
       },
       {
         "url": "#NotificationTemplate",
         "label": "notificationTemplates",
-        "description": "notificationTemplates"
+        "description": "notificationTemplates",
+        "icon": "ph ph-notification",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/notifications#notification-templates"
       }
     ]
   },
@@ -231,12 +293,16 @@
       {
         "url": "#Admin/apiRequest",
         "label": "apiRequest",
-        "description": "apiRequest"
+        "description": "apiRequest",
+        "icon": "ph ph-brackets-curly",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/tools/api-request"
       },
       {
         "url": "#IncomingWebhook",
         "label": "incomingWebhook",
-        "description": "incomingWebhook"
+        "description": "incomingWebhook",
+        "icon": "ph ph-webhooks-logo",
+        "docsUrl": "https://help.atrocore.com/integration/incoming-webhooks"
       }
     ]
   }
