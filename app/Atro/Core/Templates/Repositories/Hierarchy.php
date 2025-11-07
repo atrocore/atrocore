@@ -61,9 +61,9 @@ class Hierarchy extends Base
      * Build routes for entity and all its children.
      *
      * @param string $id
-     * @return array
+     * @return void
      */
-    public function buildRoutes(string $id): array
+    public function buildRoutes(string $id): void
     {
         // remove old routes
         $this->getConnection()->createQueryBuilder()
@@ -99,8 +99,6 @@ class Hierarchy extends Base
         foreach ($children as $child) {
             $this->buildRoutes($child['entity_id']);
         }
-
-        return $routes;
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
