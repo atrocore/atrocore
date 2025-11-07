@@ -38,6 +38,10 @@ class Hierarchy extends Base
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
+    public function buildRoutes(string $id): void
+    {
+    }
+
     public function findRelated(Entity $entity, $relationName, array $params = [])
     {
         if ($relationName === 'children') {

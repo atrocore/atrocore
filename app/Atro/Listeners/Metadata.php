@@ -1008,9 +1008,6 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$relationEntityName]['fields']['hierarchySortOrder'] = [
                 'type' => 'int'
             ];
-            $data['entityDefs'][$relationEntityName]['fields']['route'] = [
-                'type' => 'text'
-            ];
 
             if (!isset($data['entityDefs'][$scope]['fields']['parents']['view'])) {
                 $data['entityDefs'][$scope]['fields']['parents']['view'] = 'views/fields/hierarchy-parents';
@@ -1018,6 +1015,17 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['parents']['layoutDetailDisabled'] = false;
             $data['entityDefs'][$scope]['fields']['parents']['layoutLeftSidebarDisabled'] = true;
             $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
+
+            $data['entityDefs'][$scope]['fields']['routes'] = [
+                'type'                 => 'jsonArray',
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true,
+            ];
 
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
                 "type"                 => "bool",

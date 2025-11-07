@@ -31,11 +31,12 @@ class V2Dot1Dot25 extends Base
             }
 
             if ($defs['type'] === 'Hierarchy') {
-                $tableName = Util::toUnderScore(lcfirst($scope.'Hierarchy'));
+                $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($scope)));
                 if ($this->isPgSQL()) {
-                    $this->exec("ALTER TABLE $tableName ADD route TEXT DEFAULT NULL");
+                    $this->exec("ALTER TABLE $tableName ADD routes TEXT DEFAULT NULL");
+                    $this->exec("COMMENT ON COLUMN $tableName.routes IS '(DC2Type:jsonArray)'");
                 } else {
-                    $this->exec("ALTER TABLE $tableName ADD route LONGTEXT DEFAULT NULL");
+                    $this->exec("ALTER TABLE $tableName ADD routes LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonArray)'");
                 }
             }
         }
