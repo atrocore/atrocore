@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
@@ -42,7 +43,7 @@ class Hierarchy extends Base
     {
         $res = $entity->get('routes');
         if ($res === null) {
-            $res = $this->buildRoutes($entity->get('id'));
+            throw new Error("Please, rebuild routes for entity {$entity->getEntityName()}.");
         }
 
         $routes = [];
