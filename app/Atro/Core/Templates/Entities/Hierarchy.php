@@ -17,6 +17,19 @@ use Espo\Core\ORM\Entity;
 
 class Hierarchy extends Entity
 {
+    public function getRoutes(): array
+    {
+        $routes = [];
+        foreach ($this->get('routes') ?? [] as $route) {
+            $part = explode("|", $route);
+            array_pop($part);
+            array_shift($part);
+            $routes[] = $part;
+        }
+
+        return $routes;
+    }
+
     public function getParentId(): ?string
     {
         $parentsIds = $this->get('parentsIds');

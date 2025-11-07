@@ -25,6 +25,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Atro\Services\Record;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 
 class Hierarchy extends Record
 {
@@ -191,15 +192,20 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
+    protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
     {
-        $parents = $entity->get('parents');
-        if ($parents === null || count($parents) == 0) {
-            $treeBranches[] = $entity;
-        } else {
-            foreach ($parents as $parent) {
-                $parent->child = $entity;
-                $this->createTreeBranches($parent, $treeBranches);
+        foreach ($entity->getRoutes() as $route) {
+            $collection = [];
+            foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
+                $collection[$item->get('id')] = $item;
+            }
+
+            foreach ($route as $k => $id) {
+                $item = $collection[$id];
+                if (isset($route[$k + 1])) {
+                    $item->child = $collection[$route[$k + 1]];
+                }
+                $treeBranches[] = $item;
             }
         }
     }
