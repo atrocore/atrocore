@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
 
-class RebuildRoutesForEntity extends AbstractConsole
+class RebuildHierarchyRoutesForEntity extends AbstractConsole
 {
     public static function getDescription(): string
     {
