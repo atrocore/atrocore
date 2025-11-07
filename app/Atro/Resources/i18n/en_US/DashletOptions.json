@@ -16,7 +16,8 @@
     "sortDirection": "Order (direction)",
     "expandedLayout": "Layout",
     "dateFilter": "Date Filter",
-    "savedFilter": "Saved Filter"
+    "savedFilter": "Saved Filter",
+    "entityListType": "Entity List Type"
   },
   "options": {
     "mode": {
@@ -26,6 +27,11 @@
       "basicDay": "Day",
       "agendaDay": "Day (agenda)",
       "timeline": "Timeline"
+    },
+    "entityListType": {
+      "all": "All",
+      "navigation": "Navigation items",
+      "favorites": "Favorites"
     }
   },
   "messages": {

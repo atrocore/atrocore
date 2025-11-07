@@ -18693,3 +18693,55 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
     max-width: 100%;
 }
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.cards-container > .card {
+    display: block;
+    padding: 10px;
+    color: var(--primary-font-color);
+    text-decoration: none;
+    background-color: #fcfcfc;
+    border-radius: 5px;
+    border: 1px solid var(--primary-border-color);
+}
+
+.cards-container > .card:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+.cards-container > .card .icon {
+    margin-inline-end: 10px;
+}
+
+.cards-container > .card img.icon {
+    width: 23px;
+    height: 23px;
+    object-fit: contain;
+}
+
+.cards-container > .card i.icon {
+    font-size: 23px;
+}
+
+.cards-container > .card .title {
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+.cards-container > .card .description {
+    display: block;
+    margin-top: 10px;
+}
+
+.cards-container.first-steps-dashlet > .card.completed {
+    opacity: 0.5;
+}
+
+.cards-container.first-steps-dashlet > .card.completed:hover {
+    opacity: 1;
+}

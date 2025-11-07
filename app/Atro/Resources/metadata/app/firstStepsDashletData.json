@@ -1,0 +1,43 @@
+[
+  {
+    "name": "readDocumentation",
+    "url": "https://help.atrocore.com/",
+    "urlNewTab": true
+  },
+  {
+    "name": "customizeDesign",
+    "url": "/#Admin/userInterface"
+  },
+  {
+    "name": "configureLocale",
+    "url": "/#Locale"
+  },
+  {
+    "name": "addLanguages",
+    "url": "/#Language"
+  },
+  {
+    "name": "configureRoles",
+    "url": "/#Role"
+  },
+  {
+    "name": "createUsers",
+    "url": "/#User"
+  },
+  {
+    "name": "configureDataModel",
+    "url": "/#Entity"
+  },
+  {
+    "name": "importData",
+    "url": "/#ImportFeed"
+  },
+  {
+    "name": "configureFileTypes",
+    "url": "/#FileType"
+  },
+  {
+    "name": "configureLayouts",
+    "url": "/#Admin/layouts"
+  }
+]
