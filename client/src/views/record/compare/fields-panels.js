@@ -67,7 +67,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
                         let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
 
-                        model
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                             model: this.merging ? model.clone() : model,
