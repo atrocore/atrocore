@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Language;
 use Atro\ORM\DB\RDB\Mapper;
@@ -36,6 +37,68 @@ class Hierarchy extends Base
 
         $this->tableName = $entityManager->getMapper()->toDb($this->entityType);
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
+    }
+
+    public function getRoutes(Entity $entity): array
+    {
+        $res = $entity->get('routes');
+        if ($res === null) {
+            throw new Error("Please, rebuild routes for entity {$entity->getEntityName()}.");
+        }
+
+        $routes = [];
+        foreach ($res as $route) {
+            $part = explode("|", $route);
+            array_pop($part);
+            array_shift($part);
+            $routes[] = $part;
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Build routes for entity and all its children.
+     *
+     * @param string $id
+     * @return void
+     */
+    public function buildRoutes(string $id): void
+    {
+        // remove old routes
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->tableName)
+            ->set('routes', ':null')
+            ->where('routes LIKE :like OR id = :id')
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('like', "%|$id|%")
+            ->setParameter('id', $id)
+            ->executeQuery();
+
+        $routes = $this->prepareRoutes($id);
+        if ($routes === ['']) {
+            $routes = [];
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->tableName)
+            ->set('routes', ':routes')
+            ->where('id = :id')
+            ->setParameter('routes', json_encode($routes))
+            ->setParameter('id', $id)
+            ->executeQuery();
+
+        // build routes for children
+        $children = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->hierarchyTableName, 'h')
+            ->where('h.parent_id=:id')
+            ->setParameter('id', $id)
+            ->fetchAllAssociative();
+
+        foreach ($children as $child) {
+            $this->buildRoutes($child['entity_id']);
+        }
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
@@ -327,25 +390,6 @@ class Hierarchy extends Base
         }
     }
 
-    public function hasMultipleParents(): bool
-    {
-        $quotedTableName = $this->getConnection()->quoteIdentifier($this->tableName);
-        $quotedHierarchyTableName = $this->getConnection()->quoteIdentifier($this->hierarchyTableName);
-
-        $query = "SELECT COUNT(e.id) as total
-                  FROM (SELECT entity_id FROM $quotedHierarchyTableName WHERE deleted=:deleted GROUP BY entity_id HAVING COUNT(entity_id) > 1) AS rel
-                  LEFT JOIN $quotedTableName e ON e.id=rel.entity_id
-                  WHERE e.deleted=:deleted";
-
-        $sth = $this->getEntityManager()->getPDO()->prepare($query);
-        $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
-        $sth->execute();
-
-        $count = $sth->fetch(\PDO::FETCH_COLUMN);
-
-        return !empty($count);
-    }
-
     public function updateHierarchySortOrder(string $parentId, array $ids): void
     {
         /** @var Relation $relationRepository */
@@ -366,18 +410,24 @@ class Hierarchy extends Base
 
     public function getParentsRecursivelyArray(string $id): array
     {
-        $ids = [];
-        $this->collectParents($id, $ids);
+        $entity = $this->get($id);
 
-        return $ids;
+        $res = [];
+        foreach ($this->getRoutes($entity) as $ids) {
+            $res = array_merge($res, $ids);
+        }
+
+        return $res;
     }
 
     public function getChildrenRecursivelyArray(string $id): array
     {
-        $ids = [];
-        $this->collectChildren($id, $ids);
-
-        return $ids;
+        return $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from($this->tableName)
+            ->where('routes LIKE :like')
+            ->setParameter('like', "%|$id|%")
+            ->fetchFirstColumn();
     }
 
     public function getLeafChildren(string $id): array
@@ -511,22 +561,16 @@ class Hierarchy extends Base
         return (int)$qb->fetchAssociative()['count'];
     }
 
-    public function isRoot(string $id, array $roots = null): bool
+    public function hasChildren(string $id): bool
     {
-        if ($roots === null) {
-            $roots = $this->getEntitiesParents([$id]);
-        }
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from($this->tableName)
+            ->where('routes LIKE :like')
+            ->setParameter('like', "%|$id|%")
+            ->fetchAssociative();
 
-        return empty($roots[$id]);
-    }
-
-    public function hasChildren(string $id, array $children = null): bool
-    {
-        if ($children === null) {
-            $children = $this->getEntitiesChildren([$id]);
-        }
-
-        return !empty($children[$id]);
+        return !empty($res);
     }
 
     public function getEntitiesParents(array $ids): array
@@ -546,38 +590,6 @@ class Hierarchy extends Base
         }
 
         return $result;
-    }
-
-    public function getEntitiesChildren(array $ids): array
-    {
-        $records = $this->getConnection()->createQueryBuilder()
-            ->select('h.entity_id, h.parent_id')
-            ->from($this->hierarchyTableName, 'h')
-            ->where('h.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->andWhere('h.parent_id IN (:entityIds)')
-            ->setParameter('entityIds', $ids, Connection::PARAM_STR_ARRAY)
-            ->fetchAllAssociative();
-
-        $result = [];
-        foreach ($records as $record) {
-            $result[$record['parent_id']][] = $record['entity_id'];
-        }
-
-        return $result;
-    }
-
-    public function getHierarchyRoute(string $id): array
-    {
-        $route = [];
-        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $this->entityType, 'name');
-
-        while (!empty($record = $this->getParentRecord($id))) {
-            $route[$record['id']] = $record[Util::toUnderScore($name)] ?? $record['name'];
-            $id = $record['id'];
-        }
-
-        return array_reverse($route, true);
     }
 
     public function getParentRecord(string $id): array
@@ -685,60 +697,6 @@ class Hierarchy extends Base
             $foreign = is_string($foreign) ? $this->get($foreign) : $foreign;
             if (in_array($foreign->get('id'), $this->getParentsRecursivelyArray($entity->get('id')))) {
                 throw new BadRequest("Parent record cannot be chosen as a child.");
-            }
-        }
-    }
-
-    protected function createRoute(array $records, string $id, array &$route): void
-    {
-        foreach ($records as $record) {
-            if ($record['entity_id'] === $id) {
-                $route[] = $record['parent_id'];
-                $this->createRoute($records, $record['parent_id'], $route);
-            }
-        }
-    }
-
-    protected function collectParents(string $id, array &$ids): void
-    {
-        $res = $this->getConnection()->createQueryBuilder()
-            ->select('r.parent_id')
-            ->from($this->hierarchyTableName, 'r')
-            ->leftJoin('r', $this->tableName, 'm', 'r.parent_id = m.id')
-            ->where('r.deleted = :false')
-            ->andWhere('m.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->andWhere('r.entity_id = :entityId')
-            ->setParameter('entityId', $id)
-            ->fetchAllAssociative();
-
-        if (!empty($res)) {
-            $res = array_column($res, 'parent_id');
-            $ids = array_values(array_unique(array_merge($ids, $res)));
-            foreach ($res as $v) {
-                $this->collectParents($v, $ids);
-            }
-        }
-    }
-
-    protected function collectChildren(string $id, array &$ids): void
-    {
-        $res = $this->getConnection()->createQueryBuilder()
-            ->select('r.entity_id')
-            ->from($this->hierarchyTableName, 'r')
-            ->leftJoin('r', $this->tableName, 'm', 'r.entity_id = m.id')
-            ->where('r.deleted = :false')
-            ->andWhere('m.deleted = :false')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->andWhere('r.parent_id = :parentId')
-            ->setParameter('parentId', $id)
-            ->fetchAllAssociative();
-
-        if (!empty($res)) {
-            $res = array_column($res, 'entity_id');
-            $ids = array_values(array_unique(array_merge($ids, $res)));
-            foreach ($res as $v) {
-                $this->collectChildren($v, $ids);
             }
         }
     }
@@ -870,6 +828,32 @@ class Hierarchy extends Base
         $result = $this->getMapper()->count($this->entityFactory->create($this->entityName), $selectParams);
 
         return $result;
+    }
+
+    protected function prepareRoutes(string $id): array
+    {
+        $parents = $this->getConnection()->createQueryBuilder()
+            ->select('*')
+            ->from($this->hierarchyTableName, 'h')
+            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id')
+            ->where('h.entity_id=:id')
+            ->setParameter('id', $id)
+            ->fetchAllAssociative();
+
+        if (empty($parents)) {
+            return [""];
+        }
+
+        $routes = [];
+
+        foreach ($parents as $parent) {
+            $parentRoutes = $this->prepareRoutes($parent['parent_id']);
+            foreach ($parentRoutes as $route) {
+                $routes[] = substr($route, 0, -1) . "|{$parent['parent_id']}|";
+            }
+        }
+
+        return $routes;
     }
 
     protected function init()

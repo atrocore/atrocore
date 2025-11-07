@@ -13,7 +13,7 @@ namespace Atro\SelectManagers;
 
 use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 /**
  * Class of Association

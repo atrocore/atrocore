@@ -20,14 +20,18 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Atro\Services\Record;
 use Atro\Core\Exceptions\NotModified;
+use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 
 class Hierarchy extends Record
 {
+    protected $mandatorySelectAttributeList = ['routes'];
+
     public function getSelectAttributeList($params)
     {
         $res = parent::getSelectAttributeList($params);
@@ -189,15 +193,20 @@ class Hierarchy extends Record
         }
     }
 
-    protected function createTreeBranches(Entity $entity, array &$treeBranches): void
+    protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
     {
-        $parents = $entity->get('parents');
-        if ($parents === null || count($parents) == 0) {
-            $treeBranches[] = $entity;
-        } else {
-            foreach ($parents as $parent) {
-                $parent->child = $entity;
-                $this->createTreeBranches($parent, $treeBranches);
+        foreach ($entity->getRoutes() as $route) {
+            $collection = [];
+            foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
+                $collection[$item->get('id')] = $item;
+            }
+
+            foreach ($route as $k => $id) {
+                $item = $collection[$id];
+                if (isset($route[$k + 1])) {
+                    $item->child = $collection[$route[$k + 1]];
+                }
+                $treeBranches[] = $item;
             }
         }
     }
@@ -684,31 +693,32 @@ class Hierarchy extends Record
             return;
         }
 
-        $attributeList = empty($selectParams['select']) ? [] : $selectParams['select'];
+        // put routes names to the collection
+        $routesItemsIds = [];
+        foreach ($collection as $entity) {
+            foreach ($entity->getRoutes() as $ids) {
+                $routesItemsIds = array_merge($routesItemsIds, $ids);
+            }
+        }
 
-        if (count($collection) > 0 && $collection[0]->hasAttribute('isRoot') && $collection[0]->hasAttribute('hasChildren')) {
-            $ids = array_column($collection->toArray(), 'id');
+        $routeEntities = [];
+        foreach ($this->getRepository()->where(['id' => $routesItemsIds])->find() as $item) {
+            $routeEntities[$item->get('id')] = $item;
+        }
 
-            if (in_array('isRoot', $attributeList)) {
-                $roots = $this->getRepository()->getEntitiesParents($ids);
-                foreach ($collection as $entity) {
-                    $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id'), $roots));
+        $name = Language::getLocalizedFieldName($this->getInjection('container'), $collection->getEntityName(), 'name');
+
+        foreach ($collection as $entity) {
+            $routesNames = [];
+            foreach ($entity->getRoutes() as $k => $ids) {
+                foreach ($ids as $id) {
+                    $routesNames[$k][] = [
+                        'id'   => $id,
+                        'name' => $routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name'),
+                    ];
                 }
             }
-
-            if (in_array('hasChildren', $attributeList)) {
-                $children = $this->getRepository()->getEntitiesChildren($ids);
-                foreach ($collection as $entity) {
-                    $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id'), $children));
-                }
-            }
-
-            foreach ($collection as $entity) {
-                if (in_array('hierarchyRoute', $attributeList) && $this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
-                    $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
-                }
-                $entity->_skipHierarchyRoute = true;
-            }
+            $entity->set('routesNames', $routesNames);
         }
     }
 
@@ -739,7 +749,10 @@ class Hierarchy extends Record
             return;
         }
 
-        if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents'])) && empty($entity->get('parentId'))) {
+        if (
+            empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'multiParents']))
+            && empty($entity->get('parentId'))
+        ) {
             $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
             if (!empty($entity->get('parentId'))) {
                 $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);
@@ -747,17 +760,35 @@ class Hierarchy extends Record
         }
 
         if (empty($this->getMemoryStorage()->get('exportJobId'))) {
-            if (empty($entity->_skipHierarchyRoute)) {
-                if (!$entity->has('isRoot')) {
-                    $entity->set('isRoot', $this->getRepository()->isRoot($entity->get('id')));
-                }
-                if (!$entity->has('hasChildren')) {
-                    $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
-                }
-                if ($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']) !== true) {
-                    $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
+            $entity->set('isRoot', empty($this->getRepository()->getRoutes($entity)));
+            $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
+        }
+
+        // put routes names to the collection
+        if ($entity->get('routesNames') === null) {
+            $routesItemsIds = [];
+            foreach ($entity->getRoutes() as $ids) {
+                $routesItemsIds = array_merge($routesItemsIds, $ids);
+            }
+
+            $routeEntities = [];
+            foreach ($this->getRepository()->where(['id' => $routesItemsIds])->find() as $item) {
+                $routeEntities[$item->get('id')] = $item;
+            }
+
+            $name = Language::getLocalizedFieldName($this->getInjection('container'), $entity->getEntityName(), 'name');
+
+            $routesNames = [];
+            foreach ($entity->getRoutes() as $k => $ids) {
+                foreach ($ids as $id) {
+                    $routesNames[$k][] = [
+                        'id'   => $id,
+                        'name' => $routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name'),
+                    ];
                 }
             }
+
+            $entity->set('routesNames', $routesNames);
         }
     }
 
@@ -1094,6 +1125,7 @@ class Hierarchy extends Record
     {
         parent::init();
 
+        $this->addDependency('container');
         $this->addDependency(AttributeFieldConverter::class);
     }
 

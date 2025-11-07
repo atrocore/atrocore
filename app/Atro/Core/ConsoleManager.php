@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Atro\Core;
 
 use Atro\Console\AbstractConsole;
-use Atro\Core\ModuleManager\AbstractModule;
 use Atro\Core\ModuleManager\Manager;
 use Atro\Core\Utils\Config;
 use Atro\Console;
@@ -40,7 +39,7 @@ class ConsoleManager
                 (new $data['handler']($this->container))->run($data['data']);
                 die();
             }
-            AbstractConsole::show('No such console handler as ' . $data['handler'], 2, true);
+            AbstractConsole::show('No such console handler as '.$data['handler'], 2, true);
         } else {
             AbstractConsole::show('No such console command!', 2, true);
         }
@@ -62,7 +61,7 @@ class ConsoleManager
             if ($route == $command) {
                 $result = [
                     'handler' => $handler,
-                    'data'    => []
+                    'data'    => [],
                 ];
             } elseif (preg_match_all("/\<(.+?)\>/is", $route, $matches)) {
                 // prepare parameters
@@ -82,7 +81,7 @@ class ConsoleManager
 
                     $result = [
                         'handler' => $handler,
-                        'data'    => $data
+                        'data'    => $data,
                     ];
                 }
             }
@@ -94,27 +93,29 @@ class ConsoleManager
     public function getCommands(): array
     {
         $commands = [
-            "regenerate lists"                  => Console\RegenerateExtensibleEnums::class,
-            "list"                              => Console\ListCommand::class,
-            "regenerate measures"               => Console\RegenerateMeasures::class,
-            "refresh translations"              => Console\RefreshTranslations::class,
-            "install demo-project"              => Console\InstallDemoProject::class,
-            "clear cache"                       => Console\ClearCache::class,
-            "sql diff --show"                   => Console\SqlDiff::class,
-            "sql diff --run"                    => Console\SqlDiffRun::class,
-            "cron"                              => Console\Cron::class,
-            "migrate <module> <from> <to>"      => Console\Migrate::class,
-            "job <id> --run"                    => Console\Job::class,
-            "notifications --refresh"           => Console\Notification::class,
-            "kill daemons"                      => Console\KillDaemons::class,
-            "daemon <name> <id>"                => Console\Daemon::class,
-            "check updates"                     => Console\CheckUpdates::class,
-            "pt --run"                          => Console\PseudoTransactionManager::class,
-            "storages --refresh-items"          => Console\RefreshStoragesItems::class,
-            "storages --scan"                   => Console\ScanStorages::class,
-            "storage <id> --scan"               => Console\ScanStorage::class,
-            "create action <className>"         => Console\CreateAction::class,
-            "create condition type <className>" => Console\CreateConditionType::class
+            "regenerate lists"                          => Console\RegenerateExtensibleEnums::class,
+            "list"                                      => Console\ListCommand::class,
+            "regenerate measures"                       => Console\RegenerateMeasures::class,
+            "refresh translations"                      => Console\RefreshTranslations::class,
+            "install demo-project"                      => Console\InstallDemoProject::class,
+            "clear cache"                               => Console\ClearCache::class,
+            "sql diff --show"                           => Console\SqlDiff::class,
+            "sql diff --run"                            => Console\SqlDiffRun::class,
+            "cron"                                      => Console\Cron::class,
+            "migrate <module> <from> <to>"              => Console\Migrate::class,
+            "job <id> --run"                            => Console\Job::class,
+            "notifications --refresh"                   => Console\Notification::class,
+            "kill daemons"                              => Console\KillDaemons::class,
+            "daemon <name> <id>"                        => Console\Daemon::class,
+            "check updates"                             => Console\CheckUpdates::class,
+            "pt --run"                                  => Console\PseudoTransactionManager::class,
+            "storages --refresh-items"                  => Console\RefreshStoragesItems::class,
+            "storages --scan"                           => Console\ScanStorages::class,
+            "storage <id> --scan"                       => Console\ScanStorage::class,
+            "create action <className>"                 => Console\CreateAction::class,
+            "create condition type <className>"         => Console\CreateConditionType::class,
+            "rebuild hierarchy routes"                  => Console\RebuildHierarchyRoutes::class,
+            "rebuild hierarchy routes for <entityName>" => Console\RebuildHierarchyRoutesForEntity::class,
         ];
 
         if ($this->getConfig()->get('isInstalled')) {
