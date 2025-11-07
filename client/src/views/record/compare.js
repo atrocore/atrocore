@@ -332,7 +332,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.isComparisonAcrossScopes()) {
                 return;
             }
-            debugger
+
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
