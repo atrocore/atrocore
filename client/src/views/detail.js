@@ -786,13 +786,13 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 label: this.getLanguage().translate(this.scope, 'scopeNamesPlural')
             });
 
-            if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true && this.model.get('hierarchyRoute')) {
-                $.each(this.model.get('hierarchyRoute'), (id, name) => {
+            if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
+                (this.model.get('routesNames')[0] || []).forEach(item => {
                     result.push({
-                        url: `${rootUrl}/view/${id}`,
-                        label: name
+                        url: `${rootUrl}/view/${item.id}`,
+                        label: item.name
                     });
-                });
+                })
             }
 
             result.push({

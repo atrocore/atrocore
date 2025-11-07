@@ -1062,18 +1062,6 @@ class Metadata extends AbstractListener
                 "emHidden"             => true
             ];
 
-            $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
-                "type"                 => "jsonObject",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
-                "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
-            ];
-
             $data['entityDefs'][$scope]['fields']['inheritedFields'] = [
                 "type"                 => "array",
                 "notStorable"          => true,
