@@ -276,7 +276,7 @@
             }
             if (mode === 'detail') {
                 if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
-                    selectTreeNode(model.get('id'), (this.model.get('routesNames')?.[0]?.map(item => item.id) || []).reverse())
+                    selectTreeNode(model.get('id'), (model.get('routesNames')?.[0]?.map(item => item.id) || []).reverse())
                 } else if (Storage.get('selectedNodeId', scope)) {
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
                 }

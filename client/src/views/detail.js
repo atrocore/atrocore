@@ -787,7 +787,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
             });
 
             if (this.isHierarchical() && this.getMetadata().get(`scopes.${this.scope}.multiParents`) !== true) {
-                (this.model.get('routesNames')[0] || []).forEach(item => {
+                (this.model.get('routesNames')?.[0] || []).forEach(item => {
                     result.push({
                         url: `${rootUrl}/view/${item.id}`,
                         label: item.name
