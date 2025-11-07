@@ -64,15 +64,15 @@
                         {{/if}}
                     </td>
                     {{#each fieldValueRows}}
-                    {{#if ../../../merging}}
-                    <td>
-                       <div class="center-child" >
-                           <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
-                       </div>
-                    </td>
-                    {{/if}}
+                        {{#if ../../../merging}}
+                        <td>
+                           <div class="center-child" >
+                               <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
+                           </div>
+                        </td>
+                        {{/if}}
                     <td class="cell {{#if shouldNotCenter}}no-center{{/if}}">
-                        <div class="{{class}}  field">Loading...</div>
+                        <div class="{{class}}  field">{{{var key ../../../this}}}</div>
                     </td>
                     {{/each}}
                 </tr>
