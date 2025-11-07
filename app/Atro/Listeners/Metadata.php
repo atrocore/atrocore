@@ -1017,7 +1017,18 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
 
             $data['entityDefs'][$scope]['fields']['routes'] = [
-                'type'                 => 'jsonArray',
+                "type"               => "jsonArray",
+                "view"               => "views/fields/hierarchy-routes",
+                "protected"          => true,
+                "massUpdateDisabled" => true,
+                "filterDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true,
+            ];
+
+            $data['entityDefs'][$scope]['fields']['routesNames'] = [
+                "type"                 => "jsonArray",
+                "notStorable"          => true,
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,
                 "massUpdateDisabled"   => true,

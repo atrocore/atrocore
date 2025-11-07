@@ -718,6 +718,32 @@ class Hierarchy extends Record
                 $entity->_skipHierarchyRoute = true;
             }
         }
+
+        // put routes names to the collection
+        $routesItemsIds = [];
+        foreach ($collection as $entity) {
+            foreach ($entity->getRoutes() as $ids) {
+                $routesItemsIds = array_merge($routesItemsIds, $ids);
+            }
+        }
+
+        $routeEntities = [];
+        foreach ($this->getRepository()->where(['id' => $routesItemsIds])->find() as $item) {
+            $routeEntities[$item->get('id')] = $item;
+        }
+
+        foreach ($collection as $entity) {
+            $routesNames = [];
+            foreach ($entity->getRoutes() as $k => $ids) {
+                foreach ($ids as $id) {
+                    $routesNames[$k][] = [
+                        'id'   => $id,
+                        'name' => $routeEntities[$id]->get('name'),
+                    ];
+                }
+            }
+            $entity->set('routesNames', $routesNames);
+        }
     }
 
     protected function handleInput(\stdClass $data, ?string $id = null): void
@@ -766,6 +792,30 @@ class Hierarchy extends Record
                     $entity->set('hierarchyRoute', $this->getRepository()->getHierarchyRoute($entity->get('id')));
                 }
             }
+        }
+
+        // put routes names to the collection
+        if ($entity->get('routesNames') === null) {
+            $routesItemsIds = [];
+            foreach ($entity->getRoutes() as $ids) {
+                $routesItemsIds = array_merge($routesItemsIds, $ids);
+            }
+
+            $routeEntities = [];
+            foreach ($this->getRepository()->where(['id' => $routesItemsIds])->find() as $item) {
+                $routeEntities[$item->get('id')] = $item;
+            }
+
+            $routesNames = [];
+            foreach ($entity->getRoutes() as $k => $ids) {
+                foreach ($ids as $id) {
+                    $routesNames[$k][] = [
+                        'id'   => $id,
+                        'name' => $routeEntities[$id]->get('name'),
+                    ];
+                }
+            }
+            $entity->set('routesNames', $routesNames);
         }
     }
 

@@ -1,0 +1,1 @@
+{{#if valueIsNull}}{{translate 'Null'}}{{else}}<div class="value-container">{{#each routes}}{{#each this}}<a href="/#{{../../entityName}}/view/{{id}}">{{name}}</a>{{#unless @last}} / {{/unless}}{{/each}}{{#unless @last}}, <br>{{/unless}}{{/each}}</div>{{/if}}
