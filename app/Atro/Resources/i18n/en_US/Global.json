@@ -638,7 +638,7 @@
   },
   "fields": {
     "__currentUser": "Current User",
-    "routes": "Routes",
+    "routes": "Route(s)",
     "width": "Width",
     "height": "Height",
     "start": "Start",
