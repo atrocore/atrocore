@@ -7,7 +7,7 @@
       "select": false,
       "unlink": false,
       "canClose": false,
-      "sortBy": "id",
+      "sortBy": "createdAt",
       "asc": true
     }
   },

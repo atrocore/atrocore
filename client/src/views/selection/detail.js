@@ -426,7 +426,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         },
 
                         treeWidthChanged: (width) => {
-                            view.onTreeResize(width)
+                            if(view && typeof view.onTreeResize === 'function') {
+                                view.onTreeResize(width)
+                            }
                         },
 
                         shouldBeSelected: (activeItem, nodeId) => {

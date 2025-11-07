@@ -41,10 +41,12 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
             this.merging = this.options.merging;
             this.fieldList = this.options.fieldList;
             this.renderedFields = [];
+
             this.listenTo(this.model, 'select-model', (modelId) => {
                 this.updateFieldState(null, modelId)
             });
 
+            this.buildFieldViews();
         },
 
         data() {
@@ -67,7 +69,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
                         let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
 
-                        model
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                             model: this.merging ? model.clone() : model,
@@ -145,8 +146,6 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
         afterRender() {
             Dep.prototype.afterRender.call(this)
-            this.renderedFields = [];
-            this.buildFieldViews();
             if (this.merging) {
                 $('input[data-id="' + this.options.defaultModelId + '"]').prop('checked', true);
             }

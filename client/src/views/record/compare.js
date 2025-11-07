@@ -297,6 +297,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     }
                 }
 
+                this.notify('Loading...');
                 this.createView(panel.name, this.fieldsPanelsView, {
                     scope: this.scope,
                     model: this.model,
@@ -331,6 +332,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.isComparisonAcrossScopes()) {
                 return;
             }
+
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
@@ -364,7 +366,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
 
             let relationshipsPanels = [];
-            const bottomPanels = this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', 'detail']) || [];
+            const bottomPanels = this.getMetadata().get(['clientDefs', this.model.name, 'bottomPanels', 'detail']) || [];
 
             for (let link in this.model.defs.links) {
 
@@ -373,7 +375,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     continue;
                 }
 
-                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+                let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
                 let relationScope = relationDefs['entity'];
 
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
@@ -385,7 +387,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 let panelData = {
-                    label: this.translate(link, 'fields', this.scope),
+                    label: this.translate(link, 'fields', this.model.name),
                     scope: relationScope,
                     name: link,
                     type: relationDefs['type'],
@@ -397,7 +399,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 };
 
                 if (relationDefs['isAssociateRelation']) {
-                    Object.entries(this.getMetadata().get(['entityDefs', this.scope, 'links'])).forEach(([name, defs]) => {
+                    Object.entries(this.getMetadata().get(['entityDefs', this.model.name, 'links'])).forEach(([name, defs]) => {
                         if (defs?.relationName === relationName && link !== name) {
                             panelData.foreign = name;
                         }
@@ -412,7 +414,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', bottomPanel.link]);
+                let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', bottomPanel.link]);
                 if (!relationDefs) {
                     return;
                 }
@@ -424,7 +426,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 relationshipsPanels.push({
-                    label: this.translate(bottomPanel.label, 'labels', this.scope),
+                    label: this.translate(bottomPanel.label, 'labels', this.model.name),
                     scope: relationDefs['entity'],
                     name: bottomPanel.name,
                     type: relationDefs['type'],
@@ -449,7 +451,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 fieldPanels: this.fieldPanels,
                 columns: column,
                 columnLength: column.length,
-                scope: this.scope,
+                scope: this.model.name,
                 id: this.getId(),
                 merging: this.merging,
                 hideButtonPanel: this.hideButtonPanel
@@ -658,7 +660,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isComparableLink(link) {
-            let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
+            let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
 
             if (relationDefs['isAssociateRelation']) {
                 return true;
@@ -857,7 +859,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 currentValues[filter.name] = this.selectedFilters[filter.name];
             });
             this.createView('compareOverviewFilter', this.overviewFilterView, {
-                scope: this.scope,
+                scope: this.model.name,
                 model: this.model,
                 overviewFilters: overviewFilterList,
                 currentValues: currentValues
@@ -881,7 +883,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed', this.selectedFilters);
-                        this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
+                        this.getStorage().set('compareFilters', this.model.name, this.selectedFilters)
                         this.reRenderFieldsPanels();
                     }
                 });
