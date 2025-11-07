@@ -19,15 +19,7 @@ class Hierarchy extends Entity
 {
     public function getRoutes(): array
     {
-        $routes = [];
-        foreach ($this->get('routes') ?? [] as $route) {
-            $part = explode("|", $route);
-            array_pop($part);
-            array_shift($part);
-            $routes[] = $part;
-        }
-
-        return $routes;
+        return $this->getEntityManager()->getRepository($this->entityType)->getRoutes($this);
     }
 
     public function getParentId(): ?string

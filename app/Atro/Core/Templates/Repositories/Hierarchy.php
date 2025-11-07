@@ -38,13 +38,31 @@ class Hierarchy extends Base
         $this->hierarchyTableName = $this->tableName . '_hierarchy';
     }
 
+    public function getRoutes(Entity $entity): array
+    {
+        $res = $entity->get('routes');
+        if ($res === null) {
+            $res = $this->rebuildRoutes($entity->get('id'));
+        }
+
+        $routes = [];
+        foreach ($res as $route) {
+            $part = explode("|", $route);
+            array_pop($part);
+            array_shift($part);
+            $routes[] = $part;
+        }
+
+        return $routes;
+    }
+
     /**
      * Build routes for entity and all its children.
      *
      * @param string $id
-     * @return void
+     * @return array
      */
-    public function buildRoutes(string $id): void
+    public function buildRoutes(string $id): array
     {
         // remove old routes
         $this->getConnection()->createQueryBuilder()
@@ -80,6 +98,8 @@ class Hierarchy extends Base
         foreach ($children as $child) {
             $this->buildRoutes($child['entity_id']);
         }
+
+        return $routes;
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
