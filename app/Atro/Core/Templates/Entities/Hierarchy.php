@@ -17,27 +17,22 @@ use Espo\Core\ORM\Entity;
 
 class Hierarchy extends Entity
 {
+    public function getRoutes(): array
+    {
+        return $this->getEntityManager()->getRepository($this->entityType)->getRoutes($this);
+    }
+
     public function getParentId(): ?string
     {
-        $parentsIds = $this->get('parentsIds');
-        if (is_array($parentsIds)) {
-            return $parentsIds[0] ?? null;
-        }
+        $ids = $this->getRoutes()[0] ?? [];
 
-        $parents = $this->get('parents');
-
-        return !empty($parents[0]) ? $parents[0]->get('id') : null;
+        return empty($ids) ? null : array_pop($ids);
     }
 
     public function getParent(): ?Hierarchy
     {
-        $parentsIds = $this->get('parentsIds');
-        if (is_array($parentsIds)) {
-            return !empty($parentsIds[0]) ? $this->getEntityManager()->getRepository($this->entityType)->get($parentsIds[0]) : null;
-        }
+        $parentId = $this->getParentId();
 
-        $parents = $this->get('parents');
-
-        return !empty($parents[0]) ? $parents[0] : null;
+        return empty($parentId) ? null : $this->getEntityManager()->getRepository($this->entityType)->get($parentId);
     }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\SelectManagers;
 
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class SavedSearch extends Base
 {

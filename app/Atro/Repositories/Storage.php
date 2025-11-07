@@ -60,7 +60,7 @@ class Storage extends Base
 
         $this->validateLocalPath($entity);
 
-        if ($entity->isAttributeChanged('folderId')) {
+        if (!$entity->isNew() && $entity->isAttributeChanged('folderId')) {
             $file = $this->getEntityManager()->getRepository('File')
                 ->where(['folderId' => $entity->get('folderId')])
                 ->findOne();

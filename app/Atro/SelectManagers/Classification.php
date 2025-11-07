@@ -11,7 +11,7 @@
 
 namespace Atro\SelectManagers;
 
-use Espo\Core\SelectManagers\Base;
+use Atro\Core\SelectManagers\Base;
 
 class Classification extends Base
 {

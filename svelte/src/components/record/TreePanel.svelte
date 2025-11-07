@@ -175,8 +175,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="ph ph-caret-right"></i>'),
-            openedIcon: window.$('<i class="ph ph-caret-down"></i>'),
+            closedIcon: window.$('<i class="ph ph-folder"></i>'),
+            openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -278,7 +278,7 @@
             }
             if (mode === 'detail') {
                 if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
-                    selectTreeNode(model.get('id'), Object.keys(model.get('hierarchyRoute') ?? []).reverse())
+                    selectTreeNode(model.get('id'), (model.get('routesNames')?.[0]?.map(item => item.id) || []).reverse())
                 } else if (Storage.get('selectedNodeId', scope)) {
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
                 }

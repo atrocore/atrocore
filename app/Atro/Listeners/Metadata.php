@@ -1016,6 +1016,35 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$scope]['fields']['parents']['layoutLeftSidebarDisabled'] = true;
             $data['entityDefs'][$scope]['fields']['children']['layoutLeftSidebarDisabled'] = true;
 
+            $data['entityDefs'][$scope]['fields']['routes'] = [
+                "type"               => "jsonArray",
+                "view"               => "views/fields/hierarchy-routes",
+                "protected"          => true,
+                "massUpdateDisabled" => true,
+                "filterDisabled"     => true,
+                "importDisabled"     => true,
+                "emHidden"           => true,
+            ];
+
+            if (
+                $this->getConfig()->get('isInstalled')
+                && $this->getConfig()->get('database')['driver'] === 'pdo_pgsql'
+            ) {
+                $data['entityDefs'][$scope]['indexes']['routes'] = ['columns' => ['routes', 'deleted']];
+            }
+
+            $data['entityDefs'][$scope]['fields']['routesNames'] = [
+                "type"                 => "jsonArray",
+                "notStorable"          => true,
+                "layoutListDisabled"   => true,
+                "layoutDetailDisabled" => true,
+                "massUpdateDisabled"   => true,
+                "filterDisabled"       => true,
+                "importDisabled"       => true,
+                "exportDisabled"       => true,
+                "emHidden"             => true,
+            ];
+
             $data['entityDefs'][$scope]['fields']['isRoot'] = [
                 "type"                 => "bool",
                 "notStorable"          => true,
@@ -1030,18 +1059,6 @@ class Metadata extends AbstractListener
 
             $data['entityDefs'][$scope]['fields']['hasChildren'] = [
                 "type"                 => "bool",
-                "notStorable"          => true,
-                "layoutListDisabled"   => true,
-                "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
-            ];
-
-            $data['entityDefs'][$scope]['fields']['hierarchyRoute'] = [
-                "type"                 => "jsonObject",
                 "notStorable"          => true,
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,

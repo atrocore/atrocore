@@ -26,10 +26,12 @@ class CalculateScriptFieldsForEntities extends AbstractJob implements JobInterfa
             }
 
             $offset = 0;
-            $limit = 5000;
-            $records = [true];
+            $limit = (int)$this->getConfig()->get('massUpdateMaxChunkSizeFor' . ucfirst($entityName));
+            if (empty($limit)) {
+                $limit = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+            }
 
-            while (!empty($records)) {
+            while (true) {
                 $ids = $this->getEntityManager()->getRepository($entityName)->getEntitiesIdsWithNullScriptFields($offset, $limit);
 
                 if (empty($ids)) {

@@ -280,16 +280,23 @@ class Relation extends Base
 
         $this->updateModifiedAtForRelatedEntity($entity);
 
-        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity'], false))
-            && empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))
-        ) {
-            $table = $this->getEntityManager()->getMapper()->toDB($this->entityType);
-            $this->getConnection()->createQueryBuilder()
-                ->delete($this->getConnection()->quoteIdentifier($table))
-                ->where('entity_id=:entityId AND parent_id <> :parentId')
-                ->setParameter('entityId', $entity->get('entityId'))
-                ->setParameter('parentId', $entity->get('parentId'))
-                ->executeQuery();
+        if (!empty($this->getMetadata()->get(['scopes', $this->entityType, 'isHierarchyEntity']))) {
+            if (empty($this->getMetadata()->get(['scopes', $this->getHierarchicalEntity(), 'multiParents']))) {
+                $this->getConnection()->createQueryBuilder()
+                    ->delete($this->getEntityManager()->getMapper()->toDB($this->entityType))
+                    ->where('entity_id=:entityId AND parent_id <> :parentId')
+                    ->setParameter('entityId', $entity->get('entityId'))
+                    ->setParameter('parentId', $entity->get('parentId'))
+                    ->executeQuery();
+            }
+
+            // rebuild routes
+            if ($entity->isNew() || $entity->isAttributeChanged('parentId')) {
+                $this
+                    ->getEntityManager()
+                    ->getRepository($this->getHierarchicalEntity())
+                    ->buildRoutes($entity->get('entityId'));
+            }
         }
     }
 
