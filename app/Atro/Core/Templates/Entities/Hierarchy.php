@@ -24,9 +24,14 @@ class Hierarchy extends Entity
 
     public function getParentId(): ?string
     {
-        $ids = $this->getRoutes()[0] ?? [];
+        $parentsIds = $this->get('parentsIds');
+        if (is_array($parentsIds)) {
+            return $parentsIds[0] ?? null;
+        }
 
-        return empty($ids) ? null : array_pop($ids);
+        $parents = $this->get('parents');
+
+        return !empty($parents[0]) ? $parents[0]->get('id') : null;
     }
 
     public function getParent(): ?Hierarchy
