@@ -573,6 +573,29 @@ class Hierarchy extends Base
         return !empty($res);
     }
 
+    public function hasChildrenByIds(array $ids): array
+    {
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id, parent_id')
+            ->from($this->hierarchyTableName)
+            ->where('parent_id IN (:ids)')
+            ->andWhere('deleted = :false')
+            ->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
+
+        $result = [];
+        foreach ($ids as $id) {
+            $result[$id] = false;
+        }
+
+        foreach ($res as $record) {
+            $result[$record['parent_id']] = true;
+        }
+
+        return $result;
+    }
+
     public function getEntitiesParents(array $ids): array
     {
         $records = $this->getConnection()->createQueryBuilder()

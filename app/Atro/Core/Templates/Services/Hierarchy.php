@@ -689,7 +689,44 @@ class Hierarchy extends Record
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
 
-        if(!$this->isHierarchy()) {
+        if ($this->isHierarchy()) {
+            $this->prepareHasChildren($collection);
+            $this->prepareRoutesNames($collection);
+        }
+    }
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        if ($this->isHierarchy()) {
+            $entity->set('isRoot', empty($this->getRepository()->getRoutes($entity)));
+
+            if ($entity->get('hasChildren') === null) {
+                $this->prepareHasChildren(new EntityCollection([$entity], $entity->getEntityName()));
+            }
+
+            if ($entity->get('routesNames') === null) {
+                $this->prepareRoutesNames(new EntityCollection([$entity], $entity->getEntityName()));
+            }
+
+            if (empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'multiParents']))) {
+                $route = $entity->get('routesNames')[0] ?? [];
+                $parent = array_pop($route);
+
+                $entity->set('parentId', $parent['id'] ?? null);
+                $entity->set('parentName', $parent['name'] ?? null);
+            }
+        }
+    }
+
+    public function prepareRoutesNames(EntityCollection $collection): void
+    {
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            return;
+        }
+
+        if (empty($collection[0])) {
             return;
         }
 
@@ -722,6 +759,23 @@ class Hierarchy extends Record
         }
     }
 
+    public function prepareHasChildren(EntityCollection $collection): void
+    {
+        if (!empty($this->getMemoryStorage()->get('exportJobId'))) {
+            return;
+        }
+
+        if (empty($collection[0])) {
+            return;
+        }
+
+        $data = $this->getRepository()->hasChildrenByIds(array_column($collection->toArray(), 'id'));
+
+        foreach ($collection as $entity) {
+            $entity->set('hasChildren', $data[$entity->get('id')]);
+        }
+    }
+
     protected function handleInput(\stdClass $data, ?string $id = null): void
     {
         if (empty($this->getMetadata()->get(['scopes', $this->entityType, 'multiParents']))) {
@@ -739,57 +793,6 @@ class Hierarchy extends Record
         }
 
         parent::handleInput($data, $id);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
-
-        if(!$this->isHierarchy()){
-            return;
-        }
-
-        if (
-            empty($this->getMetadata()->get(['scopes', $entity->getEntityName(), 'multiParents']))
-            && empty($entity->get('parentId'))
-        ) {
-            $entity->set('parentId', $entity->get('parentsIds')[0] ?? null);
-            if (!empty($entity->get('parentId'))) {
-                $entity->set('parentName', $entity->get('parentsNames')->{$entity->get('parentId')} ?? null);
-            }
-        }
-
-        if (empty($this->getMemoryStorage()->get('exportJobId'))) {
-            $entity->set('isRoot', empty($this->getRepository()->getRoutes($entity)));
-            $entity->set('hasChildren', $this->getRepository()->hasChildren($entity->get('id')));
-        }
-
-        // put routes names to the collection
-        if ($entity->get('routesNames') === null) {
-            $routesItemsIds = [];
-            foreach ($entity->getRoutes() as $ids) {
-                $routesItemsIds = array_merge($routesItemsIds, $ids);
-            }
-
-            $routeEntities = [];
-            foreach ($this->getRepository()->where(['id' => $routesItemsIds])->find() as $item) {
-                $routeEntities[$item->get('id')] = $item;
-            }
-
-            $name = Language::getLocalizedFieldName($this->getInjection('container'), $entity->getEntityName(), 'name');
-
-            $routesNames = [];
-            foreach ($entity->getRoutes() as $k => $ids) {
-                foreach ($ids as $id) {
-                    $routesNames[$k][] = [
-                        'id'   => $id,
-                        'name' => $routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name'),
-                    ];
-                }
-            }
-
-            $entity->set('routesNames', $routesNames);
-        }
     }
 
     public function findLinkedEntities($id, $link, $params)
