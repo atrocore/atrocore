@@ -65,12 +65,23 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                 viewName = 'views/fields/user-with-avatar'
             }
 
+            let attribute = this.itemData.attribute
+            let field = this.itemData.data?.field
+
+            if (['inTeams', 'notInTeams'].includes(this.itemData['type'])) {
+                fieldType = 'linkMultiple'
+                viewName = 'views/fields/teams'
+                field = field + 'Teams'
+                attribute = field + 'Ids'
+                this.operatorString = `(${this.getLanguage().translate('Team', 'scopeNames')}) ${this.operatorString}`
+            }
+
             this.valueViewDataList = [];
-            if (['extensibleMultiEnum','linkMultiple'].includes(fieldType)){
+            if (['extensibleMultiEnum', 'linkMultiple'].includes(fieldType)) {
                 var model = this.model.clone();
-                model.set(this.itemData.attribute, valueList);
-                if (this.itemData.data?.field && this.itemData.data?.values?.[this.itemData.data.field + 'Names']) {
-                    model.set(this.itemData.data.field + 'Names', this.itemData.data.values[this.itemData.data.field + 'Names']);
+                model.set(attribute, valueList);
+                if (field && this.itemData.data?.values?.[field + 'Names']) {
+                    model.set(field + 'Names', this.itemData.data.values[field + 'Names']);
                 }
 
 
@@ -80,11 +91,17 @@ Espo.define('views/admin/dynamic-logic/conditions-string/item-multiple-values-ba
                     isEnd: true
                 });
 
-                this.createView(key, viewName, {
+                const params = {
                     model: model,
                     name: this.field,
                     el: this.getSelector() + ' [data-view-key="' + key + '"]'
-                });
+                }
+
+                if (['inTeams', 'notInTeams'].includes(this.itemData['type'])) {
+                    params['name'] = field
+                }
+
+                this.createView(key, viewName, params);
                 return
             }
 

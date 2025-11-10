@@ -15,6 +15,7 @@ namespace Atro\Core\Utils\Condition;
 
 use DateInterval;
 use Atro\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use DateTime;
@@ -25,6 +26,8 @@ use Exception;
  */
 class Condition
 {
+    private static array $teamUsersIdsCache = [];
+
     /**
      * @param ConditionGroup|null $condition
      *
@@ -48,12 +51,12 @@ class Condition
 
     /**
      * @param Entity $entity
-     * @param array $items
+     * @param array  $items
      *
      * @return ConditionGroup|null
      * @throws Error
      */
-    public static function prepare(Entity $entity, array $items): ?ConditionGroup
+    public static function prepare(Entity $entity, array $items, EntityManager $entityManager): ?ConditionGroup
     {
         if (empty($items)) {
             throw new Error('Empty items in condition');
@@ -61,12 +64,12 @@ class Condition
         $result = null;
         if (isset($items['type'])) {
             if ($items['type'] != 'and' && $items['type'] != 'or' && $items['type'] != 'not') {
-                $group = self::prepareConditionGroup($entity, $items);
+                $group = self::prepareConditionGroup($entity, $items, $entityManager);
                 if ($group !== null) {
                     $result = $group;
                 }
             } elseif ($items['type'] == 'not') {
-                $group = self::prepare($entity, $items['value']);
+                $group = self::prepare($entity, $items['value'], $entityManager);
                 if ($group !== null) {
                     $result = new ConditionGroup($items['type'], [$group]);
                 }
@@ -76,7 +79,7 @@ class Condition
                 }
                 $valuesConditionGroup = [];
                 foreach ($items['value'] as $value) {
-                    $group = self::prepare($entity, $value);
+                    $group = self::prepare($entity, $value, $entityManager);
                     if ($group !== null) {
                         $valuesConditionGroup[] = $group;
                     }
@@ -89,7 +92,7 @@ class Condition
             $type = 'and';
             $valuesConditionGroup = [];
             foreach ($items as $value) {
-                $group = self::prepare($entity, $value);
+                $group = self::prepare($entity, $value, $entityManager);
                 if ($group !== null) {
                     $valuesConditionGroup[] = $group;
                 }
@@ -108,7 +111,7 @@ class Condition
      * @return ConditionGroup
      * @throws Error
      */
-    private static function prepareConditionGroup(Entity $entity, array $item): ?ConditionGroup
+    private static function prepareConditionGroup(Entity $entity, array $item, EntityManager $entityManager): ?ConditionGroup
     {
         if (!isset($item['attribute'])) {
             throw new Error('Empty attribute or in condition');
@@ -149,6 +152,17 @@ class Condition
 
         $values[] = $currentValue;
         if (isset($item['value'])) {
+            if (in_array($item['type'], ['inTeams', 'notInTeams'])) {
+                $item['type'] = $item['type'] === 'inTeams' ? 'in' : 'notIn';
+                if (!empty($item['value'])) {
+                    $key = json_encode($item['value']);
+                    if (!isset(self::$teamUsersIdsCache[$key])) {
+                        $collection = $entityManager->getRepository('TeamUser')->select(['userId'])->where(['teamId' => $item['value']])->find();
+                        self::$teamUsersIdsCache[$key] = array_column($collection->toArray(), 'userId');
+                    }
+                    $item['value'] = self::$teamUsersIdsCache[$key];
+                }
+            }
             $values[] = $item['value'];
         }
 
@@ -493,7 +507,7 @@ class Condition
             throw new Error('The second value must be an Array type');
         }
 
-        if (is_array($currentValue)){
+        if (is_array($currentValue)) {
             foreach ($currentValue as $value) {
                 if (in_array($value, $needValue)) {
                     return true;

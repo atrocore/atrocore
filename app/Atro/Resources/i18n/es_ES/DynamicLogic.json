@@ -24,7 +24,9 @@
       "notContains": "No Contiene",
       "notHas": "No Contiene",
       "isLinked": "Está vinculado",
-      "isNotLinked": "No está vinculado"
+      "isNotLinked": "No está vinculado",
+      "inTeams": "En equipos",
+      "notInTeams": "No en equipos"
     }
   }
 }
