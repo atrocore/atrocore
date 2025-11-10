@@ -38,6 +38,7 @@ import LocaleSwitcher from "./components/Navbar/LocaleSwitcher.svelte";
 import ContentFilter from "./components/record/ContentFilter.svelte";
 import AnchorNavigation from "./components/record/header/navigation/AnchorNavigation.svelte";
 import DashboardHeader from "./components/record/header/DashboardHeader.svelte";
+import {default as Administration} from "./components/admin/Index.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -73,5 +74,6 @@ export {
     LocaleSwitcher,
     ContentFilter,
     AnchorNavigation,
-    RebuildDatabaseModal
+    RebuildDatabaseModal,
+    Administration,
 };

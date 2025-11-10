@@ -11,9 +11,9 @@
     import BaseSidebar from "./BaseSidebar.svelte";
 
     export let scope: string;
-    export let model;
-    export let collection;
-    export let callbacks: object;
+    export let model: any = null;
+    export let collection: any = null;
+    export let callbacks: object = {};
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
@@ -21,7 +21,7 @@
     export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
-    export let renderLayoutEditor;
+    export let renderLayoutEditor: Function = () => {};
 
     export let isAdminPage: boolean = false;
 

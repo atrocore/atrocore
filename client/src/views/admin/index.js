@@ -36,6 +36,8 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
 
         template: 'admin/index',
 
+        cacheDate: null,
+
         data: function () {
             return {
                 panelDataList: this.panelDataList,
@@ -45,50 +47,8 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
         },
 
         setup: function () {
-            this.panelDataList = [];
-
-            var panels = this.getMetadata().get('app.adminPanel') || {};
-            for (var name in panels) {
-                var panelItem = Espo.Utils.cloneDeep(panels[name]);
-                panelItem.name = name;
-                panelItem.itemList = panelItem.itemList || [];
-
-                panelItem.itemList.forEach(item => {
-                    if (item.url === '#Admin/rebuildDb') {
-                        item.hasWarning = (localStorage.getItem('pd_isNeedToRebuildDatabase') || false) === 'true';
-                        item.warningText = this.getLanguage().translate('rebuildDbWarning', 'labels', 'Admin');
-                    } else if (item.url === '#Composer/list') {
-                        item.hasWarning = (localStorage.getItem('pd_isNeedToUpdate') || false) === 'true';
-                        item.warningText = this.getLanguage().translate('updatesAvailable', 'labels', 'Admin');
-                    } else if (item.url === '#Admin/clearCache' && Espo?.loader?.cacheTimestamp) {
-                        const date = moment.unix(Espo.loader.cacheTimestamp).tz(this.getDateTime().getTimeZone()).format(this.getDateTime().getDateTimeFormat());
-                        item.tooltip = this.getLanguage().translate('clearCacheTooltip', 'labels', 'Admin') + ' ' + date;
-                    }
-                }, this);
-
-                if (panelItem.items) {
-                    panelItem.items.forEach(function (item) {
-                        panelItem.itemList.push(item);
-                    }, this);
-                }
-                this.panelDataList.push(panelItem);
-            }
-
-            this.panelDataList.sort(function (v1, v2) {
-                if (!('order' in v1) && ('order' in v2)) return 0;
-                if (!('order' in v2)) return 0;
-                return v1.order - v2.order;
-            }.bind(this));
-
-            var iframeParams = [
-                'version=' + encodeURIComponent(''),
-                'css=' + encodeURIComponent(this.getConfig().get('siteUrl') + '/' + this.getThemeManager().getStylesheet())
-            ];
-            this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
-            if (~this.iframeUrl.indexOf('?')) {
-                this.iframeUrl += '&' + iframeParams.join('&');
-            } else {
-                this.iframeUrl += '?' + iframeParams.join('&');
+            if (Espo?.loader?.cacheTimestamp) {
+                this.cacheDate = moment.unix(Espo.loader.cacheTimestamp).tz(this.getDateTime().getTimeZone()).format(this.getDateTime().getDateTimeFormat());
             }
 
             this.once('after:render', function () {
@@ -103,31 +63,10 @@ Espo.define('views/admin/index', ['view', 'lib!JsTree'], function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            new Svelte.BaseHeader({
-                target: $(`${this.options.el} .page-header`).get(0),
-                props: {
-                    breadcrumbs: [
-                        {
-                            label: this.getLanguage().translate('Administration'),
-                            url: '#Admin'
-                        }
-                    ],
-                    scope: 'App',
-                    id: 'Administration'
-                }
-            });
-
-            new Svelte.TreePanel({
+            new Svelte.Administration({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
-                anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                 props: {
-                    scope: this.scope,
-                    model: this.model,
-                    mode: 'detail',
-                    isAdminPage: true,
-                    callbacks: {
-
-                    }
+                    cacheDate: this.cacheDate
                 }
             });
         }
