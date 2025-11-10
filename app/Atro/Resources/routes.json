@@ -1101,10 +1101,10 @@
     }
   },
   {
-    "route": "/Matching/action/matchedRecords",
+    "route": "/MatchedRecord/action/matchedRecords",
     "method": "get",
     "params": {
-      "controller": "Matching",
+      "controller": "MatchedRecord",
       "action": "matchedRecords"
     },
     "operationId": "matchedRecords",

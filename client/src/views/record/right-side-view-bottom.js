@@ -13,8 +13,14 @@ Espo.define('views/record/right-side-view-bottom', 'views/record/detail-bottom',
     return Dep.extend({
 
         setup: function () {
+            this.panelList = this.getMetadata().get(['clientDefs', this.scope, 'rightSidePanels']) || [];
+            this.panelList = this.panelList.filter(p => {
+                if (p.aclScope) {
+                    return this.getAcl().check(p.aclScope, 'read');
+                }
+                return true;
+            });
 
-            this.panelList = this.getMetadata().get(['clientDefs', this.scope,'rightSidePanels']) || []
             this.panelList.forEach(function (item) {
                 item.expanded = true;
             })

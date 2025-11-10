@@ -15,9 +15,9 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
-use Atro\Core\Templates\Controllers\ReferenceData;
+use Atro\Core\Templates\Controllers\Base;
 
-class Matching extends ReferenceData
+class MatchedRecord extends Base
 {
     public function actionMatchedRecords($params, $data, $request)
     {
