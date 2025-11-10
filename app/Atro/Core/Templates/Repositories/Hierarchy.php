@@ -43,7 +43,20 @@ class Hierarchy extends Base
     {
         $res = $entity->get('routes');
         if ($res === null) {
-            throw new Error("Please, rebuild routes for entity {$entity->getEntityName()}.");
+            $dbData = $this->getConnection()->createQueryBuilder()
+                ->select('routes')
+                ->from($this->tableName)
+                ->where('id=:id')
+                ->setParameter('id', $entity->get('id'))
+                ->fetchAssociative();
+
+            if (!empty($dbData) && $dbData['routes'] !== null) {
+                $res = json_decode($dbData['routes'], true);
+            } else {
+                $res = $this->buildRoutes($entity->get('id'));
+            }
+
+            $entity->set('routes', $res);
         }
 
         $routes = [];
@@ -61,9 +74,9 @@ class Hierarchy extends Base
      * Build routes for entity and all its children.
      *
      * @param string $id
-     * @return void
+     * @return array
      */
-    public function buildRoutes(string $id): void
+    public function buildRoutes(string $id): array
     {
         // remove old routes
         $this->getConnection()->createQueryBuilder()
@@ -99,6 +112,8 @@ class Hierarchy extends Base
         foreach ($children as $child) {
             $this->buildRoutes($child['entity_id']);
         }
+
+        return $routes;
     }
 
     public function findRelated(Entity $entity, $relationName, array $params = [])
