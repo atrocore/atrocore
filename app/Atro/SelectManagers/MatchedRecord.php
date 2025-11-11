@@ -15,6 +15,8 @@ namespace Atro\SelectManagers;
 
 use Atro\Core\Utils\Util;
 use Atro\Core\SelectManagers\Base;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class MatchedRecord extends Base
 {
@@ -53,5 +55,27 @@ class MatchedRecord extends Base
         }
 
         $result['whereClause'][] = ['OR' => $whereGroups];
+    }
+
+    public function putInnerQueryForAclCheck(QueryBuilder $qb): void
+    {
+        if ($this->getUser()->isAdmin()) {
+            return;
+        }
+
+        $alias = $this->getRepository()->getMapper()->getQueryConverter()->getMainTableAlias();
+
+        $sp = $this->getSelectParams([], true, true);
+        $sp['select'] = ['id'];
+
+        $subQb = $this
+            ->getRepository()
+            ->getMapper()
+            ->createSelectQueryBuilder($this->getRepository()->get(), $sp, true);
+
+        $qb->andWhere("mr.id IN (".str_replace($alias, Util::generateId(), $subQb->getSql()).")");
+        foreach ($subQb->getParameters() as $parameterName => $value) {
+            $qb->setParameter($parameterName, $value, Mapper::getParameterType($value));
+        }
     }
 }

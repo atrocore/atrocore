@@ -50,11 +50,11 @@ class MatchedRecord extends Base
                 $this->getMatchingManager()->findMatches($matching, $entity);
             }
 
-            return $this->getMatchingRepository()->getMatchedRecords($matching, $entity, $statuses);
+            return $this->getRepository()->getMatchedRecords($matching, $entity, $statuses);
         }
 
         if ($entityName === $matching->get('masterEntity')) {
-            return $this->getMatchingRepository()->getForeignMatchedRecords($matching, $entity, $statuses);
+            return $this->getRepository()->getForeignMatchedRecords($matching, $entity, $statuses);
         }
 
         return [];
