@@ -88,6 +88,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         disabledInlineActions: false,
 
+        fieldActionsDisabled: false,
+
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -285,7 +287,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.model.getFieldParam(this.name, 'inlineEditDisabled') || this.inlineEditDisabled;
             this.inheritanceActionDisabled = this.options.inheritanceActionDisabled || this.params.inheritanceActionDisabled || this.model.getFieldParam(this.name, 'inheritanceActionDisabled') || this.inheritanceActionDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
-
+            this.fieldActionsDisabled = this.options.fieldActionsDisabled || this.fieldActionsDisabled;
             this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || (this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'tooltipLink']));
 
             if (this.options.readOnlyDisabled) {
@@ -359,7 +361,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }, this);
             }
 
-            if (this.fieldActions) {
+            if (this.fieldActions && !this.fieldActionsDisabled) {
                 (this.getMetadata().get('app.fieldActions') || []).forEach(item => {
                     this.createView(item.name, item.view, {
                         model: this.model,
