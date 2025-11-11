@@ -20,19 +20,6 @@ Espo.define('views/role-scope/fields/create-action', 'views/fields/enum', Dep =>
             });
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            const aclActionList = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionList`) || ['create'];
-
-            if (['detail', 'edit'].includes(this.mode)) {
-                this.$el.parent().hide();
-                if (aclActionList.includes('create') && this.model.get('hasAccess')) {
-                    this.$el.parent().show();
-                }
-            }
-        },
-
     });
 });
 
