@@ -3,7 +3,7 @@
   "entity": true,
   "layouts": false,
   "tab": false,
-  "acl": true,
+  "acl": false,
   "customizable": false,
   "isActiveUnavailable": true,
   "streamDisabled": true,
