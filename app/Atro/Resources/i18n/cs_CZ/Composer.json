@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "status": "Stav",
+    "settingVersion": "Verze nastavení",
+    "currentVersion": "Aktuální verze",
+    "latestVersion": "Nejnovější verze",
+    "availableVersions": "Dostupné verze"
+  },
+  "options": {
+    "status": {
+      "install": "Instalace",
+      "update": "Aktualizace",
+      "delete": "Smazat"
+    }
+  },
+  "exceptions": {
+    "invalidVersion": "Verze modulu je neplatná.",
+    "downgradeProhibited": "Verze modulu je neplatná. Downgrade je zakázán.",
+    "hasRequireds": "Modul nesplňuje požadavky",
+    "hasRequiredsDelete": "Požadovaný modul nelze odstranit",
+    "suchModuleIsAlreadyInstalled": "Takový modul je již nainstalován",
+    "suchModuleVersionAlreadyInstalled": "Taková verze modulu je již nainstalována",
+    "noSuchModuleVersion": "Žádná taková verze modulu",
+    "versionIsInvalid": "Verze je neplatná"
+  },
+  "labels": {
+    "purchased": "Zakoupeno",
+    "rented": "Pronajatý",
+    "purchasedUntil": "Zakoupeno, aktualizace do",
+    "rentUntil": "Pronajato, aktualizace do",
+    "available": "k dispozici",
+    "Installed": "Nainstalováno",
+    "Store": "Obchod",
+    "removeModule": "Smazat",
+    "cancelModule": "Zrušit",
+    "username": "Uživatelské jméno",
+    "password": "Heslo",
+    "anotherActionInProgress": "Probíhá další akce. Počkejte, až bude dokončena",
+    "updating": "Aktualizace...",
+    "updateStarted": "Byla zahájena aktualizace",
+    "canceling": "Rušení…",
+    "canceled": "Zrušeno",
+    "dependencies": "Závislosti",
+    "version": "Verze",
+    "Run Update": "Aktualizace",
+    "updateFailed": "Aktualizace se nezdařila. Nelze vytvořit připojení k serveru modulů. Zkuste to prosím znovu",
+    "settingModuleForRemoving": "Nastavení modulu pro odstranění...",
+    "setModuleForRemoving": "Modul byl nastaven pro odstranění. Kliknutím na tlačítko \"Aktualizovat\" provedete instalaci nebo odstranění modulu.",
+    "settingModuleForInstalling": "Nastavení modulu pro instalaci...",
+    "settingModuleForUpdating": "Nastavení modulu pro aktualizaci...",
+    "setModuleForInstalling": "Modul byl nastaven pro instalaci. Kliknutím na tlačítko \"Aktualizovat\" provedete instalaci nebo odstranění modulu.",
+    "setModuleForUpdating": "Modul byl označen k aktualizaci. Kliknutím na tlačítko \"Aktualizovat\" provedete instalaci nebo odstranění modulu.",
+    "cancelingModuleInstall": "Rušení instalace modulu…",
+    "canceledModuleInstall": "Instalace modulu byla zrušena",
+    "Log": "Log",
+    "confirmRun": "Po aktualizaci se všichni uživatelé odhlásí ze systému. Jste si jisti, že chcete aktualizovat systém?",
+    "daemonDisabled": "<b>Služba Composeru neběží!</b><br>Pravděpodobně se služba právě znovu načítá, takže chvíli vyčkejte, nebo není nakonfigurován crontab. Pokyny k nastavení crontabu najdete <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
+    "jobManagerRunning": "Možnost aktualizace modulů je zablokována. Zkuste to prosím později.",
+    "showReleaseNotes": "Poznámky k vydání"
+  },
+  "notifications": {
+    "Module update": "Modul {modul} byl aktualizován. Z verze {z} na {do}",
+    "System update": "Systém byl aktualizován. Z verze {z} na {do}",
+    "Module install": "Modul {modul} v.{verze} byl nainstalován",
+    "Module delete": "Modul {modul} byl odstraněn",
+    "Module downgrade": "Modul {module} byl downgradován. Z verze {from} na verzi {to}",
+    "System downgrade": "Systém byl downgradován. Z verze {from} na verzi {to}",
+    "Composer updated!": "Závislosti správce modulů byly aktualizovány! <a href=\"/#Composer/list\">Zobrazit podrobnosti</a>"
+  }
+}
