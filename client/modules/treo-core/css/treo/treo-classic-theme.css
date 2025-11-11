@@ -18502,14 +18502,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-size: 18px;
 }
 
-#title-bar .windows-list .dropdown-item .dropdown-item-icon {
-    margin-inline-end: 5px;
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    vertical-align: middle;
-}
-
 .hide-title-bar .modal-dialog {
     margin: 0 auto;
     max-width: 500px;
