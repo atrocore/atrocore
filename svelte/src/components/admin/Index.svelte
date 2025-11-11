@@ -195,4 +195,13 @@ for (let [id, data] of Object.entries(Metadata.get(['app', 'adminPanel']) || {})
     .card.has-alert {
         border-color: #dc3545;
     }
+
+    @media screen and (max-width: 767px) {
+        .admin-content :global(details summary) {
+            margin-left: -10px;
+            margin-right: -10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
 </style>
