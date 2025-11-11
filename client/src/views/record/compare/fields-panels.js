@@ -82,7 +82,8 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             },
                             mode: mode,
                             inheritanceActionDisabled: true,
-                            revisionHistoryActionDisabled: true
+                            revisionHistoryActionDisabled: true,
+                            qualityInlineActionDisabled: true
                         }, view => {
                             let viewKey = row.key;
 
@@ -91,6 +92,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             if (view.isRendered()) {
                                 this.handleAllFieldsRendered(row.key)
                             }
+
                             this.listenTo(view, 'edit', () => {
                                 this.fieldList.forEach(fieldListByGroup => {
                                     fieldListByGroup.fieldListInGroup.forEach(fieldData => {
@@ -100,12 +102,12 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                                             }
                                             let fieldView = this.getView(row.key);
                                             if(fieldView && fieldView.mode === 'edit') {
-                                                fieldView.inlineEditClose();
+                                                fieldView.inlineEditSave()
                                             }
-                                        })
-                                    })
-                                })
-                            })
+                                        });
+                                    });
+                                });
+                            });
 
                             this.listenTo(view, 'after:render', () => {
                                 this.handleAllFieldsRendered(row.key);

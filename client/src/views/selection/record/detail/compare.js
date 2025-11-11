@@ -50,7 +50,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
             },
             'click div.inline-actions a.remove-entity': function (e) {
                 let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-                if(!selectionRecordId) {
+                if (!selectionRecordId) {
                     return;
                 }
                 this.notify('Removing...');
@@ -96,7 +96,9 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
 
 
             this.listenTo(this, 'after:fields-panel-rendered', () => {
-
+                if (!this.getView('fieldsOverviews')) {
+                    return;
+                }
                 this.getView('fieldsOverviews').$el.find('th.inline-actions').each(function (e) {
                     $(this).on('mouseenter', function (e) {
                         e.stopPropagation();

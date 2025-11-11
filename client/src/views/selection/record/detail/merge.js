@@ -16,10 +16,6 @@ Espo.define('views/selection/record/detail/merge', 'views/selection/record/detai
 
         getRecordButtons() {
             return this.getParentView().getMergeButtons();
-        },
-
-        actionMerge() {
-            this.applyMerge();
         }
     });
 });

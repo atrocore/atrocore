@@ -192,7 +192,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 model: this.model,
                 selectionId: this.model.id,
                 el: '#main main > .record',
-                scope: this.scope,
                 rootUrl: this.options.params.rootUrl,
                 hasNext: this.hasNext,
                 models: this.selectionRecordModels
@@ -233,11 +232,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     });
                 }
 
-                if (this.selectionViewMode === 'merge') {
-                    this.listenTo(view, 'merge-success', () => {
-                        this.refreshContent()
-                    })
-                }
+
+                this.listenTo(view, 'merge-success', () => {
+                    this.selectionViewMode = 'standard';
+                    this.refreshContent()
+                })
 
                 if (this.isRendered()) {
                     this.setupCustomButtons();
@@ -554,6 +553,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     style: 'primary'
                 }]
             });
+        },
+
+        actionMerge() {
+            if(this.selectionViewMode !== 'merge') {
+                return;
+            }
+
+            this.getMainRecord()?.applyMerge();
         }
     });
 });

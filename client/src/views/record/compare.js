@@ -62,10 +62,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.hideButtonPanel = false;
             this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
             this.selectionId = this.options.selectionId || this.selectionId;
-            this.scope = this.name = this.options.scope;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
+            this.scope = this.name = this.options.scope || this.model?.name;
 
             this.setupFieldPanels();
             this.prepareFieldsData();
@@ -105,6 +105,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.notify('Loading...')
                 this.merging = true;
                 this.renderFieldsPanels();
+                this.listenTo(this, 'after:fields-panel-rendered', () => {
+                    this.handleRadioButtonsDisableState(false)
+                })
                 this.handleRadioButtonsDisableState(false)
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
@@ -316,7 +319,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered');
                     }
-                    this.listenTo(view, 'all-fields-rendered', () => {
+                    this.listenTo(view, 'after:render', () => {
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered');
                     });
