@@ -65,24 +65,26 @@ Espo.define('views/matched-record/record/row-actions/right-sidebar', 'views/reco
         getActionList() {
             let list = [];
 
-            if (this.options.status !== 'confirmed') {
+            if (this.options.parentNode.getAcl().check('MatchedRecord', 'edit')) {
+                if (this.options.status !== 'confirmed') {
+                    list.push({
+                        action: 'confirm',
+                        label: this.translate('Confirm')
+                    });
+                }
+
+                if (this.options.status !== 'rejected') {
+                    list.push({
+                        action: 'reject',
+                        label: this.translate('Reject')
+                    });
+                }
+
                 list.push({
-                    action: 'confirm',
-                    label: this.translate('Confirm')
+                    action: 'edit',
+                    label: this.translate('Edit')
                 });
             }
-
-            if (this.options.status !== 'rejected') {
-                list.push({
-                    action: 'reject',
-                    label: this.translate('Reject')
-                });
-            }
-
-            list.push({
-                action: 'edit',
-                label: this.translate('Edit')
-            });
 
             return list;
         },
