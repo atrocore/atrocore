@@ -26,7 +26,7 @@ use Exception;
  */
 class Condition
 {
-    private static array $teamUsersIdsCache = [];
+    private static array $teamsUsersIdsCache = [];
 
     /**
      * @param ConditionGroup|null $condition
@@ -56,7 +56,7 @@ class Condition
      * @return ConditionGroup|null
      * @throws Error
      */
-    public static function prepare(Entity $entity, array $items, EntityManager $entityManager): ?ConditionGroup
+    public static function prepare(Entity $entity, array $items): ?ConditionGroup
     {
         if (empty($items)) {
             throw new Error('Empty items in condition');
@@ -64,12 +64,12 @@ class Condition
         $result = null;
         if (isset($items['type'])) {
             if ($items['type'] != 'and' && $items['type'] != 'or' && $items['type'] != 'not') {
-                $group = self::prepareConditionGroup($entity, $items, $entityManager);
+                $group = self::prepareConditionGroup($entity, $items);
                 if ($group !== null) {
                     $result = $group;
                 }
             } elseif ($items['type'] == 'not') {
-                $group = self::prepare($entity, $items['value'], $entityManager);
+                $group = self::prepare($entity, $items['value']);
                 if ($group !== null) {
                     $result = new ConditionGroup($items['type'], [$group]);
                 }
@@ -79,7 +79,7 @@ class Condition
                 }
                 $valuesConditionGroup = [];
                 foreach ($items['value'] as $value) {
-                    $group = self::prepare($entity, $value, $entityManager);
+                    $group = self::prepare($entity, $value);
                     if ($group !== null) {
                         $valuesConditionGroup[] = $group;
                     }
@@ -92,7 +92,7 @@ class Condition
             $type = 'and';
             $valuesConditionGroup = [];
             foreach ($items as $value) {
-                $group = self::prepare($entity, $value, $entityManager);
+                $group = self::prepare($entity, $value);
                 if ($group !== null) {
                     $valuesConditionGroup[] = $group;
                 }
@@ -111,7 +111,7 @@ class Condition
      * @return ConditionGroup
      * @throws Error
      */
-    private static function prepareConditionGroup(Entity $entity, array $item, EntityManager $entityManager): ?ConditionGroup
+    private static function prepareConditionGroup(Entity $entity, array $item): ?ConditionGroup
     {
         if (!isset($item['attribute'])) {
             throw new Error('Empty attribute or in condition');
@@ -154,13 +154,14 @@ class Condition
         if (isset($item['value'])) {
             if (in_array($item['type'], ['inTeams', 'notInTeams'])) {
                 $item['type'] = $item['type'] === 'inTeams' ? 'in' : 'notIn';
-                if (!empty($item['value'])) {
+
+                if (!empty($item['value']) && !empty($entity->__currentUser)) {
                     $key = json_encode($item['value']);
-                    if (!isset(self::$teamUsersIdsCache[$key])) {
-                        $collection = $entityManager->getRepository('TeamUser')->select(['userId'])->where(['teamId' => $item['value']])->find();
-                        self::$teamUsersIdsCache[$key] = array_column($collection->toArray(), 'userId');
+
+                    if (!isset(self::$teamsUsersIdsCache[$key])) {
+                        self::$teamsUsersIdsCache[$key] = $entity->__currentUser->getTeamsUsersIds($item['value']);
                     }
-                    $item['value'] = self::$teamUsersIdsCache[$key];
+                    $item['value'] = self::$teamsUsersIdsCache[$key];
                 }
             }
             $values[] = $item['value'];
