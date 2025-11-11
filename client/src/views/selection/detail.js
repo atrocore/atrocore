@@ -168,7 +168,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             } else {
                 this.refreshContent();
             }
-
         },
 
         reloadModels(callback) {
