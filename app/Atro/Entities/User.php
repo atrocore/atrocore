@@ -73,4 +73,14 @@ class User extends \Espo\Core\ORM\Entity
 
         return $locale->get('languageCode');
     }
+
+    public function getTeamsUsersIds(array $teamsIds): array
+    {
+        if (empty($teamsIds)) {
+            return [];
+        }
+
+        $collection = $this->getEntityManager()->getRepository('TeamUser')->select(['userId'])->where(['teamId' => $teamsIds])->find();
+        return array_column($collection->toArray(), 'userId');
+    }
 }

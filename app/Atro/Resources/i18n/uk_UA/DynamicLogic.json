@@ -24,7 +24,9 @@
       "notContains": "Не містить",
       "notHas": "Не містить у собі",
       "isLinked": "Пов'язаний",
-      "isNotLinked": "Не пов'язаний"
+      "isNotLinked": "Не пов'язаний",
+      "inTeams": "У командах",
+      "notInTeams": "Не в командах"
     }
   }
 }

@@ -27,11 +27,13 @@ class ConditionChecker
     {
         $entity->fields['__currentUserId'] = ['type' => 'varchar', 'notStorable' => true];
         $entity->set('__currentUserId', $this->container->get('user')->get('id'));
+        $entity->__currentUser = $this->container->get('user');
 
         $res = Condition::isCheck(Condition::prepare($entity, $conditions));
 
         unset($entity->fields['__currentUserId']);
         $entity->clear('__currentUserId');
+        unset($entity->__currentUser);
 
         return $res;
     }

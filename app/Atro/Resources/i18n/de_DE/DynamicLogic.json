@@ -20,7 +20,9 @@
       "notContains": "Enthält nicht",
       "notHas": "Enthält nicht",
       "isLinked": "Ist verknüpft",
-      "isNotLinked": "Ist nicht verknüpft"
+      "isNotLinked": "Ist nicht verknüpft",
+      "inTeams": "In Teams",
+      "notInTeams": "Nicht in Teams"
     }
   },
   "labels": {

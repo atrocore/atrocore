@@ -15,6 +15,7 @@ namespace Atro\Core\Utils\Condition;
 
 use DateInterval;
 use Atro\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManager;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use DateTime;
@@ -25,6 +26,8 @@ use Exception;
  */
 class Condition
 {
+    private static array $teamsUsersIdsCache = [];
+
     /**
      * @param ConditionGroup|null $condition
      *
@@ -48,7 +51,7 @@ class Condition
 
     /**
      * @param Entity $entity
-     * @param array $items
+     * @param array  $items
      *
      * @return ConditionGroup|null
      * @throws Error
@@ -149,6 +152,18 @@ class Condition
 
         $values[] = $currentValue;
         if (isset($item['value'])) {
+            if (in_array($item['type'], ['inTeams', 'notInTeams'])) {
+                $item['type'] = $item['type'] === 'inTeams' ? 'in' : 'notIn';
+
+                if (!empty($item['value']) && !empty($entity->__currentUser)) {
+                    $key = json_encode($item['value']);
+
+                    if (!isset(self::$teamsUsersIdsCache[$key])) {
+                        self::$teamsUsersIdsCache[$key] = $entity->__currentUser->getTeamsUsersIds($item['value']);
+                    }
+                    $item['value'] = self::$teamsUsersIdsCache[$key];
+                }
+            }
             $values[] = $item['value'];
         }
 
@@ -493,7 +508,7 @@ class Condition
             throw new Error('The second value must be an Array type');
         }
 
-        if (is_array($currentValue)){
+        if (is_array($currentValue)) {
             foreach ($currentValue as $value) {
                 if (in_array($value, $needValue)) {
                     return true;
