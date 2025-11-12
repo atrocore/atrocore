@@ -21,7 +21,5 @@ Espo.define('views/selection/record/panels/selection-records', 'views/record/pan
 
             Dep.prototype.actionCreateRelated.call(this, data);
         }
-
-
     });
 });
