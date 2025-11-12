@@ -267,7 +267,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             var sortBy = this.defs.sortBy || null;
-            var asc = this.defs.asc || null;
+            var asc = null;
+            if('asc' in this.defs) {
+                asc = !!this.defs.asc;
+            }
 
             if (this.defs.orderBy) {
                 sortBy = this.defs.orderBy;
@@ -298,7 +301,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 if (sortBy) {
                     collection.sortBy = sortBy;
                 }
-                if (asc) {
+                if (asc !== null) {
                     collection.asc = asc;
                 }
 

@@ -457,8 +457,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             }, (view) => {
                                 view.render();
                                 this.listenTo(view, 'change', () => {
-                                    window.treePanelComponent.setSelectedScope(view.$elementName.attr('value'));
-                                    this.selectedScope = view.$elementName.attr('value');
+                                    window.treePanelComponent.setSelectedScope(view.$elementId.attr('value'));
+                                    this.selectedScope = view.$elementId.attr('value');
                                     window.treePanelComponent.setCanBuildTree(true);
                                     window.treePanelComponent.rebuildTree()
                                 })
