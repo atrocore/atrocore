@@ -183,6 +183,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                     this.createDisabled = true;
                 }
             }
+
             if (this.mode != 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.selectLink();
