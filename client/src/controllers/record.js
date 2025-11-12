@@ -91,7 +91,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
                             const serializer = new XMLSerializer();
                             const svgStr = serializer.serializeToString(svgEl);
-                            const svgBlob = new Blob([svgStr], {type: 'image/svg+xml'});
+                            const svgBlob = new Blob([svgStr], { type: 'image/svg+xml' });
 
                             encodedResult = URL.createObjectURL(svgBlob);
                         }
@@ -311,7 +311,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
 
                     this.main(this.getViewName('edit'), o);
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
 
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
@@ -376,7 +376,7 @@ Espo.define('controllers/record', ['controller', 'view'], function (Dep, View) {
                     createView(model);
                     this.hideLoadingNotification();
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
 
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
