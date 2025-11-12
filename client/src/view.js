@@ -38,6 +38,7 @@ Espo.define('view', [], function () {
             this.events = this.events || {};
 
             var fullAction = 'click button[data-action=\"' + action + '\"]';
+
             this.events[fullAction] = handler;
         },
 

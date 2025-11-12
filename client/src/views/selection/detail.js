@@ -73,6 +73,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.selectionRecords = list;
                 window.treePanelComponent.rebuildTree();
             });
+
         },
 
         getSelectionRecordEntityIds() {
@@ -112,7 +113,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'merge' ? 'primary' : null,
                 html: '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge'),
-                disabled: this.comparisonAcrossEntities()
+                disabled: true
 
             }, true, false, true);
 
@@ -121,14 +122,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'compare' ? 'primary' : null,
                 html: '<i class="ph ph-arrows-left-right"></i> ' + this.translate('Compare'),
-                disabled: this.comparisonAcrossEntities()
+                disabled: true
             }, true, false, true);
 
             this.addMenuItem('buttons', {
                 name: 'standard',
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'standard' ? 'primary' : null,
-                html: '<i class="ph ph-list"></i> ' + this.translate('Standard')
+                html: '<i class="ph ph-list"></i> ' + this.translate('Standard'),
+                disabled: true
             }, true, false, true);
         },
 
@@ -155,7 +157,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     window.dispatchEvent(new CustomEvent('record:buttons-update', {
                         detail: Object.assign({
                             headerButtons: this.getMenu()
-                        }, data.name === 'merge' ? this.getMergeButtons() : this.getCompareButtons())
+                        }, data.name === 'merge' ? this.getMergeButtons(false) : this.getCompareButtons())
                     }));
                     return;
                 }
@@ -219,9 +221,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
 
             this.createView('record', this.getRecordViewName(), o, view => {
-
-                view.render();
-
+                if(this.isRendered()) {
+                    view.render();
+                }
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     if (!this.panelsList) {
                         this.standardPanelList = data.list;
@@ -272,8 +274,25 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }, view.getRecordButtons())
                     }));
                     this.notify(false);
+                    if(this.selectionViewMode === 'standard') {
+                        this.enableButtons();
+                    }
                 });
+
+                this.listenTo(view, 'all-panels-rendered', () => {
+                   this.enableButtons()
+                })
             });
+        },
+
+        enableButtons () {
+            ['standard', 'compare', 'merge'].forEach(action => {
+                if(this.comparisonAcrossEntities()) {
+                    return;
+                }
+                $(`button[data-name="${action}"]`).removeClass('disabled');
+                $(`button[data-name="${action}"]`).attr('disabled', false);
+            })
         },
 
         comparisonAcrossEntities() {
@@ -562,12 +581,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
         },
 
-        getMergeButtons() {
+        getMergeButtons(disabled = true) {
             return Object.assign(this.getCompareButtons(), {
                 buttons: [{
                     label: this.translate('Merge'),
                     name: 'merge',
-                    style: 'primary'
+                    style: 'primary',
+                    disabled: disabled
                 }]
             });
         },

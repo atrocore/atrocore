@@ -703,10 +703,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         handlePanelRendering: function (name) {
-            if (this.renderedPanels.includes(name)) {
-                return;
+            if (!this.renderedPanels.includes(name)) {
+                this.renderedPanels.push(name);
             }
-            this.renderedPanels.push(name);
+
             if (this.renderedPanels.length === this.fieldPanels.length + 1) {
                 this.notify(false)
                 this.handleRadioButtonsDisableState(false);
@@ -715,6 +715,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 $('button[data-name="selectionView"]').removeClass('disabled');
                 $('button[data-name="selectionView"]').attr('disabled', false);
                 $('.button-container a').removeClass('disabled');
+                this.trigger('all-panels-rendered');
             }
         },
 
