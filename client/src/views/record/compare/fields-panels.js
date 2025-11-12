@@ -92,8 +92,8 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
                             view.render();
 
-                            this.listenTo(view, 'after:save', () => {
-                                this.trigger('data:change', field);
+                            this.listenTo(view, 'after:inlineEditSave', () => {
+                                this.trigger('data:change', fieldData);
                             });
 
                             if (view.isRendered()) {

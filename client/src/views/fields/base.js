@@ -1204,6 +1204,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             // model.trigger('after:save'); // ignored because saving needs to be silent
 
             model.trigger('after:inlineEditSave');
+            this.trigger('after:inlineEditSave');
 
             window.dispatchEvent(new Event('record:save'));
             window.dispatchEvent(new Event('record:actions-reload'));

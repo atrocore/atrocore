@@ -319,6 +319,21 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     el: `${this.options.el} [data-name="${panel.name}"] .list-container`
                 }, view => {
                     view.render();
+                    this.listenTo(view, 'data:change', fieldDefs => {
+                        this.prepareFieldsData();
+
+                        for (let el of this.fieldsArr) {
+                            if(fieldDefs.field === el.field) {
+                                if(el.different) {
+                                    this.$el.find(`tr[data-field="${el.field}"]`).addClass('danger');
+                                }else{
+                                    this.$el.find(`tr[data-field="${el.field}"]`).removeClass('danger');
+                                }
+                                break;
+                            }
+                        }
+
+                    })
                     if (view.isRendered()) {
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered');
