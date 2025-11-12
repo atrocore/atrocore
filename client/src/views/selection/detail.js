@@ -274,9 +274,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }, view.getRecordButtons())
                     }));
                     this.notify(false);
-                    if(this.selectionViewMode === 'standard') {
-                        this.enableButtons();
-                    }
                 });
 
                 this.listenTo(view, 'all-panels-rendered', () => {
@@ -370,6 +367,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.treeAllowed = false
             Dep.prototype.afterRender.call(this);
             this.renderLeftPanel();
+            if(this.selectionViewMode === 'standard') {
+                this.enableButtons();
+            }
         },
 
         renderLeftPanel() {
