@@ -6,5 +6,8 @@
   "type": "Base",
   "hasOwner": false,
   "hasAssignedUser": false,
-  "hasTeam": false
+  "hasTeam": false,
+  "duplicatableRelations": [
+    "selectionRecords"
+  ]
 }
