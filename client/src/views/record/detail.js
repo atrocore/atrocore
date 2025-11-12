@@ -1578,12 +1578,12 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
                     // hide optional
                     if (!hide && fieldFilter.includes('optional')) {
-                        hide = this.isRequiredValue(name);
+                        hide = fieldView.isRequired();
                     }
 
                     // hide required
                     if (!hide && fieldFilter.includes('required')) {
-                        hide = !this.isRequiredValue(name);
+                        hide = !fieldView.isRequired();
                     }
                 }
 
@@ -1593,10 +1593,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         isEmptyValue(value) {
             return value === null || value === '' || (Array.isArray(value) && !value.length);
-        },
-
-        isRequiredValue(field) {
-            return this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'required']) || false
         },
 
         controlFieldVisibility(field, hide) {
