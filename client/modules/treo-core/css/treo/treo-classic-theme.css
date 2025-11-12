@@ -18568,7 +18568,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel table col.col-min-width {
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .compare-records .compare-panel table tbody tr.danger td:first-child {
