@@ -70,13 +70,16 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.hidePanelNavigation = true;
+            if(!this.selectedFilters) {
+                this.selectedFilters = {}
+            }
+            this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
+
             Dep.prototype.setup.call(this);
 
             this.listenTo(this, 'selection-record:loaded', models => {
                 this.selectionModel.trigger('selection-record:loaded', models);
             })
-
-            this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
                 this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');

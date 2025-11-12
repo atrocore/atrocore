@@ -30,7 +30,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         merging: false,
 
-        selectedFilters: {},
+        selectedFilters: null,
 
         hideButtonPanel: false,
 
@@ -60,7 +60,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
-            this.selectedFilters = this.getStorage().get('compareFilters', this.scope) || {};
+            this.selectedFilters =  this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
             this.selectionId = this.options.selectionId || this.selectionId;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
