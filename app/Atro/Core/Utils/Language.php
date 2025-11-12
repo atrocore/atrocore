@@ -406,7 +406,7 @@ class Language
 
             $data = $this->getDataManager()->getCacheData($cacheName);
             if (empty($data)) {
-                $data = [];
+                $data = $this->data[self::DEFAULT_LANGUAGE];
                 $locales = $this->getConfig()->get('locales') ?? [];
 
                 $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;
@@ -416,7 +416,7 @@ class Language
 
                 $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
 
-                if (array_key_exists($language, $this->data)) {
+                if (array_key_exists($language, $this->data) && $language !== self::DEFAULT_LANGUAGE) {
                     $data = Util::merge($data, $this->data[$language]);
                 }
 

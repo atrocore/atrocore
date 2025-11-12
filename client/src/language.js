@@ -171,6 +171,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
         },
 
         fetchFallback: function (disableCache) {
+            return;
             if (this.fallbackName) {
                 Ajax.getRequest(this.url, { locale: this.fallbackName }).then(function (data) {
                     this.fallbackData = data;
