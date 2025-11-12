@@ -3,7 +3,7 @@
   "entity": true,
   "layouts": false,
   "tab": false,
-  "acl": true,
+  "acl": false,
   "customizable": false,
   "isActiveUnavailable": true,
   "streamDisabled": true,
@@ -11,10 +11,5 @@
   "bookmarkDisabled": true,
   "actionDisabled": true,
   "emHidden": true,
-  "aclLevelList": [
-    "no",
-    "own",
-    "all"
-  ],
   "matchingDisabled": true
 }
