@@ -9,7 +9,7 @@
       "unlink": false,
       "canClose": false,
       "sortBy": "createdAt",
-      "asc": true
+      "asc": false
     }
   },
   "views": {

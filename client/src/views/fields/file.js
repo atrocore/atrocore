@@ -192,6 +192,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                         this.handleResize();
                     }.bind(this));
                 }
+                this.toggleVisibility();
             }
         },
 

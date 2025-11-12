@@ -35,9 +35,7 @@ Espo.define('language', ['ajax'], function (Ajax) {
     var Language = function (cache) {
         this.cache = cache || null;
         this.data = {};
-        this.fallbackData = {}
         this.name = 'default';
-        this.fallbackName = null;
         this.localeId = null;
     };
 
@@ -61,9 +59,6 @@ Espo.define('language', ['ajax'], function (Ajax) {
 
         get: function (scope, category, name) {
             let data = this.data;
-            if (this.fallbackData && !this.has(name, category, scope)) {
-                data = this.fallbackData;
-            }
             if (scope in data) {
                 if (category in data[scope]) {
                     if (name in data[scope][category]) {
@@ -95,21 +90,17 @@ Espo.define('language', ['ajax'], function (Ajax) {
             return translation[value] || value;
         },
 
-        loadFromCache: function (loadDefault, isFallback = false) {
-            var name = isFallback ? this.fallbackName : this.name;
-            if (!isFallback && loadDefault) {
+        loadFromCache: function (loadDefault) {
+            var name = this.name;
+            if (loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
                 var cached = this.cache.get('app', 'language-' + name);
                 if (cached) {
-                    if (isFallback) {
-                        this.fallbackData = cached;
-                        window.SvelteLanguage.setFallbackTranslations(cached);
-                    } else {
-                        this.data = cached;
-                        window.SvelteLanguage.setTranslations(cached);
-                    }
+                    this.data = cached;
+                    window.SvelteLanguage.setTranslations(cached);
+
                     return true;
                 }
             }
@@ -119,17 +110,16 @@ Espo.define('language', ['ajax'], function (Ajax) {
         clearCache: function () {
             if (this.cache) {
                 this.cache.clear('app', 'language-' + this.name);
-                this.cache.clear('app', 'language-' + this.fallbackName);
             }
         },
 
-        storeToCache: function (loadDefault, isFallback = false) {
-            var name = isFallback ? this.fallbackName : this.name;
-            if (!isFallback && loadDefault) {
+        storeToCache: function (loadDefault) {
+            var name = this.name;
+            if (loadDefault) {
                 name = 'default';
             }
             if (this.cache) {
-                this.cache.set('app', 'language-' + name, isFallback ? this.fallbackData : this.data);
+                this.cache.set('app', 'language-' + name, this.data);
             }
         },
 
@@ -138,19 +128,10 @@ Espo.define('language', ['ajax'], function (Ajax) {
             if (!disableCache) {
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
-                    return;
                 } else {
                     this.fetch(disableCache, loadDefault, fallback);
                 }
-                if (this.loadFromCache(false, true)) {
-                    this.trigger('sync')
-                } else {
-                    this.fetchFallback(disableCache, fallback);
-                }
-
-
             }
-
         },
 
         fetch: function (disableCache, loadDefault) {
@@ -168,19 +149,6 @@ Espo.define('language', ['ajax'], function (Ajax) {
                 }
                 this.trigger('sync');
             }.bind(this));
-        },
-
-        fetchFallback: function (disableCache) {
-            if (this.fallbackName) {
-                Ajax.getRequest(this.url, { locale: this.fallbackName }).then(function (data) {
-                    this.fallbackData = data;
-                    window.SvelteLanguage.setFallbackTranslations(data);
-                    if (!disableCache) {
-                        this.storeToCache(false, true);
-                    }
-                    this.trigger('sync');
-                }.bind(this));
-            }
         },
 
         sortFieldList: function (scope, fieldList) {

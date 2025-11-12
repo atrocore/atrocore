@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "title": "Název",
+    "dateFrom": "Datum Od",
+    "dateTo": "Datum do",
+    "autorefreshInterval": "Interval automatického obnovení",
+    "displayRecords": "Zobrazení záznamů",
+    "isDoubleHeight": "Výška 2x",
+    "mode": "Režim",
+    "enabledScopeList": "Co zobrazit",
+    "users": "Uživatelé",
+    "entityType": "Subjekt",
+    "primaryFilter": "Primární filtr",
+    "boolFilterList": "Další filtry",
+    "sortBy": "Objednávka (pole)",
+    "sortDirection": "Pořadí (směr)",
+    "expandedLayout": "Rozložení",
+    "dateFilter": "Filtr data",
+    "savedFilter": "Uložený filtr"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Týden (program)",
+      "basicWeek": "Týden",
+      "month": "Měsíc",
+      "basicDay": "Den",
+      "agendaDay": "Den (program)",
+      "timeline": "Časová osa"
+    }
+  },
+  "messages": {
+    "selectEntityType": "V možnostech panelu nástrojů vyberte typ subjektu."
+  }
+}

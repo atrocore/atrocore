@@ -66,6 +66,12 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             if (this.attributeId) {
                 this.typeList = ['isLinked', 'isNotLinked', ...this.typeList];
             }
+            if (this.fieldType === 'link') {
+                const foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity']);
+                if (foreignScope === 'User' || this.field === '__currentUser') {
+                    this.typeList = [...this.typeList, 'inTeams', 'notInTeams'];
+                }
+            }
 
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {

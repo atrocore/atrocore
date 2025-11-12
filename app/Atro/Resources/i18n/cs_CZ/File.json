@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "type": "Typ",
+    "folder": "Složka",
+    "storage": "Úložiště",
+    "mimeType": "Typ MIME",
+    "path": "Cesta",
+    "thumbnailsPath": "Cesta k miniaturám",
+    "preview": "Náhled",
+    "hash": "Hash",
+    "fileSize": "Velikost souboru (bajty)",
+    "fileMtime": "Datum úpravy souboru",
+    "url": "URL",
+    "uploadUrl": "URL",
+    "width": "Šířka",
+    "height": "Výška",
+    "size": "Velikost",
+    "colorSpace": "Barevný prostor"
+  },
+  "labels": {
+    "Preview": "Náhled",
+    "Upload": "Nahrát",
+    "retry": "Opakovat?",
+    "uploaded": "Nahráno",
+    "putUploadUrl": "Pokud chcete soubor nahrát prostřednictvím adresy URL, zadejte URL adresu souboru",
+    "zipDownloadNotification": "Můžete si stáhnout <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\"></a> soubor zip",
+    "Share": "Sdílet"
+  },
+  "messages": {
+    "notAllFilesWereUploaded": "Soubory XX z YY nebyly nahrány.",
+    "fileCouldNotBeUploaded": "Soubor se nepodařilo nahrát.",
+    "fileHasDuplicate": "Existuje již nejméně jeden duplikát tohoto souboru <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> .",
+    "cannotDefineFileName": "Systém nemůže rozpoznat název souboru z adresy URL.",
+    "urlExpected": "Byla zadána nesprávná adresa URL",
+    "fileExtensionCorrectedAutomatically": "Přípona souboru byla automaticky opravena.",
+    "downloadJobsCreated": "Byla vytvořena úloha pro přípravu vašeho souboru zip"
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "Příponu souboru nelze změnit.",
+    "fileStorageCannotBeChanged": "Úložiště souborů nelze změnit.",
+    "fileFolderCannotBeChanged": "Složku souborů nelze změnit.",
+    "fileCreateFailed": "Vytvoření souboru se nezdařilo.",
+    "fileMoveFailed": "Přesunutí souboru se nezdařilo.",
+    "fileRenameFailed": "Přejmenování souboru se nezdařilo.",
+    "fileDeleteFailed": "Odstranění souboru se nezdařilo.",
+    "fileNameNotValidByUserRegex": "Název souboru není platný. Měl by odpovídat regexu '%s'.",
+    "notAllowToFileWithEntity": "Soubor typu '%s' nelze propojit se souborem '%s'. Jediné povolené typy jsou '%s'"
+  }
+}

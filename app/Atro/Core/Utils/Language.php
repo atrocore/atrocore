@@ -406,7 +406,7 @@ class Language
 
             $data = $this->getDataManager()->getCacheData($cacheName);
             if (empty($data)) {
-                $data = [];
+                $data = $this->data[self::DEFAULT_LANGUAGE];
                 $locales = $this->getConfig()->get('locales') ?? [];
 
                 $fallbackLanguage = $locales[$this->localeId]['fallbackLanguage'] ?? null;

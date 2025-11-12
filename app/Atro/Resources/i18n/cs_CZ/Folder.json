@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "code": "Kód",
+    "files": "Soubory",
+    "storages": "Úložiště"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "Složku úložiště nelze změnit.",
+    "folderCreateFailed": "Vytvoření složky se nezdařilo.",
+    "folderRenameFailed": "Přejmenování složky se nezdařilo.",
+    "folderMoveFailed": "Přesunutí složky se nezdařilo.",
+    "folderDeleteFailed": "Odstranění složky se nezdařilo."
+  }
+}

@@ -38,6 +38,7 @@ Espo.define('views/record/panels/side/matched-records', 'view', Dep => {
                             name: record.mrId,
                             model: this.model,
                             status: record.status,
+                            parentNode: this,
                             el: `${this.options.el} .matched-record-item-actions[data-name="${record.mrId}"]`
                         }, view => {
                             view.render();

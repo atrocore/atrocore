@@ -89,5 +89,30 @@ class RoleScope extends Base
         if ($entity->get('hasAccess')) {
             $entity->set('accessData', $this->getRoleAccessData($entity));
         }
+
+        $this->putAclActionList($entity);
+    }
+
+    protected function beforeCreateEntity(Entity $entity, $data)
+    {
+        parent::beforeCreateEntity($entity, $data);
+
+        $this->putAclActionList($entity);
+    }
+
+    protected function beforeUpdateEntity(Entity $entity, $data)
+    {
+        parent::beforeUpdateEntity($entity, $data);
+
+        $this->putAclActionList($entity);
+    }
+
+    protected function putAclActionList(Entity $entity): void
+    {
+        if ($entity->get('aclActionList') !== null) {
+            return;
+        }
+
+        $entity->set('aclActionList', $this->getMetadata()->get("scopes.{$entity->get('name')}.aclActionList"));
     }
 }

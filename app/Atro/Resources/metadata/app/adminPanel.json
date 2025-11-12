@@ -101,7 +101,7 @@
         "url": "#Language",
         "label": "multiLanguages",
         "description": "multiLanguagesSettings",
-        "icon": "ph ph-globe",
+        "icon": "ph ph-translate",
         "docsUrl": "https://help.atrocore.com/atrocore/administration/languages"
       },
       {

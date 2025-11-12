@@ -68,6 +68,14 @@
             "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
             "operatorString": "&notin;"
         },
+        "inTeams": {
+          "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+          "operatorString": "&isin;"
+        },
+        "notInTeams": {
+          "view": "views/admin/dynamic-logic/conditions-string/item-multiple-values-base",
+          "operatorString": "&notin;"
+        },
         "isToday": {
             "view": "views/admin/dynamic-logic/conditions-string/item-is-today",
             "operatorString": "="
@@ -247,6 +255,12 @@
         },
         "notIn": {
             "valueType": "custom"
+        },
+        "inTeams": {
+          "valueType": "custom"
+        },
+        "notInTeams": {
+          "valueType": "custom"
         },
         "contains": {
             "valueType": "custom"

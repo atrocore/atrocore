@@ -83,11 +83,18 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             mode: mode,
                             inheritanceActionDisabled: true,
                             revisionHistoryActionDisabled: true,
-                            qualityInlineActionDisabled: true
+                            qualityInlineActionDisabled: true,
+                            disabledFieldActions: true,
+                            disabled: this.merging,
+                            disableToggle: true
                         }, view => {
                             let viewKey = row.key;
 
                             view.render();
+
+                            this.listenTo(view, 'after:inlineEditSave', () => {
+                                this.trigger('data:change', fieldData);
+                            });
 
                             if (view.isRendered()) {
                                 this.handleAllFieldsRendered(row.key)
@@ -211,7 +218,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 let viewKey = $(el).data('key');
                 let view = self.getView(viewKey);
 
-                if (!view || !view.model || view.options.disabled) {
+                if (!view || !view.model) {
                     return;
                 }
 
@@ -267,6 +274,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
 
                 attributes = _.extend({}, attributes, data);
             });
+
             return attributes;
         },
 

@@ -94,9 +94,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     "label": "Selection View",
                     "disabled": true,
                     onClick: (dialog) => {
-
-                        const link = '#Selection/view/' + this.selectionId  ;
-                        this.getRouter().navigate(link);
+                        const link = '#Selection/view/' + this.selectionId +'/selectionViewMode=compare'  ;
+                        this.getRouter().navigate(link, {trigger: false});
                         let options = {
                             id: this.selectionId,
                             selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',

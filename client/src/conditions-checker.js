@@ -142,6 +142,10 @@ Espo.define('conditions-checker', [], function () {
                         return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
                     }
                 }
+            } else if (type === 'inTeams') {
+                return this.checkInTeams(value, setValue);
+            } else if (type === 'notInTeams') {
+                return !this.checkInTeams(value, setValue);
             }
             return false;
         },
@@ -157,6 +161,32 @@ Espo.define('conditions-checker', [], function () {
             }
 
             return value.includes(setValue);
+        },
+
+        checkInTeams(value, setValue) {
+            if (!Array.isArray(value) || !value.length) {
+                return false
+            }
+
+            const key = 'user-team-' + JSON.stringify(value)
+
+            if (Espo[key] == null) {
+                const res = Espo.ajax.getRequest('TeamUser', {
+                    collectionOnly: true,
+                    where: [{
+                        type: 'in',
+                        attribute: 'teamId',
+                        value: value
+                    }],
+                    maxSize: 500
+                }, { async: false })
+
+                Espo[key] = (res.responseJSON?.list || []).map(d => d.userId)
+            }
+
+            const usersIds = Espo[key]
+
+            return this.checkIn(usersIds, setValue)
         }
     });
 
