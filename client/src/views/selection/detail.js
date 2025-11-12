@@ -250,6 +250,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                 this.listenTo(view, 'merge-success', () => {
                     this.selectionViewMode = 'standard';
+                    const link = '#Selection/view/' + this.model.id +'/selectionViewMode=standard';
+                    this.getRouter().navigate(link, {trigger: false});
                     this.refreshContent()
                 })
 

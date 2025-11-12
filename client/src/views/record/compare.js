@@ -271,9 +271,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldsArr.sort((v1, v2) =>
                 v1.label.localeCompare(v2.label)
             );
+
+            this.fieldPanels = this.fieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
         },
 
         renderFieldsPanels() {
+            this.renderedPanels = this.renderedPanels.filter(panel => !this.fieldPanels.map(f => f.name).includes(panel));
             this.fieldPanels.forEach((panel, index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
                 fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
@@ -301,6 +304,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
 
                 this.notify('Loading...');
+
                 this.createView(panel.name, this.fieldsPanelsView, {
                     scope: this.scope,
                     model: this.model,
@@ -686,7 +690,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
             this.renderedPanels.push(name);
-            if (this.renderedPanels.length === 2 || this.fieldPanels.map(f => f.name).includes(name)) {
+            if (this.renderedPanels.length === (this.fieldPanels.length + 1) || this.fieldPanels.map(f => f.name).includes(name)) {
+                this.notify(false)
                 this.handleRadioButtonsDisableState(false);
                 $('button[data-name="merge"]').removeClass('disabled');
                 $('button[data-name="merge"]').attr('disabled', false);
@@ -905,7 +910,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderFieldsPanels();
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
-
 
             if (this.merging) {
                 this.handleRadioButtonsDisableState(false)
