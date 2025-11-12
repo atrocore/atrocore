@@ -355,6 +355,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
 
+            this.renderedPanels = this.renderedPanels.filter(panel => panel !== 'relationshipsPanels');
+
             this.notify('Loading...');
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
