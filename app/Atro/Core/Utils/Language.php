@@ -416,7 +416,7 @@ class Language
 
                 $language = $locales[$this->localeId]['language'] ?? self::DEFAULT_LANGUAGE;
 
-                if (array_key_exists($language, $this->data) && $language !== self::DEFAULT_LANGUAGE) {
+                if (array_key_exists($language, $this->data)) {
                     $data = Util::merge($data, $this->data[$language]);
                 }
 
