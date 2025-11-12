@@ -887,6 +887,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.model.trigger('overview-filters-changed', this.selectedFilters);
                         this.getStorage().set('compareFilters', this.model.name, this.selectedFilters)
                         this.reRenderFieldsPanels();
+                        this.notify(false)
                     }
                 });
             });
@@ -904,6 +905,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderFieldsPanels();
             this.toggleFieldPanels();
             this.renderPanelNavigationView();
+
 
             if (this.merging) {
                 this.handleRadioButtonsDisableState(false)
