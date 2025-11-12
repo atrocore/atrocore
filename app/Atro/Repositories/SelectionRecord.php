@@ -65,7 +65,7 @@ class SelectionRecord extends Base
            }
 
           if(empty($entity->get('selectionsIds'))) {
-              throw new NotUnique("Selection record not found");
+              throw new NotUnique("Selection already exists");
           }
        }
 
