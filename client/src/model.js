@@ -159,7 +159,7 @@ Espo.define('model', [], function () {
                 }
             }
 
-            this.set(defaultHash, {silent: true});
+            this.set(defaultHash, { silent: true });
         },
 
         parseDefaultValue: function (defaultValue) {
@@ -179,6 +179,8 @@ Espo.define('model', [], function () {
             var setRelate = function (options) {
                 var link = options.link;
                 var model = options.model;
+                const nameValueCallback = options.nameValueCallback || ((model) => model.get('name'))
+
                 if (!link || !model) {
                     throw new Error('Bad related options');
                 }
@@ -187,17 +189,17 @@ Espo.define('model', [], function () {
                     case 'belongsToParent':
                         this.set(link + 'Id', model.id);
                         this.set(link + 'Type', model.name);
-                        this.set(link + 'Name', model.get('name'));
+                        this.set(link + 'Name', nameValueCallback(model, 'name'));
                         break;
                     case 'belongsTo':
                         this.set(link + 'Id', model.id);
-                        this.set(link + 'Name', model.get('name'));
+                        this.set(link + 'Name', nameValueCallback(model, 'name'));
                         break;
                     case 'hasMany':
                         var ids = [];
                         ids.push(model.id);
                         var names = {};
-                        names[model.id] = model.get('name');
+                        names[model.id] = nameValueCallback(model, 'name');
                         this.set(link + 'Ids', ids);
                         this.set(link + 'Names', names);
                         break;
