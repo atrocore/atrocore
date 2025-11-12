@@ -19,7 +19,7 @@
     }
 </script>
 
-<a href="javascript:" role="button" class="action {className}" data-action={params.name || params.action}
+<a href="javascript:" class="action {className}" data-action={params.name || params.action}
    data-id={params.id} title={params.tooltip} on:click={runAction}>
     {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
 </a>

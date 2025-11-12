@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "user": "Uživatel",
+    "ipAddress": "IP adresa",
+    "lastAccess": "Datum posledního přístupu",
+    "createdAt": "Datum přihlášení",
+    "isActive": "Aktivní",
+    "lifetime": "Životnost",
+    "idleTime": "Doba nečinnosti",
+    "authToken": "Autorizační token",
+    "actionHistoryRecords": "Historie akce"
+  },
+  "tooltips": {
+    "lifetime": "Doba životnosti by měla být nastavena v hodinách. Nula znamená, že platnost nevyprší.",
+    "idleTime": "Doba nečinnosti by měla být nastavena v hodinách. Nula znamená, že platnost nevyprší."
+  }
+}

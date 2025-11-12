@@ -27,12 +27,12 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                 this.matchesList = [];
                 $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
                     if (item.isActive) {
-                        if (item.stagingEntity === this.model.name) {
+                        if (item.stagingEntity === this.model.name && this.getAcl().check(item.masterEntity, 'read')) {
                             this.matchesList.push({
                                 name: code,
                                 label: item.name,
                             });
-                        } else if (item.masterEntity === this.model.name) {
+                        } else if (item.masterEntity === this.model.name && this.getAcl().check(item.stagingEntity, 'read')) {
                             this.matchesList.push({
                                 name: code,
                                 label: item.foreignName,

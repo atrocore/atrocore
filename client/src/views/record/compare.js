@@ -358,6 +358,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
                     this.trigger('after:relationship-panels-render')
+                    this.notify(false)
                 });
 
             }, true);
@@ -682,12 +683,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         handlePanelRendering: function (name) {
             if (this.renderedPanels.includes(name)) {
-                this.notify(false)
                 return;
             }
             this.renderedPanels.push(name);
             if (this.renderedPanels.length === 2 || this.fieldPanels.map(f => f.name).includes(name)) {
-                this.notify(false);
                 this.handleRadioButtonsDisableState(false);
                 $('button[data-name="merge"]').removeClass('disabled');
                 $('button[data-name="merge"]').attr('disabled', false);

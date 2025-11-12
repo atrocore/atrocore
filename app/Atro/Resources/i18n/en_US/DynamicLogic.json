@@ -25,7 +25,9 @@
       "has": "Contains",
       "notHas": "Not Contains",
       "isLinked": "Is Linked",
-      "isNotLinked": "Is Not Linked"
+      "isNotLinked": "Is Not Linked",
+      "inTeams": "In Teams",
+      "notInTeams": "Not In Teams"
     }
   }
 }

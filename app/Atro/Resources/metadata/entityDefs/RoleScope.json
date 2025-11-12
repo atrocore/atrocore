@@ -24,6 +24,10 @@
       "type": "bool",
       "notNull": true
     },
+    "aclActionList": {
+      "type": "array",
+      "notStorable": true
+    },
     "createAction": {
       "type": "enum",
       "view": "views/role-scope/fields/create-action",
@@ -31,12 +35,29 @@
         "no",
         "yes"
       ],
+      "default": "no",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "create"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -45,6 +66,22 @@
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "create"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -59,12 +96,29 @@
         "team",
         "all"
       ],
+      "default": "no",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "read"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -73,6 +127,22 @@
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "read"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -87,12 +157,29 @@
         "team",
         "all"
       ],
+      "default": "no",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "edit"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -101,6 +188,22 @@
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "edit"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -115,12 +218,29 @@
         "team",
         "all"
       ],
+      "default": "no",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "delete"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -129,6 +249,22 @@
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "delete"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -141,12 +277,29 @@
         "no",
         "all"
       ],
+      "default": "no",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "isTrue",
               "attribute": "hasAccess"
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "aclActionList"
+                },
+                {
+                  "type": "in",
+                  "attribute": "aclActionList",
+                  "value": [
+                    "stream"
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -193,7 +346,8 @@
       "options": [
         "no",
         "yes"
-      ]
+      ],
+      "default": "no"
     },
     "deleteAttributeValueAction": {
       "type": "enum",
@@ -201,7 +355,8 @@
       "options": [
         "no",
         "yes"
-      ]
+      ],
+      "default": "no"
     },
     "attributes": {
       "type": "linkMultiple",

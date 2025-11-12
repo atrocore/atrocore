@@ -37,9 +37,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.setupCustomButtons();
+            if(!this.selectionRecordModels && ['merge', 'compare'].includes(this.selectionViewMode)) {
+                this.wait(true)
+                this.reloadModels(() => {
+                    Dep.prototype.setup.call(this);
+                    this.setupCustomButtons();
+                    this.wait(false)
+                });
+            }else{
+                Dep.prototype.setup.call(this);
+                this.setupCustomButtons();
+            }
 
             this.listenTo(this.model, 'sync', () => {
                 this.setupCustomButtons();
@@ -129,6 +137,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
+            if(!this.availableModes.includes(data.name)) {
+                return;
+            }
+
+            const link = '#Selection/view/' + this.model.id +'/selectionViewMode=' + data.name;
+            this.getRouter().navigate(link, {trigger: false});
+
             // if we change from compare to merge or vis-versa
             if (['compare', 'merge'].includes(this.selectionViewMode) && ['compare', 'merge'].includes(data.name)) {
                 this.selectionViewMode = data.name;
@@ -149,7 +164,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.selectionViewMode = data.name;
             if (['compare', 'merge'].includes(this.selectionViewMode)) {
                 this.notify(this.translate('Loading...'));
-                this.reloadModels(() => this.refreshContent())
+                this.reloadModels(() => this.refreshContent());
             } else {
                 this.refreshContent();
             }

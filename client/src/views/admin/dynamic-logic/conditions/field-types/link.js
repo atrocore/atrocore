@@ -47,12 +47,17 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link', 'views/admi
 
             if (valueView) {
                 valueView.fetchToModel();
-                if (['in', 'notIn'].includes(item.type)) {
-                    item.value = this.model.get(this.field + 'Ids');
+                if (['in', 'notIn', 'inTeams', 'notInTeams'].includes(item.type)) {
+                    let field = this.field
+                    if (['inTeams', 'notInTeams'].includes(item.type)) {
+                        field = this.field + 'Teams'
+                    }
+
+                    item.value = this.model.get(field + 'Ids');
 
                     const values = {};
-                    values[this.field + 'Ids'] = this.model.get(this.field + 'Ids');
-                    values[this.field + 'Names'] = this.model.get(this.field + 'Names');
+                    values[field + 'Ids'] = this.model.get(field + 'Ids');
+                    values[field + 'Names'] = this.model.get(field + 'Names');
                     item.data.values = values;
                 } else {
                     item.value = this.model.get(this.field + 'Id');
@@ -74,15 +79,26 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link', 'views/admi
             this.createLinkMultipleValueField();
         },
 
-        createLinkMultipleValueField: function () {
-            if (!this.model.get(this.field + 'Ids')) {
-                const id = this.model.get(this.field + 'Id');
-                const name = this.model.get(this.field + 'Name');
+        createValueViewInTeams: function () {
+            this.createLinkMultipleValueField('Team', this.field + 'Teams');
+        },
+
+        createValueViewNotInTeams: function () {
+            this.createLinkMultipleValueField('Team', this.field + 'Teams');
+        },
+
+        createLinkMultipleValueField: function (foreignScope = null, field = null) {
+            foreignScope = foreignScope || this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+            field = field || this.field
+
+            if (!this.model.get(field + 'Ids')) {
+                const id = this.model.get(field + 'Id');
+                const name = this.model.get(field + 'Name');
                 if (id) {
-                    this.model.set(this.field + 'Ids', [id]);
+                    this.model.set(field + 'Ids', [id]);
                 }
                 if (name) {
-                    this.model.set(this.field + 'Names', { [id]: name });
+                    this.model.set(field + 'Names', { [id]: name });
                 }
             }
 
@@ -90,12 +106,12 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/link', 'views/admi
 
             this.createView('value', viewName, {
                 model: this.model,
-                name: this.field,
+                name: field,
                 el: this.getSelector() + ' .value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
                 disableConditions: true,
-                foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) || this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
+                foreignScope: foreignScope
             }, function (view) {
                 if (this.isRendered()) {
                     view.render();

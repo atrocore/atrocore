@@ -853,7 +853,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
             return this.massActionCompare(data, e, true);
         },
 
-        massActionSelect: function(data, e) {
+        massActionSelect: function (data, e) {
             if (!this.getAcl().check(this.entityType, 'read')) {
                 this.notify('Access denied', 'error');
                 return false;
@@ -872,7 +872,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.entityType,
                 entityIds: this.checkedList
             }).then(result => {
-                this.getRouter().navigate('#Selection/view/'+result.id, {trigger: true});
+                this.getRouter().navigate('#Selection/view/' + result.id, { trigger: true });
             });
         },
 
@@ -944,9 +944,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
-            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+            let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
 
-            if (this.checkedList.length >  maxComparableItem) {
+            if (this.checkedList.length > maxComparableItem) {
                 this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
                 return;
             }
@@ -977,7 +977,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         loadSelectionRecordModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=true`, {async: false})
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=true`, { async: false })
                     .then(result => {
                         let entityByScope = {};
                         let order = 0;
@@ -1352,7 +1352,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 },
                 handleSelectAll: (e) => {
                     this.handleSelectAll(e);
-                    component.$set({selected: this.allResultIsChecked});
+                    component.$set({ selected: this.allResultIsChecked });
                 }
             };
         },
@@ -2055,6 +2055,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     item.label = this.translate(item.name, 'fields', this.collection.name)
                 }
 
+                if (this.listLayout[i].label) {
+                    item.label = this.listLayout[i].label;
+                }
+
 
                 if (item.sortable) {
                     item.sorted = this.collection.sortBy === this.listLayout[i].name;
@@ -2656,7 +2660,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             model.defs['_relationName'] = this.relationName;
 
-            if (this.options.useRelationModelOnEdit){
+            if (this.options.useRelationModelOnEdit) {
                 model = model.relationModel
             }
 

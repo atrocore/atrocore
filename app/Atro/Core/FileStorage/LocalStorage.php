@@ -34,8 +34,8 @@ use Psr\Http\Message\StreamInterface;
 
 class LocalStorage implements FileStorageInterface, LocalFileStorageInterface, HasBasketInterface
 {
+    public const TMP_DIR = 'data/.local-storage-tmp';
     public const CHUNKS_DIR = '.chunks';
-    public const TMP_DIR = '.tmp';
     public const TRASH_DIR = '.trash';
     public const PDF_IMAGE_DIR = '.img-from-pdf';
 

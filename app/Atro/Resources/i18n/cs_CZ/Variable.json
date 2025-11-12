@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "key": "Klíč",
+    "type": "Typ",
+    "value": "Hodnota"
+  },
+  "options": {
+    "type": {
+      "text": "Text",
+      "float": "Číslo",
+      "bool": "Boolean",
+      "array": "Pole"
+    }
+  }
+}

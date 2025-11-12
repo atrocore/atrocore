@@ -138,7 +138,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 hidden: true,
                 html: this.getFilterButtonHtml(),
                 onClick: () => {
-                    SearchFilterOpener.prototype.open.call(this, this.model.get('entityType'), this.model.get('entityFilter')?.where,  ({where, whereData}) => {
+                    SearchFilterOpener.prototype.open.call(this, this.model.get('entityType'), this.model.get('entityFilter')?.whereData,  ({where, whereData}) => {
                         this.model.set('entityFilter',  _.extend({}, this.model.get('entityFilter'), {
                             where,
                             whereData,
