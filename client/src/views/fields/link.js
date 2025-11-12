@@ -190,7 +190,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
                 });
-
                 this.addActionHandler('createLink', function () {
                     const attributes = _.extend((this.getCreateAttributes() || {}), {
                         _entityFrom: _.extend(this.model.attributes, {
