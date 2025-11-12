@@ -12,7 +12,7 @@
 namespace Atro\Acl;
 
 use Espo\Core\Acl\Base;
-use Atro\Entities\User;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 class SavedSearch extends Base
@@ -20,5 +20,30 @@ class SavedSearch extends Base
     public function checkIsOwner(User $user, Entity $entity)
     {
         return $user->id === $entity->get('userId');
+    }
+
+    public function checkScope(\Espo\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    {
+        return true;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, $data)
+    {
+        return true;
+    }
+
+    public function checkEntityCreate(User $user, Entity $entity, $data)
+    {
+        return true;
+    }
+
+    public function checkEntityEdit(User $user, Entity $entity, $data)
+    {
+        return $user->id === $entity->get('userId') || $user->isAdmin();
+    }
+
+    public function checkEntityDelete(User $user, Entity $entity, $data)
+    {
+        return $user->id === $entity->get('userId') || $user->isAdmin();
     }
 }

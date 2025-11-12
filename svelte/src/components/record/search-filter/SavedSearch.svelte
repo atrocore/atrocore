@@ -8,6 +8,7 @@
     import SavedSearch from "./interfaces/SavedSearch"
     import {get} from "svelte/store"
     import FilterGroup from "./FilterGroup.svelte";
+    import {UserData} from "../../../utils/UserData";
 
     export let scope: string;
     export let savedSearchList: Array<SavedSearch> = [];
@@ -56,6 +57,11 @@
         updateCollection();
     }
 
+    function isOwner(item) {
+        const userData = UserData.get();
+        return userData?.user?.id === item.userId || userData?.user?.isAdmin;
+    }
+
     function updateCollection() {
         Notifier.notify(Language.translate('loading', 'messages'));
         searchManager.fetchCollection();
@@ -98,16 +104,16 @@
                                 <i class="ph ph-dots-three-vertical"></i>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                                {#if Acl.check('SavedSearch', 'edit')}
-                                    {#if editingItem?.id === item.id}
-                                        <li><a on:click={cancel}>{Language.translate('Cancel Edit')}</a></li>
-                                    {:else}
+                                {#if editingItem?.id === item.id}
+                                    <li><a on:click={cancel}>{Language.translate('Cancel Edit')}</a></li>
+                                {:else}
+                                    <li><a on:click={() => {copy(item)}}>{Language.translate('Copy')}</a></li>
+                                    {#if isOwner(item)}
                                         <li><a on:click={() => {edit(item)}}>{Language.translate('Edit')}</a></li>
-                                        <li><a on:click={() => {copy(item)}}>{Language.translate('Copy')}</a></li>
                                     {/if}
-                                    <li><a on:click={() => rename(item)}>{Language.translate('Rename')}</a></li>
                                 {/if}
-                                {#if Acl.check('SavedSearch', 'delete')}
+                                {#if isOwner(item)}
+                                    <li><a on:click={() => rename(item)}>{Language.translate('Rename')}</a></li>
                                     <li><a on:click={() => remove(item)}>{Language.translate('Remove')}</a></li>
                                 {/if}
                             </ul>

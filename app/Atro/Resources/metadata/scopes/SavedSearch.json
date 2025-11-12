@@ -11,10 +11,5 @@
   "bookmarkDisabled": true,
   "actionDisabled": true,
   "emHidden": true,
-  "aclLevelList": [
-    "no",
-    "own",
-    "all"
-  ],
   "matchingDisabled": true
 }
