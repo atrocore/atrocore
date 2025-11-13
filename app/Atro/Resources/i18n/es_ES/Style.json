@@ -1,39 +1,39 @@
 {
   "fields": {
-    "navigationManuBackgroundColor": "",
-    "navigationMenuFontColor": "",
-    "linkFontColor": "",
+    "navigationManuBackgroundColor": "Fondo del menú de navegación",
+    "navigationMenuFontColor": "Color de la fuente de navegación",
+    "linkFontColor": "Color del enlace",
     "customStylesheetPath": "",
     "customStylesheet": "",
-    "primaryColor": "",
-    "secondaryColor": "",
-    "primaryFontColor": "",
-    "secondaryFontColor": "",
-    "labelColor": "",
-    "anchorNavigationBackground": "",
-    "iconColor": "",
-    "primaryBorderColor": "",
-    "secondaryBorderColor": "",
-    "panelTitleColor": "",
-    "headerTitleColor": "",
+    "primaryColor": "Color primario",
+    "secondaryColor": "Color secundario",
+    "primaryFontColor": "Color de fuente primario",
+    "secondaryFontColor": "Color de fuente secundario",
+    "labelColor": "Color de la etiqueta",
+    "anchorNavigationBackground": "Anclar fondo de navegación",
+    "iconColor": "Color del icono",
+    "primaryBorderColor": "Color del borde primario",
+    "secondaryBorderColor": "Color del borde secundario",
+    "panelTitleColor": "Color del título del panel",
+    "headerTitleColor": "Color del título de la cabecera",
     "success": "",
-    "notice": "",
-    "information": "",
+    "notice": "Aviso",
+    "information": "Información",
     "error": "",
-    "actionIconColor": "",
-    "navigationIconColor": "",
-    "statusIconColor": "",
+    "actionIconColor": "Color del icono de acción",
+    "navigationIconColor": "Color del icono de navegación",
+    "statusIconColor": "Color del icono de estado",
     "customHeadCode": "",
-    "highlightingColorForRequired": "",
-    "toolbarBackgroundColor": "",
-    "toolbarFontColor": ""
+    "highlightingColorForRequired": "Color de resaltado para los datos requeridos",
+    "toolbarBackgroundColor": "Color de fondo de la barra de herramientas",
+    "toolbarFontColor": "Color de fuente de la barra de herramientas"
   },
   "tooltips": {
     "customStylesheetPath": "",
     "customHeadCode": ""
   },
   "exceptions": {
-    "styleIsUsed": "",
-    "codeShouldBeString": ""
+    "styleIsUsed": "El estilo en uso no se puede quitar.",
+    "codeShouldBeString": "El código debe ser una cadena válida sin caracteres especiales ni espacios"
   }
 }
