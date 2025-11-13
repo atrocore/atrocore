@@ -11,7 +11,11 @@
     "fileSize": "Rozmiar pliku (bajty)",
     "fileMtime": "Data modyfikacji pliku",
     "url": "URL AtroCore",
-    "uploadUrl": "URL AtroCore"
+    "uploadUrl": "URL AtroCore",
+    "width": "Szerokość",
+    "height": "Wysokość",
+    "size": "Rozmiar",
+    "colorSpace": "Przestrzeń kolorów"
   },
   "labels": {
     "Preview": "Podgląd",
@@ -19,21 +23,27 @@
     "retry": "Ponowić próbę?",
     "uploaded": "przesłany",
     "putUploadUrl": "Podaj adres URL pliku, jeśli chcesz przesłać go za pośrednictwem adresu URL",
-    "zipDownloadNotification": "Możesz <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">pobrać</a> plik"
+    "zipDownloadNotification": "Możesz <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">pobrać</a> plik",
+    "Share": "Udział"
   },
   "messages": {
     "notAllFilesWereUploaded": "Pliki XX of YY nie zostały przesłane.",
     "fileCouldNotBeUploaded": "Nie można przesłać pliku.",
     "fileHasDuplicate": "Istnieje już co najmniej jeden <a target=\"_blank\" href=\"/#File/view/{{id}}\">duplikat</a> tego pliku.",
     "cannotDefineFileName": "System nie może rozpoznać nazwy pliku z adresu URL.",
-    "urlExpected": "Podano nieprawidłowy adres URL"
+    "urlExpected": "Podano nieprawidłowy adres URL",
+    "downloadJobsCreated": "Utworzono zadanie przygotowania Państwa pliku zip",
+    "fileExtensionCorrectedAutomatically": "Rozszerzenie pliku zostało poprawione automatycznie."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Nie można zmienić rozszerzenia pliku.",
     "fileStorageCannotBeChanged": "Pamięci masowej nie można zmienić.",
     "fileCreateFailed": "Tworzenie pliku nie powiodło się.",
     "fileRenameFailed": "Zmiana nazwy pliku nie powiodła się.",
-    "fileDeleteFailed": "Usunięcie pliku nie powiodło się.",
-    "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'."
+    "fileDeleteFailed": "Usuwanie pliku nie powiodło się.",
+    "fileNameNotValidByUserRegex": "Nazwa pliku jest nieprawidłowa. Powinna pasować do wyrażenia regularnego '%s'.",
+    "notAllowToFileWithEntity": "Nie mogą Państwo połączyć pliku typu '%s' z plikiem '%s'. Jedynymi dozwolonymi typami są '%s'",
+    "fileFolderCannotBeChanged": "Folder plików nie może zostać zmieniony.",
+    "fileMoveFailed": "Przenoszenie pliku nie powiodło się."
   }
 }
