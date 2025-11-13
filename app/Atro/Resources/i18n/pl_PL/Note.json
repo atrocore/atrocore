@@ -1,22 +1,23 @@
 {
-	"fields": {
-		"post": "Post",
-		"attachments": "Załączniki",
-		"type": "Typ",
-		"createdByGender": "Utworzone przez płeć",
-		"data": "Dane"
-	},
-	"filters": {
-		"all": "Wszystkie",
-		"posts": "Posty",
-		"updates": "Aktualizacje"
-	},
-	"options": {
-		"type": {
-			"Post": "Post"
-		}
-	},
-	"messages": {
-		"writeMessage": "Napisz tutaj swoją wiadomość"
-	}
+  "fields": {
+    "post": "Post",
+    "attachments": "Załączniki",
+    "type": "Typ",
+    "createdByGender": "Utworzone przez płeć",
+    "data": "Dane"
+  },
+  "filters": {
+    "all": "Wszystkie",
+    "posts": "Posty",
+    "updates": "Aktualizacje",
+    "notes": "Notatki"
+  },
+  "options": {
+    "type": {
+      "Post": "Post"
+    }
+  },
+  "messages": {
+    "writeMessage": "Napisz tutaj swoją wiadomość"
+  }
 }
