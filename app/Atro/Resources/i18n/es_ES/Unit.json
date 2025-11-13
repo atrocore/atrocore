@@ -1,13 +1,13 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "measure": "",
+    "name": "Nombre",
+    "description": "Descripción",
+    "measure": "Measure",
     "isMain": "Principal",
     "multiplier": "Multiplicador",
-    "convertTo": "",
+    "convertTo": "Convert to",
     "symbol": "Símbolo",
-    "isActive": ""
+    "isActive": "Activo"
   },
   "labels": {
     "unitSetDefault": "Establecer como predeterminado"
