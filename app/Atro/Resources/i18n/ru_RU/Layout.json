@@ -1,13 +1,13 @@
 {
   "fields": {
-    "entity": "",
+    "entity": "Сущность",
     "viewType": "",
     "relatedEntity": "",
     "layoutProfile": ""
   },
   "groupOptions": {
     "viewType": {
-      "view": "",
+      "view": "Просмотреть",
       "viewGroup": ""
     }
   },
