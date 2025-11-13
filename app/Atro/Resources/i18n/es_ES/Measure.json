@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "units": "",
+    "name": "Nombre",
+    "description": "Descripción",
+    "units": "Units",
     "displayFormat": ""
   },
   "options": {
