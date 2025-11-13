@@ -12,7 +12,8 @@
     "mpn": "Numéro du fabricant (MPN)",
     "customsNumber": "Numéro de douane",
     "countryOfOrigin": "Pays d'origine",
-    "defaultSupplier": "Fournisseur par défaut"
+    "defaultSupplier": "Fournisseur par défaut",
+    "note": "Note"
   },
   "labels": {
     "manufacturer": "Fabricant",
