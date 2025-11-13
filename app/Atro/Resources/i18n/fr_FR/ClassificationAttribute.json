@@ -19,10 +19,12 @@
     "datetimeValue": "Valeur par défaut : Date-heure",
     "boolValue": "Valeur par défaut : Booléen",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "conditionalProtected": "Protegé",
+    "conditionalRequired": "Exigée",
+    "conditionalReadOnly": "Lecture seule"
   },
   "labels": {
-    "Create ClassificationAttribute": "Créer un attribut de classification",
     "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
     "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
   },
