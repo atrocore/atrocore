@@ -12,7 +12,9 @@
     "name": "Nombre de compañía",
     "buyer": "Comprador",
     "contactName": "Nombre de contacto",
-    "prospect": "Perspectivas"
+    "prospect": "Perspectivas",
+    "accounts": "Cuentas",
+    "contacts": "Contactos"
   },
   "options": {
     "type": {
