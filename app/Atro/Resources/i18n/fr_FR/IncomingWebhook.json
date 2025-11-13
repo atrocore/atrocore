@@ -1,6 +1,6 @@
 {
   "exceptions": {
-    "invalidIP": "",
-    "invalidCode": ""
+    "invalidIP": "Adresse IP non valide : %s",
+    "invalidCode": "Échec de la validation : le code ne doit contenir que des lettres, des chiffres, des traits de soulignement ou des traits d'union."
   }
 }
