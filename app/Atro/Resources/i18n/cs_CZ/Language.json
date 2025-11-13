@@ -1,6 +1,6 @@
 {
   "fields": {
-    "role": ""
+    "role": "Role"
   },
   "options": {
     "role": {
