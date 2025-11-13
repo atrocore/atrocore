@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attribute": "",
-    "roleScope": "",
+    "attribute": "Atribut",
+    "roleScope": "Rozsah",
     "readAction": "",
-    "editAction": ""
+    "editAction": "Upravit"
   }
 }
