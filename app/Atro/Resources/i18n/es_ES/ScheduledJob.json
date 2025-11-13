@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
+    "name": "Nombre",
     "scheduling": "",
-    "jobs": ""
+    "jobs": "Trabajos"
   },
   "labels": {
     "executeNow": ""
