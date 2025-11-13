@@ -14,12 +14,12 @@
     "type": {
       "equal": "Égalité",
       "like": "Comme",
-      "contains": "",
+      "contains": "Contient",
       "set": "Fixer"
     },
     "operator": {
-      "and": "",
-      "or": ""
+      "and": "ET",
+      "or": "OU"
     }
   }
 }
