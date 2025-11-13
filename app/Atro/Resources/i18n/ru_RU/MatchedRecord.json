@@ -8,7 +8,7 @@
     "masterEntity": "Главная сущность",
     "masterEntityId": "ID основной сущности",
     "score": "Оценка",
-    "status": ""
+    "status": "Статус"
   },
   "options": {
     "status": {
