@@ -1,0 +1,85 @@
+{
+  "labels": {
+    "Dynamic Logic": "",
+    "Name": "",
+    "Label": "",
+    "Type": ""
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "",
+      "javascript: return this.dateTime.getNow(1);": "",
+      "javascript: return this.dateTime.getNow(5);": "",
+      "javascript: return this.dateTime.getNow(15);": "",
+      "javascript: return this.dateTime.getNow(30);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": ""
+    },
+    "dateDefault": {
+      "": "",
+      "javascript: return this.dateTime.getToday();": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": ""
+    }
+  },
+  "tooltips": {
+    "fontSize": "",
+    "maxFileSize": ""
+  },
+  "fieldParts": {
+    "unit": {
+      "unit": ""
+    },
+    "datetimeOptional": {
+      "date": ""
+    }
+  },
+  "messages": {
+    "defaultValidationFailed": ""
+  },
+  "exceptions": {
+    "regexNotValid": "",
+    "someFieldNotUnique": "",
+    "someFieldDontMathToPattern": ""
+  }
+}
