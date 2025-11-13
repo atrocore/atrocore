@@ -3,18 +3,18 @@
     "description": "Popis",
     "entity": "Subjekt",
     "notificationProfile": "Profil oznámení",
-    "occurrence": "",
+    "occurrence": "Událost",
     "isActive": "Aktivní",
-    "ignoreSelfAction": "",
-    "asOwner": "",
-    "asFollower": "",
-    "asAssignee": "",
-    "asTeamMember": "",
-    "asNotificationProfile": "",
-    "emailActive": "",
-    "systemActive": "",
+    "ignoreSelfAction": "Ignorování vlastních akcí",
+    "asOwner": "Jako vlastník",
+    "asFollower": "Jako následovník",
+    "asAssignee": "Jako postupník",
+    "asTeamMember": "Jako člen týmu",
+    "asNotificationProfile": "Jako uživatel profilu oznámení",
+    "emailActive": "Upozornění e-mailem",
+    "systemActive": "Systémové oznámení",
     "emailTemplateId": "Šablona e-mailu",
-    "systemTemplateId": ""
+    "systemTemplateId": "Šablona systému"
   },
   "options": {
     "occurrence": {
@@ -23,16 +23,16 @@
       "linking": "Odkaz",
       "unlinking": "Zrušit propojení",
       "deletion": "Odstranit",
-      "note_created": "",
-      "note_updated": "",
-      "note_deleted": "",
-      "ownership_assignment": "",
-      "unlinking_ownership_assignment": "",
-      "mentioned": ""
+      "note_created": "Vytvořit poznámku",
+      "note_updated": "Poznámka k aktualizaci",
+      "note_deleted": "Odstranit poznámku",
+      "ownership_assignment": "Nastavení vlastníka/přiděleného uživatele",
+      "unlinking_ownership_assignment": "Nenastavený vlastník/přidělený uživatel",
+      "mentioned": "Zmínka o"
     }
   },
   "labels": {
-    "Notify User": "",
-    "Transport": ""
+    "Notify User": "Upozornit uživatele",
+    "Transport": "Doprava"
   }
 }
