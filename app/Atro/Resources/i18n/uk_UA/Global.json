@@ -79,7 +79,9 @@
     "RoleScope": "Область застосування",
     "RoleScopeAttribute": "Атрибут",
     "RoleScopeAttributePanel": "Панель атрибутів",
-    "RoleScopeField": "польовий"
+    "RoleScopeField": "польовий",
+    "Selection": "Вибір",
+    "SelectionRecord": "Запис про вибір"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -146,7 +148,8 @@
     "LayoutProfile": "Профілі макета",
     "IncomingWebhook": "Вхідні вебхуки",
     "RoleScopeAttribute": "Атрибути",
-    "Entity": "Управління сутностями"
+    "Entity": "Управління сутностями",
+    "Selection": "Вибране"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
