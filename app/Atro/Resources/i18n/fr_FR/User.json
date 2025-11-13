@@ -11,7 +11,7 @@
     "roles": "Rôles",
     "teamRole": "Position",
     "password": "Mot de passe",
-    "currentPassword": "Mot de passe actuel",
+    "currentPassword": "Votre mot de passe actuel",
     "passwordConfirm": "Confirmer le mot de passe",
     "newPassword": "Nouveau mot de passe",
     "account": "Compte",
@@ -29,7 +29,12 @@
     "passwordUpdatedBy": "Mot de passe mis à jour par",
     "teams": "Les équipes",
     "notes": "Notes",
-    "tasks": "Tâches"
+    "tasks": "Tâches",
+    "followEntityOnAssignment": "Suivi automatique de l'affectation",
+    "followEntityOnStreamPost": "Suivi automatique des enregistrements après leur publication dans les activités",
+    "receiveNotifications": "Recevoir des notifications",
+    "style": "Style d'interface utilisateur",
+    "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur"
   },
   "labels": {
     "Generate": "Générer",
@@ -41,7 +46,8 @@
     "Email Address": "Adresse électronique",
     "External Accounts": "Comptes externes",
     "Email Accounts": "Comptes de courrier électronique",
-    "Reset Password": "Réinitialiser le mot de passe"
+    "Reset Password": "Réinitialiser le mot de passe",
+    "Preferences": "Préférences"
   },
   "tooltips": {
     "defaultTeam": "Tous les enregistrements créés par cet utilisateur seront par défaut liés à cette équipe.",
