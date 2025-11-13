@@ -1,25 +1,25 @@
 {
   "fields": {
-    "isActive": "",
-    "type": "",
+    "isActive": "Aktivní",
+    "type": "Typ",
     "sourceEntity": "",
     "inBackground": "",
     "usage": "",
     "massAction": "",
     "display": "",
     "actionsSet": "",
-    "actions": "",
-    "webhookUrl": "",
+    "actions": "Akce",
+    "webhookUrl": "URL",
     "executeAs": "",
     "displayField": "",
     "focusField": "",
     "targetEntity": "",
-    "mode": "",
-    "emailScript": "",
+    "mode": "Režim",
+    "emailScript": "Skript",
     "showEmailPreview": "",
-    "emailTemplate": "",
-    "emailTo": "",
-    "emailCc": "",
+    "emailTemplate": "Šablona e-mailu",
+    "emailTo": "Příjemce emailu",
+    "emailCc": "Kopie",
     "emailBcc": ""
   },
   "labels": {
@@ -41,7 +41,7 @@
       "onRecordLoad": ""
     },
     "display": {
-      "dropdown": "",
+      "dropdown": "Rozbalovací nabídka",
       "single": ""
     },
     "type": {
