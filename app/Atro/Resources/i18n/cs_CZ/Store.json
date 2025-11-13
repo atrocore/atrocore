@@ -1,16 +1,16 @@
 {
   "fields": {
-    "status": "",
+    "status": "Stav",
     "versions": "",
-    "tags": ""
+    "tags": "Štítky"
   },
   "options": {
     "status": {
       "buyable": "",
-      "available": ""
+      "available": "k dispozici"
     }
   },
   "labels": {
-    "installModule": ""
+    "installModule": "Instalace"
   }
 }
