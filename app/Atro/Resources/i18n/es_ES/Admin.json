@@ -73,16 +73,23 @@
     "GeneralSetting": "Ajustes generales",
     "rebuildDb": "Reconstruir la base de datos",
     "rebuildDbWarning": "La estructura de la base de datos ha cambiado. Es necesario reconstruirla para garantizar su correcto funcionamiento.",
-    "matchings": "Partidos"
+    "matchings": "Partidos",
+    "Selected": "Selección",
+    "status": "Status",
+    "AccessManagement": "Access Management",
+    "Action": "Acciones",
+    "Locale": "Localización",
+    "multiLanguages": "Languages"
   },
   "layouts": {
     "list": "Lista",
-    "detail": "Detalle",
+    "detail": "Detalles",
     "massUpdate": "Actualización masiva",
     "relationships": "Relaciones",
     "kanban": "Kanban",
     "leftSidebar": "Vista lateral izquierda",
-    "rightSideView": "Vista lateral derecha"
+    "rightSideView": "Vista lateral derecha",
+    "upload": "Subir"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
@@ -123,11 +130,14 @@
     "language": "Idioma",
     "script": "Guión",
     "extensibleMultiEnum": "Lista multivalor",
-    "markdown": "Markdown"
+    "markdown": "Markdown",
+    "extensibleEnum": "List",
+    "multiLanguage": "Languages",
+    "measure": "Measure"
   },
   "fields": {
     "type": "Tipo",
-    "name": "Nombre",
+    "name": "Código",
     "label": "Etiqueta",
     "link": "Enlace",
     "field": "Campo",
@@ -149,7 +159,8 @@
     "request": "Solicite",
     "response": "Respuesta",
     "sourceList": "Lista de fuentes",
-    "allowFileTypes": "Permitir tipos de archivo"
+    "allowFileTypes": "Permitir tipos de archivo",
+    "defaultDate": "Por defecto"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
