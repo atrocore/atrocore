@@ -4,7 +4,9 @@
     "minimumScore": "Mindestpunktzahl, %",
     "stagingEntity": "Staging-Entität",
     "masterEntity": "Master-Entität",
-    "matchingRules": "Übereinstimmungsregeln"
+    "matchingRules": "Übereinstimmungsregeln",
+    "entity": "Entität",
+    "matchedRecords": "Übereinstimmende Datensätze"
   },
   "tooltips": {
     "foreignName": "Name für eine Rückwärtsübereinstimmung, z. B. könnte „Staging“ ein Fremdname für eine „Master“-Übereinstimmung sein."
