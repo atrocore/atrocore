@@ -34,7 +34,13 @@
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
-    "conditionalDisableOptions": "Отключенные опции"
+    "conditionalDisableOptions": "Отключенные опции",
+    "description": "Описание",
+    "extensibleEnum": "Список",
+    "preparedName": "Название",
+    "channel": "Канал",
+    "conditionalRequired": "Обязательно",
+    "entity": "Сущность"
   },
   "labels": {
     "addNewValue": "Добавить новое значение",
@@ -86,7 +92,11 @@
       "rangeInt": "Целочисленный диапазон",
       "rangeFloat": "Диапазон поплавков",
       "float": "Поплавок",
-      "int": "Целое число"
+      "int": "Целое число",
+      "date": "Дата",
+      "extensibleEnum": "Список",
+      "file": "Файл",
+      "text": "Текст"
     }
   }
 }
