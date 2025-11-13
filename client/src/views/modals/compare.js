@@ -69,7 +69,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.listenTo(this, 'after:render', () => {
                 this.$el.find('.modal-body.body').css('overflow-y', 'hidden');
-                console.log( this.$el.find('.modal-body.body'))
                 this.setupRecord();
             });
 
