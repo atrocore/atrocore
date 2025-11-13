@@ -19,7 +19,8 @@
     "executeAs": "Виконати як",
     "displayField": "Поле відображення",
     "focusField": "Поле фокусування",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "targetEntity": "Цільова сутність"
   },
   "labels": {
     "execute": "Виконати",
@@ -39,7 +40,8 @@
     "type": {
       "set": "Набір дій",
       "email": "Відправити лист",
-      "webhook": "Веб-гачок"
+      "webhook": "Веб-гачок",
+      "customCode": "Користувацький код"
     },
     "usage": {
       "onFieldFocus": "Фокус на місцях",
@@ -49,7 +51,8 @@
       "field": "Кнопка дії в полі"
     },
     "executeAs": {
-      "sameUser": "Той самий користувач"
+      "sameUser": "Той самий користувач",
+      "system": "Система"
     }
   },
   "tooltips": {
