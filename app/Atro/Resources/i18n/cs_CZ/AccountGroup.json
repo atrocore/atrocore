@@ -2,7 +2,7 @@
   "fields": {
     "accounts": "Účty",
     "code": "Kód",
-    "discount": "",
-    "discountPercentage": ""
+    "discount": "Sleva, %",
+    "discountPercentage": "Sleva, %"
   }
 }
