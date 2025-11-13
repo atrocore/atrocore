@@ -13,7 +13,13 @@
   },
   "options": {
     "type": {
-      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren"
+      "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
+      "ClearEntities": "Gelöschte Daten löschen",
+      "UpdateCurrencyExchangeViaECB": "Währungsumtausch über die EZB aktualisieren",
+      "CheckUpdates": "System-Updates prüfen",
+      "ScanStorage": "Speicher scannen",
+      "FindMatches": "Treffer finden",
+      "CalculateScriptFieldsForEntities": "Skriptfelder berechnen"
     }
   },
   "tooltips": {
