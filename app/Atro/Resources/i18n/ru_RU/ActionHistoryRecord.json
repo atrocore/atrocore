@@ -10,6 +10,7 @@
     "controllerName": "Имя контроллера",
     "controllerAction": "Действие контроллера",
     "targetName": "Название цели",
-    "targetId": "ID цели"
+    "targetId": "ID цели",
+    "data": "Данные"
   }
 }
