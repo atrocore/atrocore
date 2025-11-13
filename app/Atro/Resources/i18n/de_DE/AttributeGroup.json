@@ -4,7 +4,8 @@
     "sortOrder": "Sortierreihenfolge",
     "name": "Gruppenname",
     "code": "Code",
-    "attributes": "Attribute"
+    "attributes": "Attribute",
+    "description": "Beschreibung"
   },
   "messages": {
     "unlinkAttributeGroupConfirmation": "Möchten Sie die Verknüpfung aller Attribute der Attributgruppe wirklich aufheben?"
