@@ -3,19 +3,19 @@
     "name": "",
     "description": "",
     "measure": "",
-    "isMain": "",
-    "multiplier": "",
+    "isMain": "Principal",
+    "multiplier": "Multiplicador",
     "convertTo": "",
-    "symbol": "",
+    "symbol": "Símbolo",
     "isActive": ""
   },
   "labels": {
-    "unitSetDefault": ""
+    "unitSetDefault": "Establecer como predeterminado"
   },
   "exceptions": {
-    "defaultIsRequired": "",
-    "unitIsUsed": "",
-    "unitIsUsedOnClassificationAttribute": "",
-    "unitIsUsedOnEntityAttribute": ""
+    "defaultIsRequired": "La medida debe tener una unidad por defecto.",
+    "unitIsUsed": "La unidad \"%s\" es utilizada por el campo \"%s\" en la entidad \"%s\" para el registro \"%s\".",
+    "unitIsUsedOnClassificationAttribute": "La unidad '%s' es utilizada por el Atributo '%s' en la Clasificación '%s'.",
+    "unitIsUsedOnEntityAttribute": "La unidad '%s' es utilizada por el atributo '%s' en el %s '%s'."
   }
 }
