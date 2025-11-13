@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "isActive": "",
+    "type": "",
+    "sourceEntity": "",
+    "inBackground": "",
+    "usage": "",
+    "massAction": "",
+    "display": "",
+    "actionsSet": "",
+    "actions": "",
+    "webhookUrl": "",
+    "executeAs": "",
+    "displayField": "",
+    "focusField": "",
+    "targetEntity": "",
+    "mode": "",
+    "emailScript": "",
+    "showEmailPreview": "",
+    "emailTemplate": "",
+    "emailTo": "",
+    "emailCc": "",
+    "emailBcc": ""
+  },
+  "labels": {
+    "execute": "",
+    "Parameters": ""
+  },
+  "massActions": {
+    "execute": ""
+  },
+  "messages": {
+    "executeNow": ""
+  },
+  "options": {
+    "usage": {
+      "entity": "",
+      "record": "",
+      "field": "",
+      "onFieldFocus": "",
+      "onRecordLoad": ""
+    },
+    "display": {
+      "dropdown": "",
+      "single": ""
+    },
+    "type": {
+      "set": "",
+      "webhook": "",
+      "customCode": "",
+      "email": ""
+    },
+    "executeAs": {
+      "system": "",
+      "sameUser": ""
+    }
+  },
+  "tooltips": {
+    "inBackground": "",
+    "usage": "",
+    "executeAs": ""
+  },
+  "exceptions": {
+    "forEditModeOnly": ""
+  }
+}
