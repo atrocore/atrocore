@@ -7,6 +7,10 @@
     "authToken": "Token Autoryzacyjny",
     "ipAddress": "Adres IP",
     "authLogRecord": "Rekord Logowania",
-    "data": "Dane"
+    "data": "Dane",
+    "controllerName": "Nazwa kontrolera",
+    "controllerAction": "Działanie kontrolera",
+    "targetName": "Nazwa celu",
+    "targetId": "Identyfikator celu"
   }
 }
