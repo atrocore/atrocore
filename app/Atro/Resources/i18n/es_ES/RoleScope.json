@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "",
+    "name": "Alcance",
     "role": "",
     "hasAccess": "",
     "createAction": "",
@@ -8,17 +8,17 @@
     "editAction": "",
     "deleteAction": "",
     "streamAction": "",
-    "fields": "",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
-    "attributes": "",
-    "attributePanels": ""
+    "fields": "Campos",
+    "accessData": "Datos de acceso",
+    "createAttributeValueAction": "Crear valor de atributo",
+    "deleteAttributeValueAction": "Borrar valor de atributo",
+    "attributes": "Atributos",
+    "attributePanels": "Paneles de atributos"
   },
   "labels": {
     "all": "",
     "team": "",
-    "own": "",
+    "own": "Propio",
     "no": "",
     "yes": ""
   }
