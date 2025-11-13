@@ -1,7 +1,5 @@
 {
   "fields": {
-    "packageId": "Package ID",
-    "url": "URL",
     "status": "Status",
     "versions": "Versionen",
     "tags": "Stichworte"
