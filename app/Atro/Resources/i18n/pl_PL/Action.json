@@ -1,30 +1,59 @@
 {
-	"fields": {
-		"isActive": "Aktywny",
-		"type": "Typ",
-		"sourceEntity": "Źródłowa Jednostka",
-		"inBackground": "Wykonaj w tle",
-		"usage": "Wykorzystanie",
-		"massAction": "Akcja Masowa",
-		"display": "Wyświetlanie"
-	},
-	"labels": {
-		"execute": "Wykonaj"
-	},
-	"massActions": {
-		"execute": "Wykonaj"
-	},
-	"messages": {
-		"executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
-	},
-	"options": {
-		"display": {
-			"dropdown": "Rozwijane",
-			"single": "Pojedyncze"
-		}
-	},
-	"tooltips": {
-		"inBackground": "Akcja zostanie wykonana w tle bez bezpośredniej informacji o sukcesie/błędzie. Użyj tej opcji, jeśli wykonanie akcji zajmie więcej niż 30 sekund.",
-		"usage": "Wykorzystanie określa umiejscowienie akcji. Akcja Rekordu wymaga wcześniejszego zaznaczenia dotkniętych rekordów."
-	}
+  "fields": {
+    "isActive": "Aktywny",
+    "type": "Typ",
+    "sourceEntity": "Źródłowa Jednostka",
+    "inBackground": "Wykonaj w tle",
+    "usage": "Wykorzystanie",
+    "massAction": "Akcja Masowa",
+    "display": "Wyświetlanie",
+    "displayField": "Pole wyświetlania",
+    "targetEntity": "Podmiot docelowy",
+    "showEmailPreview": "Podgląd przed wysłaniem",
+    "emailTo": "Email do",
+    "emailCc": "Email CC",
+    "actionsSet": "Zestaw działań",
+    "focusField": "Pole ostrości",
+    "emailBcc": "Email BCC",
+    "executeAs": "Wykonać jako"
+  },
+  "labels": {
+    "execute": "Wykonaj",
+    "Parameters": "Parametry"
+  },
+  "massActions": {
+    "execute": "Wykonaj"
+  },
+  "messages": {
+    "executeNow": "Czy na pewno chcesz wykonać wybraną akcję?"
+  },
+  "options": {
+    "display": {
+      "dropdown": "Rozwijane",
+      "single": "Pojedyncze"
+    },
+    "usage": {
+      "entity": "Przycisk akcji jednostki",
+      "record": "Przycisk nagrywania akcji",
+      "field": "Przycisk akcji w polu",
+      "onFieldFocus": "Koncentracja na terenie",
+      "onRecordLoad": "Przy rekordowym obciążeniu"
+    },
+    "type": {
+      "webhook": "Webhook",
+      "email": "Proszę wysłać e-mail",
+      "set": "Zestaw akcji"
+    },
+    "executeAs": {
+      "sameUser": "Ten sam użytkownik"
+    }
+  },
+  "tooltips": {
+    "inBackground": "Akcja zostanie wykonana w tle bez bezpośredniej informacji o sukcesie/błędzie. Użyj tej opcji, jeśli wykonanie akcji zajmie więcej niż 30 sekund.",
+    "usage": "Wykorzystanie określa umiejscowienie akcji. Akcja Rekordu wymaga wcześniejszego zaznaczenia dotkniętych rekordów.",
+    "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
+  },
+  "exceptions": {
+    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być użyta tutaj."
+  }
 }
