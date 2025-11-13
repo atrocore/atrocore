@@ -1,7 +1,7 @@
 {
   "fields": {
-    "extensibleEnumOptions": "",
-    "multilingual": ""
+    "extensibleEnumOptions": "Možnosti seznamu",
+    "multilingual": "Vícejazyčný"
   },
   "exceptions": {
     "extensibleEnumIsUsed": ""
