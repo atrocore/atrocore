@@ -2,6 +2,6 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "selectionRecords": ""
+    "selectionRecords": "Rekordy selekcji"
   }
 }
