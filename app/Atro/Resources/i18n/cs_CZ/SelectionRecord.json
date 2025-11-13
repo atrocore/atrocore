@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Název",
-    "entityId": "",
+    "entityId": "Záznam",
     "entityType": "Subjekt"
   }
 }
