@@ -73,21 +73,28 @@
     "incomingWebhook": "Входящие Webhooks",
     "matchings": "Матчи",
     "GeneralSetting": "Общие настройки",
-    "ThumbnailTypes": "Типы миниатюр"
+    "ThumbnailTypes": "Типы миниатюр",
+    "Available": "Доступно",
+    "execute": "Выполнить",
+    "status": "Статус",
+    "Measure": "Меры",
+    "Action": "Действия",
+    "Accounts": "Контрагенты"
   },
   "layouts": {
     "kanban": "Канбан",
     "list": "Список",
-    "detail": "Детали",
+    "detail": "Описание",
     "massUpdate": "Массовое обновление",
     "relationships": "Отношения",
     "leftSidebar": "Вид с левой стороны",
-    "rightSideView": "Вид с правой стороны"
+    "rightSideView": "Вид с правой стороны",
+    "upload": "Загрузить"
   },
   "fields": {
     "fontSize": "Размер шрифта",
     "type": "Тип",
-    "name": "Название",
+    "name": "Код",
     "label": "Отображаемое имя",
     "link": "Ссылка",
     "field": "Поле",
@@ -108,7 +115,8 @@
     "isPersonalData": "Личные данные",
     "request": "Запрос",
     "response": "Ответ",
-    "allowFileTypes": "Разрешить типы файлов"
+    "allowFileTypes": "Разрешить типы файлов",
+    "defaultDate": "По умолчанию"
   },
   "messages": {
     "selectEntityType": "Выберите тип сущности в левом меню.",
@@ -195,6 +203,19 @@
     "wysiwyg": "HTML",
     "colorpicker": "Выбор цвета",
     "jsonArray": "Массив JSON",
-    "jsonObject": "Объект JSON"
+    "jsonObject": "Объект JSON",
+    "language": "Язык",
+    "multiLanguage": "Языки",
+    "measure": "Мера",
+    "unit": "Единица измерения",
+    "password": "Пароль",
+    "date": "Дата",
+    "email": "Эл. почта",
+    "extensibleEnum": "Список",
+    "link": "Ссылка",
+    "phone": "Телефон",
+    "text": "Текст",
+    "file": "Файл",
+    "map": "Карта"
   }
 }
