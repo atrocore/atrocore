@@ -1,11 +1,11 @@
 {
   "fields": {
     "classification": "Классификация",
-    "attribute": "",
-    "isRequired": "",
+    "attribute": "Атрибут",
+    "isRequired": "Обязательно",
     "isReadOnly": "Только для чтения",
     "isProtected": "Защищенный",
-    "maxLength": "",
+    "maxLength": "Максимальная длина",
     "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
     "value": "Значение по умолчанию",
     "valueFrom": "Значение по умолчанию От",
@@ -25,7 +25,7 @@
     "enableConditionalReadOnly": "Включить Только для чтения",
     "enableConditionalProtected": "Включить Защищено",
     "enableConditionalDisableOptions": "Включить Отключенные опции",
-    "conditionalRequired": "",
+    "conditionalRequired": "Обязательно",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
@@ -39,8 +39,8 @@
   },
   "options": {
     "scope": {
-      "Global": "",
-      "Channel": ""
+      "Global": "Глобальный",
+      "Channel": "Канал"
     }
   },
   "messages": {
