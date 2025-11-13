@@ -1,39 +1,39 @@
 {
   "fields": {
-    "navigationManuBackgroundColor": "",
-    "navigationMenuFontColor": "",
-    "linkFontColor": "",
-    "customStylesheetPath": "",
-    "customStylesheet": "",
-    "primaryColor": "",
-    "secondaryColor": "",
-    "primaryFontColor": "",
-    "secondaryFontColor": "",
-    "labelColor": "",
-    "anchorNavigationBackground": "",
-    "iconColor": "",
-    "primaryBorderColor": "",
-    "secondaryBorderColor": "",
-    "panelTitleColor": "",
-    "headerTitleColor": "",
+    "navigationManuBackgroundColor": "Pozadí navigační nabídky",
+    "navigationMenuFontColor": "Barva písma navigace",
+    "linkFontColor": "Barva odkazu",
+    "customStylesheetPath": "Cesta k souboru SSS",
+    "customStylesheet": "CSS",
+    "primaryColor": "Základní barva",
+    "secondaryColor": "Sekundární barva",
+    "primaryFontColor": "Základní barva písma",
+    "secondaryFontColor": "Sekundární barva písma",
+    "labelColor": "Barva štítku",
+    "anchorNavigationBackground": "Pozadí kotvy navigace",
+    "iconColor": "Barva ikony",
+    "primaryBorderColor": "Primární barva rámečku",
+    "secondaryBorderColor": "Sekundární barva rámečku",
+    "panelTitleColor": "Barva názvu panelu",
+    "headerTitleColor": "Barva nadpisu záhlaví",
     "success": "",
-    "notice": "",
-    "information": "",
+    "notice": "Oznámení",
+    "information": "Informace",
     "error": "",
-    "actionIconColor": "",
-    "navigationIconColor": "",
-    "statusIconColor": "",
-    "customHeadCode": "",
-    "highlightingColorForRequired": "",
-    "toolbarBackgroundColor": "",
-    "toolbarFontColor": ""
+    "actionIconColor": "Barva ikony akce",
+    "navigationIconColor": "Barva navigační ikony",
+    "statusIconColor": "Barva ikony stavu",
+    "customHeadCode": "Kód hlavy",
+    "highlightingColorForRequired": "Zvýraznění barvy pro požadovaná data",
+    "toolbarBackgroundColor": "Barva pozadí panelu nástrojů",
+    "toolbarFontColor": "Barva písma panelu nástrojů"
   },
   "tooltips": {
-    "customStylesheetPath": "",
-    "customHeadCode": ""
+    "customStylesheetPath": "Do tohoto souboru se zapíší vaše vlastní styly CSS. Můžete v něm také přímo provádět změny.",
+    "customHeadCode": "Přidejte kód na konec značky <head>. Atrocore za vás vlastní kód neověřuje, proto si jej před publikováním nezapomeňte zkontrolovat."
   },
   "exceptions": {
-    "styleIsUsed": "",
-    "codeShouldBeString": ""
+    "styleIsUsed": "Používaný styl nelze odstranit.",
+    "codeShouldBeString": "Kód by měl být platný řetězec bez speciálních znaků a mezer."
   }
 }
