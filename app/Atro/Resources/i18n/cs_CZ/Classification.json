@@ -1,18 +1,18 @@
 {
   "fields": {
-    "entity": "",
-    "description": "",
+    "entity": "Subjekt",
+    "description": "Popis",
     "release": "",
     "synonyms": "",
-    "code": "",
-    "isActive": "",
-    "classifications": "",
-    "classificationAttributes": "",
-    "type": ""
+    "code": "Kód",
+    "isActive": "Aktivní",
+    "classifications": "Klasifikace",
+    "classificationAttributes": "Atributy klasifikace",
+    "type": "Typ"
   },
   "options": {
     "type": {
-      "general": ""
+      "general": "Obecné"
     }
   },
   "labels": {
