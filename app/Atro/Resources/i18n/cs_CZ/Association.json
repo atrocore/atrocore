@@ -7,7 +7,7 @@
     "default": ""
   },
   "exceptions": {
-    "associationIsLinkedWithRecords": "",
-    "youCanNotDeactivateAssociationWithActiveRecords": ""
+    "associationIsLinkedWithRecords": "Asociace je spojena se záznamem (záznamy). Nejprve zrušte propojení záznamu(ů)",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Nelze deaktivovat přidružení k aktivním záznamům."
   }
 }
