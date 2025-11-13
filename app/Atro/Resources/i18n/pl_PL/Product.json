@@ -12,7 +12,8 @@
     "mpn": "Numer producenta (MPN)",
     "customsNumber": "Numer celny",
     "countryOfOrigin": "Kraj pochodzenia",
-    "defaultSupplier": "Domyślny dostawca"
+    "defaultSupplier": "Domyślny dostawca",
+    "note": "Notatka"
   },
   "labels": {
     "manufacturer": "Producent",
