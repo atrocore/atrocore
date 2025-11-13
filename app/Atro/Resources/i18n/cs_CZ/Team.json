@@ -6,6 +6,6 @@
     "notes": "Poznámky"
   },
   "tooltips": {
-    "roles": ""
+    "roles": "Přístupové role. Uživatelé tohoto týmu získají úroveň řízení přístupu z vybraných rolí."
   }
 }
