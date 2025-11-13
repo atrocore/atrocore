@@ -1,6 +1,5 @@
 {
   "fields": {
-    "associatedProducts": "Пов'язані продукти",
     "description": "Опис",
     "isActive": "Активний",
     "reverseAssociation": "Зворотня асоціація",
