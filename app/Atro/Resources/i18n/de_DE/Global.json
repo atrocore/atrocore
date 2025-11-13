@@ -58,7 +58,18 @@
     "Bookmark": "Lesezeichen",
     "SystemIcon": "System-Symbol",
     "AccountGroup": "Kontogruppe",
-    "ProductGroup": "Produktgruppe"
+    "ProductGroup": "Produktgruppe",
+    "Job": "Job",
+    "ExtensibleEnumExtensibleEnumOption": "Liste (Option Liste)",
+    "DocumentFolder": "Dokumentenmappe",
+    "Team": "Team",
+    "AuthToken": "Auth Token",
+    "LayoutManager": "Layout Manager",
+    "Admin": "Admin",
+    "MatchedRecord": "Abgestimmter Datensatz",
+    "Matching": "Passend dazu",
+    "ThumbnailType": "Thumbnail Typ",
+    "ProductHierarchy": "Produkt-Hierarchie"
   },
   "scopeNamesPlural": {
     "ActionLog": "Aktionsprotokolle",
@@ -110,7 +121,15 @@
     "Bookmark": "Lesezeichen",
     "SystemIcon": "System-Symbole",
     "AccountGroup": "Kontogruppen",
-    "ProductGroup": "Produktgruppen"
+    "ProductGroup": "Produktgruppen",
+    "Matching": "Matchings",
+    "ThumbnailType": "Thumbnail-Typen",
+    "RoleScope": "Geltungsbereiche",
+    "Background": "Hintergründe",
+    "EntityRelation": "Entitätsbeziehungen",
+    "DocumentFolder": "Dokumentenmappen",
+    "AuthToken": "Authentifizierungs-Token",
+    "Team": "Mannschaften"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -424,7 +443,32 @@
     "reloadPage": "Seite neu laden",
     "Compare": "Vergleichen",
     "Standard": "Standard",
-    "addItem": "Entität hinzufügen"
+    "addItem": "Entität hinzufügen",
+    "addGroup": "Gruppe beginnen / beenden",
+    "actionFollow": "Klicken Sie zum Folgen",
+    "actionUnfollow": "Sie folgen, Klicken Sie zum Aufheben des Folgens",
+    "actionBookmark": "Zum Lesezeichen klicken",
+    "actionUnbookmark": "Mit Lesezeichen versehen, Klicken Sie zum Entfernen des Lesezeichens",
+    "actionOpenFilter": "Filter öffnen",
+    "relatedAssociates": "Rückwärtsgerichtete Assoziationen",
+    "Associated": "Assoziiert",
+    "Associating": "Assoziieren Sie",
+    "phpCode": "PHP-Code",
+    "_addAttribute": "[Attribut hinzufügen]",
+    "confirmRemoveAttributeValue": "Sind Sie sicher, dass Sie das Attribut löschen möchten?",
+    "UserFollowed": "Benutzer Gefolgt",
+    "jobManager": "Job Manager",
+    "massActionDelegatedToJm": "Ihre Aktion wurde erfolgreich an den Job Manager delegiert.",
+    "intPart": "(Ganzzahl)",
+    "floatPart": "(Schwebezustand)",
+    "varcharPart": "(Zeichenfolge)",
+    "customDownload": "Benutzerdefinierter Download",
+    "Admin": "Admin",
+    "Administration": "Verwaltung",
+    "editGroup": "Gruppe bearbeiten",
+    "Duplicates": "Dupliziert",
+    "Person": "Person",
+    "Original": "Original"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -461,7 +505,7 @@
     "massRestoreZeroResult": "Es wurde nichts wiederhergestellt",
     "posting": "postiere...",
     "streamPostInfo": "Schreiben Sie <strong>@username</strong> um Benutzer in der Post zu nennen.",
-    "writeMessageToSelf": "Nachricht bei eigenen Aktivitäten erfassen",
+    "writeMessageToSelf": "Schreiben Sie eine Nachricht über Ihre Aktivitäten",
     "writeYourCommentHere": "Notiz hier erfassen",
     "massUpdateResult": "{count} Einträge werden aktualisiert",
     "isRequiredAndUnique": "{field} Feld ist erforderlich und sollte eindeutig sein.",
@@ -505,7 +549,7 @@
     "checkForNewNotifications": "Nach neuen Benachrichtigungen überprüfen",
     "duplicate": "Der Datensatz den Sie erstellen wollen, könnte eine Dublette sein",
     "dropToAttach": "Anhang hier ablegen",
-    "checkForNewNotes": "Nach neuen Aktivitäten überprüfen",
+    "checkForNewNotes": "Prüfen Sie auf Aktualisierungen der Aktivitäten",
     "done": "Fertig",
     "fieldShouldBeEmail": "{field} muss eine gültige E-Mail sein",
     "fieldShouldBeInt": "{field} muss eine gültige Ganzzahl sein",
@@ -527,19 +571,23 @@
     "unableToDuplicateRecord": "Duplizieren nicht möglich. Ein Datensatz mit einem Wert des eindeutigen Feldes existiert bereits.",
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
     "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
-    "closePanelConfirmation": "Sind Sie sicher, dass Sie das Panel schließen wollen?"
+    "closePanelConfirmation": "Sind Sie sicher, dass Sie das Panel schließen wollen?",
+    "jobAdded": "Job wurde erfolgreich zum Job Manager hinzugefügt"
   },
   "unit Length": {
     "mm": "mm",
     "cm": "cm",
     "dm": "dm",
     "m": "m",
-    "km": "km"
+    "km": "km",
+    "inch": "Zoll",
+    "\"": "\""
   },
   "unit Mass": {
     "mg": "MG",
     "g": "g",
-    "kg": "kg"
+    "kg": "kg",
+    "ounces": "Unzen"
   },
   "unit Time": {
     "s": "s",
@@ -547,7 +595,8 @@
     "h": "h"
   },
   "unit Electric Current": {
-    "A": "A"
+    "A": "A",
+    "W": "W"
   },
   "unit Thermodynamic Temperature": {
     "K": "K",
@@ -697,14 +746,29 @@
     "reverseAssociation": "Umgekehrte Assoziation",
     "sorting": "Sortierreihenfolge",
     "associateEverything": "Jeden Datensatz mit jedem anderen Datensatz assoziieren",
-    "conditionalProperties": "Bedingte Eigenschaften"
+    "conditionalProperties": "Bedingte Eigenschaften",
+    "__currentUser": "Aktueller Benutzer",
+    "routes": "Route(n)",
+    "logs": "Protokolle",
+    "smallThumbnailUrl": "Thumbnail URL (klein)",
+    "mediumThumbnailUrl": "Vorschaubild-URL (mittel)",
+    "largeThumbnailUrl": "Thumbnail URL (groß)",
+    "extension": "Erweiterung",
+    "hierarchySortOrder": "Hierarchie Sortierreihenfolge",
+    "emailAddressData": "E-Mail Adresse Daten",
+    "teams": "Mannschaften",
+    "team": "Team",
+    "ids": "IDs",
+    "folderPath": "Ordner Pfad",
+    "downloadUrl": "URL herunterladen"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
   },
   "dashlets": {
     "Stream": "Aktivitäten",
-    "Records": "Datensatzliste"
+    "Records": "Datensatzliste",
+    "FirstSteps": "Erste Schritte"
   },
   "notificationMessages": {
     "own": "Sie wurden als Eigentümer für {entityType} {entity} gesetzt.",
@@ -759,7 +823,7 @@
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
-    "unrelateThis": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit diese(r/m) {entityType}",
+    "unrelateThis": "{Benutzer} unverknüpft {relatedEntityType} {relatedEntity} von diesem {entityType}",
     "updateOneThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateFromToThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateOne": "{user} aktualisierte {entityType} {entity}",
@@ -768,7 +832,25 @@
     "to": "zu",
     "was": "war",
     "become": "werden",
-    "changed": "wurde geändert"
+    "changed": "wurde geändert",
+    "updateOneInThis": "{user} in diesem {entityType} aktualisiert in {relatedEntityType} {relatedEntity}",
+    "own": "{Benutzer} setzt {Besitzer} als Eigentümer für {Einheitentyp} {Einheit}",
+    "ownThis": "{Benutzer} setzen {Besitzer} als Besitzer für diesen {Einheitentyp}",
+    "ownYou": "{user} hat Sie als Eigentümer für {entityType} festgelegt {Einheit}",
+    "ownThisVoid": "{user} den Besitzer für diesen {entityType} aufheben",
+    "ownVoid": "{Benutzer} den Besitzer für {entityType} aufheben {Einheit}",
+    "ownThisSelf": "{Benutzer} hat sich selbst als Eigentümer für diesen {entityType} festgelegt",
+    "ownSelf": "{user} hat sich selbst als Eigentümer für {entityType} {Einheit}",
+    "assign": "{Benutzer} hat {entityType} zugewiesen {Einheit} an {Empfänger}",
+    "assignThis": "{Benutzer} hat diesen {entityType} an {Abtretungsempfänger} vergeben",
+    "assignYou": "{Benutzer} hat {entityType} zugewiesen {Einheit} an Sie",
+    "assignThisVoid": "{Benutzer} hat diesen {entityType} nicht zugewiesen",
+    "assignVoid": "{Benutzer} nicht zugewiesen {entityType} {Einheit}",
+    "assignThisSelf": "{Benutzer} hat diesen {entityType} selbst zugewiesen",
+    "assignSelf": "{Benutzer} selbst zugewiesen {entityType} {Einheit}",
+    "updateFromToInThis": "{user} in diesem {entityType} aktualisiert in {relatedEntityType} {relatedEntity}",
+    "updateOneIn": "{Benutzer} in {entityType} {Entität} aktualisiert in {relatedEntityType} {relatedEntity}",
+    "updateFromToIn": "{Benutzer} in {entityType} {Entität} aktualisiert in {relatedEntityType} {relatedEntity}"
   },
   "monthNames": {
     "January": "Januar",
@@ -912,7 +994,8 @@
     "Electric Current": "Elektrischer Strom",
     "Thermodynamic Temperature": "Thermodynamische Temperatur",
     "Amount Of Substance": "Menge der Substanz",
-    "Luminous Intensity": "Lichtintensität"
+    "Luminous Intensity": "Lichtintensität",
+    "Long intervals of time": "Lange Zeitintervalle"
   },
   "sets": {
     "summernote": {
@@ -951,7 +1034,10 @@
       },
       "video": {
         "insert": "Video einfügen",
-        "providers": "(YouTube, Vimeo, Vine, Instagram oder DailyMotion)"
+        "providers": "(YouTube, Vimeo, Vine, Instagram oder DailyMotion)",
+        "video": "Video",
+        "videoLink": "Video Link",
+        "url": "Video-URL?"
       },
       "table": {
         "table": "Tabelle"
@@ -1027,7 +1113,8 @@
     "s": "S"
   },
   "listViewModes": {
-    "list": "Liste"
+    "list": "Liste",
+    "kanban": "Kanban"
   },
   "exceptions": {
     "singleClassificationAllowed": "Nur eine Klassifizierung ist zulässig",
@@ -1083,7 +1170,9 @@
     "massDeleteSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich entfernt werden.",
     "massRestoreSomeRecordNotProceed": "Einige Datensätze konnten nicht erfolgreich wiederhergestellt werden.",
     "entityCannotBeBookmarked": "Die Datensätze dieser Entität können nicht mit Lesezeichen versehen werden.",
-    "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen."
+    "integerValueValidationFailed": "Der ganzzahlige Wert für das Feld/Attribut \"%s\" muss zwischen %s und %s liegen.",
+    "notAllowedOption": "Die Option '%s' ist für '%s' nicht erlaubt.",
+    "notUniqueRecordField": "Der Datensatz kann nicht gespeichert werden, der Datensatz mit diesem '%s' existiert bereits."
   },
   "firstStepsDashlet": {
     "title": {
@@ -1184,8 +1273,13 @@
       "number_wrong_step": "Muss ein Vielfaches von {0} sein",
       "datetime_invalid": "Ungültiges Datumsformat ({0})",
       "datetime_exceed_min": "Muss nach dem {0} sein",
-      "datetime_exceed_max": "Muss vor dem {0} sein"
-    }
+      "datetime_exceed_max": "Muss vor dem {0} sein",
+      "number_between_invalid": "Ungültige Werte, {0} ist größer als {1}",
+      "datetime_between_invalid": "Ungültige Werte, {0} ist größer als {1}",
+      "boolean_not_valid": "Nicht boolesch",
+      "operator_not_multiple": "Der Operator \"{1}\" kann nicht mehrere Werte annehmen"
+    },
+    "invert": "Invertieren"
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
@@ -1195,5 +1289,47 @@
     "small": "Klein",
     "medium": "Mittel",
     "large": "Groß"
+  },
+  "twig": {
+    "functions": {
+      "isNew": "Prüfen Sie, ob eine Entität neu ist",
+      "md5": "Eingabe-String in md5-Hash umwandeln",
+      "isAttributeChanged": "Prüfen Sie, ob ein Attribut geändert wurde",
+      "getFetched": "Abgerufene Entitätsdaten abrufen",
+      "get": "Feldwert abrufen",
+      "createEntity": "Eine neue Entität erstellen",
+      "createRecord": "Erstellen Sie einen neuen Entitätsdatensatz",
+      "findEntity": "Eine einzelne Entität finden",
+      "findRecord": "Einen einzelnen Entitätsdatensatz finden",
+      "findEntities": "Mehrere Entitäten finden \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "findRecords": "Mehrere Entitäten finden \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "convertFileToBase64FromUrl": "Konvertieren einer Datei in base64 von URL",
+      "translate": "Übersetzen Sie eine Zeichenkette",
+      "translateOption": "Einen Optionswert umrechnen",
+      "convertFileToBase64": "Eine Datei in base64 konvertieren",
+      "getConvertedImageUrl": "URL eines konvertierten Bildes abrufen",
+      "editable": "Prüfen, ob eine Entität editierbar ist",
+      "getAllLanguageFields": "Alle sprachspezifischen Felder abrufen",
+      "parseMarkdown": "Parsen von Markdown-Inhalt",
+      "formatField": "Einen Feldwert formatieren",
+      "convertMeasureUnit": "Einen Wert von einer Einheit in eine andere umrechnen \n Params: float|int Wert, string measureId, string fromUnitId, string? toUnitId = null \n Wenn toUnitId leer ist, ist das Ergebnis ein Array mit konvertierten Werten für alle Maßeinheiten \n Beispiel: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}"
+    },
+    "filters": {
+      "prepareHtmlField": "HTML-Feldinhalte für die sichere Anzeige vorbereiten",
+      "isImage": "Prüfen, ob der Inhalt ein Bild ist",
+      "escapeDoubleQuote": "Doppelte Anführungszeichen in einer Zeichenkette entwerten",
+      "escapeStr": "Sonderzeichen in einer Zeichenkette ausblenden",
+      "backslashNToBr": "\\n in HTML-Zeilenumbrüche umwandeln",
+      "generateBorderColor": "Erzeugen Sie einen Wert für die Randfarbe",
+      "generateFontColor": "Erzeugen Sie einen Wert für die Schriftfarbe",
+      "prepareEntity": "Entität für die Anzeige oder Verarbeitung vorbereiten"
+    }
+  },
+  "twigVariables": {
+    "entity": "Entity (Datensatz) Objekt",
+    "uiRecord": "Datensatz-Array. Die Variable enthält die Daten, die Sie auf der Frontend-Seite haben.",
+    "uiRecordFromName": "Der Name der Entität, von der aus Sie die aktuelle Entität öffnen.",
+    "uiRecordFrom": "Datensatz-Array der Entität, von der aus Sie die aktuelle Entität öffnen.",
+    "config": "Konfigurationsobjekt des Systems"
   }
 }
