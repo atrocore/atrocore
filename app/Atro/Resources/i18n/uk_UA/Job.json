@@ -1,26 +1,26 @@
 {
   "fields": {
-    "status": "",
+    "status": "Статус",
     "executeTime": "",
     "pid": "",
-    "priority": "",
+    "priority": "Пріоритет",
     "handler": "",
-    "payload": "",
-    "scheduledJob": "",
-    "message": "",
+    "payload": "корисне навантаження",
+    "scheduledJob": "Розклад роботи",
+    "message": "Повідомлення",
     "startedAt": "",
     "endedAt": ""
   },
   "labels": {
-    "cancel": ""
+    "cancel": "Скасування"
   },
   "options": {
     "status": {
-      "Pending": "",
-      "Success": "",
-      "Running": "",
-      "Failed": "",
-      "Canceled": "",
+      "Pending": "В очікуванні",
+      "Success": "Успіх",
+      "Running": "Виконується",
+      "Failed": "Не виконано",
+      "Canceled": "Скасовано",
       "Awaiting": "",
       "Closed": ""
     }
