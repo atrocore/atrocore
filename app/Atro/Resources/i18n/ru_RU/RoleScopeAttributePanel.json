@@ -1,8 +1,8 @@
 {
   "fields": {
     "attributePanel": "Панель атрибутов",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "roleScope": "Область применения",
+    "readAction": "Чтение",
+    "editAction": "Редактировать"
   }
 }
