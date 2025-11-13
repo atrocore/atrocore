@@ -1,12 +1,12 @@
 {
   "fields": {
-    "type": "",
+    "type": "Typ",
     "dbName": "",
     "host": "",
     "port": "",
-    "user": "",
+    "user": "Uživatel",
     "ftpSsl": "",
-    "password": "",
+    "password": "Heslo",
     "oauthUrl": "",
     "oauthGrantType": "",
     "oauthClientId": "",
@@ -24,16 +24,16 @@
     "callbackUrl": "",
     "linkUrl": "",
     "apiTestUrl": "",
-    "payload": "",
+    "payload": "Payload (užitečná data)",
     "loginUrl": "",
-    "atrocoreUrl": "",
-    "atrocoreToken": "",
+    "atrocoreUrl": "URL",
+    "atrocoreToken": "Autorizační token",
     "additionalParameters": "",
     "smtpServer": "",
     "smtpPort": "",
     "smtpSecurity": "",
-    "smtpUsername": "",
-    "smtpPassword": "",
+    "smtpUsername": "Uživatelské jméno",
+    "smtpPassword": "Heslo",
     "outboundEmailFromName": "",
     "outboundEmailFromAddress": "",
     "smtpOauthScope": "",
@@ -75,7 +75,7 @@
   },
   "options": {
     "smtpAuthType": {
-      "basic": "",
+      "basic": "Základní",
       "oauth": ""
     }
   },
