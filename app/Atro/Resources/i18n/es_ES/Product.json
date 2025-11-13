@@ -1,8 +1,8 @@
 {
   "fields": {
-    "number": "",
-    "isActive": "",
-    "image": "",
+    "number": "Número",
+    "isActive": "Activo",
+    "image": "Imagen",
     "price": "Precio",
     "description": "Breve descripción",
     "longDescription": "Descripción larga",
@@ -13,7 +13,7 @@
     "customsNumber": "Número de aduana",
     "countryOfOrigin": "País de origen",
     "defaultSupplier": "Proveedor por defecto",
-    "note": ""
+    "note": "Note"
   },
   "labels": {
     "manufacturer": "Fabricante",
