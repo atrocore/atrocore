@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "isActive": "",
+    "description": "Descripción",
+    "isActive": "Activo",
     "reverseAssociation": "Asociación inversa",
-    "code": "",
-    "default": ""
+    "code": "Código",
+    "default": "Por defecto"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "La asociación está vinculada con registro(s). Por favor, desvincule primero el/los registro(s)",
