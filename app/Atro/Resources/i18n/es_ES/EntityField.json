@@ -1,27 +1,27 @@
 {
   "fields": {
-    "type": "",
+    "type": "Type",
     "entity": "",
-    "isMultilang": "",
-    "required": "",
+    "isMultilang": "Multilingual",
+    "required": "Required",
     "notNull": "",
     "readOnly": "",
     "protected": "",
     "unique": "",
     "index": "",
-    "measure": "",
+    "measure": "Measure",
     "trim": "",
     "maxLength": "",
     "countBytesInsteadOfCharacters": "",
     "pattern": "",
     "defaultUnit": "",
-    "default": "",
+    "default": "Por defecto",
     "defaultValueType": "",
     "tooltip": "",
     "tooltipText": "",
     "tooltipLink": "",
     "noEmptyString": "",
-    "options": "",
+    "options": "Ajustes",
     "useNumericFormat": "",
     "isSorted": "",
     "dropdown": "",
@@ -45,7 +45,7 @@
     "strip": "",
     "height": "",
     "useIframe": "",
-    "htmlSanitizer": "",
+    "htmlSanitizer": "HTML Sanitizer",
     "foreignCode": "",
     "relationType": "",
     "foreignEntity": "",
@@ -62,7 +62,7 @@
     "modifiedExtendedEnabled": "",
     "duplicateIgnore": "",
     "recordRelatedChangesInStream": "",
-    "conditionalRequired": "",
+    "conditionalRequired": "Required",
     "conditionalVisible": "",
     "conditionalReadOnly": "",
     "conditionalProtected": "",
@@ -95,16 +95,16 @@
   },
   "options": {
     "outputType": {
-      "text": "",
-      "int": "",
-      "float": "",
-      "bool": "",
-      "date": "",
-      "datetime": ""
+      "text": "Área de texto simple",
+      "int": "Entero",
+      "float": "Decimal",
+      "bool": "SI / NO",
+      "date": "Date",
+      "datetime": "Date-Time"
     },
     "relationType": {
-      "oneToMany": "",
-      "manyToMany": ""
+      "oneToMany": "One-to-Many",
+      "manyToMany": "Many-to-Many"
     }
   },
   "groupOptions": {
@@ -120,7 +120,7 @@
     "resetToDefault": ""
   },
   "labels": {
-    "resetToDefault": "",
+    "resetToDefault": "Restablecer a (por defecto)",
     "relationManagement": "",
     "conditionalProperties": ""
   }
