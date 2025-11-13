@@ -2,7 +2,6 @@
   "fields": {
     "department": "Abteilung",
     "name": "Anzeigename",
-    "acceptanceStatus": "Acceptance Status",
     "isActive": "Aktiv",
     "userName": "Benutzername",
     "title": "Funktion",
@@ -33,7 +32,10 @@
     "followCreatedEntities": "Eigenerstellte Datensätze automatisch verfolgen",
     "receiveNotifications": "Erhalten Sie Benachrichtigungen",
     "locale": "Gebietsschema",
-    "style": "Design"
+    "style": "Design",
+    "notificationProfile": "Benachrichtigungsprofil",
+    "layoutProfile": "Layout-Profil",
+    "teamRole": "Position"
   },
   "labels": {
     "Generate": "Erzeugen",
@@ -45,7 +47,8 @@
     "Password Change Request": "Anforderung zur Passwortänderung",
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
-    "Email Accounts": "E-Mail Konten"
+    "Email Accounts": "E-Mail Konten",
+    "Notifications": "Benachrichtigungen"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -53,8 +56,7 @@
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
     "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
-    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
+    "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen."
   },
   "messages": {
     "accountInfoEmailSubject": "AtroCore Benutzerzugriffsinfo",
