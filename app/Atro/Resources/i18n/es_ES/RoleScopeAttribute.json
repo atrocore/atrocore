@@ -1,7 +1,7 @@
 {
   "fields": {
     "attribute": "Atributo",
-    "roleScope": "",
+    "roleScope": "Alcance",
     "readAction": "Leer",
     "editAction": "Editar"
   }
