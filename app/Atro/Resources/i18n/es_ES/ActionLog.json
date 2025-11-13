@@ -1,20 +1,20 @@
 {
   "fields": {
-    "incomingWebhook": "",
+    "incomingWebhook": "Webhook entrante",
     "scheduledJob": "",
-    "workflow": "",
-    "statusMessage": ""
+    "workflow": "Flujo de trabajo",
+    "statusMessage": "Mensaje de estado"
   },
   "options": {
     "type": {
-      "manual": "",
-      "incomingWebhook": "",
+      "manual": "Manual",
+      "incomingWebhook": "Webhook entrante",
       "scheduledJob": "",
-      "workflow": ""
+      "workflow": "Flujo de trabajo"
     },
     "status": {
-      "executed": "",
-      "failed": ""
+      "executed": "Ejecutado",
+      "failed": "Fallida"
     }
   }
 }
