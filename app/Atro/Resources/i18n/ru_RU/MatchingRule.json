@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "",
+    "weight": "",
+    "sourceField": "",
+    "targetField": "",
+    "stagingEntity": "",
+    "masterEntity": "",
+    "matchingRuleSet": "",
+    "matchingRules": "",
+    "operator": ""
+  },
+  "options": {
+    "type": {
+      "equal": "",
+      "like": "",
+      "contains": "",
+      "set": ""
+    },
+    "operator": {
+      "and": "",
+      "or": ""
+    }
+  }
+}
