@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "Nombre del grupo",
-    "description": "",
-    "code": "",
-    "isActive": "",
+    "description": "Descripción",
+    "code": "Código",
+    "isActive": "Activo",
     "attributes": "Atributos",
-    "sortOrder": ""
+    "sortOrder": "ordenar Orden"
   },
   "messages": {
     "unlinkAttributeGroupConfirmation": "¿Está seguro de que desea desvincular todos los atributos del grupo de atributos?"
