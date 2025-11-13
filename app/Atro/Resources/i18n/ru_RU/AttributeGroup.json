@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "Название группы",
-    "description": "",
-    "code": "",
-    "isActive": "",
-    "attributes": "",
-    "sortOrder": ""
+    "description": "Описание",
+    "code": "Код",
+    "isActive": "Активные",
+    "attributes": "Атрибуты",
+    "sortOrder": "Порядок сортировки"
   },
   "messages": {
     "unlinkAttributeGroupConfirmation": "Вы уверены, что хотите отсоединить все атрибуты группы атрибутов?"
