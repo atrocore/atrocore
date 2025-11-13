@@ -10,8 +10,8 @@
     "decimalMark": "Marca decimal"
   },
   "labels": {
-    "sunday": "",
-    "monday": ""
+    "sunday": "Domingo",
+    "monday": "Lunes"
   },
   "exceptions": {
     "localeIsUsed": "La localización en uso no puede eliminarse."
