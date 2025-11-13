@@ -149,7 +149,8 @@
     "Account": "Accounts",
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
-    "Selection": "Selektionen"
+    "Selection": "Selektionen",
+    "SelectionRecord": "Auswahldatensätze"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
