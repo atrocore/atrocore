@@ -1,19 +1,19 @@
 {
   "fields": {
-    "isActive": "",
-    "isDefault": "",
-    "description": "",
+    "isActive": "Активные",
+    "isDefault": "По умолчанию",
+    "description": "Описание",
     "hideShowFullList": "",
-    "layouts": "",
+    "layouts": "Лейауты",
     "parent": "",
     "navigation": "",
     "favoritesList": "",
     "dashboardLayout": ""
   },
   "labels": {
-    "addGroup": "",
-    "Menu": "",
-    "Dashboards": "",
+    "addGroup": "Добавить группу",
+    "Menu": "Меню",
+    "Dashboards": "Панели виджетов",
     "Favorites": ""
   },
   "exceptions": {
