@@ -149,7 +149,8 @@
     "IncomingWebhook": "Вхідні вебхуки",
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
-    "Selection": "Вибране"
+    "Selection": "Вибране",
+    "SelectionRecord": "Записи вибору"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
