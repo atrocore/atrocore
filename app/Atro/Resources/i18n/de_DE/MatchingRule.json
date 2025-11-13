@@ -14,12 +14,12 @@
     "type": {
       "equal": "Gleichberechtigt",
       "like": "Wie",
-      "contains": "",
+      "contains": "Enthält",
       "set": "Setzen Sie"
     },
     "operator": {
-      "and": "",
-      "or": ""
+      "and": "UND",
+      "or": "ODER"
     }
   }
 }
