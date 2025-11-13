@@ -36,7 +36,8 @@
     "followEntityOnStreamPost": "Автоматическое следование за записями после публикации в разделе Деятельность",
     "receiveNotifications": "Получение уведомлений",
     "notificationProfile": "Профиль уведомлений",
-    "layoutProfile": "Профиль раскладки"
+    "layoutProfile": "Профиль раскладки",
+    "locale": "Локаль"
   },
   "labels": {
     "Generate": "Сгенерировать",
@@ -49,7 +50,8 @@
     "External Accounts": "Внешние учетные записи",
     "Email Accounts": "Учетные записи эл. почты",
     "Reset Password": "Сброс пароля",
-    "Preferences": "Предпочтения"
+    "Preferences": "Предпочтения",
+    "Notifications": "Уведомления"
   },
   "tooltips": {
     "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой группе.",
