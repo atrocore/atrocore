@@ -4,6 +4,6 @@
     "default": "Výchozí"
   },
   "exceptions": {
-    "entityIsUsed": ""
+    "entityIsUsed": "Atribut Panel nelze odstranit, protože se používá v několika atributech."
   }
 }
