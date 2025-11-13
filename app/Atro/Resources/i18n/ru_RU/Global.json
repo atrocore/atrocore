@@ -79,7 +79,9 @@
     "ExtensibleEnum": "Список",
     "RoleScope": "Область применения",
     "RoleScopeField": "Поле",
-    "RoleScopeAttribute": "Атрибут"
+    "RoleScopeAttribute": "Атрибут",
+    "Selection": "Выбор",
+    "SelectionRecord": "Запись о выборе"
   },
   "scopeNamesPlural": {
     "Attribute": "Атрибуты",
@@ -146,7 +148,9 @@
     "RoleScopeField": "Поля",
     "Entity": "Управление сущностями",
     "Language": "Языки",
-    "Action": "Действия"
+    "Action": "Действия",
+    "Selection": "Подборки",
+    "SelectionRecord": "Записи о выборе"
   },
   "labels": {
     "matchings": "Соответствия",
