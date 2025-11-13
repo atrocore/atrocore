@@ -38,7 +38,13 @@
     "smtpOauthTokenUrl": "URL-адрес Oauth-токена",
     "smtpClientId": "ID клиента",
     "smtpClientSecret": "Секрет клиента",
-    "smtpAuthType": "Тип авторизации"
+    "smtpAuthType": "Тип авторизации",
+    "payload": "Параметры",
+    "smtpPort": "Порт",
+    "smtpUsername": "Имя пользователя",
+    "smtpPassword": "Пароль",
+    "headers": "Заголовки",
+    "atrocoreUrl": "URL"
   },
   "labels": {
     "connectionSuccess": "Соединение успешно установлено",
@@ -63,7 +69,9 @@
     "tokenAuthApi": "API Token Auth",
     "atrocore": "AtroCore",
     "mysql": "Сервер MySQL",
-    "psql": "Сервер PostgreSQL"
+    "psql": "Сервер PostgreSQL",
+    "products": "Продукты",
+    "smtp": "SMTP"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не установлен.",
