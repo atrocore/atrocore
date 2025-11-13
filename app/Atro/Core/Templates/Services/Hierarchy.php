@@ -148,14 +148,13 @@ class Hierarchy extends Record
 
     public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
+        $entity = $this->getEntity($id);
+
         $treeBranches = [];
-        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+        $this->createTreeBranches($entity, $treeBranches);
 
         $tree = [];
-        if (!empty($treeBranches[0])) {
-            $this->prepareTreeForSelectedNode($treeBranches[0], $tree, $sortParams);
-        }
-
+        $this->prepareTreeForSelectedNode($treeBranches[0] ?? $entity, $tree, $sortParams);
         $this->prepareTreeData($tree);
 
         $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
