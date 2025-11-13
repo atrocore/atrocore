@@ -1,16 +1,16 @@
 {
   "labels": {
-    "Field": "",
-    "currentUser": ""
+    "Field": "Pole",
+    "currentUser": "Současný uživatel"
   },
   "options": {
     "operators": {
-      "equals": "",
-      "notEquals": "",
-      "greaterThan": "",
-      "lessThan": "",
-      "greaterThanOrEquals": "",
-      "lessThanOrEquals": "",
+      "equals": "Rovná se",
+      "notEquals": "Ne rovná se",
+      "greaterThan": "Větší než",
+      "lessThan": "Méně než",
+      "greaterThanOrEquals": "Větší než nebo rovná se",
+      "lessThanOrEquals": "Méně než nebo rovná se",
       "in": "",
       "notIn": "",
       "inPast": "",
@@ -18,12 +18,12 @@
       "isToday": "",
       "isTrue": "",
       "isFalse": "",
-      "isEmpty": "",
-      "isNotEmpty": "",
-      "contains": "",
-      "notContains": "",
-      "has": "",
-      "notHas": "",
+      "isEmpty": "Je prázdný",
+      "isNotEmpty": "Není prázdný",
+      "contains": "Obsahuje",
+      "notContains": "Neobsahuje",
+      "has": "Obsahuje",
+      "notHas": "Neobsahuje",
       "isLinked": "",
       "isNotLinked": "",
       "inTeams": "",
