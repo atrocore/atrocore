@@ -9,7 +9,9 @@
     "preview": "Podgląd",
     "hash": "Hash",
     "fileSize": "Rozmiar pliku (bajty)",
-    "fileMtime": "Data modyfikacji pliku"
+    "fileMtime": "Data modyfikacji pliku",
+    "url": "URL AtroCore",
+    "uploadUrl": "URL AtroCore"
   },
   "labels": {
     "Preview": "Podgląd",
