@@ -1,13 +1,13 @@
 {
   "fields": {
-    "key": "",
-    "type": "",
-    "value": ""
+    "key": "Ключ",
+    "type": "Тип",
+    "value": "Значение"
   },
   "options": {
     "type": {
-      "text": "",
-      "float": "",
+      "text": "Текст",
+      "float": "Номер",
       "bool": "",
       "array": ""
     }
