@@ -1,13 +1,13 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "measure": "",
+    "name": "Název",
+    "description": "Popis",
+    "measure": "Míra",
     "isMain": "",
     "multiplier": "",
-    "convertTo": "",
+    "convertTo": "Převést na",
     "symbol": "",
-    "isActive": ""
+    "isActive": "Aktivní"
   },
   "labels": {
     "unitSetDefault": ""
