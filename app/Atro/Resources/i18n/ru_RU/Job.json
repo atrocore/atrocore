@@ -1,26 +1,26 @@
 {
   "fields": {
-    "status": "",
+    "status": "Статус",
     "executeTime": "",
     "pid": "",
-    "priority": "",
+    "priority": "Приоритет",
     "handler": "",
-    "payload": "",
-    "scheduledJob": "",
-    "message": "",
+    "payload": "Параметры",
+    "scheduledJob": "Задание планировщика",
+    "message": "Сообщение",
     "startedAt": "",
     "endedAt": ""
   },
   "labels": {
-    "cancel": ""
+    "cancel": "Отмена"
   },
   "options": {
     "status": {
-      "Pending": "",
-      "Success": "",
-      "Running": "",
-      "Failed": "",
-      "Canceled": "",
+      "Pending": "На рассмотрении",
+      "Success": "Успешно",
+      "Running": "Выполняется",
+      "Failed": "Не выполнено",
+      "Canceled": "Отменено",
       "Awaiting": "",
       "Closed": ""
     }
