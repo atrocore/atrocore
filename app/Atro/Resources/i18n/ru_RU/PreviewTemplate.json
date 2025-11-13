@@ -1,7 +1,7 @@
 {
   "fields": {
-    "entityType": "",
-    "isActive": "",
+    "entityType": "Сущность",
+    "isActive": "Активные",
     "template": ""
   }
 }
