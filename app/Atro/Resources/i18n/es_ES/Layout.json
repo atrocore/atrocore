@@ -1,18 +1,18 @@
 {
   "fields": {
-    "entity": "",
-    "viewType": "",
-    "relatedEntity": "",
-    "layoutProfile": ""
+    "entity": "Entidad",
+    "viewType": "Ver tipo",
+    "relatedEntity": "Entidad relacionada",
+    "layoutProfile": "Perfil del diseño"
   },
   "groupOptions": {
     "viewType": {
       "view": "",
-      "viewGroup": ""
+      "viewGroup": "Ver grupo"
     }
   },
   "tooltips": {
-    "entity": "",
-    "relatedEntity": ""
+    "entity": "Es la entidad para la que está configurada la maqueta.",
+    "relatedEntity": "Se trata de la entidad principal desde cuya página se muestra el diseño de la entidad seleccionada anteriormente."
   }
 }
