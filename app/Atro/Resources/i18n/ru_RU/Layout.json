@@ -1,18 +1,18 @@
 {
   "fields": {
     "entity": "Сущность",
-    "viewType": "",
-    "relatedEntity": "",
-    "layoutProfile": ""
+    "viewType": "Вид Тип",
+    "relatedEntity": "Сопутствующая организация",
+    "layoutProfile": "Профиль раскладки"
   },
   "groupOptions": {
     "viewType": {
       "view": "Просмотреть",
-      "viewGroup": ""
+      "viewGroup": "Группа просмотра"
     }
   },
   "tooltips": {
-    "entity": "",
-    "relatedEntity": ""
+    "entity": "Это сущность, для которой настраивается макет.",
+    "relatedEntity": "Это главная сущность, на странице которой отображается макет для выбранной выше сущности."
   }
 }
