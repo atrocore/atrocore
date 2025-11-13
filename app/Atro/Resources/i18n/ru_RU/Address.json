@@ -1,19 +1,19 @@
 {
   "fields": {
     "buyer": "",
-    "email": "",
-    "phone": "",
-    "street": "",
+    "email": "Эл. почта",
+    "phone": "Телефон",
+    "street": "Улица",
     "zip": "",
     "box": "",
-    "city": "",
-    "country": "",
-    "type": "",
-    "account": "",
+    "city": "Город",
+    "country": "Страна",
+    "type": "Тип",
+    "account": "Контрагент",
     "contactName": "",
     "name": "",
     "prospect": "",
-    "accounts": "",
+    "accounts": "Контрагенты",
     "contacts": ""
   },
   "options": {
