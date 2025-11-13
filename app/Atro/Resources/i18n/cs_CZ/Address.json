@@ -1,19 +1,19 @@
 {
   "fields": {
     "buyer": "",
-    "email": "",
+    "email": "E-mail",
     "phone": "",
-    "street": "",
+    "street": "Ulice",
     "zip": "",
     "box": "",
-    "city": "",
-    "country": "",
-    "type": "",
-    "account": "",
+    "city": "Město",
+    "country": "Země",
+    "type": "Typ",
+    "account": "Účet",
     "contactName": "",
     "name": "",
     "prospect": "",
-    "accounts": "",
+    "accounts": "Účty",
     "contacts": ""
   },
   "options": {
