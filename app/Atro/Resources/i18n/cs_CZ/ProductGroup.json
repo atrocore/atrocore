@@ -1,7 +1,7 @@
 {
   "fields": {
     "code": "Kód",
-    "itemType": "",
-    "products": ""
+    "itemType": "Typ položky",
+    "products": "Produkty"
   }
 }
