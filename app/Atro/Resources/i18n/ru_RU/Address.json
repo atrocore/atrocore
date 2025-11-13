@@ -1,25 +1,25 @@
 {
   "fields": {
-    "buyer": "",
+    "buyer": "Покупатель",
     "email": "Эл. почта",
     "phone": "Телефон",
     "street": "Улица",
-    "zip": "",
-    "box": "",
+    "zip": "ZIP",
+    "box": "Коробка",
     "city": "Город",
     "country": "Страна",
     "type": "Тип",
     "account": "Контрагент",
-    "contactName": "",
-    "name": "",
-    "prospect": "",
+    "contactName": "Контактное имя",
+    "name": "Название компании",
+    "prospect": "Перспективы",
     "accounts": "Контрагенты",
-    "contacts": ""
+    "contacts": "Контакты"
   },
   "options": {
     "type": {
-      "billing": "",
-      "delivery": ""
+      "billing": "Выставление счетов",
+      "delivery": "Доставка"
     }
   }
 }
