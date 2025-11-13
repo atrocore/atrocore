@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "entity": "",
+    "description": "Описание",
+    "entity": "Сущность",
     "notificationProfile": "",
     "occurrence": "",
-    "isActive": "",
+    "isActive": "Активные",
     "ignoreSelfAction": "",
     "asOwner": "",
     "asFollower": "",
@@ -18,11 +18,11 @@
   },
   "options": {
     "occurrence": {
-      "creation": "",
-      "updating": "",
-      "linking": "",
-      "unlinking": "",
-      "deletion": "",
+      "creation": "Создать",
+      "updating": "Обновить",
+      "linking": "Ссылка",
+      "unlinking": "Убрать ссылку",
+      "deletion": "Удалить",
       "note_created": "",
       "note_updated": "",
       "note_deleted": "",
