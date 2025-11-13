@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "",
-    "body": ""
+    "type": "Typ",
+    "body": "Körper"
   }
 }
