@@ -9,7 +9,8 @@
   "filters": {
     "all": "Tous",
     "posts": "Postes",
-    "updates": "Mises à jour"
+    "updates": "Mises à jour",
+    "notes": "Notes"
   },
   "messages": {
     "writeMessage": "Ecrivez votre message ici"
