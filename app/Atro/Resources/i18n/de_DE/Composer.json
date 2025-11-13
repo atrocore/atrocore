@@ -12,7 +12,9 @@
     "suchModuleVersionAlreadyInstalled": "Diese Modul-Version ist schon installiert",
     "noSuchModuleVersion": "Es gibt diese Modul-Version nicht",
     "versionIsInvalid": "Version ist ungültig",
-    "hasRequireds": "Modul hat die Anforderungen nicht erfüllt"
+    "hasRequireds": "Modul hat die Anforderungen nicht erfüllt",
+    "invalidVersion": "Die Modulversion ist ungültig.",
+    "downgradeProhibited": "Die Modulversion ist ungültig. Ein Downgrade ist verboten."
   },
   "labels": {
     "purchased": "Erworben ",
