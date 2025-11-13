@@ -1,17 +1,17 @@
 {
   "fields": {
-    "username": "",
-    "ipAddress": "",
+    "username": "Uživatelské jméno",
+    "ipAddress": "IP adresa",
     "requestTime": "",
     "createdAt": "",
     "isDenied": "",
     "denialReason": "",
-    "user": "",
+    "user": "Uživatel",
     "authToken": "",
     "requestUrl": "",
     "requestMethod": "",
     "authTokenIsActive": "",
-    "actionHistoryRecords": ""
+    "actionHistoryRecords": "Historie akce"
   },
   "options": {
     "denialReason": {
