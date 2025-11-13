@@ -2,12 +2,12 @@
   "fields": {
     "description": "",
     "isActive": "",
-    "reverseAssociation": "",
+    "reverseAssociation": "Обратная ассоциация",
     "code": "",
     "default": ""
   },
   "exceptions": {
-    "associationIsLinkedWithRecords": "",
-    "youCanNotDeactivateAssociationWithActiveRecords": ""
+    "associationIsLinkedWithRecords": "Ассоциация связана с записью(ями). Пожалуйста, сначала отмените связь с записью (записями)",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Вы не можете деактивировать ассоциацию с активной записью (записями)"
   }
 }
