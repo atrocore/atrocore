@@ -26,12 +26,16 @@
     "enableConditionalReadOnly": "Aktivieren Schreibgeschützt",
     "enableConditionalProtected": "Aktivieren Geschützt",
     "enableConditionalDisableOptions": "Deaktivierte Optionen einschalten",
-    "conditionalVisible": "Sichtbar"
+    "conditionalVisible": "Sichtbar",
+    "conditionalRequired": "Erforderlich",
+    "conditionalReadOnly": "Schreibgeschützt",
+    "conditionalProtected": "Geschützt"
   },
   "labels": {
     "classificationAttribute": "Attribut aus Klassifikation",
     "unlinkRelatedAttribute": "Löschen und für Datensätze aufbewahren",
-    "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen"
+    "cascadeUnlinkRelatedAttribute": "Hier und aus Datensätzen löschen",
+    "conditionalProperties": "Bedingte Eigenschaften"
   },
   "options": {
     "scope": {
