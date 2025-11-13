@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Score minimum, en %.",
-    "entity": "",
+    "entity": "Entité",
     "stagingEntity": "Entité de transit",
     "masterEntity": "Entité maîtresse",
     "matchingRules": "Règles de correspondance",
