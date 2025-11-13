@@ -1,7 +1,7 @@
 {
   "fields": {
-    "name": "",
+    "name": "Название",
     "entityId": "",
-    "entityType": ""
+    "entityType": "Сущность"
   }
 }
