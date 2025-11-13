@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "",
+    "name": "Zakres",
     "role": "",
     "hasAccess": "",
     "createAction": "",
@@ -9,16 +9,16 @@
     "deleteAction": "",
     "streamAction": "",
     "fields": "",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
-    "attributes": "",
-    "attributePanels": ""
+    "accessData": "Dane dostępu",
+    "createAttributeValueAction": "Tworzenie wartości atrybutu",
+    "deleteAttributeValueAction": "Usuń wartość atrybutu",
+    "attributes": "Atrybuty",
+    "attributePanels": "Panele atrybutów"
   },
   "labels": {
     "all": "",
     "team": "",
-    "own": "",
+    "own": "Własny",
     "no": "",
     "yes": ""
   }
