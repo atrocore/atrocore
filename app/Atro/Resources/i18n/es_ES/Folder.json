@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "code": "",
+    "files": "",
+    "storages": ""
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "",
+    "folderCreateFailed": "",
+    "folderRenameFailed": "",
+    "folderMoveFailed": "",
+    "folderDeleteFailed": ""
+  }
+}
