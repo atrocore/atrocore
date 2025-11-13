@@ -79,7 +79,9 @@
     "RoleScopeField": "Pole",
     "Entity": "Encja",
     "Language": "Język",
-    "RoleScopeAttribute": "Atrybut"
+    "RoleScopeAttribute": "Atrybut",
+    "Selection": "Wybór",
+    "SelectionRecord": "Rekord wyboru"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -146,7 +148,9 @@
     "RoleScope": "Lunety",
     "Entity": "Encje",
     "Language": "Języki",
-    "RoleScopeField": "Pola"
+    "RoleScopeField": "Pola",
+    "Selection": "Wybór",
+    "SelectionRecord": "Rekordy selekcji"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
