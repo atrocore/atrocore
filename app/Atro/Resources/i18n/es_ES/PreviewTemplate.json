@@ -1,7 +1,7 @@
 {
   "fields": {
     "entityType": "Entidad",
-    "isActive": "",
+    "isActive": "Activo",
     "template": "Plantilla HTML/CSS"
   }
 }
