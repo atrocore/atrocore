@@ -2,6 +2,12 @@
   "fields": {
     "isActive": "Actif",
     "description": "Description",
-    "layouts": "Mise en page"
+    "layouts": "Mise en page",
+    "isDefault": "Défaut"
+  },
+  "labels": {
+    "addGroup": "Ajouter un groupe",
+    "Menu": "Menu",
+    "Dashboards": "Tableaux de bord"
   }
 }
