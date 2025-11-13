@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "isActive": "",
+    "description": "Описание",
+    "isActive": "Активные",
     "reverseAssociation": "Обратная ассоциация",
-    "code": "",
-    "default": ""
+    "code": "Код",
+    "default": "По умолчанию"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "Ассоциация связана с записью(ями). Пожалуйста, сначала отмените связь с записью (записями)",
