@@ -2,11 +2,11 @@
   "fields": {
     "width": "",
     "widthPx": "",
-    "link": "",
+    "link": "Odkaz",
     "notSortable": "",
     "align": "",
     "panelName": "",
-    "style": "",
+    "style": "Styl",
     "sticked": "",
     "isLarge": "",
     "cssStyle": "",
@@ -19,17 +19,17 @@
       "center": ""
     },
     "style": {
-      "default": "",
-      "success": "",
+      "default": "Výchozí",
+      "success": "Úspěch",
       "danger": "",
       "info": "",
       "warning": "",
-      "primary": ""
+      "primary": "Primární"
     }
   },
   "labels": {
     "New panel": "",
-    "Layout": "",
+    "Layout": "Rozložení",
     "Current Layout": "",
     "reset": "",
     "fullEdit": "",
