@@ -86,7 +86,6 @@
     "ClassificationAttribute": "Attribut de classification",
     "Attribute": "Attribut",
     "AttributeGroup": "Groupe d'attributs",
-    "UiHandler": "Gestionnaire d'interface utilisateur",
     "Folder": "Dossier",
     "Team": "L'équipe",
     "AuthToken": "Jeton d'authentification",
@@ -167,7 +166,7 @@
     "varcharPart": "(Chaine de caractères)",
     "unitPart": "(Unité)",
     "inheritAllForChildren": "Hérite de tous les éléments des enfants",
-    "inheritAllFromParent":"Hérite de tous les éléments du parent",
+    "inheritAllFromParent": "Hérite de tous les éléments du parent",
     "homepage": "Page d'accueil",
     "Sharing": "Partage",
     "useDragAndDrop": "Utilisez la fonction \"glisser-déposer\" pour réorganiser l'ordre",
@@ -482,7 +481,6 @@
     "AuthToken": "Jetons d'authentification",
     "EmailTemplate": "Modèles d'e-mails",
     "Storage": "Stockages",
-    "UiHandler": "Gestionnaires d'interface utilisateur",
     "Action": "Actions",
     "ExtensibleEnum": "Listes",
     "ExtensibleEnumOption": "Liste des options",
@@ -893,10 +891,10 @@
     }
   },
   "exceptions": {
-    "reverseAssociationError" : "Reverse association error : %s",
-    "noSuchAssociation" : "Échec de la validation. Aucune association de ce type n'existe",
-    "itselfAssociation" : "L'enregistrement ne peut pas être associé à lui-même.",
-    "recordAssociationAlreadyExists" : "Une telle association d'enregistrements existe déjà",
+    "reverseAssociationError": "Reverse association error : %s",
+    "noSuchAssociation": "Échec de la validation. Aucune association de ce type n'existe",
+    "itselfAssociation": "L'enregistrement ne peut pas être associé à lui-même.",
+    "recordAssociationAlreadyExists": "Une telle association d'enregistrements existe déjà",
     "massRestoreNoRecordProceed": "Aucun enregistrement n'a été rétabli.",
     "childsMustBeArchived": "L'élément (parent) ne peut être archivé que si tous les éléments enfants le sont également.",
     "noOptionsDefined": "Les options pour le champ \"%s\" ne sont pas définies.",
@@ -1022,7 +1020,6 @@
     "A": "A",
     "W": "W"
   },
-
   "unit Long intervals of time": {
     "week": "Semaine",
     "day": "jour",

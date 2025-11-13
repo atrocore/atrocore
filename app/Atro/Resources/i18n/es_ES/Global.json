@@ -25,7 +25,6 @@
     "Account": "Cuenta",
     "KnowledgeBaseCategory": "Categoría de la base de conocimiento",
     "Country": "Country",
-    "MeasuringUnit": "Measuring Unit",
     "Composer": "Composer",
     "Dashlet": "Dashlet",
     "Multilang": "Multilingual",
@@ -56,7 +55,6 @@
     "Account": "Cuentas",
     "DocumentFolder": "Carpetas de documentos",
     "KnowledgeBaseCategory": "Categorías de la base de conocimiento",
-    "MeasuringUnit": "Measuring Units",
     "AuthLogRecord": "Auth Log Records",
     "Note": "Notes",
     "Notification": "Notifications",
@@ -249,7 +247,6 @@
   "messages": {
     "pleaseWait": "Por favor espere...",
     "posting": "Publicando...",
-    "massRestoring": "Restaurando: {{restaurado}} de {{total}}",
     "confirmLeaveOutMessage": "¿Seguro que quieres salir del formulario?",
     "notModified": "Usted no ha modificado el registro",
     "fieldIsRequired": "{field} es requerido",
@@ -327,7 +324,6 @@
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
-    "followed": "Siguiendo",
     "onlyActive": "Active",
     "assignedToMe": "Assigned to me",
     "ownedByMe": "Owned by me",
@@ -348,7 +344,6 @@
     "removePartial": "Remove (Part %s)",
     "addRelation": "Add relation",
     "removeRelation": "Remove relation",
-    "convertCurrency": "Convert Currency",
     "restore": "Restaurar",
     "delete": "Eliminar",
     "download": "Descargar"
@@ -431,8 +426,6 @@
     "mentionYouInPostTargetNoTarget": "{user} te ha mencionado en una publicación",
     "create": "{user} ha creado: {entityType} {entity}",
     "createThis": "{user} ha creado: {entityType}",
-    "createAssignedThis": "{user} ha creado y se lo ha asignado a {assignee}: {entityType}",
-    "createAssigned": "{user} ha creado y se lo ha asignado a {assignee}: {entityType} {entity}",
     "assign": "{user} ha asignado: {entityType} {entity} a {assignee}",
     "assignThis": "{user} ha asignado {entityType} a {assignee}",
     "postThis": "{user} ha publicado",
@@ -528,15 +521,6 @@
     "s": "s"
   },
   "options": {
-    "fieldsFilter": {
-      "allFields": "All Fields",
-      "empty": "Empty Fields",
-      "emptyAndRequired": "Empty Required Fields"
-    },
-    "localesFilter": {
-      "": "All Languages",
-      "showGenericFields": "Show main language fields"
-    },
     "dateSearchRanges": {
       "on": "Está en",
       "notOn": "No está en",
@@ -772,7 +756,6 @@
     "notDashletService": "Service %s must implement Dashlet Interface",
     "editedByAnotherUser": "The data set [%s] has been changed in the meantime. You can <a href=\"javascript:\" onclick=\"location.reload();\">reload the page</a> to see the new values, return to editing by pressing \"Cancel\" or overwrite the data by pressing \"Apply\". Do you want to overwrite the data?",
     "dontMatchToPattern": "The value of the field \"{field}\" does not correspond to the pattern \"{pattern}\".",
-    "notUnique": "'%s' should have unique value.",
     "optionIsDisabled": "El elemento '%s' está deshabilitado para el campo '%s'."
   },
   "queryBuilderFilter": {

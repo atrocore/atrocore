@@ -58,7 +58,6 @@
     "DashletOptions": "Možnosti panelu Dashlet",
     "Admin": "Admin",
     "Global": "Globální",
-    "AuthFailLogRecord": "Záznam protokolu o selhání ověření",
     "PreviewTemplate": "Šablona náhledu",
     "NotificationProfile": "Profil oznámení",
     "NotificationRule": "Pravidlo pro oznamování",
@@ -147,8 +146,7 @@
     "OutboundEmail": "Odchozí e-maily",
     "RoleScopeAttributePanel": "Panely atributů",
     "EmailTemplate": "Šablony e-mailů",
-    "Folder": "Složky",
-    "AuthFailLogRecord": "Záznamy o neúspěšných pokusech o ověření"
+    "Folder": "Složky"
   },
   "labels": {
     "basic": "Základní",
@@ -695,7 +693,6 @@
     "onlyActive": "Aktivní",
     "notActive": "Neaktivní",
     "onlyMy": "Moje",
-    "onlyHidden": "Skryté",
     "assignedToMe": "Přiřazeno mně",
     "ownedByMe": "Patří mně",
     "onlyArchived": "Bez nearchivovaných",

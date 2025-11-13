@@ -37,7 +37,6 @@
     "DocumentFolder": "Папка с документами",
     "KnowledgeBaseCategory": "Категория базы знаний",
     "Country": "Страна",
-    "MeasuringUnit": "Кдиница измерения",
     "Composer": "Програма-компоновщик",
     "Dashlet": "Мини-панель",
     "Multilang": "Многоязычный",
@@ -78,14 +77,13 @@
     "Account": "Контрагенты",
     "DocumentFolder": "Папки с документами",
     "KnowledgeBaseCategory": "Категории базы знаний",
-    "MeasuringUnit": "Единицы измерения",
     "Note": "Примечания",
     "Notification": "Уведомления"
   },
   "labels": {
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",
-    "attachFiles":"Прикрепить файлы",
+    "attachFiles": "Прикрепить файлы",
     "typeToSearch": "Введ. и нажм. Enter...",
     "dragAndDropBtnText": "Перетяните",
     "dragAndDropBtnTextSmall": "Ваши файлы или",
@@ -98,7 +96,6 @@
     "inheritAllForChildren": "Наследовать все для дочерних элементов",
     "homepage": "Домашняя страница",
     "Sharing": "Шеринги",
-    "Example": "Пример",
     "useDragAndDrop": "Перетаскивайте для изменения порядка",
     "Shown": "Показано",
     "typeAndPressEnter": "Введите и нажмите Enter для поиска...",
@@ -295,7 +292,6 @@
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
-    "massDeleting": "Удаляется: {{proceed}} с {{total}}",
     "optionValueCannotBeEmpty": "Значение опции не может быть пустым",
     "minimumOneOptionsRequired": "Требуется минимум одно значение параметра.",
     "defaultEnumValueCannotBeEmpty": "Если пустые значение запрещено, следует выбрать значение по умолчанию.",
@@ -376,11 +372,9 @@
     "onlyActive": "Активный",
     "assignedToMe": "Назначен мне",
     "ownedByMe": "Принадлежит мне",
-    "onlyMy": "Только мои",
-    "followed": "Вы подписаны"
+    "onlyMy": "Только мои"
   },
   "presetFilters": {
-    "followed": "Вы подписаны",
     "all": "Все"
   },
   "massActions": {
@@ -390,7 +384,6 @@
     "export": "Экспортировать",
     "follow": "Подписаться",
     "unfollow": "Отписаться",
-    "convertCurrency": "Конвертировать валюту",
     "massUpdatePartial": "Массовое обновление (Part %s)",
     "removePartial": "Удалить (Part %s)",
     "addRelation": "Добавить связь",
@@ -486,8 +479,6 @@
     "mentionYouInPostTargetNoTarget": "{user} упомянул Вас в сообщении",
     "create": "{user} создал {entityType} {entity}",
     "createThis": "{user} создал {entityType}",
-    "createAssignedThis": "{user} создал {entityType} назначил {assignee}",
-    "createAssigned": "{user} создал {entityType} {entity} (кому) {assignee}",
     "assign": "{user} назначил {entityType} {entity} (кому) {assignee}",
     "assignThis": "{user} назначил {entityType} {assignee}",
     "postThis": "{user} оставил сообщение",
