@@ -29,7 +29,9 @@
     "finish": "Beenden",
     "required": "Erforderlich",
     "currentVersion": "Aktuelle Version",
-    "status": "Status"
+    "status": "Status",
+    "reportingEnabled": "Senden Sie anonyme Fehlerberichte, um Probleme schneller zu identifizieren und zu lösen",
+    "dbSystem": "Datenbank-System"
   },
   "errors": {
     "alreadyInstalled": "AtroCore ist schon installiert",
