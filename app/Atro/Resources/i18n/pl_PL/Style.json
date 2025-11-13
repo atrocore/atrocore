@@ -1,39 +1,39 @@
 {
   "fields": {
-    "navigationManuBackgroundColor": "",
-    "navigationMenuFontColor": "",
-    "linkFontColor": "",
+    "navigationManuBackgroundColor": "Tło menu nawigacyjnego",
+    "navigationMenuFontColor": "Kolor czcionki nawigacji",
+    "linkFontColor": "Kolor łącza",
     "customStylesheetPath": "",
     "customStylesheet": "",
-    "primaryColor": "",
-    "secondaryColor": "",
-    "primaryFontColor": "",
-    "secondaryFontColor": "",
-    "labelColor": "",
-    "anchorNavigationBackground": "",
-    "iconColor": "",
-    "primaryBorderColor": "",
-    "secondaryBorderColor": "",
-    "panelTitleColor": "",
-    "headerTitleColor": "",
+    "primaryColor": "Kolor podstawowy",
+    "secondaryColor": "Kolor dodatkowy",
+    "primaryFontColor": "Podstawowy kolor czcionki",
+    "secondaryFontColor": "Dodatkowy kolor czcionki",
+    "labelColor": "Kolor etykiety",
+    "anchorNavigationBackground": "Tło nawigacji zakotwiczenia",
+    "iconColor": "Kolor ikony",
+    "primaryBorderColor": "Podstawowy kolor obramowania",
+    "secondaryBorderColor": "Dodatkowy kolor obramowania",
+    "panelTitleColor": "Kolor tytułu panelu",
+    "headerTitleColor": "Kolor tytułu nagłówka",
     "success": "",
-    "notice": "",
-    "information": "",
+    "notice": "Proszę zauważyć",
+    "information": "Informacje",
     "error": "",
-    "actionIconColor": "",
-    "navigationIconColor": "",
-    "statusIconColor": "",
+    "actionIconColor": "Kolor ikony akcji",
+    "navigationIconColor": "Kolor ikony nawigacji",
+    "statusIconColor": "Kolor ikony stanu",
     "customHeadCode": "",
-    "highlightingColorForRequired": "",
-    "toolbarBackgroundColor": "",
-    "toolbarFontColor": ""
+    "highlightingColorForRequired": "Kolor podświetlenia dla wymaganych danych",
+    "toolbarBackgroundColor": "Kolor tła paska narzędzi",
+    "toolbarFontColor": "Kolor czcionki paska narzędzi"
   },
   "tooltips": {
     "customStylesheetPath": "",
     "customHeadCode": ""
   },
   "exceptions": {
-    "styleIsUsed": "",
-    "codeShouldBeString": ""
+    "styleIsUsed": "Używany styl nie może zostać usunięty.",
+    "codeShouldBeString": "Kod powinien być poprawnym ciągiem znaków bez znaków specjalnych i spacji."
   }
 }
