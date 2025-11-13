@@ -1,22 +1,22 @@
 {
   "fields": {
-    "entity": "",
-    "description": "",
+    "entity": "Сутність",
+    "description": "Опис",
     "release": "",
     "synonyms": "",
-    "code": "",
-    "isActive": "",
-    "classifications": "",
-    "classificationAttributes": "",
-    "type": ""
+    "code": "Код",
+    "isActive": "Активні",
+    "classifications": "Класифікації",
+    "classificationAttributes": "Класифікаційні атрибути",
+    "type": "Тип"
   },
   "options": {
     "type": {
-      "general": ""
+      "general": "Загальний"
     }
   },
   "labels": {
-    "selectAttributeGroup": ""
+    "selectAttributeGroup": "Вибрати групу атрибута"
   },
   "exceptions": {
     "entityCannotBeChanged": "",
