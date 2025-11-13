@@ -1,26 +1,26 @@
 {
   "fields": {
-    "status": "",
+    "status": "Status",
     "executeTime": "",
     "pid": "",
     "priority": "",
     "handler": "",
     "payload": "",
-    "scheduledJob": "",
+    "scheduledJob": "Tarea Programada",
     "message": "",
     "startedAt": "",
     "endedAt": ""
   },
   "labels": {
-    "cancel": ""
+    "cancel": "Cancelar"
   },
   "options": {
     "status": {
       "Pending": "",
-      "Success": "",
+      "Success": "Success",
       "Running": "",
       "Failed": "",
-      "Canceled": "",
+      "Canceled": "Canceled",
       "Awaiting": "",
       "Closed": ""
     }
