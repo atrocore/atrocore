@@ -14,12 +14,12 @@
     "type": {
       "equal": "Igual",
       "like": "Como",
-      "contains": "",
+      "contains": "Contiene",
       "set": "Fije"
     },
     "operator": {
-      "and": "",
-      "or": ""
+      "and": "Y",
+      "or": "O"
     }
   }
 }
