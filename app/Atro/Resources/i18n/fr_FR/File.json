@@ -24,7 +24,8 @@
     "retry": "Réessayer ?",
     "uploaded": "téléchargé",
     "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL.",
-    "Share": "Partager"
+    "Share": "Partager",
+    "thumbnailUrl": "URL de la vignette (%s)"
   },
   "exceptions": {
     "fileCreateFailed": "La création du fichier a échoué.",
