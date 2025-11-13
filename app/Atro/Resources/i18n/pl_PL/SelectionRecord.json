@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Name",
-    "entityId": "",
+    "entityId": "Rekord",
     "entityType": "Encja"
   }
 }
