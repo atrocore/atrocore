@@ -4,7 +4,7 @@
     "dbname": "Název databáze",
     "user": "Uživatelské jméno databáze",
     "username": "Uživatelské jméno",
-    "password": "",
+    "password": "Heslo",
     "confirmPassword": "Potvrzení hesla"
   },
   "labels": {
@@ -24,14 +24,14 @@
     "testConnection": "Testovací připojení",
     "reCheck": "Znovu zkontrolujte",
     "userName": "Uživatelské jméno",
-    "password": "",
+    "password": "Heslo",
     "confirmYourPassword": "Potvrzení hesla",
     "back": "Zpět",
     "next": "Další",
     "finish": "Dokončení",
-    "required": "",
-    "currentVersion": "",
-    "status": ""
+    "required": "Požadované",
+    "currentVersion": "Aktuální verze",
+    "status": "Stav"
   },
   "errors": {
     "alreadyInstalled": "AtroCore je již nainstalován",
@@ -41,7 +41,7 @@
   },
   "messages": {
     "youMustAgreeToTheLicenseAgreement": "Musíte souhlasit s licenční smlouvou",
-    "fieldIsRequired": "",
+    "fieldIsRequired": "{pole} je povinné",
     "connectionSuccessful": "Připojení proběhlo úspěšně!",
     "pleaseConfigureYourSystemToStart": "Nakonfigurujte svůj systém tak, aby se spustil"
   },
