@@ -1,7 +1,7 @@
 {
   "fields": {
-    "attributes": "",
-    "default": ""
+    "attributes": "Atributy",
+    "default": "Výchozí"
   },
   "exceptions": {
     "entityIsUsed": ""
