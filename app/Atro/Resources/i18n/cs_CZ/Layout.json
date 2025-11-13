@@ -1,13 +1,13 @@
 {
   "fields": {
-    "entity": "",
+    "entity": "Subjekt",
     "viewType": "",
     "relatedEntity": "",
-    "layoutProfile": ""
+    "layoutProfile": "Profil rozvržení"
   },
   "groupOptions": {
     "viewType": {
-      "view": "",
+      "view": "Zobrazit",
       "viewGroup": ""
     }
   },
