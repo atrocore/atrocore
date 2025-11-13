@@ -3,8 +3,8 @@
     "navigationManuBackgroundColor": "Tło menu nawigacyjnego",
     "navigationMenuFontColor": "Kolor czcionki nawigacji",
     "linkFontColor": "Kolor łącza",
-    "customStylesheetPath": "",
-    "customStylesheet": "",
+    "customStylesheetPath": "Ścieżka pliku CSS",
+    "customStylesheet": "CSS",
     "primaryColor": "Kolor podstawowy",
     "secondaryColor": "Kolor dodatkowy",
     "primaryFontColor": "Podstawowy kolor czcionki",
@@ -16,21 +16,21 @@
     "secondaryBorderColor": "Dodatkowy kolor obramowania",
     "panelTitleColor": "Kolor tytułu panelu",
     "headerTitleColor": "Kolor tytułu nagłówka",
-    "success": "",
+    "success": "Sukces",
     "notice": "Proszę zauważyć",
     "information": "Informacje",
-    "error": "",
+    "error": "Błąd",
     "actionIconColor": "Kolor ikony akcji",
     "navigationIconColor": "Kolor ikony nawigacji",
     "statusIconColor": "Kolor ikony stanu",
-    "customHeadCode": "",
+    "customHeadCode": "Kod Head",
     "highlightingColorForRequired": "Kolor podświetlenia dla wymaganych danych",
     "toolbarBackgroundColor": "Kolor tła paska narzędzi",
     "toolbarFontColor": "Kolor czcionki paska narzędzi"
   },
   "tooltips": {
-    "customStylesheetPath": "",
-    "customHeadCode": ""
+    "customStylesheetPath": "Twoje niestandardowe style CSS zostaną zapisane w tym pliku. Możesz w nim również dokonywać zmian bezpośrednio.",
+    "customHeadCode": "Dodaj kod na końcu znacznika <head>. Atrocore nie weryfikuje niestandardowego kodu, więc upewnij się, że sprawdziłeś swój kod przed opublikowaniem."
   },
   "exceptions": {
     "styleIsUsed": "Używany styl nie może zostać usunięty.",
