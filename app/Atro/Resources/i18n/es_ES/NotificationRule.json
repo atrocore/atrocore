@@ -1,20 +1,20 @@
 {
   "fields": {
     "description": "Descripción",
-    "entity": "",
-    "notificationProfile": "",
-    "occurrence": "",
+    "entity": "Entidad",
+    "notificationProfile": "Perfil de notificación",
+    "occurrence": "Evento",
     "isActive": "Activo",
-    "ignoreSelfAction": "",
-    "asOwner": "",
-    "asFollower": "",
-    "asAssignee": "",
-    "asTeamMember": "",
-    "asNotificationProfile": "",
-    "emailActive": "",
-    "systemActive": "",
+    "ignoreSelfAction": "Ignorar las acciones propias",
+    "asOwner": "Como propietario",
+    "asFollower": "Como seguidor",
+    "asAssignee": "Como cesionario",
+    "asTeamMember": "Como miembro del equipo",
+    "asNotificationProfile": "Como usuario del perfil de notificación",
+    "emailActive": "Notificación por correo electrónico",
+    "systemActive": "Notificación del sistema",
     "emailTemplateId": "Plantilla de correo electrónico",
-    "systemTemplateId": ""
+    "systemTemplateId": "Plantilla del sistema"
   },
   "options": {
     "occurrence": {
@@ -23,16 +23,16 @@
       "linking": "Enlace",
       "unlinking": "Desenlazar",
       "deletion": "Borrar",
-      "note_created": "",
-      "note_updated": "",
-      "note_deleted": "",
-      "ownership_assignment": "",
-      "unlinking_ownership_assignment": "",
-      "mentioned": ""
+      "note_created": "Crear nota",
+      "note_updated": "Nota de actualización",
+      "note_deleted": "Borrar nota",
+      "ownership_assignment": "Establecer propietario/usuario asignado",
+      "unlinking_ownership_assignment": "Propietario/usuario no asignado",
+      "mentioned": "Mencione"
     }
   },
   "labels": {
-    "Notify User": "",
-    "Transport": ""
+    "Notify User": "Notificar al usuario",
+    "Transport": "Transporte"
   }
 }
