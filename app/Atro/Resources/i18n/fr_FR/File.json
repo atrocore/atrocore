@@ -14,7 +14,8 @@
     "width": "Largeur",
     "height": "Hauteur",
     "size": "Taille",
-    "colorSpace": "Espace couleur"
+    "colorSpace": "Espace couleur",
+    "uploadUrl": "URL"
   },
   "labels": {
     "Upload": "Télécharger",
