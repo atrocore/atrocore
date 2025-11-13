@@ -1,18 +1,18 @@
 {
   "fields": {
-    "entity": "",
-    "description": "",
+    "entity": "Encja",
+    "description": "Description",
     "release": "",
     "synonyms": "",
-    "code": "",
-    "isActive": "",
+    "code": "Kod",
+    "isActive": "Aktywny",
     "classifications": "",
     "classificationAttributes": "",
-    "type": ""
+    "type": "Type"
   },
   "options": {
     "type": {
-      "general": ""
+      "general": "Ogólne"
     }
   },
   "labels": {
