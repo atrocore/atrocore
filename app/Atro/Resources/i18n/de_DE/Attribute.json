@@ -34,11 +34,19 @@
     "nestedAttributes": "Verschachtelte Attribute",
     "attributeGroupSortOrder": "Sortierreihenfolge in der Attributgruppe",
     "conditionalVisible": "Sichtbar",
-    "conditionalDisableOptions": "Deaktivierte Optionen"
+    "conditionalDisableOptions": "Deaktivierte Optionen",
+    "entity": "Entität",
+    "classifications": "Klassifikationen",
+    "channel": "Kanal",
+    "conditionalRequired": "Erforderlich",
+    "conditionalReadOnly": "Schreibgeschützt",
+    "conditionalProtected": "Geschützt"
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",
-    "extensibleEnumOptions": "Auswahloptionen"
+    "extensibleEnumOptions": "Auswahloptionen",
+    "Classification": "Klassifikation",
+    "conditionalProperties": "Bedingte Eigenschaften"
   },
   "options": {
     "type": {
@@ -56,7 +64,9 @@
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",
       "file": "Datei",
-      "composite": "Komposit"
+      "composite": "Komposit",
+      "rangeInt": "Ganzzahlbereich",
+      "rangeFloat": "Gleitkommabereich"
     }
   },
   "messages": {
