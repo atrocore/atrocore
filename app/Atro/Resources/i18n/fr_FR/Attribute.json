@@ -1,7 +1,5 @@
 {
   "fields": {
-    "parents": "Associer des attributs",
-    "children": "Attributs associés",
     "attributeGroup": "Groupe d'attributs",
     "type": "Type d'attribut",
     "code": "Code",
@@ -30,12 +28,20 @@
     "trim": "Supprimez les espaces blancs de début et de fin",
     "classificationAttributes": "Attributs de la classification",
     "preparedName": "Nom",
-    "htmlSanitizer": "HTML Sanitizer"
+    "htmlSanitizer": "HTML Sanitizer",
+    "conditionalDisableOptions": "Options désactivées",
+    "attributeGroupSortOrder": "Ordre de tri dans le groupe d'attributs",
+    "compositeAttribute": "Attribut composite",
+    "nestedAttributes": "Attributs imbriqués",
+    "attributePanel": "Panneau d'attributs",
+    "conditionalVisible": "Visible",
+    "fullWidth": "Largeur totale"
   },
   "labels": {
     "Classification": "Classification",
     "addNewValue": "Ajouter une nouvelle valeur",
-    "extensibleEnumOptions": "Liste des options"
+    "extensibleEnumOptions": "Liste des options",
+    "conditionalProperties": "Propriétés conditionnelles"
   },
   "options": {
     "type": {
@@ -54,7 +60,8 @@
       "wysiwyg": "HTML",
       "rangeInt": "Plage de nombres entiers",
       "rangeFloat": "Plage de flottaison",
-      "file": "Fichier"
+      "file": "Fichier",
+      "composite": "Composite"
     }
   },
   "messages": {
@@ -67,7 +74,8 @@
   },
   "tooltips": {
     "pattern": "Pour n'autoriser que les lettres majuscules d'une longueur de 10 symboles, utilisez \"/^[A-Z]{1,10}$/\"",
-    "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)"
+    "defaultDate": "Modificateur de la valeur de l'attribut (par exemple +5 jours, -3 mois)",
+    "dropdown": "N'utilisez pas la liste déroulante s'il y a plus de 300 options dans la liste."
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "L'enregistrement ne peut pas être supprimé car il est utilisé dans l'attribut \"%s\".",
@@ -78,6 +86,12 @@
     "attributeWithSuchCodeAlreadyExist": "L'attribut avec ce code existe déjà.",
     "attributeIsUsedInProducts": "L'attribut est utilisé dans les produits. Veuillez d'abord mettre à jour les produits.",
     "attributeIsUsedInClassifications": "L'attribut est utilisé dans les classifications. Veuillez d'abord mettre à jour les classifications.",
-    "invalidType": "Le type d'attribut '{type}' n'est pas valide"
+    "invalidType": "Le type d'attribut '{type}' n'est pas valide",
+    "wrongAttributeEntity": "L'entité choisie n'est pas autorisée. L'entité doit être la même que le panneau d'attributs et le groupe d'attributs.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "L'entité de l'attribut doit être la même que celle de l'attribut composite.",
+    "attributeNotBelongToEntity": "L'attribut n'appartient pas à cette entité.",
+    "entityCannotBeChanged": "L'entité ne peut être modifiée.",
+    "compositeAttributeNotFound": "Attribut composite introuvable.",
+    "compositeAttributeCannotBeChild": "L'attribut composite ne peut pas être un enfant."
   }
 }
