@@ -1,10 +1,11 @@
 {
   "fields": {
     "name": "Назва",
-    "scheduling": "Планування"
+    "scheduling": "Планування",
+    "jobs": "Завдання"
   },
   "labels": {
-    "executeNow":"Виконати зараз"
+    "executeNow": "Виконати зараз"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильна конфігурація crontab"
