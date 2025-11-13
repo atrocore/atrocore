@@ -1,0 +1,33 @@
+{
+  "labels": {
+    "Field": "",
+    "currentUser": ""
+  },
+  "options": {
+    "operators": {
+      "equals": "",
+      "notEquals": "",
+      "greaterThan": "",
+      "lessThan": "",
+      "greaterThanOrEquals": "",
+      "lessThanOrEquals": "",
+      "in": "",
+      "notIn": "",
+      "inPast": "",
+      "inFuture": "",
+      "isToday": "",
+      "isTrue": "",
+      "isFalse": "",
+      "isEmpty": "",
+      "isNotEmpty": "",
+      "contains": "",
+      "notContains": "",
+      "has": "",
+      "notHas": "",
+      "isLinked": "",
+      "isNotLinked": "",
+      "inTeams": "",
+      "notInTeams": ""
+    }
+  }
+}
