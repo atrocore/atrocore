@@ -1,11 +1,11 @@
 {
   "fields": {
-    "active": "",
+    "active": "Aktivní",
     "available": "",
     "validTill": "",
     "allowedUsage": "",
     "used": "",
-    "link": "",
+    "link": "Odkaz",
     "viewLink": ""
   }
 }
