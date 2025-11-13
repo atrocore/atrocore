@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
+    "description": "Descripción",
     "entity": "",
     "notificationProfile": "",
     "occurrence": "",
-    "isActive": "",
+    "isActive": "Activo",
     "ignoreSelfAction": "",
     "asOwner": "",
     "asFollower": "",
@@ -13,16 +13,16 @@
     "asNotificationProfile": "",
     "emailActive": "",
     "systemActive": "",
-    "emailTemplateId": "",
+    "emailTemplateId": "Plantilla de correo electrónico",
     "systemTemplateId": ""
   },
   "options": {
     "occurrence": {
-      "creation": "",
-      "updating": "",
-      "linking": "",
-      "unlinking": "",
-      "deletion": "",
+      "creation": "Crear",
+      "updating": "Guardar",
+      "linking": "Enlace",
+      "unlinking": "Desenlazar",
+      "deletion": "Borrar",
       "note_created": "",
       "note_updated": "",
       "note_deleted": "",
