@@ -3,6 +3,6 @@
     "configuration": "Конфигурация"
   },
   "exceptions": {
-    "notValidYaml": ""
+    "notValidYaml": "Конфигурация не является действительной конфигурацией Yaml."
   }
 }
