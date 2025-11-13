@@ -1,7 +1,7 @@
 {
   "fields": {
     "incomingWebhook": "Webhook entrante",
-    "scheduledJob": "",
+    "scheduledJob": "Tarea Programada",
     "workflow": "Flujo de trabajo",
     "statusMessage": "Mensaje de estado"
   },
@@ -9,7 +9,7 @@
     "type": {
       "manual": "Manual",
       "incomingWebhook": "Webhook entrante",
-      "scheduledJob": "",
+      "scheduledJob": "Tarea Programada",
       "workflow": "Flujo de trabajo"
     },
     "status": {
