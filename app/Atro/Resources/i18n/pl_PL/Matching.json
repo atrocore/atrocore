@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Minimalny wynik, %",
-    "entity": "",
+    "entity": "Encja",
     "stagingEntity": "Podmiot etapowy",
     "masterEntity": "Podmiot główny",
     "matchingRules": "Zasady dopasowywania",
