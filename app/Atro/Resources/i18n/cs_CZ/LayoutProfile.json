@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "isActive": "",
+    "isDefault": "",
+    "description": "",
+    "hideShowFullList": "",
+    "layouts": "",
+    "parent": "",
+    "navigation": "",
+    "favoritesList": "",
+    "dashboardLayout": ""
+  },
+  "labels": {
+    "addGroup": "",
+    "Menu": "",
+    "Dashboards": "",
+    "Favorites": ""
+  },
+  "exceptions": {
+    "defaultIsRequired": ""
+  },
+  "messages": {
+    "profileWillBeNewDefault": "",
+    "navigationUpdate": ""
+  },
+  "boolFilters": {
+    "withLayouts": ""
+  }
+}
