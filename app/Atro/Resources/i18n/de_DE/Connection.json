@@ -41,7 +41,10 @@
     "ftpSsl": "TLS/SSL",
     "oauthUrl": "OAuth URL",
     "oauthGrantType": "OAuth Grant-Typ",
-    "additionalParameters": "Zusätzliche Parameter"
+    "additionalParameters": "Zusätzliche Parameter",
+    "atrocoreUrl": "URL",
+    "smtpServer": "Server",
+    "smtpPort": "Port"
   },
   "labels": {
     "connectionSuccess": "Verbindung wurde erfolgreich hergestellt",
@@ -65,7 +68,10 @@
     "receipts": "Quittungen",
     "oauth1": "Oauth 1.0",
     "vertica": "Vertica DB",
-    "orders": "Bestellungen"
+    "orders": "Bestellungen",
+    "returns": "Verkaufsretouren",
+    "products": "Produkte",
+    "price-reduction": "Preisreduzierung"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL-Erweiterung ist nicht installiert.",
@@ -75,7 +81,8 @@
   },
   "options": {
     "smtpAuthType": {
-      "oauth": "Oauth"
+      "oauth": "Oauth",
+      "basic": "Basic"
     }
   }
 }
