@@ -4,7 +4,6 @@
     "FileTypes": "Types de fichiers",
     "Folders": "Dossiers",
     "GeneralSetting": "Paramètres généraux",
-    "UiHandler": "Gestionnaires d'interface utilisateur",
     "multiLanguagesSettings": "Langues",
     "multiLanguages": "Langues",
     "Composer": "Modules",
@@ -39,8 +38,6 @@
     "Ready for installation": "Prêt pour l'installation",
     "Uninstalling...": "Désinstallation...",
     "Notifications": "Notifications",
-    "Enabled": "Activé",
-    "Disabled": "Désactivée",
     "FileManagement": "Gestion des fichiers",
     "AccessManagement": "Gestion de l'accès",
     "Users": "Utilisateurs",
@@ -182,16 +179,6 @@
     "emailTemplates": "Gérer les modèles de courrier électronique pour l'envoi manuel ou automatisé de courriels (pas pour les notifications standard).",
     "notificationTemplates": "Gérer le modèle de notification standard du système.",
     "layoutProfiles": "Gérer et personnaliser les différentes configurations de l'interface utilisateur du système"
-  },
-  "options": {
-    "outputType": {
-      "text": "Texte",
-      "int": "Entier",
-      "float": "Flottant",
-      "bool": "Booléen",
-      "date": "Date",
-      "datetime": "Date et heure"
-    }
   },
   "logicalOperators": {
     "and": "ET",
