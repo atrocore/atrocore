@@ -151,12 +151,11 @@ class Hierarchy extends Record
         $treeBranches = [];
         $this->createTreeBranches($this->getEntity($id), $treeBranches);
 
-        if (empty($entity = $treeBranches[0])) {
-            throw new NotFound();
+        $tree = [];
+        if (!empty($treeBranches[0])) {
+            $this->prepareTreeForSelectedNode($treeBranches[0], $tree, $sortParams);
         }
 
-        $tree = [];
-        $this->prepareTreeForSelectedNode($entity, $tree, $sortParams);
         $this->prepareTreeData($tree);
 
         $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
