@@ -5,7 +5,11 @@
     "phoneNumber": "Телефон",
     "description": "Описание",
     "addresses": "Адреса",
-    "contacts": "Контакты"
+    "contacts": "Контакты",
+    "type": "Тип",
+    "role": "Роль",
+    "number": "Номер",
+    "language": "Язык"
   },
   "options": {
     "type": {
