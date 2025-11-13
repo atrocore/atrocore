@@ -1,21 +1,21 @@
 {
   "fields": {
-    "post": "",
+    "post": "Příspěvek",
     "attachments": "",
-    "type": "",
+    "type": "Typ",
     "createdByGender": "",
     "data": ""
   },
   "filters": {
-    "all": "",
+    "all": "Všechny",
     "posts": "",
     "updates": "",
-    "notes": "",
+    "notes": "Poznámky",
     "emails": ""
   },
   "options": {
     "type": {
-      "Post": ""
+      "Post": "Příspěvek"
     }
   },
   "messages": {
