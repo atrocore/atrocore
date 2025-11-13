@@ -10,6 +10,7 @@
     "controllerAction": "Controller Aktion",
     "authToken": "Auth Token",
     "targetName": "Ziel Name",
-    "targetId": "Ziel-ID"
+    "targetId": "Ziel-ID",
+    "data": "Daten"
   }
 }
