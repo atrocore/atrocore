@@ -3,27 +3,27 @@
     "isActive": "",
     "isDefault": "",
     "description": "",
-    "hideShowFullList": "",
+    "hideShowFullList": "Ocultar \"Mostrar lista completa\" en los paneles de relación",
     "layouts": "",
-    "parent": "",
-    "navigation": "",
-    "favoritesList": "",
-    "dashboardLayout": ""
+    "parent": "Perfil de disposición de los padres",
+    "navigation": "Menú de navegación",
+    "favoritesList": "Favoritos",
+    "dashboardLayout": "Diseño del salpicadero"
   },
   "labels": {
     "addGroup": "",
     "Menu": "",
     "Dashboards": "",
-    "Favorites": ""
+    "Favorites": "Favoritos"
   },
   "exceptions": {
-    "defaultIsRequired": ""
+    "defaultIsRequired": "Debe existir un perfil de disposición por defecto en el sistema"
   },
   "messages": {
-    "profileWillBeNewDefault": "",
-    "navigationUpdate": ""
+    "profileWillBeNewDefault": "Este perfil será el nuevo predeterminado, ¿está seguro?",
+    "navigationUpdate": "El menú de navegación ha sido ajustado por el sistema."
   },
   "boolFilters": {
-    "withLayouts": ""
+    "withLayouts": "Con disposición almacenada"
   }
 }
