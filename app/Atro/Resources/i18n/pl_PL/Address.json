@@ -12,7 +12,9 @@
     "account": "Konto",
     "contactName": "Imię i nazwisko kontaktowe",
     "name": "Nazwa firmy",
-    "prospect": "Perspektywy"
+    "prospect": "Perspektywy",
+    "accounts": "Accounts",
+    "contacts": "Kontakty"
   },
   "options": {
     "type": {
