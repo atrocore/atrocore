@@ -3,29 +3,29 @@
     "type": "",
     "path": "",
     "files": "",
-    "folder": "",
+    "folder": "Namontovaná složka",
     "folders": "",
-    "syncFolders": ""
+    "syncFolders": "Udržování struktury souborů a složek"
   },
   "options": {
     "type": {
-      "local": ""
+      "local": "Místní (Linux)"
     }
   },
   "tooltips": {
-    "syncFolders": ""
+    "syncFolders": "Pokud je zaškrtnuto, bude fyzická struktura souborů a složek v úložišti stejná jako v systému. To znamená, že ve stejné cestě může být uložen pouze jeden soubor/složka s podobným názvem."
   },
   "labels": {
-    "scan": "",
-    "scanDone": ""
+    "scan": "Skenování",
+    "scanDone": "Kontrola úložiště '%s' byla dokončena."
   },
   "exceptions": {
-    "itemCannotBeMovedToAnotherStorage": "",
-    "folderInUse": "",
-    "storageHasItems": "",
-    "storagePathNotUnique": "",
-    "storagePathContainFilesFromAnotherStorage": "",
-    "storageTypeCannotBeChanged": "",
-    "storagePathCannotBeChanged": ""
+    "itemCannotBeMovedToAnotherStorage": "Složku/soubor nelze přesouvat mezi úložišti.",
+    "folderInUse": "Jako připojenou složku lze vybrat pouze prázdnou složku.",
+    "storageHasItems": "Připojenou složku nelze změnit pro neprázdné úložiště.",
+    "storagePathNotUnique": "Cesta k úložišti by měla být jedinečná.",
+    "storagePathContainFilesFromAnotherStorage": "Strom složek zahájený vybranou cestou k úložišti nemůže obsahovat složky/soubory spojené s jiným úložištěm.",
+    "storageTypeCannotBeChanged": "Typ úložiště nelze změnit.",
+    "storagePathCannotBeChanged": "Cestu k úložišti nelze změnit."
   }
 }
