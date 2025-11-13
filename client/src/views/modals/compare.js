@@ -72,7 +72,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.buttonList = [
                 {
                     name: 'merge',
-                    style: 'primary action',
+                    style: 'primary',
                     label: 'Merge',
                     disabled: true,
                     onClick: (dialog) => {
@@ -82,7 +82,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 {
                     name: 'cancel',
                     label: 'Cancel',
-                    style: 'action',
                     onClick: (dialog) => {
                         this.trigger('cancel', dialog)
                     }
@@ -93,7 +92,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.buttonList.push({
                     name: "selectionView",
                     label: "Selection View",
-                    style: "action",
                     disabled: true,
                     onClick: (dialog) => {
                         const link = '#Selection/view/' + this.selectionId + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
