@@ -20,5 +20,8 @@
       "supplier": "Dostawca",
       "customer": "Klient"
     }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "Domyślny adres dla konta już istnieje."
   }
 }
