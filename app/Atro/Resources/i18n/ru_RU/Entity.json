@@ -23,12 +23,12 @@
     "hasTeam": "Обеспечьте командам возможность",
     "hasOwner": "Включить владельца",
     "multiParents": "Несколько родителей",
-    "dragAndDrop": "",
+    "dragAndDrop": "Перетяните",
     "fieldValueInheritance": "Наследование значений полей",
     "unInheritedFields": "Не унаследованные поля",
     "relationInheritance": "Наследование отношений",
     "unInheritedRelations": "Ненаследственные отношения",
-    "fields": "",
+    "fields": "Поля",
     "auditedDisabledFields": "Отсутствие регистрации активности полей",
     "auditedEnabledRelations": "Запись активности в журнале для отношений",
     "hasAttribute": "Имеет атрибуты",
@@ -55,11 +55,11 @@
     }
   },
   "labels": {
-    "accessManagement": "",
+    "accessManagement": "Управление доступом",
     "hierarchyManagement": "Управление иерархией",
     "other": "Другие",
-    "resetToDefault": "",
-    "attributes": ""
+    "resetToDefault": "Восстановить настройки по умолчанию",
+    "attributes": "Атрибуты"
   },
   "confirmations": {
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
