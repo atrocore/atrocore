@@ -1,22 +1,22 @@
 {
   "fields": {
-    "entity": "",
-    "description": "",
+    "entity": "Сущность",
+    "description": "Описание",
     "release": "",
     "synonyms": "",
-    "code": "",
-    "isActive": "",
+    "code": "Код",
+    "isActive": "Активные",
     "classifications": "",
     "classificationAttributes": "",
-    "type": ""
+    "type": "Тип"
   },
   "options": {
     "type": {
-      "general": ""
+      "general": "Общий"
     }
   },
   "labels": {
-    "selectAttributeGroup": ""
+    "selectAttributeGroup": "Выбрать группу атрибута"
   },
   "exceptions": {
     "entityCannotBeChanged": "",
