@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attribute": "",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "attribute": "Attribut",
+    "roleScope": "Geltungsbereich",
+    "readAction": "Lesen",
+    "editAction": "Bearbeiten"
   }
 }
