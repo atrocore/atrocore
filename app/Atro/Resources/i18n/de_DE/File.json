@@ -32,16 +32,18 @@
     "fileHasDuplicate": "Es gibt bereits mindestens ein <a target=\"_blank\" href=\"/#File/view/{{id}}\">Duplikat</a> dieser Datei.",
     "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
     "urlExpected": "Falsche URL wurde angegeben",
-    "fileExtensionCorrectedAutomatically": "Dateierweiterung wurde automatisch korrigiert."
+    "fileExtensionCorrectedAutomatically": "Dateierweiterung wurde automatisch korrigiert.",
+    "downloadJobsCreated": "Auftrag wurde erstellt, um Ihre Zip-Datei vorzubereiten"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",
     "fileStorageCannotBeChanged": "Der Speicherplatz kann nicht geändert werden.",
     "fileFolderCannotBeChanged": "Der Dateiordner kann nicht geändert werden.",
     "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
-    "fileRenameFailed": "Die Umbenennung der Datei ist fehlgeschlagen.",
+    "fileRenameFailed": "Dateiumbenennung fehlgeschlagen.",
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
     "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen.",
-    "notAllowToFileWithEntity": "Sie dürfen eine Datei vom Typ '%s' nicht mit '%s' verknüpfen. Die einzigen erlaubten Typen sind '%s'"
+    "notAllowToFileWithEntity": "Sie dürfen eine Datei vom Typ '%s' nicht mit '%s' verknüpfen. Die einzigen erlaubten Typen sind '%s'",
+    "fileMoveFailed": "Das Verschieben von Dateien ist fehlgeschlagen."
   }
 }
