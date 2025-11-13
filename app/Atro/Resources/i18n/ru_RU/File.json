@@ -24,7 +24,8 @@
     "uploaded": "загружено",
     "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу",
     "zipDownloadNotification": "Вы можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачать</a> zip-файл.",
-    "Share": "Поделиться"
+    "Share": "Поделиться",
+    "thumbnailUrl": "URL миниатюры (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "Файлы XX из YY не были загружены.",
