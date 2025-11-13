@@ -8,7 +8,8 @@
     "role": "papel",
     "addresses": "Direcciones",
     "contacts": "Contactos",
-    "number": "Número"
+    "number": "Número",
+    "language": "Idioma"
   },
   "options": {
     "type": {
@@ -19,5 +20,8 @@
       "supplier": "Proveedor",
       "customer": "Cliente"
     }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "La dirección predeterminada para la Cuenta ya existe."
   }
 }
