@@ -7,7 +7,8 @@
   },
   "groupOptions": {
     "viewType": {
-      "viewGroup": "Voir le groupe"
+      "viewGroup": "Voir le groupe",
+      "view": "Voir"
     }
   },
   "tooltips": {
