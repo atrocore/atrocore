@@ -1,25 +1,25 @@
 {
   "fields": {
-    "name": "",
-    "role": "",
-    "hasAccess": "",
-    "createAction": "",
-    "readAction": "",
-    "editAction": "",
-    "deleteAction": "",
-    "streamAction": "",
-    "fields": "",
+    "name": "Champ d'application",
+    "role": "Rôle",
+    "hasAccess": "Accès",
+    "createAction": "Créer",
+    "readAction": "Lire",
+    "editAction": "Éditer",
+    "deleteAction": "Supprimer",
+    "streamAction": "Activités",
+    "fields": "Domaines",
     "accessData": "",
     "createAttributeValueAction": "",
     "deleteAttributeValueAction": "",
-    "attributes": "",
+    "attributes": "Attributs",
     "attributePanels": ""
   },
   "labels": {
-    "all": "",
-    "team": "",
+    "all": "Tous",
+    "team": "L'équipe",
     "own": "",
-    "no": "",
-    "yes": ""
+    "no": "Non",
+    "yes": "Oui"
   }
 }
