@@ -35,7 +35,9 @@
     "style": "Design",
     "notificationProfile": "Benachrichtigungsprofil",
     "layoutProfile": "Layout-Profil",
-    "teamRole": "Position"
+    "teamRole": "Position",
+    "teams": "Mannschaften",
+    "avatar": "Avatar"
   },
   "labels": {
     "Generate": "Erzeugen",
@@ -48,7 +50,8 @@
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail Konten",
-    "Notifications": "Benachrichtigungen"
+    "Notifications": "Benachrichtigungen",
+    "Preferences": "Präferenzen"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -90,7 +93,8 @@
     "gender": {
       "": "Nicht gesetzt",
       "Male": "Männlich",
-      "Female": "Weiblich"
+      "Female": "Weiblich",
+      "Neutral": "Neutral"
     }
   }
 }
