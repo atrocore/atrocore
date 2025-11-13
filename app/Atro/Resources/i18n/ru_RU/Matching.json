@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "minimumScore": "",
+    "entity": "",
+    "stagingEntity": "",
+    "masterEntity": "",
+    "matchingRules": "",
+    "foreignName": "",
+    "matchedRecords": ""
+  },
+  "options": {
+    "type": {
+      "bidirectional": "",
+      "unidirectional": ""
+    }
+  },
+  "tooltips": {
+    "foreignName": ""
+  },
+  "exceptions": {
+    "notValidCode": ""
+  }
+}
