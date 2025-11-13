@@ -1,19 +1,19 @@
 {
   "fields": {
-    "incomingWebhook": "",
+    "incomingWebhook": "Входящий Webhook",
     "scheduledJob": "",
-    "workflow": "",
-    "statusMessage": ""
+    "workflow": "Рабочий процесс",
+    "statusMessage": "Сообщение о состоянии"
   },
   "options": {
     "type": {
-      "manual": "",
-      "incomingWebhook": "",
+      "manual": "Руководство",
+      "incomingWebhook": "Входящий Webhook",
       "scheduledJob": "",
-      "workflow": ""
+      "workflow": "Рабочий процесс"
     },
     "status": {
-      "executed": "",
+      "executed": "Выполнено",
       "failed": ""
     }
   }
