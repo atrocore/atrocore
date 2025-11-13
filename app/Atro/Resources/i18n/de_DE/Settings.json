@@ -85,7 +85,9 @@
     "Activities": "Aktivitäten",
     "Theme Configuration": "Theme-Konfiguration",
     "Custom Code": "Benutzerdefinierter Code",
-    "Representation": "Repräsentation"
+    "Representation": "Repräsentation",
+    "System": "System",
+    "SMTP": "SMTP"
   },
   "messages": {
     "languageMustBeSelected": "Mindestens eine Sprache soll ausgewählt werden."
