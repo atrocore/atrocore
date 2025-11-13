@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attributePanel": "",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "attributePanel": "Attribut-Panel",
+    "roleScope": "Geltungsbereich",
+    "readAction": "Lesen",
+    "editAction": "Bearbeiten"
   }
 }
