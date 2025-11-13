@@ -2,7 +2,6 @@
   "labels": {
     "Storage": "Dateiablage",
     "FileTypes": "Datei-Typen",
-    "UiHandler": "UI-Handler",
     "Folders": "Ordner",
     "Locale": "Gebietsschema",
     "multiLanguagesSettings": "Sprachen",
@@ -33,7 +32,7 @@
     "Action": "Aktionen",
     "Clear Cache": "Systemcache leeren",
     "clearCacheTooltip": "Cache erstellt unter",
-    "rebuildDb": "Datenbankstruktur aktualisieren",
+    "rebuildDb": "Datenbank wiederherstellen",
     "rebuildDbWarning": "Die Datenbankstruktur wurde geändert. Um die ordnungsgemäße Funktionalität sicherzustellen, ist ein Rebuild erforderlich.",
     "updatesAvailable": "Neue Updates sind verfügbar!",
     "Maintenance": "Wartung",
@@ -72,7 +71,12 @@
     "status": "Status",
     "apiRequest": "API-Anfrag",
     "style": "Stile",
-    "incomingWebhook": "Eingehende Webhooks"
+    "incomingWebhook": "Eingehende Webhooks",
+    "matchings": "Matchings",
+    "ThumbnailTypes": "Thumbnail-Typen",
+    "Teams": "Mannschaften",
+    "Auth Tokens": "Authentifizierungs-Tokens",
+    "Upgrading...": "Aufrüsten..."
   },
   "logicalOperators": {
     "and": "UND",
@@ -80,12 +84,13 @@
     "or": "ODER"
   },
   "layouts": {
-    "relationships": "Relations-Paneele",
+    "relationships": "Beziehungen",
     "list": "Liste",
     "detail": "Details",
     "massUpdate": "Massenänderung",
     "leftSidebar": "Linke Seitenansicht",
-    "rightSideView": "Rechte Seitenansicht"
+    "rightSideView": "Rechte Seitenansicht",
+    "kanban": "Kanban"
   },
   "fieldTypes": {
     "color": "Farbe",
@@ -127,7 +132,8 @@
     "language": "Sprache",
     "multiLanguage": "Sprachen",
     "measure": "Messen",
-    "markdown": "Markdown"
+    "markdown": "Markdown",
+    "jsonArray": "JSON-Array"
   },
   "fields": {
     "request": "Request",
@@ -151,8 +157,9 @@
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
     "maxFileSize": "Max. Dateigröße (Mb)",
     "isPersonalData": "Gehört zu persönlichen Daten",
-    "dataUrl": "Daten-URL",
-    "allowFileTypes": "Dateitypen zulassen"
+    "allowFileTypes": "Dateitypen zulassen",
+    "provider": "Anbieter",
+    "prefix": "Präfix"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -181,7 +188,7 @@
     "roles": "Verwalten Sie Rollen – legen Sie Berechtigungen fürs Erstellen, Lesen, Aktualisieren und Löschen der Datensätze. Bestimmen Sie die Zugriffsebenen (eigene, teambezogene oder alle Datensätze) für alle Entitäten im System fest, definieren Sie spezifische Berechtigungen für einzelne Felder.",
     "outboundEmails": "Legen Sie die SMTP-Servereinstellungen für ausgehende E-Mails fest.",
     "layoutManager": "Verwalten Sie Standardsystemlayouts für (seitliche) Listenansicht, (seitliche) Detailansicht, Relations-Paneele und deren Sortierreihenfolge, Massenaktualisierung usw.",
-    "userInterface": "Wählen Sie Ihr Theme aus, konfigurieren Sie Hauptnavigationselemente, Standard-Dashboards und Entitäten, die für eine schnelle Datensatz-Erstellung verfügbar sind, und legen Sie andere Einstellungen fest.",
+    "userInterface": "Wählen Sie Ihren CSS-Stil, konfigurieren Sie die Hauptnavigationspunkte, Standard-Dashboards und Entitäten, die für die schnelle Erstellung zur Verfügung stehen, und verwalten Sie andere Einstellungen für Benutzeroberflächen.",
     "authTokens": "Untersuchen Sie aktive Autorisierungssitzungen, einschließlich IP-Adresse, Benutzername sowie Datum und Uhrzeit des letzten Zugriffs.",
     "authentication": "Verwalten Sie Authentifizierungsmethoden und -einstellungen.",
     "notifications": "Verwalten Sie die Einstellungen für In-App- und E-Mail-Benachrichtigungen.",
@@ -199,6 +206,10 @@
     "notificationProfiles": "Konfigurieren Sie Benachrichtigungsprofile und -regeln, um Ihren Alarmmanagementprozess effektiv zu optimieren, damit er zeitnah und relevant ist.",
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
     "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds.",
-    "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen"
+    "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen",
+    "matchings": "Mit Matchings können Sie anhand von benutzerdefinierten Regeln ähnliche Datensätze in verschiedenen Entitäten identifizieren.",
+    "thumbnailTypes": "Verwalten Sie die Thumbnail-Typen, um die Breite oder Höhe eines Thumbnails zu ändern oder um ein neues zu erstellen.",
+    "scheduledJob": "Verwalten Sie geplante Systemaufträge.",
+    "jobs": "Verwalten Sie Systemaufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen."
   }
 }
