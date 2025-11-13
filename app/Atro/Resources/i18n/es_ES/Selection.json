@@ -1,7 +1,7 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
+    "name": "Nombre",
+    "description": "Descripción",
     "selectionRecords": ""
   }
 }
