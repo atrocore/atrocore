@@ -24,7 +24,8 @@
     "uploaded": "Nahráno",
     "putUploadUrl": "Pokud chcete soubor nahrát prostřednictvím adresy URL, zadejte URL adresu souboru",
     "zipDownloadNotification": "Můžete si stáhnout <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\"></a> soubor zip",
-    "Share": "Sdílet"
+    "Share": "Sdílet",
+    "thumbnailUrl": "Adresa URL miniatury (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "Soubory XX z YY nebyly nahrány.",
