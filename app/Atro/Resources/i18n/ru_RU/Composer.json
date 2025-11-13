@@ -19,7 +19,9 @@
     "suchModuleIsAlreadyInstalled": "Данный модуль уже установлен",
     "suchModuleVersionAlreadyInstalled": "Данная версия модуля уже установлена",
     "noSuchModuleVersion": "Такой версии модуля нет",
-    "versionIsInvalid": "Версия неправильная"
+    "versionIsInvalid": "Версия неправильная",
+    "invalidVersion": "Версия модуля недействительна.",
+    "downgradeProhibited": "Версия модуля недействительна. Переход на новую версию запрещен."
   },
   "labels": {
     "available": "Доступен",
@@ -47,7 +49,14 @@
     "Log": "Лог",
     "confirmRun": "После действия обновления все пользователи будут вылогинены из системы. Вы уверены, что хотите обновить систему?",
     "daemonDisabled": "<b>Демон программы-компоновщика не запущен! </b> <br> Вероятно, демон сейчас перезагружается, и Вам следует подождать минуту, или crontab не настроен. Инструкции по настройке crontab вы можете найти <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">здесь</a>.",
-    "jobManagerRunning": "Возможность обновления модулей заблокирована. Пожалуйста, повторите попытку позже."
+    "jobManagerRunning": "Возможность обновления модулей заблокирована. Пожалуйста, повторите попытку позже.",
+    "rented": "Аренда",
+    "purchasedUntil": "Приобретен, обновляется до",
+    "rentUntil": "Сдается в аренду, обновляется до",
+    "settingModuleForUpdating": "Модуль настройки для обновления...",
+    "purchased": "Приобретено",
+    "setModuleForUpdating": "Модуль был настроен на обновление. Нажмите на кнопку \"Обновить\", чтобы применить установку или удаление модуля.",
+    "showReleaseNotes": "Примечания к выпуску"
   },
   "notifications": {
     "Module update": "Модуль {module} был обновлен. С версии {from} до {to}",
