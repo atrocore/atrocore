@@ -64,7 +64,9 @@
     "conditionalRequired": "Erforderlich",
     "conditionalReadOnly": "Schreibgeschützt",
     "conditionalProtected": "Geschützt",
-    "tooltip": "Kurzinfo"
+    "tooltip": "Kurzinfo",
+    "conditionalVisible": "Sichtbar",
+    "conditionalDisableOptions": "Deaktivierte Optionen"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
