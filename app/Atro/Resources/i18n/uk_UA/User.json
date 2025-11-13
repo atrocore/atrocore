@@ -34,7 +34,10 @@
     "followEntityOnStreamPost": "Автоматичне відстеження записів після публікації в Заходах",
     "receiveNotifications": "Отримувати сповіщення",
     "followEntityOnAssignment": "Автоматичне відстеження за призначенням",
-    "style": "Стиль інтерфейсу користувача"
+    "style": "Стиль інтерфейсу користувача",
+    "notificationProfile": "Профіль сповіщення",
+    "layoutProfile": "Лейаут профіль",
+    "locale": "Мова"
   },
   "labels": {
     "Generate": "Згенерувати",
@@ -47,7 +50,8 @@
     "Email Address": "Адреса ел. пошти",
     "External Accounts": "Зовнішні облікові записи",
     "Email Accounts": "Облікові записи ел. пошти",
-    "Preferences": "Уподобання"
+    "Preferences": "Уподобання",
+    "Notifications": "Повідомлення"
   },
   "tooltips": {
     "defaultTeam": "Усі записи, створені цим користувачем, за промовчанням будуть відноситися до цієї групи.",
