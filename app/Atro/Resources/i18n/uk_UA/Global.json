@@ -61,7 +61,15 @@
     "Bookmark": "Додати в закладки",
     "SystemIcon": "Системний значок",
     "AccountGroup": "Група рахунків",
-    "ProductGroup": "Група продуктів"
+    "ProductGroup": "Група продуктів",
+    "Matching": "Відповідність",
+    "ThumbnailType": "Тип мініатюри",
+    "ActionLog": "Журнал дій",
+    "ProductHierarchy": "Ієрархія продуктів",
+    "IncomingWebhook": "Вхідний веб-хук",
+    "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
+    "UserProfile": "Профіль користувача",
+    "MatchedRecord": "Відповідний запис"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -111,7 +119,18 @@
     "Bookmark": "Закладки",
     "SystemIcon": "Системні значки",
     "AccountGroup": "Групи рахунків",
-    "ProductGroup": "Групи товарів"
+    "ProductGroup": "Групи товарів",
+    "RoleScopeAttributePanel": "Панелі атрибутів",
+    "MatchedRecord": "Відповідні записи",
+    "Matching": "Відповідності",
+    "ThumbnailType": "Типи мініатюр",
+    "ActionLog": "Журнали дій",
+    "AttributePanel": "Панелі атрибутів",
+    "RoleScope": "Сфери застосування",
+    "UserProfile": "Профілі користувачів",
+    "Background": "Передумови",
+    "EntityField": "Поля сутності",
+    "EntityRelation": "Відносини між сутностями"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -285,7 +304,7 @@
     "Default": "За замовчуванням",
     "Number": "Номер",
     "From": "Від",
-    "To": "До",
+    "To": "(До)",
     "Create Post": "Створити повідомлення",
     "Previous Entry": "Попередній запис",
     "Next Entry": "Наступний запис",
@@ -418,7 +437,40 @@
     "reloadPage": "Перезавантажити",
     "Compare": "Порівняйте",
     "Standard": "Стандартний",
-    "addItem": "додати товар"
+    "addItem": "додати товар",
+    "basic": "Базовий",
+    "UserFollowed": "Користувач Підписався",
+    "authenticate": "Автентифікація",
+    "Load data": "Завантажте дані",
+    "floatPart": "(Поплавок)",
+    "inheritedFromParent": "Успадковано від батьків",
+    "Action Forbidden": "Дія заборонена",
+    "Duplicate and Select": "Дублюйте та виділяйте",
+    "actionFollow": "Натисніть, щоб продовжити",
+    "actionUnfollow": "Ви стежите за нами, натисніть, щоб скасувати підписку",
+    "collapseAll": "Згорнути все",
+    "relatedAssociates": "Відсталі асоціації",
+    "Duplicates": "Дублікати",
+    "phpCode": "Код PHP",
+    "_addAttribute": "[Додати атрибут].",
+    "fieldValueFilters": "Фільтри значень полів",
+    "confirmRemoveAttributeValue": "Ви впевнені, що хочете видалити атрибут?",
+    "massActionDelegatedToJm": "Ваш запит успішно делеговано менеджеру вакансії.",
+    "massActionJobName": "%s на об'єкті \"%s\" (%s з %s)",
+    "customDownload": "Спеціальне завантаження",
+    "notInheritedFromParent": "Не успадковується від батьків",
+    "Added": "Додано",
+    "actionBookmark": "Натисніть, щоб додати в закладки",
+    "actionUnbookmark": "Додано до закладок, натисніть, щоб видалити закладку",
+    "actionOpenFilter": "Відкрити фільтр",
+    "expandAll": "Розгорнути всі",
+    "Associated": "Асоційований",
+    "Associating": "Асоціювання",
+    "matchedRecords": "Відповідні записи",
+    "noMatches": "Немає збігів",
+    "varcharPart": "(Рядок)",
+    "deletePermanently": "Видалити назавжди",
+    "intPart": "(Ціле число)"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -446,11 +498,11 @@
     "inheritAllConfirmation": "Ви впевнені, що хочете успадкувати всі записи?",
     "unlinkAllConfirmation": "Ви дійсно хочете прибрати всі пов'язані записи?",
     "deleteAllConfirmation": "Ви дійсно хочете видалити всі записи?",
-    "removeRecordConfirmation": "Ви дійсно хочете видалити запис?",
+    "removeRecordConfirmation": "Ви впевнені, що хочете видалити запис?",
     "restoreRecordConfirmation": "Вибраний запис буде відновлено. Ви впевнені, що бажаєте його відновити?",
     "unlinkRecordConfirmation": "Ви дійсно хочете прибрати пов'язаний запис?",
     "removeRecordConfirmationHierarchically": "Ви дійсно хочете видалити записи ієрархічно?",
-    "removeSelectedRecordsConfirmation": "Ви дійсно хочете видалити вибрані записи?",
+    "removeSelectedRecordsConfirmation": "Ви впевнені, що хочете видалити вибрані записи?",
     "restoreSelectedRecordsConfirmation": "Ви впевнені, що бажаєте остаточно відновити вибрані?",
     "massUpdateResult": "{count} записів було оновлено",
     "massUpdateResultSingle": "{count} запис було оновлено",
@@ -465,8 +517,8 @@
     "checkForNewNotifications": "Перевірити нові сповіщення",
     "duplicate": "Створюваний запис є дублікатом вже існуючого",
     "dropToAttach": "Перетягніть щоб прикріпити",
-    "writeMessageToSelf": "Залишити повідомлення для себе",
-    "checkForNewNotes": "Перевірити нові події в Стрічці",
+    "writeMessageToSelf": "Напишіть повідомлення про свою діяльність",
+    "checkForNewNotes": "Перевірте оновлення заходів",
     "internalPost": "Повідомлення буде видно тільки внутрішнім користувачам",
     "done": "Готово",
     "confirmMassFollow": "Ви впевнені, що хочете підписатися на вибрані записи?",
@@ -519,7 +571,10 @@
     "unableToDuplicateRecord": "Неможливо продублювати. Запис зі значенням унікального поля вже існує.",
     "youHaveErrorsInFilter": "У фільтрі є деякі помилки.",
     "theSavedFilterMightBeCorrupt": "Формат не підтримується, збережений фільтр може бути пошкоджений.",
-    "closePanelConfirmation": "Ви дійсно хочете закрити панель?"
+    "closePanelConfirmation": "Ви дійсно хочете закрити панель?",
+    "removeRelatedRecords": "Ви впевнені, що хочете видалити всі записи для вибраної Асоціації з поточного запису? Всі пов'язані записи будуть збережені.",
+    "deletePermanentlyRecordConfirmation": "Ви впевнені, що хочете назавжди видалити запис?",
+    "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?"
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -559,7 +614,8 @@
     "download": "Завантажити",
     "compare": "Порівняйте",
     "removeAttribute": "Видалити атрибут",
-    "select": "Виберіть"
+    "select": "Виберіть",
+    "deletePermanently": "Видалити назавжди"
   },
   "fields": {
     "classifications": "Класифікації",
@@ -639,14 +695,31 @@
     "association": "Зв'язок",
     "reverseAssociation": "Зворотня асоціація",
     "sorting": "Порядок сортування",
-    "associateEverything": "Пов'язати кожен запис з кожним іншим записом"
+    "associateEverything": "Пов'язати кожен запис з кожним іншим записом",
+    "__currentUser": "Поточний користувач",
+    "mediumThumbnailUrl": "URL-адреса мініатюри (середня)",
+    "largeThumbnailUrl": "URL-адреса мініатюри (велика)",
+    "extension": "Розширення",
+    "hierarchySortOrder": "Ієрархія Порядок сортування",
+    "emailAddressData": "Дані адреси електронної пошти",
+    "logs": "Журнали",
+    "ipWhiteList": "Білий список IP-адрес",
+    "httpMethod": "Метод HTTP",
+    "url": "URL",
+    "allowedOptions": "Дозволені опції",
+    "disableActionHistory": "Вимкнути реєстрацію дій",
+    "downloadUrl": "URL-адреса для завантаження",
+    "smallThumbnailUrl": "URL-адреса мініатюри (маленька)",
+    "routes": "Маршрут(и)",
+    "conditionalProperties": "Умовні властивості"
   },
   "tooltips": {
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
   },
   "dashlets": {
     "Stream": "Активність",
-    "Records": "Список записів"
+    "Records": "Список записів",
+    "FirstSteps": "Перші кроки"
   },
   "notificationMessages": {
     "assign": "Вам було призначено {entityType} {entity}",
@@ -699,7 +772,7 @@
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
     "composerUpdateThis": "{user}",
     "unrelate": "{user} відв'язав {relatedEntityType} {relatedEntity} від {entityType} {entity}",
-    "unrelateThis": "{user} відв'язав {relatedEntityType} {relatedEntity} від цього {entityType}",
+    "unrelateThis": "{користувач} від'єднав {relatedEntityType} {relatedEntity} від цього {entityType}",
     "updateOneThis": "{user} оновив {entityType} {entity}",
     "updateFromToThis": "{user} оновив {entityType} {entity}",
     "updateOne": "{user} оновив {entityType} {entity}",
@@ -708,7 +781,27 @@
     "to": "на",
     "was": "було",
     "become": "стало",
-    "changed": "було змінено"
+    "changed": "було змінено",
+    "deleteRecordAssociationThis": "{користувач} видалив асоціацію з {пов'язанимзаписом} як {асоціацію}.",
+    "createAssociationRecordThis": "{користувач} пов'язав {mainRecord} з {relatedRecord}",
+    "deleteAssociationRecordThis": "{користувач} видалив зв'язок {mainRecord} з {relatedRecord}",
+    "own": "{user} встановлює {owner} як власника для {entityType} {entity}",
+    "ownThisVoid": "{користувач} встановлює власника для цього {entityType}",
+    "assignYou": "{user} призначив {entityType} {entity} вам",
+    "assignThisVoid": "{user} скасував призначення цього {entityType}",
+    "assignVoid": "{user} unassigned {entityType} {entity}",
+    "updateOneInThis": "{user} у цій {entityType} оновлено у {relatedEntityType} {relatedEntity}",
+    "updateFromToInThis": "{user} у цій {entityType} оновлено у {relatedEntityType} {relatedEntity}",
+    "updateOneIn": "{user} в {entityType} {entity} оновлено в {relatedEntityType} {relatedEntity}",
+    "updateFromToIn": "{user} в {entityType} {entity} оновлено в {relatedEntityType} {relatedEntity}",
+    "createRecordAssociationThis": "{user} асоціював {relatedRecord} як {association}",
+    "ownVoid": "{користувач} скидає власника для {entityType} {entity}",
+    "ownThisSelf": "{user} встановив себе як власника для цього {entityType}",
+    "ownSelf": "{user} встановив себе як власника для {entityType} {entity}",
+    "ownThis": "{user} встановлює {owner} як власника для цього {entityType}",
+    "ownYou": "{user} призначить вас власником для {entityType} {entity}",
+    "assignThisSelf": "{user} самостійно призначив цей {entityType}",
+    "assignSelf": "{user} self-assigned {entityType} {entity}"
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",
@@ -1068,7 +1161,10 @@
     "massDeleteSomeRecordNotProceed": "Деякі записи не були видалені.",
     "massRestoreSomeRecordNotProceed": "Деякі записи не вдалося відновити.",
     "entityCannotBeBookmarked": "До записів цієї сутності не можна додавати закладки.",
-    "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s"
+    "integerValueValidationFailed": "Ціле значення для поля/атрибута \"%s\" повинно бути в межах від %s до %s",
+    "notAllowedOption": "Опція '%s' не допускається для '%s'.",
+    "notUniqueRecordField": "Запис не може бути збережено, запис з такими '%s' вже існує.",
+    "suchItemNameCannotBeUsedHere": "Папка/файл з такою назвою вже існує у папці призначення. Будь ласка, виберіть іншу папку або змініть назву і спробуйте ще раз."
   },
   "firstStepsDashlet": {
     "title": {
@@ -1148,7 +1244,8 @@
       "include_me": "включають мене",
       "exclude_me": "виключають мене",
       "is_my_team": "є моєю командою",
-      "is_not_my_team": "не є моєю командою"
+      "is_not_my_team": "не є моєю командою",
+      "not_between": "а не між"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",
@@ -1171,7 +1268,9 @@
       "datetime_exceed_min": "Повинне бути, після {0}",
       "datetime_exceed_max": "Повинне бути, до {0}",
       "boolean_not_valid": "Не логічне",
-      "operator_not_multiple": "Оператор \"{1}\" не підтримує багато значень"
+      "operator_not_multiple": "Оператор \"{1}\" не підтримує багато значень",
+      "datetime_between_invalid": "Неправильні значення, {0} більше {1}",
+      "number_between_invalid": "Неправильні значення, {0} більше {1}"
     },
     "invert": "інвертувати"
   },
@@ -1183,5 +1282,51 @@
     "small": "Малий",
     "medium": "Середній",
     "large": "Великий"
+  },
+  "twig": {
+    "functions": {
+      "isNew": "Перевірте, чи є організація новою",
+      "md5": "Перетворити вхідний рядок в md5 хеш",
+      "isAttributeChanged": "Перевірити, чи був змінений атрибут",
+      "getFetched": "Отримання даних про отриману сутність",
+      "get": "Отримати значення поля",
+      "createEntity": "Створіть нову сутність",
+      "createRecord": "Створіть новий запис про сутність",
+      "findEntity": "Знайдіть єдиний об'єкт",
+      "findRecord": "Знайти єдиний запис про сутність",
+      "findEntities": "Знайти декілька сутностей \n Параметри: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "convertFileToBase64FromUrl": "Конвертувати файл в base64 з URL-адреси",
+      "findRecords": "Знайти декілька сутностей \n Параметри: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "parseMarkdown": "Розбір вмісту націнки",
+      "formatField": "Форматування значення поля",
+      "convertMeasureUnit": "Конвертувати значення з одних одиниць виміру в інші \n Параметри: float|int value, рядок measureId, рядок fromUnitId, рядок? toUnitId = null \n Якщо toUnitId пустий, результатом буде масив з конвертованим значенням для всіх одиниць виміру \n Приклад: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}",
+      "translateOption": "Перекласти значення опції",
+      "convertFileToBase64": "Перетворення файлу в base64",
+      "getConvertedImageUrl": "Отримати URL-адресу перетвореного зображення",
+      "editable": "Перевірте, чи можна редагувати сутність",
+      "getAllLanguageFields": "Отримати всі мовні поля",
+      "translate": "Перекласти рядок"
+    },
+    "filters": {
+      "backslashNToBr": "Перетворення \\n в розриви рядків HTML",
+      "generateBorderColor": "Згенерувати значення кольору рамки",
+      "generateFontColor": "Згенерувати значення кольору шрифту",
+      "prepareEntity": "Підготуйте сутність до відображення або обробки",
+      "prepareHtmlField": "Підготуйте вміст HTML-поля для безпечного відображення",
+      "isImage": "Перевірте, чи є вміст зображенням",
+      "escapeDoubleQuote": "Екранування подвійних лапок у рядку",
+      "escapeStr": "Екранування спеціальних символів у рядку"
+    }
+  },
+  "twigVariables": {
+    "entity": "Об'єкт сутності (запис)",
+    "config": "Об'єкт конфігурації системи",
+    "uiRecord": "Запис масиву даних. Змінна містить дані, які ви маєте на стороні фронтенду.",
+    "uiRecordFromName": "Назва сутності, з якої ви відкриваєте поточну сутність.",
+    "uiRecordFrom": "Записати масив даних сутності, з якої ви відкриваєте поточну сутність."
+  },
+  "unit Thermodynamic Temperature": {
+    "C": "C",
+    "K": "K"
   }
 }
