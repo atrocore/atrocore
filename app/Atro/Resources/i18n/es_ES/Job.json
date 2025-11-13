@@ -1,34 +1,34 @@
 {
   "fields": {
     "status": "Status",
-    "executeTime": "",
-    "pid": "",
-    "priority": "",
-    "handler": "",
-    "payload": "",
+    "executeTime": "Ejecutar en",
+    "pid": "PID",
+    "priority": "Prioridad",
+    "handler": "Manejador",
+    "payload": "Carga útil",
     "scheduledJob": "Tarea Programada",
-    "message": "",
-    "startedAt": "",
-    "endedAt": ""
+    "message": "Mensaje",
+    "startedAt": "Comenzó en",
+    "endedAt": "Terminado en"
   },
   "labels": {
     "cancel": "Cancelar"
   },
   "options": {
     "status": {
-      "Pending": "",
+      "Pending": "Pendiente",
       "Success": "Success",
-      "Running": "",
-      "Failed": "",
+      "Running": "Correr",
+      "Failed": "Fallida",
       "Canceled": "Canceled",
-      "Awaiting": "",
-      "Closed": ""
+      "Awaiting": "A la espera de",
+      "Closed": "Cerrado"
     }
   },
   "tooltips": {
-    "priority": ""
+    "priority": "Un número más alto significa mayor prioridad"
   },
   "exceptions": {
-    "jobIsRunning": ""
+    "jobIsRunning": "Un trabajo en ejecución no puede eliminarse."
   }
 }
