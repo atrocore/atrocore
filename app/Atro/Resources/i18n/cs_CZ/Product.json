@@ -1,7 +1,7 @@
 {
   "fields": {
-    "number": "",
-    "isActive": "",
+    "number": "Číslo",
+    "isActive": "Aktivní",
     "image": "",
     "price": "",
     "description": "",
@@ -13,7 +13,7 @@
     "customsNumber": "",
     "countryOfOrigin": "",
     "defaultSupplier": "",
-    "note": ""
+    "note": "Poznámka"
   },
   "labels": {
     "manufacturer": "",
