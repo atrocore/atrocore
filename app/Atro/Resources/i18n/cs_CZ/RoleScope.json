@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "",
+    "role": "",
+    "hasAccess": "",
+    "createAction": "",
+    "readAction": "",
+    "editAction": "",
+    "deleteAction": "",
+    "streamAction": "",
+    "fields": "",
+    "accessData": "",
+    "createAttributeValueAction": "",
+    "deleteAttributeValueAction": "",
+    "attributes": "",
+    "attributePanels": ""
+  },
+  "labels": {
+    "all": "",
+    "team": "",
+    "own": "",
+    "no": "",
+    "yes": ""
+  }
+}
