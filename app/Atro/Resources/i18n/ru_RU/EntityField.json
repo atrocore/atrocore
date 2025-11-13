@@ -1,27 +1,27 @@
 {
   "fields": {
-    "type": "",
-    "entity": "",
-    "isMultilang": "",
-    "required": "",
+    "type": "Тип",
+    "entity": "Сущность",
+    "isMultilang": "Многоязычность",
+    "required": "Обязательно",
     "notNull": "Отключите нулевое значение",
     "readOnly": "Только для чтения",
     "protected": "Защищенный",
     "unique": "Уникальный",
     "index": "Указатель базы данных",
-    "measure": "",
+    "measure": "Мера",
     "trim": "Удалите ведущие и завершающие пробельные символы",
     "maxLength": "Максимальная длина",
     "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
-    "pattern": "",
+    "pattern": "Regex Pattern",
     "defaultUnit": "Единица измерения по умолчанию",
-    "default": "",
+    "default": "По умолчанию",
     "defaultValueType": "Значение по умолчанию Тип",
-    "tooltip": "",
+    "tooltip": "Текст подсказки",
     "tooltipText": "Текст всплывающей подсказки",
     "tooltipLink": "Ссылка на всплывающую подсказку",
     "noEmptyString": "Пустое строковое значение не допускается",
-    "options": "",
+    "options": "Опции",
     "useNumericFormat": "Используйте числовой формат",
     "isSorted": "Отсортировано (в алфавитном порядке)",
     "dropdown": "Dropdown",
@@ -31,14 +31,14 @@
     "amountOfDigitsAfterComma": "Количество цифр после запятой",
     "disableFormatting": "Отключите форматирование",
     "foreignName": "Иностранное поле",
-    "fileTypes": "",
+    "fileTypes": "Типы файлов",
     "seeMoreDisabled": "Отключить сокращение отображаемого текста",
     "minHeight": "Минимальная высота (px)",
     "maxHeight": "Максимальная высота (px)",
     "lengthOfCut": "Сумма символа, которая будет отображаться",
     "script": "Скрипт",
     "outputType": "Тип выхода",
-    "preview": "",
+    "preview": "Предпросмотр",
     "rowsMax": "Максимальное количество строк текстовой области",
     "rowsMin": "Минимальное количество строк текстовой области",
     "useDisabledTextareaInViewMode": "Используйте отключенную текстовую область в режиме просмотра",
@@ -62,7 +62,7 @@
     "modifiedExtendedEnabled": "Запишите изменение как модификацию",
     "duplicateIgnore": "Не дублируется",
     "recordRelatedChangesInStream": "Запишите изменения в связанных записях для текущей сущности.",
-    "conditionalRequired": "",
+    "conditionalRequired": "Обязательно",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
@@ -77,7 +77,7 @@
     "readOnly": "Значение поля не может быть указано пользователем. Тем не менее, его можно изменить с помощью API.",
     "protected": "Значение поля не может быть указано пользователем. Ни через фронт-энд, ни через API.",
     "maxLength": "Максимально допустимая длина текста.",
-    "pattern": "",
+    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"/^[A-Z]{1,10}$/\"",
     "default": "Значение будет установлено по умолчанию при создании.",
     "isSorted": "Опции будут отсортированы после сохранения.",
     "dropdown": "Не используйте выпадающий список, если в нем более 300 вариантов.",
@@ -95,16 +95,16 @@
   },
   "options": {
     "outputType": {
-      "text": "",
+      "text": "Текст",
       "int": "Целое число",
       "float": "Поплавок",
       "bool": "Булево",
-      "date": "",
+      "date": "Дата",
       "datetime": "Дата-время"
     },
     "relationType": {
-      "oneToMany": "",
-      "manyToMany": ""
+      "oneToMany": "Один-ко-многим",
+      "manyToMany": "Многие-ко-многим"
     }
   },
   "groupOptions": {
@@ -120,7 +120,7 @@
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   },
   "labels": {
-    "resetToDefault": "",
+    "resetToDefault": "Восстановить настройки по умолчанию",
     "relationManagement": "Управление отношениями",
     "conditionalProperties": "Условные свойства"
   }
