@@ -1,17 +1,19 @@
 {
-	"fields": {
-		"timeZone": "Strefa czasowa",
-		"dateFormat": "Format daty",
-		"weekStart": "Pierwszy dzień tygodnia",
-		"timeFormat": "Format czasu",
-		"thousandSeparator": "Separator tysięcy",
-		"decimalMark": "Znak dziesiętny"
-	},
-	"labels": {
-		"sunday": "Niedziela",
-		"monday": "Poniedziałek"
-	},
-	"exceptions": {
-		"localeIsUsed": "Lokalizacja w użyciu nie może zostać usunięta."
-	}
+  "fields": {
+    "timeZone": "Strefa czasowa",
+    "dateFormat": "Format daty",
+    "weekStart": "Pierwszy dzień tygodnia",
+    "timeFormat": "Format czasu",
+    "thousandSeparator": "Separator tysięcy",
+    "decimalMark": "Znak dziesiętny",
+    "languageCode": "Kod języka",
+    "fallbackLanguageCode": "Kod języka rezerwowego"
+  },
+  "labels": {
+    "sunday": "Niedziela",
+    "monday": "Poniedziałek"
+  },
+  "exceptions": {
+    "localeIsUsed": "Lokalizacja w użyciu nie może zostać usunięta."
+  }
 }
