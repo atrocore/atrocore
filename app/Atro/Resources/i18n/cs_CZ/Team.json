@@ -1,9 +1,9 @@
 {
   "fields": {
-    "name": "",
-    "roles": "",
-    "users": "",
-    "notes": ""
+    "name": "Název",
+    "roles": "Role",
+    "users": "Uživatelé",
+    "notes": "Poznámky"
   },
   "tooltips": {
     "roles": ""
