@@ -1,7 +1,7 @@
 {
   "fields": {
-    "isActive": "",
-    "description": "",
+    "isActive": "Активные",
+    "description": "Описание",
     "notificationRules": ""
   }
 }
