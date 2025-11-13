@@ -1,8 +1,8 @@
 {
   "fields": {
     "attributePanel": "Panneau d'attributs",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "roleScope": "Champ d'application",
+    "readAction": "Lire",
+    "editAction": "Éditer"
   }
 }
