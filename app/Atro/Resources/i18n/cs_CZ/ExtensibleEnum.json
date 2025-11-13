@@ -4,6 +4,6 @@
     "multilingual": "Vícejazyčný"
   },
   "exceptions": {
-    "extensibleEnumIsUsed": ""
+    "extensibleEnumIsUsed": "Seznam \"%s\" je používán polem \"%s\" v entitě \"%s\"."
   }
 }
