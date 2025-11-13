@@ -4,6 +4,6 @@
     "default": "Défaut"
   },
   "exceptions": {
-    "entityIsUsed": ""
+    "entityIsUsed": "L'attribut Panel ne peut pas être supprimé car il est utilisé dans plusieurs attributs."
   }
 }
