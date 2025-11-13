@@ -5,6 +5,13 @@
     "lastAccess": "Letztes Zugriffsdatum",
     "createdAt": "Login Datum",
     "isActive": "Aktiv",
-    "actionHistoryRecords": "Aktionsverlauf"
+    "actionHistoryRecords": "Aktionsverlauf",
+    "lifetime": "Lebenszeit",
+    "idleTime": "Leerlaufzeit",
+    "authToken": "Autorisierungs-Token"
+  },
+  "tooltips": {
+    "lifetime": "Die Lebenszeit sollte in Stunden angegeben werden. Null bedeutet keinen Ablauf.",
+    "idleTime": "Die Leerlaufzeit sollte in Stunden angegeben werden. Null bedeutet keinen Verfall."
   }
 }
