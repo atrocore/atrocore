@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Nazwa",
-    "scheduling": "Harmonogram"
+    "scheduling": "Harmonogram",
+    "jobs": "Zadania"
   },
   "labels": {
     "executeNow": "Wykonaj teraz"
