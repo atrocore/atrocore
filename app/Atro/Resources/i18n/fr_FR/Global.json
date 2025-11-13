@@ -93,7 +93,17 @@
     "disableActionHistory": "Désactiver l'enregistrement des actions",
     "isPublic": "Public",
     "groupEnd": "Fin du groupe",
-    "iconClass": "Icône"
+    "iconClass": "Icône",
+    "modified": "Modifié",
+    "start": "Démarrer",
+    "end": "Fin",
+    "action": "Action",
+    "payload": "Charge utile",
+    "hash": "Hachures",
+    "classification": "Classification",
+    "entity": "Entité",
+    "created": "Créé",
+    "url": "URL"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -120,7 +130,7 @@
     "Role": "Rôle",
     "OutboundEmail": "Courrier électronique sortant",
     "Dashboard": "Tableau de bord",
-    "Stream": "Flux",
+    "Stream": "Activités",
     "Job": "Emploi",
     "ScheduledJobLogRecord": "Enregistrement du journal des travaux programmés",
     "PasswordChangeRequest": "Demande de changement de mot de passe",
@@ -168,7 +178,14 @@
     "Bookmark": "Signet",
     "ProductHierarchy": "Hiérarchie des produits",
     "AccountGroup": "Groupe de comptes",
-    "ProductGroup": "Groupe de produits"
+    "ProductGroup": "Groupe de produits",
+    "RoleScopeAttribute": "Attribut",
+    "RoleScope": "Champ d'application",
+    "RoleScopeField": "Champ",
+    "Entity": "Entité",
+    "EntityField": "Champ de l'entité",
+    "Language": "Langue",
+    "LayoutProfile": "Profil de la mise en page"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -281,7 +298,7 @@
     "Active": "Actif",
     "Inactive": "Inactif",
     "Post": "Poste",
-    "Stream": "Flux",
+    "Stream": "Activités",
     "Show more": "Afficher plus",
     "Read more": "Lire la suite ...",
     "Show %s more": "Afficher %s plus",
@@ -494,7 +511,22 @@
     "sidebarPin": "L'extension automatique du panneau est active",
     "sidebarExpand": "Cliquez pour agrandir",
     "sidebarCollapse": "Cliquez pour réduire",
-    "Action Forbidden": "Action interdite"
+    "Action Forbidden": "Action interdite",
+    "Fields": "Domaines",
+    "Reset to Default": "Rétablissement des valeurs par défaut",
+    "code": "Code",
+    "label": "Étiquette",
+    "color": "Couleur",
+    "basic": "Basique",
+    "script": "Script",
+    "Download": "Télécharger",
+    "Compare": "Comparez",
+    "addItem": "Ajouter un article",
+    "language": "Langue",
+    "scopeFilter": "Canal",
+    "Activities": "Activités",
+    "accessManagement": "Gestion de l'accès",
+    "Attributes": "Attributs"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",
@@ -635,7 +667,7 @@
     "NotificationProfile": "Profils de notification",
     "NotificationRule": "Règles de notification",
     "Country": "Pays",
-    "Stream": "Cours d'eau",
+    "Stream": "Activités",
     "User": "Utilisateurs",
     "Team": "Teams",
     "Role": "Rôles",
@@ -660,7 +692,12 @@
     "AttributePanel": "Panneaux d'attributs",
     "RoleScope": "Scopes",
     "UserProfile": "Profils des utilisateurs",
-    "Background": "Arrière-plans"
+    "Background": "Arrière-plans",
+    "Entity": "Entités",
+    "Language": "Langues",
+    "LayoutProfile": "Profils de mise en page",
+    "RoleScopeAttribute": "Attributs",
+    "RoleScopeField": "Domaines"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
@@ -699,12 +736,15 @@
     "delete": "Supprimer",
     "update": "Mise à jour des masses",
     "massRestore": "Restauration en masse",
-    "removeAttribute": "Supprimer un attribut"
+    "removeAttribute": "Supprimer un attribut",
+    "compare": "Comparez",
+    "select": "Sélectionnez"
   },
   "dashlets": {
-    "Stream": "Flux",
+    "Stream": "Activités",
     "Records": "Liste des enregistrements",
-    "FirstSteps": "Premiers pas"
+    "FirstSteps": "Premiers pas",
+    "Entities": "Entités"
   },
   "notificationMessages": {
     "own": "Vous avez été désigné comme propriétaire de {entityType} {entity}.",
