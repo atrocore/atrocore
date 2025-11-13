@@ -9,7 +9,7 @@
     "mode": "Режим",
     "enabledScopeList": "Что отображать",
     "users": "Пользователи",
-    "entityType": "Тип объекта",
+    "entityType": "Сущность",
     "primaryFilter": "Первичный фильтр",
     "boolFilterList": "Дополнительные фильтры",
     "sortBy": "Сортировка (поле)",
@@ -30,7 +30,8 @@
     },
     "entityListType": {
       "navigation": "Элементы навигации",
-      "favorites": "Избранное"
+      "favorites": "Избранное",
+      "all": "Все"
     }
   },
   "messages": {
