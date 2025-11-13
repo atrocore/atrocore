@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attributePanel": "",
-    "roleScope": "",
+    "attributePanel": "Panel atributů",
+    "roleScope": "Rozsah",
     "readAction": "",
-    "editAction": ""
+    "editAction": "Upravit"
   }
 }
