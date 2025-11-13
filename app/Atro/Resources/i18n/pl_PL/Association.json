@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "isActive": "",
+    "description": "Description",
+    "isActive": "Aktywny",
     "reverseAssociation": "",
-    "code": "",
-    "default": ""
+    "code": "Kod",
+    "default": "Domyślny"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "",
