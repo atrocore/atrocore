@@ -1,19 +1,19 @@
 {
   "fields": {
-    "languageCode": "",
-    "fallbackLanguageCode": "",
-    "timeZone": "",
-    "dateFormat": "",
-    "weekStart": "",
-    "timeFormat": "",
-    "thousandSeparator": "",
-    "decimalMark": ""
+    "languageCode": "Código de idioma",
+    "fallbackLanguageCode": "Código de lengua de reserva",
+    "timeZone": "Zona horaria",
+    "dateFormat": "Formato de fecha",
+    "weekStart": "Primer día de la semana",
+    "timeFormat": "Formato de hora",
+    "thousandSeparator": "Separador de mil",
+    "decimalMark": "Marca decimal"
   },
   "labels": {
     "sunday": "",
     "monday": ""
   },
   "exceptions": {
-    "localeIsUsed": ""
+    "localeIsUsed": "La localización en uso no puede eliminarse."
   }
 }
