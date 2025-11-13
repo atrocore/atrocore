@@ -79,7 +79,9 @@
     "RoleScopeAttribute": "Attribut",
     "RoleScopeAttributePanel": "Attribut-Panel",
     "RoleScope": "Geltungsbereich",
-    "RoleScopeField": "Feld"
+    "RoleScopeField": "Feld",
+    "Selection": "Auswahl",
+    "SelectionRecord": "Auswahlsatz"
   },
   "scopeNamesPlural": {
     "ActionLog": "Aktionsprotokolle",
@@ -146,7 +148,8 @@
     "RoleScopeField": "Felder",
     "Account": "Accounts",
     "Job": "Aufträge",
-    "LayoutProfile": "Layoutprofile"
+    "LayoutProfile": "Layoutprofile",
+    "Selection": "Selektionen"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
