@@ -3,27 +3,27 @@
     "isActive": "Aktywny",
     "isDefault": "Domyślny",
     "description": "Description",
-    "hideShowFullList": "",
+    "hideShowFullList": "Ukryj \"Pokaż pełną listę\" w panelach relacji",
     "layouts": "Układy",
-    "parent": "",
-    "navigation": "",
-    "favoritesList": "",
-    "dashboardLayout": ""
+    "parent": "Profil układu rodzica",
+    "navigation": "Menu nawigacji",
+    "favoritesList": "Ulubione",
+    "dashboardLayout": "Układ pulpitu nawigacyjnego"
   },
   "labels": {
     "addGroup": "Dodaj grupę",
     "Menu": "Menu",
     "Dashboards": "Pulpity",
-    "Favorites": ""
+    "Favorites": "Ulubione"
   },
   "exceptions": {
-    "defaultIsRequired": ""
+    "defaultIsRequired": "W systemie powinien istnieć domyślny profil układu"
   },
   "messages": {
-    "profileWillBeNewDefault": "",
-    "navigationUpdate": ""
+    "profileWillBeNewDefault": "Ten profil będzie nowym domyślnym, jest Pan pewien?",
+    "navigationUpdate": "Menu nawigacji zostało dostosowane przez system."
   },
   "boolFilters": {
-    "withLayouts": ""
+    "withLayouts": "Z zapisanym układem"
   }
 }
