@@ -14,6 +14,7 @@
     "aspectRatioMustBeInFormat": "Format de rapport d'aspect non valide. Veuillez utiliser le format largeur:hauteur, tel que 16:9."
   },
   "labels": {
-    "Image Settings": "Paramètres de l'image"
+    "Image Settings": "Paramètres de l'image",
+    "General Settings": "Paramètres généraux"
   }
 }
