@@ -1,23 +1,23 @@
 {
   "fields": {
-    "minimumScore": "",
-    "entity": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRules": "",
-    "foreignName": "",
-    "matchedRecords": ""
+    "minimumScore": "Puntuación mínima, %.",
+    "entity": "Entidad",
+    "stagingEntity": "Entidad de puesta en escena",
+    "masterEntity": "Entidad principal",
+    "matchingRules": "Reglas de concordancia",
+    "foreignName": "Nombre extranjero",
+    "matchedRecords": "Registros coincidentes"
   },
   "options": {
     "type": {
-      "bidirectional": "",
-      "unidirectional": ""
+      "bidirectional": "Bidireccional",
+      "unidirectional": "Unidireccional"
     }
   },
   "tooltips": {
-    "foreignName": ""
+    "foreignName": "Nombre para una coincidencia hacia atrás, por ejemplo, \"puesta en escena\" podría ser el nombre extranjero para la coincidencia \"maestro\"."
   },
   "exceptions": {
-    "notValidCode": ""
+    "notValidCode": "El código debe contener sólo letras, números y guiones bajos."
   }
 }
