@@ -1,13 +1,13 @@
 {
   "fields": {
-    "classification": "",
-    "attribute": "",
-    "isRequired": "",
+    "classification": "Класифікація",
+    "attribute": "Атрибут",
+    "isRequired": "Обов'язковий",
     "isReadOnly": "",
     "isProtected": "",
-    "maxLength": "",
-    "countBytesInsteadOfCharacters": "",
-    "value": "",
+    "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "value": "За замовчуванням",
     "valueFrom": "",
     "valueTo": "",
     "varcharValue": "",
@@ -18,14 +18,14 @@
     "dateValue": "",
     "datetimeValue": "",
     "boolValue": "",
-    "min": "",
-    "max": "",
+    "min": "Мінімальне значення",
+    "max": "Максимальне значення",
     "enableConditionalRequired": "",
     "enableConditionalVisible": "",
     "enableConditionalReadOnly": "",
     "enableConditionalProtected": "",
     "enableConditionalDisableOptions": "",
-    "conditionalRequired": "",
+    "conditionalRequired": "Обов'язковий",
     "conditionalVisible": "",
     "conditionalReadOnly": "",
     "conditionalProtected": "",
@@ -39,8 +39,8 @@
   },
   "options": {
     "scope": {
-      "Global": "",
-      "Channel": ""
+      "Global": "Глобальний",
+      "Channel": "Канал"
     }
   },
   "messages": {
