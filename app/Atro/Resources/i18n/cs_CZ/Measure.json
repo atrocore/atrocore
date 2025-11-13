@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "units": "",
+    "name": "Název",
+    "description": "Popis",
+    "units": "Jednotky",
     "displayFormat": ""
   },
   "options": {
