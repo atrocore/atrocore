@@ -2,46 +2,46 @@
   "fields": {
     "name": "",
     "roles": "",
-    "assignmentPermission": "",
-    "dataPrivacyPermission": "",
+    "assignmentPermission": "Povolení k přidělení",
+    "dataPrivacyPermission": "Povolení k ochraně osobních údajů",
     "users": "",
     "teams": "",
-    "styleControlPermission": "",
+    "styleControlPermission": "Ovládání stylu",
     "scopes": ""
   },
   "tooltips": {
-    "assignmentPermission": "",
-    "dataPrivacyPermission": ""
+    "assignmentPermission": "Umožňuje omezit možnost přiřazovat záznamy a odesílat zprávy ostatním uživatelům.\n\nall - bez omezení\n\nteam - může přiřazovat a odesílat příspěvky pouze členům týmu\n\nne - lze přiřadit a odeslat pouze sobě",
+    "dataPrivacyPermission": "Umožňuje zobrazit a vymazat osobní údaje."
   },
   "labels": {
     "Access": "",
-    "Scope Level": "",
-    "Field Level": ""
+    "Scope Level": "Úroveň rozsahu",
+    "Field Level": "Úroveň pole"
   },
   "options": {
     "accessList": {
-      "not-set": "",
-      "enabled": "",
-      "disabled": ""
+      "not-set": "not-set",
+      "enabled": "povoleno",
+      "disabled": "zakázané"
     },
     "levelList": {
-      "all": "",
-      "team": "",
-      "account": "",
-      "own": "",
-      "no": "",
-      "yes": "",
-      "not-set": ""
+      "all": "všechny",
+      "team": "tým",
+      "account": "účet",
+      "own": "vlastní",
+      "no": "ne",
+      "yes": "ano",
+      "not-set": "not-set"
     }
   },
   "actions": {
-    "read": "",
+    "read": "Přečtěte si",
     "edit": "",
     "delete": "",
     "stream": "",
     "create": ""
   },
   "messages": {
-    "changesAfterClearCache": ""
+    "changesAfterClearCache": "Všechny změny v řízení přístupu se použijí po vymazání mezipaměti."
   }
 }
