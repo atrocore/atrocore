@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "entity": "",
-    "notificationProfile": "",
+    "description": "Popis",
+    "entity": "Subjekt",
+    "notificationProfile": "Profil oznámení",
     "occurrence": "",
-    "isActive": "",
+    "isActive": "Aktivní",
     "ignoreSelfAction": "",
     "asOwner": "",
     "asFollower": "",
@@ -13,16 +13,16 @@
     "asNotificationProfile": "",
     "emailActive": "",
     "systemActive": "",
-    "emailTemplateId": "",
+    "emailTemplateId": "Šablona e-mailu",
     "systemTemplateId": ""
   },
   "options": {
     "occurrence": {
-      "creation": "",
-      "updating": "",
-      "linking": "",
-      "unlinking": "",
-      "deletion": "",
+      "creation": "Vytvořit",
+      "updating": "Aktualizace",
+      "linking": "Odkaz",
+      "unlinking": "Zrušit propojení",
+      "deletion": "Odstranit",
       "note_created": "",
       "note_updated": "",
       "note_deleted": "",
