@@ -1,18 +1,18 @@
 {
   "fields": {
-    "name": "",
-    "firstName": "",
+    "name": "Název",
+    "firstName": "Jméno",
     "secondName": "",
     "gender": "",
-    "title": "",
+    "title": "Název",
     "jobPosition": "",
-    "email": "",
+    "email": "E-mail",
     "phone": "",
     "mobile": "",
-    "street": "",
+    "street": "Ulice",
     "zip": "",
     "box": "",
-    "city": "",
-    "accounts": ""
+    "city": "Město",
+    "accounts": "Účty"
   }
 }
