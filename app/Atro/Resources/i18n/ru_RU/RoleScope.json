@@ -9,16 +9,16 @@
     "deleteAction": "Удалить",
     "streamAction": "Действия",
     "fields": "Поля",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
+    "accessData": "Данные доступа",
+    "createAttributeValueAction": "Создайте значение атрибута",
+    "deleteAttributeValueAction": "Удалить значение атрибута",
     "attributes": "Атрибуты",
-    "attributePanels": ""
+    "attributePanels": "Панели атрибутов"
   },
   "labels": {
     "all": "Все",
     "team": "Группа",
-    "own": "",
+    "own": "Собственный",
     "no": "Нет",
     "yes": "Да"
   }
