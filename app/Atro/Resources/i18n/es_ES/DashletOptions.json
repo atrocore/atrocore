@@ -30,7 +30,8 @@
     },
     "entityListType": {
       "favorites": "Favoritos",
-      "navigation": "Elementos de navegación"
+      "navigation": "Elementos de navegación",
+      "all": "Todos"
     }
   },
   "messages": {
