@@ -24,7 +24,8 @@
     "uploaded": "cargado",
     "putUploadUrl": "Especifique la URL del archivo si desea cargarlo mediante URL",
     "zipDownloadNotification": "Puede <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">descargar</a> el archivo zip",
-    "Share": "Compartir"
+    "Share": "Compartir",
+    "thumbnailUrl": "URL de la miniatura (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "No se han cargado los archivos XX de YY.",
