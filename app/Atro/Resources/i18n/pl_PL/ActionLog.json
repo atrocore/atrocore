@@ -1,19 +1,19 @@
 {
   "fields": {
-    "incomingWebhook": "",
+    "incomingWebhook": "Przychodzący Webhook",
     "scheduledJob": "",
-    "workflow": "",
-    "statusMessage": ""
+    "workflow": "Przepływ pracy",
+    "statusMessage": "Komunikat o statusie"
   },
   "options": {
     "type": {
-      "manual": "",
-      "incomingWebhook": "",
+      "manual": "Podręcznik",
+      "incomingWebhook": "Przychodzący Webhook",
       "scheduledJob": "",
-      "workflow": ""
+      "workflow": "Przepływ pracy"
     },
     "status": {
-      "executed": "",
+      "executed": "Wykonano",
       "failed": ""
     }
   }
