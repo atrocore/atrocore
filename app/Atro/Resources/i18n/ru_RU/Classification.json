@@ -2,12 +2,12 @@
   "fields": {
     "entity": "Сущность",
     "description": "Описание",
-    "release": "",
-    "synonyms": "",
+    "release": "Выпуск",
+    "synonyms": "Синонимы",
     "code": "Код",
     "isActive": "Активные",
-    "classifications": "",
-    "classificationAttributes": "",
+    "classifications": "Классификации",
+    "classificationAttributes": "Атрибуты классификации",
     "type": "Тип"
   },
   "options": {
@@ -19,8 +19,8 @@
     "selectAttributeGroup": "Выбрать группу атрибута"
   },
   "exceptions": {
-    "entityCannotBeChanged": "",
-    "classificationForToAnotherEntity": "",
-    "classificationHasRecords": ""
+    "entityCannotBeChanged": "Сущность не может быть изменена.",
+    "classificationForToAnotherEntity": "Классификация не может быть связана с этой записью, поскольку она используется для другой сущности.",
+    "classificationHasRecords": "Классификация со связанными записями не может быть удалена."
   }
 }
