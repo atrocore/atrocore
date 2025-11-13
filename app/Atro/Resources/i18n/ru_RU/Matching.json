@@ -1,23 +1,23 @@
 {
   "fields": {
-    "minimumScore": "",
+    "minimumScore": "Минимальный балл, %",
     "entity": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRules": "",
-    "foreignName": "",
-    "matchedRecords": ""
+    "stagingEntity": "Постановочная сущность",
+    "masterEntity": "Главная сущность",
+    "matchingRules": "Правила подбора",
+    "foreignName": "Иностранное имя",
+    "matchedRecords": "Matched Records"
   },
   "options": {
     "type": {
-      "bidirectional": "",
-      "unidirectional": ""
+      "bidirectional": "Двунаправленный",
+      "unidirectional": "Однонаправленный"
     }
   },
   "tooltips": {
-    "foreignName": ""
+    "foreignName": "Имя для обратного сопоставления, например, 'staging' может быть иностранным именем для сопоставления с 'master'."
   },
   "exceptions": {
-    "notValidCode": ""
+    "notValidCode": "Код должен содержать только буквы, цифры и символы подчеркивания."
   }
 }
