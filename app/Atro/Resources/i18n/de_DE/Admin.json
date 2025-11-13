@@ -76,7 +76,10 @@
     "ThumbnailTypes": "Thumbnail-Typen",
     "Teams": "Mannschaften",
     "Auth Tokens": "Authentifizierungs-Tokens",
-    "Upgrading...": "Aufrüsten..."
+    "Upgrading...": "Aufrüsten...",
+    "Jobs": "Aufträge",
+    "GeneralSetting": "Allgemeine Einstellungen",
+    "System": "System"
   },
   "logicalOperators": {
     "and": "UND",
@@ -90,7 +93,8 @@
     "massUpdate": "Massenänderung",
     "leftSidebar": "Linke Seitenansicht",
     "rightSideView": "Rechte Seitenansicht",
-    "kanban": "Kanban"
+    "kanban": "Kanban",
+    "upload": "Hochladen"
   },
   "fieldTypes": {
     "color": "Farbe",
@@ -133,7 +137,8 @@
     "multiLanguage": "Sprachen",
     "measure": "Messen",
     "markdown": "Markdown",
-    "jsonArray": "JSON-Array"
+    "jsonArray": "JSON-Array",
+    "link": "Link"
   },
   "fields": {
     "request": "Request",
@@ -159,7 +164,8 @@
     "isPersonalData": "Gehört zu persönlichen Daten",
     "allowFileTypes": "Dateitypen zulassen",
     "provider": "Anbieter",
-    "prefix": "Präfix"
+    "prefix": "Präfix",
+    "link": "Link"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
