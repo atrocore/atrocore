@@ -55,10 +55,10 @@
     }
   },
   "labels": {
-    "accessManagement": "",
+    "accessManagement": "Access Management",
     "hierarchyManagement": "Gestión jerárquica",
     "other": "Otros",
-    "resetToDefault": "",
+    "resetToDefault": "Restablecer a (por defecto)",
     "attributes": "Atributos"
   },
   "confirmations": {
