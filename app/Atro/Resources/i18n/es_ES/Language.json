@@ -4,17 +4,17 @@
   },
   "options": {
     "role": {
-      "main": "",
-      "additional": ""
+      "main": "Principal",
+      "additional": "Adicional"
     }
   },
   "tooltips": {
-    "role": ""
+    "role": "Seleccione Principal si desea que este idioma sea el principal para su contenido. Adicional debe utilizarse para los idiomas a los que se traducirá."
   },
   "exceptions": {
-    "mainLanguageIsAlreadyExists": "",
-    "roleCannotBeChanged": "",
-    "codeForAdditionalCannotBeChanged": "",
-    "mainLanguageCannotBeRemoved": ""
+    "mainLanguageIsAlreadyExists": "El idioma principal ya existe.",
+    "roleCannotBeChanged": "La función no puede modificarse.",
+    "codeForAdditionalCannotBeChanged": "El código del idioma adicional no puede modificarse.",
+    "mainLanguageCannotBeRemoved": "El idioma principal no se puede eliminar."
   }
 }
