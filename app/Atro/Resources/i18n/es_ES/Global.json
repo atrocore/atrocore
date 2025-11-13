@@ -7,7 +7,7 @@
     "OutboundEmail": "Correo Saliente",
     "ScheduledJob": "Tarea Programada",
     "Dashboard": "Escritorio",
-    "Stream": "Historia",
+    "Stream": "Actividades planeadas",
     "Job": "Trabajo",
     "ScheduledJobLogRecord": "Registro del registro de trabajo programado",
     "PasswordChangeRequest": "Solicitar Cambio de Contraseña",
@@ -70,7 +70,16 @@
     "Bookmark": "Marcar como favorito",
     "ProductHierarchy": "Jerarquía de productos",
     "AccountGroup": "Grupo de cuentas",
-    "ProductGroup": "Grupo de productos"
+    "ProductGroup": "Grupo de productos",
+    "Translation": "Etiqueta",
+    "RoleScopeAttribute": "Atributo",
+    "Attribute": "Atributo",
+    "RoleScopeField": "Campo",
+    "ExtensibleEnum": "List",
+    "Locale": "Localización",
+    "Measure": "Measure",
+    "File": "Archivo",
+    "Action": "Acción"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -79,7 +88,7 @@
     "OutboundEmail": "Salientes",
     "ScheduledJob": "Tareas programadas",
     "Dashboard": "Escritorio",
-    "Stream": "Historia",
+    "Stream": "Actividades planeadas",
     "Job": "Trabajos",
     "ScheduledJobLogRecord": "Registros del registro de trabajo programado",
     "PasswordChangeRequest": "Solicitar Cambios de Contraseñas",
@@ -131,7 +140,13 @@
     "RoleScopeAttribute": "Atributos",
     "RoleScopeAttributePanel": "Paneles de atributos",
     "Classification": "Clasificaciones",
-    "ClassificationAttribute": "Atributos de clasificación"
+    "ClassificationAttribute": "Atributos de clasificación",
+    "Entity": "Entidades",
+    "Language": "Languages",
+    "Unit": "Units",
+    "Translation": "Etiquetas",
+    "Action": "Acciones",
+    "ExtensibleEnum": "Listas"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
@@ -226,7 +241,7 @@
     "Inactive": "Inactivo",
     "Write your comment here": "Escriba su comentario aquí",
     "Post": "Publicar",
-    "Stream": "Historia",
+    "Stream": "Actividades planeadas",
     "Show more": "Mostrar mas",
     "Show %s more": "Mostrar %s mas",
     "Dashlet Options": "Ajustes de cajas",
@@ -457,7 +472,22 @@
     "resetAllToDefault": "Restablecer todo a los valores predeterminados",
     "showKanban": "Pizarra abierta",
     "Clear": "Claro",
-    "Record cannot be saved": "No se puede guardar el registro"
+    "Record cannot be saved": "No se puede guardar el registro",
+    "Activities": "Actividades planeadas",
+    "Reset to Default": "Restablecer a (por defecto)",
+    "code": "Código",
+    "label": "Etiqueta",
+    "color": "Color",
+    "Download": "Descargar",
+    "typeToSearch": "Escribe y presiona la tecla Enter...",
+    "upload": "Subir",
+    "attachFile": "Adjuntar archivo",
+    "noData": "Sin Datos",
+    "searchPanel": "Buscar",
+    "unitPart": "(Unit)",
+    "unlinkAll": "Desenlazar todo",
+    "addItem": "Agregar elemento",
+    "accessManagement": "Access Management"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -573,7 +603,9 @@
     "onlyFollowed": "Siguiendo",
     "onlyMyTeams": "Mis equipos",
     "onlyBookmarked": "Favoritos",
-    "multipleClassifications": "Clasificaciones múltiples"
+    "multipleClassifications": "Clasificaciones múltiples",
+    "notActive": "Inactivo",
+    "onlyDeleted": "Eliminado"
   },
   "presetFilters": {
     "all": "Todos"
@@ -596,7 +628,11 @@
     "massRestore": "Restauración en masa",
     "deletePermanently": "Borrar permanentemente",
     "compare": "Comparar",
-    "removeAttribute": "Borrar atributo"
+    "removeAttribute": "Borrar atributo",
+    "update": "Actualización masiva",
+    "export": "Exportar",
+    "select": "Seleccionar",
+    "cancel": "Cancelar"
   },
   "fields": {
     "name": "Nombre",
@@ -689,12 +725,26 @@
     "largeThumbnailUrl": "URL en miniatura (grande)",
     "extension": "Extensión",
     "hidden": "Oculto",
-    "priority": "Prioridad"
+    "priority": "Prioridad",
+    "action": "Acción",
+    "status": "Status",
+    "followers": "Seguidores",
+    "file": "Archivo",
+    "extensibleEnum": "List",
+    "sortOrder": "ordenar Orden",
+    "assignedAccounts": "Cuentas",
+    "isActive": "Activo",
+    "created": "Creado",
+    "modified": "Modificado",
+    "sorting": "ordenar Orden",
+    "code": "Código",
+    "team": "Equipo"
   },
   "dashlets": {
-    "Stream": "Historia",
+    "Stream": "Actividades planeadas",
     "Records": "Lista de registros",
-    "FirstSteps": "Primeros pasos"
+    "FirstSteps": "Primeros pasos",
+    "Entities": "Entidades"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} ha sido asignado a usted",
@@ -918,7 +968,8 @@
       "optional": "Opcional",
       "allValues": "Todos los valores",
       "filled": "Relleno",
-      "empty": "Vacío"
+      "empty": "Vacío",
+      "required": "Required"
     },
     "languageFilter": {
       "allLanguages": "Todas las lenguas",
@@ -1192,7 +1243,13 @@
       "is_not_my_team": "no es mi equipo",
       "is_attribute_not_linked": "no está vinculado",
       "last_x_days": "últimos x días",
-      "next_x_days": "próximos x días"
+      "next_x_days": "próximos x días",
+      "array_none_of": "no en",
+      "linked_with": "en",
+      "not_linked_with": "no en",
+      "is_linked": "no está vacío",
+      "is_not_linked": "está vacío",
+      "array_any_of": "en"
     },
     "errors": {
       "no_filter": "No se ha seleccionado ningún filtro",
@@ -1219,7 +1276,8 @@
       "boolean_not_valid": "No es booleano",
       "operator_not_multiple": "El operador \"{1}\" no puede aceptar valores multiples"
     },
-    "invert": "Invertir"
+    "invert": "Invertir",
+    "NOT": "NO"
   },
   "descriptions": {
     "previewTemplate": "Gestione plantillas HTML/CSS para la previsualización automática de datos"
