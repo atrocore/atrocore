@@ -1,5 +1,6 @@
 {
   "fields": {
-    "attributes": "Attribute"
+    "attributes": "Attribute",
+    "default": "Standard"
   }
 }
