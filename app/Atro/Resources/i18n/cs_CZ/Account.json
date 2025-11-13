@@ -2,26 +2,26 @@
   "fields": {
     "name": "Název",
     "emailAddress": "E-mail",
-    "phoneNumber": "",
+    "phoneNumber": "Telefon",
     "description": "Popis",
     "type": "Typ",
     "role": "Role",
     "number": "Číslo",
     "language": "Jazyk",
-    "addresses": "",
-    "contacts": ""
+    "addresses": "Adresy",
+    "contacts": "Kontakty"
   },
   "options": {
     "type": {
-      "individual": "",
-      "company": ""
+      "individual": "Individuální",
+      "company": "Společnost"
     },
     "role": {
-      "supplier": "",
-      "customer": ""
+      "supplier": "Dodavatel",
+      "customer": "Zákazník"
     }
   },
   "exceptions": {
-    "defaultAddressAlreadyExist": ""
+    "defaultAddressAlreadyExist": "Výchozí adresa pro účet již existuje."
   }
 }
