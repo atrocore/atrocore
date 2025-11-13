@@ -1,42 +1,42 @@
 {
   "fields": {
-    "width": "",
-    "widthPx": "",
+    "width": "Šířka (%)",
+    "widthPx": "Šířka (px)",
     "link": "Odkaz",
-    "notSortable": "",
-    "align": "",
-    "panelName": "",
+    "notSortable": "Nelze třídit",
+    "align": "Zarovnat",
+    "panelName": "Název panelu",
     "style": "Styl",
-    "sticked": "",
-    "isLarge": "",
-    "cssStyle": "",
-    "hiddenPerDefault": ""
+    "sticked": "Nalepený",
+    "isLarge": "Velká velikost písma",
+    "cssStyle": "Styly CSS",
+    "hiddenPerDefault": "Skryté ve výchozím nastavení"
   },
   "options": {
     "align": {
-      "left": "",
-      "right": "",
-      "center": ""
+      "left": "Vlevo",
+      "right": "Vpravo",
+      "center": "Středisko"
     },
     "style": {
       "default": "Výchozí",
       "success": "Úspěch",
-      "danger": "",
-      "info": "",
-      "warning": "",
+      "danger": "Nebezpečí",
+      "info": "Informace",
+      "warning": "Varování",
       "primary": "Primární"
     }
   },
   "labels": {
-    "New panel": "",
+    "New panel": "Nový panel",
     "Layout": "Rozložení",
-    "Current Layout": "",
-    "reset": "",
-    "fullEdit": "",
-    "resetToSystem": "",
-    "layoutManagement": "",
-    "layoutSelection": "",
-    "layoutCustomization": "",
-    "configure": ""
+    "Current Layout": "Aktuální rozložení",
+    "reset": "Obnovení rozložení",
+    "fullEdit": "Úplná úprava",
+    "resetToSystem": "Obnovení rozložení systému",
+    "layoutManagement": "Správa rozložení",
+    "layoutSelection": "Výběr rozvržení",
+    "layoutCustomization": "Přizpůsobení rozvržení",
+    "configure": "Konfigurace"
   }
 }
