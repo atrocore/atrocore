@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
-    "roleScope": "",
+    "name": "Pole",
+    "roleScope": "Rozsah",
     "readAction": "",
-    "editAction": ""
+    "editAction": "Upravit"
   }
 }
