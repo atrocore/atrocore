@@ -1,7 +1,8 @@
 {
   "fields": {
-    "lastRun": "Zuletzt ausgeführt",
-    "scheduling": "Planung"
+    "scheduling": "Planung",
+    "jobs": "Aufträge",
+    "name": "Name"
   },
   "labels": {
     "executeNow": "Jetzt ausführen"
