@@ -182,7 +182,9 @@
     "Entity": "Entité",
     "EntityField": "Champ de l'entité",
     "Language": "Langue",
-    "LayoutProfile": "Profil de la mise en page"
+    "LayoutProfile": "Profil de la mise en page",
+    "Selection": "Sélection",
+    "SelectionRecord": "Dossier de sélection"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -697,7 +699,9 @@
     "Language": "Langues",
     "LayoutProfile": "Profils de mise en page",
     "RoleScopeAttribute": "Attributs",
-    "RoleScopeField": "Domaines"
+    "RoleScopeField": "Domaines",
+    "Selection": "Sélections",
+    "SelectionRecord": "Dossiers de sélection"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
