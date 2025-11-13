@@ -2,21 +2,21 @@
   "fields": {
     "number": "Číslo",
     "isActive": "Aktivní",
-    "image": "",
-    "price": "",
-    "description": "",
-    "longDescription": "",
-    "children": "",
-    "parents": "",
-    "quantity": "",
-    "mpn": "",
-    "customsNumber": "",
-    "countryOfOrigin": "",
-    "defaultSupplier": "",
+    "image": "Obrázek",
+    "price": "Cena",
+    "description": "Krátký popis",
+    "longDescription": "Dlouhý popis",
+    "children": "Výrobky pro děti",
+    "parents": "Mateřské produkty",
+    "quantity": "Množství",
+    "mpn": "Číslo výrobce (MPN)",
+    "customsNumber": "Celní číslo",
+    "countryOfOrigin": "Země původu",
+    "defaultSupplier": "Výchozí dodavatel",
     "note": "Poznámka"
   },
   "labels": {
-    "manufacturer": "",
-    "other": ""
+    "manufacturer": "Výrobce",
+    "other": "Další"
   }
 }
