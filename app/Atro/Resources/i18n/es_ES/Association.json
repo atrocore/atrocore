@@ -2,12 +2,12 @@
   "fields": {
     "description": "",
     "isActive": "",
-    "reverseAssociation": "",
+    "reverseAssociation": "Asociación inversa",
     "code": "",
     "default": ""
   },
   "exceptions": {
-    "associationIsLinkedWithRecords": "",
-    "youCanNotDeactivateAssociationWithActiveRecords": ""
+    "associationIsLinkedWithRecords": "La asociación está vinculada con registro(s). Por favor, desvincule primero el/los registro(s)",
+    "youCanNotDeactivateAssociationWithActiveRecords": "No puede desactivar la asociación con los registros activos"
   }
 }
