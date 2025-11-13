@@ -67,7 +67,11 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.header = this.options.header ?? (this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison'));
             }
 
-            this.listenTo(this, 'after:render', () => this.setupRecord());
+            this.listenTo(this, 'after:render', () => {
+                this.$el.find('.modal-body.body').css('overflow-y', 'hidden');
+                console.log( this.$el.find('.modal-body.body'))
+                this.setupRecord();
+            });
 
             this.buttonList = [
                 {
@@ -234,6 +238,11 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
                 view.render();
+
+                this.listenTo(view, 'all-panels-rendered', () => {
+                    this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                });
+
                 this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
