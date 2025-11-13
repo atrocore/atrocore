@@ -2,21 +2,21 @@
   "fields": {
     "number": "Номер",
     "isActive": "Активные",
-    "image": "",
+    "image": "Изображение",
     "price": "Цена",
-    "description": "",
-    "longDescription": "",
-    "children": "",
-    "parents": "",
-    "quantity": "",
-    "mpn": "",
-    "customsNumber": "",
-    "countryOfOrigin": "",
-    "defaultSupplier": "",
+    "description": "Краткое описание",
+    "longDescription": "Длинное описание",
+    "children": "Детские товары",
+    "parents": "Родительские продукты",
+    "quantity": "Количество",
+    "mpn": "Номер производителя (MPN)",
+    "customsNumber": "Таможенный номер",
+    "countryOfOrigin": "Страна происхождения",
+    "defaultSupplier": "Поставщик по умолчанию",
     "note": "Заметка"
   },
   "labels": {
-    "manufacturer": "",
-    "other": ""
+    "manufacturer": "Производитель",
+    "other": "Другие"
   }
 }
