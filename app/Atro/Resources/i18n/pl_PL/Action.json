@@ -15,7 +15,12 @@
     "actionsSet": "Zestaw działań",
     "focusField": "Pole ostrości",
     "emailBcc": "Email BCC",
-    "executeAs": "Wykonać jako"
+    "executeAs": "Wykonać jako",
+    "mode": "Tryb",
+    "emailScript": "Skrypt",
+    "emailTemplate": "Szablon e-maila",
+    "actions": "Akcje",
+    "webhookUrl": "URL AtroCore"
   },
   "labels": {
     "execute": "Wykonaj",
@@ -42,10 +47,12 @@
     "type": {
       "webhook": "Webhook",
       "email": "Proszę wysłać e-mail",
-      "set": "Zestaw akcji"
+      "set": "Zestaw akcji",
+      "customCode": "Kod niestandardowy"
     },
     "executeAs": {
-      "sameUser": "Ten sam użytkownik"
+      "sameUser": "Ten sam użytkownik",
+      "system": "System"
     }
   },
   "tooltips": {
