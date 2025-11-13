@@ -1,23 +1,23 @@
 {
   "fields": {
-    "minimumScore": "",
+    "minimumScore": "Score minimum, en %.",
     "entity": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRules": "",
-    "foreignName": "",
-    "matchedRecords": ""
+    "stagingEntity": "Entité de transit",
+    "masterEntity": "Entité maîtresse",
+    "matchingRules": "Règles de correspondance",
+    "foreignName": "Nom étranger",
+    "matchedRecords": "Disques appariés"
   },
   "options": {
     "type": {
-      "bidirectional": "",
-      "unidirectional": ""
+      "bidirectional": "Bidirectionnel",
+      "unidirectional": "Unidirectionnel"
     }
   },
   "tooltips": {
-    "foreignName": ""
+    "foreignName": "Nom pour une correspondance en amont, par exemple \"staging\" peut être un nom étranger pour la correspondance \"master\"."
   },
   "exceptions": {
-    "notValidCode": ""
+    "notValidCode": "Le code ne doit contenir que des lettres, des chiffres et des caractères de soulignement."
   }
 }
