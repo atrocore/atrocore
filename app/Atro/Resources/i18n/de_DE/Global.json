@@ -69,7 +69,17 @@
     "MatchedRecord": "Abgestimmter Datensatz",
     "Matching": "Passend dazu",
     "ThumbnailType": "Thumbnail Typ",
-    "ProductHierarchy": "Produkt-Hierarchie"
+    "ProductHierarchy": "Produkt-Hierarchie",
+    "Account": "Konto",
+    "Store": "Store",
+    "Dashboard": "Dashboard",
+    "LayoutProfile": "Layout-Profil",
+    "Background": "Hintergrund",
+    "Global": "Global",
+    "RoleScopeAttribute": "Attribut",
+    "RoleScopeAttributePanel": "Attribut-Panel",
+    "RoleScope": "Scope",
+    "RoleScopeField": "Feld"
   },
   "scopeNamesPlural": {
     "ActionLog": "Aktionsprotokolle",
@@ -129,7 +139,14 @@
     "EntityRelation": "Entitätsbeziehungen",
     "DocumentFolder": "Dokumentenmappen",
     "AuthToken": "Authentifizierungs-Token",
-    "Team": "Mannschaften"
+    "Team": "Mannschaften",
+    "MatchedRecord": "Übereinstimmende Datensätze",
+    "RoleScopeAttribute": "Attribute",
+    "RoleScopeAttributePanel": "Attribut-Panels",
+    "RoleScopeField": "Felder",
+    "Account": "Accounts",
+    "Job": "Aufträge",
+    "LayoutProfile": "Layoutprofile"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -468,7 +485,12 @@
     "editGroup": "Gruppe bearbeiten",
     "Duplicates": "Dupliziert",
     "Person": "Person",
-    "Original": "Original"
+    "Original": "Original",
+    "basic": "Basic",
+    "script": "Script",
+    "unitPart": "(Maßeinheit)",
+    "Details": "Details",
+    "Filter": "Filter"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -760,7 +782,10 @@
     "team": "Team",
     "ids": "IDs",
     "folderPath": "Ordner Pfad",
-    "downloadUrl": "URL herunterladen"
+    "downloadUrl": "URL herunterladen",
+    "start": "Start",
+    "id": "ID",
+    "end": "Ende"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
@@ -768,7 +793,8 @@
   "dashlets": {
     "Stream": "Aktivitäten",
     "Records": "Datensatzliste",
-    "FirstSteps": "Erste Schritte"
+    "FirstSteps": "Erste Schritte",
+    "Entities": "Entitäten"
   },
   "notificationMessages": {
     "own": "Sie wurden als Eigentümer für {entityType} {entity} gesetzt.",
@@ -1030,7 +1056,8 @@
         "edit": "Bearbeiten",
         "textToDisplay": "Anzeigetext",
         "url": "Ziel des Links?",
-        "openInNewWindow": "In einem neuen Fenster öffnen"
+        "openInNewWindow": "In einem neuen Fenster öffnen",
+        "link": "Link"
       },
       "video": {
         "insert": "Video einfügen",
@@ -1054,7 +1081,8 @@
         "h3": "Überschrift 3",
         "h4": "Überschrift 4",
         "h5": "Überschrift 5",
-        "h6": "Überschrift 6"
+        "h6": "Überschrift 6",
+        "normal": "Normal"
       },
       "lists": {
         "unordered": "Unsortierte Liste",
@@ -1277,9 +1305,11 @@
       "number_between_invalid": "Ungültige Werte, {0} ist größer als {1}",
       "datetime_between_invalid": "Ungültige Werte, {0} ist größer als {1}",
       "boolean_not_valid": "Nicht boolesch",
-      "operator_not_multiple": "Der Operator \"{1}\" kann nicht mehrere Werte annehmen"
+      "operator_not_multiple": "Der Operator \"{1}\" kann nicht mehrere Werte annehmen",
+      "datetime_empty": "Leerer Wert"
     },
-    "invert": "Invertieren"
+    "invert": "Invertieren",
+    "NOT": "NICHT"
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Sie werden einen oder mehrere Werte durch einen leeren Wert ersetzen. Sind Sie sicher?"
