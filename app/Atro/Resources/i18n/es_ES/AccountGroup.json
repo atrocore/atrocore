@@ -2,7 +2,7 @@
   "fields": {
     "accounts": "Cuentas",
     "code": "Código",
-    "discount": "",
-    "discountPercentage": ""
+    "discount": "Descuento, %.",
+    "discountPercentage": "Descuento, %."
   }
 }
