@@ -4,20 +4,12 @@
     "action": "Acción",
     "createdAt": "Fecha",
     "target": "Entidad objetivo",
-    "targetType": "Tipo de entidad",
     "authToken": "Token de autenticación",
     "ipAddress": "Dirección IP",
-    "authLogRecord": "Auth Log Record"
-  },
-  "presetFilters": {
-    "onlyMy": "Solo míos"
-  },
-  "options": {
-    "action": {
-      "read": "Leer",
-      "update": "Guardar",
-      "delete": "Eliminar",
-      "create": "Crear"
-    }
+    "authLogRecord": "Auth Log Record",
+    "controllerName": "Nombre del controlador",
+    "controllerAction": "Acción del controlador",
+    "targetName": "Nombre del objetivo",
+    "targetId": "ID del objetivo"
   }
 }
