@@ -3,19 +3,19 @@
     "name": "Název",
     "description": "Popis",
     "measure": "Míra",
-    "isMain": "",
-    "multiplier": "",
+    "isMain": "Hlavní stránka",
+    "multiplier": "Multiplikátor",
     "convertTo": "Převést na",
-    "symbol": "",
+    "symbol": "Symbol",
     "isActive": "Aktivní"
   },
   "labels": {
-    "unitSetDefault": ""
+    "unitSetDefault": "Nastavit jako výchozí"
   },
   "exceptions": {
-    "defaultIsRequired": "",
-    "unitIsUsed": "",
-    "unitIsUsedOnClassificationAttribute": "",
-    "unitIsUsedOnEntityAttribute": ""
+    "defaultIsRequired": "Opatření musí mít výchozí jednotku.",
+    "unitIsUsed": "Jednotka \"%s\" je použita polem \"%s\" v entitě \"%s\" pro záznam \"%s\".",
+    "unitIsUsedOnClassificationAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v klasifikaci \"%s\".",
+    "unitIsUsedOnEntityAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v %s \"%s\"."
   }
 }
