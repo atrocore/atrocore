@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
+    "name": "Pole",
     "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "readAction": "Odczyt",
+    "editAction": "Edytuj"
   }
 }
