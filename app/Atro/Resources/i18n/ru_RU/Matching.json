@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Минимальный балл, %",
-    "entity": "",
+    "entity": "Сущность",
     "stagingEntity": "Постановочная сущность",
     "masterEntity": "Главная сущность",
     "matchingRules": "Правила подбора",
