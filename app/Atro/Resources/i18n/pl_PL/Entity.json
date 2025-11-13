@@ -23,12 +23,12 @@
     "hasTeam": "Proszę włączyć zespoły",
     "hasOwner": "Proszę włączyć właściciela",
     "multiParents": "Wielu rodziców",
-    "dragAndDrop": "",
+    "dragAndDrop": "Przeciągnij i upuść",
     "fieldValueInheritance": "Dziedziczenie wartości pola",
     "unInheritedFields": "Pola niedziedziczone",
     "relationInheritance": "Dziedziczenie relacji",
     "unInheritedRelations": "Niedziedziczone relacje",
-    "fields": "",
+    "fields": "Pola",
     "auditedDisabledFields": "Brak rejestrowania aktywności dla pól",
     "auditedEnabledRelations": "Rejestr aktywności dla relacji",
     "hasAttribute": "Posiada atrybuty",
@@ -55,10 +55,10 @@
     }
   },
   "labels": {
-    "accessManagement": "",
+    "accessManagement": "Zarządzanie dostępem",
     "hierarchyManagement": "Zarządzanie hierarchią",
     "other": "Inne",
-    "resetToDefault": "",
+    "resetToDefault": "Resetuj do domyślnego",
     "attributes": "Atrybuty"
   },
   "confirmations": {
