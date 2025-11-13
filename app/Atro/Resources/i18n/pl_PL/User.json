@@ -36,7 +36,8 @@
     "followEntityOnAssignment": "Automatyczne śledzenie przydziału",
     "followEntityOnStreamPost": "Automatyczne śledzenie rekordów po opublikowaniu w Aktywnościach",
     "receiveNotifications": "Otrzymywanie powiadomień",
-    "notificationProfile": "Profil powiadomienia"
+    "notificationProfile": "Profil powiadomienia",
+    "locale": "Lokalizacja"
   },
   "labels": {
     "Generate": "Generuj",
@@ -49,7 +50,8 @@
     "External Accounts": "Konta Zewnętrzne",
     "Email Accounts": "Konta Email",
     "Reset Password": "Proszę zresetować hasło",
-    "Preferences": "Preferencje"
+    "Preferences": "Preferencje",
+    "Notifications": "Powiadomienia"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie rekordy utworzone przez tego użytkownika będą domyślnie powiązane z tym zespołem.",
