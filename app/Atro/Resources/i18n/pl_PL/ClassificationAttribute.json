@@ -1,13 +1,13 @@
 {
   "fields": {
     "classification": "",
-    "attribute": "",
-    "isRequired": "",
+    "attribute": "Atrybut",
+    "isRequired": "Wymagane",
     "isReadOnly": "",
     "isProtected": "",
     "maxLength": "",
     "countBytesInsteadOfCharacters": "",
-    "value": "",
+    "value": "Wartość domyślna",
     "valueFrom": "",
     "valueTo": "",
     "varcharValue": "",
@@ -25,7 +25,7 @@
     "enableConditionalReadOnly": "",
     "enableConditionalProtected": "",
     "enableConditionalDisableOptions": "",
-    "conditionalRequired": "",
+    "conditionalRequired": "Wymagane",
     "conditionalVisible": "",
     "conditionalReadOnly": "",
     "conditionalProtected": "",
@@ -39,7 +39,7 @@
   },
   "options": {
     "scope": {
-      "Global": "",
+      "Global": "Globalny",
       "Channel": ""
     }
   },
