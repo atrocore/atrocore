@@ -31,7 +31,7 @@
     "Locale": "Lokalizacja",
     "Clear Cache": "Wyczyść pamięć podręczną systemu",
     "clearCacheTooltip": "Pamięć podręczna utworzona w",
-    "rebuildDb": "Odbuduj bazę danych",
+    "rebuildDb": "Przebudowa bazy danych",
     "Teams": "Zespoły",
     "Roles": "Role",
     "Account": "Zarządzanie kontem",
@@ -63,14 +63,29 @@
     "Addresses": "Adresy",
     "Currency": "Waluta",
     "lists": "Listy",
-    "emailTemplates": "Szablony wiadomości"
+    "emailTemplates": "Szablony wiadomości",
+    "Selected": "Wybrane",
+    "upsert": "Upsert",
+    "apiRequest": "Żądanie API",
+    "style": "Style",
+    "notificationTemplates": "Szablony powiadomień",
+    "notificationProfiles": "Profile powiadomień",
+    "layoutProfiles": "Profile układu",
+    "updatesAvailable": "Nowe aktualizacje są już dostępne!",
+    "Maintenance": "Konserwacja",
+    "ThumbnailTypes": "Typy miniatur",
+    "rebuildDbWarning": "Struktura bazy danych uległa zmianie. Wymagana jest przebudowa, aby zapewnić prawidłowe działanie.",
+    "incomingWebhook": "Przychodzące webhooki",
+    "matchings": "Dopasowania"
   },
   "layouts": {
-    "relationships": "Panele relacji",
+    "relationships": "Relacje",
     "list": "Lista",
     "detail": "Szczegóły",
     "massUpdate": "Masowa aktualizacja",
-    "kanban": "Kanban"
+    "kanban": "Kanban",
+    "leftSidebar": "Widok z lewej strony",
+    "rightSideView": "Widok z prawej strony"
   },
   "fieldTypes": {
     "color": "Kolor",
@@ -138,7 +153,10 @@
     "dynamicLogicOptions": "Opcje warunkowe",
     "probabilityMap": "Prawdopodobieństwo etapów (%)",
     "maxFileSize": "Maksymalny rozmiar pliku (Mb)",
-    "isPersonalData": "Dane osobowe"
+    "isPersonalData": "Dane osobowe",
+    "request": "Prośba",
+    "response": "Odpowiedź",
+    "allowFileTypes": "Dozwolone typy plików"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "Separator tysięcy nie może być taki sam jak znak dziesiętny.",
@@ -146,7 +164,7 @@
     "selectEntityType": "Wybierz typ jednostki w lewym menu.",
     "selectLayout": "Wybierz układ w lewym menu i edytuj go.",
     "incorrectThousandSeparatorOrDecimalMark": "Dozwolone są tylko następujące separatory: '.' i ','.",
-    "rebuildDb": "Czy na pewno chcesz odbudować strukturę bazy danych? Wszystkie nieużywane kolumny i tabele zostaną usunięte."
+    "rebuildDb": "Zmiany, które zostaną zastosowane do Państwa bazy danych po kliknięciu przycisku \"Zastosuj\", są wymienione poniżej. Niektóre dane mogą być niekompatybilne z nową wersją oprogramowania i mogą zostać utracone. To działanie jest nieodwracalne."
   },
   "descriptions": {
     "Storage": "Zarządzanie fizycznymi lokalizacjami wszystkich przesłanych plików (lokalny system plików, Microsoft Sharepoint, Amazon S3 itp.)",
@@ -166,20 +184,30 @@
     "roles": "Zarządzaj rolami - ustaw uprawnienia do tworzenia, odczytu, zapisu i usuwania rekordów, zdefiniuj poziomy dostępu (własne, związane z zespołem lub wszystkie rekordy) dla wszystkich jednostek w systemie, zdefiniuj specyficzne uprawnienia dla poszczególnych pól.",
     "outboundEmails": "Ustawienia serwera SMTP dla wychodzących e-maili.",
     "layoutManager": "Zarządzaj standardowymi układami systemowymi dla widoku listy (boczny), widoku szczegółów (boczny), paneli relacji i ich kolejności sortowania, masowej aktualizacji itp.",
-    "entityManager": "Skonfiguruj swój model danych - zarządzaj prekonfigurowanymi i twórz nowe jednostki różnych typów (bazowe, hierarchiczne), zarządzaj ich konfiguracjami, polami różnych typów (dostępnych jest ponad 20 typów pól) oraz relacjami (wiele do wielu, jeden do wielu, wiele do jednego) między jednostkami oraz zdefiniuj warunki dynamicznej logiki dla sprawienia, że pola są widoczne, tylko do odczytu lub wymagane.",
-    "userInterface": "Wybierz swój motyw, skonfiguruj główne elementy nawigacji, domyślne pulpity nawigacyjne i jednostki, dostępne do szybkiego tworzenia oraz zarządzaj innymi ustawieniami interfejsów użytkownika.",
+    "entityManager": "Konfiguracja modelu danych poprzez zarządzanie istniejącymi jednostkami i tworzenie nowych. Zarządzanie i tworzenie pól i relacji między jednostkami.",
+    "userInterface": "Proszę wybrać styl CSS, skonfigurować główne elementy nawigacyjne, domyślne pulpity nawigacyjne i encje, dostępne do szybkiego tworzenia, a także zarządzać innymi ustawieniami interfejsu użytkownika.",
     "authTokens": "Sprawdź aktywne sesje autoryzacyjne, w tym adresy IP użytkowników oraz datę i godzinę ostatniego dostępu.",
     "authentication": "Zarządzaj metodami i ustawieniami autoryzacji.",
     "notifications": "Zarządzaj ustawieniami powiadomień w aplikacji i e-mailowych.",
     "actionHistory": "Zobacz historię wszystkich akcji użytkownika w systemie, w tym nazwę użytkownika, rekord danych docelowych, typ akcji, adres IP, datę i godzinę dostępu.",
     "labelManager": "Zarządzaj tłumaczeniami etykiet dla wybranych języków, przesyłaj swoje tłumaczenia do recenzji przez zespół AtroCore oraz zresetuj swoje tłumaczenia do wartości domyślnych.",
     "authLog": "Przejrzyj historię logowania.",
-    "accounts": "Zarządzaj kontami",
-    "contacts": "Zarządzaj kontaktami",
-    "addresses": "Zarządzaj adresami",
-    "currency": "Skonfiguruj używane waluty",
+    "accounts": "Reprezentuje podmioty biznesowe, takie jak klienci, dostawcy lub partnerzy, wykorzystywane do zarządzania relacjami i transakcjami w systemie.",
+    "contacts": "Przechowywanie poszczególnych osób powiązanych z kontami, w tym ich ról i szczegółów komunikacji w celu interakcji i koordynacji.",
+    "addresses": "Są to ustrukturyzowane szczegóły lokalizacji dla kont, umożliwiające dokładną identyfikację, fakturowanie i operacje wysyłkowe.",
+    "currency": "Zdefiniowanie obsługiwanych walut używanych w systemie do ustalania cen, transakcji i innych operacji finansowych.",
     "lists": "Zarządzaj listami i ich opcjami dla list prostych lub wielowartościowych.",
-    "emailTemplates": "Zarządzaj szablonami wiadomości e-mail w celu ręcznego lub automatycznego dostarczania wiadomości e-mail (nie dla standardowych powiadomień)."
+    "emailTemplates": "Zarządzaj szablonami wiadomości e-mail w celu ręcznego lub automatycznego dostarczania wiadomości e-mail (nie dla standardowych powiadomień).",
+    "thumbnailTypes": "Zarządzanie typami miniatur w celu zmiany szerokości lub wysokości miniatury lub utworzenia nowej.",
+    "jobs": "Zarządzanie zadaniami systemowymi, które działają w tle bez bezpośredniej interakcji użytkownika.",
+    "apiRequest": "Funkcja ta umożliwia szybkie tworzenie złożonych struktur danych, takich jak skonfigurowane kanały importu lub eksportu.",
+    "style": "Tworzenie, aktualizowanie i dostosowywanie nowych stylów w celu dostosowania do standardowego CSS",
+    "incomingWebhook": "Przychodzące Webhooki umożliwiają wyzwalanie predefiniowanych akcji za pośrednictwem zewnętrznych żądań HTTP, z opcjonalnymi zabezpieczeniami, takimi jak weryfikacja hash i biała lista adresów IP.",
+    "matchings": "Dopasowania pomagają identyfikować podobne rekordy między jednostkami przy użyciu reguł zdefiniowanych przez użytkownika.",
+    "scheduledJob": "Zarządzanie zaplanowanymi zadaniami systemowymi.",
+    "notificationTemplates": "Proszę zarządzać szablonem standardowego powiadomienia systemu.",
+    "notificationProfiles": "Skonfiguruj profile powiadomień i reguły powiadomień, aby skutecznie usprawnić proces zarządzania alertami, tak aby były one aktualne i istotne.",
+    "layoutProfiles": "Zarządzanie i dostosowywanie różnych konfiguracji układu interfejsu użytkownika systemu"
   },
   "logicalOperators": {
     "and": "ORAZ",
