@@ -1,20 +1,20 @@
 {
   "fields": {
     "incomingWebhook": "Вхідний веб-хук",
-    "scheduledJob": "",
-    "workflow": "",
+    "scheduledJob": "Розклад роботи",
+    "workflow": "Робочі процес",
     "statusMessage": "Повідомлення про стан"
   },
   "options": {
     "type": {
       "manual": "Посібник",
       "incomingWebhook": "Вхідний веб-хук",
-      "scheduledJob": "",
-      "workflow": ""
+      "scheduledJob": "Розклад роботи",
+      "workflow": "Робочі процес"
     },
     "status": {
       "executed": "Виконано.",
-      "failed": ""
+      "failed": "Не виконано"
     }
   }
 }
