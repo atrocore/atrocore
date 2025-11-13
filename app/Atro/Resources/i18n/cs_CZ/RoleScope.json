@@ -1,25 +1,25 @@
 {
   "fields": {
-    "name": "",
-    "role": "",
-    "hasAccess": "",
-    "createAction": "",
+    "name": "Rozsah",
+    "role": "Role",
+    "hasAccess": "Přístup",
+    "createAction": "Vytvořit",
     "readAction": "",
-    "editAction": "",
-    "deleteAction": "",
-    "streamAction": "",
-    "fields": "",
+    "editAction": "Upravit",
+    "deleteAction": "Odstranit",
+    "streamAction": "Aktivity",
+    "fields": "Pole",
     "accessData": "",
     "createAttributeValueAction": "",
     "deleteAttributeValueAction": "",
-    "attributes": "",
-    "attributePanels": ""
+    "attributes": "Atributy",
+    "attributePanels": "Panely atributů"
   },
   "labels": {
-    "all": "",
-    "team": "",
+    "all": "Všechny",
+    "team": "Tým",
     "own": "",
-    "no": "",
-    "yes": ""
+    "no": "Ne",
+    "yes": "Ano"
   }
 }
