@@ -9,7 +9,8 @@
   "filters": {
     "all": "Все",
     "posts": "Сообщения",
-    "updates": "Обновления"
+    "updates": "Обновления",
+    "notes": "Заметки"
   },
   "options": {
     "type": {
