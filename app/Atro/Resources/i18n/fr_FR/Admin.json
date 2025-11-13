@@ -74,7 +74,12 @@
     "ThumbnailTypes": "Types de vignettes",
     "rebuildDbWarning": "La structure de la base de données a été modifiée. Une reconstruction est nécessaire pour assurer le bon fonctionnement de la base de données.",
     "updatesAvailable": "De nouvelles mises à jour sont disponibles !",
-    "Maintenance": "Maintenance"
+    "Maintenance": "Maintenance",
+    "Selected": "Sélectionné",
+    "Available": "Disponible",
+    "upsert": "Upsert",
+    "execute": "Exécuter",
+    "status": "Statut"
   },
   "fieldTypes": {
     "datetime": "Date et heure",
@@ -122,7 +127,7 @@
   },
   "fields": {
     "type": "Type",
-    "name": "Nom",
+    "name": "Code",
     "link": "Lien",
     "translation": "Traduction",
     "defaultType": "Type par défaut",
@@ -210,6 +215,7 @@
     "massUpdate": "Mise à jour des masses",
     "kanban": "Kanban",
     "leftSidebar": "Vue du côté gauche",
-    "rightSideView": "Vue latérale droite"
+    "rightSideView": "Vue latérale droite",
+    "upload": "Télécharger"
   }
 }
