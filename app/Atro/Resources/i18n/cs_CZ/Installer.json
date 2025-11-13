@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "host": "",
+    "dbname": "",
+    "user": "",
+    "username": "",
+    "password": "",
+    "confirmPassword": ""
+  },
+  "labels": {
+    "licenseAgreement": "",
+    "databaseConfiguration": "",
+    "administratorSetup": "",
+    "requiredSettings": "",
+    "chooseYourLanguage": "",
+    "acceptTheAgreement": "",
+    "reportingEnabled": "",
+    "dbSystem": "",
+    "hostName": "",
+    "databaseName": "",
+    "databaseUserName": "",
+    "databaseUserPassword": "",
+    "port": "",
+    "testConnection": "",
+    "reCheck": "",
+    "userName": "",
+    "password": "",
+    "confirmYourPassword": "",
+    "back": "",
+    "next": "",
+    "finish": "",
+    "required": "",
+    "currentVersion": "",
+    "status": ""
+  },
+  "errors": {
+    "alreadyInstalled": "",
+    "differentPass": "",
+    "notCorrectDatabaseConfig": "",
+    "filePermissionsError": ""
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "",
+    "fieldIsRequired": "",
+    "connectionSuccessful": "",
+    "pleaseConfigureYourSystemToStart": ""
+  },
+  "requirements": {
+    "phpVersion": "",
+    "mysqlVersion": ""
+  }
+}
