@@ -1,26 +1,26 @@
 {
   "fields": {
-    "status": "",
+    "status": "Stav",
     "executeTime": "",
     "pid": "",
-    "priority": "",
+    "priority": "Priorita",
     "handler": "",
-    "payload": "",
-    "scheduledJob": "",
+    "payload": "Payload (užitečná data)",
+    "scheduledJob": "Naplánovaná úloha",
     "message": "",
     "startedAt": "",
     "endedAt": ""
   },
   "labels": {
-    "cancel": ""
+    "cancel": "Zrušit"
   },
   "options": {
     "status": {
-      "Pending": "",
-      "Success": "",
+      "Pending": "Čekající",
+      "Success": "Úspěch",
       "Running": "",
       "Failed": "",
-      "Canceled": "",
+      "Canceled": "Zrušeno",
       "Awaiting": "",
       "Closed": ""
     }
