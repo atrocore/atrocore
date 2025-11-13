@@ -1,8 +1,8 @@
 {
   "fields": {
-    "name": "",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "name": "Поле",
+    "roleScope": "Область применения",
+    "readAction": "Чтение",
+    "editAction": "Редактировать"
   }
 }
