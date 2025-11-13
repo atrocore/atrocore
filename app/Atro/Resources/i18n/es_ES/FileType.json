@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "files": "",
+    "aspectRatio": "",
+    "minSize": "",
+    "maxSize": "",
+    "minWidth": "",
+    "minHeight": "",
+    "extensions": "",
+    "mimeTypes": ""
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "",
+    "aspectRatioMustBeInFormat": ""
+  },
+  "labels": {
+    "General Settings": "",
+    "Image Settings": ""
+  }
+}
