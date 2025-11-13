@@ -1,20 +1,20 @@
 {
   "fields": {
-    "matching": "",
-    "staging": "",
-    "stagingEntity": "",
-    "stagingEntityId": "",
-    "master": "",
-    "masterEntity": "",
-    "masterEntityId": "",
-    "score": "",
+    "matching": "Correspondance",
+    "staging": "Mise en scène",
+    "stagingEntity": "Entité de transit",
+    "stagingEntityId": "ID de l'entité de transit",
+    "master": "Maître",
+    "masterEntity": "Entité maîtresse",
+    "masterEntityId": "ID de l'entité maître",
+    "score": "Score",
     "status": ""
   },
   "options": {
     "status": {
-      "found": "",
-      "confirmed": "",
-      "rejected": ""
+      "found": "Trouvé",
+      "confirmed": "Confirmé",
+      "rejected": "Rejeté"
     }
   }
 }
