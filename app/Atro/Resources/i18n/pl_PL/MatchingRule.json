@@ -1,21 +1,21 @@
 {
   "fields": {
-    "matching": "",
-    "weight": "",
-    "sourceField": "",
-    "targetField": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRuleSet": "",
-    "matchingRules": "",
-    "operator": ""
+    "matching": "Dopasowanie",
+    "weight": "Waga",
+    "sourceField": "Pole źródłowe",
+    "targetField": "Pole docelowe",
+    "stagingEntity": "Podmiot etapowy",
+    "masterEntity": "Podmiot główny",
+    "matchingRuleSet": "Zestaw",
+    "matchingRules": "Zasady dopasowywania",
+    "operator": "Operator"
   },
   "options": {
     "type": {
-      "equal": "",
-      "like": "",
+      "equal": "Równość",
+      "like": "Na przykład",
       "contains": "",
-      "set": ""
+      "set": "Zestaw"
     },
     "operator": {
       "and": "",
