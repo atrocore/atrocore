@@ -6,7 +6,8 @@
     "isMain": "По умолчанию",
     "multiplier": "Мультипликатор",
     "convertTo": "Конвертировать в",
-    "symbol": "Символ"
+    "symbol": "Символ",
+    "isActive": "Активные"
   },
   "exceptions": {
     "defaultIsRequired": "Мера должна иметь единицу измерения по умолчанию.",
