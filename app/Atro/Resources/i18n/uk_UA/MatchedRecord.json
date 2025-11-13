@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "matching": "",
+    "staging": "",
+    "stagingEntity": "",
+    "stagingEntityId": "",
+    "master": "",
+    "masterEntity": "",
+    "masterEntityId": "",
+    "score": "",
+    "status": ""
+  },
+  "options": {
+    "status": {
+      "found": "",
+      "confirmed": "",
+      "rejected": ""
+    }
+  }
+}
