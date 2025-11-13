@@ -1,23 +1,23 @@
 {
   "fields": {
-    "minimumScore": "",
+    "minimumScore": "Мінімальний бал, %.",
     "entity": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRules": "",
-    "foreignName": "",
-    "matchedRecords": ""
+    "stagingEntity": "Організаційна одиниця",
+    "masterEntity": "Головна сутність",
+    "matchingRules": "Правила збігу",
+    "foreignName": "Іноземна назва",
+    "matchedRecords": "Відповідні записи"
   },
   "options": {
     "type": {
-      "bidirectional": "",
-      "unidirectional": ""
+      "bidirectional": "Двонаправлений",
+      "unidirectional": "Односпрямований"
     }
   },
   "tooltips": {
-    "foreignName": ""
+    "foreignName": "Назва для зворотного збігу, наприклад, \"стадія\" може бути іноземною назвою для збігу \"майстер\"."
   },
   "exceptions": {
-    "notValidCode": ""
+    "notValidCode": "Код повинен містити лише літери, цифри та підкреслення."
   }
 }
