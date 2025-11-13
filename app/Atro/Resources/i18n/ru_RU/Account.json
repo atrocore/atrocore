@@ -3,6 +3,21 @@
     "name": "Имя",
     "emailAddress": "Адрес эл. почты",
     "phoneNumber": "Телефон",
-    "description": "Описание"
+    "description": "Описание",
+    "addresses": "Адреса",
+    "contacts": "Контакты"
+  },
+  "options": {
+    "type": {
+      "individual": "Индивидуально",
+      "company": "Компания"
+    },
+    "role": {
+      "supplier": "Поставщик",
+      "customer": "Клиент"
+    }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "Адрес по умолчанию для этой учетной записи уже существует."
   }
 }
