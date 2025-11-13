@@ -3,27 +3,27 @@
     "isActive": "Активные",
     "isDefault": "По умолчанию",
     "description": "Описание",
-    "hideShowFullList": "",
+    "hideShowFullList": "Скрыть \"Показать полный список\" на панелях отношений",
     "layouts": "Лейауты",
-    "parent": "",
-    "navigation": "",
-    "favoritesList": "",
-    "dashboardLayout": ""
+    "parent": "Профиль родительской раскладки",
+    "navigation": "Навигационное меню",
+    "favoritesList": "Избранное",
+    "dashboardLayout": "Макет приборной панели"
   },
   "labels": {
     "addGroup": "Добавить группу",
     "Menu": "Меню",
     "Dashboards": "Панели виджетов",
-    "Favorites": ""
+    "Favorites": "Избранное"
   },
   "exceptions": {
-    "defaultIsRequired": ""
+    "defaultIsRequired": "В системе должен существовать профиль раскладки по умолчанию"
   },
   "messages": {
-    "profileWillBeNewDefault": "",
-    "navigationUpdate": ""
+    "profileWillBeNewDefault": "Этот профиль будет новым профилем по умолчанию, Вы уверены?",
+    "navigationUpdate": "Навигационное меню было настроено системой."
   },
   "boolFilters": {
-    "withLayouts": ""
+    "withLayouts": "С сохраненным макетом"
   }
 }
