@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Название",
-    "scheduling": "Планирование"
+    "scheduling": "Планирование",
+    "jobs": "Задания"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильная конфигурация crontab"
