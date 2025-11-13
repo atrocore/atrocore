@@ -11,7 +11,9 @@
       "Success": "Erfolg",
       "Running": "In Arbeit",
       "Failed": "Fehlgeschlagen",
-      "Canceled": "Abgebrochen"
+      "Canceled": "Abgebrochen",
+      "Awaiting": "Warten auf",
+      "Closed": "Geschlossen"
     }
   },
   "fields": {
@@ -19,6 +21,14 @@
     "scheduledJob": "Geplante Aufgabe",
     "priority": "Priorität",
     "payload": "Payload",
-    "message": "Botschaft"
+    "message": "Botschaft",
+    "executeTime": "Ausführen bei",
+    "pid": "PID",
+    "handler": "Handler",
+    "startedAt": "Begonnen bei",
+    "endedAt": "Beendet am"
+  },
+  "exceptions": {
+    "jobIsRunning": "Ein laufender Auftrag kann nicht entfernt werden."
   }
 }
