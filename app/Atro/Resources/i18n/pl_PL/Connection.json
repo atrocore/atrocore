@@ -42,7 +42,9 @@
     "smtpClientSecret": "Tajemnica klienta",
     "smtpAuthType": "Typ autoryzacji",
     "dsn": "Dsn",
-    "headers": "Nagłówki"
+    "headers": "Nagłówki",
+    "smtpOauthScope": "Zakres OAuth",
+    "server": "Serwer SMTP"
   },
   "labels": {
     "connectionSuccess": "Połączenie zostało pomyślnie ustanowione",
