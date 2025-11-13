@@ -16,7 +16,8 @@
     "sortDirection": "Pořadí (směr)",
     "expandedLayout": "Rozložení",
     "dateFilter": "Filtr data",
-    "savedFilter": "Uložený filtr"
+    "savedFilter": "Uložený filtr",
+    "entityListType": "Typ seznamu subjektů"
   },
   "options": {
     "mode": {
@@ -26,6 +27,10 @@
       "basicDay": "Den",
       "agendaDay": "Den (program)",
       "timeline": "Časová osa"
+    },
+    "entityListType": {
+      "favorites": "Oblíbené položky",
+      "navigation": "Navigační položky"
     }
   },
   "messages": {
