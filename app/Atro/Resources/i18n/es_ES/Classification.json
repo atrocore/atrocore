@@ -1,18 +1,18 @@
 {
   "fields": {
     "entity": "Entidad",
-    "description": "",
+    "description": "Descripción",
     "release": "Libere",
     "synonyms": "Sinónimos",
-    "code": "",
-    "isActive": "",
+    "code": "Código",
+    "isActive": "Activo",
     "classifications": "Clasificaciones",
     "classificationAttributes": "Atributos de clasificación",
-    "type": ""
+    "type": "Type"
   },
   "options": {
     "type": {
-      "general": ""
+      "general": "General"
     }
   },
   "labels": {
