@@ -11,7 +11,7 @@
     "roles": "Role",
     "teamRole": "Stanowisko",
     "password": "Hasło",
-    "currentPassword": "Aktualne Hasło",
+    "currentPassword": "Państwa aktualne hasło",
     "passwordConfirm": "Potwierdź Hasło",
     "newPassword": "Nowe Hasło",
     "newPasswordConfirm": "Potwierdź Nowe Hasło",
@@ -27,7 +27,16 @@
     "type": "Typ",
     "teams": "Zespoły",
     "notes": "Notatki",
-    "tasks": "Zadania"
+    "tasks": "Zadania",
+    "layoutProfile": "Profil układu",
+    "style": "Styl interfejsu użytkownika",
+    "followCreatedEntities": "Automatyczne śledzenie samodzielnie utworzonych rekordów",
+    "passwordUpdatedAt": "Hasło zostało zaktualizowane w",
+    "passwordUpdatedBy": "Hasło zaktualizowane przez",
+    "followEntityOnAssignment": "Automatyczne śledzenie przydziału",
+    "followEntityOnStreamPost": "Automatyczne śledzenie rekordów po opublikowaniu w Aktywnościach",
+    "receiveNotifications": "Otrzymywanie powiadomień",
+    "notificationProfile": "Profil powiadomienia"
   },
   "labels": {
     "Generate": "Generuj",
@@ -38,7 +47,9 @@
     "Password Change Request": "Prośba o Zmianę Hasła",
     "Email Address": "Adres Email",
     "External Accounts": "Konta Zewnętrzne",
-    "Email Accounts": "Konta Email"
+    "Email Accounts": "Konta Email",
+    "Reset Password": "Proszę zresetować hasło",
+    "Preferences": "Preferencje"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie rekordy utworzone przez tego użytkownika będą domyślnie powiązane z tym zespołem.",
@@ -63,7 +74,12 @@
     "uniqueLinkHasBeenSent": "Unikalny URL został wysłany na podany adres email.",
     "passwordChangedByRequest": "Hasło zostało zmienione.",
     "setupSmtpBefore": "Musisz skonfigurować <a href=\"{url}\">ustawienia SMTP</a>, aby system mógł wysyłać hasło emailem.",
-    "userNameExists": "Nazwa Użytkownika już istnieje"
+    "userNameExists": "Nazwa Użytkownika już istnieje",
+    "passwordResetEmailSubject": "Resetowanie hasła",
+    "passwordResetEmailBody": "Mogą Państwo przywrócić swoje hasło pod tym linkiem {link}. Ten unikalny adres URL wkrótce wygaśnie.",
+    "passwordExpiredForm": "Państwa hasło wygasło. Proszę je zaktualizować za pomocą poniższego formularza.",
+    "newPasswordInvalid": "Państwa hasło powinno zawierać co najmniej jeden symbol, wielką literę i cyfrę oraz składać się z co najmniej 8 znaków.",
+    "changePasswordOnResetViaEmailOnly": "Nie można ustawić hasła ręcznie. Proszę użyć akcji \"Resetuj hasło\"."
   },
   "options": {
     "gender": {
