@@ -23,12 +23,12 @@
     "hasTeam": "Permettre aux équipes de travailler",
     "hasOwner": "Activer le propriétaire",
     "multiParents": "Parents multiples",
-    "dragAndDrop": "",
+    "dragAndDrop": "Glisser-déposer",
     "fieldValueInheritance": "Héritage des valeurs des champs",
     "unInheritedFields": "Champs non hérités",
     "relationInheritance": "Héritage des relations",
     "unInheritedRelations": "Relations non héritées",
-    "fields": "",
+    "fields": "Domaines",
     "auditedDisabledFields": "Pas d'enregistrement d'activité pour les champs",
     "auditedEnabledRelations": "Enregistrer l'activité des relations",
     "hasAttribute": "A des attributs",
@@ -55,11 +55,11 @@
     }
   },
   "labels": {
-    "accessManagement": "",
+    "accessManagement": "Gestion de l'accès",
     "hierarchyManagement": "Gestion de la hiérarchie",
     "other": "Autre",
-    "resetToDefault": "",
-    "attributes": ""
+    "resetToDefault": "Rétablissement des valeurs par défaut",
+    "attributes": "Attributs"
   },
   "confirmations": {
     "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
