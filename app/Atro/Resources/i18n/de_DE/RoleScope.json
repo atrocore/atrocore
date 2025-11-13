@@ -9,16 +9,16 @@
     "deleteAction": "löschen",
     "streamAction": "Aktivitäten",
     "fields": "Felder",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
+    "accessData": "Zugangsdaten",
+    "createAttributeValueAction": "Attributwert erstellen",
+    "deleteAttributeValueAction": "Attributwert löschen",
     "attributes": "Attribute",
     "attributePanels": "Attribut-Panels"
   },
   "labels": {
     "all": "Alle",
-    "team": "",
-    "own": "",
+    "team": "Team",
+    "own": "Eigene",
     "no": "Nein",
     "yes": "Ja"
   }
