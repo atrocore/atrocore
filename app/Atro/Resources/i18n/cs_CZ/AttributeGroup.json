@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "",
+    "name": "Název skupiny",
     "description": "",
     "code": "",
     "isActive": "",
@@ -8,10 +8,10 @@
     "sortOrder": ""
   },
   "messages": {
-    "unlinkAttributeGroupConfirmation": ""
+    "unlinkAttributeGroupConfirmation": "Jste si jisti, že chcete zrušit propojení všech atributů skupiny atributů?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "",
-    "entityIsUsed": ""
+    "attributeGroupSsLinkedWithAttributes": "Skupina atributů je propojena s atributem (atributy). Nejprve zrušte propojení atributů.",
+    "entityIsUsed": "Skupinu atributů nelze odstranit, protože se používá v několika atributech."
   }
 }
