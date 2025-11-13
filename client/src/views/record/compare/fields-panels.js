@@ -68,16 +68,20 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                         let model = this.models[index];
                         let viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldData.type);
                         let mode = (this.merging && index === 0 && !fieldData.disabled) ? 'edit' : 'detail';
-
+                        let modelForView = model;
+                        if (this.merging) {
+                            modelForView = model.clone();
+                            modelForView.defs = model.defs;
+                        }
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
-                            model: this.merging ? model.clone() : model,
+                            model: modelForView,
                             defs: {
                                 name: field
                             },
                             params: {
                                 required: !!model.getFieldParam(field, 'required'),
-                                readOnly:  model.getFieldParam(field, 'readOnly'),
+                                readOnly: model.getFieldParam(field, 'readOnly'),
                                 disableAttributeRemove: true
                             },
                             mode: mode,
@@ -104,11 +108,11 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                                 this.fieldList.forEach(fieldListByGroup => {
                                     fieldListByGroup.fieldListInGroup.forEach(fieldData => {
                                         fieldData.fieldValueRows.forEach((row, index) => {
-                                            if(row.key === viewKey){
+                                            if (row.key === viewKey) {
                                                 return
                                             }
                                             let fieldView = this.getView(row.key);
-                                            if(fieldView && fieldView.mode === 'edit') {
+                                            if (fieldView && fieldView.mode === 'edit') {
                                                 fieldView.inlineEditSave()
                                             }
                                         });
@@ -225,7 +229,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                 let data
                 if (view.mode === 'detail') {
                     const name = view.idName || view.originalName || view.name;
-                    data = { [name]: view.model.get(name) }
+                    data = {[name]: view.model.get(name)}
                     if (view.unitFieldName) {
                         data[view.unitFieldName] = view.model.get(view.unitFieldName)
                     }

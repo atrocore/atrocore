@@ -1,0 +1,25 @@
+/**
+ * AtroCore Software
+ *
+ * This source file is available under GNU General Public License version 3 (GPLv3).
+ * Full copyright and license information is available in LICENSE.txt, located in the root directory.
+ *
+ * @copyright  Copyright (c) AtroCore GmbH (https://www.atrocore.com)
+ * @license    GPLv3 (https://www.gnu.org/licenses/)
+ */
+
+Espo.define('views/selection/record/panels/selection-records', 'views/record/panels/relationship', Dep => {
+
+    return Dep.extend({
+        actionCreateRelated (data) {
+            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+
+            if (this.collection.models.length >=  maxComparableItem) {
+                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
+                return;
+            }
+
+            Dep.prototype.actionCreateRelated.call(this, data);
+        }
+    });
+});
