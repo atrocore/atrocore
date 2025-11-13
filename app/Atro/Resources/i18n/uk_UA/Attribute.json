@@ -1,7 +1,5 @@
 {
   "fields": {
-    "parents": "Пов'язуючі атрибути",
-    "children": "Пов'язані атрибути",
     "attributeGroup": "Група атрибутів",
     "attributePanel": "Панель атрибутів",
     "type": "Тип атрибута",
@@ -29,26 +27,35 @@
     "classificationAttributes": "Класифікаційні атрибути",
     "preparedName": "Ім'я",
     "htmlSanitizer": "HTML Sanitizer",
-    "fullWidth": "На всю ширину"
+    "fullWidth": "На всю ширину",
+    "isProtected": "Захищено",
+    "conditionalVisible": "Видимий",
+    "conditionalReadOnly": "Тільки для читання",
+    "conditionalProtected": "Захищено",
+    "conditionalDisableOptions": "Вимкнені опції",
+    "compositeAttribute": "Складений атрибут",
+    "nestedAttributes": "Вкладені атрибути",
+    "attributeGroupSortOrder": "Порядок сортування в групі атрибутів",
+    "isReadOnly": "Тільки для читання"
   },
   "labels": {
-    "classification": "Класифікація",
     "addNewValue": "Додати нове значення",
-    "extensibleEnumOptions": "Опції списку"
+    "extensibleEnumOptions": "Опції списку",
+    "conditionalProperties": "Умовні властивості"
   },
   "messages": {
-     "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
-     "productsCountWithAttribute": "Кількість продуктів, які мають заданий атрибут: <strong>{count}</strong>",
-     "removeAttribute(s)": "Усі значення для цього(цих) атрибуту(ів) також видаляються. Ви дійсно хочете видалити цей(ці) атрибут(и)?"
-   },
-   "filterLabels": {
-     "All": "All"
-   },
-   "tooltips": {
-     "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"\/^[A-Z]{1,10}$\/\"",
-     "defaultDate": "Модифікатор значення атрибута (наприклад, +5 days, -3 months)",
-     "dropdown": "Не використовуйте випадаючий список, якщо в ньому більше 300 варіантів"
-   },
+    "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
+    "productsCountWithAttribute": "Кількість продуктів, які мають заданий атрибут: <strong>{count}</strong>",
+    "removeAttribute(s)": "Усі значення для цього(цих) атрибуту(ів) також видаляються. Ви дійсно хочете видалити цей(ці) атрибут(и)?"
+  },
+  "filterLabels": {
+    "All": "All"
+  },
+  "tooltips": {
+    "pattern": "Щоб дозволити лише великі літери довжиною 10 символів використовуйте \"/^[A-Z]{1,10}$/\"",
+    "defaultDate": "Модифікатор значення атрибута (наприклад, +5 days, -3 months)",
+    "dropdown": "Не використовуйте випадаючий список, якщо в ньому більше 300 варіантів"
+  },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Запис не можна видалити, оскільки він використовується в атрибуті '%s'.",
     "maxLessThanMin": "Мінімальне значення повинно бути менше за максимальне значення.",
@@ -58,6 +65,24 @@
     "attributeWithSuchCodeAlreadyExist": "Атрибут із таким кодом уже існує.",
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
     "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
-    "invalidType": "Тип атрибута '{type}' недійсний"
+    "invalidType": "Тип атрибута '{type}' недійсний",
+    "wrongAttributeEntity": "Вибрано неприпустиму сутність. Сутність має збігатися з Панеллю атрибутів та Групою атрибутів.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Атрибут Entity має бути таким самим, як у складеному атрибуті",
+    "attributeNotBelongToEntity": "Атрибут не належить цій сутності.",
+    "entityCannotBeChanged": "Сутність не може бути змінена.",
+    "compositeAttributeNotFound": "Композитний атрибут не знайдено.",
+    "compositeAttributeCannotBeChild": "Складений атрибут не може бути дочірнім."
+  },
+  "options": {
+    "type": {
+      "array": "Масив",
+      "composite": "Композит",
+      "extensibleMultiEnum": "Багатозначний список",
+      "markdown": "Уцінка",
+      "url": "Url",
+      "varchar": "Рядок",
+      "rangeInt": "Цілочисельний діапазон",
+      "rangeFloat": "Діапазон плаваючих значень"
+    }
   }
 }
