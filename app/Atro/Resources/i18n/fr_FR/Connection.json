@@ -42,7 +42,9 @@
     "smtpClientSecret": "Secret du client",
     "smtpAuthType": "Type d'authentification",
     "dsn": "Dsn",
-    "headers": "En-têtes"
+    "headers": "En-têtes",
+    "smtpOauthScope": "Champ d'application Oauth",
+    "server": "Serveur"
   },
   "labels": {
     "connectionSuccess": "La connexion est établie avec succès",
@@ -79,7 +81,8 @@
   },
   "options": {
     "smtpAuthType": {
-      "oauth": "Oauth"
+      "oauth": "Oauth",
+      "basic": "Basique"
     }
   }
 }
