@@ -16,7 +16,7 @@
     "OutboundEmail": "Исходящее эл. письмо",
     "ScheduledJob": "Задание планировщика",
     "Dashboard": "Панель виджетов",
-    "Stream": "Лента",
+    "Stream": "Действия",
     "Job": "Задание",
     "ScheduledJobLogRecord": "Запись журнала запланированных работ",
     "PasswordChangeRequest": "Запрос на изменение пароля",
@@ -72,7 +72,14 @@
     "ProductGroup": "Группа продуктов",
     "Classification": "Классификация",
     "ClassificationAttribute": "Атрибут классификации",
-    "LayoutProfile": "Профиль раскладки"
+    "LayoutProfile": "Профиль раскладки",
+    "Entity": "Сущность",
+    "Language": "Язык",
+    "Action": "Действие",
+    "ExtensibleEnum": "Список",
+    "RoleScope": "Область применения",
+    "RoleScopeField": "Поле",
+    "RoleScopeAttribute": "Атрибут"
   },
   "scopeNamesPlural": {
     "Attribute": "Атрибуты",
@@ -93,7 +100,7 @@
     "OutboundEmail": "Исходящие эл. письма",
     "ScheduledJob": "Задания планировщика",
     "Dashboard": "Панели виджетов",
-    "Stream": "Ленты",
+    "Stream": "Действия",
     "Job": "Задания",
     "ScheduledJobLogRecord": "Записи журнала запланированных работ",
     "PasswordChangeRequest": "Запросы смены пароля",
@@ -134,7 +141,12 @@
     "Country": "Страны",
     "SystemIcon": "Системные значки",
     "AccountGroup": "Группы учетных записей",
-    "ProductGroup": "Группы продуктов"
+    "ProductGroup": "Группы продуктов",
+    "RoleScopeAttribute": "Атрибуты",
+    "RoleScopeField": "Поля",
+    "Entity": "Управление сущностями",
+    "Language": "Языки",
+    "Action": "Действия"
   },
   "labels": {
     "jobManager": "Менеджер задач",
@@ -254,7 +266,7 @@
     "Inactive": "Неактивный",
     "Write your comment here": "Оставьте свою заметку здесь",
     "Post": "Разместить",
-    "Stream": "Лента",
+    "Stream": "Действия",
     "Show more": "Показать еще",
     "Show %s more": "Показать %s еще",
     "Dashlet Options": "Настройки панели",
@@ -463,7 +475,19 @@
     "Action Forbidden": "Действие Запрещено",
     "restoring": "Восстановление...",
     "Added": "Добавлено",
-    "RememberUsername": "Запомните имя пользователя"
+    "RememberUsername": "Запомните имя пользователя",
+    "addItem": "Добавить",
+    "Attributes": "Атрибуты",
+    "Fields": "Поля",
+    "Reset to Default": "Восстановить",
+    "code": "Код",
+    "label": "Отображаемое имя",
+    "language": "Язык",
+    "scopeFilter": "Канал",
+    "Activities": "Действия",
+    "accessManagement": "Управление доступом",
+    "Start": "Старт",
+    "unitPart": "(Unit)"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -578,7 +602,10 @@
     "withArchived": "С архивными",
     "onlyMyTeams": "Мои команды",
     "onlyBookmarked": "В закладки",
-    "multipleClassifications": "Несколько классификаций"
+    "multipleClassifications": "Несколько классификаций",
+    "notActive": "Неактивный",
+    "onlyDeleted": "Удалено",
+    "onlyFollowed": "Вы подписаны"
   },
   "presetFilters": {
     "all": "Все"
@@ -601,7 +628,11 @@
     "massDelete": "Массовое удаление",
     "download": "Скачать",
     "compare": "Сравнить",
-    "removeAttribute": "Удалить атрибут"
+    "removeAttribute": "Удалить атрибут",
+    "update": "Массовое обновление",
+    "delete": "Удалить",
+    "select": "Выбрать",
+    "cancel": "Отмена"
   },
   "fields": {
     "status": "Статус",
@@ -691,12 +722,29 @@
     "iconClass": "Иконка",
     "isPublic": "Публичный",
     "associateEverything": "Свяжите каждую запись с любой другой записью",
-    "conditionalProperties": "Условные свойства"
+    "conditionalProperties": "Условные свойства",
+    "start": "Старт",
+    "action": "Действие",
+    "payload": "Параметры",
+    "hash": "Hash",
+    "url": "URL",
+    "entity": "Сущность",
+    "followers": "Подписчики",
+    "sorting": "Порядок сортировки",
+    "isInherited": "Наследуется",
+    "code": "Код",
+    "extensibleEnum": "Список",
+    "isActive": "Активные",
+    "created": "Создано",
+    "modified": "Изменено",
+    "end": "Завершение",
+    "emailAddress": "Эл. почта"
   },
   "dashlets": {
-    "Stream": "Лента",
+    "Stream": "Действия",
     "Records": "Список записей",
-    "FirstSteps": "Первые шаги"
+    "FirstSteps": "Первые шаги",
+    "Entities": "Управление сущностями"
   },
   "notificationMessages": {
     "assign": "Вам было назначено {entityType} {entity}",
@@ -1195,7 +1243,13 @@
       "exclude_me": "Исключите меня",
       "is_my_team": "это моя команда",
       "is_not_my_team": "это не моя команда",
-      "query_in": "запрос"
+      "query_in": "запрос",
+      "array_any_of": "из указанных",
+      "array_none_of": "не из указанных",
+      "linked_with": "из указанных",
+      "not_linked_with": "не из указанных",
+      "is_linked": "не пустая строка",
+      "is_not_linked": "пустая строка"
     },
     "errors": {
       "no_filter": "Фильтр не выбран",
