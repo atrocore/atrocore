@@ -34,7 +34,10 @@
     "followEntityOnStreamPost": "Suivi automatique des enregistrements après leur publication dans les activités",
     "receiveNotifications": "Recevoir des notifications",
     "style": "Style d'interface utilisateur",
-    "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur"
+    "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur",
+    "notificationProfile": "Profil de notification",
+    "layoutProfile": "Profil de la mise en page",
+    "locale": "Local"
   },
   "labels": {
     "Generate": "Générer",
@@ -47,7 +50,8 @@
     "External Accounts": "Comptes externes",
     "Email Accounts": "Comptes de courrier électronique",
     "Reset Password": "Réinitialiser le mot de passe",
-    "Preferences": "Préférences"
+    "Preferences": "Préférences",
+    "Notifications": "Notifications"
   },
   "tooltips": {
     "defaultTeam": "Tous les enregistrements créés par cet utilisateur seront par défaut liés à cette équipe.",
