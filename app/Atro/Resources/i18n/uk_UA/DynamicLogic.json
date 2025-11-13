@@ -1,6 +1,7 @@
 {
   "labels": {
-    "Field": "Поле"
+    "Field": "Поле",
+    "currentUser": "Поточний користувач"
   },
   "options": {
     "operators": {
@@ -15,7 +16,18 @@
       "greaterThanOrEquals": "Більше ніж або дорівнює",
       "lessThanOrEquals": "Менше ніж або дорівнює",
       "isEmpty": "Порожньо",
-      "has": "Містить"
+      "has": "Містить",
+      "isLinked": "Пов'язано",
+      "isNotLinked": "Не пов'язано",
+      "notInTeams": "Не в команді",
+      "in": "У",
+      "notIn": "Не ввійшов",
+      "inPast": "У минулому",
+      "inFuture": "Майбутнє - це майбутнє",
+      "isToday": "Це сьогодні",
+      "isTrue": "Це правда.",
+      "isFalse": "є хибним.",
+      "inTeams": "У командах"
     }
   }
 }
