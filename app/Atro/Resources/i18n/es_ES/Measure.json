@@ -3,15 +3,15 @@
     "name": "Nombre",
     "description": "Descripción",
     "units": "Units",
-    "displayFormat": ""
+    "displayFormat": "Formato de visualización"
   },
   "options": {
     "displayFormat": {
-      "format1": "",
-      "format2": ""
+      "format1": "10€",
+      "format2": "€10"
     }
   },
   "exceptions": {
-    "measureIsUsed": ""
+    "measureIsUsed": "La medida '%s' es utilizada por el campo '%s' en la Entidad '%s'."
   }
 }
