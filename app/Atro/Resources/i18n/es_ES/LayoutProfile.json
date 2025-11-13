@@ -1,19 +1,19 @@
 {
   "fields": {
-    "isActive": "",
-    "isDefault": "",
-    "description": "",
+    "isActive": "Activo",
+    "isDefault": "Por defecto",
+    "description": "Descripción",
     "hideShowFullList": "Ocultar \"Mostrar lista completa\" en los paneles de relación",
-    "layouts": "",
+    "layouts": "Diseño",
     "parent": "Perfil de disposición de los padres",
     "navigation": "Menú de navegación",
     "favoritesList": "Favoritos",
     "dashboardLayout": "Diseño del salpicadero"
   },
   "labels": {
-    "addGroup": "",
-    "Menu": "",
-    "Dashboards": "",
+    "addGroup": "Añadir grupo",
+    "Menu": "Menú",
+    "Dashboards": "Escritorio",
     "Favorites": "Favoritos"
   },
   "exceptions": {
