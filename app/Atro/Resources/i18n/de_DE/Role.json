@@ -6,7 +6,8 @@
     "users": "Benutzer",
     "styleControlPermission": "Stilkontrolle",
     "teams": "Mannschaften",
-    "scopes": "Geltungsbereiche"
+    "scopes": "Geltungsbereiche",
+    "name": "Name"
   },
   "tooltips": {
     "assignmentPermission": "Ermöglicht das Recht der Zuweisung von Datensätzen und das Senden von Nachrichten an andere Benutzer zu beschränken\n\nAlle - Keine Einschränkung\n\nTeam - Kann an Benutzer des eigenen Teams zuweisen/senden\n\nNein - Kann nur sich selbst zuweisen/senden",
