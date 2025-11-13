@@ -3,27 +3,27 @@
     "isActive": "",
     "isDefault": "",
     "description": "",
-    "hideShowFullList": "",
-    "layouts": "",
-    "parent": "",
-    "navigation": "",
-    "favoritesList": "",
-    "dashboardLayout": ""
+    "hideShowFullList": "Skrytí možnosti \"Zobrazit úplný seznam\" na panelech vztahů",
+    "layouts": "Rozložení",
+    "parent": "Profil rozvržení rodiče",
+    "navigation": "Navigační menu",
+    "favoritesList": "Oblíbené položky",
+    "dashboardLayout": "Rozložení přístrojové desky"
   },
   "labels": {
-    "addGroup": "",
+    "addGroup": "Přidat skupinu",
     "Menu": "",
     "Dashboards": "",
-    "Favorites": ""
+    "Favorites": "Oblíbené položky"
   },
   "exceptions": {
-    "defaultIsRequired": ""
+    "defaultIsRequired": "V systému by měl existovat výchozí profil rozvržení."
   },
   "messages": {
-    "profileWillBeNewDefault": "",
-    "navigationUpdate": ""
+    "profileWillBeNewDefault": "Tento profil bude novým výchozím profilem, jste si jisti?",
+    "navigationUpdate": "Systém upravil navigační nabídku."
   },
   "boolFilters": {
-    "withLayouts": ""
+    "withLayouts": "S uloženým rozložením"
   }
 }
