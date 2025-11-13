@@ -15,7 +15,9 @@
     "sortBy": "Сортировка (поле)",
     "sortDirection": "Сортировка (направление)",
     "expandedLayout": "Макет",
-    "dateFilter": "Фильтр даты"
+    "dateFilter": "Фильтр даты",
+    "savedFilter": "Сохраненный фильтр",
+    "entityListType": "Тип списка сущностей"
   },
   "options": {
     "mode": {
@@ -25,6 +27,10 @@
       "basicDay": "День",
       "agendaDay": "День (повестка дня)",
       "timeline": "Расписание"
+    },
+    "entityListType": {
+      "navigation": "Элементы навигации",
+      "favorites": "Избранное"
     }
   },
   "messages": {
