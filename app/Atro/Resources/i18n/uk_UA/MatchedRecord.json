@@ -8,7 +8,7 @@
     "masterEntity": "Головна сутність",
     "masterEntityId": "Ідентифікатор основної сутності",
     "score": "Оцінка",
-    "status": ""
+    "status": "Статус"
   },
   "options": {
     "status": {
