@@ -1,21 +1,21 @@
 {
   "fields": {
-    "matching": "",
-    "weight": "",
-    "sourceField": "",
-    "targetField": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRuleSet": "",
-    "matchingRules": "",
-    "operator": ""
+    "matching": "Passend dazu",
+    "weight": "Gewicht",
+    "sourceField": "Quelle Feld",
+    "targetField": "Zielfeld",
+    "stagingEntity": "Staging-Entität",
+    "masterEntity": "Master-Entität",
+    "matchingRuleSet": "Setzen Sie",
+    "matchingRules": "Übereinstimmungsregeln",
+    "operator": "Operator"
   },
   "options": {
     "type": {
-      "equal": "",
-      "like": "",
+      "equal": "Gleichberechtigt",
+      "like": "Wie",
       "contains": "",
-      "set": ""
+      "set": "Setzen Sie"
     },
     "operator": {
       "and": "",
