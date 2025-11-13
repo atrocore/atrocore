@@ -2,8 +2,8 @@
   "fields": {
     "entity": "Subjekt",
     "description": "Popis",
-    "release": "",
-    "synonyms": "",
+    "release": "Vydání",
+    "synonyms": "Synonyma",
     "code": "Kód",
     "isActive": "Aktivní",
     "classifications": "Klasifikace",
@@ -16,11 +16,11 @@
     }
   },
   "labels": {
-    "selectAttributeGroup": ""
+    "selectAttributeGroup": "Vybrat skupinu atributů"
   },
   "exceptions": {
-    "entityCannotBeChanged": "",
-    "classificationForToAnotherEntity": "",
-    "classificationHasRecords": ""
+    "entityCannotBeChanged": "Entitu nelze změnit.",
+    "classificationForToAnotherEntity": "Klasifikaci nelze s tímto záznamem spojit, protože se používá pro jiný subjekt.",
+    "classificationHasRecords": "Klasifikaci se souvisejícími záznamy nelze vymazat."
   }
 }
