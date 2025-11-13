@@ -2,16 +2,16 @@
   "fields": {
     "name": "Název",
     "firstName": "Jméno",
-    "secondName": "",
-    "gender": "",
+    "secondName": "Druhé jméno",
+    "gender": "Pohlaví",
     "title": "Název",
-    "jobPosition": "",
+    "jobPosition": "Pracovní pozice",
     "email": "E-mail",
-    "phone": "",
-    "mobile": "",
+    "phone": "Telefon",
+    "mobile": "Mobilní",
     "street": "Ulice",
-    "zip": "",
-    "box": "",
+    "zip": "ZIP",
+    "box": "Box",
     "city": "Město",
     "accounts": "Účty"
   }
