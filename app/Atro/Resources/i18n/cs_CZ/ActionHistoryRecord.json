@@ -1,13 +1,13 @@
 {
   "fields": {
-    "user": "",
-    "action": "",
+    "user": "Uživatel",
+    "action": "Akce",
     "createdAt": "",
     "controllerName": "",
     "controllerAction": "",
-    "authToken": "",
-    "ipAddress": "",
-    "authLogRecord": "",
+    "authToken": "Auth Token",
+    "ipAddress": "IP adresa",
+    "authLogRecord": "Záznam protokolu ověření",
     "target": "",
     "targetName": "",
     "targetId": "",
