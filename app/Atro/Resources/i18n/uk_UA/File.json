@@ -13,7 +13,9 @@
     "width": "Ширина",
     "height": "Висота",
     "size": "Розмір",
-    "colorSpace": "Колірний простір"
+    "colorSpace": "Колірний простір",
+    "url": "URL",
+    "uploadUrl": "URL"
   },
   "labels": {
     "Preview": "Попередній перегляд",
@@ -30,17 +32,18 @@
     "fileHasDuplicate": "Вже існує принаймні один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дублікат</a> цього файлу.",
     "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою.",
     "urlExpected": "сВказано невірну URL-адресу",
-    "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично."
+    "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично.",
+    "downloadJobsCreated": "Створено завдання для підготовки вашого zip-файлу"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",
     "fileStorageCannotBeChanged": "Сховище файлу не можна змінити.",
     "fileFolderCannotBeChanged": "Папку файлу не можна змінити.",
     "fileCreateFailed": "Не вдалося створити файл.",
-    "fileRenameFailed": "Не вдалося перейменувати файл.",
+    "fileRenameFailed": "Перейменування файлу не вдалося.",
     "fileDeleteFailed": "Видалення файлу не вдалося.",
     "fileNameNotValidByUserRegex": "Ім'я файлу невірне. Воно повинно відповідати регексу '%s'.",
-    "notAllowToFileWithEntity": "Вам не дозволено зв'язувати файл типу '%s' з '%s'. Єдині дозволені типи - це '%s'"
-
+    "notAllowToFileWithEntity": "Вам не дозволено зв'язувати файл типу '%s' з '%s'. Єдині дозволені типи - це '%s'",
+    "fileMoveFailed": "Переміщення файлу не вдалося."
   }
 }
