@@ -9,5 +9,8 @@
   "hasTeam": false,
   "duplicatableRelations": [
     "selectionRecords"
+  ],
+  "modifiedExtendedRelations": [
+    "selectionRecords"
   ]
 }
