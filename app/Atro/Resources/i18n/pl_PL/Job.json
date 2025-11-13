@@ -1,15 +1,15 @@
 {
   "fields": {
     "status": "Status",
-    "executeTime": "",
-    "pid": "",
+    "executeTime": "Wykonać przy",
+    "pid": "PID",
     "priority": "Priorytet",
-    "handler": "",
+    "handler": "Prowadzący",
     "payload": "Dane wejściowe",
     "scheduledJob": "Zaplanowane zadanie",
     "message": "Wiadomość",
-    "startedAt": "",
-    "endedAt": ""
+    "startedAt": "Rozpoczęto od",
+    "endedAt": "Zakończono na"
   },
   "labels": {
     "cancel": "Odwołaj"
@@ -21,14 +21,14 @@
       "Running": "Trwa",
       "Failed": "Niepowodzenie",
       "Canceled": "Anulowano",
-      "Awaiting": "",
-      "Closed": ""
+      "Awaiting": "Oczekiwanie",
+      "Closed": "Zamknięte"
     }
   },
   "tooltips": {
-    "priority": ""
+    "priority": "Wyższy numer oznacza wyższy priorytet"
   },
   "exceptions": {
-    "jobIsRunning": ""
+    "jobIsRunning": "Uruchomionego zadania nie można usunąć."
   }
 }
