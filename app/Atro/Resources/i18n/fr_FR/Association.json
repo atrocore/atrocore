@@ -1,10 +1,10 @@
 {
   "fields": {
-    "associatedProducts": "Produits associés",
     "description": "Description",
     "isActive": "Actif",
     "reverseAssociation": "Association des arriérés",
-    "code": "Code"
+    "code": "Code",
+    "default": "Défaut"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "L'association est liée à un ou plusieurs enregistrements. Please, unlink record(s) first",
