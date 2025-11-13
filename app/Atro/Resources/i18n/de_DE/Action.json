@@ -19,7 +19,8 @@
     "emailCc": "E-Mail CC",
     "emailBcc": "E-Mail BCC",
     "focusField": "Fokusfeld",
-    "displayField": "Anzeigefeld"
+    "displayField": "Anzeigefeld",
+    "webhookUrl": "URL"
   },
   "labels": {
     "execute": "Ausführen",
@@ -39,7 +40,8 @@
     "type": {
       "set": "Aktionsset",
       "email": "E-Mail senden",
-      "webhook": "Webhook"
+      "webhook": "Webhook",
+      "customCode": "Benutzerdefinierter Code"
     },
     "executeAs": {
       "system": "System",
