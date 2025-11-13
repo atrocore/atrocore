@@ -86,7 +86,8 @@
     "Activities": "Aktywności",
     "Admin Notifications": "Powiadomienia dla administratora",
     "Theme Configuration": "Konfiguracja motywu",
-    "Custom Code": "Kod niestandardowy"
+    "Custom Code": "Kod niestandardowy",
+    "Security": "Bezpieczeństwo SMTP"
   },
   "messages": {
     "languageMustBeSelected": "Należy wybrać przynajmniej jeden język."
