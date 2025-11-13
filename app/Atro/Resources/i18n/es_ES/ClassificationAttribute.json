@@ -1,8 +1,8 @@
 {
   "fields": {
     "classification": "Clasificación",
-    "attribute": "",
-    "isRequired": "",
+    "attribute": "Atributo",
+    "isRequired": "Required",
     "isReadOnly": "Sólo lectura",
     "isProtected": "Protegido",
     "maxLength": "Longitud máxima",
@@ -25,7 +25,7 @@
     "enableConditionalReadOnly": "Activar Sólo lectura",
     "enableConditionalProtected": "Activar Protegido",
     "enableConditionalDisableOptions": "Activar opciones desactivadas",
-    "conditionalRequired": "",
+    "conditionalRequired": "Required",
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
@@ -39,7 +39,7 @@
   },
   "options": {
     "scope": {
-      "Global": "",
+      "Global": "Global",
       "Channel": "Canal"
     }
   },
