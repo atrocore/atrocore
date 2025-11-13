@@ -161,6 +161,12 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - Password: admin
 
 
+## Localization
+
+Would you like to help us translate UIs into your language, or improve existing translations?
+- https://translate.atrocore.com/
+
+
 ## Resources
 
 - Report a Bug - https://github.com/atrocore/atrocore/issues/new
