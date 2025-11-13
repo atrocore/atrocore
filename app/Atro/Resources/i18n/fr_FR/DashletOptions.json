@@ -9,7 +9,7 @@
     "mode": "Mode",
     "enabledScopeList": "Ce qu'il faut afficher",
     "users": "Utilisateurs",
-    "entityType": "Type d'entité",
+    "entityType": "Entité",
     "primaryFilter": "Filtre primaire",
     "boolFilterList": "Filtres supplémentaires",
     "sortBy": "Ordre (champ)",
@@ -33,7 +33,8 @@
     },
     "entityListType": {
       "navigation": "Éléments de navigation",
-      "favorites": "Favoris"
+      "favorites": "Favoris",
+      "all": "Tous"
     }
   }
 }
