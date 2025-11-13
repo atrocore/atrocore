@@ -36,12 +36,17 @@
     "compositeAttribute": "Складений атрибут",
     "nestedAttributes": "Вкладені атрибути",
     "attributeGroupSortOrder": "Порядок сортування в групі атрибутів",
-    "isReadOnly": "Тільки для читання"
+    "isReadOnly": "Тільки для читання",
+    "conditionalRequired": "Обов'язковий",
+    "entity": "Сутність",
+    "classifications": "Класифікації",
+    "channel": "Канал"
   },
   "labels": {
     "addNewValue": "Додати нове значення",
     "extensibleEnumOptions": "Опції списку",
-    "conditionalProperties": "Умовні властивості"
+    "conditionalProperties": "Умовні властивості",
+    "Classification": "Класифікація"
   },
   "messages": {
     "sameNumberOptions": "Ви повинні встановити таку саму кількість опцій",
@@ -82,7 +87,16 @@
       "url": "Url",
       "varchar": "Рядок",
       "rangeInt": "Цілочисельний діапазон",
-      "rangeFloat": "Діапазон плаваючих значень"
+      "rangeFloat": "Діапазон плаваючих значень",
+      "bool": "Логічне значення",
+      "date": "фініковий",
+      "datetime": "Дата і час",
+      "extensibleEnum": "Список",
+      "float": "Дробове число",
+      "int": "Ціле число",
+      "text": "Текст",
+      "wysiwyg": "HTML",
+      "file": "Файл"
     }
   }
 }
