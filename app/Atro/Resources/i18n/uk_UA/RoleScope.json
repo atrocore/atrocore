@@ -9,16 +9,16 @@
     "deleteAction": "",
     "streamAction": "",
     "fields": "",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
+    "accessData": "Дані доступу",
+    "createAttributeValueAction": "Створити значення атрибута",
+    "deleteAttributeValueAction": "Видалити значення атрибута",
     "attributes": "",
-    "attributePanels": ""
+    "attributePanels": "Панелі атрибутів"
   },
   "labels": {
     "all": "",
     "team": "",
-    "own": "",
+    "own": "Власний",
     "no": "",
     "yes": ""
   }
