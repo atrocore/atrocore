@@ -35,7 +35,9 @@
     "passwordUpdatedBy": "Contraseña actualizada por",
     "followEntityOnAssignment": "Seguimiento automático en la asignación",
     "followEntityOnStreamPost": "Seguimiento automático de los registros tras su publicación en Actividades",
-    "layoutProfile": "Perfil del diseño"
+    "layoutProfile": "Perfil del diseño",
+    "locale": "Localización",
+    "type": "Type"
   },
   "labels": {
     "Generate": "Generar",
@@ -48,7 +50,8 @@
     "External Accounts": "Cuentas externas",
     "Email Accounts": "Cuentas de correo",
     "Reset Password": "Restablecer contraseña",
-    "Preferences": "Preferencias"
+    "Preferences": "Preferencias",
+    "Notifications": "Notificaciones"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
