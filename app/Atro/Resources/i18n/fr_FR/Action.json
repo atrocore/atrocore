@@ -16,7 +16,11 @@
     "emailCc": "Email CC",
     "emailBcc": "Email BCC",
     "executeAs": "Exécuter en tant que",
-    "displayField": "Champ d'affichage"
+    "displayField": "Champ d'affichage",
+    "mode": "Mode",
+    "emailScript": "Script",
+    "emailTemplate": "Modèle de courrier électronique",
+    "targetEntity": "Entité cible"
   },
   "labels": {
     "execute": "Exécuter",
@@ -36,7 +40,8 @@
     "type": {
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
-      "email": "Envoyer un e-mail"
+      "email": "Envoyer un e-mail",
+      "customCode": "Code personnalisé"
     },
     "usage": {
       "entity": "Bouton d'action de l'entité",
@@ -46,7 +51,8 @@
       "onRecordLoad": "Chargement record"
     },
     "executeAs": {
-      "sameUser": "Même utilisateur"
+      "sameUser": "Même utilisateur",
+      "system": "Système"
     }
   },
   "tooltips": {
