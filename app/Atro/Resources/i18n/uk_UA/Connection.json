@@ -15,7 +15,35 @@
     "outboundEmailFromAddress": "Адреса відправника",
     "dsn": "Dsn",
     "server": "Сервер",
-    "headers": "Заголовок"
+    "headers": "Заголовок",
+    "ftpSsl": "TLS/SSL",
+    "oauthUrl": "URL-адреса OAuth",
+    "oauthGrantType": "Тип гранту OAuth",
+    "oauthClientId": "Ідентифікатор клієнта OAuth",
+    "oauthClientSecret": "Секрет клієнта OAuth",
+    "oauthScope": "Сфера застосування Oauth",
+    "vendorOauthUrl": "URL-адреса постачальника Oauth",
+    "vendorOauthScopes": "Сфери дії Oauth постачальника",
+    "oauthConsumerKey": "Ключ споживача Oauth",
+    "oauthConsumerSecret": "Секрет споживача Oauth",
+    "requestTokenUrl": "Запит URL токену",
+    "accessTokenUrl": "Урл доступу до токену",
+    "oauthVerifier": "Верифікатор Oauth",
+    "oauthToken": "Токен доступу",
+    "oauthTokenSecret": "Секретний токен доступу",
+    "callbackUrl": "Адреса зворотного дзвінка",
+    "linkUrl": "URL-адреса посилання",
+    "apiTestUrl": "Тестовий URL-адресу api",
+    "loginUrl": "URL-адреса для входу",
+    "atrocoreUrl": "URL",
+    "atrocoreToken": "Токен авторизації",
+    "additionalParameters": "Додаткові параметри",
+    "smtpOauthScope": "Сфера застосування Oauth",
+    "smtpOauthAuthorizeUrl": "Oauth Authorize URL",
+    "smtpOauthTokenUrl": "URL-адреса токену Oauth",
+    "smtpClientId": "Ідентифікатор клієнта",
+    "smtpClientSecret": "Таємниця клієнта",
+    "smtpAuthType": "Тип автора"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
@@ -23,12 +51,34 @@
     "sendTestEmail": "Надіслати тестовий електронний лист",
     "smtp": "SMTP",
     "pdoSql": "PDO SQL",
-    "tokenAuthApi": "API автентифікації токенів"
+    "tokenAuthApi": "API автентифікації токенів",
+    "oauth2": "OAuth 2.0",
+    "otto": "Отто Оут",
+    "cookie": "Cookie Session",
+    "client_credentials": "Облікові дані клієнта",
+    "orders": "Накази",
+    "shipments": "Відправлення",
+    "quantities": "Кількість",
+    "oauth1": "Oauth 1.0",
+    "vertica": "Vertica DB",
+    "atrocore": "AtroCore",
+    "mysql": "Сервер MySQL",
+    "psql": "Сервер PostgreSQL",
+    "msql": "Microsoft SQL Server",
+    "ftp": "FTP",
+    "sftp": "SFTP",
+    "receipts": "Квитанції"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
     "connectionFailed": "З'єднання не встановлено: %s",
     "noSuchType": "Тип з'єднання не підтримується.",
     "notificationConnectionCannotBeDeleted": "Це з’єднання використовується для сповіщень електронною поштою та не може бути видалено"
+  },
+  "options": {
+    "smtpAuthType": {
+      "basic": "Базовий",
+      "oauth": "Ох."
+    }
   }
 }
