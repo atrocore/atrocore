@@ -5,16 +5,16 @@
   "options": {
     "role": {
       "main": "Основний",
-      "additional": ""
+      "additional": "Додатково"
     }
   },
   "tooltips": {
-    "role": ""
+    "role": "Виберіть Основна, якщо ви хочете, щоб ця мова була основною для вашого контенту. Додаткову слід використовувати для мов, на які буде перекладено контент."
   },
   "exceptions": {
-    "mainLanguageIsAlreadyExists": "",
-    "roleCannotBeChanged": "",
-    "codeForAdditionalCannotBeChanged": "",
-    "mainLanguageCannotBeRemoved": ""
+    "mainLanguageIsAlreadyExists": "Основна мова вже існує.",
+    "roleCannotBeChanged": "Роль не можна змінити.",
+    "codeForAdditionalCannotBeChanged": "Код для додаткової мови не може бути змінений.",
+    "mainLanguageCannotBeRemoved": "Основну мову не можна вилучити."
   }
 }
