@@ -1,9 +1,9 @@
 {
   "fields": {
-    "attributes": "",
+    "attributes": "Atributos",
     "default": ""
   },
   "exceptions": {
-    "entityIsUsed": ""
+    "entityIsUsed": "El panel de atributos no se puede eliminar porque se utiliza en varios atributos."
   }
 }
