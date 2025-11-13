@@ -13,7 +13,9 @@
     "width": "Breite",
     "height": "Höhe",
     "size": "Größe",
-    "colorSpace": "Farbraum"
+    "colorSpace": "Farbraum",
+    "url": "URL",
+    "uploadUrl": "URL"
   },
   "labels": {
     "Preview": "Vorschau",
@@ -41,6 +43,5 @@
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
     "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen.",
     "notAllowToFileWithEntity": "Sie dürfen eine Datei vom Typ '%s' nicht mit '%s' verknüpfen. Die einzigen erlaubten Typen sind '%s'"
-
   }
 }
