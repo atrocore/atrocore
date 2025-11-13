@@ -1,7 +1,7 @@
 {
   "fields": {
-    "attributePanel": "",
-    "roleScope": "",
+    "attributePanel": "Panel atrybutów",
+    "roleScope": "Zakres",
     "readAction": "",
     "editAction": ""
   }
