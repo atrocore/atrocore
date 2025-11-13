@@ -31,7 +31,7 @@
     "OutboundEmail": "Email wychodzący",
     "ScheduledJob": "Zaplanowane zadanie",
     "Dashboard": "Pulpit",
-    "Stream": "Strumień",
+    "Stream": "Aktywności",
     "Job": "Zadanie",
     "ScheduledJobLogRecord": "Rekord dziennika zaplanowanego zadania",
     "PasswordChangeRequest": "Prośba o zmianę hasła",
@@ -74,7 +74,12 @@
     "Bookmark": "Zakładka",
     "ProductHierarchy": "Hierarchia produktów",
     "AccountGroup": "Grupa kont",
-    "ProductGroup": "Grupa produktów"
+    "ProductGroup": "Grupa produktów",
+    "Attribute": "Atrybut",
+    "RoleScopeField": "Pole",
+    "Entity": "Encja",
+    "Language": "Język",
+    "RoleScopeAttribute": "Atrybut"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -98,7 +103,7 @@
     "Dashboard": "Pulpity",
     "Note": "Notatki",
     "Notification": "Powiadomienia",
-    "Stream": "Strumienie",
+    "Stream": "Aktywności",
     "User": "Użytkownicy",
     "Team": "Zespoły",
     "Role": "Role",
@@ -138,7 +143,10 @@
     "Attribute": "Atrybuty",
     "AttributeGroup": "Grupy atrybutów",
     "AttributePanel": "Panele atrybutów",
-    "RoleScope": "Lunety"
+    "RoleScope": "Lunety",
+    "Entity": "Encje",
+    "Language": "Języki",
+    "RoleScopeField": "Pola"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -289,7 +297,7 @@
     "Inactive": "Nieaktywny",
     "Write your comment here": "Napisz swój komentarz tutaj",
     "Post": "Opublikuj",
-    "Stream": "Strumień",
+    "Stream": "Aktywności",
     "Show more": "Pokaż więcej",
     "Read more": "Czytaj więcej ...",
     "Show %s more": "Pokaż %s więcej",
@@ -467,7 +475,19 @@
     "authenticate": "Uwierzytelnić",
     "Added": "Dodano",
     "Clear": "Wyczyść",
-    "Unbookmarking": "Usuwanie zakładek"
+    "Unbookmarking": "Usuwanie zakładek",
+    "accessManagement": "Zarządzanie dostępem",
+    "Fields": "Pola",
+    "Reset to Default": "Przywróć domyślne",
+    "code": "Kod",
+    "label": "Etykieta",
+    "color": "Kolor",
+    "script": "Skrypt",
+    "Download": "Pobierać",
+    "typeToSearch": "Wpisz i naciśnij Enter...",
+    "addItem": "Dodaj element",
+    "language": "Język",
+    "Activities": "Aktywności"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -609,7 +629,10 @@
     "deletePermanently": "Usuń trwale",
     "massDelete": "Masowe usuwanie",
     "compare": "Proszę porównać",
-    "removeAttribute": "Usuń atrybut"
+    "removeAttribute": "Usuń atrybut",
+    "update": "Masowa aktualizacja",
+    "delete": "Usuń",
+    "select": "Wybierz"
   },
   "fields": {
     "status": "Status",
@@ -705,12 +728,23 @@
     "association": "Stowarzyszenie",
     "reverseAssociation": "Odwrócone stowarzyszenie",
     "associateEverything": "Powiązanie każdego rekordu z każdym innym rekordem",
-    "conditionalProperties": "Właściwości warunkowe"
+    "conditionalProperties": "Właściwości warunkowe",
+    "start": "Start",
+    "end": "Zakończ",
+    "action": "Akcja",
+    "payload": "Dane wejściowe",
+    "hash": "Hash",
+    "url": "URL AtroCore",
+    "entity": "Encja",
+    "created": "Utworzony",
+    "modified": "Zmodyfikowany",
+    "sorting": "Sort Order"
   },
   "dashlets": {
-    "Stream": "Stream",
+    "Stream": "Aktywności",
     "Records": "Record List",
-    "FirstSteps": "Pierwsze kroki"
+    "FirstSteps": "Pierwsze kroki",
+    "Entities": "Encje"
   },
   "notificationMessages": {
     "own": "You were set as Owner for {entityType} {entity}.",
