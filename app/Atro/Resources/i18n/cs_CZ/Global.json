@@ -475,7 +475,17 @@
     "editLabels": "Úprava štítků",
     "Duplicates": "Duplikáty",
     "matchedRecords": "Shodné záznamy",
-    "noMatches": "Žádné shody"
+    "noMatches": "Žádné shody",
+    "pwaHideTitle": "Pro zlepšení uživatelského prostředí doporučujeme povolit pokročilé ovládací prvky aplikace v titulkovém pruhu v pravém horním rohu okna aplikace. To provedete kliknutím na tlačítko se šipkou.",
+    "openWindow": "Otevřít nové okno",
+    "copyUrl": "Kopírovat adresu URL",
+    "copiedToClipboard": "Zkopírováno do schránky",
+    "goBack": "Vrátit se zpět",
+    "goForward": "Pokračujte vpřed",
+    "reloadPage": "Načtení stránky",
+    "Standard": "Standardní",
+    "varcharPart": "(řetězec)",
+    "Help Center": "Centrum nápovědy"
   },
   "fields": {
     "width": "Šířka",
@@ -580,7 +590,8 @@
     "reverseAssociation": "Obrácená asociace",
     "conditionalProperties": "Podmíněné vlastnosti",
     "sorting": "Pořadí řazení",
-    "associateEverything": "Přiřadit každý záznam ke každému jinému záznamu"
+    "associateEverything": "Přiřadit každý záznam ke každému jinému záznamu",
+    "routes": "Trasa (trasy)"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -731,7 +742,8 @@
   },
   "dashlets": {
     "Records": "Seznam záznamů",
-    "Stream": "Aktivity"
+    "Stream": "Aktivity",
+    "FirstSteps": "První kroky"
   },
   "notificationMessages": {
     "emailReceived": "E-mail přijatý od {od}",
@@ -766,11 +778,62 @@
     "createThis": "{user} vytvořil(a) tento {entityType}",
     "deleteRecordAssociationThis": "{uživatel} odstranil asociaci k {relatedRecord} jako {asociace}",
     "deleteAssociationRecordThis": "{uživatel} odstranil asociaci {mainRecord} s {relatedRecord}",
-    "own": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}"
+    "own": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
+    "assignVoid": "{user} nepřiřazeno {entityType} {entity}",
+    "postThis": "{uživatel} vyslal",
+    "emailReceivedThis": "Obdržený e-mail",
+    "emailSent": "{uživatel} úspěšně odeslal e-mail s předmětem '{předmět}' na adresu '{emailTo}' dne '{createdAt}', týkající se {entityType} {entita}",
+    "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
+    "changed": "byl změněn",
+    "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
+    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
+    "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}",
+    "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}",
+    "ownThisSelf": "{uživatel} se nastavil jako vlastník pro tento {entityType}",
+    "assignThisSelf": "{uživatel} sám přidělil tento {entityType}",
+    "assignSelf": "{uživatel} samostatně přidělený {entityType} {entity}",
+    "attachThis": "{uživatel} připojen",
+    "statusThis": "{uživatel} aktualizoval {pole}",
+    "createRelated": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s {entityType} {entita}",
+    "relate": "{user} propojený s {relatedEntityType} {relatedEntity} s {entityType} {entity}",
+    "relateThis": "{user} propojený s {relatedEntityType} {relatedEntity} s tímto {entityType}",
+    "emailReceivedInitialThis": "Přijatý e-mail, tento {entityType} vytvořen",
+    "emailReceivedFrom": "E-mail přijatý od {od}, týkající se {entityType} {entita}",
+    "updateOneInThis": "{user} v tomto {entityType} aktualizováno v {relatedEntityType} {relatedEntity}",
+    "updateFromToIn": "{user} v {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
+    "to": "na",
+    "was": "byl",
+    "become": "stát se",
+    "ownSelf": "{uživatel} se nastavil jako vlastník pro {entityType} {entity}",
+    "assign": "{uživatel} přiřazen {entityType} {entita} na {příjemce}",
+    "assignThis": "{uživatel} přidělil tento {typ entity} {příjemci}",
+    "assignThisVoid": "{user} unassigned this {entityType}",
+    "updateThis": "{uživatel} aktualizoval tento {entityType}",
+    "createRelatedThis": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s touto {entityType}",
+    "emailReceivedInitialFromThis": "Email přijatý od {from}, tento {entityType} vytvořen",
+    "emailReceivedFromInitial": "E-mail přijatý od {from}, {entityType} {entita} vytvořeno",
+    "emailReceived": "Přijatý e-mail týkající se {entityType} {entita}",
+    "emailReceivedInitial": "Obdržený e-mail: {entityType} {entity} created",
+    "emailReceivedInitialFrom": "E-mail přijatý od {from}, {entityType} {entita} vytvořeno",
+    "emailSentThis": "{uživatel} úspěšně odeslal e-mail s předmětem '{předmět}' na adresu '{emailTo}' dne '{createdAt}'.",
+    "unrelate": "{user} odpojeno {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
+    "unrelateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}",
+    "updateOneThis": "{user} v tomto {entityType} aktualizováno",
+    "updateFromToInThis": "{user} v tomto {entityType} aktualizováno v {relatedEntityType} {relatedEntity}",
+    "updateOne": "{user} v {entityType} {entity} updated",
+    "updateOneIn": "{user} v {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
+    "updateFromTo": "{user} v {entityType} {entity} updated",
+    "from": "z",
+    "assignYou": "{uživatel} přiřazen {entityType} {entita} vám"
   },
   "dayNamesShort": {
     "Sat": "So",
-    "Fri": "Pá"
+    "Fri": "Pá",
+    "Tue": "Út",
+    "Wed": "St",
+    "Thu": "Čt",
+    "Sun": "Sun",
+    "Mon": "Mon"
   },
   "dayNamesMin": {
     "Su": "Ne",
@@ -948,11 +1011,332 @@
       },
       "color": {
         "recent": "Nedávná barva",
-        "more": "Více barev"
+        "more": "Více barev",
+        "background": "BackColor",
+        "foreground": "FontColor",
+        "transparent": "Transparentní",
+        "setTransparent": "Nastavení průhlednosti"
+      },
+      "shortcut": {
+        "shortcuts": "Klávesové zkratky",
+        "textFormatting": "Formátování textu",
+        "paragraphFormatting": "Formátování odstavců",
+        "documentStyle": "Styl dokumentu"
+      },
+      "history": {
+        "undo": "Zrušit",
+        "redo": "Přepracovat"
       }
     }
   },
   "tooltips": {
     "groupEnd": "Vyberte tuto položku, pokud chcete označit konec seskupených navigačních položek. Všechny položky, které budou umístěny za touto položkou, již nebudou součástí skupiny."
+  },
+  "monthNames": {
+    "August": "Srpen",
+    "September": "září",
+    "October": "Říjen",
+    "January": "Leden",
+    "February": "Únor",
+    "March": "Březen",
+    "April": "duben",
+    "May": "Květen",
+    "June": "červen",
+    "July": "Červenec",
+    "November": "Listopad",
+    "December": "Prosinec"
+  },
+  "monthNamesShort": {
+    "May": "Květen",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Aug",
+    "Sep": "Září",
+    "Oct": "Říjen",
+    "Nov": "Nov",
+    "Dec": "Prosinec",
+    "Jan": "Jan",
+    "Feb": "Únor",
+    "Mar": "Mar",
+    "Apr": "Duben"
+  },
+  "dayNames": {
+    "Sunday": "Neděle",
+    "Monday": "Pondělí",
+    "Tuesday": "Úterý",
+    "Wednesday": "Středa",
+    "Thursday": "Čtvrtek",
+    "Friday": "Pátek",
+    "Saturday": "Sobota"
+  },
+  "exceptions": {
+    "reverseAssociationError": "Chyba zpětného přiřazení: %s",
+    "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s",
+    "singleClassificationAllowed": "Je povolena pouze jedna klasifikace",
+    "moreThanOneClassification": "Některé záznamy mají více než jednu klasifikaci.",
+    "noSuchAssociation": "Ověření se nezdařilo. Žádná taková asociace neexistuje.",
+    "itselfAssociation": "Záznam nelze přiřadit k sobě samému.",
+    "recordAssociationAlreadyExists": "Takové sdružení záznamů již existuje.",
+    "notAllowedOption": "Možnost '%s' není pro '%s' povolena.",
+    "suchItemNameCannotBeUsedHere": "Složka/soubor s takovým názvem již v cílové složce existuje. Vyberte jinou složku nebo změňte název a zkuste to znovu.",
+    "colorDepthValidationFailed": "Barevná hloubka tohoto souboru není povolena.",
+    "colorSpaceValidationFailed": "Barevný prostor tohoto souboru není povolen.",
+    "fileExtensionValidationFailed": "Používejte pouze soubory s následujícími příponami: %s.",
+    "mimeTypeValidationFailed": "Soubor má nesprávný typ MIME.",
+    "pdfValidationFailed": "Soubor není dokument PDF.",
+    "imageQualityValidationFailed": "Kvalita obrazu musí být v rozmezí %s až %s.",
+    "imageRatioValidationFailed": "Obrázek musí mít poměr stran %s.",
+    "imageScaleValidationFailed": "Obrázek musí mít šířku větší než %spx a výšku větší než %spx.",
+    "imageScaleWidthValidationFailed": "Obrázek musí mít šířku větší než %spx.",
+    "imageScaleHeightValidationFailed": "Obrázek musí mít výšku větší než %spx.",
+    "imageSizeValidationFailed": "Velikost souboru by se měla pohybovat mezi %skb a %skb.",
+    "imageMinSizeValidationFailed": "Velikost souboru by měla být větší než %skb.",
+    "imageMaxSizeValidationFailed": "Velikost souboru by měla být nižší než %skb.",
+    "childsMustBeArchived": "(Nadřazenou) položku lze archivovat pouze v případě, že jsou archivovány i všechny podřízené položky.",
+    "maxLengthIsExceeded": "Povolená maximální délka pro \"%s\" je %s symbolů, aktuální délka je \"%s\" symbolů.",
+    "parentRecordsHaveDifferentValues": "Nadřazené záznamy mají různé hodnoty, hodnotu pro dědění nelze určit.",
+    "hasMultipleParents": "Existuje jeden nebo více záznamů s více rodiči.",
+    "unitValueIsRequired": "Jednotka pro pole \"%s\" je povinná.",
+    "emailIsInvalid": "E-mail pro pole '%s' není platný.",
+    "dateIsInvalid": "Datum pro pole \"%s\" není platné.",
+    "datetimeIsInvalid": "Datum a čas pro pole '%s' není platný.",
+    "noSuchUnit": "Jednotka \"%s\" pro pole \"%s\" není platná.",
+    "noSuchOptions": "Hodnota \"%s\" pro pole \"%s\" není platná.",
+    "noOptionsDefined": "Možnosti pole '%s' nejsou definovány.",
+    "fieldIsRequired": "Ověření se nezdařilo. Je vyžadováno '%s'.",
+    "urlIsInvalid": "Adresa URL je neplatná",
+    "maximumOfDigitsAfterCommaInvalid": "Maximální počet číslic za čárkou je %s",
+    "suchUrlExists": "Taková adresa URL již existuje",
+    "siteUrlEmpty": "Adresa URL webu je prázdná",
+    "codeInvalid": "Kód je neplatný. Kód by měl být jedinečný. Očekávají se pouze písmena, číslice a znak \"_\".",
+    "notDashletService": "Služba %s musí implementovat rozhraní Dashlet",
+    "editedByAnotherUser": "Datová sada [%s] byla mezitím změněna. Můžete <a href=\"javascript:\" onclick=\"location.reload();\">znovu načíst stránku</a>, abyste viděli nové hodnoty, vrátit se k editaci stisknutím tlačítka \"Zrušit\" nebo přepsat data stisknutím tlačítka \"Použít\". Chcete data přepsat?",
+    "dontMatchToPattern": "Hodnota pole \"{field}\" neodpovídá vzoru \"{pattern}\".",
+    "notUniqueRecordField": "Záznam nelze uložit, záznam s takovým '%s' již existuje.",
+    "notUniqueValue": "Záznam nelze vytvořit/aktualizovat z důvodu omezení databáze.",
+    "notUniqueCreatedValue": "Takové vztahy již existují, a proto je nelze přidat.",
+    "optionIsDisabled": "Položka \"%s\" je pro pole \"%s\" zakázána.",
+    "someCouldNotDuplicatedAndLinked": "Některé záznamy nebylo možné duplikovat a propojit.",
+    "someCouldNotLinked": "Některé záznamy nebylo možné propojit",
+    "massUpdateNoRecordProceed": "Žádný záznam nebyl aktualizován.",
+    "massDeleteNoRecordProceed": "Žádný záznam nebyl odstraněn.",
+    "massRestoreNoRecordProceed": "Žádný záznam nebyl obnoven.",
+    "massUpdateSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně aktualizovat.",
+    "massDeleteSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně odstranit.",
+    "massRestoreSomeRecordNotProceed": "Některé záznamy se nepodařilo úspěšně obnovit.",
+    "entityCannotBeBookmarked": "Záznamy tohoto subjektu nelze zakládat.",
+    "fileIsInvalid": "Soubor pro pole '%s' není platný."
+  },
+  "queryBuilderFilter": {
+    "operators": {
+      "not_begins_with": "nezačíná",
+      "next_month": "příští měsíc",
+      "contains": "obsahuje",
+      "not_contains": "neobsahuje",
+      "ends_with": "končí slovy",
+      "not_ends_with": "nekončí",
+      "is_empty": "je prázdný",
+      "is_not_empty": "není prázdný",
+      "is_null": "je nulový",
+      "is_not_linked": "je prázdný",
+      "query_in": "dotaz",
+      "query_linked_with": "dotaz",
+      "is_attribute_linked": "je propojen",
+      "not_equal": "nerovná se",
+      "in": "na adrese",
+      "not_in": "ne v",
+      "array_any_of": "na adrese",
+      "array_none_of": "ne v",
+      "linked_with": "na adrese",
+      "not_linked_with": "ne v",
+      "less": "méně",
+      "less_or_equal": "méně nebo rovno",
+      "greater": "větší",
+      "greater_or_equal": "větší nebo rovno",
+      "between": "mezi",
+      "not_between": "ne mezi",
+      "begins_with": "začíná slovy",
+      "is_not_null": "není null",
+      "is_linked": "není prázdný",
+      "is_attribute_not_linked": "není propojen",
+      "last_x_days": "posledních x dní",
+      "next_x_days": "příštích x dní",
+      "current_month": "aktuální měsíc",
+      "last_month": "minulý měsíc",
+      "current_year": "běžný rok",
+      "last_year": "minulý rok",
+      "is_me": "jsem já",
+      "is_not_me": "nejsem já",
+      "is_team_member": "je členem mých týmů",
+      "include_me": "zahrnout mě",
+      "exclude_me": "mě vyloučit",
+      "is_my_team": "je můj tým",
+      "is_not_my_team": "není můj tým",
+      "equal": "rovná se"
+    },
+    "errors": {
+      "number_exceed_max": "Musí být nižší než {0}",
+      "number_wrong_step": "Musí být násobkem {0}",
+      "number_between_invalid": "Neplatné hodnoty, {0} je větší než {1}",
+      "datetime_empty": "Prázdná hodnota",
+      "datetime_exceed_max": "Musí být před {0}",
+      "datetime_between_invalid": "Neplatné hodnoty, {0} je větší než {1}",
+      "boolean_not_valid": "Není to boolean",
+      "operator_not_multiple": "Operátor \"{1}\" nemůže přijmout více hodnot",
+      "empty_group": "Skupina je prázdná",
+      "radio_empty": "Není vybrána žádná hodnota",
+      "checkbox_empty": "Není vybrána žádná hodnota",
+      "select_empty": "Není vybrána žádná hodnota",
+      "string_empty": "Prázdná hodnota",
+      "string_exceed_min_length": "Musí obsahovat alespoň {0} znaků",
+      "string_exceed_max_length": "Nesmí obsahovat více než {0} znaků",
+      "string_invalid_format": "Neplatný formát ({0})",
+      "number_nan": "Ne číslo",
+      "number_not_integer": "Není celé číslo",
+      "number_not_double": "Není to skutečné číslo",
+      "number_exceed_min": "Musí být větší než {0}",
+      "datetime_invalid": "Nesprávný formát data ({0})",
+      "datetime_exceed_min": "Musí být za {0}",
+      "no_filter": "Není vybrán žádný filtr"
+    },
+    "add_rule": "Přidat pravidlo",
+    "add_group": "Přidat skupinu",
+    "conditions": {
+      "AND": "A",
+      "OR": "NEBO"
+    },
+    "invert": "Invertovat",
+    "NOT": "NE"
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe"
+  },
+  "twig": {
+    "functions": {
+      "findEntity": "Vyhledání jediného subjektu",
+      "findRecord": "Vyhledání záznamu jedné entity",
+      "convertFileToBase64FromUrl": "Převod souboru do base64 z adresy URL",
+      "translate": "Přeložit řetězec",
+      "translateOption": "Přeložit hodnotu možnosti",
+      "convertFileToBase64": "Převod souboru do formátu base64",
+      "getConvertedImageUrl": "Získání adresy URL převedeného obrázku",
+      "editable": "Zkontrolovat, zda je entita upravitelná",
+      "getAllLanguageFields": "Získání všech polí specifických pro daný jazyk",
+      "parseMarkdown": "Parsování obsahu markdown",
+      "formatField": "Formátování hodnoty pole",
+      "isNew": "Zkontrolovat, zda je entita nová",
+      "md5": "Převést vstupní řetězec na hash md5",
+      "isAttributeChanged": "Zkontrolovat, zda byl atribut změněn",
+      "getFetched": "Získání načtených dat entit",
+      "get": "Získat hodnotu pole",
+      "createEntity": "Vytvoření nového subjektu",
+      "createRecord": "Vytvoření nového záznamu entity",
+      "findEntities": "Vyhledání více subjektů \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "findRecords": "Vyhledání více subjektů \n Params: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
+      "convertMeasureUnit": "Převod hodnoty z jedné jednotky na jinou \n Params: float|int value, string measureId, string fromUnitId, string? toUnitId = null \n Pokud je toUnitId prázdné, výsledkem bude pole s převedenou hodnotou pro všechny měrné jednotky. \n Příklad: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}"
+    },
+    "filters": {
+      "prepareEntity": "Připravit entitu k zobrazení nebo zpracování",
+      "prepareHtmlField": "Příprava obsahu polí HTML pro bezpečné zobrazení",
+      "isImage": "Kontrola, zda je obsahem obrázek",
+      "escapeDoubleQuote": "Escape dvojité uvozovky v řetězci",
+      "escapeStr": "Escape speciálních znaků v řetězci",
+      "backslashNToBr": "Převod \\n na zalomení řádků HTML",
+      "generateBorderColor": "Generování hodnoty barvy okraje",
+      "generateFontColor": "Generování hodnoty barvy písma"
+    }
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama"
+  },
+  "listViewModes": {
+    "kanban": "Kanban"
+  },
+  "measure": {
+    "Length": "Délka",
+    "Mass": "Hromadné",
+    "Time": "Čas",
+    "Electric Current": "Elektrický proud",
+    "Thermodynamic Temperature": "Termodynamická teplota",
+    "Amount Of Substance": "Množství látky",
+    "Luminous Intensity": "Svítivost",
+    "Long intervals of time": "Dlouhé časové intervaly"
+  },
+  "unit Long intervals of time": {
+    "Year": "Rok",
+    "year": "rok",
+    "month": "měsíc",
+    "week": "týden",
+    "day": "den"
+  },
+  "unit Length": {
+    "mm": "mm",
+    "cm": "cm",
+    "dm": "dm",
+    "\"": "\"",
+    "inch": "palec",
+    "km": "km"
+  },
+  "unit Mass": {
+    "mg": "mg",
+    "g": "g",
+    "kg": "kg",
+    "ounces": "uncí"
+  },
+  "unit Electric Current": {
+    "A": "A",
+    "W": "W"
+  },
+  "unit Thermodynamic Temperature": {
+    "K": "K",
+    "C": "C"
+  },
+  "unit Amount Of Substance": {
+    "mol": "mol"
+  },
+  "unit Luminous Intensity": {
+    "cd": "cd"
+  },
+  "firstStepsDashlet": {
+    "title": {
+      "readDocumentation": "Přečtěte si dokumentaci",
+      "customizeDesign": "Přizpůsobení návrhu systému",
+      "configureLocale": "Konfigurace nastavení místního jazyka",
+      "addLanguages": "Přidání dalších jazyků",
+      "configureRoles": "Nastavení rolí",
+      "createUsers": "Vytvořit uživatele",
+      "configureDataModel": "Konfigurace datového modelu",
+      "importData": "Import dat",
+      "configureFileTypes": "Konfigurace typů souborů",
+      "configureLayouts": "Konfigurace rozvržení"
+    },
+    "description": {
+      "readDocumentation": "Prozkoumejte naši komplexní dokumentaci pro správce a uživatele, abyste lépe porozuměli tomu, jak systém efektivně konfigurovat a používat.",
+      "customizeDesign": "Nahrajte logo společnosti a favicon a vyberte si styl systému. Přizpůsobte uživatelské rozhraní tak, aby odpovídalo vaší firemní značce.",
+      "configureLocale": "Nastavení výchozího prostředí pro uživatelské rozhraní, včetně jazyka systému, formátů data, oddělovače tisíců a dalších regionálních předvoleb.",
+      "addLanguages": "Povolení a konfigurace dalších jazyků pro vytváření a správu vícejazyčného obsahu v celém systému.",
+      "configureRoles": "Definujte uživatelské role pro řízení přístupu a odpovědností v systému.",
+      "createUsers": "Přidejte uživatele systému, přiřaďte role a definujte správce pro správu přístupu a oprávnění.",
+      "configureDataModel": "Zkontrolujte výchozí datové entity, které jsou k dispozici po vybalení. Podle potřeby vytvořte nové entity (datové tabulky), nová pole nebo definujte vztahy mezi entitami.",
+      "importData": "Nastavte první importní kanál, který přinese data do systému ze souborů CSV nebo XLSX.",
+      "configureFileTypes": "Zkontrolujte, které standardní typy souborů jsou ve výchozím nastavení k dispozici. V případě potřeby upravte jejich nastavení a nakonfigurujte nové typy souborů pro ověřování a správu nahrávání uživateli.",
+      "configureLayouts": "Přizpůsobte si seznamy, podrobnosti a další zobrazení pro libovolnou entitu tak, aby vyhovovaly vašim preferencím ohledně pracovního postupu a prezentace dat uživatelského rozhraní."
+    }
+  },
+  "twigVariables": {
+    "entity": "Objekt Entita (Záznam)",
+    "config": "Objekt konfigurace systému",
+    "uiRecord": "Pole dat záznamu. Proměnná obsahuje data, která máte na straně frontendu.",
+    "uiRecordFromName": "Název entity, ze které otevíráte aktuální entitu.",
+    "uiRecordFrom": "Datové pole záznamu entity, ze které otevíráte aktuální entitu."
+  },
+  "confirmations": {
+    "someFieldsEmptyOnMassUpdate": "Nahradíte jednu nebo více hodnot prázdnou hodnotou. Jste si jisti?"
+  },
+  "thumbnailTypes": {
+    "small-logo": "Malé logo",
+    "small": "Malé",
+    "medium": "Střední",
+    "large": "Velké"
   }
 }
