@@ -79,7 +79,9 @@
     "Locale": "Localización",
     "Measure": "Measure",
     "File": "Archivo",
-    "Action": "Acción"
+    "Action": "Acción",
+    "Selection": "Selección",
+    "SelectionRecord": "Registro de selección"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -146,7 +148,9 @@
     "Unit": "Units",
     "Translation": "Etiquetas",
     "Action": "Acciones",
-    "ExtensibleEnum": "Listas"
+    "ExtensibleEnum": "Listas",
+    "Selection": "Selecciones",
+    "SelectionRecord": "Registros de selección"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
