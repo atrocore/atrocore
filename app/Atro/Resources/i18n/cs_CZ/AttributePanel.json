@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "attributes": "",
+    "default": ""
+  },
+  "exceptions": {
+    "entityIsUsed": ""
+  }
+}
