@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "name": "",
+    "emailAddress": "",
+    "phoneNumber": "",
+    "description": "",
+    "type": "",
+    "role": "",
+    "number": "",
+    "language": "",
+    "addresses": "",
+    "contacts": ""
+  },
+  "options": {
+    "type": {
+      "individual": "",
+      "company": ""
+    },
+    "role": {
+      "supplier": "",
+      "customer": ""
+    }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": ""
+  }
+}
