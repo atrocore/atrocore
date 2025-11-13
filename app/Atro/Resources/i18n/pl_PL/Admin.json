@@ -76,7 +76,10 @@
     "ThumbnailTypes": "Typy miniatur",
     "rebuildDbWarning": "Struktura bazy danych uległa zmianie. Wymagana jest przebudowa, aby zapewnić prawidłowe działanie.",
     "incomingWebhook": "Przychodzące webhooki",
-    "matchings": "Dopasowania"
+    "matchings": "Dopasowania",
+    "Available": "Dostępny",
+    "execute": "Wykonaj",
+    "status": "Status"
   },
   "layouts": {
     "relationships": "Relacje",
@@ -85,7 +88,8 @@
     "massUpdate": "Masowa aktualizacja",
     "kanban": "Kanban",
     "leftSidebar": "Widok z lewej strony",
-    "rightSideView": "Widok z prawej strony"
+    "rightSideView": "Widok z prawej strony",
+    "upload": "Prześlij"
   },
   "fieldTypes": {
     "color": "Kolor",
@@ -134,7 +138,7 @@
   "fields": {
     "fontSize": "Rozmiar czcionki",
     "type": "Typ",
-    "name": "Nazwa",
+    "name": "Kod",
     "label": "Etykieta",
     "defaultDate": "Domyślny",
     "link": "Link",
