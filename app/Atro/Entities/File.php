@@ -15,6 +15,7 @@ namespace Atro\Entities;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Entities\Base;
+use Atro\Core\Utils\Util;
 
 class File extends Base
 {
@@ -107,5 +108,12 @@ class File extends Base
     {
         $storageInterface = $this->getEntityManager()->getContainer()->get($this->getStorage()->get('type') . 'Storage');
         return $storageInterface->isAvailable($this->getStorage());
+    }
+
+    public static function prepareThumbnailUrlFieldName(string $size): string
+    {
+        $size = preg_replace('/[^A-Za-z0-9]+/', '_', $size);
+
+        return Util::toCamelCase(strtolower($size)) . 'ThumbnailUrl';
     }
 }

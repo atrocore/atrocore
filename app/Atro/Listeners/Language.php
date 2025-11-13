@@ -16,6 +16,7 @@ namespace Atro\Listeners;
 use Atro\Core\EventManager\Event;
 use Atro\Core\Templates\Repositories\Relation;
 use Atro\Core\Utils\Util;
+use Atro\Entities\File;
 
 class Language extends AbstractListener
 {
@@ -187,6 +188,16 @@ class Language extends AbstractListener
                         }
                     }
                 }
+            }
+        }
+
+        foreach ($this->getMetadata()->get(['app', 'thumbnailTypes'], []) as $size => $params) {
+            $field = File::prepareThumbnailUrlFieldName($size);
+
+            foreach ($data as $locale => $rows) {
+                $label = $rows['File']['labels']['thumbnailUrl'] ?? "Thumbnail URL (%s)";
+
+                $data[$locale]['File']['fields'][$field] = sprintf($label, $size);
             }
         }
 

@@ -64,33 +64,6 @@
       "importDisabled": true,
       "openApiEnabled": true
     },
-    "smallThumbnailUrl": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "openApiEnabled": true
-    },
-    "mediumThumbnailUrl": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "openApiEnabled": true
-    },
-    "largeThumbnailUrl": {
-      "type": "varchar",
-      "notStorable": true,
-      "readOnly": true,
-      "layoutMassUpdateDisabled": true,
-      "filterDisabled": true,
-      "importDisabled": true,
-      "openApiEnabled": true
-    },
     "mimeType": {
       "type": "varchar",
       "readOnly": true,

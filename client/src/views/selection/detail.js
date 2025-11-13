@@ -74,6 +74,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 window.treePanelComponent.rebuildTree();
             });
 
+            this.listenToOnce(this, 'after:render', () => {
+                let record = this.getMainRecord();
+                if(!record || typeof record.isPanelsLoading !== "function") {
+                    return;
+                }
+
+                if(record.isPanelsLoading()) {
+                    this.notify('Loading...');
+                    $('#main > .content-wrapper > main').css('overflow-y', 'hidden')
+                }
+            })
+
         },
 
         getSelectionRecordEntityIds() {
@@ -278,7 +290,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                    this.enableButtons()
-                })
+                    $('#main > .content-wrapper > main').css('overflow-y', 'auto')
+                });
             });
         },
 

@@ -79,7 +79,9 @@
     "SystemIcon": "System Icon",
     "ProductHierarchy": "Product Hierarchy",
     "AccountGroup": "Account Group",
-    "ProductGroup": "Product Group"
+    "ProductGroup": "Product Group",
+    "Selection": "Selection",
+    "SelectionRecord": "Selection Record"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Matched Records",
@@ -146,7 +148,9 @@
     "Bookmark": "Bookmarks",
     "SystemIcon": "System Icons",
     "AccountGroup": "Account Groups",
-    "ProductGroup": "Product Groups"
+    "ProductGroup": "Product Groups",
+    "Selection": "Selections",
+    "SelectionRecord": "Selection Records"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
@@ -664,9 +668,6 @@
     "connection": "Connection",
     "tags": "Tags",
     "downloadUrl": "Download URL",
-    "smallThumbnailUrl": "Thumbnail URL (small)",
-    "mediumThumbnailUrl": "Thumbnail URL (medium)",
-    "largeThumbnailUrl": "Thumbnail URL (large)",
     "extension": "Extension",
     "hidden": "Hidden",
     "priority": "Priority",
