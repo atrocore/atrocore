@@ -1,10 +1,10 @@
 {
   "fields": {
-    "role": ""
+    "role": "Rôle"
   },
   "options": {
     "role": {
-      "main": "",
+      "main": "Principal",
       "additional": ""
     }
   },
