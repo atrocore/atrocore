@@ -16,7 +16,8 @@
     "sortDirection": "Ordre (direction)",
     "expandedLayout": "Mise en page",
     "dateFilter": "Filtre de date",
-    "savedFilter": "Filtre sauvegardé"
+    "savedFilter": "Filtre sauvegardé",
+    "entityListType": "Type de liste d'entités"
   },
   "messages": {
     "selectEntityType": "Sélectionnez le type d'entité dans les options du dashlet."
@@ -29,6 +30,10 @@
       "basicDay": "Jour",
       "agendaDay": "Jour (agenda)",
       "timeline": "Chronologie"
+    },
+    "entityListType": {
+      "navigation": "Éléments de navigation",
+      "favorites": "Favoris"
     }
   }
 }
