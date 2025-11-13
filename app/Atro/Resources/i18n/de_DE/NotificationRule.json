@@ -33,6 +33,6 @@
   },
   "labels": {
     "Notify User": "Benutzer benachrichtigen",
-    "transport": "Transport"
+    "Transport": "Transport"
   }
 }
