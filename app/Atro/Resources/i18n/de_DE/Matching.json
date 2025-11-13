@@ -1,8 +1,21 @@
 {
   "fields": {
-    "foreignName": "Fremdname"
+    "foreignName": "Fremdname",
+    "minimumScore": "Mindestpunktzahl, %",
+    "stagingEntity": "Staging-Entität",
+    "masterEntity": "Master-Entität",
+    "matchingRules": "Übereinstimmungsregeln"
   },
   "tooltips": {
     "foreignName": "Name für eine Rückwärtsübereinstimmung, z. B. könnte „Staging“ ein Fremdname für eine „Master“-Übereinstimmung sein."
+  },
+  "options": {
+    "type": {
+      "bidirectional": "Bidirektional",
+      "unidirectional": "Unidirektional"
+    }
+  },
+  "exceptions": {
+    "notValidCode": "Der Code darf nur Buchstaben, Zahlen und Unterstriche enthalten."
   }
 }
