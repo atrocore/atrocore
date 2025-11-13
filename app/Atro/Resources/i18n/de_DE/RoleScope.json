@@ -1,25 +1,25 @@
 {
   "fields": {
-    "name": "",
-    "role": "",
-    "hasAccess": "",
-    "createAction": "",
-    "readAction": "",
-    "editAction": "",
-    "deleteAction": "",
-    "streamAction": "",
-    "fields": "",
+    "name": "Geltungsbereich",
+    "role": "Rolle",
+    "hasAccess": "Berechtigungen",
+    "createAction": "Erstellen",
+    "readAction": "Lesen",
+    "editAction": "Bearbeiten",
+    "deleteAction": "löschen",
+    "streamAction": "Aktivitäten",
+    "fields": "Felder",
     "accessData": "",
     "createAttributeValueAction": "",
     "deleteAttributeValueAction": "",
-    "attributes": "",
-    "attributePanels": ""
+    "attributes": "Attribute",
+    "attributePanels": "Attribut-Panels"
   },
   "labels": {
-    "all": "",
+    "all": "Alle",
     "team": "",
     "own": "",
-    "no": "",
-    "yes": ""
+    "no": "Nein",
+    "yes": "Ja"
   }
 }
