@@ -7,12 +7,14 @@
     "layouts": "Макети",
     "parent": "Батьківський лейаут профіль",
     "navigation": "Меню навігації",
-    "dashboardLayout": "Макет дашборда"
+    "dashboardLayout": "Макет дашборда",
+    "favoritesList": "Обрані елементи"
   },
   "labels": {
     "addGroup": "Додати групу",
     "Menu": "Меню",
-    "Dashboards": "Дашборди"
+    "Dashboards": "Дашборди",
+    "Favorites": "Обрані елементи"
   },
   "exceptions": {
     "defaultIsRequired": "В системі має існувати лейаут профіль за замовчуванням"
