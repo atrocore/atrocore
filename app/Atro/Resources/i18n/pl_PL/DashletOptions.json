@@ -9,7 +9,7 @@
     "mode": "Tryb",
     "enabledScopeList": "Co wyświetlić",
     "users": "Użytkownicy",
-    "entityType": "Typ jednostki",
+    "entityType": "Encja",
     "primaryFilter": "Główny filtr",
     "boolFilterList": "Dodatkowe filtry",
     "sortBy": "Sortuj (pole)",
@@ -30,7 +30,8 @@
     },
     "entityListType": {
       "navigation": "Elementy nawigacji",
-      "favorites": "Ulubione"
+      "favorites": "Ulubione",
+      "all": "Wszystkie"
     }
   },
   "messages": {
