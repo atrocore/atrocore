@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "",
+    "description": "",
+    "measure": "",
+    "isMain": "",
+    "multiplier": "",
+    "convertTo": "",
+    "symbol": "",
+    "isActive": ""
+  },
+  "labels": {
+    "unitSetDefault": ""
+  },
+  "exceptions": {
+    "defaultIsRequired": "",
+    "unitIsUsed": "",
+    "unitIsUsedOnClassificationAttribute": "",
+    "unitIsUsedOnEntityAttribute": ""
+  }
+}
