@@ -1,13 +1,13 @@
 {
   "labels": {
-    "Dynamic Logic": "",
-    "Name": "",
-    "Label": "",
-    "Type": ""
+    "Dynamic Logic": "Dynamická logika",
+    "Name": "Název",
+    "Label": "Štítek",
+    "Type": "Typ"
   },
   "options": {
     "dateTimeDefault": {
-      "": "",
+      "": "Žádný",
       "javascript: return this.dateTime.getNow(1);": "",
       "javascript: return this.dateTime.getNow(5);": "",
       "javascript: return this.dateTime.getNow(15);": "",
@@ -33,8 +33,8 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": ""
     },
     "dateDefault": {
-      "": "",
-      "javascript: return this.dateTime.getToday();": "",
+      "": "Žádný",
+      "javascript: return this.dateTime.getToday();": "Dnes",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "",
       "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "",
@@ -68,7 +68,7 @@
   },
   "fieldParts": {
     "unit": {
-      "unit": ""
+      "unit": "(Jednotka)"
     },
     "datetimeOptional": {
       "date": ""
