@@ -485,7 +485,9 @@
     "reloadPage": "Načtení stránky",
     "Standard": "Standardní",
     "varcharPart": "(řetězec)",
-    "Help Center": "Centrum nápovědy"
+    "Help Center": "Centrum nápovědy",
+    "Compare": "Porovnat",
+    "addItem": "Přidat položku"
   },
   "fields": {
     "width": "Šířka",
@@ -738,12 +740,14 @@
     "massDelete": "Hromadné odstranění",
     "download": "Stáhnout",
     "compare": "Porovnat",
-    "removeAttribute": "Odstranění atributu"
+    "removeAttribute": "Odstranění atributu",
+    "select": "Vybrat"
   },
   "dashlets": {
     "Records": "Seznam záznamů",
     "Stream": "Aktivity",
-    "FirstSteps": "První kroky"
+    "FirstSteps": "První kroky",
+    "Entities": "Entity"
   },
   "notificationMessages": {
     "emailReceived": "E-mail přijatý od {od}",
@@ -824,7 +828,8 @@
     "updateOneIn": "{user} v {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
     "updateFromTo": "{user} v {entityType} {entity} updated",
     "from": "z",
-    "assignYou": "{uživatel} přiřazen {entityType} {entita} vám"
+    "assignYou": "{uživatel} přiřazen {entityType} {entita} vám",
+    "emailReceivedFromThis": "E-mail přijatý od {od}"
   },
   "dayNamesShort": {
     "Sat": "So",
@@ -1015,13 +1020,17 @@
         "background": "BackColor",
         "foreground": "FontColor",
         "transparent": "Transparentní",
-        "setTransparent": "Nastavení průhlednosti"
+        "setTransparent": "Nastavení průhlednosti",
+        "reset": "Reset",
+        "resetToDefault": "Obnovení výchozího nastavení"
       },
       "shortcut": {
         "shortcuts": "Klávesové zkratky",
         "textFormatting": "Formátování textu",
         "paragraphFormatting": "Formátování odstavců",
-        "documentStyle": "Styl dokumentu"
+        "documentStyle": "Styl dokumentu",
+        "close": "Zavřít",
+        "action": "Akce"
       },
       "history": {
         "undo": "Zrušit",
@@ -1206,10 +1215,13 @@
       "OR": "NEBO"
     },
     "invert": "Invertovat",
-    "NOT": "NE"
+    "NOT": "NE",
+    "delete_rule": "Odstranit",
+    "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe"
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
+    "composerUpdateThis": "{uživatel}"
   },
   "twig": {
     "functions": {
@@ -1247,10 +1259,12 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama"
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
+    "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {
-    "kanban": "Kanban"
+    "kanban": "Kanban",
+    "list": "Seznam"
   },
   "measure": {
     "Length": "Délka",
@@ -1267,7 +1281,10 @@
     "year": "rok",
     "month": "měsíc",
     "week": "týden",
-    "day": "den"
+    "day": "den",
+    "Month": "Měsíc",
+    "Week": "Týden",
+    "Day": "Den"
   },
   "unit Length": {
     "mm": "mm",
@@ -1275,7 +1292,8 @@
     "dm": "dm",
     "\"": "\"",
     "inch": "palec",
-    "km": "km"
+    "km": "km",
+    "m": "m"
   },
   "unit Mass": {
     "mg": "mg",
@@ -1338,5 +1356,10 @@
     "small": "Malé",
     "medium": "Střední",
     "large": "Velké"
+  },
+  "unit Time": {
+    "s": "s",
+    "m": "m",
+    "h": "h"
   }
 }
