@@ -108,10 +108,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
                 })
-                this.handleRadioButtonsDisableState(false)
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
-                this.notify(false)
                 return;
             }
 
@@ -1042,6 +1040,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
             }
             Dep.prototype.remove.call(this, dontEmpty);
+        },
+
+        isPanelsLoading() {
+            return this.renderedPanels.length < this.fieldPanels.length + 1;
         }
     });
 });
