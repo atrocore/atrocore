@@ -9,10 +9,18 @@
     "display": "Affichage",
     "actionsSet": "Ensemble d'actions",
     "actions": "Actions",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "showEmailPreview": "Prévisualisation avant envoi",
+    "emailTo": "Email à",
+    "focusField": "Champ de vision",
+    "emailCc": "Email CC",
+    "emailBcc": "Email BCC",
+    "executeAs": "Exécuter en tant que",
+    "displayField": "Champ d'affichage"
   },
   "labels": {
-    "execute": "Exécuter"
+    "execute": "Exécuter",
+    "Parameters": "Paramètres"
   },
   "massActions": {
     "execute": "Exécuter"
@@ -27,11 +35,26 @@
     },
     "type": {
       "set": "Ensemble d'actions",
-      "webhook": "Point d'encrage Web"
+      "webhook": "Point d'encrage Web",
+      "email": "Envoyer un e-mail"
+    },
+    "usage": {
+      "entity": "Bouton d'action de l'entité",
+      "record": "Bouton d'enregistrement d'une action",
+      "field": "Bouton d'action de champ",
+      "onFieldFocus": "Mise au point sur le terrain",
+      "onRecordLoad": "Chargement record"
+    },
+    "executeAs": {
+      "sameUser": "Même utilisateur"
     }
   },
   "tooltips": {
     "inBackground": "L'action sera exécutée en arrière-plan sans message direct de succès ou d'erreur. Utilisez-le si l'exécution de l'action peut prendre plus de 30 secondes.",
-    "usage": "L'utilisation prescrit l'emplacement de l'action. Une action sur les enregistrements exige que les enregistrements concernés soient présélectionnés."
+    "usage": "L'utilisation prescrit l'emplacement de l'action. Une action sur les enregistrements exige que les enregistrements concernés soient présélectionnés.",
+    "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'action."
+  },
+  "exceptions": {
+    "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode édition et ne peut pas être utilisée ici."
   }
 }
