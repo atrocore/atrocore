@@ -39,7 +39,8 @@
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
     "checkForDuplicates": "Prüfung auf Duplikate",
     "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen",
-    "customizable": "Anpassbar"
+    "customizable": "Anpassbar",
+    "fields": "Felder"
   },
   "options": {
     "type": {
