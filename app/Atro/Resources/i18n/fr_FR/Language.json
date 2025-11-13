@@ -5,16 +5,16 @@
   "options": {
     "role": {
       "main": "Principal",
-      "additional": ""
+      "additional": "Supplémentaire"
     }
   },
   "tooltips": {
-    "role": ""
+    "role": "Sélectionnez Principale si vous souhaitez que cette langue soit la langue principale de votre contenu. Additional doit être utilisé pour les langues à traduire."
   },
   "exceptions": {
-    "mainLanguageIsAlreadyExists": "",
-    "roleCannotBeChanged": "",
-    "codeForAdditionalCannotBeChanged": "",
-    "mainLanguageCannotBeRemoved": ""
+    "mainLanguageIsAlreadyExists": "La langue principale existe déjà.",
+    "roleCannotBeChanged": "Le rôle ne peut pas être modifié.",
+    "codeForAdditionalCannotBeChanged": "Le code de la langue supplémentaire ne peut pas être modifié.",
+    "mainLanguageCannotBeRemoved": "La langue principale ne peut pas être supprimée."
   }
 }
