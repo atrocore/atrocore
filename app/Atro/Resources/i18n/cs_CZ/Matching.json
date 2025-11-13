@@ -1,12 +1,12 @@
 {
   "fields": {
     "minimumScore": "Minimální skóre, %",
-    "entity": "",
+    "entity": "Subjekt",
     "stagingEntity": "Subjekt etapizace",
     "masterEntity": "Hlavní subjekt",
     "matchingRules": "Pravidla porovnávání",
     "foreignName": "Cizí název",
-    "matchedRecords": ""
+    "matchedRecords": "Shodné záznamy"
   },
   "options": {
     "type": {
