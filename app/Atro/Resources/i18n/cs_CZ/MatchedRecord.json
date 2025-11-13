@@ -1,6 +1,6 @@
 {
   "fields": {
-    "matching": "",
+    "matching": "Odpovídající",
     "staging": "",
     "stagingEntity": "",
     "stagingEntityId": "",
@@ -8,7 +8,7 @@
     "masterEntity": "",
     "masterEntityId": "",
     "score": "",
-    "status": ""
+    "status": "Stav"
   },
   "options": {
     "status": {
