@@ -7,6 +7,15 @@
     "longDescription": "Description longue",
     "children": "Sous-Produits",
     "parents": "Produits de base",
-    "quantity": "Quantité"
+    "quantity": "Quantité",
+    "description": "Brève description",
+    "mpn": "Numéro du fabricant (MPN)",
+    "customsNumber": "Numéro de douane",
+    "countryOfOrigin": "Pays d'origine",
+    "defaultSupplier": "Fournisseur par défaut"
+  },
+  "labels": {
+    "manufacturer": "Fabricant",
+    "other": "Autre"
   }
 }
