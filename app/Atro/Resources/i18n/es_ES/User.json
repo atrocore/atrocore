@@ -9,7 +9,7 @@
     "phoneNumber": "Teléfono",
     "teamRole": "Puesto",
     "password": "Contraseña",
-    "currentPassword": "Contraseña Actual",
+    "currentPassword": "Su contraseña actual",
     "passwordConfirm": "Confirmar Contraseña",
     "newPassword": "Nueva Contraseña",
     "newPasswordConfirm": "Confirmar Contraseña Nueva",
@@ -25,7 +25,17 @@
     "lastAccess": "Last Access",
     "teams": "Equipos",
     "notes": "Notas",
-    "tasks": "Tareas"
+    "tasks": "Tareas",
+    "receiveNotifications": "Recibir notificaciones",
+    "notificationProfile": "Perfil de notificación",
+    "style": "Estilo de la interfaz de usuario",
+    "followCreatedEntities": "Seguimiento automático de registros creados por usted mismo",
+    "department": "Departamento",
+    "passwordUpdatedAt": "Contraseña actualizada en",
+    "passwordUpdatedBy": "Contraseña actualizada por",
+    "followEntityOnAssignment": "Seguimiento automático en la asignación",
+    "followEntityOnStreamPost": "Seguimiento automático de los registros tras su publicación en Actividades",
+    "layoutProfile": "Perfil del diseño"
   },
   "labels": {
     "Generate": "Generar",
@@ -36,7 +46,9 @@
     "Password Change Request": "Solicitar Cambio de Contraseña",
     "Email Address": "Correo electrónico",
     "External Accounts": "Cuentas externas",
-    "Email Accounts": "Cuentas de correo"
+    "Email Accounts": "Cuentas de correo",
+    "Reset Password": "Restablecer contraseña",
+    "Preferences": "Preferencias"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
@@ -61,7 +73,12 @@
     "passwordChangeLinkEmailSubject": "Change Password Request",
     "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon.",
     "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
-    "userNameExists": "User Name already exists"
+    "userNameExists": "User Name already exists",
+    "passwordResetEmailBody": "Puede restaurar su contraseña siguiendo este enlace {link}. Este URL único caducará pronto.",
+    "passwordExpiredForm": "Su contraseña ha caducado. Por favor, actualícela utilizando el siguiente formulario.",
+    "newPasswordInvalid": "Su contraseña debe contener al menos un símbolo, una letra mayúscula y un dígito y debe tener al menos 8 caracteres.",
+    "changePasswordOnResetViaEmailOnly": "No puede establecer una contraseña manualmente. Por favor, utilice la acción \"Restablecer contraseña\".",
+    "passwordResetEmailSubject": "Restablecer contraseña"
   },
   "options": {
     "gender": {
