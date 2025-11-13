@@ -2,15 +2,15 @@
   "fields": {
     "user": "Uživatel",
     "action": "Akce",
-    "createdAt": "",
-    "controllerName": "",
-    "controllerAction": "",
+    "createdAt": "Datum",
+    "controllerName": "Název ovladače",
+    "controllerAction": "Akce řídicí jednotky",
     "authToken": "Auth Token",
     "ipAddress": "IP adresa",
     "authLogRecord": "Záznam protokolu ověření",
-    "target": "",
-    "targetName": "",
-    "targetId": "",
-    "data": ""
+    "target": "Cílová stránka",
+    "targetName": "Název cíle",
+    "targetId": "ID cíle",
+    "data": "Data"
   }
 }
