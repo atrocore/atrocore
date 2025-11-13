@@ -19,6 +19,7 @@ use Atro\Console\CreateAction;
 use Atro\Console\CreateConditionType;
 use Atro\Core\EventManager\Event;
 use Atro\Core\KeyValueStorages\StorageInterface;
+use Atro\Entities\File;
 use Atro\Repositories\NotificationRule;
 use Atro\Repositories\PreviewTemplate;
 use Doctrine\DBAL\ParameterType;
@@ -106,6 +107,8 @@ class Metadata extends AbstractListener
         $this->addClassificationToEntity($data);
 
         $this->prepareMetadataViaMatchings($data);
+
+        $this->addThumbnailFieldsByTypesToFile($data);
 
         $event->setArgument('data', $data);
     }
@@ -2187,6 +2190,29 @@ class Metadata extends AbstractListener
                         'aclScope' => 'MatchedRecord',
                     ];
                 }
+            }
+        }
+    }
+
+    protected function addThumbnailFieldsByTypesToFile(array &$data): void
+    {
+        if (empty($data['app'])) {
+            return;
+        }
+
+        foreach ($data['app']['thumbnailTypes'] ?? [] as $size => $params) {
+            $field = File::prepareThumbnailUrlFieldName($size);
+
+            if (empty($data['entityDefs']['File']['fields'][$field])) {
+                $data['entityDefs']['File']['fields'][$field] = [
+                    'type' => 'varchar',
+                    'notStorable' => true,
+                    'readOnly' => true,
+                    'layoutMassUpdateDisabled' => true,
+                    'filterDisabled' => true,
+                    'importDisabled' => true,
+                    'openApiEnabled' => true
+                ];
             }
         }
     }
