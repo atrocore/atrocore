@@ -1,10 +1,10 @@
 {
   "fields": {
-    "description": "",
-    "isActive": "",
-    "reverseAssociation": "",
-    "code": "",
-    "default": ""
+    "description": "Popis",
+    "isActive": "Aktivní",
+    "reverseAssociation": "Obrácená asociace",
+    "code": "Kód",
+    "default": "Výchozí"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "Asociace je spojena se záznamem (záznamy). Nejprve zrušte propojení záznamu(ů)",
