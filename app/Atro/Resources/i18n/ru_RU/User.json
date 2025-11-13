@@ -11,7 +11,7 @@
     "roles": "Роли",
     "teamRole": "Должность (положение в группе)",
     "password": "Пароль",
-    "currentPassword": "Текущий пароль",
+    "currentPassword": "Ваш текущий пароль",
     "passwordConfirm": "Подтвердить пароль",
     "newPassword": "Новый пароль",
     "newPasswordConfirm": "Подтвердить новый пароль",
@@ -27,7 +27,16 @@
     "type": "Тип",
     "teams": "Группы",
     "notes": "Заметки",
-    "tasks": "Задачи"
+    "tasks": "Задачи",
+    "style": "Стиль пользовательского интерфейса",
+    "followCreatedEntities": "Автоматическое следование за самостоятельно созданными записями",
+    "passwordUpdatedAt": "Пароль обновлен на",
+    "passwordUpdatedBy": "Пароль Обновлен",
+    "followEntityOnAssignment": "Автоматическое отслеживание при назначении",
+    "followEntityOnStreamPost": "Автоматическое следование за записями после публикации в разделе Деятельность",
+    "receiveNotifications": "Получение уведомлений",
+    "notificationProfile": "Профиль уведомлений",
+    "layoutProfile": "Профиль раскладки"
   },
   "labels": {
     "Generate": "Сгенерировать",
@@ -38,7 +47,9 @@
     "Password Change Request": "Запрос смены пароля",
     "Email Address": "Адрес эл. почты",
     "External Accounts": "Внешние учетные записи",
-    "Email Accounts": "Учетные записи эл. почты"
+    "Email Accounts": "Учетные записи эл. почты",
+    "Reset Password": "Сброс пароля",
+    "Preferences": "Предпочтения"
   },
   "tooltips": {
     "defaultTeam": "Все записи, созданные этим пользователем, по умолчанию будут относиться к этой группе.",
@@ -63,7 +74,12 @@
     "accountInfoEmailBody": "Ваши данные доступа n:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
     "passwordChangeLinkEmailSubject": "Отправить запрос на изменение пароля",
     "passwordChangeLinkEmailBody": "Вы можете изменить Ваш пароль следуя {link}. Срок действия этого уникального URL скоро закончится.",
-    "setupSmtpBefore": "Вам необходимо установить <a href=\"{url}\">SMTP settings</a> чтобы разрешить системе отправлять пароль в емейле."
+    "setupSmtpBefore": "Вам необходимо установить <a href=\"{url}\">SMTP settings</a> чтобы разрешить системе отправлять пароль в емейле.",
+    "passwordResetEmailSubject": "Сброс пароля",
+    "passwordResetEmailBody": "Вы можете восстановить свой пароль, перейдя по этой ссылке {link}. Срок действия этого уникального URL скоро истечет.",
+    "passwordExpiredForm": "Срок действия Вашего пароля истек. Пожалуйста, обновите его, используя форму ниже.",
+    "newPasswordInvalid": "Ваш пароль должен содержать как минимум один символ, заглавную букву и цифру, а его длина должна составлять не менее 8 символов.",
+    "changePasswordOnResetViaEmailOnly": "Вы не можете установить пароль вручную. Пожалуйста, воспользуйтесь действием \"Сбросить пароль\"."
   },
   "options": {
     "gender": {
