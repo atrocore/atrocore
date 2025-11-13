@@ -1,7 +1,7 @@
 {
   "fields": {
-    "attributes": "",
-    "default": ""
+    "attributes": "Атрибути",
+    "default": "За замовчуванням"
   },
   "exceptions": {
     "entityIsUsed": ""
