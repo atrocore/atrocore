@@ -193,18 +193,24 @@ class Hierarchy extends Record
 
     protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
     {
-        foreach ($entity->getRoutes() as $route) {
-            $collection = [];
-            foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
-                $collection[$item->get('id')] = $item;
-            }
+        $routes = $entity->getRoutes();
 
-            foreach ($route as $k => $id) {
-                $item = $collection[$id];
-                if (isset($route[$k + 1])) {
-                    $item->child = $collection[$route[$k + 1]];
+        if (empty($routes)) {
+            $treeBranches[] = $entity;
+        } else {
+            foreach ($routes as $route) {
+                $collection = [];
+                foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
+                    $collection[$item->get('id')] = $item;
                 }
-                $treeBranches[] = $item;
+
+                foreach ($route as $k => $id) {
+                    $item = $collection[$id];
+                    if (isset($route[$k + 1])) {
+                        $item->child = $collection[$route[$k + 1]];
+                    }
+                    $treeBranches[] = $item;
+                }
             }
         }
     }
