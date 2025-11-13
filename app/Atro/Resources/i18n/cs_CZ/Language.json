@@ -4,17 +4,17 @@
   },
   "options": {
     "role": {
-      "main": "",
-      "additional": ""
+      "main": "Hlavní stránka",
+      "additional": "Další"
     }
   },
   "tooltips": {
-    "role": ""
+    "role": "Pokud chcete, aby byl tento jazyk hlavním jazykem obsahu, vyberte možnost Hlavní. Doplňkový by měl být použit pro jazyky, do kterých se má překládat."
   },
   "exceptions": {
-    "mainLanguageIsAlreadyExists": "",
-    "roleCannotBeChanged": "",
-    "codeForAdditionalCannotBeChanged": "",
-    "mainLanguageCannotBeRemoved": ""
+    "mainLanguageIsAlreadyExists": "Hlavní jazyk již existuje.",
+    "roleCannotBeChanged": "Roli nelze změnit.",
+    "codeForAdditionalCannotBeChanged": "Kód pro další jazyk nelze změnit.",
+    "mainLanguageCannotBeRemoved": "Hlavní jazyk nelze odstranit."
   }
 }
