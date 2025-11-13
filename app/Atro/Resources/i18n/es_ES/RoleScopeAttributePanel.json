@@ -2,7 +2,7 @@
   "fields": {
     "attributePanel": "Panel de atributos",
     "roleScope": "Alcance",
-    "readAction": "",
-    "editAction": ""
+    "readAction": "Leer",
+    "editAction": "Editar"
   }
 }
