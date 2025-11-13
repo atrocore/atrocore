@@ -1,8 +1,20 @@
 {
   "fields": {
-    "files": "Pliki"
+    "files": "Pliki",
+    "aspectRatio": "Współczynnik proporcji",
+    "minSize": "Minimalny rozmiar, Kb",
+    "maxSize": "Maksymalny rozmiar, Kb",
+    "minWidth": "Minimalna szerokość, px",
+    "minHeight": "Minimalna wysokość, px",
+    "extensions": "Rozszerzenia",
+    "mimeTypes": "Typy Mime"
   },
   "exceptions": {
-    "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\"."
+    "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\".",
+    "aspectRatioMustBeInFormat": "Nieprawidłowy format proporcji obrazu. Proszę użyć formatu szerokość:wysokość, np. 16:9."
+  },
+  "labels": {
+    "Image Settings": "Ustawienia obrazu",
+    "General Settings": "Ustawienia ogólne"
   }
 }

@@ -3,5 +3,13 @@
     "key": "Schlüssel",
     "type": "Typ",
     "value": "Wert"
+  },
+  "options": {
+    "type": {
+      "text": "Text",
+      "float": "Nummer",
+      "bool": "Boolesch",
+      "array": "Anordnung"
+    }
   }
 }

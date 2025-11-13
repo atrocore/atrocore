@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "selectionRecords": "Registros de selección"
+  }
+}

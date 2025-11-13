@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "isActive": "Aktywny",
+    "description": "Description",
+    "notificationRules": "Zasady powiadamiania"
+  }
+}

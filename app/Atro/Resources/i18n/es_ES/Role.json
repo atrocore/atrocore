@@ -5,7 +5,9 @@
     "roles": "Roles",
     "dataPrivacyPermission": "Data Privacy Permission",
     "users": "Usuarios",
-    "teams": "Equipos"
+    "teams": "Equipos",
+    "styleControlPermission": "Control de estilo",
+    "scopes": "Visores"
   },
   "tooltips": {
     "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
@@ -36,7 +38,7 @@
     "read": "Leer",
     "edit": "Editar",
     "delete": "Borrar",
-    "stream": "Historia",
+    "stream": "Actividades planeadas",
     "create": "Crear"
   },
   "messages": {

@@ -4,13 +4,14 @@
     "attachments": "Adjuntos",
     "type": "Tipo",
     "createdByGender": "Creado por género",
-    "data": "Datos",
-    "number": "Número"
+    "data": "Datos"
   },
   "filters": {
     "all": "Todos",
     "posts": "Entradas",
-    "updates": "Actualizaciones"
+    "updates": "Actualizaciones",
+    "notes": "Notas",
+    "emails": "Correos electrónicos"
   },
   "options": {
     "type": {

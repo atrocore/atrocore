@@ -35,7 +35,16 @@
     "smtpUsername": "Nazwa użytkownika SMTP",
     "smtpPassword": "Hasło SMTP",
     "outboundEmailFromName": "Nazwa nadawcy",
-    "outboundEmailFromAddress": "Adres nadawcy"
+    "outboundEmailFromAddress": "Adres nadawcy",
+    "smtpOauthAuthorizeUrl": "Adres URL autoryzacji Oauth",
+    "smtpOauthTokenUrl": "Adres URL tokenu Oauth",
+    "smtpClientId": "Identyfikator klienta",
+    "smtpClientSecret": "Tajemnica klienta",
+    "smtpAuthType": "Typ autoryzacji",
+    "dsn": "Dsn",
+    "headers": "Nagłówki",
+    "smtpOauthScope": "Zakres OAuth",
+    "server": "Serwer SMTP"
   },
   "labels": {
     "connectionSuccess": "Połączenie zostało pomyślnie ustanowione",
@@ -58,11 +67,22 @@
     "receipts": "Paragony",
     "price-reduction": "Obniżka cen",
     "oauth1": "OAuth 1.0",
-    "smtp": "SMTP"
+    "smtp": "SMTP",
+    "sendTestEmail": "Proszę wysłać testową wiadomość e-mail",
+    "pdoSql": "PDO SQL",
+    "vertica": "Vertica DB",
+    "tokenAuthApi": "Token Auth API"
   },
   "exceptions": {
     "sqlsrvMissing": "Rozszerzenie PHP MSSQL nie jest zainstalowane.",
     "connectionFailed": "Nie można nawiązać połączenia: %s",
-    "noSuchType": "Brak takiego typu połączenia."
+    "noSuchType": "Brak takiego typu połączenia.",
+    "notificationConnectionCannotBeDeleted": "To połączenie jest używane do powiadomień e-mail i nie można go usunąć."
+  },
+  "options": {
+    "smtpAuthType": {
+      "basic": "Podstawowy",
+      "oauth": "Oauth"
+    }
   }
 }

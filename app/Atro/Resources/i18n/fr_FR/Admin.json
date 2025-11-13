@@ -4,7 +4,6 @@
     "FileTypes": "Types de fichiers",
     "Folders": "Dossiers",
     "GeneralSetting": "Paramètres généraux",
-    "UiHandler": "Gestionnaires d'interface utilisateur",
     "multiLanguagesSettings": "Langues",
     "multiLanguages": "Langues",
     "Composer": "Modules",
@@ -21,7 +20,7 @@
     "Locale": "Local",
     "Clear Cache": "Vider le cache du système",
     "clearCacheTooltip": "Cache créé à",
-    "rebuildDb": "Reconstruire la base de données",
+    "rebuildDb": "Reconstruction de la base de données",
     "Teams": "Les équipes",
     "Roles": "Rôles",
     "Account": "Gestion des comptes",
@@ -39,8 +38,6 @@
     "Ready for installation": "Prêt pour l'installation",
     "Uninstalling...": "Désinstallation...",
     "Notifications": "Notifications",
-    "Enabled": "Activé",
-    "Disabled": "Désactivée",
     "FileManagement": "Gestion des fichiers",
     "AccessManagement": "Gestion de l'accès",
     "Users": "Utilisateurs",
@@ -69,7 +66,20 @@
     "emailTemplates": "Modèles d'e-mails",
     "notificationTemplates": "Modèles de notification",
     "notificationProfiles": "Profils de notification",
-    "layoutProfiles": "Profils de mise en page"
+    "layoutProfiles": "Profils de mise en page",
+    "apiRequest": "Demande d'API",
+    "style": "Styles",
+    "incomingWebhook": "Webhooks entrants",
+    "matchings": "Matchs",
+    "ThumbnailTypes": "Types de vignettes",
+    "rebuildDbWarning": "La structure de la base de données a été modifiée. Une reconstruction est nécessaire pour assurer le bon fonctionnement de la base de données.",
+    "updatesAvailable": "De nouvelles mises à jour sont disponibles !",
+    "Maintenance": "Maintenance",
+    "Selected": "Sélectionné",
+    "Available": "Disponible",
+    "upsert": "Upsert",
+    "execute": "Exécuter",
+    "status": "Statut"
   },
   "fieldTypes": {
     "datetime": "Date et heure",
@@ -117,7 +127,7 @@
   },
   "fields": {
     "type": "Type",
-    "name": "Nom",
+    "name": "Code",
     "link": "Lien",
     "translation": "Traduction",
     "defaultType": "Type par défaut",
@@ -137,7 +147,10 @@
     "label": "Étiquette",
     "fontSize": "Taille de la police",
     "defaultDate": "Défaut",
-    "field": "Champ"
+    "field": "Champ",
+    "request": "Demande",
+    "response": "Réponse",
+    "allowFileTypes": "Autoriser les types de fichiers"
   },
   "messages": {
     "thousandSeparatorEqualsDecimalMark": "Le séparateur de milliers ne peut pas être le même que le séparateur de décimales.",
@@ -145,7 +158,7 @@
     "selectEntityType": "Sélectionnez le type d'entité dans le menu de gauche.",
     "selectLayout": "Sélectionnez la mise en page dans le menu de gauche et modifiez-la.",
     "incorrectThousandSeparatorOrDecimalMark": "Seuls les délimiteurs suivants sont autorisés : '.' et ','.",
-    "rebuildDb": "Êtes-vous sûr de vouloir reconstruire la structure de la base de données ? Toutes les colonnes et tables inutilisées seront supprimées."
+    "rebuildDb": "Les changements qui seront appliqués à votre base de données lorsque vous cliquerez sur le bouton \"Appliquer\" sont énumérés ci-dessous. Certaines données peuvent être incompatibles avec la nouvelle version du logiciel et être perdues. Cette action est irréversible."
   },
   "descriptions": {
     "Storage": "Gérer les emplacements physiques de tous les fichiers téléchargés (système de fichiers local, Microsoft Sharepoint, Amazon S3, etc.)",
@@ -165,33 +178,30 @@
     "roles": "Gérer les rôles - définir les autorisations de création, de lecture, d'écriture et de suppression des enregistrements, définir les niveaux d'accès (propre, lié à l'équipe ou à tous les enregistrements) pour toutes les entités du système, définir des autorisations spécifiques pour des champs particuliers.",
     "outboundEmails": "Définissez les paramètres du serveur SMTP pour les courriers électroniques sortants.",
     "layoutManager": "Gérer les présentations standard du système pour l'affichage des listes (latérales), l'affichage des détails (latéraux), les panneaux de relation et leur ordre de tri, la mise à jour en masse, etc.",
-    "entityManager": "Configurez votre modèle de données - gérez les entités préconfigurées et créez de nouvelles entités de différents types (base, hiérarchie), gérez leurs configurations, les champs de différents types (plus de 20 types de champs sont disponibles) et les relations (plusieurs-à-plusieurs, un-à-plusieurs, plusieurs-à-un) entre les entités, et définissez des conditions logiques dynamiques pour rendre les champs visibles, en lecture seule ou obligatoires.",
-    "userInterface": "Sélectionnez votre thème, configurez les éléments de navigation principaux, les tableaux de bord et les entités par défaut, disponibles pour une création rapide, et gérez d'autres paramètres pour les interfaces utilisateur.",
+    "entityManager": "Configurez votre modèle de données en gérant les entités existantes et en en créant de nouvelles. Gérez et créez des champs et des relations entre les entités.",
+    "userInterface": "Sélectionnez votre style CSS, configurez les éléments de navigation principaux, les tableaux de bord et les entités par défaut, disponibles pour une création rapide, et gérez d'autres paramètres pour les interfaces utilisateur.",
     "authTokens": "Examinez les sessions d'autorisation actives, y compris l'adresse IP des utilisateurs ainsi que la date et l'heure du dernier accès.",
     "authentication": "Gérer les méthodes et les paramètres d'authentification.",
     "notifications": "Gérez les paramètres des notifications in-app et par courriel.",
     "actionHistory": "Consultez l'historique de toutes les actions des utilisateurs dans le système, y compris le nom d'utilisateur, l'enregistrement de données cibles, le type d'action, l'adresse IP, la date et l'heure d'accès.",
     "labelManager": "Gérez les traductions des étiquettes pour les langues présélectionnées, envoyez vos traductions pour révision par l'équipe d'AtroCore et réinitialisez vos traductions aux valeurs par défaut.",
     "authLog": "Consultez l'historique des connexions.",
-    "accounts": "Gérer les comptes",
-    "contacts": "Gérer les contacts",
-    "addresses": "Gérer les adresses",
-    "currency": "Configurer les devises à utiliser",
+    "accounts": "Représente les entités commerciales telles que les clients, les fournisseurs ou les partenaires, utilisées pour gérer les relations et les transactions au sein du système.",
+    "contacts": "Enregistrez les personnes individuelles associées aux comptes, y compris leurs rôles et les détails de communication pour l'interaction et la coordination.",
+    "addresses": "Sont des détails structurés sur la localisation pour les comptes, permettant une identification, une facturation et des opérations d'expédition précises.",
+    "currency": "Définissez les devises utilisées dans le système pour la fixation des prix, les transactions et les autres opérations financières.",
     "lists": "Gérez vos listes et leurs options pour les listes simples ou multivaluées.",
     "notificationProfiles": "Configurez les profils et les règles de notification pour rationaliser efficacement votre processus de gestion des alertes afin qu'elles soient opportunes et pertinentes.",
     "emailTemplates": "Gérer les modèles de courrier électronique pour l'envoi manuel ou automatisé de courriels (pas pour les notifications standard).",
     "notificationTemplates": "Gérer le modèle de notification standard du système.",
-    "layoutProfiles": "Gérer et personnaliser les différentes configurations de l'interface utilisateur du système"
-  },
-  "options": {
-    "outputType": {
-      "text": "Texte",
-      "int": "Entier",
-      "float": "Flottant",
-      "bool": "Booléen",
-      "date": "Date",
-      "datetime": "Date et heure"
-    }
+    "layoutProfiles": "Gérer et personnaliser les différentes configurations de l'interface utilisateur du système",
+    "matchings": "Les correspondances permettent d'identifier les enregistrements similaires entre les entités à l'aide de règles définies par l'utilisateur.",
+    "incomingWebhook": "Les crochets Web entrants vous permettent de déclencher des actions prédéfinies via des requêtes HTTP externes, avec des options de sécurité telles que la vérification du hachage et la liste blanche des adresses IP.",
+    "thumbnailTypes": "Gérer les types de vignettes pour modifier la largeur ou la hauteur d'une vignette, ou pour en créer une nouvelle.",
+    "scheduledJob": "Gérer les travaux programmés du système.",
+    "jobs": "Gérer les tâches du système qui s'exécutent en arrière-plan sans interaction directe avec l'utilisateur.",
+    "apiRequest": "Utilisez cette fonction pour créer rapidement des structures de données complexes telles que des flux d'importation ou d'exportation configurés.",
+    "style": "Créez, mettez à jour et personnalisez de nouveaux styles afin d'apporter des ajustements aux feuilles de style standard."
   },
   "logicalOperators": {
     "and": "ET",
@@ -199,10 +209,13 @@
     "not": "PAS"
   },
   "layouts": {
-    "relationships": "Panneaux de liaison",
+    "relationships": "Relations avec le public",
     "list": "Liste",
     "detail": "Détails",
     "massUpdate": "Mise à jour des masses",
-    "kanban": "Kanban"
+    "kanban": "Kanban",
+    "leftSidebar": "Vue du côté gauche",
+    "rightSideView": "Vue latérale droite",
+    "upload": "Télécharger"
   }
 }

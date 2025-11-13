@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "classification": "Классификация",
+    "attribute": "Атрибут",
+    "isRequired": "Обязательно",
+    "isReadOnly": "Только для чтения",
+    "isProtected": "Защищенный",
+    "maxLength": "Максимальная длина",
+    "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
+    "value": "Значение по умолчанию",
+    "valueFrom": "Значение по умолчанию От",
+    "valueTo": "Значение по умолчанию К",
+    "varcharValue": "Значение по умолчанию: Строка",
+    "referenceValue": "Значение по умолчанию: Ссылка",
+    "textValue": "Значение по умолчанию: Текст",
+    "intValue": "Значение по умолчанию: Целое число",
+    "floatValue": "Значение по умолчанию: Плавающий",
+    "dateValue": "Значение по умолчанию: Дата",
+    "datetimeValue": "Значение по умолчанию: Дата-время",
+    "boolValue": "Значение по умолчанию: Булево",
+    "min": "Мин",
+    "max": "Макс",
+    "enableConditionalRequired": "Требуется включение",
+    "enableConditionalVisible": "Включить видимость",
+    "enableConditionalReadOnly": "Включить Только для чтения",
+    "enableConditionalProtected": "Включить Защищено",
+    "enableConditionalDisableOptions": "Включить Отключенные опции",
+    "conditionalRequired": "Обязательно",
+    "conditionalVisible": "Видимый",
+    "conditionalReadOnly": "Только для чтения",
+    "conditionalProtected": "Защищенный",
+    "conditionalDisableOptions": "Отключенные опции"
+  },
+  "labels": {
+    "classificationAttribute": "Атрибут из классификации",
+    "unlinkRelatedAttribute": "Удаляйте и сохраняйте для записей",
+    "cascadeUnlinkRelatedAttribute": "Удаление и выбор записей",
+    "conditionalProperties": "Условные свойства"
+  },
+  "options": {
+    "scope": {
+      "Global": "Глобальный",
+      "Channel": "Канал"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Атрибут '%s' был связан не со всеми выбранными каналами.",
+    "unlinkRelatedAttribute": "Вы уверены, что хотите удалить выбранный атрибут из выбранной Классификации? Все связанные записи сохранят этот атрибут.",
+    "cascadeUnlinkRelatedAttribute": "Вы уверены, что хотите удалить выбранный атрибут из выбранной Классификации и связанных с ней записей? Все связанные с ним значения атрибутов также будут удалены.",
+    "removeRelatedAttributeGroup": "Вы уверены, что хотите удалить все атрибуты для выбранной группы атрибутов из выбранной Классификации? Все связанные записи сохранят эти атрибуты.",
+    "removeRelatedAttributeGroupCascade": "Вы уверены, что хотите удалить все атрибуты для выбранной группы атрибутов из выбранной Классификации и связанных с ней записей? Все связанные значения атрибутов также будут удалены."
+  }
+}

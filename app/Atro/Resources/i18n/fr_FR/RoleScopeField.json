@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "name": "Champ",
+    "roleScope": "Champ d'application",
+    "readAction": "Lire",
+    "editAction": "Éditer"
+  }
+}

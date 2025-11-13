@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Název skupiny",
+    "description": "Popis",
+    "code": "Kód",
+    "isActive": "Aktivní",
+    "attributes": "Atributy",
+    "sortOrder": "Pořadí řazení"
+  },
+  "messages": {
+    "unlinkAttributeGroupConfirmation": "Jste si jisti, že chcete zrušit propojení všech atributů skupiny atributů?"
+  },
+  "exceptions": {
+    "attributeGroupSsLinkedWithAttributes": "Skupina atributů je propojena s atributem (atributy). Nejprve zrušte propojení atributů.",
+    "entityIsUsed": "Skupinu atributů nelze odstranit, protože se používá v několika atributech."
+  }
+}

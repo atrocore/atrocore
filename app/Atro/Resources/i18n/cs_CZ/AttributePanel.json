@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "attributes": "Atributy",
+    "default": "Výchozí"
+  },
+  "exceptions": {
+    "entityIsUsed": "Atribut Panel nelze odstranit, protože se používá v několika atributech."
+  }
+}

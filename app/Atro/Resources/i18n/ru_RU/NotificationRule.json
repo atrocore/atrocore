@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "description": "Описание",
+    "entity": "Сущность",
+    "notificationProfile": "Профиль уведомлений",
+    "occurrence": "Событие",
+    "isActive": "Активные",
+    "ignoreSelfAction": "Игнорируйте собственные действия",
+    "asOwner": "В качестве владельца",
+    "asFollower": "Как последователь",
+    "asAssignee": "В качестве Правоприобретателя",
+    "asTeamMember": "Как член команды",
+    "asNotificationProfile": "Как пользователь профиля уведомлений",
+    "emailActive": "Уведомление по электронной почте",
+    "systemActive": "Системное уведомление",
+    "emailTemplateId": "Шаблон электронной почты",
+    "systemTemplateId": "Шаблон системы"
+  },
+  "options": {
+    "occurrence": {
+      "creation": "Создать",
+      "updating": "Обновить",
+      "linking": "Ссылка",
+      "unlinking": "Убрать ссылку",
+      "deletion": "Удалить",
+      "note_created": "Создайте заметку",
+      "note_updated": "Примечание к обновлению",
+      "note_deleted": "Удалить заметку",
+      "ownership_assignment": "Установите владельца/назначенного пользователя",
+      "unlinking_ownership_assignment": "Неустановленный владелец/назначенный пользователь",
+      "mentioned": "Упомяните"
+    }
+  },
+  "labels": {
+    "Notify User": "Уведомить пользователя",
+    "Transport": "Транспорт"
+  }
+}

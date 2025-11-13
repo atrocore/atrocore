@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "name": "Pole",
+    "roleScope": "Rozsah",
+    "readAction": "Přečtěte si",
+    "editAction": "Upravit"
+  }
+}

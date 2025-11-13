@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "width": "Šířka (%)",
+    "widthPx": "Šířka (px)",
+    "link": "Odkaz",
+    "notSortable": "Nelze třídit",
+    "align": "Zarovnat",
+    "panelName": "Název panelu",
+    "style": "Styl",
+    "sticked": "Nalepený",
+    "isLarge": "Velká velikost písma",
+    "cssStyle": "Styly CSS",
+    "hiddenPerDefault": "Skryté ve výchozím nastavení"
+  },
+  "options": {
+    "align": {
+      "left": "Vlevo",
+      "right": "Vpravo",
+      "center": "Středisko"
+    },
+    "style": {
+      "default": "Výchozí",
+      "success": "Úspěch",
+      "danger": "Nebezpečí",
+      "info": "Informace",
+      "warning": "Varování",
+      "primary": "Primární"
+    }
+  },
+  "labels": {
+    "New panel": "Nový panel",
+    "Layout": "Rozložení",
+    "Current Layout": "Aktuální rozložení",
+    "reset": "Obnovení rozložení",
+    "fullEdit": "Úplná úprava",
+    "resetToSystem": "Obnovení rozložení systému",
+    "layoutManagement": "Správa rozložení",
+    "layoutSelection": "Výběr rozvržení",
+    "layoutCustomization": "Přizpůsobení rozvržení",
+    "configure": "Konfigurace"
+  }
+}

@@ -5,7 +5,11 @@
     "phoneNumber": "Teléfono",
     "description": "Descripción",
     "type": "tipo",
-    "role": "papel"
+    "role": "papel",
+    "addresses": "Direcciones",
+    "contacts": "Contactos",
+    "number": "Número",
+    "language": "Idioma"
   },
   "options": {
     "type": {
@@ -16,5 +20,8 @@
       "supplier": "Proveedor",
       "customer": "Cliente"
     }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "La dirección predeterminada para la Cuenta ya existe."
   }
 }

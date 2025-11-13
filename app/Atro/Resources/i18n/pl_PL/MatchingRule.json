@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Dopasowanie",
+    "weight": "Waga",
+    "sourceField": "Pole źródłowe",
+    "targetField": "Pole docelowe",
+    "stagingEntity": "Podmiot etapowy",
+    "masterEntity": "Podmiot główny",
+    "matchingRuleSet": "Zestaw",
+    "matchingRules": "Zasady dopasowywania",
+    "operator": "Operator"
+  },
+  "options": {
+    "type": {
+      "equal": "Równość",
+      "like": "Na przykład",
+      "contains": "Zawiera",
+      "set": "Zestaw"
+    },
+    "operator": {
+      "and": "ORAZ",
+      "or": "LUB"
+    }
+  }
+}

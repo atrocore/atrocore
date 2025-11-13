@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "active": "Aktivní",
+    "available": "Dostupné na",
+    "validTill": "Platnost do",
+    "allowedUsage": "Povolené použití",
+    "used": "Použité",
+    "link": "Odkaz",
+    "viewLink": "Odkaz pro prohlížení"
+  }
+}

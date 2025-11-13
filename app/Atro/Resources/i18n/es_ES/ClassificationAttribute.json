@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "classification": "Clasificación",
+    "attribute": "Atributo",
+    "isRequired": "Required",
+    "isReadOnly": "Sólo lectura",
+    "isProtected": "Protegido",
+    "maxLength": "Longitud máxima",
+    "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",
+    "value": "Valor por defecto",
+    "valueFrom": "Valor por defecto Desde",
+    "valueTo": "Valor por defecto A",
+    "varcharValue": "Valor por defecto: Cadena",
+    "referenceValue": "Valor por defecto: Referencia",
+    "textValue": "Valor por defecto: Texto",
+    "intValue": "Valor por defecto: Entero",
+    "floatValue": "Valor por defecto: Flotante",
+    "dateValue": "Valor por defecto: Fecha",
+    "datetimeValue": "Valor por defecto: Fecha-hora",
+    "boolValue": "Valor por defecto: Booleano",
+    "min": "Min",
+    "max": "Max",
+    "enableConditionalRequired": "Habilitación requerida",
+    "enableConditionalVisible": "Activar Visible",
+    "enableConditionalReadOnly": "Activar Sólo lectura",
+    "enableConditionalProtected": "Activar Protegido",
+    "enableConditionalDisableOptions": "Activar opciones desactivadas",
+    "conditionalRequired": "Required",
+    "conditionalVisible": "Visible",
+    "conditionalReadOnly": "Sólo lectura",
+    "conditionalProtected": "Protegido",
+    "conditionalDisableOptions": "Opciones para discapacitados"
+  },
+  "labels": {
+    "classificationAttribute": "Atributo de la clasificación",
+    "unlinkRelatedAttribute": "Borrar y conservar para registros",
+    "cascadeUnlinkRelatedAttribute": "Borrar y de registros",
+    "conditionalProperties": "Propiedades condicionales"
+  },
+  "options": {
+    "scope": {
+      "Global": "Global",
+      "Channel": "Canal"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "El atributo '%s' no se ha vinculado para todos los canales elegidos.",
+    "unlinkRelatedAttribute": "¿Está seguro de que desea eliminar el Atributo seleccionado de la Clasificación seleccionada? Todos los registros relacionados conservarán este Atributo.",
+    "cascadeUnlinkRelatedAttribute": "¿Está seguro de que desea eliminar el atributo seleccionado de la Clasificación seleccionada y sus registros relacionados? También se eliminarán todos los valores de atributo relacionados.",
+    "removeRelatedAttributeGroup": "¿Está seguro de que desea eliminar todos los Atributos del Grupo de Atributos seleccionado de la Clasificación seleccionada? Todos los registros relacionados conservarán estos Atributos.",
+    "removeRelatedAttributeGroupCascade": "¿Está seguro de que desea eliminar todos los atributos del Grupo de Atributos seleccionado de la Clasificación seleccionada y sus registros relacionados? También se eliminarán todos los Valores de Atributo relacionados."
+  }
+}

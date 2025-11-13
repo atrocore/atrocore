@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "buyer": "Kupující",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "street": "Ulice",
+    "zip": "ZIP",
+    "box": "Box",
+    "city": "Město",
+    "country": "Země",
+    "type": "Typ",
+    "account": "Účet",
+    "contactName": "Kontaktní jméno",
+    "name": "Název společnosti",
+    "prospect": "Vyhlídky",
+    "accounts": "Účty",
+    "contacts": "Kontakty"
+  },
+  "options": {
+    "type": {
+      "billing": "Fakturace",
+      "delivery": "Dodávka"
+    }
+  }
+}

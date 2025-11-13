@@ -5,7 +5,9 @@
     "weekStart": "Premier jour de la semaine",
     "timeFormat": "Format de l'heure",
     "thousandSeparator": "Mille séparateurs",
-    "decimalMark": "Point décimal"
+    "decimalMark": "Point décimal",
+    "languageCode": "Code langue",
+    "fallbackLanguageCode": "Code de la langue de secours"
   },
   "labels": {
     "sunday": "Dimanche",

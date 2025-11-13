@@ -3,5 +3,12 @@
     "code": "Код",
     "files": "Файлы",
     "storages": "Хранилища"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "Хранилище папок не может быть изменено.",
+    "folderCreateFailed": "Не удалось создать папку.",
+    "folderRenameFailed": "Не удалось переименовать папку.",
+    "folderMoveFailed": "Перемещение папки не удалось.",
+    "folderDeleteFailed": "Удаление папки не удалось."
   }
 }

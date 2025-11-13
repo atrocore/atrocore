@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "Encja",
+    "description": "Description",
+    "release": "Zwolnienie",
+    "synonyms": "Synonimy",
+    "code": "Kod",
+    "isActive": "Aktywny",
+    "classifications": "Klasyfikacje",
+    "classificationAttributes": "Atrybuty klasyfikacji",
+    "type": "Type"
+  },
+  "options": {
+    "type": {
+      "general": "Ogólne"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Proszę wybrać grupę atrybutów"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
+    "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego Podmiotu.",
+    "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta."
+  }
+}

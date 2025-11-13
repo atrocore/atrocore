@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Nombre del grupo",
+    "description": "Descripción",
+    "code": "Código",
+    "isActive": "Activo",
+    "attributes": "Atributos",
+    "sortOrder": "ordenar Orden"
+  },
+  "messages": {
+    "unlinkAttributeGroupConfirmation": "¿Está seguro de que desea desvincular todos los atributos del grupo de atributos?"
+  },
+  "exceptions": {
+    "attributeGroupSsLinkedWithAttributes": "El grupo de atributos está vinculado con atributo(s). Por favor, desvincule primero el atributo(s)",
+    "entityIsUsed": "El Grupo de Atributos no se puede eliminar porque se utiliza en varios Atributos."
+  }
+}

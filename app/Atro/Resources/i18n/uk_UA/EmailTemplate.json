@@ -1,7 +1,8 @@
 {
   "fields": {
     "subject": "Тема",
-    "body": "Тіло"
+    "body": "Тіло",
+    "isHtml": "HTML"
   },
   "labels": {
     "send": "Надіслати"

@@ -1,0 +1,92 @@
+{
+  "fields": {
+    "name": "Имя в единственном числе",
+    "namePlural": "Имя во множественном числе",
+    "disabled": "Отключено",
+    "customizable": "Настраиваемый",
+    "hasArchive": "Архивируемый",
+    "hasActive": "Активируемый",
+    "hideFieldTypeFilters": "Скрыть фильтры типов полей",
+    "streamDisabled": "Отключить деятельность",
+    "iconClass": "Иконка",
+    "sortBy": "Поле заказа по умолчанию",
+    "sortDirection": "Направление заказа по умолчанию",
+    "statusField": "Поле состояния",
+    "kanbanViewMode": "Представление Kanban",
+    "kanbanStatusIgnoreList": "Игнорируемые списки в Kanban View",
+    "deleteWithoutConfirmation": "Удалить без подтверждения",
+    "autoDeleteAfterDays": "Период автоматического удаления, в днях",
+    "clearDeletedAfterDays": "Период постоянного удаления, дней",
+    "modifiedExtendedRelations": "Отношения, влияющие на дату/время модификации",
+    "duplicatableRelations": "Дублирующиеся отношения",
+    "hasAssignedUser": "Включить назначенного пользователя",
+    "hasTeam": "Обеспечьте командам возможность",
+    "hasOwner": "Включить владельца",
+    "multiParents": "Несколько родителей",
+    "dragAndDrop": "Перетяните",
+    "fieldValueInheritance": "Наследование значений полей",
+    "unInheritedFields": "Не унаследованные поля",
+    "relationInheritance": "Наследование отношений",
+    "unInheritedRelations": "Ненаследственные отношения",
+    "fields": "Поля",
+    "auditedDisabledFields": "Отсутствие регистрации активности полей",
+    "auditedEnabledRelations": "Запись активности в журнале для отношений",
+    "hasAttribute": "Имеет атрибуты",
+    "hasClassification": "Имеет классификации",
+    "singleClassification": "Только одиночная классификация",
+    "disableAttributeLinking": "Отключите прямое связывание атрибутов",
+    "hasAssociate": "Has Associates",
+    "textFilterFields": "Поля текстового фильтра",
+    "nonDuplicatableFields": "Не дублирующиеся поля",
+    "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
+    "checkForDuplicates": "Проверьте наличие дубликатов",
+    "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически"
+  },
+  "options": {
+    "type": {
+      "Base": "База",
+      "Hierarchy": "Иерархия",
+      "ReferenceData": "Ссылка",
+      "Archive": "Архив"
+    },
+    "sortDirection": {
+      "asc": "Восходящий",
+      "desc": "Спуск"
+    }
+  },
+  "labels": {
+    "accessManagement": "Управление доступом",
+    "hierarchyManagement": "Управление иерархией",
+    "other": "Другие",
+    "resetToDefault": "Восстановить настройки по умолчанию",
+    "attributes": "Атрибуты"
+  },
+  "confirmations": {
+    "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "Записи для этой организации удаляются навсегда через XX дней после даты удаления.",
+    "autoDeleteAfterDays": "Записи об этой организации удаляются через XX дней после даты последнего изменения.",
+    "disabled": "Проверьте, не нужна ли Вам эта сущность в Вашей системе.",
+    "statusField": "Обновления этого поля регистрируются в разделе \"Деятельность\".",
+    "deleteWithoutConfirmation": "Если флажок установлен, отдельная запись удаляется без подтверждения пользователя. Удаление нескольких записей еще нужно подтвердить.",
+    "modifiedExtendedRelations": "Изменения в этих отношениях приведут к обновлению даты и времени \"Modified At\".",
+    "dragAndDrop": "Эта опция активирует иерархический порядок сортировки. Это означает, что никакая другая сортировка в иерархической навигации невозможна.",
+    "unInheritedFields": "Значения этих полей не наследуются от родительского элемента.",
+    "unInheritedRelations": "Отношения с этими сущностями не наследуются от родительского элемента.",
+    "hasAssignedUser": "Включите назначение пользователя для управления доступом.",
+    "hasTeam": "Включите Команды для управления доступом.",
+    "hasOwner": "Включите владельца для управления доступом.",
+    "streamDisabled": "Если флажок установлен, на странице Сведения о записи не будет отображаться панель Действия. Вы не сможете добавлять заметки.",
+    "disableActionHistory": "Если флажок установлен, никакие действия пользователя над записями этой сущности не будут регистрироваться.",
+    "auditedDisabledFields": "Изменения в этих полях не отображаются как Активность.",
+    "auditedEnabledRelations": "Изменения в этих отношениях отображаются как Активность.",
+    "linkAttributesWithClassificationAutomatically": "Если атрибут напрямую связан с записью, а эта запись связана с классификацией, то атрибут также будет связан с этой классификацией."
+  },
+  "exceptions": {
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} и {children} не должны быть оба в Отношениях, влияющих на дату/время изменения",
+    "entityAlreadyHasAttributesInUse": "Параметр \"Имеет атрибут\" не может быть деактивирован. Пожалуйста, сначала удалите все связанные с ним атрибуты.",
+    "entityHasDirectlyLinkedAttributes": "Уже есть атрибуты, связанные напрямую. Пожалуйста, удалите их из записей.",
+    "entityTypeIsNotSuitableForAssociates": "Этот тип сущности не может содержать параметр \"Has Associates\". Только \"Base\" и \"Hierarchy\" могут иметь его."
+  }
+}

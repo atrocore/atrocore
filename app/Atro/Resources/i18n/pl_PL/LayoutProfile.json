@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "isActive": "Aktywny",
+    "isDefault": "Domyślny",
+    "description": "Description",
+    "hideShowFullList": "Ukryj \"Pokaż pełną listę\" w panelach relacji",
+    "layouts": "Układy",
+    "parent": "Profil układu rodzica",
+    "navigation": "Menu nawigacji",
+    "favoritesList": "Ulubione",
+    "dashboardLayout": "Układ pulpitu nawigacyjnego"
+  },
+  "labels": {
+    "addGroup": "Dodaj grupę",
+    "Menu": "Menu",
+    "Dashboards": "Pulpity",
+    "Favorites": "Ulubione"
+  },
+  "exceptions": {
+    "defaultIsRequired": "W systemie powinien istnieć domyślny profil układu"
+  },
+  "messages": {
+    "profileWillBeNewDefault": "Ten profil będzie nowym domyślnym, jest Pan pewien?",
+    "navigationUpdate": "Menu nawigacji zostało dostosowane przez system."
+  },
+  "boolFilters": {
+    "withLayouts": "Z zapisanym układem"
+  }
+}

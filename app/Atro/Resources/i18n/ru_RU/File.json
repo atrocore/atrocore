@@ -9,21 +9,31 @@
     "preview": "Предварительный просмотр",
     "hash": "Hash",
     "fileSize": "Размер файла (байт)",
-    "fileMtime": "Дата модификации файла"
+    "fileMtime": "Дата модификации файла",
+    "url": "URL",
+    "uploadUrl": "URL",
+    "width": "Ширина",
+    "height": "Высота",
+    "size": "Размер",
+    "colorSpace": "Цветовое пространство"
   },
   "labels": {
     "Preview": "Предварительный просмотр",
     "Upload": "Загрузить",
     "retry": "Повторить попытку?",
     "uploaded": "загружено",
-    "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу"
+    "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу",
+    "zipDownloadNotification": "Вы можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачать</a> zip-файл.",
+    "Share": "Поделиться"
   },
   "messages": {
     "notAllFilesWereUploaded": "Файлы XX из YY не были загружены.",
     "fileCouldNotBeUploaded": "Не удалось загрузить файл.",
     "fileHasDuplicate": "Уже существует как минимум один <a target=\"_blank\" href=\"/#File/view/{{id}}\">дубликат</a> этого файла.",
     "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса.",
-    "urlExpected": "Был указан неверный URL-адрес"
+    "urlExpected": "Был указан неверный URL-адрес",
+    "fileExtensionCorrectedAutomatically": "Расширение файла было исправлено автоматически.",
+    "downloadJobsCreated": "Создано задание для подготовки Вашего zip-файла"
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Расширение файла изменить нельзя.",
@@ -31,7 +41,9 @@
     "fileFolderCannotBeChanged": "Папка файла не может быть изменена.",
     "fileCreateFailed": "Не удалось создать файл.",
     "fileRenameFailed": "Не удалось переименовать файл.",
-    "fileDeleteFailed": "Не удалось удалить файл.",
-    "fileNameNotValidByUserRegex": "Имя файла не является действительным. Оно должно соответствовать регексу '%s'."
+    "fileDeleteFailed": "Удаление файла не удалось.",
+    "fileNameNotValidByUserRegex": "Имя файла не является действительным. Оно должно соответствовать регексу '%s'.",
+    "fileMoveFailed": "Не удалось переместить файл.",
+    "notAllowToFileWithEntity": "Вам не разрешено связывать файл типа '%s' с '%s'. Единственные разрешенные типы - это '%s'"
   }
 }

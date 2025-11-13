@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Odpovídající",
+    "weight": "Hmotnost",
+    "sourceField": "Zdrojová oblast",
+    "targetField": "Cílové pole",
+    "stagingEntity": "Subjekt etapizace",
+    "masterEntity": "Hlavní subjekt",
+    "matchingRuleSet": "Sada",
+    "matchingRules": "Pravidla porovnávání",
+    "operator": "Operátor"
+  },
+  "options": {
+    "type": {
+      "equal": "Equal",
+      "like": "Stejně jako",
+      "contains": "Obsahuje",
+      "set": "Sada"
+    },
+    "operator": {
+      "and": "A",
+      "or": "NEBO"
+    }
+  }
+}

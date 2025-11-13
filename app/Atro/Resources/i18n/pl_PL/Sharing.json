@@ -1,10 +1,11 @@
 {
-	"fields": {
-		"active": "Aktywny",
-		"available": "Dostępny",
-		"validTill": "Ważne do",
-		"allowedUsage": "Dozwolone użycie",
-		"link": "Link",
-		"viewLink": "Link do podglądu"
-	}
+  "fields": {
+    "active": "Aktywny",
+    "available": "Dostępny",
+    "validTill": "Ważne do",
+    "allowedUsage": "Dozwolone użycie",
+    "link": "Link",
+    "viewLink": "Link do podglądu",
+    "used": "Używany"
+  }
 }

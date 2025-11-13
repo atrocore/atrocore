@@ -5,9 +5,17 @@
     "measure": "Мера",
     "isMain": "По умолчанию",
     "multiplier": "Мультипликатор",
-    "convertTo": "Конвертировать в"
+    "convertTo": "Конвертировать в",
+    "symbol": "Символ",
+    "isActive": "Активные"
   },
   "exceptions": {
-    "defaultIsRequired": "Мера должна иметь единицу измерения по умолчанию."
+    "defaultIsRequired": "Мера должна иметь единицу измерения по умолчанию.",
+    "unitIsUsedOnEntityAttribute": "Единица '%s' используется атрибутом '%s' в %s '%s'.",
+    "unitIsUsed": "Единица '%s' используется полем '%s' в сущности '%s' для записи '%s'.",
+    "unitIsUsedOnClassificationAttribute": "Единица '%s' используется атрибутом '%s' в классификации '%s'."
+  },
+  "labels": {
+    "unitSetDefault": "Установите по умолчанию"
   }
 }

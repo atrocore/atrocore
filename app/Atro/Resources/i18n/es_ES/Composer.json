@@ -3,7 +3,8 @@
     "status": "Status",
     "settingVersion": "Setting Version",
     "currentVersion": "Current Version",
-    "availableVersions": "Available Versions"
+    "availableVersions": "Available Versions",
+    "latestVersion": "Última versión"
   },
   "options": {
     "status": {
@@ -18,7 +19,9 @@
     "suchModuleIsAlreadyInstalled": "Such module is already installed",
     "suchModuleVersionAlreadyInstalled": "Such module version already installed",
     "noSuchModuleVersion": "No such module version",
-    "versionIsInvalid": "Version is invalid"
+    "versionIsInvalid": "Version is invalid",
+    "invalidVersion": "La versión del módulo no es válida.",
+    "downgradeProhibited": "La versión del módulo no es válida. El downgrade está prohibido."
   },
   "labels": {
     "available": "available",
@@ -40,15 +43,20 @@
     "settingModuleForRemoving": "Setting module for removing...",
     "settingModuleForInstalling": "Setting module for installing...",
     "settingModuleForUpdating": "Setting module for updating...",
-    "settedModuleForUpdating": "Module has been set for updating",
-    "cancelingModuleUpdate": "Canceling module update...",
-    "canceledModuleUpdate": "Module update has been canceled",
     "cancelingModuleInstall": "Canceling module install...",
     "canceledModuleInstall": "Module install has been canceled",
     "Log": "Log",
     "confirmRun": "After update action all users would logout from system. Are you sure you want to update you system?",
     "daemonDisabled": "<b>The composer daemon is not running!</b><br>Probably the daemon is reloading now and you should wait a minute or the crontab is not configured. Instructions on how to configure the crontab you can find <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">here</a>.",
-    "showReleaseNotes": "Notas de lanzamiento"
+    "showReleaseNotes": "Notas de lanzamiento",
+    "rentUntil": "Alquilado, actualizaciones hasta",
+    "rented": "Alquilado",
+    "purchasedUntil": "Comprado, actualizaciones hasta",
+    "setModuleForRemoving": "El módulo ha sido configurado para ser eliminado. Pulse el botón \"Actualizar\" para aplicar la instalación o eliminación del módulo.",
+    "setModuleForInstalling": "El módulo ha sido configurado para su instalación. Pulse el botón \"Actualizar\" para aplicar la instalación o eliminación del módulo.",
+    "jobManagerRunning": "La posibilidad de actualizar módulos está bloqueada. Por favor, inténtelo más tarde.",
+    "setModuleForUpdating": "El módulo ha sido configurado para su actualización. Pulse el botón \"Actualizar\" para aplicar la instalación o eliminación del módulo.",
+    "purchased": "Comprado"
   },
   "notifications": {
     "Module update": "Module {module} has been updated. From version {from} to {to}",

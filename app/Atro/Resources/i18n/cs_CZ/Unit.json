@@ -1,0 +1,21 @@
+{
+  "fields": {
+    "name": "Název",
+    "description": "Popis",
+    "measure": "Míra",
+    "isMain": "Hlavní stránka",
+    "multiplier": "Multiplikátor",
+    "convertTo": "Převést na",
+    "symbol": "Symbol",
+    "isActive": "Aktivní"
+  },
+  "labels": {
+    "unitSetDefault": "Nastavit jako výchozí"
+  },
+  "exceptions": {
+    "defaultIsRequired": "Opatření musí mít výchozí jednotku.",
+    "unitIsUsed": "Jednotka \"%s\" je použita polem \"%s\" v entitě \"%s\" pro záznam \"%s\".",
+    "unitIsUsedOnClassificationAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v klasifikaci \"%s\".",
+    "unitIsUsedOnEntityAttribute": "Jednotka \"%s\" je použita atributem \"%s\" v %s \"%s\"."
+  }
+}

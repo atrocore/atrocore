@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "number": "Číslo",
+    "isActive": "Aktivní",
+    "image": "Obrázek",
+    "price": "Cena",
+    "description": "Krátký popis",
+    "longDescription": "Dlouhý popis",
+    "children": "Výrobky pro děti",
+    "parents": "Mateřské produkty",
+    "quantity": "Množství",
+    "mpn": "Číslo výrobce (MPN)",
+    "customsNumber": "Celní číslo",
+    "countryOfOrigin": "Země původu",
+    "defaultSupplier": "Výchozí dodavatel",
+    "note": "Poznámka"
+  },
+  "labels": {
+    "manufacturer": "Výrobce",
+    "other": "Další"
+  }
+}

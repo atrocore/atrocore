@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "accounts": "Účty",
+    "code": "Kód",
+    "discount": "Sleva, %",
+    "discountPercentage": "Sleva, %"
+  }
+}

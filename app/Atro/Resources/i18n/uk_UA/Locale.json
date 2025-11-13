@@ -6,7 +6,8 @@
     "timeFormat": "Формат часу",
     "thousandSeparator": "Тисячний роздільник",
     "decimalMark": "Десятковий роздільник",
-    "measures": "Заходи"
+    "languageCode": "Код мови",
+    "fallbackLanguageCode": "Код резервної мови"
   },
   "labels": {
     "sunday": "Неділя",

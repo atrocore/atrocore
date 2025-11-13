@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "matching": "Passend dazu",
+    "staging": "Inszenierung",
+    "stagingEntity": "Staging-Entität",
+    "stagingEntityId": "Staging Entity ID",
+    "master": "Meister",
+    "masterEntity": "Master-Entität",
+    "masterEntityId": "Master Entity ID",
+    "score": "Ergebnis",
+    "status": "Status"
+  },
+  "options": {
+    "status": {
+      "found": "Gefunden",
+      "confirmed": "Bestätigt",
+      "rejected": "Abgelehnt"
+    }
+  }
+}

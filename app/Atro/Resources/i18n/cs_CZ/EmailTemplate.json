@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "subject": "Předmět",
+    "body": "Tělo",
+    "isHtml": "HTML"
+  },
+  "labels": {
+    "send": "Odeslat"
+  },
+  "exceptions": {
+    "systemTemplatesCannotBeDeleted": "Systémové šablony nelze odstranit",
+    "systemTemplateCodeChanged": "Kód šablony systému nelze změnit"
+  }
+}

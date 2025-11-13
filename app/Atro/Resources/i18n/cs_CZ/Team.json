@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "name": "Název",
+    "roles": "Role",
+    "users": "Uživatelé",
+    "notes": "Poznámky"
+  },
+  "tooltips": {
+    "roles": "Přístupové role. Uživatelé tohoto týmu získají úroveň řízení přístupu z vybraných rolí."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "Entidad",
+    "description": "Descripción",
+    "release": "Libere",
+    "synonyms": "Sinónimos",
+    "code": "Código",
+    "isActive": "Activo",
+    "classifications": "Clasificaciones",
+    "classificationAttributes": "Atributos de clasificación",
+    "type": "Type"
+  },
+  "options": {
+    "type": {
+      "general": "General"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Seleccionar grupo de atributos"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "La entidad no puede modificarse.",
+    "classificationForToAnotherEntity": "La clasificación no puede vincularse con este registro, porque se utiliza para otra Entidad.",
+    "classificationHasRecords": "La clasificación con registros relacionados no puede eliminarse."
+  }
+}

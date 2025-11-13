@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "Název",
+    "scheduling": "Plánování",
+    "jobs": "Úlohy"
+  },
+  "labels": {
+    "executeNow": "Provést nyní"
+  },
+  "exceptions": {
+    "wrongCrontabConfiguration": "Špatná konfigurace crontabu"
+  },
+  "messages": {
+    "jobLaunched": "Pracovní místo bylo vytvořeno",
+    "jobAlreadyExist": "Pracovní místo bylo vytvořeno před méně než minutou"
+  },
+  "options": {
+    "type": {
+      "ClearEntities": "Vymazání odstraněných dat",
+      "ComposerAutoUpdate": "Automatická aktualizace systému",
+      "UpdateCurrencyExchangeViaECB": "Aktualizace směny měn prostřednictvím ECB",
+      "CheckUpdates": "Kontrola aktualizací systému",
+      "ScanStorage": "Skenování úložiště",
+      "FindMatches": "Vyhledávání shod",
+      "CalculateScriptFieldsForEntities": "Výpočet polí skriptu"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Zápis Crontab. Definuje frekvenci spouštění úloh.\n\n*/5 * * * * - každých 5 minut\n\n0 */2 * * * - každé 2 hodiny\n\n30 1 * * * - jednou denně v 01:30 hod.\n\n0 0 1 * * - první den v měsíci"
+  }
+}

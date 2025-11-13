@@ -1,0 +1,92 @@
+{
+  "fields": {
+    "name": "Nazwa pojedyncza",
+    "namePlural": "Liczba mnoga nazwiska",
+    "disabled": "Wyłączony",
+    "customizable": "Możliwość dostosowania",
+    "hasArchive": "Archiwalny",
+    "hasActive": "Możliwość aktywacji",
+    "hideFieldTypeFilters": "Ukryj filtry typu pola",
+    "streamDisabled": "Wyłączanie działań",
+    "iconClass": "Ikona",
+    "sortBy": "Domyślne pole zamówienia",
+    "sortDirection": "Domyślny kierunek zamówienia",
+    "statusField": "Pole statusu",
+    "kanbanViewMode": "Widok Kanban",
+    "kanbanStatusIgnoreList": "Ignorowane listy w widoku Kanban",
+    "deleteWithoutConfirmation": "Usuń bez potwierdzenia",
+    "autoDeleteAfterDays": "Okres automatycznego usuwania, w dniach",
+    "clearDeletedAfterDays": "Okres trwałego usunięcia, dni",
+    "modifiedExtendedRelations": "Relacje wpływające na datę/godzinę modyfikacji",
+    "duplicatableRelations": "Duplikujące się relacje",
+    "hasAssignedUser": "Włącz przypisanego użytkownika",
+    "hasTeam": "Proszę włączyć zespoły",
+    "hasOwner": "Proszę włączyć właściciela",
+    "multiParents": "Wielu rodziców",
+    "dragAndDrop": "Przeciągnij i upuść",
+    "fieldValueInheritance": "Dziedziczenie wartości pola",
+    "unInheritedFields": "Pola niedziedziczone",
+    "relationInheritance": "Dziedziczenie relacji",
+    "unInheritedRelations": "Niedziedziczone relacje",
+    "fields": "Pola",
+    "auditedDisabledFields": "Brak rejestrowania aktywności dla pól",
+    "auditedEnabledRelations": "Rejestr aktywności dla relacji",
+    "hasAttribute": "Posiada atrybuty",
+    "hasClassification": "Posiada klasyfikacje",
+    "singleClassification": "Tylko pojedyncza klasyfikacja",
+    "disableAttributeLinking": "Proszę wyłączyć bezpośrednie łączenie atrybutów",
+    "hasAssociate": "Has Associates",
+    "textFilterFields": "Pola filtra tekstu",
+    "nonDuplicatableFields": "Pola niepowielone",
+    "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
+    "checkForDuplicates": "Proszę sprawdzić duplikaty",
+    "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją"
+  },
+  "options": {
+    "type": {
+      "Base": "Podstawa",
+      "Hierarchy": "Hierarchia",
+      "ReferenceData": "Odniesienie",
+      "Archive": "Archiwum"
+    },
+    "sortDirection": {
+      "asc": "Rosnąco",
+      "desc": "Zstępujący"
+    }
+  },
+  "labels": {
+    "accessManagement": "Zarządzanie dostępem",
+    "hierarchyManagement": "Zarządzanie hierarchią",
+    "other": "Inne",
+    "resetToDefault": "Resetuj do domyślnego",
+    "attributes": "Atrybuty"
+  },
+  "confirmations": {
+    "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "Rekordy dotyczące tego podmiotu są trwale usuwane XX dni po dacie usunięcia.",
+    "autoDeleteAfterDays": "Rekordy dotyczące tego podmiotu są usuwane XX dni po dacie ostatniej zmiany.",
+    "disabled": "Proszę sprawdzić, czy ta jednostka nie jest potrzebna w Państwa systemie.",
+    "statusField": "Aktualizacje tego pola są rejestrowane w Aktywnościach.",
+    "deleteWithoutConfirmation": "Jeśli zaznaczone, pojedynczy rekord zostanie usunięty bez potwierdzenia użytkownika. Usunięcie wielu rekordów wymaga jeszcze potwierdzenia.",
+    "modifiedExtendedRelations": "Zmiany w tych relacjach spowodują aktualizację daty i godziny \"Modified At\".",
+    "dragAndDrop": "Ta opcja aktywuje hierarchiczną kolejność sortowania. Oznacza to, że w nawigacji hierarchicznej nie jest możliwe żadne inne sortowanie.",
+    "unInheritedFields": "Wartości dla tych pól nie będą dziedziczone z elementu nadrzędnego.",
+    "unInheritedRelations": "Relacje z tymi podmiotami nie będą dziedziczone z elementu nadrzędnego.",
+    "hasAssignedUser": "Włącz przypisanego użytkownika dla zarządzania dostępem.",
+    "hasTeam": "Włącz zespoły do zarządzania dostępem.",
+    "hasOwner": "Proszę włączyć właściciela dla zarządzania dostępem.",
+    "streamDisabled": "Jeśli ta opcja jest zaznaczona, na stronie szczegółów rekordu nie będzie wyświetlany panel działań. Nie będzie można dodawać notatek.",
+    "disableActionHistory": "Jeśli zaznaczone, żadne działania użytkownika na rekordach tego podmiotu nie będą rejestrowane.",
+    "auditedDisabledFields": "Zmiany w tych polach nie są wyświetlane jako Aktywność.",
+    "auditedEnabledRelations": "Zmiany w tych relacjach są wyświetlane jako Aktywność.",
+    "linkAttributesWithClassificationAutomatically": "Jeśli atrybut jest bezpośrednio powiązany z rekordem, a ten rekord jest powiązany z klasyfikacją, wówczas atrybut będzie również powiązany z tą klasyfikacją."
+  },
+  "exceptions": {
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{rodzice} i {dzieci} nie powinny znajdować się jednocześnie w relacjach skutkujących datą/godziną modyfikacji.",
+    "entityAlreadyHasAttributesInUse": "Nie można dezaktywować parametru Has Attribute. Proszę najpierw usunąć wszystkie powiązane atrybuty.",
+    "entityHasDirectlyLinkedAttributes": "Istnieją już bezpośrednio powiązane atrybuty. Proszę usunąć je z rekordów.",
+    "entityTypeIsNotSuitableForAssociates": "Ten typ podmiotu nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "languageCode": "Código de idioma",
+    "fallbackLanguageCode": "Código de lengua de reserva",
+    "timeZone": "Zona horaria",
+    "dateFormat": "Formato de fecha",
+    "weekStart": "Primer día de la semana",
+    "timeFormat": "Formato de hora",
+    "thousandSeparator": "Separador de mil",
+    "decimalMark": "Marca decimal"
+  },
+  "labels": {
+    "sunday": "Domingo",
+    "monday": "Lunes"
+  },
+  "exceptions": {
+    "localeIsUsed": "La localización en uso no puede eliminarse."
+  }
+}

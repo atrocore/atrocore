@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "status": "Stav",
+    "executeTime": "Provést v",
+    "pid": "PID",
+    "priority": "Priorita",
+    "handler": "Handler",
+    "payload": "Payload (užitečná data)",
+    "scheduledJob": "Naplánovaná úloha",
+    "message": "Zpráva",
+    "startedAt": "Začínáme v",
+    "endedAt": "Ukončeno v"
+  },
+  "labels": {
+    "cancel": "Zrušit"
+  },
+  "options": {
+    "status": {
+      "Pending": "Čekající",
+      "Success": "Úspěch",
+      "Running": "Běh",
+      "Failed": "Neúspěšný",
+      "Canceled": "Zrušeno",
+      "Awaiting": "Čeká se na",
+      "Closed": "Uzavřeno"
+    }
+  },
+  "tooltips": {
+    "priority": "Vyšší číslo znamená vyšší prioritu"
+  },
+  "exceptions": {
+    "jobIsRunning": "Spuštěnou úlohu nelze odebrat."
+  }
+}

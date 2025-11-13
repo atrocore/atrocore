@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Název",
+    "roles": "Role",
+    "assignmentPermission": "Povolení k přidělení",
+    "dataPrivacyPermission": "Povolení k ochraně osobních údajů",
+    "users": "Uživatelé",
+    "teams": "Týmy",
+    "styleControlPermission": "Ovládání stylu",
+    "scopes": "Rozsahy"
+  },
+  "tooltips": {
+    "assignmentPermission": "Umožňuje omezit možnost přiřazovat záznamy a odesílat zprávy ostatním uživatelům.\n\nall - bez omezení\n\nteam - může přiřazovat a odesílat příspěvky pouze členům týmu\n\nne - lze přiřadit a odeslat pouze sobě",
+    "dataPrivacyPermission": "Umožňuje zobrazit a vymazat osobní údaje."
+  },
+  "labels": {
+    "Access": "Přístup",
+    "Scope Level": "Úroveň rozsahu",
+    "Field Level": "Úroveň pole"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "not-set",
+      "enabled": "povoleno",
+      "disabled": "zakázané"
+    },
+    "levelList": {
+      "all": "všechny",
+      "team": "tým",
+      "account": "účet",
+      "own": "vlastní",
+      "no": "ne",
+      "yes": "ano",
+      "not-set": "not-set"
+    }
+  },
+  "actions": {
+    "read": "Přečtěte si",
+    "edit": "Upravit",
+    "delete": "Odstranit",
+    "stream": "Aktivity",
+    "create": "Vytvořit"
+  },
+  "messages": {
+    "changesAfterClearCache": "Všechny změny v řízení přístupu se použijí po vymazání mezipaměti."
+  }
+}

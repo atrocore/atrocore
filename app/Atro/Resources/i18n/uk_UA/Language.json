@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "role": "Роль"
+  },
+  "options": {
+    "role": {
+      "main": "Основний",
+      "additional": "Додатково"
+    }
+  },
+  "tooltips": {
+    "role": "Виберіть Основна, якщо ви хочете, щоб ця мова була основною для вашого контенту. Додаткову слід використовувати для мов, на які буде перекладено контент."
+  },
+  "exceptions": {
+    "mainLanguageIsAlreadyExists": "Основна мова вже існує.",
+    "roleCannotBeChanged": "Роль не можна змінити.",
+    "codeForAdditionalCannotBeChanged": "Код для додаткової мови не може бути змінений.",
+    "mainLanguageCannotBeRemoved": "Основну мову не можна вилучити."
+  }
+}

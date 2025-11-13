@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "units": "Units",
+    "displayFormat": "Formato de visualización"
+  },
+  "options": {
+    "displayFormat": {
+      "format1": "10€",
+      "format2": "€10"
+    }
+  },
+  "exceptions": {
+    "measureIsUsed": "La medida '%s' es utilizada por el campo '%s' en la Entidad '%s'."
+  }
+}

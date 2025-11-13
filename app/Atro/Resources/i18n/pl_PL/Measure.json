@@ -1,17 +1,17 @@
 {
-	"fields": {
-		"name": "Nazwa",
-		"description": "Opis",
-		"units": "Jednostki",
-		"displayFormat": "Format wyświetlania"
-	},
-	"options": {
-		"displayFormat": {
-			"1": "10€",
-			"2": "€10"
-		}
-	},
-	"exceptions": {
-		"measureIsUsed": "Miarę '%s' używa pole '%s' w jednostce '%s'."
-	}
+  "fields": {
+    "name": "Nazwa",
+    "description": "Opis",
+    "units": "Jednostki",
+    "displayFormat": "Format wyświetlania"
+  },
+  "exceptions": {
+    "measureIsUsed": "Miarę '%s' używa pole '%s' w jednostce '%s'."
+  },
+  "options": {
+    "displayFormat": {
+      "format1": "10€",
+      "format2": "€10"
+    }
+  }
 }

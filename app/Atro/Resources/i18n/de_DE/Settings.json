@@ -23,7 +23,7 @@
     "notificationSoundsDisabled": "Benachrichtigungstöne deaktivieren",
     "applicationName": "Name der Applikation",
     "assignmentEmailNotifications": "E-Mail Benachrichtigungen bei Zuweisungen senden",
-    "streamEmailNotifications": "Benachrichtigungen über Änderungen im Aktivitätenpanel für interne Benutzer",
+    "streamEmailNotifications": "Benachrichtigungen über Aktualisierungen in Aktivitäten für interne Benutzer",
     "mentionEmailNotifications": "Benachrichtigungen für Erwähnungen in Beträgen",
     "aclStrictMode": "ACL Strict-Modus",
     "authTokenPreventConcurrent": "Nur ein Auth Token pro Benutzer",
@@ -39,7 +39,10 @@
     "defaultStyle": "Standard-Stil",
     "customHeadCode": "Head Code",
     "customStylesheetPath": "CSS-Dateipfad",
-    "customStylesheet": "CSS"
+    "customStylesheet": "CSS",
+    "reportingEnabled": "Anonyme Fehlerberichte senden",
+    "currencyRates": "Werte bewerten",
+    "disableEmailDelivery": "E-Mail-Zustellung deaktivieren"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",
@@ -60,7 +63,8 @@
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
     "companyLogo": "Verfügbare Dateitypen: image/jpeg, image/png, image/gif, image/svg+xml",
-    "favicon": "Verfügbarer Dateityp: image/svg+xml"
+    "favicon": "Verfügbarer Dateityp: image/svg+xml",
+    "reportingEnabled": "Anonyme Fehlerberichte werden an AtroCore gesendet, damit Probleme schneller erkannt und gelöst werden können."
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",
@@ -80,7 +84,10 @@
     "Connecting": "Verbinde...",
     "Activities": "Aktivitäten",
     "Theme Configuration": "Theme-Konfiguration",
-    "Custom Code": "Benutzerdefinierter Code"
+    "Custom Code": "Benutzerdefinierter Code",
+    "Representation": "Repräsentation",
+    "System": "System",
+    "SMTP": "SMTP"
   },
   "messages": {
     "languageMustBeSelected": "Mindestens eine Sprache soll ausgewählt werden."

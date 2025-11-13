@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "invalidIP": "Dirección IP no válida: %s",
+    "invalidCode": "Validación fallida: el código debe contener sólo letras, números, guiones bajos o guiones."
+  }
+}

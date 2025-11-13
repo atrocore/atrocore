@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributePanel": "Panel de atributos",
+    "roleScope": "Alcance",
+    "readAction": "Leer",
+    "editAction": "Editar"
+  }
+}

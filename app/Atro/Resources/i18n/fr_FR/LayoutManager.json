@@ -10,13 +10,13 @@
     "sticked": "Collé",
     "isLarge": "Grande taille de police",
     "cssStyle": "Styles CSS",
-    "dynamicLogicVisible": "Conditions de visibilité du panneau",
     "hiddenPerDefault": "Caché par défaut"
   },
   "options": {
     "align": {
       "left": "Gauche",
-      "right": "Droit"
+      "right": "Droit",
+      "center": "Centre"
     },
     "style": {
       "default": "Défaut",
@@ -29,6 +29,14 @@
   },
   "labels": {
     "New panel": "Nouveau panel",
-    "Layout": "Mise en page"
+    "Layout": "Mise en page",
+    "reset": "Remise à zéro de la mise en page",
+    "fullEdit": "Édition complète",
+    "resetToSystem": "Réinitialisation de la configuration du système",
+    "layoutManagement": "Gestion de la mise en page",
+    "layoutSelection": "Sélection de la mise en page",
+    "layoutCustomization": "Personnalisation de la mise en page",
+    "configure": "Configurer",
+    "Current Layout": "Disposition actuelle"
   }
 }

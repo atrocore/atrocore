@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Correspondance",
+    "weight": "Poids",
+    "sourceField": "Champ de la source",
+    "targetField": "Champ cible",
+    "stagingEntity": "Entité de transit",
+    "masterEntity": "Entité maîtresse",
+    "matchingRuleSet": "Fixer",
+    "matchingRules": "Règles de correspondance",
+    "operator": "Opérateur"
+  },
+  "options": {
+    "type": {
+      "equal": "Égalité",
+      "like": "Comme",
+      "contains": "Contient",
+      "set": "Fixer"
+    },
+    "operator": {
+      "and": "ET",
+      "or": "OU"
+    }
+  }
+}

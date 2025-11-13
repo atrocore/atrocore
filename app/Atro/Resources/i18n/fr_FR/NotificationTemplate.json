@@ -1,13 +1,6 @@
 {
   "fields": {
     "type": "Type",
-    "subject": "Sujet",
     "body": "Corps"
-  },
-  "options": {
-    "type": {
-      "system": "Notification du système",
-      "email": "Notification par courriel"
-    }
   }
 }

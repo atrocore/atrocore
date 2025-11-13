@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "name": "Champ d'application",
+    "role": "Rôle",
+    "hasAccess": "Accès",
+    "createAction": "Créer",
+    "readAction": "Lire",
+    "editAction": "Éditer",
+    "deleteAction": "Supprimer",
+    "streamAction": "Activités",
+    "fields": "Domaines",
+    "accessData": "Données d'accès",
+    "createAttributeValueAction": "Créer une valeur d'attribut",
+    "deleteAttributeValueAction": "Supprimer une valeur d'attribut",
+    "attributes": "Attributs",
+    "attributePanels": "Panneaux d'attributs"
+  },
+  "labels": {
+    "all": "Tous",
+    "team": "L'équipe",
+    "own": "Propre à l'entreprise",
+    "no": "Non",
+    "yes": "Oui"
+  }
+}
