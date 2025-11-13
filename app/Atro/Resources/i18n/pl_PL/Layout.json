@@ -1,13 +1,13 @@
 {
   "fields": {
-    "entity": "",
+    "entity": "Encja",
     "viewType": "Typ widoku",
     "relatedEntity": "Podmiot powiązany",
     "layoutProfile": "Profil układu"
   },
   "groupOptions": {
     "viewType": {
-      "view": "",
+      "view": "Zobacz",
       "viewGroup": "Grupa widokowa"
     }
   },
