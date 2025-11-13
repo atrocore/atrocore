@@ -35,7 +35,12 @@
     "nestedAttributes": "Attributs imbriqués",
     "attributePanel": "Panneau d'attributs",
     "conditionalVisible": "Visible",
-    "fullWidth": "Largeur totale"
+    "fullWidth": "Largeur totale",
+    "conditionalRequired": "Exigée",
+    "conditionalReadOnly": "Lecture seule",
+    "conditionalProtected": "Protegé",
+    "channel": "Canal",
+    "entity": "Entité"
   },
   "labels": {
     "Classification": "Classification",
