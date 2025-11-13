@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "",
+    "description": "",
+    "release": "",
+    "synonyms": "",
+    "code": "",
+    "isActive": "",
+    "classifications": "",
+    "classificationAttributes": "",
+    "type": ""
+  },
+  "options": {
+    "type": {
+      "general": ""
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": ""
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "",
+    "classificationForToAnotherEntity": "",
+    "classificationHasRecords": ""
+  }
+}
