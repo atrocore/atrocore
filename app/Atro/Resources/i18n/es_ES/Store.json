@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "status": "",
+    "versions": "",
+    "tags": ""
+  },
+  "options": {
+    "status": {
+      "buyable": "",
+      "available": ""
+    }
+  },
+  "labels": {
+    "installModule": ""
+  }
+}
