@@ -2,21 +2,14 @@
   "fields": {
     "action": "Aktion",
     "target": "Ziel",
-    "targetType": "Zieltyp",
     "ipAddress": "IP-Adresse",
     "authLogRecord": "Auth Log-Datensatz",
     "user": "Benutzer",
-    "createdAt": "Datum"
-  },
-  "presetFilters": {
-    "onlyMy": "Nur meine"
-  },
-  "options": {
-    "action": {
-      "read": "Lesen",
-      "update": "Aktualisieren",
-      "delete": "Löschen",
-      "create": "Erstellen"
-    }
+    "createdAt": "Datum",
+    "controllerName": "Controller Name",
+    "controllerAction": "Controller Aktion",
+    "authToken": "Auth Token",
+    "targetName": "Ziel Name",
+    "targetId": "Ziel-ID"
   }
 }
