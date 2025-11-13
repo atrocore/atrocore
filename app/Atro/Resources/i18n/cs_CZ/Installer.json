@@ -1,52 +1,52 @@
 {
   "fields": {
-    "host": "",
-    "dbname": "",
-    "user": "",
-    "username": "",
+    "host": "Název hostitele",
+    "dbname": "Název databáze",
+    "user": "Uživatelské jméno databáze",
+    "username": "Uživatelské jméno",
     "password": "",
-    "confirmPassword": ""
+    "confirmPassword": "Potvrzení hesla"
   },
   "labels": {
-    "licenseAgreement": "",
-    "databaseConfiguration": "",
-    "administratorSetup": "",
-    "requiredSettings": "",
-    "chooseYourLanguage": "",
-    "acceptTheAgreement": "",
-    "reportingEnabled": "",
-    "dbSystem": "",
-    "hostName": "",
-    "databaseName": "",
-    "databaseUserName": "",
-    "databaseUserPassword": "",
-    "port": "",
-    "testConnection": "",
-    "reCheck": "",
-    "userName": "",
+    "licenseAgreement": "Licenční smlouva",
+    "databaseConfiguration": "Konfigurace databáze",
+    "administratorSetup": "Nastavení správce",
+    "requiredSettings": "Požadovaná nastavení",
+    "chooseYourLanguage": "Zvolte si jazyk",
+    "acceptTheAgreement": "Přijímám dohodu",
+    "reportingEnabled": "Odesílání anonymních chybových hlášení pro rychlejší identifikaci a řešení problémů",
+    "dbSystem": "Databázový systém",
+    "hostName": "Název hostitele",
+    "databaseName": "Název databáze",
+    "databaseUserName": "Uživatelské jméno databáze",
+    "databaseUserPassword": "Heslo uživatele databáze",
+    "port": "Přístav",
+    "testConnection": "Testovací připojení",
+    "reCheck": "Znovu zkontrolujte",
+    "userName": "Uživatelské jméno",
     "password": "",
-    "confirmYourPassword": "",
-    "back": "",
-    "next": "",
-    "finish": "",
+    "confirmYourPassword": "Potvrzení hesla",
+    "back": "Zpět",
+    "next": "Další",
+    "finish": "Dokončení",
     "required": "",
     "currentVersion": "",
     "status": ""
   },
   "errors": {
-    "alreadyInstalled": "",
-    "differentPass": "",
-    "notCorrectDatabaseConfig": "",
-    "filePermissionsError": ""
+    "alreadyInstalled": "AtroCore je již nainstalován",
+    "differentPass": "Různá hesla",
+    "notCorrectDatabaseConfig": "Neplatné nastavení databáze",
+    "filePermissionsError": "Nemáte dostatečná oprávnění k souborům. Nastavte oprávnění podle pokynů."
   },
   "messages": {
-    "youMustAgreeToTheLicenseAgreement": "",
+    "youMustAgreeToTheLicenseAgreement": "Musíte souhlasit s licenční smlouvou",
     "fieldIsRequired": "",
-    "connectionSuccessful": "",
-    "pleaseConfigureYourSystemToStart": ""
+    "connectionSuccessful": "Připojení proběhlo úspěšně!",
+    "pleaseConfigureYourSystemToStart": "Nakonfigurujte svůj systém tak, aby se spustil"
   },
   "requirements": {
-    "phpVersion": "",
-    "mysqlVersion": ""
+    "phpVersion": "Verze PHP",
+    "mysqlVersion": "Verze MySQL"
   }
 }
