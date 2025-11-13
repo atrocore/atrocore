@@ -1,7 +1,7 @@
 {
   "fields": {
-    "accounts": "",
-    "code": "",
+    "accounts": "Accounts",
+    "code": "Kod",
     "discount": "",
     "discountPercentage": ""
   }
