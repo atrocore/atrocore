@@ -1,8 +1,8 @@
 {
   "fields": {
-    "isActive": "",
-    "isDefault": "",
-    "description": "",
+    "isActive": "Aktivní",
+    "isDefault": "Výchozí",
+    "description": "Popis",
     "hideShowFullList": "Skrytí možnosti \"Zobrazit úplný seznam\" na panelech vztahů",
     "layouts": "Rozložení",
     "parent": "Profil rozvržení rodiče",
@@ -12,8 +12,8 @@
   },
   "labels": {
     "addGroup": "Přidat skupinu",
-    "Menu": "",
-    "Dashboards": "",
+    "Menu": "Nabídka",
+    "Dashboards": "Dashboards",
     "Favorites": "Oblíbené položky"
   },
   "exceptions": {
