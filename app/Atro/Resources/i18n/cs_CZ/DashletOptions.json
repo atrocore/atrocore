@@ -30,7 +30,8 @@
     },
     "entityListType": {
       "favorites": "Oblíbené položky",
-      "navigation": "Navigační položky"
+      "navigation": "Navigační položky",
+      "all": "Všechny"
     }
   },
   "messages": {
