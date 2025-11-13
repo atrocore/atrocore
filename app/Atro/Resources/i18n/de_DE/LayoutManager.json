@@ -23,7 +23,8 @@
       "success": "Erfolgreich",
       "danger": "Gefahr",
       "warning": "Warnung",
-      "primary": "Primär"
+      "primary": "Primär",
+      "info": "Info"
     }
   },
   "labels": {
