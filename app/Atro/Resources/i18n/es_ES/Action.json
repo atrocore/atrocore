@@ -1,23 +1,23 @@
 {
   "fields": {
-    "isActive": "",
-    "type": "",
+    "isActive": "Activo",
+    "type": "Type",
     "sourceEntity": "",
     "inBackground": "",
     "usage": "",
     "massAction": "",
     "display": "",
     "actionsSet": "",
-    "actions": "",
+    "actions": "Acciones",
     "webhookUrl": "",
     "executeAs": "",
     "displayField": "",
     "focusField": "",
     "targetEntity": "",
-    "mode": "",
+    "mode": "Modo",
     "emailScript": "",
     "showEmailPreview": "",
-    "emailTemplate": "",
+    "emailTemplate": "Plantilla de correo electrónico",
     "emailTo": "",
     "emailCc": "",
     "emailBcc": ""
@@ -47,11 +47,11 @@
     "type": {
       "set": "",
       "webhook": "",
-      "customCode": "",
+      "customCode": "Código personalizado",
       "email": ""
     },
     "executeAs": {
-      "system": "",
+      "system": "Sistema",
       "sameUser": ""
     }
   },
