@@ -3,5 +3,12 @@
     "code": "Код",
     "files": "Файли",
     "storages": "Сховища"
+  },
+  "exceptions": {
+    "folderCreateFailed": "Не вдалося створити папку.",
+    "folderRenameFailed": "Перейменування папки не вдалося.",
+    "folderMoveFailed": "Переміщення папки не вдалося.",
+    "folderDeleteFailed": "Видалення папки не вдалося.",
+    "folderStorageCannotBeChanged": "Сховище папок не можна змінити."
   }
 }
