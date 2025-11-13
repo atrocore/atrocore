@@ -2,65 +2,65 @@
   "fields": {
     "isActive": "",
     "type": "",
-    "sourceEntity": "",
-    "inBackground": "",
-    "usage": "",
-    "massAction": "",
-    "display": "",
-    "actionsSet": "",
+    "sourceEntity": "Исходная сущность",
+    "inBackground": "Выполнение в фоновом режиме",
+    "usage": "Использование",
+    "massAction": "Массовое действие",
+    "display": "Дисплей",
+    "actionsSet": "Набор действий",
     "actions": "",
     "webhookUrl": "",
-    "executeAs": "",
-    "displayField": "",
-    "focusField": "",
-    "targetEntity": "",
+    "executeAs": "Выполнить как",
+    "displayField": "Поле отображения",
+    "focusField": "Поле фокусировки",
+    "targetEntity": "Целевая организация",
     "mode": "",
-    "emailScript": "",
-    "showEmailPreview": "",
-    "emailTemplate": "",
-    "emailTo": "",
-    "emailCc": "",
-    "emailBcc": ""
+    "emailScript": "Скрипт",
+    "showEmailPreview": "Предварительный просмотр перед отправкой",
+    "emailTemplate": "Шаблон электронной почты",
+    "emailTo": "Email To",
+    "emailCc": "Email CC",
+    "emailBcc": "Email BCC"
   },
   "labels": {
     "execute": "",
-    "Parameters": ""
+    "Parameters": "Параметры"
   },
   "massActions": {
     "execute": ""
   },
   "messages": {
-    "executeNow": ""
+    "executeNow": "Вы уверены, что хотите выполнить выбранное действие?"
   },
   "options": {
     "usage": {
-      "entity": "",
-      "record": "",
-      "field": "",
-      "onFieldFocus": "",
-      "onRecordLoad": ""
+      "entity": "Кнопка действия сущности",
+      "record": "Кнопка записи действия",
+      "field": "Кнопка действия с полем",
+      "onFieldFocus": "Фокусировка на поле",
+      "onRecordLoad": "При рекордной нагрузке"
     },
     "display": {
-      "dropdown": "",
-      "single": ""
+      "dropdown": "Dropdown",
+      "single": "Одиночный"
     },
     "type": {
-      "set": "",
-      "webhook": "",
-      "customCode": "",
-      "email": ""
+      "set": "Набор действий",
+      "webhook": "Webhook",
+      "customCode": "Пользовательский код",
+      "email": "Отправить электронную почту"
     },
     "executeAs": {
       "system": "",
-      "sameUser": ""
+      "sameUser": "Тот же пользователь"
     }
   },
   "tooltips": {
-    "inBackground": "",
-    "usage": "",
-    "executeAs": ""
+    "inBackground": "Действие будет выполняться в фоновом режиме без прямого сообщения об успехе/ошибке. Используйте его, если выполнение действия займет более 30 секунд.",
+    "usage": "Использование предписывает размещение действия. Действие с записью требует предварительного выбора затрагиваемых записей.",
+    "executeAs": "Укажите, какого пользователя система будет использовать для выполнения действия"
   },
   "exceptions": {
-    "forEditModeOnly": ""
+    "forEditModeOnly": "Действие '%s' доступно только в режиме редактирования и не может быть использовано здесь."
   }
 }
