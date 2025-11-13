@@ -9,7 +9,10 @@
     "country": "País",
     "type": "Tipo",
     "account": "Cuenta",
-    "name": "Nombre de compañía"
+    "name": "Nombre de compañía",
+    "buyer": "Comprador",
+    "contactName": "Nombre de contacto",
+    "prospect": "Perspectivas"
   },
   "options": {
     "type": {
