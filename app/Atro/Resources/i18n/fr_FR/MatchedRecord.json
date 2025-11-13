@@ -8,7 +8,7 @@
     "masterEntity": "Entité maîtresse",
     "masterEntityId": "ID de l'entité maître",
     "score": "Score",
-    "status": ""
+    "status": "Statut"
   },
   "options": {
     "status": {
