@@ -1,26 +1,26 @@
 {
   "fields": {
-    "status": "",
+    "status": "Status",
     "executeTime": "",
     "pid": "",
-    "priority": "",
+    "priority": "Priorytet",
     "handler": "",
-    "payload": "",
-    "scheduledJob": "",
-    "message": "",
+    "payload": "Dane wejściowe",
+    "scheduledJob": "Zaplanowane zadanie",
+    "message": "Wiadomość",
     "startedAt": "",
     "endedAt": ""
   },
   "labels": {
-    "cancel": ""
+    "cancel": "Odwołaj"
   },
   "options": {
     "status": {
-      "Pending": "",
-      "Success": "",
-      "Running": "",
-      "Failed": "",
-      "Canceled": "",
+      "Pending": "Oczekujące",
+      "Success": "Sukces",
+      "Running": "Trwa",
+      "Failed": "Niepowodzenie",
+      "Canceled": "Anulowano",
       "Awaiting": "",
       "Closed": ""
     }
