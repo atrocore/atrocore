@@ -1,21 +1,21 @@
 {
   "fields": {
-    "matching": "",
-    "weight": "",
-    "sourceField": "",
-    "targetField": "",
-    "stagingEntity": "",
-    "masterEntity": "",
-    "matchingRuleSet": "",
-    "matchingRules": "",
-    "operator": ""
+    "matching": "Відповідність",
+    "weight": "Вага",
+    "sourceField": "Поле джерела",
+    "targetField": "Цільове поле",
+    "stagingEntity": "Організаційна одиниця",
+    "masterEntity": "Головна сутність",
+    "matchingRuleSet": "Набір",
+    "matchingRules": "Правила збігу",
+    "operator": "Оператор"
   },
   "options": {
     "type": {
-      "equal": "",
-      "like": "",
+      "equal": "Дорівнює",
+      "like": "Наприклад.",
       "contains": "",
-      "set": ""
+      "set": "Набір"
     },
     "operator": {
       "and": "",
