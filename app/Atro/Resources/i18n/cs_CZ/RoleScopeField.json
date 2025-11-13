@@ -2,7 +2,7 @@
   "fields": {
     "name": "Pole",
     "roleScope": "Rozsah",
-    "readAction": "",
+    "readAction": "Přečtěte si",
     "editAction": "Upravit"
   }
 }
