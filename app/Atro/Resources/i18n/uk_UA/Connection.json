@@ -43,7 +43,8 @@
     "smtpOauthTokenUrl": "URL-адреса токену Oauth",
     "smtpClientId": "Ідентифікатор клієнта",
     "smtpClientSecret": "Таємниця клієнта",
-    "smtpAuthType": "Тип автора"
+    "smtpAuthType": "Тип автора",
+    "payload": "корисне навантаження"
   },
   "labels": {
     "connectionSuccess": "З'єднання успішно встановлено",
@@ -67,7 +68,10 @@
     "msql": "Microsoft SQL Server",
     "ftp": "FTP",
     "sftp": "SFTP",
-    "receipts": "Квитанції"
+    "receipts": "Квитанції",
+    "returns": "Повернення",
+    "products": "Продукти",
+    "price-reduction": "Зниження ціни"
   },
   "exceptions": {
     "sqlsrvMissing": "PHP MSSQL extension не встановлено.",
