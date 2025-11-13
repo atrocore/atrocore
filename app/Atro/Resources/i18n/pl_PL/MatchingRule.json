@@ -14,12 +14,12 @@
     "type": {
       "equal": "Równość",
       "like": "Na przykład",
-      "contains": "",
+      "contains": "Zawiera",
       "set": "Zestaw"
     },
     "operator": {
-      "and": "",
-      "or": ""
+      "and": "ORAZ",
+      "or": "LUB"
     }
   }
 }
