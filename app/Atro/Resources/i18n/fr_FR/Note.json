@@ -10,7 +10,8 @@
     "all": "Tous",
     "posts": "Postes",
     "updates": "Mises à jour",
-    "notes": "Notes"
+    "notes": "Notes",
+    "emails": "Emails"
   },
   "messages": {
     "writeMessage": "Ecrivez votre message ici"
