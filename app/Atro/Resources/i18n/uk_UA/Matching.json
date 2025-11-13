@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Мінімальний бал, %.",
-    "entity": "",
+    "entity": "Сутність",
     "stagingEntity": "Організаційна одиниця",
     "masterEntity": "Головна сутність",
     "matchingRules": "Правила збігу",
