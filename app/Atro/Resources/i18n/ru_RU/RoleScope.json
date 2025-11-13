@@ -1,25 +1,25 @@
 {
   "fields": {
-    "name": "",
-    "role": "",
-    "hasAccess": "",
-    "createAction": "",
-    "readAction": "",
-    "editAction": "",
-    "deleteAction": "",
-    "streamAction": "",
-    "fields": "",
+    "name": "Область применения",
+    "role": "Роль",
+    "hasAccess": "Доступ",
+    "createAction": "Создать",
+    "readAction": "Чтение",
+    "editAction": "Редактировать",
+    "deleteAction": "Удалить",
+    "streamAction": "Действия",
+    "fields": "Поля",
     "accessData": "",
     "createAttributeValueAction": "",
     "deleteAttributeValueAction": "",
-    "attributes": "",
+    "attributes": "Атрибуты",
     "attributePanels": ""
   },
   "labels": {
-    "all": "",
-    "team": "",
+    "all": "Все",
+    "team": "Группа",
     "own": "",
-    "no": "",
-    "yes": ""
+    "no": "Нет",
+    "yes": "Да"
   }
 }
