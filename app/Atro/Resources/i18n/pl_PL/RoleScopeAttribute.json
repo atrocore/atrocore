@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attribute": "",
+    "attribute": "Atrybut",
     "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "readAction": "Odczyt",
+    "editAction": "Edytuj"
   }
 }
