@@ -1,8 +1,8 @@
 {
   "fields": {
-    "attribute": "",
-    "roleScope": "",
-    "readAction": "",
-    "editAction": ""
+    "attribute": "Атрибут",
+    "roleScope": "Область применения",
+    "readAction": "Чтение",
+    "editAction": "Редактировать"
   }
 }
