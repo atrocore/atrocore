@@ -2,7 +2,7 @@
   "fields": {
     "accounts": "Контрагенты",
     "code": "Код",
-    "discount": "",
-    "discountPercentage": ""
+    "discount": "Скидка, %",
+    "discountPercentage": "Скидка, %"
   }
 }
