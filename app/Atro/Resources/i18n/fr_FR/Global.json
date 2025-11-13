@@ -140,7 +140,8 @@
     "User": "Utilisateur",
     "AuthLogRecord": "Enregistrement du journal d'authentification",
     "HtmlSanitizer": "HTML Sanitizer",
-    "SystemIcon": "Icône du système"
+    "SystemIcon": "Icône du système",
+    "MatchedRecord": "Enregistrement apparié"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
