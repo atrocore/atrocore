@@ -69,7 +69,17 @@
     "IncomingWebhook": "Вхідний веб-хук",
     "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
     "UserProfile": "Профіль користувача",
-    "MatchedRecord": "Відповідний запис"
+    "MatchedRecord": "Відповідний запис",
+    "Background": "Фон",
+    "Entity": "Сутність",
+    "EntityField": "Поле сутності",
+    "Language": "Мова",
+    "LayoutProfile": "Лейаут профіль",
+    "AttributePanel": "Панель атрибутів",
+    "RoleScope": "Область застосування",
+    "RoleScopeAttribute": "Атрибут",
+    "RoleScopeAttributePanel": "Панель атрибутів",
+    "RoleScopeField": "польовий"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -130,7 +140,13 @@
     "UserProfile": "Профілі користувачів",
     "Background": "Передумови",
     "EntityField": "Поля сутності",
-    "EntityRelation": "Відносини між сутностями"
+    "EntityRelation": "Відносини між сутностями",
+    "RoleScopeField": "Поля",
+    "Language": "Мови",
+    "LayoutProfile": "Профілі макета",
+    "IncomingWebhook": "Вхідні вебхуки",
+    "RoleScopeAttribute": "Атрибути",
+    "Entity": "Управління сутностями"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -470,7 +486,11 @@
     "noMatches": "Немає збігів",
     "varcharPart": "(Рядок)",
     "deletePermanently": "Видалити назавжди",
-    "intPart": "(Ціле число)"
+    "intPart": "(Ціле число)",
+    "Download": "Завантажити",
+    "unitPart": "(Unit)",
+    "Username can not be empty!": "Ім'я користувача не може бути порожнім",
+    "script": "Скрипт"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -711,7 +731,17 @@
     "downloadUrl": "URL-адреса для завантаження",
     "smallThumbnailUrl": "URL-адреса мініатюри (маленька)",
     "routes": "Маршрут(и)",
-    "conditionalProperties": "Умовні властивості"
+    "conditionalProperties": "Умовні властивості",
+    "emailAddress": "Email",
+    "width": "Ширина",
+    "height": "Висота",
+    "start": "Старт",
+    "end": "Завершення",
+    "action": "Дія",
+    "payload": "корисне навантаження",
+    "hash": "Хеш",
+    "entity": "Сутність",
+    "followers": "Підписники"
   },
   "tooltips": {
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
@@ -719,7 +749,8 @@
   "dashlets": {
     "Stream": "Активність",
     "Records": "Список записів",
-    "FirstSteps": "Перші кроки"
+    "FirstSteps": "Перші кроки",
+    "Entities": "Управління сутностями"
   },
   "notificationMessages": {
     "assign": "Вам було призначено {entityType} {entity}",
@@ -1076,7 +1107,8 @@
     "year": "рік",
     "month": "місяць",
     "week": "тиждень",
-    "day": "день"
+    "day": "день",
+    "Week": "Тиждень"
   },
   "unit Length": {
     "mm": "мм",
@@ -1272,7 +1304,8 @@
       "datetime_between_invalid": "Неправильні значення, {0} більше {1}",
       "number_between_invalid": "Неправильні значення, {0} більше {1}"
     },
-    "invert": "інвертувати"
+    "invert": "інвертувати",
+    "NOT": "НЕ"
   },
   "confirmations": {
     "someFieldsEmptyOnMassUpdate": "Ви збираєтеся замінити одне або декілька значень на порожнє. Ви впевнені?"
