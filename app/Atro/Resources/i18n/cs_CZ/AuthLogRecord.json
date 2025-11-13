@@ -2,21 +2,21 @@
   "fields": {
     "username": "Uživatelské jméno",
     "ipAddress": "IP adresa",
-    "requestTime": "",
-    "createdAt": "",
-    "isDenied": "",
-    "denialReason": "",
+    "requestTime": "Čas požadavku",
+    "createdAt": "Vyžádáno na",
+    "isDenied": "Je zamítnuta",
+    "denialReason": "Důvod odmítnutí",
     "user": "Uživatel",
-    "authToken": "",
-    "requestUrl": "",
-    "requestMethod": "",
-    "authTokenIsActive": "",
+    "authToken": "Vytvořený autentizační token",
+    "requestUrl": "Adresa URL žádosti",
+    "requestMethod": "Metoda žádosti",
+    "authTokenIsActive": "Auth Token je aktivní",
     "actionHistoryRecords": "Historie akce"
   },
   "options": {
     "denialReason": {
-      "CREDENTIALS": "",
-      "INACTIVE_USER": ""
+      "CREDENTIALS": "Neplatná pověření",
+      "INACTIVE_USER": "Neaktivní uživatel"
     }
   }
 }
