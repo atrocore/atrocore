@@ -1,7 +1,5 @@
 {
   "fields": {
-    "parents": "Assoziierende Attribute",
-    "children": "Assoziierte Attribute",
     "products": "Produkte",
     "type": "Typ",
     "attributeGroup": "Attributgruppe",
@@ -31,10 +29,14 @@
     "classificationAttributes": "Klassifikationsattribute",
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
-    "fullWidth": "Volle Breite"
+    "fullWidth": "Volle Breite",
+    "compositeAttribute": "Komposit-Attribut",
+    "nestedAttributes": "Verschachtelte Attribute",
+    "attributeGroupSortOrder": "Sortierreihenfolge in der Attributgruppe",
+    "conditionalVisible": "Sichtbar",
+    "conditionalDisableOptions": "Deaktivierte Optionen"
   },
   "labels": {
-    "classification": "Klassifikation",
     "addNewValue": "Neuen Wert hinzufügen",
     "extensibleEnumOptions": "Auswahloptionen"
   },
@@ -53,11 +55,11 @@
       "url": "Url",
       "varchar": "Einzeiliger Text",
       "wysiwyg": "HTML",
-      "file": "Datei"
+      "file": "Datei",
+      "composite": "Komposit"
     }
   },
   "messages": {
-    "allLingualAttrsWillDeleted": "Wenn das mehrsprachige Attribut als einsprachig festgelegt ist, werden alle Attributwerte für zusätzliche Sprachen gelöscht. Möchten Sie fortfahren?",
     "sameNumberOptions": "Die gleiche Anzahl von Optionen",
     "productsCountWithAttribute": "Anzahl der Produkte, für die dieses Attribut festgelegt ist: <strong>{count}</strong>",
     "removeAttribute(s)": "Alle Werte für dieses (diese) Attribut(e) werden ebenfalls gelöscht. Möchten Sie diese(n) Attribut(e) wirklich löschen?"
@@ -66,7 +68,7 @@
     "All": "Alle"
   },
   "tooltips": {
-    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
+    "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
   },
@@ -79,6 +81,12 @@
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
-    "invalidType": "Der Attributtyp „{type}“ ist ungültig"
+    "invalidType": "Der Attributtyp „{type}“ ist ungültig",
+    "compositeAttributeNotFound": "Zusammengesetztes Attribut nicht gefunden.",
+    "compositeAttributeCannotBeChild": "Zusammengesetztes Attribut kann nicht untergeordnet sein.",
+    "entityCannotBeChanged": "Die Entität kann nicht geändert werden.",
+    "wrongAttributeEntity": "Es wurde eine nicht zulässige Entität gewählt. Die Entität muss mit dem Attribut-Panel und der Attribut-Gruppe übereinstimmen.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Das Attribut Entität muss dasselbe sein wie im zusammengesetzten Attribut",
+    "attributeNotBelongToEntity": "Das Attribut gehört nicht zu dieser Entität."
   }
 }
