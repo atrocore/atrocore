@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "",
+    "type": "Type",
     "folder": "Carpeta",
     "storage": "Almacenamiento",
     "mimeType": "Tipo MIME",
@@ -19,7 +19,7 @@
   },
   "labels": {
     "Preview": "Vista previa",
-    "Upload": "",
+    "Upload": "Subir",
     "retry": "¿Reintentar?",
     "uploaded": "cargado",
     "putUploadUrl": "Especifique la URL del archivo si desea cargarlo mediante URL",
