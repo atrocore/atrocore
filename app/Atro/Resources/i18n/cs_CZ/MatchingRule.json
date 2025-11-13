@@ -1,6 +1,6 @@
 {
   "fields": {
-    "matching": "",
+    "matching": "Odpovídající",
     "weight": "",
     "sourceField": "",
     "targetField": "",
@@ -14,7 +14,7 @@
     "type": {
       "equal": "",
       "like": "",
-      "contains": "",
+      "contains": "Obsahuje",
       "set": ""
     },
     "operator": {
