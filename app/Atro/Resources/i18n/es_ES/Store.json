@@ -1,12 +1,12 @@
 {
   "fields": {
     "status": "Status",
-    "versions": "",
-    "tags": ""
+    "versions": "Versiones",
+    "tags": "Etiquetas"
   },
   "options": {
     "status": {
-      "buyable": "",
+      "buyable": "se puede comprar",
       "available": "available"
     }
   },
