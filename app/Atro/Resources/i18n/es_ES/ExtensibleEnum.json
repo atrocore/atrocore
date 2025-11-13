@@ -1,9 +1,9 @@
 {
   "fields": {
-    "extensibleEnumOptions": "",
+    "extensibleEnumOptions": "Opciones de la lista",
     "multilingual": ""
   },
   "exceptions": {
-    "extensibleEnumIsUsed": ""
+    "extensibleEnumIsUsed": "La Lista '%s' es utilizada por el campo '%s' en la Entidad '%s'."
   }
 }
