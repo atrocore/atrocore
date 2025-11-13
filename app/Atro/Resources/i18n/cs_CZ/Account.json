@@ -1,13 +1,13 @@
 {
   "fields": {
-    "name": "",
-    "emailAddress": "",
+    "name": "Název",
+    "emailAddress": "E-mail",
     "phoneNumber": "",
-    "description": "",
-    "type": "",
-    "role": "",
-    "number": "",
-    "language": "",
+    "description": "Popis",
+    "type": "Typ",
+    "role": "Role",
+    "number": "Číslo",
+    "language": "Jazyk",
     "addresses": "",
     "contacts": ""
   },
