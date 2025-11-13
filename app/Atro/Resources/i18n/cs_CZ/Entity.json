@@ -8,7 +8,7 @@
     "hasActive": "Aktivovatelné",
     "hideFieldTypeFilters": "Skrytí filtrů typu pole",
     "streamDisabled": "Zakázat činnosti",
-    "iconClass": "",
+    "iconClass": "Ikona",
     "sortBy": "Výchozí pole objednávky",
     "sortDirection": "Výchozí směr objednávky",
     "statusField": "Stavové pole",
@@ -23,12 +23,12 @@
     "hasTeam": "Umožnit týmům",
     "hasOwner": "Povolit vlastníka",
     "multiParents": "Více rodičů",
-    "dragAndDrop": "",
+    "dragAndDrop": "Drag & Drop",
     "fieldValueInheritance": "Dědičnost hodnot polí",
     "unInheritedFields": "Nedědičná pole",
     "relationInheritance": "Dědičnost vztahů",
     "unInheritedRelations": "Nedědičné vztahy",
-    "fields": "",
+    "fields": "Pole",
     "auditedDisabledFields": "Žádné zaznamenávání aktivit pro pole",
     "auditedEnabledRelations": "Záznam aktivity pro vztahy",
     "hasAttribute": "Má atributy",
@@ -55,11 +55,11 @@
     }
   },
   "labels": {
-    "accessManagement": "",
+    "accessManagement": "Správa přístupu",
     "hierarchyManagement": "Správa hierarchie",
     "other": "Další",
-    "resetToDefault": "",
-    "attributes": ""
+    "resetToDefault": "Obnovení výchozího nastavení",
+    "attributes": "Atributy"
   },
   "confirmations": {
     "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
