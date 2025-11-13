@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "role": ""
+  },
+  "options": {
+    "role": {
+      "main": "",
+      "additional": ""
+    }
+  },
+  "tooltips": {
+    "role": ""
+  },
+  "exceptions": {
+    "mainLanguageIsAlreadyExists": "",
+    "roleCannotBeChanged": "",
+    "codeForAdditionalCannotBeChanged": "",
+    "mainLanguageCannotBeRemoved": ""
+  }
+}
