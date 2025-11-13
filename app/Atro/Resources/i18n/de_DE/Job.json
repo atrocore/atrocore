@@ -4,5 +4,21 @@
   },
   "tooltips": {
     "priority": "Höhere Zahl bedeutet höhere Priorität"
+  },
+  "options": {
+    "status": {
+      "Pending": "Steht aus",
+      "Success": "Erfolg",
+      "Running": "In Arbeit",
+      "Failed": "Fehlgeschlagen",
+      "Canceled": "Abgebrochen"
+    }
+  },
+  "fields": {
+    "status": "Status",
+    "scheduledJob": "Geplante Aufgabe",
+    "priority": "Priorität",
+    "payload": "Payload",
+    "message": "Botschaft"
   }
 }
