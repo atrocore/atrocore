@@ -1,15 +1,15 @@
 {
   "fields": {
     "status": "Statut",
-    "executeTime": "",
-    "pid": "",
+    "executeTime": "Exécuter à",
+    "pid": "PID",
     "priority": "Priorité",
-    "handler": "",
+    "handler": "Gestionnaire",
     "payload": "Charge utile",
     "scheduledJob": "Travail programmé",
     "message": "Message",
-    "startedAt": "",
-    "endedAt": ""
+    "startedAt": "Commencé à",
+    "endedAt": "Terminé le"
   },
   "labels": {
     "cancel": "Annuler"
@@ -21,14 +21,14 @@
       "Running": "La course à pied",
       "Failed": "Échec",
       "Canceled": "Annulé",
-      "Awaiting": "",
-      "Closed": ""
+      "Awaiting": "En attente",
+      "Closed": "Fermé"
     }
   },
   "tooltips": {
-    "priority": ""
+    "priority": "Un numéro plus élevé signifie une plus grande priorité"
   },
   "exceptions": {
-    "jobIsRunning": ""
+    "jobIsRunning": "Un travail en cours ne peut pas être supprimé."
   }
 }
