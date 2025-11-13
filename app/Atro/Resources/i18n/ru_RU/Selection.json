@@ -2,6 +2,6 @@
   "fields": {
     "name": "Название",
     "description": "Описание",
-    "selectionRecords": ""
+    "selectionRecords": "Записи о выборе"
   }
 }
