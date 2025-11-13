@@ -1,19 +1,19 @@
 {
   "fields": {
-    "isActive": "",
-    "isDefault": "",
-    "description": "",
+    "isActive": "Aktywny",
+    "isDefault": "Domyślny",
+    "description": "Description",
     "hideShowFullList": "",
-    "layouts": "",
+    "layouts": "Układy",
     "parent": "",
     "navigation": "",
     "favoritesList": "",
     "dashboardLayout": ""
   },
   "labels": {
-    "addGroup": "",
-    "Menu": "",
-    "Dashboards": "",
+    "addGroup": "Dodaj grupę",
+    "Menu": "Menu",
+    "Dashboards": "Pulpity",
     "Favorites": ""
   },
   "exceptions": {
