@@ -1,9 +1,9 @@
 {
   "fields": {
     "name": "Hodnota opce",
-    "color": "",
-    "sortOrder": "",
-    "extensibleEnums": ""
+    "color": "Barva",
+    "sortOrder": "Pořadí řazení",
+    "extensibleEnums": "Seznamy"
   },
   "exceptions": {
     "extensibleEnumOptionIsSystem": "Systém vyžaduje možnost seznamu '%s'.",
