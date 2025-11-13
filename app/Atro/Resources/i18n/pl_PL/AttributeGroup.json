@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "",
-    "description": "",
-    "code": "",
-    "isActive": "",
+    "description": "Description",
+    "code": "Kod",
+    "isActive": "Aktywny",
     "attributes": "",
-    "sortOrder": ""
+    "sortOrder": "Sort Order"
   },
   "messages": {
     "unlinkAttributeGroupConfirmation": ""
