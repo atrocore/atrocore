@@ -2,7 +2,7 @@
   "fields": {
     "name": "Стоимость опциона",
     "color": "Цвет",
-    "sortOrder": "",
+    "sortOrder": "Порядок сортировки",
     "extensibleEnums": "Списки"
   },
   "exceptions": {
