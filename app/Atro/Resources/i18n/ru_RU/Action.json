@@ -1,20 +1,20 @@
 {
   "fields": {
-    "isActive": "",
-    "type": "",
+    "isActive": "Активные",
+    "type": "Тип",
     "sourceEntity": "Исходная сущность",
     "inBackground": "Выполнение в фоновом режиме",
     "usage": "Использование",
     "massAction": "Массовое действие",
     "display": "Дисплей",
     "actionsSet": "Набор действий",
-    "actions": "",
-    "webhookUrl": "",
+    "actions": "Действия",
+    "webhookUrl": "URL",
     "executeAs": "Выполнить как",
     "displayField": "Поле отображения",
     "focusField": "Поле фокусировки",
     "targetEntity": "Целевая организация",
-    "mode": "",
+    "mode": "Режим",
     "emailScript": "Скрипт",
     "showEmailPreview": "Предварительный просмотр перед отправкой",
     "emailTemplate": "Шаблон электронной почты",
@@ -23,11 +23,11 @@
     "emailBcc": "Email BCC"
   },
   "labels": {
-    "execute": "",
+    "execute": "Выполнить",
     "Parameters": "Параметры"
   },
   "massActions": {
-    "execute": ""
+    "execute": "Выполнить"
   },
   "messages": {
     "executeNow": "Вы уверены, что хотите выполнить выбранное действие?"
@@ -51,7 +51,7 @@
       "email": "Отправить электронную почту"
     },
     "executeAs": {
-      "system": "",
+      "system": "Система",
       "sameUser": "Тот же пользователь"
     }
   },
