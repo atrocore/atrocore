@@ -3,8 +3,8 @@
     "navigationManuBackgroundColor": "Fondo del menú de navegación",
     "navigationMenuFontColor": "Color de la fuente de navegación",
     "linkFontColor": "Color del enlace",
-    "customStylesheetPath": "",
-    "customStylesheet": "",
+    "customStylesheetPath": "Ruta del archivo СSS",
+    "customStylesheet": "CSS",
     "primaryColor": "Color primario",
     "secondaryColor": "Color secundario",
     "primaryFontColor": "Color de fuente primario",
@@ -16,21 +16,21 @@
     "secondaryBorderColor": "Color del borde secundario",
     "panelTitleColor": "Color del título del panel",
     "headerTitleColor": "Color del título de la cabecera",
-    "success": "",
+    "success": "Success",
     "notice": "Aviso",
     "information": "Información",
-    "error": "",
+    "error": "Error",
     "actionIconColor": "Color del icono de acción",
     "navigationIconColor": "Color del icono de navegación",
     "statusIconColor": "Color del icono de estado",
-    "customHeadCode": "",
+    "customHeadCode": "Código de la Head",
     "highlightingColorForRequired": "Color de resaltado para los datos requeridos",
     "toolbarBackgroundColor": "Color de fondo de la barra de herramientas",
     "toolbarFontColor": "Color de fuente de la barra de herramientas"
   },
   "tooltips": {
-    "customStylesheetPath": "",
-    "customHeadCode": ""
+    "customStylesheetPath": "Sus estilos CSS personalizados se escribirán en este archivo. También puede realizar cambios en él directamente.",
+    "customHeadCode": "Añade el código al final de la etiqueta <head>. Atrocore no valida el código personalizado por ti, así que asegúrate de comprobar tu código antes de publicarlo."
   },
   "exceptions": {
     "styleIsUsed": "El estilo en uso no se puede quitar.",
