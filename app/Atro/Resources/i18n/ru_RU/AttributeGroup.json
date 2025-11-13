@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "",
+    "name": "Название группы",
     "description": "",
     "code": "",
     "isActive": "",
@@ -8,10 +8,10 @@
     "sortOrder": ""
   },
   "messages": {
-    "unlinkAttributeGroupConfirmation": ""
+    "unlinkAttributeGroupConfirmation": "Вы уверены, что хотите отсоединить все атрибуты группы атрибутов?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "",
-    "entityIsUsed": ""
+    "attributeGroupSsLinkedWithAttributes": "Группа атрибутов связана с атрибутом(ами). Пожалуйста, сначала отсоедините атрибут(ы).",
+    "entityIsUsed": "Группа атрибутов не может быть удалена, поскольку она используется в нескольких атрибутах."
   }
 }
