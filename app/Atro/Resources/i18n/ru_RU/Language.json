@@ -1,10 +1,10 @@
 {
   "fields": {
-    "role": ""
+    "role": "Роль"
   },
   "options": {
     "role": {
-      "main": "",
+      "main": "По умолчанию",
       "additional": ""
     }
   },
