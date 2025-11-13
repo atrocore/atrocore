@@ -8,7 +8,7 @@
     "masterEntity": "Entidad principal",
     "masterEntityId": "ID de la entidad principal",
     "score": "Puntuación",
-    "status": ""
+    "status": "Status"
   },
   "options": {
     "status": {
