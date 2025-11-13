@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Pole",
-    "roleScope": "",
+    "roleScope": "Zakres",
     "readAction": "Odczyt",
     "editAction": "Edytuj"
   }
