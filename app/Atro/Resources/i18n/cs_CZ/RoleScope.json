@@ -4,21 +4,21 @@
     "role": "Role",
     "hasAccess": "Přístup",
     "createAction": "Vytvořit",
-    "readAction": "",
+    "readAction": "Přečtěte si",
     "editAction": "Upravit",
     "deleteAction": "Odstranit",
     "streamAction": "Aktivity",
     "fields": "Pole",
-    "accessData": "",
-    "createAttributeValueAction": "",
-    "deleteAttributeValueAction": "",
+    "accessData": "Přístupová data",
+    "createAttributeValueAction": "Vytvořit hodnotu atributu",
+    "deleteAttributeValueAction": "Odstranění hodnoty atributu",
     "attributes": "Atributy",
     "attributePanels": "Panely atributů"
   },
   "labels": {
     "all": "Všechny",
     "team": "Tým",
-    "own": "",
+    "own": "Vlastní",
     "no": "Ne",
     "yes": "Ano"
   }
