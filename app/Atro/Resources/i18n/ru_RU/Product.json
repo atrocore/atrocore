@@ -1,9 +1,9 @@
 {
   "fields": {
-    "number": "",
-    "isActive": "",
+    "number": "Номер",
+    "isActive": "Активные",
     "image": "",
-    "price": "",
+    "price": "Цена",
     "description": "",
     "longDescription": "",
     "children": "",
@@ -13,7 +13,7 @@
     "customsNumber": "",
     "countryOfOrigin": "",
     "defaultSupplier": "",
-    "note": ""
+    "note": "Заметка"
   },
   "labels": {
     "manufacturer": "",
