@@ -1,20 +1,20 @@
 {
   "fields": {
-    "matching": "",
-    "staging": "",
-    "stagingEntity": "",
-    "stagingEntityId": "",
-    "master": "",
-    "masterEntity": "",
-    "masterEntityId": "",
-    "score": "",
+    "matching": "Відповідність",
+    "staging": "Постановка",
+    "stagingEntity": "Організаційна одиниця",
+    "stagingEntityId": "Ідентифікатор організації-постановника",
+    "master": "Магістр",
+    "masterEntity": "Головна сутність",
+    "masterEntityId": "Ідентифікатор основної сутності",
+    "score": "Оцінка",
     "status": ""
   },
   "options": {
     "status": {
-      "found": "",
-      "confirmed": "",
-      "rejected": ""
+      "found": "Знайдено",
+      "confirmed": "Підтверджено.",
+      "rejected": "Відхилено"
     }
   }
 }
