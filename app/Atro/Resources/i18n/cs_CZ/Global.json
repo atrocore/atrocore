@@ -79,7 +79,9 @@
     "AuthLogRecord": "Záznam protokolu ověření",
     "KnowledgeBaseCategory": "Kategorie znalostní báze",
     "Dashboard": "Dashboard",
-    "NotificationTemplate": "Šablona oznámení"
+    "NotificationTemplate": "Šablona oznámení",
+    "Selection": "Výběr",
+    "SelectionRecord": "Záznam o výběru"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -146,7 +148,9 @@
     "OutboundEmail": "Odchozí e-maily",
     "RoleScopeAttributePanel": "Panely atributů",
     "EmailTemplate": "Šablony e-mailů",
-    "Folder": "Složky"
+    "Folder": "Složky",
+    "Selection": "Výběry",
+    "SelectionRecord": "Výběrové záznamy"
   },
   "labels": {
     "basic": "Základní",
