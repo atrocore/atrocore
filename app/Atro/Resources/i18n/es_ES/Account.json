@@ -5,7 +5,10 @@
     "phoneNumber": "Teléfono",
     "description": "Descripción",
     "type": "tipo",
-    "role": "papel"
+    "role": "papel",
+    "addresses": "Direcciones",
+    "contacts": "Contactos",
+    "number": "Número"
   },
   "options": {
     "type": {
