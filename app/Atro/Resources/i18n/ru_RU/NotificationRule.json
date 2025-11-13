@@ -2,19 +2,19 @@
   "fields": {
     "description": "Описание",
     "entity": "Сущность",
-    "notificationProfile": "",
-    "occurrence": "",
+    "notificationProfile": "Профиль уведомлений",
+    "occurrence": "Событие",
     "isActive": "Активные",
-    "ignoreSelfAction": "",
-    "asOwner": "",
-    "asFollower": "",
-    "asAssignee": "",
-    "asTeamMember": "",
-    "asNotificationProfile": "",
-    "emailActive": "",
-    "systemActive": "",
-    "emailTemplateId": "",
-    "systemTemplateId": ""
+    "ignoreSelfAction": "Игнорируйте собственные действия",
+    "asOwner": "В качестве владельца",
+    "asFollower": "Как последователь",
+    "asAssignee": "В качестве Правоприобретателя",
+    "asTeamMember": "Как член команды",
+    "asNotificationProfile": "Как пользователь профиля уведомлений",
+    "emailActive": "Уведомление по электронной почте",
+    "systemActive": "Системное уведомление",
+    "emailTemplateId": "Шаблон электронной почты",
+    "systemTemplateId": "Шаблон системы"
   },
   "options": {
     "occurrence": {
@@ -23,16 +23,16 @@
       "linking": "Ссылка",
       "unlinking": "Убрать ссылку",
       "deletion": "Удалить",
-      "note_created": "",
-      "note_updated": "",
-      "note_deleted": "",
-      "ownership_assignment": "",
-      "unlinking_ownership_assignment": "",
-      "mentioned": ""
+      "note_created": "Создайте заметку",
+      "note_updated": "Примечание к обновлению",
+      "note_deleted": "Удалить заметку",
+      "ownership_assignment": "Установите владельца/назначенного пользователя",
+      "unlinking_ownership_assignment": "Неустановленный владелец/назначенный пользователь",
+      "mentioned": "Упомяните"
     }
   },
   "labels": {
-    "Notify User": "",
-    "Transport": ""
+    "Notify User": "Уведомить пользователя",
+    "Transport": "Транспорт"
   }
 }
