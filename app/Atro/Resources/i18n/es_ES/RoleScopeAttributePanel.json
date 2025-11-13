@@ -1,7 +1,7 @@
 {
   "fields": {
-    "attributePanel": "",
-    "roleScope": "",
+    "attributePanel": "Panel de atributos",
+    "roleScope": "Alcance",
     "readAction": "",
     "editAction": ""
   }
