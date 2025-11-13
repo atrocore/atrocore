@@ -1,25 +1,25 @@
 {
   "fields": {
-    "name": "",
-    "role": "",
-    "hasAccess": "",
-    "createAction": "",
-    "readAction": "",
-    "editAction": "",
-    "deleteAction": "",
-    "streamAction": "",
-    "fields": "",
+    "name": "Область застосування",
+    "role": "Роль",
+    "hasAccess": "Доступ",
+    "createAction": "Створити",
+    "readAction": "Читання",
+    "editAction": "Редагувати",
+    "deleteAction": "Видалити",
+    "streamAction": "Активність",
+    "fields": "Поля",
     "accessData": "Дані доступу",
     "createAttributeValueAction": "Створити значення атрибута",
     "deleteAttributeValueAction": "Видалити значення атрибута",
-    "attributes": "",
+    "attributes": "Атрибути",
     "attributePanels": "Панелі атрибутів"
   },
   "labels": {
-    "all": "",
-    "team": "",
+    "all": "Усі",
+    "team": "Група",
     "own": "Власний",
-    "no": "",
-    "yes": ""
+    "no": "Ні",
+    "yes": "Так"
   }
 }
