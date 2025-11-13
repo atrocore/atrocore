@@ -1,12 +1,12 @@
 {
   "fields": {
     "status": "Stav",
-    "versions": "",
+    "versions": "Verze",
     "tags": "Štítky"
   },
   "options": {
     "status": {
-      "buyable": "",
+      "buyable": "koupitelné",
       "available": "k dispozici"
     }
   },
