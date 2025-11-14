@@ -873,8 +873,10 @@ class Hierarchy extends Base
         $parents = $this->getConnection()->createQueryBuilder()
             ->select('*')
             ->from($this->hierarchyTableName, 'h')
-            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id')
+            ->innerJoin('h', $this->tableName, 't', 't.id=h.parent_id AND t.deleted = :false')
             ->where('h.entity_id=:id')
+            ->andWhere('h.deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('id', $id)
             ->fetchAllAssociative();
 
