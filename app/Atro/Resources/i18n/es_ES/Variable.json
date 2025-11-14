@@ -1,7 +1,7 @@
 {
   "fields": {
     "key": "Clave",
-    "type": "Type",
+    "type": "Tipo",
     "value": "Valor"
   },
   "options": {
