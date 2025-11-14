@@ -152,9 +152,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     buttons.removeClass('disabled');
                     this.handleRadioButtonsDisableState(false);
                 }
-            }).done(() => {
+            }).done((result) => {
                 this.notify('Merged', 'success');
-                this.trigger('merge-success');
+                this.trigger('merge-success', result);
+                this.getRouter().navigate(`#${this.scope}/view/${result.id}`,{trigger: true});
                 if (doneCallback) {
                     doneCallback();
                 }

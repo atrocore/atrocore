@@ -399,8 +399,9 @@ class Record extends RecordService
         }
 
         $repository = $this->getRepository();
-
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        $input = $attributes->input;
+        unset($input->id);
+        $entity = $this->createEntity($input);
 
         if (!$entity) {
             throw new NotFound();
@@ -501,13 +502,6 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        try {
-            $attributes->input->_skipCheckForConflicts = true;
-            $this->updateEntity($id, $attributes->input);
-        } catch (NotModified $e) {
-
-        }
-
         if (empty($keepSources)) {
             foreach ($sourceList as $source) {
                 $this->getEntityManager()->removeEntity($source);
@@ -517,7 +511,7 @@ class Record extends RecordService
 
         $this->afterMerge($entity, $sourceList, $attributes);
 
-        return true;
+        return $entity;
     }
 
     public function getMergeLinkList(array $relationshipData): array
