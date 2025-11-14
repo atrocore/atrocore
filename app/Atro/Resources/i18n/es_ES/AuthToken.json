@@ -4,7 +4,7 @@
     "ipAddress": "Dirección IP",
     "lastAccess": "Fecha del último acceso",
     "createdAt": "Fecha de acceso",
-    "isActive": "Está activo",
+    "isActive": "Activo",
     "actionHistoryRecords": "Histórico",
     "lifetime": "Tiempo de vida",
     "idleTime": "Tiempo de inactividad",
