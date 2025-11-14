@@ -35,9 +35,7 @@ class ExtensibleEnum extends Base
     }
 
     public function getExtensibleEnumsOptions(array $extensibleEnumIds): array{
-        if (empty($extensibleEnumIds)) {
-            return [];
-        }
+        $extensibleEnumIds = array_unique($extensibleEnumIds);
 
         $res = [];
         foreach ($extensibleEnumIds as $extensibleEnumId) {

@@ -2181,6 +2181,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.field, 'extensibleEnumId']) || this.model.getFieldParam(cell.field, 'extensibleEnumId');
                             if (extensibleEnumId &&
                                 (this.model.getFieldParam(cell.field, 'dropdown') || this.model.get('attributesDefs')?.[cell.field]?.dropdown) &&
+                                !idsToLoad.includes(extensibleEnumId) &&
                                 !Espo['extensible_enum_' + extensibleEnumId]) {
                                 idsToLoad.push(extensibleEnumId)
                             }
