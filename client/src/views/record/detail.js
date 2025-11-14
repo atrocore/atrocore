@@ -2166,7 +2166,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 layout.push(panel);
             }
 
-            this.loadListOptionsDataFromLayout(layout)
+            if (typeof this.loadListOptionsDataFromLayout == 'function') {
+                this.loadListOptionsDataFromLayout(layout)
+            }
 
             return this.prepareLayoutAfterConverting(layout);
         },
