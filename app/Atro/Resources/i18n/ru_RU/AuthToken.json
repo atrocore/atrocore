@@ -4,7 +4,7 @@
     "ipAddress": "IP адрес",
     "lastAccess": "Дата последнего подключения",
     "createdAt": "Дата входа",
-    "isActive": "Активен",
+    "isActive": "Активный",
     "actionHistoryRecords": "История действий",
     "lifetime": "Время жизни",
     "idleTime": "Время простоя",
