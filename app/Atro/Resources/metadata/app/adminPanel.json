@@ -147,7 +147,8 @@
         "url": "#Folder",
         "label": "Folders",
         "description": "folders",
-        "icon": "ph ph-folder"
+        "icon": "ph ph-folder",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/file-management#folder-management"
       }
     ]
   },
