@@ -140,7 +140,7 @@
       ],
       [
         {
-          "name": "emaupdateType"
+          "name": "updateType"
         },
         false
       ],
@@ -152,7 +152,7 @@
       ],
       [
         {
-          "name": "updateupdateScript",
+          "name": "updateScript",
           "fullWidth": true
         }
       ]
