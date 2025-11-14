@@ -7,6 +7,7 @@
     import ContentFilter from "./ContentFilter.svelte";
     import {Storage} from "../../utils/Storage";
     import {Notifier} from "../../utils/Notifier";
+    import {Acl} from "../../utils/Acl";
 
     const dispatch = createEventDispatcher();
 
@@ -101,6 +102,10 @@
     }
 
     async function recalculateCheck() {
+        if (!Acl.check(scope, 'edit')) {
+            return;
+        }
+
         Notifier.notify('Please wait...')
         const resp = await Utils.postRequest('/QualityCheck/action/recalculate', {
             entityName: scope,
@@ -144,6 +149,8 @@
     }
 
     onMount(() => {
+        const forbiddenFields = Acl.getScopeForbiddenFieldList(scope, 'read') || [];
+
         Object.entries(Metadata.get(['entityDefs', scope, 'fields'])).forEach(([field, defs]) => {
             if (defs.dataQualityCheck) {
                 let text;
@@ -153,11 +160,13 @@
                     }
                 });
 
-                qualityChecksList.push({
-                    value: defs.qualityCheckId,
-                    text: text,
-                    field: field,
-                });
+                if (!forbiddenFields.includes(field)) {
+                    qualityChecksList.push({
+                        value: defs.qualityCheckId,
+                        text: text,
+                        field: field,
+                    });
+                }
             }
         });
 
