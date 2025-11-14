@@ -1,7 +1,7 @@
 {
   "fields": {
     "number": "Номер",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "image": "Изображение",
     "price": "Цена",
     "description": "Краткое описание",
