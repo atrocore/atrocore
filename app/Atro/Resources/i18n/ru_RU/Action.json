@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Активные",
+    "isActive": "Активный",
     "type": "Тип",
     "sourceEntity": "Исходная сущность",
     "inBackground": "Выполнение в фоновом режиме",
