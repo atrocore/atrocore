@@ -1,6 +1,6 @@
 {
   "fields": {
-    "minimumScore": "Puntuación mínima, %.",
+    "minimumScore": "Puntuación mínima, %",
     "entity": "Entidad",
     "masterEntity": "Entidad principal",
     "matchingRules": "Reglas de concordancia",
