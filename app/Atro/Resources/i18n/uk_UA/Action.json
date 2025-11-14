@@ -20,11 +20,15 @@
     "displayField": "Поле відображення",
     "focusField": "Поле фокусування",
     "webhookUrl": "URL",
-    "targetEntity": "Цільова сутність"
+    "targetEntity": "Цільова сутність",
+    "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
+    "updateType": "Тип оновлення",
+    "updateScript": "Скрипт"
   },
   "labels": {
     "execute": "Виконати",
-    "Parameters": "Параметри"
+    "Parameters": "Параметри",
+    "fieldsPanel": "Оновлення"
   },
   "massActions": {
     "execute": "Виконати"
@@ -56,6 +60,10 @@
     "executeAs": {
       "sameUser": "Той самий користувач",
       "system": "Система"
+    },
+    "updateType": {
+      "basic": "Базовий",
+      "script": "Скрипт"
     }
   },
   "tooltips": {

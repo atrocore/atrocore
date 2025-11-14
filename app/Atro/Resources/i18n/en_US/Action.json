@@ -20,11 +20,16 @@
     "emailTemplate": "Email Template",
     "emailTo": "Email To",
     "emailCc": "Email CC",
-    "emailBcc": "Email BCC"
+    "emailBcc": "Email BCC",
+    "applyToPreselectedRecords": "Apply to pre-selected records",
+    "updateType": "Update Type",
+    "updateFields": "Update Fields",
+    "updateScript": "Script"
   },
   "labels": {
     "execute": "Execute",
-    "Parameters": "Parameters"
+    "Parameters": "Parameters",
+    "fieldsPanel": "Update"
   },
   "massActions": {
     "execute": "Execute"
@@ -56,6 +61,10 @@
     "executeAs": {
       "system": "System",
       "sameUser": "Same User"
+    },
+    "mode": {
+      "basic": "Basic",
+      "script": "Script"
     }
   },
   "tooltips": {

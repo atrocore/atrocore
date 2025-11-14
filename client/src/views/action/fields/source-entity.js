@@ -13,6 +13,20 @@ Espo.define('views/action/fields/source-entity', 'views/fields/entity-type',
 
         return Dep.extend({
 
+            setup() {
+                Dep.prototype.setup.call(this);
+
+                this.listenTo(this.model, 'change:applyToPreselectedRecords', () => {
+                    this.model.set(this.name, this.model.get('targetEntity'));
+                });
+
+                this.listenTo(this.model, 'change:targetEntity', () => {
+                    if (this.model.get('applyToPreselectedRecords')) {
+                        this.model.set(this.name, this.model.get('targetEntity'));
+                    }
+                });
+            },
+
             checkAvailability(entityType) {
                 let defs = this.scopesMetadataDefs[entityType] || {};
                 if (defs.actionDisabled) {

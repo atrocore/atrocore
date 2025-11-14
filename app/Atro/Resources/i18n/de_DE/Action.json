@@ -20,11 +20,15 @@
     "emailBcc": "E-Mail BCC",
     "focusField": "Fokusfeld",
     "displayField": "Anzeigefeld",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
+    "updateType": "Aktualisierungstyp",
+    "updateScript": "Script"
   },
   "labels": {
     "execute": "Ausführen",
-    "Parameters": "Parameter"
+    "Parameters": "Parameter",
+    "fieldsPanel": "Aktualisieren"
   },
   "massActions": {
     "execute": "Ausführen"
@@ -56,6 +60,10 @@
       "record": "Schaltfläche Aktion aufnehmen",
       "field": "Schaltfläche Feldaktion",
       "entity": "Schaltfläche Entitätsaktion"
+    },
+    "mode": {
+      "basic": "Basic",
+      "script": "Skript"
     }
   },
   "tooltips": {
