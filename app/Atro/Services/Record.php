@@ -503,6 +503,15 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
+        if(!empty($id)) {
+            try {
+                $attributes->input->_skipCheckForConflicts = true;
+                $this->updateEntity($id, $attributes->input);
+            } catch (NotModified $e) {
+
+            }
+        }
+
         if (empty($keepSources)) {
             foreach ($sourceList as $source) {
                 $this->getEntityManager()->removeEntity($source);
