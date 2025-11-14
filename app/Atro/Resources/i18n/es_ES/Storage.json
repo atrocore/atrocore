@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Tipo",
     "path": "Ruta",
     "files": "Archivos",
     "folder": "Carpeta montada",
