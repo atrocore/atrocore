@@ -137,6 +137,24 @@
           "name": "emailScript",
           "fullWidth": true
         }
+      ],
+      [
+        {
+          "name": "emaupdateType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "updateFields",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "updateupdateScript",
+          "fullWidth": true
+        }
       ]
     ]
   }

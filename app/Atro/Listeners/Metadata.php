@@ -408,8 +408,20 @@ class Metadata extends AbstractListener
                 'acl'     => [
                     'scope'  => $action['source_entity'],
                     'action' => 'read',
-                ]
+                ],
             ];
+
+            if (in_array($action['type'], ['update', 'create'])) {
+                $params['acl'] = [
+                    'scope'  => $action['target_entity'],
+                    'action' => 'edit',
+                ];
+            } elseif ($action['type'] == 'delete') {
+                $params['acl'] = [
+                    'scope'  => $action['target_entity'],
+                    'action' => 'delete',
+                ];
+            }
 
             if ($action['type'] === 'email') {
                 $actionData = @json_decode($action['data'], true);
