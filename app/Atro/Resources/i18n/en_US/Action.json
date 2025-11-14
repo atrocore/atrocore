@@ -45,6 +45,9 @@
       "single": "Single"
     },
     "type": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
       "set": "Action Set",
       "webhook": "Webhook",
       "customCode": "Custom Code",

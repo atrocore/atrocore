@@ -38,6 +38,9 @@
       "single": "Unique"
     },
     "type": {
+      "create": "Créer",
+      "update": "Mise à jour",
+      "upsert": "Upsert",
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
       "email": "Envoyer un e-mail",

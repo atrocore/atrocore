@@ -38,6 +38,9 @@
       "single": "Einzeln"
     },
     "type": {
+      "create": "Erstellen",
+      "update": "Aktualisierung",
+      "delete": "Löschen",
       "set": "Aktionsset",
       "email": "E-Mail senden",
       "webhook": "Webhook",
