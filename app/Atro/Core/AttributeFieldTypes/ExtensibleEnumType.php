@@ -66,7 +66,7 @@ class ExtensibleEnumType extends AbstractFieldType
             'readOnly'                  => !empty($row['is_read_only']),
             'protected'                 => !empty($row['is_protected']),
             'label'                     => $row[$this->prepareKey('name', $row)],
-            'dropdown'                  => !empty($row['dropdown']),
+            'dropdown'                  => !empty($attributeData['dropdown']),
             'extensibleEnumId'          => $row['extensible_enum_id'] ?? null,
             'allowedOptions'            => $attributeData['allowedOptions'] ?? null,
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),

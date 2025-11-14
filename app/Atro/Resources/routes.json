@@ -1241,5 +1241,42 @@
     "response": {
       "$ref": "#/components/schemas/Selection"
     }
+  },
+  {
+    "route": "/ExtensibleEnum/action/getExtensibleEnumsOptions",
+    "method": "get",
+    "params": {
+      "controller": "ExtensibleEnum",
+      "action": "getExtensibleEnumsOptions"
+    },
+    "operationId": "getExtensibleEnumsOptions",
+    "tags": [
+      "ExtensibleEnum"
+    ],
+    "summary": "Get extensible enums options for multiple lists",
+    "description": "Get extensible enums options for multiple lists",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "queryParams": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "extensibleEnumsIds": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object"
+    }
   }
 ]

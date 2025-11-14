@@ -27,4 +27,18 @@ class ExtensibleEnum extends Base
 
         return $this->getRecordService()->getExtensibleEnumOptions((string)$request->get('extensibleEnumId'));
     }
+
+    public function actionGetExtensibleEnumsOptions($params, $data, Request $request)
+    {
+        $ids = $request->get('extensibleEnumIds');
+        if (is_string($ids)) {
+            $ids = @json_decode($ids, true);
+        }
+
+        if (!$request->isGet() || empty($ids)) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->getExtensibleEnumsOptions($ids);
+    }
 }
