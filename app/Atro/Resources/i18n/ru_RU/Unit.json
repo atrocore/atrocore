@@ -7,7 +7,7 @@
     "multiplier": "Мультипликатор",
     "convertTo": "Конвертировать в",
     "symbol": "Символ",
-    "isActive": "Активные"
+    "isActive": "Активный"
   },
   "exceptions": {
     "defaultIsRequired": "Мера должна иметь единицу измерения по умолчанию.",
