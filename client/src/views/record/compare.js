@@ -163,17 +163,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getCompareUrl() {
-            return this.scope + '/action/merge'
+            return 'App/action/merge'
         },
 
         getCompareData(targetId, attributes, relationshipData) {
             return {
+                scope: this.scope,
                 attributes: {
                     input: attributes,
                     relationshipData: relationshipData
                 },
-                targetId: targetId,
-                sourceIds: this.getModels().filter(m => m.id !== targetId).map(m => m.id),
+                sourceIds: this.getModels().map(m => m.id),
             }
         },
 

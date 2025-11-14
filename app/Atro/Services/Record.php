@@ -394,14 +394,15 @@ class Record extends RecordService
 
     public function merge($id, array $sourceIdList, \stdClass $attributes, bool $keepSources = false)
     {
-        if (empty($id)) {
-            throw new Error();
-        }
-
         $repository = $this->getRepository();
-        $input = $attributes->input;
-        unset($input->id);
-        $entity = $this->createEntity($input);
+
+        if(!empty($id)) {
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        }else{
+            $input = $attributes->input;
+            unset($input->id);
+            $entity = $this->createEntity($input);
+        }
 
         if (!$entity) {
             throw new NotFound();
