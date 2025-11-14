@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Tipo",
     "folder": "Carpeta",
     "storage": "Almacenamiento",
     "mimeType": "Tipo MIME",
