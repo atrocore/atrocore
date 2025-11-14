@@ -495,6 +495,21 @@ class Attribute extends Base
 
     public function beforeSave(Entity $entity, array $options = [])
     {
+        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
+            $converterName = $this
+                ->getMetadata()
+                ->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
+
+            if (empty($converterName)) {
+                $message = $this
+                    ->getInjection('language')
+                    ->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
+                throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
+            }
+
+            $this->getInjection('container')->get($converterName)->convert($entity);
+        }
+
         if ($entity->get('code') === '') {
             $entity->set('code', null);
         }
@@ -588,25 +603,6 @@ class Attribute extends Base
         }
     }
 
-    public function save(Entity $entity, array $options = [])
-    {
-        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
-            $converterName = $this
-                ->getMetadata()
-                ->get(['attributes', $entity->getFetched('type'), 'convert', $entity->get('type')]);
-
-            if (empty($converterName)) {
-                $message = $this
-                    ->getInjection('language')
-                    ->translate('noAttributeConverterFound', 'exceptions', 'Attribute');
-                throw new BadRequest(sprintf($message, $entity->getFetched('type'), $entity->get('type')));
-            }
-
-            $this->getInjection('container')->get($converterName)->convert($entity);
-        }
-
-        return parent::save($entity, $options);
-    }
 
     public function clearAttributeValue(string $scope, string $attributeId, string $column): void
     {
