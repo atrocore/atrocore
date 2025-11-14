@@ -3,7 +3,7 @@
     "name": "Название группы",
     "description": "Описание",
     "code": "Код",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "attributes": "Атрибуты",
     "sortOrder": "Порядок сортировки"
   },
