@@ -4,7 +4,7 @@
     "entity": "Сущность",
     "notificationProfile": "Профиль уведомлений",
     "occurrence": "Событие",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "ignoreSelfAction": "Игнорируйте собственные действия",
     "asOwner": "В качестве владельца",
     "asFollower": "Как последователь",
