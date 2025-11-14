@@ -74,6 +74,15 @@ class Create extends AbstractAction
         /** @var Record $service */
         $service = $this->getServiceFactory()->create($action->get('targetEntity'));
 
+        if (property_exists($inputData, 'id')) {
+            $existed = $this->getEntityManager()->getEntity($action->get('targetEntity'), $inputData->id);
+            if (!empty($existed)) {
+                $service->updateEntity($existed->id, $inputData);
+
+                return true;
+            }
+        }
+
         $service->createEntity($inputData);
 
         return true;
