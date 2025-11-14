@@ -1,6 +1,6 @@
 {
   "fields": {
-    "minimumScore": "Мінімальний бал, %.",
+    "minimumScore": "Мінімальний бал, %",
     "entity": "Сутність",
     "sourceEntity": "Джерело",
     "masterEntity": "Мастер",
