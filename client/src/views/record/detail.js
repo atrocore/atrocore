@@ -2165,7 +2165,40 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
                 layout.push(panel);
             }
+
+            this.loadListOptionsDataFromLayout(layout)
+
             return this.prepareLayoutAfterConverting(layout);
+        },
+
+        loadListOptionsDataFromLayout(layout) {
+            const idsToLoad = []
+
+            layout.forEach(panel => {
+                (panel.rows || []).forEach(row => {
+                    (row || []).forEach(cell => {
+                        if (cell && cell.field) {
+                            let extensibleEnumId = this.getMetadata().get(['entityDefs', this.model.name, 'fields', cell.field, 'extensibleEnumId']) || this.model.getFieldParam(cell.field, 'extensibleEnumId');
+                            if (extensibleEnumId &&
+                                (this.model.getFieldParam(cell.field, 'dropdown') || this.model.get('attributesDefs')?.[cell.field]?.dropdown) &&
+                                !idsToLoad.includes(extensibleEnumId) &&
+                                !Espo['extensible_enum_' + extensibleEnumId]) {
+                                idsToLoad.push(extensibleEnumId)
+                            }
+                        }
+                    })
+                })
+            })
+
+            if (idsToLoad.length === 0) {
+                return
+            }
+
+            this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumsOptions`, { extensibleEnumIds: idsToLoad }, { async: false }).then(res => {
+                Object.entries(res).forEach(([extensibleEnumId, value]) => {
+                    Espo['extensible_enum_' + extensibleEnumId] = value;
+                })
+            });
         },
 
         getRelEntity(entityType, link) {
