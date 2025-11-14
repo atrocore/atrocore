@@ -11,8 +11,8 @@
 
     const dispatch = createEventDispatcher();
 
-    export let scope;
-    export let id;
+    export let scope: string;
+    export let id: string;
     export let fetchModel: Function
 
 
