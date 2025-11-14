@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Активные",
+    "isActive": "Активный",
     "isDefault": "По умолчанию",
     "description": "Описание",
     "hideShowFullList": "Скрыть \"Показать полный список\" на панелях отношений",
