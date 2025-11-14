@@ -11,6 +11,8 @@
 
 namespace Atro\ActionTypes;
 
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotModified;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
 
@@ -54,13 +56,15 @@ class Create extends AbstractAction
                     $templateData = [
                         'entity'              => $entity,
                         'triggeredEntityType' => $input->triggeredEntityType ?? null,
-                        'triggeredEntityId'   => $input->triggeredEntityId ?? null
+                        'triggeredEntityId'   => $input->triggeredEntityId ?? null,
                     ];
-                    $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
+                    $outputJson = $this->container->get('twig')
+                        ->renderTemplate($actionData->field->updateScript, $templateData);
                     $input = @json_decode((string)$outputJson);
-                    if ($input !== null) {
-                        $inputData = $input;
+                    if ($input === null) {
+                        throw new Error("Action '{$action->get('name')}' failed. Script generated invalid JSON: $outputJson");
                     }
+                    $inputData = $input;
                 }
                 break;
         }
@@ -77,7 +81,10 @@ class Create extends AbstractAction
         if (property_exists($inputData, 'id')) {
             $existed = $this->getEntityManager()->getEntity($action->get('targetEntity'), $inputData->id);
             if (!empty($existed)) {
-                $service->updateEntity($existed->id, $inputData);
+                try {
+                    $service->updateEntity($existed->id, $inputData);
+                } catch (NotModified $e) {
+                }
 
                 return true;
             }
