@@ -135,16 +135,6 @@ Installation Guide for Docker is [here](https://help.atrocore.com/installation-a
 
 We recommend to use Docker Image to play with the system, and standard installation for production environment.
 
-## License
-
-AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
-
-## Contributing
-
-- **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
-- **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
-- **Contribute features:** You are encouraged to create new features. Please contact us before you start.
-
 ## Screenshots
 |                                                                                          |                                                                                          |
 | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -161,11 +151,17 @@ AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
 - Password: admin
 
 
+## Contributing
+
+- **Report bugs:** please [report bugs](https://github.com/atrocore/atrocore/issues/new).
+- **Fix bugs:** please create a pull request in the affected repository including a step by step description to reproduce the problem.
+- **Contribute features:** You are encouraged to create new features. Please contact us before you start.
+
+
 ## Localization
 
 Would you like to help us translate UIs into your language, or improve existing translations?
 - https://translate.atrocore.com/
-
 
 ## Resources
 
@@ -183,3 +179,8 @@ If you find AtroCore useful:
 - ⭐ Star the repo
 - 🗣️ Share it with your network
 - 🛠️ Contribute to the project
+
+
+## License
+
+AtroCore is published under the GNU GPLv3 [license](LICENSE.txt).
