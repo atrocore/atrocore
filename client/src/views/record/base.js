@@ -60,20 +60,23 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
                 $.each(confirmations, (field, data) => {
                     if (_prev[field] !== attrs[field]) {
-                        let key = null;
-                        if (typeof data.values !== 'undefined') {
-                            data.values.forEach(value => {
-                                if (attrs[field] === value) {
-                                    key = data.message;
-                                }
-                            });
-                        } else {
-                            key = data;
-                        }
+                        // check if both values are empty
+                        if ([_prev[field], attrs[field]].every(v => v !== null && v !== undefined)) {
+                            let key = null;
+                            if (typeof data.values !== 'undefined') {
+                                data.values.forEach(value => {
+                                    if (attrs[field] === value) {
+                                        key = data.message;
+                                    }
+                                });
+                            } else {
+                                key = data;
+                            }
 
-                        if (key) {
-                            let parts = key.split('.');
-                            confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                            if (key) {
+                                let parts = key.split('.');
+                                confirmMessage = this.translate(parts[2], parts[1], parts[0]);
+                            }
                         }
                     }
                 });
