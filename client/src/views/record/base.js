@@ -60,7 +60,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper'], function (Dep, 
                 let confirmations = this.getMetadata().get(`clientDefs.${model.urlRoot}.confirm`) || {};
                 $.each(confirmations, (field, data) => {
                     if (_prev[field] !== attrs[field]) {
-                        // check if both values are empty
+                        // check if both values are not empty
                         if ([_prev[field], attrs[field]].every(v => v !== null && v !== undefined)) {
                             let key = null;
                             if (typeof data.values !== 'undefined') {
