@@ -319,15 +319,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     return;
                 }
 
-                if( action === 'compare' && this.model.get('entities')) {
+                if (action === 'compare' && this.model.get('entities')) {
                     let shouldDisabled = false;
                     for (const entityType of this.model.get('entities')) {
-                        if(!this.getAcl().check(entityType, 'update')) {
+                        if (!this.getAcl().check(entityType, 'read')) {
                             shouldDisabled = true;
                             break;
                         }
                     }
-                    if(shouldDisabled) {
+                    if (shouldDisabled) {
                         return;
                     }
                 }
@@ -441,6 +441,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     showEntitySelector: true,
                     callbacks: {
                         selectNode: data => {
+                            if (!this.getAcl().check('Selection', 'edit')) {
+                                return
+                            }
                             if (window.treePanelComponent.getActiveItem() !== '_self') {
                                 view.selectNode(data);
                                 return;
@@ -601,14 +604,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getCompareButtons() {
-            return {
-                additionalButtons: [
-                    {
-                        action: 'addItem',
-                        name: 'addItem',
-                        label: this.translate('addItem')
-                    }
-                ],
+            let buttons = {
+                additionalButtons: [],
                 buttons: [],
                 dropdownButtons: [
                     {
@@ -620,6 +617,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         name: 'duplicate'
                     }
                 ]
+            }
+
+            if (this.getAcl().check('Selection', 'edit')) {
+                buttons.additionalButtons.push({
+                    action: 'addItem',
+                    name: 'addItem',
+                    label: this.translate('addItem')
+                })
             }
         },
 
