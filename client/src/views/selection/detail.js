@@ -37,14 +37,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setup: function () {
-            if(!this.selectionRecordModels && ['merge', 'compare'].includes(this.selectionViewMode)) {
+            if (!this.selectionRecordModels && ['merge', 'compare'].includes(this.selectionViewMode)) {
                 this.wait(true)
                 this.reloadModels(() => {
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
                     this.wait(false)
                 });
-            }else{
+            } else {
                 Dep.prototype.setup.call(this);
                 this.setupCustomButtons();
             }
@@ -66,6 +66,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.listenTo(collection, 'sync', () => {
                     this.selectionRecords = collection.models.map(m => m.attributes);
                     window.treePanelComponent.rebuildTree();
+                    if (collection.models.length > 1) {
+                        this.enableButtons()
+                    }
                 });
             });
 
@@ -76,12 +79,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.listenToOnce(this, 'after:render', () => {
                 let record = this.getMainRecord();
-                if(!record || typeof record.isPanelsLoading !== "function") {
+                if (!record || typeof record.isPanelsLoading !== "function") {
                     return;
                 }
 
-                if(record.isPanelsLoading()) {
-                    this.notify('Loading...');
+                if (record.isPanelsLoading()) {
+                    this.notify(this.translate('Loading...'));
                     $('#main > .content-wrapper > main').css('overflow-y', 'hidden')
                 }
             })
@@ -146,17 +149,22 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }, true, false, true);
         },
 
+        updateUrl(mode = null) {
+            mode = mode ?? this.selectionViewMode;
+            const link = '#Selection/view/' + this.model.id + '/selectionViewMode=' + mode;
+            this.getRouter().navigate(link, {trigger: false});
+        },
+
         actionShowSelectionView: function (data) {
             if (this.selectionViewMode === data.name) {
                 return;
             }
 
-            if(!this.availableModes.includes(data.name)) {
+            if (!this.availableModes.includes(data.name)) {
                 return;
             }
 
-            const link = '#Selection/view/' + this.model.id +'/selectionViewMode=' + data.name;
-            this.getRouter().navigate(link, {trigger: false});
+            this.updateUrl(data.name);
 
             // if we change from compare to merge or vis-versa
             if (['compare', 'merge'].includes(this.selectionViewMode) && ['compare', 'merge'].includes(data.name)) {
@@ -217,6 +225,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setupRecord: function () {
+            if (['compare', 'merge'].includes(this.selectionViewMode) && this.selectionRecordModels.length < 2) {
+                this.notify('You need at least two item for comparison', 'error');
+                this.selectionViewMode = 'standard';
+                this.updateUrl()
+                this.refreshContent();
+                return;
+            }
             const o = {
                 model: this.model,
                 selectionId: this.model.id,
@@ -233,7 +248,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
 
             this.createView('record', this.getRecordViewName(), o, view => {
-                if(this.isRendered()) {
+                if (this.isRendered()) {
                     view.render();
                 }
                 this.listenTo(view, 'detailPanelsLoaded', data => {
@@ -264,10 +279,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                 this.listenTo(view, 'merge-success', () => {
                     this.selectionViewMode = 'standard';
-                    const link = '#Selection/view/' + this.model.id +'/selectionViewMode=standard';
-                    this.getRouter().navigate(link, {trigger: false});
+                    this.updateUrl(this.selectionViewMode);
                     this.refreshContent()
-                })
+                });
+
 
                 if (this.isRendered()) {
                     this.setupCustomButtons();
@@ -285,19 +300,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             headerButtons: this.getMenu()
                         }, view.getRecordButtons())
                     }));
-                    this.notify(false);
                 });
 
                 this.listenTo(view, 'all-panels-rendered', () => {
-                   this.enableButtons()
+                    this.enableButtons()
                     $('#main > .content-wrapper > main').css('overflow-y', 'auto')
                 });
             });
         },
 
-        enableButtons () {
+        enableButtons() {
             ['standard', 'compare', 'merge'].forEach(action => {
-                if(this.comparisonAcrossEntities()) {
+                if (this.comparisonAcrossEntities()) {
                     return;
                 }
                 $(`button[data-name="${action}"]`).removeClass('disabled');
@@ -325,9 +339,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         actionAddItem() {
-            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+            let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
 
-            if (this.getTotalRecords() >=  maxComparableItem) {
+            if (this.getTotalRecords() >= maxComparableItem) {
                 this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
                 return;
             }
@@ -380,9 +394,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.treeAllowed = false
             Dep.prototype.afterRender.call(this);
             this.renderLeftPanel();
-            if(this.selectionViewMode === 'standard') {
-                this.enableButtons();
-            }
         },
 
         renderLeftPanel() {
@@ -425,9 +436,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             if (selected) {
                                 this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
                             } else {
-                                let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
+                                let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
 
-                                if (this.getTotalRecords() >=  maxComparableItem) {
+                                if (this.getTotalRecords() >= maxComparableItem) {
                                     this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
                                     return;
                                 }
@@ -474,7 +485,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         },
 
                         treeWidthChanged: (width) => {
-                            if(view && typeof view.onTreeResize === 'function') {
+                            if (view && typeof view.onTreeResize === 'function') {
                                 view.onTreeResize(width)
                             }
                         },
@@ -606,7 +617,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         actionMerge() {
-            if(this.selectionViewMode !== 'merge') {
+            if (this.selectionViewMode !== 'merge') {
                 return;
             }
 
