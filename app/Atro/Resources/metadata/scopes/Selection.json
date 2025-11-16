@@ -12,5 +12,9 @@
   ],
   "modifiedExtendedRelations": [
     "selectionRecords"
+  ],
+  "aclLevelList": [
+    "no",
+    "all"
   ]
 }
