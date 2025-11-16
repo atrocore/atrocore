@@ -266,7 +266,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }
 
                             let selected = this.model.get(this.nameHashName) || {};
-                            if (selected._localeId) {
+                            if ('_localeId' in selected) {
                                 delete selected._localeId;
                             }
                             models.forEach(function (model) {
