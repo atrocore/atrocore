@@ -629,14 +629,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getMergeButtons(disabled = true) {
-            return Object.assign(this.getCompareButtons(), {
+            return Object.assign(this.getCompareButtons(), this.getAcl().check(this.model.get('entities')[0], 'create') ? {
                 buttons: [{
                     label: this.translate('Merge'),
                     name: 'merge',
                     style: 'primary',
                     disabled: disabled
                 }]
-            });
+            }: {});
         },
 
         actionMerge() {
