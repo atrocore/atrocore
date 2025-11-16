@@ -24,60 +24,64 @@ use Espo\ORM\Entity;
 
 class SelectionRecord extends Base
 {
-   protected function beforeSave(Entity $entity, array $options = [])
-   {
-       $select = ['id'];
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        $select = ['id'];
 
-       if ($this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', 'name'])) {
-           $select[] = 'name';
-       }
+        if ($this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', 'name'])) {
+            $select[] = 'name';
+        }
 
-       $record = $this->getEntityManager()->getRepository($entity->get('entityType'))
-           ->select($select)
-           ->where(['id' => $entity->get('entityId')])
-           ->findOne();
+        $record = $this->getEntityManager()->getRepository($entity->get('entityType'))
+            ->select($select)
+            ->where(['id' => $entity->get('entityId')])
+            ->findOne();
 
-       if(empty($record)) {
-           throw new Error("Selection record not found");
-       }
+        if (empty($record)) {
+            throw new Error("Selection record not found");
+        }
 
-       $entity->set('name', $record->get('name') ?? $record->get('id'));
+        $entity->set('name', $record->get('name') ?? $record->get('id'));
 
-       if($entity->isNew() && !empty($entity->get('selectionsIds'))) {
-           foreach ($entity->get('selectionsIds') as $key => $id) {
-               $exists = $this->getConnection()->createQueryBuilder()
-                   ->select('1')
-                   ->from('selection_selection_record', 'ssr')
-                   ->join('ssr', 'selection_record', 'sr', 'ssr.selection_record_id = sr.id and sr.deleted = :false')
-                   ->where('ssr.selection_id = :selectionId and ssr.deleted = :false')
-                   ->andWhere('sr.entity_id = :entityId and sr.entity_type = :entityType')
-                   ->setParameter('false', false, ParameterType::BOOLEAN)
-                   ->setParameter('entityId', $entity->get('entityId'))
-                   ->setParameter('entityType', $entity->get('entityType'))
-                   ->setParameter('selectionId', $id)
-                   ->fetchOne();
 
-               if(!empty($exists)) {
-                   $values = $entity->get('selectionsIds');
-                   unset($values[$key]);
-                   $entity->set('selectionsIds', array_values($values));
-               }
-           }
+        if ($entity->isNew() || $entity->isAttributeChanged('entityId')) {
+            if (!$entity->isNew()) {
+                $entity->loadLinkMultipleField('selections');
+            }
+            foreach ($entity->get('selectionsIds') as $key => $id) {
+                $exists = $this->getConnection()->createQueryBuilder()
+                    ->select('1')
+                    ->from('selection_selection_record', 'ssr')
+                    ->join('ssr', 'selection_record', 'sr', 'ssr.selection_record_id = sr.id and sr.deleted = :false')
+                    ->where('ssr.selection_id = :selectionId and ssr.deleted = :false')
+                    ->andWhere('sr.entity_id = :entityId and sr.entity_type = :entityType')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('entityId', $entity->get('entityId'))
+                    ->setParameter('entityType', $entity->get('entityType'))
+                    ->setParameter('selectionId', $id)
+                    ->fetchOne();
 
-          if(empty($entity->get('selectionsIds'))) {
-              throw new NotUnique("Selection already exists");
-          }
-       }
+                if (!empty($exists)) {
+                    $values = $entity->get('selectionsIds');
+                    unset($values[$key]);
+                    $entity->set('selectionsIds', array_values($values));
+                }
+            }
 
-       parent::beforeSave($entity, $options);
-   }
+            if (empty($entity->get('selectionsIds'))) {
+                throw new NotUnique("Selection already exists");
+            }
+        }
 
-   public function save(Entity $entity, array $options = [])
-   {
-       try {
-           return parent::save($entity, $options);
-       }catch (NotUnique $e) {
-           throw new BadRequest("Selection record already exists");
-       }
-   }
+        parent::beforeSave($entity, $options);
+    }
+
+    public function save(Entity $entity, array $options = [])
+    {
+        try {
+            return parent::save($entity, $options);
+        } catch (NotUnique $e) {
+            throw new BadRequest("Selection record already exists");
+        }
+    }
 }
