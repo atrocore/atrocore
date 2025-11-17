@@ -86,8 +86,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 this.reRenderFieldsPanels();
             })
 
-            this.listenToOnce(this, 'after:relationship-panels-render', () => {
-
+            this.listenToOnce(this, 'all-panels-rendered', () => {
                 let panelList = this.getRelationshipPanels().map(m => {
                     m.title = m.label;
                     return m;

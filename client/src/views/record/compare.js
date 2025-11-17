@@ -350,6 +350,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderRelationshipsPanels() {
             if (this.isComparisonAcrossScopes()) {
+                this.handlePanelRendering('relationshipsPanels');
+                return;
+            }
+
+            let panelList = this.getRelationshipPanels();
+
+            if(panelList.length === 0) {
+                this.handlePanelRendering('relationshipsPanels');
                 return;
             }
 
@@ -359,7 +367,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
                 model: this.model,
-                relationshipsPanels: this.getRelationshipPanels(),
+                relationshipsPanels: panelList,
                 collection: this.collection,
                 models: this.getModels(),
                 distantModels: this.getDistantModels(),
@@ -398,8 +406,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     continue;
                 }
 
+
                 let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
                 let relationScope = relationDefs['entity'];
+
+                if(!this.getAcl().check(relationScope, 'read')) {
+                    continue;
+                }
 
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
@@ -407,6 +420,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        continue;
+                    }
                 }
 
                 let panelData = {
@@ -442,10 +458,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
+                if(!this.getAcl().check(relationDefs['entity'], 'read')) {
+                    return;
+                }
+
                 let relationName = relationDefs['relationName'];
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        return ;
+                    }
                 }
 
                 relationshipsPanels.push({
