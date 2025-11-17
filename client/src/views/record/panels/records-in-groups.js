@@ -234,6 +234,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             let count = 0;
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, groupCollection => {
+
                     this.initGroupCollection(group, groupCollection, () => {
                         let viewName = this.defs.recordListView || 'views/record/list-in-groups';
                         let options = {
