@@ -15718,7 +15718,6 @@ span.became .file-link {
 
 .bottom .panel .group-container > .group > .group-name {
     padding: 10px 0 10px 10px;
-    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group > .group-name .btn {
@@ -15726,8 +15725,9 @@ span.became .file-link {
     border-width: 0;
 }
 
-.bottom .panel .group-container > .group {
-    border-bottom: 1px solid #ececec;
+.bottom .panel .group-container > .group > .list-container .list > table {
+    border-top: 1px solid #e8eced;
+    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group .list td.over-visible[data-name="value"] {

@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "classification": "Klasyfikacja",
+    "attribute": "Atrybut",
+    "isRequired": "Wymagane",
+    "isReadOnly": "Tylko do odczytu",
+    "isProtected": "Chroniony",
+    "maxLength": "Maksymalna długość",
+    "countBytesInsteadOfCharacters": "Liczenie bajtów zamiast znaków",
+    "value": "Wartość domyślna",
+    "valueFrom": "Wartość domyślna Od",
+    "valueTo": "Wartość domyślna Do",
+    "varcharValue": "Wartość domyślna: String",
+    "referenceValue": "Wartość domyślna: Odniesienie",
+    "textValue": "Wartość domyślna: Tekst",
+    "intValue": "Wartość domyślna: Liczba całkowita",
+    "floatValue": "Wartość domyślna: Pływak",
+    "dateValue": "Wartość domyślna: Data",
+    "datetimeValue": "Wartość domyślna: Data-czas",
+    "boolValue": "Wartość domyślna: Boolean",
+    "min": "Min",
+    "max": "Max",
+    "enableConditionalRequired": "Proszę włączyć wymagane",
+    "enableConditionalVisible": "Włącz widoczne",
+    "enableConditionalReadOnly": "Włącz tylko do odczytu",
+    "enableConditionalProtected": "Włącz chronione",
+    "enableConditionalDisableOptions": "Proszę włączyć wyłączone opcje",
+    "conditionalRequired": "Wymagane",
+    "conditionalVisible": "Widoczny",
+    "conditionalReadOnly": "Tylko do odczytu",
+    "conditionalProtected": "Chroniony",
+    "conditionalDisableOptions": "Wyłączone opcje"
+  },
+  "labels": {
+    "classificationAttribute": "Atrybut z klasyfikacji",
+    "unlinkRelatedAttribute": "Usunąć i zachować do celów archiwizacji",
+    "cascadeUnlinkRelatedAttribute": "Usuwanie z rekordów",
+    "conditionalProperties": "Właściwości warunkowe"
+  },
+  "options": {
+    "scope": {
+      "Global": "Globalny",
+      "Channel": "Kanał"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Atrybut \"%s\" nie został powiązany ze wszystkimi wybranymi kanałami.",
+    "unlinkRelatedAttribute": "Czy na pewno chcą Państwo usunąć wybrany atrybut z wybranej klasyfikacji? Wszystkie powiązane rekordy zachowają ten atrybut.",
+    "cascadeUnlinkRelatedAttribute": "Czy na pewno chcą Państwo usunąć wybrany atrybut z wybranej Klasyfikacji i powiązanych z nią rekordów? Wszystkie powiązane wartości atrybutów również zostaną usunięte.",
+    "removeRelatedAttributeGroup": "Czy na pewno chcą Państwo usunąć wszystkie atrybuty dla wybranej grupy atrybutów z wybranej klasyfikacji? Wszystkie powiązane rekordy zachowają te atrybuty.",
+    "removeRelatedAttributeGroupCascade": "Czy na pewno chcą Państwo usunąć wszystkie atrybuty dla wybranej grupy atrybutów z wybranej klasyfikacji i powiązanych rekordów? Wszystkie powiązane wartości atrybutów również zostaną usunięte."
+  }
+}

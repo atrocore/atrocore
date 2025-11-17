@@ -23,7 +23,10 @@
     "actionIconColor": "Колір іконок дій",
     "customHeadCode": "Код Head",
     "toolbarBackgroundColor": "Колір фону тулбару",
-    "toolbarFontColor": "Колір тексту на тулбарі"
+    "toolbarFontColor": "Колір тексту на тулбарі",
+    "highlightingColorForRequired": "Виділення кольором необхідних даних",
+    "navigationIconColor": "Колір іконки навігації",
+    "statusIconColor": "Колір піктограми стану"
   },
   "tooltips": {
     "customStylesheetPath": "Ваші користувацькі стилі CSS будуть записані в цей файл. Ви також можете вносити зміни в нього безпосередньо.",

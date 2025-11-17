@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "type": "Type",
+    "path": "Ruta",
+    "files": "Archivos",
+    "folder": "Carpeta montada",
+    "folders": "Carpetas",
+    "syncFolders": "Mantener la estructura de archivos y carpetas"
+  },
+  "options": {
+    "type": {
+      "local": "Local (Linux)"
+    }
+  },
+  "tooltips": {
+    "syncFolders": "Si está marcada, la estructura física de archivos y carpetas en el almacenamiento será la misma que en el sistema. Significa que sólo se puede almacenar un archivo/carpeta con nombre similar en la misma ruta."
+  },
+  "labels": {
+    "scan": "Escanee",
+    "scanDone": "El escaneado del almacén '%s' ha finalizado."
+  },
+  "exceptions": {
+    "itemCannotBeMovedToAnotherStorage": "La carpeta/archivo no se puede mover entre almacenamientos.",
+    "folderInUse": "Sólo se puede seleccionar una carpeta vacía como carpeta montada.",
+    "storageHasItems": "La carpeta montada no puede modificarse para un almacenamiento no vacío.",
+    "storagePathNotUnique": "La ruta de almacenamiento debe ser única.",
+    "storagePathContainFilesFromAnotherStorage": "El árbol de carpetas iniciado por la ruta de almacenamiento seleccionada no puede contener carpetas/archivos asociados a otro almacenamiento.",
+    "storageTypeCannotBeChanged": "El tipo de almacenamiento no puede modificarse.",
+    "storagePathCannotBeChanged": "La ruta de almacenamiento no puede modificarse."
+  }
+}

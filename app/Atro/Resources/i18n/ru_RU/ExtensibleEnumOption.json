@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "name": "Стоимость опциона",
+    "color": "Цвет",
+    "sortOrder": "Порядок сортировки",
+    "extensibleEnums": "Списки"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsSystem": "Параметр списка '%s' необходим системе.",
+    "extensibleEnumOptionIsUsed": "Опция списка '%s' используется полем '%s' в сущности '%s' для записи '%s'."
+  }
+}

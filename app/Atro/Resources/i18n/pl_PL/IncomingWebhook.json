@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "invalidIP": "Nieprawidłowy adres IP: %s",
+    "invalidCode": "Walidacja nie powiodła się: kod musi zawierać tylko litery, cyfry, podkreślenia lub myślniki."
+  }
+}

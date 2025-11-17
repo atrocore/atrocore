@@ -985,9 +985,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getConditions(type) {
-            if (this.disableConditions) {
+            if (this.disableConditions || this.options.disableConditions) {
                 return;
             }
+
             const fieldName = this.getFieldForConditions();
 
             const defs = this.model.get('attributesDefs')?.[fieldName] ?? this.getMetadata().get(`entityDefs.${this.model.name}.fields.${fieldName}`)

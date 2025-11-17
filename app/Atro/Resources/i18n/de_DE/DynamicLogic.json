@@ -22,10 +22,12 @@
       "isLinked": "Ist verknüpft",
       "isNotLinked": "Ist nicht verknüpft",
       "inTeams": "In Teams",
-      "notInTeams": "Nicht in Teams"
+      "notInTeams": "Nicht in Teams",
+      "in": "Unter"
     }
   },
   "labels": {
-    "Field": "Feld"
+    "Field": "Feld",
+    "currentUser": "Aktueller Benutzer"
   }
 }

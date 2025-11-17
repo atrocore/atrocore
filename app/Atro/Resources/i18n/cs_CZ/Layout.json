@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "entity": "Subjekt",
+    "viewType": "Zobrazit typ",
+    "relatedEntity": "Související subjekt",
+    "layoutProfile": "Profil rozvržení"
+  },
+  "groupOptions": {
+    "viewType": {
+      "view": "Zobrazit",
+      "viewGroup": "Zobrazit skupinu"
+    }
+  },
+  "tooltips": {
+    "entity": "Jedná se o entitu, pro kterou je rozvržení nakonfigurováno.",
+    "relatedEntity": "Jedná se o hlavní entitu, z jejíž stránky se zobrazuje rozložení pro výše vybranou entitu."
+  }
+}

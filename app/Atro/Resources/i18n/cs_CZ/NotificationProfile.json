@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "isActive": "Aktivní",
+    "description": "Popis",
+    "notificationRules": "Pravidla oznamování"
+  }
+}

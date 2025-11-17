@@ -38,7 +38,9 @@
     "nonDuplicatableFields": "Nicht-duplizierbare Felder",
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
     "checkForDuplicates": "Prüfung auf Duplikate",
-    "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen"
+    "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen",
+    "customizable": "Anpassbar",
+    "fields": "Felder"
   },
   "options": {
     "type": {
@@ -84,6 +86,7 @@
   "exceptions": {
     "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
     "entityHasDirectlyLinkedAttributes": "Es gibt bereits direkt verknüpfte Attribute. Bitte entfernen Sie diese aus den Datensätzen.",
-    "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben."
+    "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{Eltern} und {Kinder} sollten nicht beide in der Beziehung sein, die Datum/Uhrzeit der Änderung bewirkt"
   }
 }

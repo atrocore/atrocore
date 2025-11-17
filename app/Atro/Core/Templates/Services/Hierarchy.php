@@ -148,15 +148,13 @@ class Hierarchy extends Record
 
     public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
-        $treeBranches = [];
-        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+        $entity = $this->getEntity($id);
 
-        if (empty($entity = $treeBranches[0])) {
-            throw new NotFound();
-        }
+        $treeBranches = [];
+        $this->createTreeBranches($entity, $treeBranches);
 
         $tree = [];
-        $this->prepareTreeForSelectedNode($entity, $tree, $sortParams);
+        $this->prepareTreeForSelectedNode($treeBranches[0] ?? $entity, $tree, $sortParams);
         $this->prepareTreeData($tree);
 
         $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
@@ -195,18 +193,22 @@ class Hierarchy extends Record
 
     protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
     {
+        $parentsIds = [];
         foreach ($entity->getRoutes() as $route) {
-            $collection = [];
-            foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
-                $collection[$item->get('id')] = $item;
-            }
+            $parentsIds[] = array_pop($route);
+        }
 
-            foreach ($route as $k => $id) {
-                $item = $collection[$id];
-                if (isset($route[$k + 1])) {
-                    $item->child = $collection[$route[$k + 1]];
+        if (empty($parentsIds)) {
+            $treeBranches[] = $entity;
+        } else {
+            $parents = $this->getRepository()->where(['id' => $parentsIds])->find();
+            if (empty($parents[0])) {
+                $treeBranches[] = $entity;
+            } else {
+                foreach ($parents as $parent) {
+                    $parent->child = $entity;
+                    $this->createTreeBranches($parent, $treeBranches);
                 }
-                $treeBranches[] = $item;
             }
         }
     }

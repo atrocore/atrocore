@@ -1,7 +1,8 @@
 {
   "fields": {
     "subject": "Sujet",
-    "body": "Corps"
+    "body": "Corps",
+    "isHtml": "HTML"
   },
   "labels": {
     "send": "Envoyer"

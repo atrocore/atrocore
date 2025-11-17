@@ -60,7 +60,13 @@
     "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung",
     "modifiedExtendedEnabled": "Änderung als Modifikation erfassen",
     "duplicateIgnore": "Nicht entlastbar",
-    "recordRelatedChangesInStream": "Änderungen an zugehörigen Datensätzen für die aktuelle Entität aufzeichnen."
+    "recordRelatedChangesInStream": "Änderungen an zugehörigen Datensätzen für die aktuelle Entität aufzeichnen.",
+    "conditionalRequired": "Erforderlich",
+    "conditionalReadOnly": "Schreibgeschützt",
+    "conditionalProtected": "Geschützt",
+    "tooltip": "Kurzinfo",
+    "conditionalVisible": "Sichtbar",
+    "conditionalDisableOptions": "Deaktivierte Optionen"
   },
   "tooltips": {
     "foreignCode": "Dieser Codename wird für das Feld verwendet, das in der verknüpften Entität für die Rückwärtsrelation angelegt wurde.",
@@ -71,7 +77,7 @@
     "readOnly": "Der Feldwert kann nicht vom Benutzer festgelegt werden. Es ist jedoch möglich, ihn über die API zu ändern.",
     "protected": "Der Feldwert kann nicht vom Benutzer angegeben werden. Weder über das Frontend noch über die API.",
     "maxLength": "Maximal zulässige Länge des Textes.",
-    "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"\/^[A-Z]{1,10}$\/\"",
+    "pattern": "Um nur Großbuchstaben mit einer maximalen Länge von 10 Zeichen zu aktivieren, verwenden Sie \"/^[A-Z]{1,10}$/\"",
     "default": "Der Wert wird bei der Erstellung standardmäßig festgelegt.",
     "isSorted": "Die Optionen werden nach dem Speichern sortiert.",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind.",
@@ -115,6 +121,7 @@
   },
   "labels": {
     "resetToDefault": "Auf Standardwerte zurücksetzen",
-    "relationManagement": "Beziehungs-Management"
+    "relationManagement": "Beziehungs-Management",
+    "conditionalProperties": "Bedingte Eigenschaften"
   }
 }

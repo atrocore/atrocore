@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Подходящий",
+    "weight": "Вес",
+    "sourceField": "Источник Поле",
+    "targetField": "Target Field",
+    "stagingEntity": "Постановочная сущность",
+    "masterEntity": "Главная сущность",
+    "matchingRuleSet": "Установите",
+    "matchingRules": "Правила подбора",
+    "operator": "Оператор"
+  },
+  "options": {
+    "type": {
+      "equal": "Равный",
+      "like": "Например,",
+      "contains": "Содержит",
+      "set": "Установите"
+    },
+    "operator": {
+      "and": "И",
+      "or": "ИЛИ"
+    }
+  }
+}

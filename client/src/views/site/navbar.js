@@ -272,7 +272,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         },
 
         setupTabDefsList: function () {
-            this.tabDefsList = this.tabList.map(tab => this.getTabDefs(tab));
+            this.tabDefsList = this.tabList.map(tab => this.getTabDefs(tab)).filter(item => item != null);
         },
 
         getTabDefs(tab) {
@@ -298,9 +298,12 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 group = true;
                 name = tab.name;
                 translateCategory = 'navMenuDelimiters';
-                items = tab.items.map(item => this.getTabDefs(item));
+                items = tab.items.map(item => this.getTabDefs(item)).filter(item => item != null);
                 link = 'javascript:';
             } else {
+                if (!this.getAcl().check(tab, 'read')){
+                    return null;
+                }
                 iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
                 id = tab;
                 group = false;

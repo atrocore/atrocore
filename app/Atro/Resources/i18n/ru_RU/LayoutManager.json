@@ -8,14 +8,15 @@
     "panelName": "Название панели",
     "style": "Стиль",
     "isLarge": "Большой размер шрифта",
-    "dynamicLogicVisible": "Условия, которые делают панель видимой",
     "sticked": "Прилеплен",
-    "cssStyle": "CSS Styles"
+    "cssStyle": "CSS Styles",
+    "hiddenPerDefault": "Скрыт по умолчанию"
   },
   "options": {
     "align": {
       "left": "по левому краю",
-      "right": "по правому краю"
+      "right": "по правому краю",
+      "center": "Центр"
     },
     "style": {
       "default": "По умолчанию",
@@ -28,6 +29,14 @@
   },
   "labels": {
     "New panel": "Новая панель",
-    "Layout": "Макет"
+    "Layout": "Макет",
+    "configure": "Настройте",
+    "reset": "Сброс макета",
+    "fullEdit": "Полное редактирование",
+    "resetToSystem": "Сброс к системной раскладке",
+    "layoutManagement": "Управление макетом",
+    "layoutSelection": "Выбор раскладки",
+    "layoutCustomization": "Настройка макета",
+    "Current Layout": "Текущий макет"
   }
 }

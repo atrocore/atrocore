@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\FileStorage\FileStorageInterface;
 use Atro\Core\Templates\Services\Base;
@@ -65,14 +66,21 @@ class File extends Base
             $entity->set('downloadUrl', $downloadUrl);
             if (in_array($entity->get('extension'), $this->getMetadata()->get('app.file.image.hasPreviewExtensions', []))) {
                 $entity->set('hasOpen', true);
-                if (!empty($entity->getSmallThumbnailUrl())) {
-                    $entity->set('smallThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getSmallThumbnailUrl());
-                }
-                if (!empty($entity->getMediumThumbnailUrl())) {
-                    $entity->set('mediumThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getMediumThumbnailUrl());
-                }
-                if (!empty($entity->getLargeThumbnailUrl())) {
-                    $entity->set('largeThumbnailUrl', $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $entity->getLargeThumbnailUrl());
+
+                foreach ($this->getMetadata()->get(['app', 'thumbnailTypes'], []) as $size => $typeData) {
+                    $field = \Atro\Entities\File::prepareThumbnailUrlFieldName($size);
+
+                    if ($entity->hasField($field)) {
+                        try {
+                            if (!empty($url = $this->getRepository()->getStorage($entity)->getThumbnail($entity, $size))) {
+                                $url = $this->getConfig()->getSiteUrl() . DIRECTORY_SEPARATOR . $url;
+                            }
+                        } catch (BadRequest|NotFound $e) {
+                            $url = null;
+                        }
+
+                        $entity->set($field, $url);
+                    }
                 }
             }
         }

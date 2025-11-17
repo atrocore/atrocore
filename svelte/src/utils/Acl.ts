@@ -8,7 +8,7 @@ interface AclInterface {
     checkIsOwner(model:any): boolean,
     checkInTeam(model: any): boolean,
     check(subject: any, action: any, precise: any): boolean
-
+    getScopeForbiddenFieldList(scope: string, action: string): any
 }
 
 const data = writable<AclInterface>();
@@ -86,6 +86,17 @@ export const Acl = {
                 res =  current.check(subject, action, precise);
             }
         })();
+        return res;
+    },
+
+    getScopeForbiddenFieldList(scope: string, action: string) {
+        let res = null
+        data.subscribe((current: AclInterface) => {
+            if (current) {
+                res = current.getScopeForbiddenFieldList(scope, action);
+            }
+        })();
+
         return res;
     }
 

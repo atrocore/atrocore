@@ -12,6 +12,16 @@ Espo.define('views/dashlets/entities', 'views/dashlets/abstract/base', function 
             }
         },
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.getPreferences(), 'favorites:update', () => {
+                if (this.getOption('entityListType') === 'favorites') {
+                    this.reRender();
+                }
+            });
+        },
+
         getEntities: function () {
             const type = this.getOption('entityListType');
 

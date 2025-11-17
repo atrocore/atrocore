@@ -1,7 +1,5 @@
 {
   "fields": {
-    "parents": "Связывающие атрибуты",
-    "children": "Связанные атрибуты",
     "attributeGroup": "Группа атрибутов",
     "type": "Тип атрибута",
     "code": "Код",
@@ -13,10 +11,42 @@
     "measure": "Мера",
     "isRequired": "Обязательно",
     "tooltip": "Текст подсказки",
-    "maxLength": "Максимальная длина"
+    "maxLength": "Максимальная длина",
+    "compositeAttribute": "Составной атрибут",
+    "nestedAttributes": "Вложенные атрибуты",
+    "attributePanel": "Панель атрибутов",
+    "defaultUnit": "Единица измерения по умолчанию",
+    "countBytesInsteadOfCharacters": "Считайте байты вместо символов",
+    "useDisabledTextareaInViewMode": "Использование отключенной текстовой области в режиме просмотра",
+    "amountOfDigitsAfterComma": "Количество цифр после запятой",
+    "classifications": "Классификации",
+    "min": "Мин",
+    "max": "Макс",
+    "notNull": "Отключить нулевое значение",
+    "trim": "Удалите ведущие и завершающие пробельные символы",
+    "classificationAttributes": "Атрибуты классификации",
+    "htmlSanitizer": "Дезинфицирующее средство для HTML",
+    "fullWidth": "Полная ширина",
+    "attributeGroupSortOrder": "Порядок сортировки в группе атрибутов",
+    "defaultDate": "Дата по умолчанию",
+    "isReadOnly": "Только для чтения",
+    "isProtected": "Защищенный",
+    "conditionalVisible": "Видимый",
+    "conditionalReadOnly": "Только для чтения",
+    "conditionalProtected": "Защищенный",
+    "conditionalDisableOptions": "Отключенные опции",
+    "description": "Описание",
+    "extensibleEnum": "Список",
+    "preparedName": "Название",
+    "channel": "Канал",
+    "conditionalRequired": "Обязательно",
+    "entity": "Сущность"
   },
   "labels": {
-    "addNewValue": "Добавить новое значение"
+    "addNewValue": "Добавить новое значение",
+    "Classification": "Классификация",
+    "extensibleEnumOptions": "Параметры списка",
+    "conditionalProperties": "Условные свойства"
   },
   "messages": {
     "sameNumberOptions": "Вы должны установить такое же количество опций",
@@ -27,13 +57,46 @@
     "All": "All"
   },
   "tooltips": {
-    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"\/^[A-Z]{1,10}$\/\""
+    "pattern": "Чтобы разрешить только заглавные буквы длиной в 10 символов используйте \"/^[A-Z]{1,10}$/\"",
+    "defaultDate": "Модификатор значения атрибута (например, +5 дней, -3 месяца)",
+    "dropdown": "Не используйте выпадающий список, если в нем более 300 вариантов."
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Запись не может быть удалена, так как она используется в атрибуте '%s'.",
     "attributeValueIsInUse": "Значение атрибута используется и не может быть удалено.",
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
-    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты."
+    "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
+    "wrongAttributeEntity": "Выбрана недопустимая сущность. Сущность должна совпадать с панелью атрибутов и группой атрибутов.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Сущность атрибута должна быть такой же, как и в составном атрибуте",
+    "attributeNotBelongToEntity": "Атрибут не принадлежит этой сущности.",
+    "entityCannotBeChanged": "Сущность не может быть изменена.",
+    "compositeAttributeNotFound": "Составной атрибут не найден.",
+    "compositeAttributeCannotBeChild": "Составной атрибут не может быть дочерним.",
+    "maxLessThanMin": "Min должен быть меньше Max.",
+    "noAttributeConverterFound": "Преобразование атрибута из типа '%s' в '%s' невозможно.",
+    "attributeIsUsedInClassifications": "Атрибут используется в классификациях. Пожалуйста, сначала обновите классификации.",
+    "invalidType": "Тип атрибута '{type}' недопустим"
+  },
+  "options": {
+    "type": {
+      "array": "Массив",
+      "bool": "Булево",
+      "composite": "Композит",
+      "datetime": "Дата-время",
+      "extensibleMultiEnum": "Многозначный список",
+      "markdown": "Уценка",
+      "url": "Url",
+      "varchar": "Строка",
+      "wysiwyg": "HTML",
+      "rangeInt": "Целочисленный диапазон",
+      "rangeFloat": "Диапазон поплавков",
+      "float": "Поплавок",
+      "int": "Целое число",
+      "date": "Дата",
+      "extensibleEnum": "Список",
+      "file": "Файл",
+      "text": "Текст"
+    }
   }
 }

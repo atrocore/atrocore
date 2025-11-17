@@ -7,7 +7,9 @@
     "type": "Typ",
     "role": "Rola",
     "addresses": "Adresy",
-    "contacts": "Kontakty"
+    "contacts": "Kontakty",
+    "number": "Numer",
+    "language": "Język"
   },
   "options": {
     "type": {
@@ -18,5 +20,8 @@
       "supplier": "Dostawca",
       "customer": "Klient"
     }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "Domyślny adres dla konta już istnieje."
   }
 }

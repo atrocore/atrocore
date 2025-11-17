@@ -19,7 +19,9 @@
     "suchModuleIsAlreadyInstalled": "Даний модуль вже встановлений",
     "suchModuleVersionAlreadyInstalled": "Ця версія модуля вже встановлена",
     "noSuchModuleVersion": "Такої версії модуля немає",
-    "versionIsInvalid": "Версія неправильна"
+    "versionIsInvalid": "Версія неправильна",
+    "invalidVersion": "Версія модуля невірна.",
+    "downgradeProhibited": "Версія модуля недійсна. Зниження версії заборонено."
   },
   "labels": {
     "purchased": "Придбано",

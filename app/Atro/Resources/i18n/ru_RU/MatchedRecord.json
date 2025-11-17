@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "matching": "Подходящий",
+    "staging": "Постановка",
+    "stagingEntity": "Постановочная сущность",
+    "stagingEntityId": "Идентификатор объекта постановки",
+    "master": "Мастер",
+    "masterEntity": "Главная сущность",
+    "masterEntityId": "ID основной сущности",
+    "score": "Оценка",
+    "status": "Статус"
+  },
+  "options": {
+    "status": {
+      "found": "Найдено",
+      "confirmed": "Подтверждено",
+      "rejected": "Отклонено"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "role": "Role"
+  },
+  "options": {
+    "role": {
+      "main": "Hlavní stránka",
+      "additional": "Další"
+    }
+  },
+  "tooltips": {
+    "role": "Pokud chcete, aby byl tento jazyk hlavním jazykem obsahu, vyberte možnost Hlavní. Doplňkový by měl být použit pro jazyky, do kterých se má překládat."
+  },
+  "exceptions": {
+    "mainLanguageIsAlreadyExists": "Hlavní jazyk již existuje.",
+    "roleCannotBeChanged": "Roli nelze změnit.",
+    "codeForAdditionalCannotBeChanged": "Kód pro další jazyk nelze změnit.",
+    "mainLanguageCannotBeRemoved": "Hlavní jazyk nelze odstranit."
+  }
+}

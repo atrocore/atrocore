@@ -19,12 +19,23 @@
     "datetimeValue": "Valeur par défaut : Date-heure",
     "boolValue": "Valeur par défaut : Booléen",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "conditionalProtected": "Protegé",
+    "conditionalRequired": "Exigée",
+    "conditionalReadOnly": "Lecture seule",
+    "conditionalDisableOptions": "Options désactivées",
+    "enableConditionalRequired": "Activation requise",
+    "enableConditionalVisible": "Activer Visible",
+    "enableConditionalReadOnly": "Activer Lecture seule",
+    "enableConditionalProtected": "Activer Protégé",
+    "enableConditionalDisableOptions": "Activer les options désactivées",
+    "conditionalVisible": "Visible"
   },
   "labels": {
-    "Create ClassificationAttribute": "Créer un attribut de classification",
     "unlinkRelatedAttribute": "Supprimer ici et conserver pour les archives",
-    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers"
+    "cascadeUnlinkRelatedAttribute": "Supprimer ici et dans les dossiers",
+    "conditionalProperties": "Propriétés conditionnelles",
+    "classificationAttribute": "Attribut de la classification"
   },
   "options": {
     "scope": {
@@ -33,6 +44,10 @@
     }
   },
   "messages": {
-    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis."
+    "savedForNotAllChannels": "L'attribut '%s' n'a pas été lié à tous les canaux choisis.",
+    "unlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée ? Tous les enregistrements liés conserveront cet attribut.",
+    "cascadeUnlinkRelatedAttribute": "Êtes-vous sûr de vouloir supprimer l'attribut sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées.",
+    "removeRelatedAttributeGroup": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné dans la classification sélectionnée ? Tous les enregistrements liés conserveront ces attributs.",
+    "removeRelatedAttributeGroupCascade": "Êtes-vous sûr de vouloir supprimer tous les attributs du groupe d'attributs sélectionné de la classification sélectionnée et des enregistrements qui lui sont liés ? Toutes les valeurs d'attributs associées seront également supprimées."
   }
 }

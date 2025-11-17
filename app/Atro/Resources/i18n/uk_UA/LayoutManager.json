@@ -10,7 +10,6 @@
     "sticked": "Закріплений",
     "isLarge": "Великий розмір шрифту",
     "cssStyle": "CSS Styles",
-    "dynamicLogicVisible": "Умови, які роблять панель видимою",
     "hiddenPerDefault": "Приховано за замовчуванням"
   },
   "options": {
@@ -37,6 +36,7 @@
     "layoutManagement": "Керування лейаутом",
     "layoutSelection": "Вибір лейаута",
     "layoutCustomization": "Налаштування лейаута",
-    "configure": "Налаштувати"
+    "configure": "Налаштувати",
+    "Current Layout": "Поточний макет"
   }
 }

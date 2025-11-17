@@ -1,7 +1,8 @@
 {
   "fields": {
     "subject": "Sujeto",
-    "body": "Cuerpo"
+    "body": "Cuerpo",
+    "isHtml": "Área de texto con editor"
   },
   "labels": {
     "send": "Enviar"

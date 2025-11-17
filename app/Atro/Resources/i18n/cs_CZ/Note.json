@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "post": "Příspěvek",
+    "attachments": "Přílohy",
+    "type": "Typ",
+    "createdByGender": "Vytvořeno podle pohlaví",
+    "data": "Data"
+  },
+  "filters": {
+    "all": "Všechny",
+    "posts": "Příspěvky",
+    "updates": "Aktualizace",
+    "notes": "Poznámky",
+    "emails": "E-maily"
+  },
+  "options": {
+    "type": {
+      "Post": "Příspěvek"
+    }
+  },
+  "messages": {
+    "writeMessage": "Zde napište svůj vzkaz"
+  }
+}

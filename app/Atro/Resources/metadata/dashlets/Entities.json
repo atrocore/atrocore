@@ -17,7 +17,6 @@
       }
     },
     "defaults": {
-      "displayRecords": 200,
       "autorefreshInterval": 0,
       "entityListType": "all"
     },

@@ -10,12 +10,13 @@
     "sticked": "Przypięty",
     "isLarge": "Duża wielkość czcionki",
     "cssStyle": "Style CSS",
-    "dynamicLogicVisible": "Warunki widoczności panelu"
+    "hiddenPerDefault": "Domyślnie ukryte"
   },
   "options": {
     "align": {
       "left": "Lewo",
-      "right": "Prawo"
+      "right": "Prawo",
+      "center": "Centrum"
     },
     "style": {
       "default": "Domyślny",
@@ -28,6 +29,14 @@
   },
   "labels": {
     "New panel": "Nowy panel",
-    "Layout": "Układ"
+    "Layout": "Układ",
+    "reset": "Resetowanie układu",
+    "fullEdit": "Pełna edycja",
+    "resetToSystem": "Reset do układu systemu",
+    "layoutManagement": "Zarządzanie układem",
+    "layoutSelection": "Wybór układu",
+    "layoutCustomization": "Dostosowanie układu",
+    "configure": "Proszę skonfigurować",
+    "Current Layout": "Aktualny układ"
   }
 }

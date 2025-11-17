@@ -3,5 +3,12 @@
     "code": "Code",
     "files": "Dateien",
     "storages": "Dateiablagen"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "Der Ordnerspeicher kann nicht geändert werden.",
+    "folderCreateFailed": "Die Erstellung eines Ordners ist fehlgeschlagen.",
+    "folderRenameFailed": "Die Umbenennung eines Ordners ist fehlgeschlagen.",
+    "folderMoveFailed": "Das Verschieben von Ordnern ist fehlgeschlagen.",
+    "folderDeleteFailed": "Das Löschen von Ordnern ist fehlgeschlagen."
   }
 }

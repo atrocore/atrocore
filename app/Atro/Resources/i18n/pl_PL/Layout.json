@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "entity": "Encja",
+    "viewType": "Typ widoku",
+    "relatedEntity": "Podmiot powiązany",
+    "layoutProfile": "Profil układu"
+  },
+  "groupOptions": {
+    "viewType": {
+      "view": "Zobacz",
+      "viewGroup": "Grupa widokowa"
+    }
+  },
+  "tooltips": {
+    "entity": "Jest to podmiot, dla którego konfigurowany jest układ.",
+    "relatedEntity": "Jest to główna jednostka, z której strony wyświetlany jest układ dla jednostki wybranej powyżej."
+  }
+}

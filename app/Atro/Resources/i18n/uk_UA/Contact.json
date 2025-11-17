@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "firstName": "Ім'я",
+    "secondName": "Прізвище",
+    "gender": "Стать",
+    "title": "Посада",
+    "jobPosition": "Посада",
+    "email": "Email",
+    "phone": "Телефон",
+    "mobile": "мобільний",
+    "street": "Вулиця",
+    "zip": "Поштовий індекс",
+    "box": "Коробка",
+    "city": "Місто",
+    "accounts": "Контрагенти"
+  }
+}

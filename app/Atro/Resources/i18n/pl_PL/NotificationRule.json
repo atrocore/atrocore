@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "description": "Description",
+    "entity": "Encja",
+    "notificationProfile": "Profil powiadomienia",
+    "occurrence": "Wydarzenie",
+    "isActive": "Aktywny",
+    "ignoreSelfAction": "Ignorowanie własnych działań",
+    "asOwner": "Jako właściciel",
+    "asFollower": "Jako obserwujący",
+    "asAssignee": "Jako cesjonariusz",
+    "asTeamMember": "Jako członek zespołu",
+    "asNotificationProfile": "Jako użytkownik profilu powiadomień",
+    "emailActive": "Powiadomienie e-mail",
+    "systemActive": "Powiadomienie systemowe",
+    "emailTemplateId": "Szablon e-maila",
+    "systemTemplateId": "Szablon systemu"
+  },
+  "options": {
+    "occurrence": {
+      "creation": "Utwórz",
+      "updating": "Aktualizuj",
+      "linking": "Link",
+      "unlinking": "Usuń link",
+      "deletion": "Usuń",
+      "note_created": "Proszę utworzyć notatkę",
+      "note_updated": "Uwaga dotycząca aktualizacji",
+      "note_deleted": "Proszę usunąć uwagę",
+      "ownership_assignment": "Ustawianie właściciela/przypisanego użytkownika",
+      "unlinking_ownership_assignment": "Nieustawiony właściciel/przypisany użytkownik",
+      "mentioned": "Proszę wspomnieć"
+    }
+  },
+  "labels": {
+    "Notify User": "Proszę powiadomić użytkownika",
+    "Transport": "Transport"
+  }
+}

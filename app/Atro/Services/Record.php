@@ -394,13 +394,15 @@ class Record extends RecordService
 
     public function merge($id, array $sourceIdList, \stdClass $attributes, bool $keepSources = false)
     {
-        if (empty($id)) {
-            throw new Error();
-        }
-
         $repository = $this->getRepository();
 
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        if(!empty($id)) {
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        }else{
+            $input = $attributes->input;
+            unset($input->id);
+            $entity = $this->createEntity($input);
+        }
 
         if (!$entity) {
             throw new NotFound();
@@ -501,11 +503,13 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        try {
-            $attributes->input->_skipCheckForConflicts = true;
-            $this->updateEntity($id, $attributes->input);
-        } catch (NotModified $e) {
+        if(!empty($id)) {
+            try {
+                $attributes->input->_skipCheckForConflicts = true;
+                $this->updateEntity($id, $attributes->input);
+            } catch (NotModified $e) {
 
+            }
         }
 
         if (empty($keepSources)) {
@@ -517,7 +521,7 @@ class Record extends RecordService
 
         $this->afterMerge($entity, $sourceList, $attributes);
 
-        return true;
+        return $entity;
     }
 
     public function getMergeLinkList(array $relationshipData): array

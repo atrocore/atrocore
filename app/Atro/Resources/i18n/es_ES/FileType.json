@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "files": "Archivos",
+    "aspectRatio": "Relación de aspecto",
+    "minSize": "Tamaño mínimo, Kb",
+    "maxSize": "Tamaño máximo, Kb",
+    "minWidth": "Anchura mínima, px",
+    "minHeight": "Altura mínima, px",
+    "extensions": "Extensiones",
+    "mimeTypes": "Tipos Mime"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "El registro no puede borrarse porque se utiliza en el campo \"%s\" de la entidad \"%s\".",
+    "aspectRatioMustBeInFormat": "Formato de relación de aspecto no válido. Por favor, utilice el formato ancho:alto, como 16:9."
+  },
+  "labels": {
+    "General Settings": "Ajustes generales",
+    "Image Settings": "Ajustes de imagen"
+  }
+}

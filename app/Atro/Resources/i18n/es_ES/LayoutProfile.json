@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "isActive": "Activo",
+    "isDefault": "Por defecto",
+    "description": "Descripción",
+    "hideShowFullList": "Ocultar \"Mostrar lista completa\" en los paneles de relación",
+    "layouts": "Diseño",
+    "parent": "Perfil de disposición de los padres",
+    "navigation": "Menú de navegación",
+    "favoritesList": "Favoritos",
+    "dashboardLayout": "Diseño del salpicadero"
+  },
+  "labels": {
+    "addGroup": "Añadir grupo",
+    "Menu": "Menú",
+    "Dashboards": "Escritorio",
+    "Favorites": "Favoritos"
+  },
+  "exceptions": {
+    "defaultIsRequired": "Debe existir un perfil de disposición por defecto en el sistema"
+  },
+  "messages": {
+    "profileWillBeNewDefault": "Este perfil será el nuevo predeterminado, ¿está seguro?",
+    "navigationUpdate": "El menú de navegación ha sido ajustado por el sistema."
+  },
+  "boolFilters": {
+    "withLayouts": "Con disposición almacenada"
+  }
+}

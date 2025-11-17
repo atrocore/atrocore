@@ -1,0 +1,6 @@
+{
+  "exceptions": {
+    "invalidIP": "Neplatná IP adresa: %s",
+    "invalidCode": "Ověření selhalo: kód musí obsahovat pouze písmena, číslice, podtržítka nebo pomlčky."
+  }
+}

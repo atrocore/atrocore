@@ -2,12 +2,16 @@
   "fields": {
     "name": "Название",
     "description": "Описание",
-    "units": "Единицы измерения"
+    "units": "Единицы измерения",
+    "displayFormat": "Формат дисплея"
   },
   "options": {
     "displayFormat": {
       "format1": "10€",
       "format2": "€10"
     }
+  },
+  "exceptions": {
+    "measureIsUsed": "Мера '%s' используется полем '%s' в сущности '%s'."
   }
 }

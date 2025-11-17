@@ -5,7 +5,6 @@
     "variables": "Змінні",
     "locale": "Локаль за замовчуванням",
     "useCache": "Використовувати кеш",
-    "defaultCurrency": "Валюта за замовчуванням",
     "currencyRates": "Курси обміну",
     "companyLogo": "Логотип заголовка",
     "notificationSmtpConnection": "З'єднання для оповіщень по мейлу",
@@ -22,7 +21,7 @@
     "notificationSoundsDisabled": "Вимкнути звукові нагадування",
     "applicationName": "Назва програми",
     "assignmentEmailNotifications": "Сповіщати по ел. пошті при призначенні",
-    "streamEmailNotifications": "Повідомлення про оновлення в стрічці для внутрішніх користувачів",
+    "streamEmailNotifications": "Сповіщення про оновлення в Діяльності для внутрішніх користувачів",
     "mentionEmailNotifications": "Надіслати сповіщення ел. поштою про згадки в повідомленнях",
     "authTokenPreventConcurrent": "Тільки один токен аутентифікації для кожного користувача",
     "tabIconsDisabled": "Вимкнути значки меню навігації",
@@ -39,7 +38,11 @@
     "defaultStyle": "Стиль за замовчуванням",
     "customHeadCode": "Код Head",
     "customStylesheetPath": "Шлях до файлу СSS",
-    "customStylesheet": "CSS"
+    "customStylesheet": "CSS",
+    "onlyStableReleases": "Використовуйте лише стабільні випуски",
+    "reportingEnabled": "Надсилайте анонімні повідомлення про помилки",
+    "favicon": "Іконка",
+    "disableEmailDelivery": "Вимкнути доставку електронної пошти"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Верхня межа на кількість завдань або процесів, які можуть одночасно виконуватися у фоновому режимі сервера.",
@@ -60,7 +63,8 @@
     "customHeadCode": "Додайте код в кінці тегу <head>. Atrocore не перевіряє кастомний код, тому обов'язково перевіряйте його перед публікацією.",
     "customStylesheetPath": "Ваші користувацькі стилі CSS будуть записані в цей файл. Ви також можете вносити зміни в нього безпосередньо.",
     "companyLogo": "Доступні типи файлів: image/jpeg, image/png, image/gif, image/svg+xml",
-    "favicon": "Доступний тип файлу: image/svg+xml"
+    "favicon": "Доступний тип файлу: image/svg+xml",
+    "reportingEnabled": "Анонімні повідомлення про помилки надсилатимуться до AtroCore для швидшого виявлення та вирішення проблем."
   },
   "labels": {
     "System": "Система",
@@ -82,7 +86,8 @@
     "allow": "Дозволено",
     "SMTP": "SMTP",
     "Theme Configuration": "Конфігурація теми",
-    "Custom Code": "Користувацький код"
+    "Custom Code": "Користувацький код",
+    "Currency Rates": "Курси валют"
   },
   "messages": {
     "languageMustBeSelected": "Мінімум одна мова має бути обрана."

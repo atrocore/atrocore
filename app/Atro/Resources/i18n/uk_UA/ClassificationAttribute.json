@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "classification": "Класифікація",
+    "attribute": "Атрибут",
+    "isRequired": "Обов'язковий",
+    "isReadOnly": "Тільки для читання",
+    "isProtected": "Захищено",
+    "maxLength": "Максимальна довжина",
+    "countBytesInsteadOfCharacters": "Рахувати байти замість символів",
+    "value": "За замовчуванням",
+    "valueFrom": "Значення за замовчуванням Від",
+    "valueTo": "Значення за замовчуванням To",
+    "varcharValue": "Значення за замовчуванням: Рядок",
+    "referenceValue": "Значення за замовчуванням: Посилання",
+    "textValue": "Значення за замовчуванням: Текст",
+    "intValue": "Значення за замовчуванням: Ціле число",
+    "floatValue": "Значення за замовчуванням: Float",
+    "dateValue": "Значення за замовчуванням: Дата",
+    "datetimeValue": "Значення за замовчуванням: Дата-час",
+    "boolValue": "Значення за замовчуванням: Boolean",
+    "min": "Мінімальне значення",
+    "max": "Максимальне значення",
+    "enableConditionalRequired": "Увімкнути Потрібно",
+    "enableConditionalVisible": "Увімкнути видимий",
+    "enableConditionalReadOnly": "Увімкнути тільки для читання",
+    "enableConditionalProtected": "Увімкнути Захищено",
+    "enableConditionalDisableOptions": "Увімкнути вимкнені опції",
+    "conditionalRequired": "Обов'язковий",
+    "conditionalVisible": "Видимий",
+    "conditionalReadOnly": "Тільки для читання",
+    "conditionalProtected": "Захищено",
+    "conditionalDisableOptions": "Вимкнені опції"
+  },
+  "labels": {
+    "classificationAttribute": "Атрибут з Класифікації",
+    "unlinkRelatedAttribute": "Видалити та зберегти для записів",
+    "cascadeUnlinkRelatedAttribute": "Видалення і з записів",
+    "conditionalProperties": "Умовні властивості"
+  },
+  "options": {
+    "scope": {
+      "Global": "Глобальний",
+      "Channel": "Канал"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Атрибут '%s' було встановлено не для всіх обраних каналів.",
+    "unlinkRelatedAttribute": "Ви впевнені, що хочете видалити вибраний Атрибут з вибраної Класифікації? Всі пов'язані записи збережуть цей атрибут.",
+    "cascadeUnlinkRelatedAttribute": "Ви впевнені, що хочете видалити вибраний атрибут з вибраної Класифікації та пов'язаних з ним записів? Всі пов'язані значення атрибута також будуть видалені.",
+    "removeRelatedAttributeGroup": "Ви впевнені, що хочете видалити всі атрибути для вибраної групи атрибутів з вибраної класифікації? Всі пов'язані записи збережуть ці атрибути.",
+    "removeRelatedAttributeGroupCascade": "Ви впевнені, що хочете видалити всі атрибути для вибраної Групи атрибутів з вибраної Класифікації та пов'язані з ними записи? Всі пов'язані значення атрибутів також будуть видалені."
+  }
+}

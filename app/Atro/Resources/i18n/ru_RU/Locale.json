@@ -5,7 +5,9 @@
     "weekStart": "Первый день недели",
     "timeFormat": "Формат времени",
     "thousandSeparator": "Тысячный разделитель",
-    "decimalMark": "Десятичный разделитель"
+    "decimalMark": "Десятичный разделитель",
+    "languageCode": "Код языка",
+    "fallbackLanguageCode": "Код запасного языка"
   },
   "labels": {
     "sunday": "Воскресенье",

@@ -1241,5 +1241,115 @@
     "response": {
       "$ref": "#/components/schemas/Selection"
     }
+  },
+  {
+    "route": "/ExtensibleEnum/action/getExtensibleEnumsOptions",
+    "method": "get",
+    "params": {
+      "controller": "ExtensibleEnum",
+      "action": "getExtensibleEnumsOptions"
+    },
+    "operationId": "getExtensibleEnumsOptions",
+    "tags": [
+      "ExtensibleEnum"
+    ],
+    "summary": "Get extensible enums options for multiple lists",
+    "description": "Get extensible enums options for multiple lists",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "queryParams": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "extensibleEnumsIds": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object"
+    }
+  },
+  {
+    "route": "/App/action/merge",
+    "method": "post",
+    "params": {
+      "controller": "App",
+      "action": "merge"
+    },
+    "summary": "Merge multiple records into a target entity or a new one",
+    "description": "Merge multiple records into a target entity or a new one",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "example": "Product"
+              },
+              "targetId": {
+                "type": "string",
+                "example": "some-id"
+              },
+              "sourceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "example-id"
+                }
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "object",
+                    "example": {
+                      "name": "a name",
+                      "description": "a description",
+                      "someOtherField": "value"
+                    }
+                  },
+                  "relationshipData": {
+                    "type": "object",
+                    "example": {
+                      "manyToManyRelationName": {
+                        "scope": "ForeignScope",
+                        "toDelete": [],
+                        "toUpsert": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "example": {
+        "id": "some-id",
+        "name": "a name",
+        "description": "a description"
+      }
+    }
   }
 ]

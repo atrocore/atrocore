@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Nazwa",
-    "scheduling": "Harmonogram"
+    "scheduling": "Harmonogram",
+    "jobs": "Zadania"
   },
   "labels": {
     "executeNow": "Wykonaj teraz"
@@ -15,7 +16,13 @@
   },
   "options": {
     "type": {
-      "ComposerAutoUpdate": "Automatyczna aktualizacja systemu"
+      "ComposerAutoUpdate": "Automatyczna aktualizacja systemu",
+      "ClearEntities": "Wyczyść usunięte dane",
+      "UpdateCurrencyExchangeViaECB": "Aktualizacja wymiany walut przez EBC",
+      "CheckUpdates": "Proszę sprawdzić aktualizacje systemu",
+      "ScanStorage": "Przechowywanie skanów",
+      "FindMatches": "Proszę znaleźć dopasowania",
+      "CalculateScriptFieldsForEntities": "Obliczanie pól skryptu"
     }
   },
   "tooltips": {

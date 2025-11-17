@@ -1,20 +1,31 @@
 {
   "fields": {
     "name": "Назва",
-    "scheduling": "Планування"
+    "scheduling": "Планування",
+    "jobs": "Завдання"
   },
   "labels": {
-    "executeNow":"Виконати зараз"
+    "executeNow": "Виконати зараз"
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Неправильна конфігурація crontab"
   },
   "options": {
     "type": {
-      "ComposerAutoUpdate": "Автооновлення модулів"
+      "ComposerAutoUpdate": "Автооновлення модулів",
+      "ClearEntities": "Очистити видалені дані",
+      "UpdateCurrencyExchangeViaECB": "Оновіть обмін валют через ЄЦБ",
+      "CheckUpdates": "Перевірте оновлення системи",
+      "ScanStorage": "Сканувати сховище",
+      "FindMatches": "Знайти збіги",
+      "CalculateScriptFieldsForEntities": "Обчислення полів скрипта"
     }
   },
   "tooltips": {
     "scheduling": "Визначає періодичність виконання завдання.\n\n```/5 * * * * * `` - кожні 5 хвилин\n\n``0 */2 * * * `` - кожні 2 години\n\n``30 1 * * * `` - кожен день один раз о 01:30\n\n``0 0 1 * * * `` - кожен перший день місяця"
+  },
+  "messages": {
+    "jobLaunched": "Робоче місце створено",
+    "jobAlreadyExist": "Вакансія була створена менше хвилини тому"
   }
 }

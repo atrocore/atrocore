@@ -2,7 +2,8 @@
   "labels": {
     "Dynamic Logic": "Dynamische Logik",
     "Label": "Label",
-    "Type": "Typ"
+    "Type": "Typ",
+    "Name": "Name"
   },
   "options": {
     "dateTimeDefault": {

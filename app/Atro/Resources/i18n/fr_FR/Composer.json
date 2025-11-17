@@ -19,7 +19,9 @@
     "suchModuleIsAlreadyInstalled": "Ce module est déjà installé",
     "suchModuleVersionAlreadyInstalled": "Cette version du module est déjà installée",
     "noSuchModuleVersion": "Aucune version de module de ce type",
-    "versionIsInvalid": "La version n'est pas valide"
+    "versionIsInvalid": "La version n'est pas valide",
+    "invalidVersion": "La version du module n'est pas valide.",
+    "downgradeProhibited": "La version du module n'est pas valide. La rétrogradation est interdite."
   },
   "labels": {
     "updateStarted": "La mise à jour a été lancée",

@@ -51,8 +51,8 @@ class UserProfile extends AbstractRecordController
         }
 
         return (object)[
-            'dashboardLayout' => !empty($defaultLayout) ? $defaultLayout->get('dashboardLayout') : null,
-            'dashletsOptions' => !empty($defaultLayout) ? $defaultLayout->get('dashletsOptions') : null,
+            'dashboardLayout' => $defaultLayout?->get('dashboardLayout') ?: null,
+            'dashletsOptions' => $defaultLayout?->get('dashletsOptions') ?: null,
         ];
     }
 

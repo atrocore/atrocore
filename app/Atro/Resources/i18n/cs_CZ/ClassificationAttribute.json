@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "classification": "Klasifikace",
+    "attribute": "Atribut",
+    "isRequired": "Požadované",
+    "isReadOnly": "Pouze pro čtení",
+    "isProtected": "Chráněné stránky",
+    "maxLength": "Maximální délka",
+    "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
+    "value": "Výchozí hodnota",
+    "valueFrom": "Výchozí hodnota Od",
+    "valueTo": "Výchozí hodnota Do",
+    "varcharValue": "Výchozí hodnota: Řetězec",
+    "referenceValue": "Výchozí hodnota: Referenční",
+    "textValue": "Výchozí hodnota: Text",
+    "intValue": "Výchozí hodnota: Celé číslo",
+    "floatValue": "Výchozí hodnota: Float",
+    "dateValue": "Výchozí hodnota: Datum",
+    "datetimeValue": "Výchozí hodnota: Datum a čas",
+    "boolValue": "Výchozí hodnota: Boolean",
+    "min": "Min",
+    "max": "Max",
+    "enableConditionalRequired": "Povolit vyžadováno",
+    "enableConditionalVisible": "Povolit viditelnost",
+    "enableConditionalReadOnly": "Povolit Pouze ke čtení",
+    "enableConditionalProtected": "Povolit chráněné",
+    "enableConditionalDisableOptions": "Povolit zakázané možnosti",
+    "conditionalRequired": "Požadované",
+    "conditionalVisible": "Viditelné",
+    "conditionalReadOnly": "Pouze pro čtení",
+    "conditionalProtected": "Chráněné stránky",
+    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením"
+  },
+  "labels": {
+    "classificationAttribute": "Atribut z klasifikace",
+    "unlinkRelatedAttribute": "Vymazat a uchovat pro evidenci",
+    "cascadeUnlinkRelatedAttribute": "Odstranit a ze záznamů",
+    "conditionalProperties": "Podmíněné vlastnosti"
+  },
+  "options": {
+    "scope": {
+      "Global": "Globální",
+      "Channel": "Kanál"
+    }
+  },
+  "messages": {
+    "savedForNotAllChannels": "Atribut '%s' nebyl propojen pro všechny vybrané kanály.",
+    "unlinkRelatedAttribute": "Opravdu chcete odstranit vybraný atribut z vybrané klasifikace? Všechny související záznamy si tento atribut ponechají.",
+    "cascadeUnlinkRelatedAttribute": "Jste si jisti, že chcete odstranit vybraný atribut z vybrané klasifikace a souvisejících záznamů? Všechny související hodnoty atributů budou také odstraněny.",
+    "removeRelatedAttributeGroup": "Jste si jisti, že chcete odstranit všechny atributy vybrané skupiny atributů z vybrané klasifikace? Všechny související záznamy si tyto Atributy ponechají.",
+    "removeRelatedAttributeGroupCascade": "Jste si jisti, že chcete odstranit všechny atributy vybrané skupiny atributů z vybrané klasifikace a jejich souvisejících záznamů? Budou odstraněny také všechny související hodnoty atributů."
+  }
+}

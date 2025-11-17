@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "isActive": "Aktivní",
+    "type": "Typ",
+    "sourceEntity": "Zdrojový subjekt",
+    "inBackground": "Provést na pozadí",
+    "usage": "Použití",
+    "massAction": "Hromadná akce",
+    "display": "Zobrazit",
+    "actionsSet": "Sada akcí",
+    "actions": "Akce",
+    "webhookUrl": "URL",
+    "executeAs": "Provést jako",
+    "displayField": "Zobrazovací pole",
+    "focusField": "Zaostřovací pole",
+    "targetEntity": "Cílový subjekt",
+    "mode": "Režim",
+    "emailScript": "Skript",
+    "showEmailPreview": "Náhled před odesláním",
+    "emailTemplate": "Šablona e-mailu",
+    "emailTo": "Příjemce emailu",
+    "emailCc": "Kopie",
+    "emailBcc": "E-mail BCC"
+  },
+  "labels": {
+    "execute": "Provést",
+    "Parameters": "Parametry"
+  },
+  "massActions": {
+    "execute": "Provést"
+  },
+  "messages": {
+    "executeNow": "Jste si jisti, že chcete provést vybranou akci?"
+  },
+  "options": {
+    "usage": {
+      "entity": "Tlačítko akce Entita",
+      "record": "Tlačítko akce Záznam",
+      "field": "Akční tlačítko pole",
+      "onFieldFocus": "Zaměření v terénu",
+      "onRecordLoad": "O rekordním zatížení"
+    },
+    "display": {
+      "dropdown": "Rozbalovací nabídka",
+      "single": "Jednotlivé stránky"
+    },
+    "type": {
+      "set": "Akční sada",
+      "webhook": "Webhook",
+      "customCode": "Vlastní kód",
+      "email": "Odeslat e-mail"
+    },
+    "executeAs": {
+      "system": "Systém",
+      "sameUser": "Stejný uživatel"
+    }
+  },
+  "tooltips": {
+    "inBackground": "Akce se provede na pozadí bez přímé zprávy o úspěchu/chybě. Použijte ji, pokud provedení akce trvá déle než 30 sekund.",
+    "usage": "Použití předepisuje umístění akce. Akce záznamu vyžaduje, aby byly předem vybrány záznamy, kterých se akce týká.",
+    "executeAs": "Určete uživatele, kterého systém použije k provedení akce."
+  },
+  "exceptions": {
+    "forEditModeOnly": "Akce \"%s\" je k dispozici pouze v režimu úprav a nelze ji zde použít."
+  }
+}

@@ -8,7 +8,8 @@
     "number": "Nummer",
     "language": "Sprache",
     "addresses": "Adressen",
-    "contacts": "Kontakte"
+    "contacts": "Kontakte",
+    "name": "Name"
   },
   "options": {
     "type": {

@@ -1,5 +1,9 @@
 {
   "fields": {
-    "attributes": "Attribute"
+    "attributes": "Attribute",
+    "default": "Standard"
+  },
+  "exceptions": {
+    "entityIsUsed": "Das Attribut Panel kann nicht gelöscht werden, da es in mehreren Attributen verwendet wird."
   }
 }

@@ -122,6 +122,30 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getSelectFilters: function () {
+            // Example:
+            // if (this.model.get('projectId')) {
+            //     return {
+            //         queryBuilder: {
+            //             condition: 'AND',
+            //             rules: [
+            //                 {
+            //                     id: 'projectId',
+            //                     field: 'projectId',
+            //                     type: 'string',
+            //                     operator: 'in',
+            //                     value: [this.model.get('projectId')],
+            //                     data: {
+            //                         nameHash: {
+            //                             [this.model.get('projectId')]: this.model.get('projectName')
+            //                         }
+            //                     }
+            //                 }
+            //             ],
+            //             valid: true
+            //         },
+            //         queryBuilderApplied: true
+            //     }
+            // }
         },
 
         getSelectBoolFilterList: function () {

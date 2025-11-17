@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Passend dazu",
+    "weight": "Gewicht",
+    "sourceField": "Quelle Feld",
+    "targetField": "Zielfeld",
+    "stagingEntity": "Staging-Entität",
+    "masterEntity": "Master-Entität",
+    "matchingRuleSet": "Setzen Sie",
+    "matchingRules": "Übereinstimmungsregeln",
+    "operator": "Operator"
+  },
+  "options": {
+    "type": {
+      "equal": "Gleichberechtigt",
+      "like": "Wie",
+      "contains": "Enthält",
+      "set": "Setzen Sie"
+    },
+    "operator": {
+      "and": "UND",
+      "or": "ODER"
+    }
+  }
+}

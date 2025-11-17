@@ -4,20 +4,13 @@
     "action": "Action",
     "createdAt": "Date",
     "target": "Cible",
-    "targetType": "Type de cible",
     "authToken": "Jeton d'authentification",
     "ipAddress": "Adresse IP",
-    "authLogRecord": "Enregistrement du journal d'authentification"
-  },
-  "presetFilters": {
-    "onlyMy": "Seul mon"
-  },
-  "options": {
-    "action": {
-      "read": "Lire",
-      "update": "Mise à jour",
-      "delete": "Supprimer",
-      "create": "Créer"
-    }
+    "authLogRecord": "Enregistrement du journal d'authentification",
+    "controllerName": "Nom du contrôleur",
+    "controllerAction": "Action du contrôleur",
+    "targetName": "Nom de la cible",
+    "targetId": "Identifiant de la cible",
+    "data": "Données"
   }
 }

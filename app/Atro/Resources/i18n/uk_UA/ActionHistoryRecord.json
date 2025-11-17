@@ -4,20 +4,13 @@
     "action": "Дія",
     "createdAt": "Дата",
     "target": "Ціль",
-    "targetType": "Тип цілі",
     "authToken": "Токен аутентифікації",
     "ipAddress": "IP адреса",
-    "authLogRecord": "Запис Логу Аутентифікації"
-  },
-  "presetFilters": {
-    "onlyMy": "Тільки мої"
-  },
-  "options": {
-    "action": {
-      "read": "Прочитано",
-      "update": "Оновити",
-      "delete": "Видалити",
-      "create": "Створити"
-    }
+    "authLogRecord": "Запис Логу Аутентифікації",
+    "controllerName": "Ім'я контролера Ім'я контролера",
+    "controllerAction": "Дія контролера",
+    "targetName": "Назва цілі",
+    "targetId": "Ідентифікатор цілі",
+    "data": "Дані"
   }
 }

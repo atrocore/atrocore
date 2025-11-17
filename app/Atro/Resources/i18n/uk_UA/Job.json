@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "status": "Статус",
+    "executeTime": "Виконати на",
+    "pid": "PID",
+    "priority": "Пріоритет",
+    "handler": "Оброблювач",
+    "payload": "корисне навантаження",
+    "scheduledJob": "Розклад роботи",
+    "message": "Повідомлення",
+    "startedAt": "Розпочато в",
+    "endedAt": "Закінчується на"
+  },
+  "labels": {
+    "cancel": "Скасування"
+  },
+  "options": {
+    "status": {
+      "Pending": "В очікуванні",
+      "Success": "Успіх",
+      "Running": "Виконується",
+      "Failed": "Не виконано",
+      "Canceled": "Скасовано",
+      "Awaiting": "В очікуванні",
+      "Closed": "Закрито."
+    }
+  },
+  "tooltips": {
+    "priority": "Більший номер означає вищий пріоритет"
+  },
+  "exceptions": {
+    "jobIsRunning": "Запущене завдання не можна видалити."
+  }
+}

@@ -3,5 +3,12 @@
     "code": "Kod",
     "files": "Pliki",
     "storages": "Przechowywanie plików"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "Folder Storage nie może zostać zmieniony.",
+    "folderCreateFailed": "Tworzenie folderu nie powiodło się.",
+    "folderRenameFailed": "Zmiana nazwy folderu nie powiodła się.",
+    "folderMoveFailed": "Przenoszenie folderu nie powiodło się.",
+    "folderDeleteFailed": "Usuwanie folderu nie powiodło się."
   }
 }

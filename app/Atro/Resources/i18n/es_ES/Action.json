@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "isActive": "Activo",
+    "type": "Type",
+    "sourceEntity": "Entidad de origen",
+    "inBackground": "Ejecutar en segundo plano",
+    "usage": "Utilización",
+    "massAction": "Acción de masas",
+    "display": "Mostrar",
+    "actionsSet": "Conjunto de acciones",
+    "actions": "Acciones",
+    "webhookUrl": "URL",
+    "executeAs": "Ejecutar como",
+    "displayField": "Campo de visualización",
+    "focusField": "Campo de enfoque",
+    "targetEntity": "Entidad objetivo",
+    "mode": "Modo",
+    "emailScript": "Guión",
+    "showEmailPreview": "Vista previa antes de enviar",
+    "emailTemplate": "Plantilla de correo electrónico",
+    "emailTo": "Enviar a",
+    "emailCc": "Correo electrónico CC",
+    "emailBcc": "Correo electrónico CCO"
+  },
+  "labels": {
+    "execute": "Ejecute",
+    "Parameters": "Parámetros"
+  },
+  "massActions": {
+    "execute": "Ejecute"
+  },
+  "messages": {
+    "executeNow": "¿Está seguro de que desea ejecutar la acción seleccionada?"
+  },
+  "options": {
+    "usage": {
+      "entity": "Botón de acción de la entidad",
+      "record": "Botón de acción de grabación",
+      "field": "Botón de acción de campo",
+      "onFieldFocus": "Enfoque sobre el terreno",
+      "onRecordLoad": "En carga récord"
+    },
+    "display": {
+      "dropdown": "Desplegable",
+      "single": "Solo"
+    },
+    "type": {
+      "set": "Conjunto de acciones",
+      "webhook": "Gancho web",
+      "customCode": "Código personalizado",
+      "email": "Enviar correo electrónico"
+    },
+    "executeAs": {
+      "system": "Sistema",
+      "sameUser": "Mismo usuario"
+    }
+  },
+  "tooltips": {
+    "inBackground": "La acción se ejecutará en segundo plano sin mensaje directo de éxito/error. Utilícelo, si la ejecución de la acción hasta tardar más de 30 segundos.",
+    "usage": "El uso prescribe la colocación de la acción. Una acción de registro requiere que los registros afectados estén preseleccionados.",
+    "executeAs": "Especifique qué usuario utilizará el sistema para realizar la acción"
+  },
+  "exceptions": {
+    "forEditModeOnly": "La acción '%s' sólo está disponible en el modo de edición y no puede utilizarse aquí."
+  }
+}

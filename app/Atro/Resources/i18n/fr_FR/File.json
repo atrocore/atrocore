@@ -10,7 +10,12 @@
     "hash": "Hachures",
     "fileSize": "Taille du fichier (octets)",
     "fileMtime": "Date de modification du dossier",
-    "url": "URL"
+    "url": "URL",
+    "width": "Largeur",
+    "height": "Hauteur",
+    "size": "Taille",
+    "colorSpace": "Espace couleur",
+    "uploadUrl": "URL"
   },
   "labels": {
     "Upload": "Télécharger",
@@ -19,7 +24,8 @@
     "retry": "Réessayer ?",
     "uploaded": "téléchargé",
     "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL.",
-    "Share": "Partager"
+    "Share": "Partager",
+    "thumbnailUrl": "URL de la vignette (%s)"
   },
   "exceptions": {
     "fileCreateFailed": "La création du fichier a échoué.",
@@ -29,13 +35,16 @@
     "fileNameNotValidByUserRegex": "Le nom de fichier n'est pas valide. Il doit correspondre à la regex '%s'.",
     "fileExtensionCannotBeChanged": "L'extension du fichier ne peut pas être modifiée.",
     "fileStorageCannotBeChanged": "Le stockage de fichiers ne peut pas être modifié.",
-    "fileFolderCannotBeChanged": "Le dossier de fichiers ne peut pas être modifié."
+    "fileFolderCannotBeChanged": "Le dossier de fichiers ne peut pas être modifié.",
+    "notAllowToFileWithEntity": "Vous n'êtes pas autorisé à lier un fichier de type '%s' avec '%s'. Les seuls types autorisés sont '%s'"
   },
   "messages": {
     "fileHasDuplicate": "Il existe déjà au moins un doublon <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> de ce dossier.",
     "notAllFilesWereUploaded": "XX des fichiers YY n'ont pas été téléchargés.",
     "fileCouldNotBeUploaded": "Le fichier n'a pas pu être téléchargé.",
     "cannotDefineFileName": "Le système ne peut pas reconnaître le nom du fichier à partir de l'URL.",
-    "urlExpected": "Une URL incorrecte a été donnée"
+    "urlExpected": "Une URL incorrecte a été donnée",
+    "fileExtensionCorrectedAutomatically": "L'extension du fichier a été corrigée automatiquement.",
+    "downloadJobsCreated": "Une tâche a été créée pour préparer votre fichier zip"
   }
 }

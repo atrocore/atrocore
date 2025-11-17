@@ -1,15 +1,26 @@
 {
   "fields": {
-    "products": "Produits",
     "description": "Description",
     "release": "Libération",
     "synonyms": "Synonymes",
     "code": "Code",
     "isActive": "Actif",
     "classifications": "Classification",
-    "classificationAttributes": "Attributs de la classification"
+    "classificationAttributes": "Attributs de la classification",
+    "entity": "Entité",
+    "type": "Type"
   },
   "labels": {
     "selectAttributeGroup": "Sélectionnez le groupe d'attributs"
+  },
+  "options": {
+    "type": {
+      "general": "Général"
+    }
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "L'entité ne peut être modifiée.",
+    "classificationForToAnotherEntity": "La classification ne peut pas être liée à cet enregistrement, car elle est utilisée pour une autre entité.",
+    "classificationHasRecords": "La classification avec les enregistrements connexes ne peut pas être supprimée."
   }
 }
