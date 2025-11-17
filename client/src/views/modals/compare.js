@@ -86,15 +86,13 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: (dialog) => {
-                        this.trigger('cancel', dialog)
-                    }
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: (dialog) => {
+                    this.trigger('cancel', dialog)
                 }
-            ];
+            });
 
             if (this.getAcl().check('Selection', 'read') && this.selectionId) {
                 this.buttonList.push({
