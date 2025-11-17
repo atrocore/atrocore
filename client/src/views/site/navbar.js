@@ -355,6 +355,11 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
 
             result.colorFilter = filter;
 
+            if (tab === 'Dashboard') {
+                result.link = '#';
+                result.name = 'Home';
+            }
+
             return result;
         },
 
