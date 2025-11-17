@@ -229,8 +229,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setupRecord: function () {
-            if (['compare', 'merge'].includes(this.selectionViewMode) && (this.comparisonAcrossEntities() || this.selectionRecordModels.length < 2)) {
-                if( this.selectionRecordModels.length < 2) {
+            if (['compare', 'merge'].includes(this.selectionViewMode)
+                && (
+                    this.comparisonAcrossEntities()
+                    || this.selectionRecordModels.length < 2
+                    || !(this.getEntityTypes().map(e => this.getAcl().check(e, 'read')).reduce((prev, current) => prev && current, true)))
+                ) {
+                if (this.selectionRecordModels.length < 2) {
                     this.notify('You need at least two item for comparison', 'error');
                 }
 
@@ -326,9 +331,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     return;
                 }
 
-                if (action === 'compare' && this.model.get('entities')) {
+                if (action === 'compare' && this.getEntityTypes().length) {
                     let shouldDisabled = false;
-                    for (const entityType of this.model.get('entities')) {
+                    for (const entityType of this.getEntityTypes()) {
                         if (!this.getAcl().check(entityType, 'read')) {
                             shouldDisabled = true;
                             break;
@@ -344,25 +349,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             })
         },
 
-        comparisonAcrossEntities() {
-            if(this.selectionRecordModels) {
-                let scope = null;
-                for (const model of this.selectionRecordModels) {
-                    if (scope === null) {
-                        scope = this.model.name;
-                    }
-                    if (scope !== this.model.name) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            if (Array.isArray(this.model.get('entities'))) {
-                return this.model.get('entities').length > 1;
-            }
-
-            return true;
+        comparisonAcrossEntities: function () {
+            return this.getEntityTypes().length !== 1;
         },
 
         getRecordViewName: function () {
@@ -662,6 +650,24 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     disabled: disabled
                 }]
             } : {});
+        },
+
+        getEntityTypes() {
+            if (this.model.get('entities')) {
+                return this.model.get('entities');
+            }
+
+            if (this.selectionRecordModels) {
+                let entityTypes = [];
+                this.selectionRecordModels.forEach(m => {
+                    if (!entityTypes.includes(m.name)) {
+                        entityTypes.push(m.name);
+                    }
+                });
+                return entityTypes;
+            }
+
+            return  [];
         },
 
         actionMerge() {
