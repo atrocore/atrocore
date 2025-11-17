@@ -239,13 +239,19 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
-                view.render();
+                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                    ['merge', 'selectionView'].forEach(action => {
+                        $(`button[data-name="${action}"]`).removeClass('disabled');
+                        $(`button[data-name="${action}"]`).attr('disabled', false);
+                    });
+                    $('.button-container a').removeClass('disabled');
                 });
 
-                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+                view.render();
+
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
                 });
