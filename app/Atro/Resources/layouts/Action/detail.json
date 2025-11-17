@@ -55,6 +55,14 @@
       ],
       [
         {
+          "name": "iconClass"
+        },
+        {
+          "name": "hideTextLabel"
+        }
+      ],
+      [
+        {
           "name": "conditionsType",
           "inlineEditDisabled": true
         },

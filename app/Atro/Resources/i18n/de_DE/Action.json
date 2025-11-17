@@ -20,7 +20,8 @@
     "emailBcc": "E-Mail BCC",
     "focusField": "Fokusfeld",
     "displayField": "Anzeigefeld",
-    "webhookUrl": "URL"
+    "webhookUrl": "URL",
+    "hideTextLabel": "Text auf der Schaltfläche ausblenden"
   },
   "labels": {
     "execute": "Ausführen",
