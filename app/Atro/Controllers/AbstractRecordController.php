@@ -552,7 +552,9 @@ abstract class AbstractRecordController extends AbstractController
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
+        $entity = $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
+
+        return $entity->getValueMap();
     }
 
     public function postActionGetDuplicateAttributes($params, $data, $request)
