@@ -1336,6 +1336,10 @@ class OpenApiGenerator
             default:
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
         }
+
+        if(!empty($fieldData['protected'])) {
+            $result['components']['schemas'][$entityName]['properties'][$fieldName]['forRead'] = true;
+        }
     }
 
     protected function getEnumOptionProperties()
