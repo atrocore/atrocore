@@ -9,6 +9,7 @@
     import {UserData} from "../../utils/UserData";
     import Preloader from "../icons/loading/Preloader.svelte";
     import BaseSidebar from "./BaseSidebar.svelte";
+    import {Utils} from "../../utils/Utils";
 
     export let scope: string;
     export let model: any = null;
@@ -21,7 +22,8 @@
     export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
-    export let renderLayoutEditor: Function = () => {};
+    export let renderLayoutEditor: Function = () => {
+    };
 
     export let isAdminPage: boolean = false;
 
@@ -31,7 +33,7 @@
 
     export let canBuildTree = true;
 
-    export let selectedScope: string|null = null;
+    export let selectedScope: string | null = null;
 
     export let canOpenNode: boolean = true;
 
@@ -115,7 +117,16 @@
             whereData = [];
         }
 
-        return whereData
+        return JSON.parse(JSON.stringify(whereData))
+    }
+
+    function getForeignWhereData() {
+        let whereData = Storage.get('treeWhereData', scope) || [];
+        if (['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
+            whereData = [];
+        }
+
+        return JSON.parse(JSON.stringify(whereData))
     }
 
     function canUseDataRequest() {
@@ -130,8 +141,32 @@
         return locationHash.split('/').shift().replace('#', '');
     }
 
+    async function toggleSubTree($tree, node) {
+        if (node.disabled) {
+            return;
+        }
+
+        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-caret-right')
+
+        if (isClosed && !node.getData().length) {
+            const resp = await Utils.getRequest(generateSubTreeUrl(node))
+            const data = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
+            $tree.tree('loadData', data, node);
+        }
+
+        if (isClosed) {
+            $tree.tree('openNode', node, true, () => {
+                window.$(node.element).find('.load-items').removeClass('ph-caret-right').addClass('ph-caret-down');
+            });
+        } else {
+            $tree.tree('closeNode', node, true)
+            window.$(node.element).find('.load-items').removeClass('ph-caret-down').addClass('ph-caret-right');
+        }
+
+    }
+
     function buildTree(data = null): void {
-        if(!canBuildTree && activeItem.name === '_self') {
+        if (!canBuildTree && activeItem.name === '_self') {
             return;
         }
 
@@ -144,6 +179,7 @@
         }
         let $tree = window.$(treeElement);
         let whereData = getWhereData();
+        let foreignWhereData = getForeignWhereData();
         let hasTextFilter = !!searchValue;
 
         if (
@@ -156,6 +192,7 @@
             }
             Espo.ajax.getRequest(`${treeScope}/action/TreeData`, {
                 "where": whereData,
+                "foreignWhere": foreignWhereData,
                 "scope": scope,
                 "link": activeItem.name,
                 "sortBy": sortBy,
@@ -168,7 +205,7 @@
         }
 
         let treeData = {
-            dataUrl: generateUrl(),
+            dataUrl: generateUrl,
             dataFilter: response => filterResponse(response),
             selectable: true,
             saveState: false,
@@ -216,7 +253,7 @@
                     $li.addClass('jqtree-selected');
                 }
 
-                if(callbacks?.shouldBeSelected && callbacks.shouldBeSelected(activeItem.name, node.id)) {
+                if (callbacks?.shouldBeSelected && callbacks.shouldBeSelected(activeItem.name, node.id)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -237,6 +274,12 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
+                    if (activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.load_on_demand) {
+                        const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
+                        $li.find('.jqtree-element').append($el);
+                        $el.on('click', () => toggleSubTree($tree, node));
+                        $li.addClass('sub-tree-container');
+                    }
                 }
             }.bind(this)
         };
@@ -331,7 +374,7 @@
                     return loadMore(node);
                 }
 
-                if (node.element) {
+                if (node.element && !isNodeInSubTree(node)) {
                     appendUnsetButton(window.$(node.element));
                 }
 
@@ -341,7 +384,7 @@
                     node = node.parent;
                 }
 
-                let data = {id: e.node.id, route: '', click: true};
+                let data = {id: e.node.id, route: '', scope: e.node.scope, click: true};
                 if (route.length > 0) {
                     data['route'] = "|" + route.reverse().join('|') + "|";
                 }
@@ -391,18 +434,26 @@
         Espo.ajax.getRequest(generateUrl(node)).then(response => {
             if (response['list']) {
                 const $tree = window.$(treeElement);
+                const parentNode = node.getParent();
                 if (node.showMoreDirection === 'up') {
                     // prepend
                     filterResponse(JSON.parse(JSON.stringify(response)), 'up').reverse().forEach(item => {
-                        prependNode($tree, item, node.getParent());
+                        prependNode($tree, item, parentNode);
                     });
                 } else if (node.showMoreDirection === 'down') {
                     // append
                     filterResponse(JSON.parse(JSON.stringify(response)), 'down').forEach(item => {
-                        appendNode($tree, item, node.getParent());
+                        appendNode($tree, item, parentNode);
                     });
                 }
                 $tree.tree('removeNode', node);
+                if (parentNode) {
+                    // Fix caret loader
+                    const $el = window.$(parentNode.element).find('.load-items');
+                    if ($el.length > 0) {
+                        $el.removeClass('ph-caret-right').addClass('ph-caret-down');
+                    }
+                }
             }
         });
     }
@@ -426,8 +477,12 @@
     }
 
     function generateUrl(node) {
+        if (isNodeInSubTree(node)) {
+            return generateSubTreeUrl(node)
+        }
+
         let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
-        if(selectedScope) {
+        if (selectedScope) {
             url += `&selectedScope=${selectedScope}`;
         }
         if (sortBy) {
@@ -470,6 +525,48 @@
             url += "&";
             url += window.$.param({"where": whereData});
         }
+
+        const foreignWhere = getForeignWhereData()
+        if (foreignWhere.length > 0) {
+            url += "&";
+            url += window.$.param({"foreignWhere": foreignWhere});
+        }
+
+        return url;
+    }
+
+    function generateSubTreeUrl(node) {
+        let url = scope + `/action/Tree?isTreePanel=1&scope=${scope}&link=_self`;
+        if (node.showMoreDirection) {
+            let offset = node.offset;
+            let maxSize1 = maxSize;
+            if (node.showMoreDirection === 'up') {
+                let diff = node.offset - maxSize1;
+                offset = node.offset - maxSize1;
+                if (diff < 0) {
+                    offset = 0;
+                    maxSize1 = maxSize1 + diff;
+                } else {
+                    offset = diff;
+                }
+            } else if (node.showMoreDirection === 'down') {
+                offset = offset + 1;
+            }
+            url += '&offset=' + offset + '&maxSize=' + maxSize1;
+        } else if (isNodeInSubTree(node) && node.id) {
+            url += '&node=' + node.id + '&offset=0&maxSize=' + maxSize;
+        }
+
+
+        const foreignWhere = getForeignWhereData()
+        foreignWhere.push({
+            operator: 'linked_with',
+            id: activeItem.name,
+            field: activeItem.name,
+            value: [getSubTreeRootId(node)]
+        })
+        url += "&";
+        url += window.$.param({"where": foreignWhere});
 
         return url;
     }
@@ -548,7 +645,8 @@
                     id: 'show-more-' + first.offset,
                     offset: first.offset,
                     showMoreDirection: 'up',
-                    name: Language.translate('Show more')
+                    name: Language.translate('Show more'),
+                    scope: first.scope,
                 });
             }
         }
@@ -560,7 +658,8 @@
                     id: 'show-more-' + last.offset,
                     offset: last.offset,
                     showMoreDirection: 'down',
-                    name: Language.translate('Show more')
+                    name: Language.translate('Show more'),
+                    scope: last.scope,
                 });
             }
         }
@@ -572,8 +671,33 @@
         });
     }
 
+    function isNodeInSubTree(node) {
+        if (!node || !node.id) {
+            return false;
+        }
+        return node.scope && node.scope !== treeScope
+    }
+
+    function getSubTreeRootId(node) {
+        if (!node || !node.id) {
+            return null;
+        }
+        if (!node.scope || node.scope === treeScope) {
+            return node.id
+        }
+
+        while (node.parent) {
+            node = node.parent;
+            if (!node.scope || node.scope === treeScope) {
+                return node.id
+            }
+        }
+
+        return null
+    }
+
     function openNodes($tree, ids, onFinished) {
-        if(!canOpenNode) {
+        if (!canOpenNode) {
             return;
         }
         if (!Array.isArray(ids) || ids.length === 0) {
@@ -894,7 +1018,7 @@
     });
 
     function createEntitySelectorView(node) {
-        if(callbacks?.onEntitySelectorAvailable) {
+        if (callbacks?.onEntitySelectorAvailable) {
             callbacks.onEntitySelectorAvailable(node);
         }
     }
@@ -968,8 +1092,7 @@
                         </div>
                     </div>
                     {#if showApplyQuery }
-                        {#if activeItem.name === "_self" || activeItem.name === "_bookmark"}
-                            <div style="margin-top:  20px;">
+                        <div style="margin-top:  20px;">
                                  <span class="icons-wrapper">
                                     <span class="toggle" class:active={applyAdvancedFilter}
                                           on:click|stopPropagation|preventDefault={handleFilterToggle}
@@ -982,8 +1105,7 @@
                                     </span>
                                      {Language.translate('applyMainSearchAndFilter')}
                                 </span>
-                            </div>
-                        {/if}
+                        </div>
                     {/if}
                     {#if showApplySortOrder && activeItem.name !== '_admin' }
                         <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
@@ -1006,7 +1128,8 @@
                     {/if}
                 </div>
                 {#if activeItem.name === '_self' && showEntitySelector}
-                    <div class="entity-selector" style="margin: 20px 0;" use:createEntitySelectorView   bind:this={entitySelectorElement}>
+                    <div class="entity-selector" style="margin: 20px 0;" use:createEntitySelectorView
+                         bind:this={entitySelectorElement}>
                     </div>
                 {/if}
 

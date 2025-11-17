@@ -1408,7 +1408,7 @@ td, th {
     content: "\e260"
 }
 
-*, *:before, *:after  {
+*, *:before, *:after {
     box-sizing: border-box
 }
 
@@ -6533,6 +6533,7 @@ button.close {
 .modal-footer .btn-group .btn-select-field {
     margin-left: 20px !important;
 }
+
 .modal-footer .btn-group .btn-select-attribute {
     margin-left: 5px !important;
 }
@@ -10366,37 +10367,37 @@ table.table > thead th > div > a {
     width: auto;
 }
 
-.panel .panel-heading .panel-title .list-actions-container{
+.panel .panel-heading .panel-title .list-actions-container {
     margin-left: 8px;
     text-transform: none;
 }
 
-.panel .panel-heading .panel-title .list-actions-container .dropdown-menu{
+.panel .panel-heading .panel-title .list-actions-container .dropdown-menu {
     z-index: 99999;
 }
 
 @media screen and (min-width: 768px) {
-    .relationship-container > .list > .table .record-checkbox{
+    .relationship-container > .list > .table .record-checkbox {
         visibility: hidden;
     }
 
-    .relationship-container > .list > .table tr:hover .record-checkbox{
+    .relationship-container > .list > .table tr:hover .record-checkbox {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .record-checkbox:checked{
+    .relationship-container > .list > .table .record-checkbox:checked {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .select-all{
+    .relationship-container > .list > .table .select-all {
         visibility: hidden;
     }
 
-    .relationship-container > .list > .table tr:hover .select-all{
+    .relationship-container > .list > .table tr:hover .select-all {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .select-all:checked{
+    .relationship-container > .list > .table .select-all:checked {
         visibility: visible;
     }
 }
@@ -11866,7 +11867,7 @@ span.became > .value-container {
 }
 
 .selectize-control.multi .selectize-input .label.colored-enum > i,
-.selectize-control.multi .selectize-input  .label.colored-multi-enum > i {
+.selectize-control.multi .selectize-input .label.colored-multi-enum > i {
     margin-inline-start: 0;
 }
 
@@ -13327,7 +13328,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .navbar-inverse {
-    background-color: var( --toolbar-background-color);
+    background-color: var(--toolbar-background-color);
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -14830,6 +14831,19 @@ ul.jqtree-tree li.jqtree_common {
     list-style-type: none;
 }
 
+ul.jqtree-tree .load-items.ph {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+li.sub-tree-container > div.jqtree_common .jqtree-toggler{
+    display: none;
+}
+
+li.sub-tree-container > ul.jqtree_common {
+    margin-left: 5px;
+}
+
 ul.jqtree-tree .jqtree-toggler {
     border-bottom: none;
     color: #333;
@@ -16161,7 +16175,6 @@ ins.diffins, ins.diffmod {
     background: #dfd;
     text-decoration: none;
 }
-
 
 
 .button-container {
@@ -17883,7 +17896,7 @@ span[data-img-src]::after {
 }
 
 .navbar-favorites .favorite:not(.active):hover,
-.favorites-dropdown  .favorite:not(.active):hover {
+.favorites-dropdown .favorite:not(.active):hover {
     background-color: rgba(0, 0, 0, .05);
 }
 
@@ -18104,7 +18117,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     line-height: 1;
 }
 
-.panel-stream .header .filter .filter-item:hover,  .panel-stream .header .filter .filter-item:focus {
+.panel-stream .header .filter .filter-item:hover, .panel-stream .header .filter .filter-item:focus {
     text-decoration: none;
 }
 
@@ -18658,7 +18671,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-align: initial !important;
 }
 
-.compare-records .compare-panel table td.cell .field .selectize-control{
+.compare-records .compare-panel table td.cell .field .selectize-control {
     text-align: initial;
 }
 
@@ -18687,7 +18700,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-right: 20px;
 }
 
-.compare-records th.inline-actions > a,  .compare-records td .field > a{
+.compare-records th.inline-actions > a, .compare-records td .field > a {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -18712,7 +18725,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .cards-container > .card:hover {
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .cards-container > .card .icon {

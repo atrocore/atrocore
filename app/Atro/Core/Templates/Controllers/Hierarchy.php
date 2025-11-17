@@ -61,19 +61,22 @@ class Hierarchy extends AbstractRecordController
 
         if (empty($request->get('node')) && !empty($request->get('selectedId'))) {
             $sortParams = [
-                'asc'         => $request->get('asc', 'true') === 'true',
-                'sortBy'      => $request->get('sortBy'),
+                'asc'    => $request->get('asc', 'true') === 'true',
+                'sortBy' => $request->get('sortBy'),
             ];
             return $this->getRecordService()->getTreeDataForSelectedNode((string)$request->get('selectedId'), $sortParams);
         }
 
         $params = [
-            'where'       => $this->prepareWhereQuery($request->get('where')),
-            'asc'         => $request->get('asc', 'true') === 'true',
-            'sortBy'      => $request->get('sortBy'),
-            'isTreePanel' => !empty($request->get('isTreePanel')),
-            'offset'      => (int)$request->get('offset'),
-            'maxSize'     => empty($request->get('maxSize')) ? $this->getConfig()->get('recordsPerPageSmall', 20) : (int)$request->get('maxSize')
+            'where'        => $this->prepareWhereQuery($request->get('where')),
+            'foreignWhere' => $this->prepareWhereQuery($request->get('foreignWhere')),
+            'link'         => (string)$request->get('link'),
+            'scope'        => (string)$request->get('scope'),
+            'asc'          => $request->get('asc', 'true') === 'true',
+            'sortBy'       => $request->get('sortBy'),
+            'isTreePanel'  => !empty($request->get('isTreePanel')),
+            'offset'       => (int)$request->get('offset'),
+            'maxSize'      => empty($request->get('maxSize')) ? $this->getConfig()->get('recordsPerPageSmall', 20) : (int)$request->get('maxSize')
         ];
 
         return $this->getRecordService()->getChildren((string)$request->get('node'), $params);
@@ -93,12 +96,15 @@ class Hierarchy extends AbstractRecordController
             $ids = (array)$request->get('ids');
         } elseif (!empty($request->get('where'))) {
             $params = [
-                'select'  => ['id'],
-                'where'   => $this->prepareWhereQuery($request->get('where')),
-                'offset'  => 0,
-                'maxSize' => 5000,
-                'asc'     => true,
-                'sortBy'  => 'id'
+                'select'       => ['id'],
+                'where'        => $this->prepareWhereQuery($request->get('where')),
+                'foreignWhere' => $this->prepareWhereQuery($request->get('foreignWhere')),
+                'link'         => (string)$request->get('link'),
+                'scope'        => (string)$request->get('scope'),
+                'offset'       => 0,
+                'maxSize'      => 5000,
+                'asc'          => true,
+                'sortBy'       => 'id'
             ];
 
             $result = $this->getRecordService()->findEntities($params);

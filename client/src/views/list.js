@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Interact', 'lib!QueryBuilder'], function (Dep, SearchManager) {
+Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!Interact', 'lib!QueryBuilder'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -205,13 +205,13 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                         onAddFavorite: (scope) => {
                             this.notify('Saving');
                             const favorites = this.getPreferences().get('favoritesList') || [];
-                            const result =  [...favorites, scope];
+                            const result = [...favorites, scope];
 
                             this.getPreferences().save({
                                 favoritesList: result,
-                            }, {patch: true}).then(() => {
+                            }, { patch: true }).then(() => {
                                 this.notify('Saved', 'success');
-                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                window.dispatchEvent(new CustomEvent('favorites:update', { detail: result }));
                                 this.getPreferences().trigger('favorites:update');
                             });
                         },
@@ -226,9 +226,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                             const result = favorites.filter(item => item !== scope);
                             this.getPreferences().save({
                                 favoritesList: result
-                            }, {patch: true}).then(() => {
+                            }, { patch: true }).then(() => {
                                 this.notify('Saved', 'success');
-                                window.dispatchEvent(new CustomEvent('favorites:update', {detail: result}));
+                                window.dispatchEvent(new CustomEvent('favorites:update', { detail: result }));
                                 this.getPreferences().trigger('favorites:update');
                             });
                         },
@@ -238,7 +238,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     isFavoriteEntity: !!this.getPreferences().get('favoritesList')?.includes(this.scope),
                     onViewModeChange: (mode) => {
                         if (mode) {
-                            this.getRouter().navigate(`${this.scope}/${mode}`, {trigger: false});
+                            this.getRouter().navigate(`${this.scope}/${mode}`, { trigger: false });
                             this.switchViewMode(mode);
                         }
                     }
@@ -403,7 +403,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
             if (this.svelteListActions) {
                 try {
                     this.svelteListActions.$destroy();
-                } catch (e) {}
+                } catch (e) {
+                }
             }
 
             const container = document.querySelector('#main .list-buttons-container');
@@ -446,7 +447,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                     this.trigger('record-list-rendered', view)
                 }, this);
 
-                if(!fetch) {
+                if (!fetch) {
                     view.notify(false);
                 }
                 if (this.searchPanel) {
@@ -468,7 +469,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                             headers: {
                                 'Entity-History': sessionStorage.tabId || 'true'
                             }
-                        }).then(_ =>  view.notify(false));
+                        }).then(_ => view.notify(false));
                     }.bind(this));
                 } else {
                     view.render();
@@ -547,7 +548,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
                 returnDispatchParams: returnDispatchParams
             });
 
-            router.navigate(url, {trigger: false});
+            router.navigate(url, { trigger: false });
             router.dispatch(this.scope, 'create', options);
         },
 
@@ -675,9 +676,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         },
 
         selectNode(data, force = false) {
-            if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
-                if(data.click){
-                    window.location.href = `/#${this.scope}/view/${data.id}`;
+            if (data.scope === this.scope) {
+                if (data.click) {
+                    window.location.href = `/#${data.scope}/view/${data.id}`;
                 }
                 return;
             }
@@ -712,7 +713,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         },
 
         onTreeResize(width) {
-            window.dispatchEvent(new CustomEvent('tree-width-changed', {detail: {width}}));
+            window.dispatchEvent(new CustomEvent('tree-width-changed', { detail: { width } }));
         },
 
         reloadBookmarks() {
@@ -731,7 +732,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree','lib!Int
         },
 
         shouldShowFilter() {
-            if(this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
+            if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'ReferenceData') {
                 return false;
             }
 

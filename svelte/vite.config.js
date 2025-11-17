@@ -6,6 +6,7 @@ export default defineConfig({
     plugins: [svelte()],
     base: '/client',
     build: {
+        minify: false,
         outDir: '../client',
         rollupOptions: {
             output: {
