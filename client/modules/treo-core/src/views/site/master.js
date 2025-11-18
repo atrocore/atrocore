@@ -66,29 +66,20 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             },
             'click #title-bar [data-action=splitHorizontal]': function () {
                 const workArea = this.getScreenWorkArea();
-                if (window.outerWidth === workArea.screenWidth &&
-                    window.outerHeight === workArea.screenHeight) {
-
-                    this.notify("Please unmaximize the window before splitting.", 'error');
-                    return;
-                }
 
                 this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
-                this.openWindow('/', workArea.screenLeft + workArea.screenWidth / 2, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
+                this.openWindow(window.location.href, workArea.screenLeft + workArea.screenWidth / 2, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
             },
             'click #title-bar [data-action=splitVertical]': function () {
                 const workArea = this.getScreenWorkArea();
 
-                if (window.outerWidth === workArea.screenWidth &&
-                    window.outerHeight === workArea.screenHeight) {
-
-                    this.notify("Please unmaximize the window before splitting.", 'error');
-                    return;
-                }
-
                 this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth, workArea.screenHeight / 2);
-                this.openWindow('/', workArea.screenLeft, workArea.screenTop + workArea.screenHeight / 2, workArea.screenWidth, workArea.screenHeight / 2);
-            }
+                this.openWindow(window.location.href, workArea.screenLeft, workArea.screenTop + workArea.screenHeight / 2, workArea.screenWidth, workArea.screenHeight / 2);
+            },
+            'click #title-bar [data-action=expand]': function () {
+                const workArea = this.getScreenWorkArea();
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth, workArea.screenHeight);
+            },
         },
 
         data: function () {

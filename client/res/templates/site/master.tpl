@@ -15,6 +15,7 @@
         <button data-action="reload" title="{{ translate 'reloadPage' }}"><i class="ph ph-arrow-clockwise"></i></button>
         <button data-action="splitHorizontal" title="{{ translate 'splitHorizontal' }}"><i class="ph ph-square-split-horizontal"></i></button>
         <button data-action="splitVertical" title="{{ translate 'splitVertical' }}"><i class="ph ph-square-split-vertical"></i></button>
+        <button data-action="expand" title="{{ translate 'expandWindow' }}"><i class="ph ph-arrows-out"></i></button>
     </div>
 </div>
 <header id="header">{{{header}}}</header>

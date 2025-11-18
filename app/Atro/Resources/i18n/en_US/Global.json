@@ -492,6 +492,9 @@
     "goBack": "Go back",
     "goForward": "Go forward",
     "reloadPage": "Reload page",
+    "splitHorizontal": "Split Horizontally",
+    "splitVertical": "Split Vertically",
+    "expand": "Expand Window",
     "Compare": "Compare",
     "Standard": "Standard",
     "addItem": "Add Item"
