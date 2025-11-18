@@ -47,6 +47,10 @@ class ThumbnailType extends ReferenceData
             throw new BadRequest("Code is invalid.");
         }
 
+        if (preg_match('/^\d+$/', $entity->get('code'))) {
+            throw new BadRequest("Code must contains at least one letter.");
+        }
+
         if ($this->getMetadata()->get("app.thumbnailTypes.{$entity->get('code')}")) {
             throw new BadRequest("Thumbnail type '{$entity->get('code')}' is already exists.");
         }
