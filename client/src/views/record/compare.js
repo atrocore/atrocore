@@ -98,6 +98,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 relationshipsPanels.changeViewMode('detail');
                 this.renderFieldsPanels();
                 relationshipsPanels.merging = false;
+                this.$el.find('div.compare-records').attr('data-mode','compare')
             }
         },
 
@@ -112,6 +113,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 })
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
+                this.$el.find('div.compare-records').attr('data-mode','merge')
                 return;
             }
 

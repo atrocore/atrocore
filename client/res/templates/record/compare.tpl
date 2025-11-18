@@ -1,4 +1,4 @@
-<div class="detail compare-records" id="{{id}}" style="position: relative">
+<div class="detail compare-records" data-mode="{{#if merging}}merge{{else}}compare{{/if}}" id="{{id}}" style="position: relative">
     {{#if showOverlay }}
     <div class="overlay"></div>
     {{/if}}
