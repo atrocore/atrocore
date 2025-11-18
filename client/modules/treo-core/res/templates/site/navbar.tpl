@@ -80,9 +80,11 @@
                             </span>
                             <span class="full-label" {{#unless ../../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
                         </a>
-                        <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                            <i class="ph ph-plus"></i>
-                        </button>
+                        {{#unless createDisabled}}
+                            <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        {{/unless}}
                     </li>
                     {{/each}}
                 </ul>
@@ -104,9 +106,11 @@
                         <span class="short-label-text">{{shortLabel}}</span>
                     </span>
                 </a>
+                {{#unless createDisabled}}
                 <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                     <i class="ph ph-plus"></i>
                 </button>
+                {{/unless}}
             </li>
             {{/if}}
             {{/each}}
