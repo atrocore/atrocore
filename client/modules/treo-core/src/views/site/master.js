@@ -87,11 +87,21 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 sessionStorage.tabId = Math.random().toString(36).substr(2, 25);
             }
 
+            if (navigator.clearAppBadge) {
+                navigator.clearAppBadge();
+            }
+
             window.addEventListener('appinstalled',  () => {
                 if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
                     this.createView('hideTitleModal', 'views/modals/hide-title-bar', {}, view => {
                         view.render();
                     });
+                }
+            });
+
+            this.listenToOnce(this, 'remove', () => {
+                if (navigator.clearAppBadge) {
+                    navigator.clearAppBadge();
                 }
             });
         },

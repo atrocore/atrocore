@@ -53,7 +53,7 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
 
             let savedCount = null;
 
-            this.listenTo(Backbone.Events, 'publicData', data => {
+            const processPublicData = data => {
                 this.$number?.addClass('hidden').html('');
 
                 if (data.notReadCount) {
@@ -73,11 +73,33 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                                 }
                             }
                             savedCount = count;
+
+                            if (navigator.setAppBadge && this.isPWAMode()) {
+                                navigator.setAppBadge(count);
+                            }
+                        } else {
+                            if (navigator.clearAppBadge) {
+                                navigator.clearAppBadge();
+                            }
                         }
+                    } else {
+                        if (navigator.clearAppBadge) {
+                            navigator.clearAppBadge();
+                        }
+                    }
+                } else {
+                    if (navigator.clearAppBadge) {
+                        navigator.clearAppBadge();
                     }
                 }
 
                 this.refreshList();
+            }
+
+            this.listenTo(Backbone.Events, 'publicData', processPublicData);
+
+            this.listenToOnce(this, 'remove', () => {
+                this.stopListening(Backbone.Events, 'publicData', processPublicData);
             });
         },
 
