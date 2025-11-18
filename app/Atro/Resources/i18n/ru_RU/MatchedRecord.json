@@ -1,12 +1,12 @@
 {
   "fields": {
-    "matching": "Подходящий",
-    "staging": "Постановка",
-    "stagingEntity": "Постановочная сущность",
-    "stagingEntityId": "Идентификатор объекта постановки",
+    "matching": "Соответствие",
+    "staging": "Этап",
+    "stagingEntity": "Этапная сущность",
+    "stagingEntityId": "Идентификатор этапная сущность",
     "master": "Мастер",
-    "masterEntity": "Главная сущность",
-    "masterEntityId": "ID основной сущности",
+    "masterEntity": "Мастер сущность",
+    "masterEntityId": "Идентификатор мастер сущности",
     "score": "Оценка",
     "status": "Статус",
     "manuallyAdded": "Добавлено вручную",
@@ -16,9 +16,10 @@
   },
   "options": {
     "status": {
-      "found": "Найдено",
       "confirmed": "Подтверждено",
-      "rejected": "Отклонено"
+      "rejected": "Отклонено",
+      "new": "Новый",
+      "preselected": "Предварительно выбранный"
     }
   }
 }

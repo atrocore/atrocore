@@ -16,9 +16,10 @@
   },
   "options": {
     "status": {
-      "found": "Found",
       "confirmed": "Confirmed",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "new": "New",
+      "preselected": "Preselected"
     }
   }
 }

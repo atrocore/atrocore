@@ -1,12 +1,12 @@
 {
   "fields": {
     "matching": "Відповідність",
-    "staging": "Постановка",
-    "stagingEntity": "Організаційна одиниця",
-    "stagingEntityId": "Ідентифікатор організації-постановника",
-    "master": "Магістр",
-    "masterEntity": "Головна сутність",
-    "masterEntityId": "Ідентифікатор основної сутності",
+    "staging": "Етап",
+    "stagingEntity": "Етапна сутність",
+    "stagingEntityId": "Ідентифікатор етапної сутністі",
+    "master": "Мастер",
+    "masterEntity": "Мастер сутність",
+    "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
     "status": "Статус",
     "manuallyAdded": "Додано вручну",
@@ -16,9 +16,10 @@
   },
   "options": {
     "status": {
-      "found": "Знайдено",
-      "confirmed": "Підтверджено.",
-      "rejected": "Відхилено"
+      "confirmed": "Підтверджено",
+      "rejected": "Відхилено",
+      "new": "Новий",
+      "preselected": "Попередньо обраний"
     }
   }
 }
