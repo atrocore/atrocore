@@ -42,7 +42,11 @@ class MatchedRecord extends Base
         }
 
         if (empty($statuses)) {
-            $statuses = ["found", "confirmed"];
+            foreach ($this->getMetadata()->get("entityDefs.MatchedRecord.fields.status.options") ?? [] as $status) {
+                if ($status !== 'rejected') {
+                    $statuses[] = $status;
+                }
+            }
         }
 
         if ($entityName === $matching->get('stagingEntity')) {

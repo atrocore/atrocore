@@ -31,18 +31,21 @@ class V2Dot1Dot28 extends Base
             $this->exec("ALTER TABLE matched_record ADD golden_record BOOLEAN DEFAULT 'false' NOT NULL");
             $this->exec("ALTER TABLE matched_record ADD golden_record_hash VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469E6FB4A73AEB3B4E33 ON matched_record (golden_record_hash, deleted)");
+            $this->exec("ALTER TABLE matched_record ALTER status SET DEFAULT 'new'");
+            $this->exec("ALTER TABLE matched_record ALTER status SET NOT NULL");
         } else {
             $this->exec("ALTER TABLE matched_record ADD manually_added TINYINT(1) DEFAULT '1' NOT NULL");
             $this->exec("ALTER TABLE matched_record ADD golden_record TINYINT(1) DEFAULT '0' NOT NULL");
             $this->exec("ALTER TABLE matched_record ADD golden_record_hash VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469E6FB4A73AEB3B4E33 ON matched_record (golden_record_hash, deleted)");
+            $this->exec("ALTER TABLE matched_record CHANGE status status VARCHAR(255) DEFAULT 'new' NOT NULL");
         }
 
         $this->getConnection()->createQueryBuilder()
             ->update('matched_record')
-            ->set('status', ':null')
+            ->set('status', ':new')
             ->where('status = :found')
-            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('new', 'new')
             ->setParameter('found', 'found')
             ->executeQuery();
     }

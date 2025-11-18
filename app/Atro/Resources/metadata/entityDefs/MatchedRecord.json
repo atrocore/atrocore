@@ -88,12 +88,16 @@
     },
     "status": {
       "type": "enum",
+      "default": "new",
+      "notNull": true,
+      "required": true,
       "options": [
-        "new",
-        "preselected",
         "confirmed",
+        "preselected",
+        "new",
         "rejected"
-      ]
+      ],
+      "customizable": false
     },
     "hash": {
       "type": "varchar",

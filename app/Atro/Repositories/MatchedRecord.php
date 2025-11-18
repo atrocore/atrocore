@@ -96,8 +96,7 @@ class MatchedRecord extends Base
             'matches'    => [],
         ];
 
-
-        foreach (['confirmed', 'found', 'rejected'] as $status) {
+        foreach ($this->getMetadata()->get("entityDefs.MatchedRecord.fields.status.options") ?? [] as $status) {
             if (!in_array($status, $statuses)) {
                 continue;
             }
@@ -126,7 +125,7 @@ class MatchedRecord extends Base
 
             $this->getSelectManager()->putInnerQueryForAclCheck($qb);
 
-            if ($status === 'found') {
+            if ($status === 'new') {
                 $qb->setFirstResult(0);
                 $qb->setMaxResults(5);
             }
@@ -154,7 +153,7 @@ class MatchedRecord extends Base
             'matches'    => [],
         ];
 
-        foreach (['confirmed', 'found', 'rejected'] as $status) {
+        foreach ($this->getMetadata()->get("entityDefs.MatchedRecord.fields.status.options") ?? [] as $status) {
             if (!in_array($status, $statuses)) {
                 continue;
             }
@@ -182,7 +181,7 @@ class MatchedRecord extends Base
 
             $this->getSelectManager()->putInnerQueryForAclCheck($qb);
 
-            if ($status === 'found') {
+            if ($status === 'new') {
                 $qb->setFirstResult(0);
                 $qb->setMaxResults(5);
             }
@@ -203,7 +202,7 @@ class MatchedRecord extends Base
                 'matchingId'      => $matching->id,
                 'stagingEntity'   => $entity->getEntityName(),
                 'stagingEntityId' => $entity->id,
-                'status'          => 'found',
+                'status'          => 'new',
             ])
             ->removeCollection();
 
@@ -213,7 +212,7 @@ class MatchedRecord extends Base
                     'matchingId'     => $matching->id,
                     'masterEntity'   => $entity->getEntityName(),
                     'masterEntityId' => $entity->id,
-                    'status'         => 'found',
+                    'status'         => 'new',
                 ])
                 ->removeCollection();
         }
@@ -235,7 +234,7 @@ class MatchedRecord extends Base
             'masterEntity'    => $matching->get('masterEntity'),
             'masterEntityId'  => $masterId,
             'score'           => $score,
-            'status'          => 'found',
+            'status'          => 'new',
             'manuallyAdded'   => false,
         ]);
 

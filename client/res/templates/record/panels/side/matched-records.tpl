@@ -5,7 +5,7 @@
       <div class="matched-record-status-group-title">{{status}}</div>
       {{#each list}}
         <div class="matched-record-item">
-          <span class="matched-record-item-score">{{score}}%</span>
+          {{#if score}}<span class="matched-record-item-score">{{score}}%</span>{{/if}}
           <a href="{{link}}" class="matched-record-link">{{label}}</a>
           <div class="pull-right matched-record-item-actions" data-name="{{mrId}}"></div>
         </div>
