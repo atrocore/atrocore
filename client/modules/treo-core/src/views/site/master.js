@@ -53,9 +53,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 const width = window.outerWidth;
                 const height = window.outerHeight;
 
-                window.open('/', '_blank',
-                    `width=${width},height=${height},left=${screenX},top=${screenY},noopener`
-                );
+                this.openWindow('/', screenX, screenY, width, height);
             },
             'click #title-bar [data-action=reload]': function () {
                 window.location.reload();
@@ -65,6 +63,16 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             },
             'click #title-bar [data-action=goForward]': function () {
                 window.history.forward();
+            },
+            'click #title-bar [data-action=splitHorizontal]': function () {
+                const workArea = this.getScreenWorkArea();
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
+                this.openWindow('/', workArea.screenLeft + workArea.screenWidth / 2, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
+            },
+            'click #title-bar [data-action=splitVertical]': function () {
+                const workArea = this.getScreenWorkArea();
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth, workArea.screenHeight / 2);
+                this.openWindow('/', workArea.screenLeft, workArea.screenTop + workArea.screenHeight / 2, workArea.screenWidth, workArea.screenHeight / 2);
             }
         },
 
@@ -86,6 +94,24 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                     });
                 }
             });
+        },
+
+        getScreenWorkArea: function () {
+            const screenLeft = window.screen.availLeft ?? 0;
+            const screenTop = window.screen.availTop ?? 0;
+            const screenWidth = window.screen.availWidth;
+            const screenHeight = window.screen.availHeight;
+
+            return {screenLeft, screenTop, screenWidth, screenHeight};
+        },
+
+        moveCurrentWindow(x, y, w, h) {
+            window.resizeTo(w, h);
+            window.moveTo(x, y);
+        },
+
+        openWindow(url, x, y, w, h) {
+            return window.open(url, "_blank", `left=${x},top=${y},width=${w},height=${h},noopener`);
         },
 
         getFavicon: function () {
