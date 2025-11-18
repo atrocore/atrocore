@@ -16,6 +16,18 @@ Espo.define('views/matched-record/fields/staging', 'views/fields/link', Dep => {
             this.options.foreignScope = this.model.get('stagingEntity');
 
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:matchingId', () => {
+                this.model.set('stagingId', null);
+                this.model.set('stagingName', null);
+
+                $.each((this.getConfig().get('referenceData').Matching || {}), (code, matching) => {
+                    if (matching.id === this.model.get('matchingId')) {
+                        this.foreignScope = matching.stagingEntity;
+                        this.reRender();
+                    }
+                })
+            });
         },
 
     });

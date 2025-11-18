@@ -16,6 +16,18 @@ Espo.define('views/matched-record/fields/master', 'views/fields/link', Dep => {
             this.options.foreignScope = this.model.get('masterEntity');
 
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:matchingId', () => {
+                this.model.set('masterId', null);
+                this.model.set('masterName', null);
+
+                $.each((this.getConfig().get('referenceData').Matching || {}), (code, matching) => {
+                    if (matching.id === this.model.get('matchingId')) {
+                        this.foreignScope = matching.masterEntity;
+                        this.reRender();
+                    }
+                })
+            });
         },
 
     });

@@ -3,7 +3,16 @@
     "matching": {
       "type": "link",
       "entity": "Matching",
-      "protected": true
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "attribute": "id",
+              "type": "isNotEmpty"
+            }
+          ]
+        }
+      }
     },
     "staging": {
       "type": "link",
@@ -11,7 +20,28 @@
       "view": "views/matched-record/fields/staging",
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "protected": true
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "matchingId"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "stagingEntity": {
       "type": "varchar",
@@ -28,7 +58,28 @@
       "view": "views/matched-record/fields/master",
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "protected": true
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "matchingId"
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "masterEntity": {
       "type": "varchar",
