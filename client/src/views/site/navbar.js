@@ -126,12 +126,19 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 }
             },
             'mouseenter .favorites-items .nav-link': function (e) {
-                $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
-                $(e.currentTarget).find('.label-wrapper .plus-icon').removeClass('hidden');
+                const createIcon = $(e.currentTarget).find('.label-wrapper .plus-icon');
+
+                if (createIcon.length) {
+                    $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
+                    createIcon.removeClass('hidden');
+                }
             },
             'mouseleave .favorites-items .nav-link ': function (e) {
-                $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
-                $(e.currentTarget).find('.label-wrapper .plus-icon').addClass('hidden');
+                const createIcon = $(e.currentTarget).find('.label-wrapper .plus-icon');
+                if (createIcon.length) {
+                    $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
+                    createIcon.addClass('hidden');
+                }
             },
             'click .favorites-items [data-action="quickFavCreate"]': function(e){
                 e.preventDefault();
@@ -321,6 +328,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 name: name,
                 items: items,
                 group: group,
+                createDisabled: this.getAcl().check(tab, 'create') === false,
             };
 
             if (iconClass) {
@@ -358,6 +366,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             if (tab === 'Dashboard') {
                 result.link = '#';
                 result.name = 'Home';
+                result.createDisabled = true;
             }
 
             return result;
