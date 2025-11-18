@@ -84,11 +84,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (record.isPanelsLoading()) {
-                    this.notify(this.translate('Loading...'));
                     $('#main > .content-wrapper > main').css('overflow-y', 'hidden')
+                }else{
+                   setTimeout(() =>  this.enableButtons(), 300)
                 }
-            })
+            });
 
+            this.notify(this.translate('Loading...'));
         },
 
         getSelectionRecordEntityIds() {
@@ -260,9 +262,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
 
             this.createView('record', this.getRecordViewName(), o, view => {
-                if (this.isRendered()) {
-                    view.render();
-                }
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     if (!this.panelsList) {
                         this.standardPanelList = data.list;
@@ -295,18 +294,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.refreshContent()
                 });
 
-
-                if (this.isRendered()) {
-                    this.setupCustomButtons();
-                    window.dispatchEvent(new CustomEvent('record:buttons-update', {
-                        detail: Object.assign({
-                            headerButtons: this.getMenu()
-                        }, view.getRecordButtons())
-                    }));
-                    this.notify(false);
-                }
-
                 this.listenToOnce(view, 'after:render', () => {
+                    this.setupCustomButtons();
                     window.dispatchEvent(new CustomEvent('record:buttons-update', {
                         detail: Object.assign({
                             headerButtons: this.getMenu()
@@ -315,19 +304,24 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 });
 
                 this.listenTo(view, 'all-panels-rendered', () => {
-                    this.enableButtons()
-                    $('#main > .content-wrapper > main').css('overflow-y', 'auto')
+                    $('#main > .content-wrapper > main').css('overflow-y', 'auto');
+                    this.enableButtons();
+                    this.notify(false);
                 });
+
+                if (this.isRendered()) {
+                    view.render();
+                }
             });
         },
 
         enableButtons() {
-            ['standard', 'compare', 'merge'].forEach(action => {
+            this.availableModes.forEach(action => {
                 if (['compare', 'merge'].includes(action) && this.comparisonAcrossEntities()) {
                     return;
                 }
 
-                if (action === 'merge' && !this.getAcl().check(this.model.get('entities')[0], 'create')) {
+                if (action === 'merge' && this.getEntityTypes().length && !this.getAcl().check(this.getEntityTypes()[0], 'create')) {
                     return;
                 }
 
@@ -346,7 +340,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                 $(`button[data-name="${action}"]`).removeClass('disabled');
                 $(`button[data-name="${action}"]`).attr('disabled', false);
-            })
+            });
         },
 
         comparisonAcrossEntities: function () {

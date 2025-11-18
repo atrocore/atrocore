@@ -1,4 +1,7 @@
-<div class="detail compare-records" id="{{id}}">
+<div class="detail compare-records" id="{{id}}" style="position: relative">
+    {{#if showOverlay }}
+    <div class="overlay"></div>
+    {{/if}}
     <div class="row">
         <div class="fields-compare-panel col-md-12">
             {{#each fieldPanels }}
