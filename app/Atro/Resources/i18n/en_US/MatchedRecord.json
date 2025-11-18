@@ -10,7 +10,9 @@
     "score": "Score",
     "status": "Status",
     "manuallyAdded": "Manually Added",
-    "goldenRecord": "Golden Record"
+    "goldenRecord": "Golden Record",
+    "hash": "Unique Hash",
+    "goldenRecordHash": "Golden Record Unique Hash"
   },
   "options": {
     "status": {

@@ -21,6 +21,36 @@ use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
+    public function createUniqHash(Entity $matchedRecord): string
+    {
+        $hashParts = [
+            $matchedRecord->get('matchingId'),
+            $matchedRecord->get('stagingEntity'),
+            $matchedRecord->get('stagingEntityId'),
+            $matchedRecord->get('masterEntity'),
+            $matchedRecord->get('masterEntityId'),
+        ];
+
+        return md5(implode('_', $hashParts));
+    }
+
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if ($entity->isNew()) {
+            $entity->set('hash', $this->createUniqHash($entity));
+        }
+
+        if ($entity->isAttributeChanged('goldenRecord')) {
+            $goldenRecordHash = null;
+            if ($entity->get('goldenRecord')) {
+                $goldenRecordHash = md5("goldenRecord_{$entity->get('matchingId')}_{$entity->get('stagingEntity')}_{$entity->get('stagingEntityId')}");
+            }
+            $entity->set('goldenRecordHash', $goldenRecordHash);
+        }
+    }
+
     public function getMatchedRecords(MatchingEntity $matching, Entity $entity, array $statuses): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -165,36 +195,23 @@ class MatchedRecord extends Base
         int $score,
         bool $skipBidirectional = false
     ): void {
-        $hashParts = [
-            $matching->id,
-            $matching->get('stagingEntity'),
-            $stagingId,
-            $matching->get('masterEntity'),
-            $masterId,
-        ];
+        // create new record
+        $matchedRecord = $this->get();
+        $matchedRecord->set([
+            'matchingId'      => $matching->id,
+            'stagingEntity'   => $matching->get('stagingEntity'),
+            'stagingEntityId' => $stagingId,
+            'masterEntity'    => $matching->get('masterEntity'),
+            'masterEntityId'  => $masterId,
+            'score'           => $score,
+            'status'          => 'found',
+            'manuallyAdded'   => false,
+        ]);
 
-        $hash = md5(implode('_', $hashParts));
-
-        $matchedRecord = $this
-            ->where(['hash' => $hash])
-            ->findOne();
-
-        if (!empty($matchedRecord)) {
+        if (!empty($exists = $this->where(['hash' => $this->createUniqHash($matchedRecord)])->findOne())) {
             // update if exists
+            $matchedRecord = $exists;
             $matchedRecord->set('score', $score);
-        } else {
-            // create if not exists
-            $matchedRecord = $this->get();
-            $matchedRecord->set([
-                'matchingId'      => $matching->id,
-                'stagingEntity'   => $matching->get('stagingEntity'),
-                'stagingEntityId' => $stagingId,
-                'masterEntity'    => $matching->get('masterEntity'),
-                'masterEntityId'  => $masterId,
-                'score'           => $score,
-                'status'          => 'found',
-                'hash'            => $hash,
-            ]);
         }
 
         try {

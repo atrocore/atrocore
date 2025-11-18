@@ -54,16 +54,20 @@
     "hash": {
       "type": "varchar",
       "unique": true,
-      "protected": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true
+      "protected": true
     },
     "manuallyAdded": {
       "type": "bool",
-      "protected": true
+      "protected": true,
+      "default": true
     },
     "goldenRecord": {
       "type": "bool"
+    },
+    "goldenRecordHash": {
+      "type": "varchar",
+      "unique": true,
+      "protected": true
     },
     "createdAt": {
       "type": "datetime",

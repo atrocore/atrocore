@@ -10,7 +10,9 @@
     "score": "Ergebnis",
     "status": "Status",
     "manuallyAdded": "Manuell hinzugefügt",
-    "goldenRecord": "Goldene Aufzeichnung"
+    "goldenRecord": "Goldene Aufzeichnung",
+    "hash": "Eindeutiger Hash",
+    "goldenRecordHash": "Goldene Aufzeichnung Unique Hash"
   },
   "options": {
     "status": {

@@ -26,11 +26,15 @@ class V2Dot1Dot28 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE matched_record ADD manually_added BOOLEAN DEFAULT 'false' NOT NULL");
+            $this->exec("ALTER TABLE matched_record ADD manually_added BOOLEAN DEFAULT 'true' NOT NULL");
             $this->exec("ALTER TABLE matched_record ADD golden_record BOOLEAN DEFAULT 'false' NOT NULL");
+            $this->exec("ALTER TABLE matched_record ADD golden_record_hash VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469E6FB4A73AEB3B4E33 ON matched_record (golden_record_hash, deleted)");
         } else {
-            $this->exec("ALTER TABLE matched_record ADD manually_added TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("ALTER TABLE matched_record ADD manually_added TINYINT(1) DEFAULT '1' NOT NULL");
             $this->exec("ALTER TABLE matched_record ADD golden_record TINYINT(1) DEFAULT '0' NOT NULL");
+            $this->exec("ALTER TABLE matched_record ADD golden_record_hash VARCHAR(255) DEFAULT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469E6FB4A73AEB3B4E33 ON matched_record (golden_record_hash, deleted)");
         }
     }
 

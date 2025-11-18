@@ -1,5 +1,4 @@
 {
   "iconClass": "approximate-equals",
-  "controller": "controllers/record",
-  "createDisabled": true
+  "controller": "controllers/record"
 }

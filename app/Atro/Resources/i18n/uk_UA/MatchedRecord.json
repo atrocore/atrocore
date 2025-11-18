@@ -10,7 +10,9 @@
     "score": "Оцінка",
     "status": "Статус",
     "manuallyAdded": "Додано вручну",
-    "goldenRecord": "Золотий запис"
+    "goldenRecord": "Золотий запис",
+    "hash": "Унікальний хеш",
+    "goldenRecordHash": "Унікальний хеш Золотого запису"
   },
   "options": {
     "status": {
