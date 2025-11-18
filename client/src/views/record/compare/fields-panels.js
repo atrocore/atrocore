@@ -89,7 +89,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             revisionHistoryActionDisabled: true,
                             qualityInlineActionDisabled: true,
                             disabledFieldActions: true,
-                            disabled: this.merging,
+                            disabled: this.merging || !this.getAcl().check(model.name, 'edit'),
                             disableToggle: true
                         }, view => {
                             let viewKey = row.key;
