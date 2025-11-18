@@ -46,7 +46,8 @@
     "status": {
       "type": "enum",
       "options": [
-        "found",
+        "new",
+        "preselected",
         "confirmed",
         "rejected"
       ]
