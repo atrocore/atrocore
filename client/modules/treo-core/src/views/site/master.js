@@ -99,6 +99,10 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 }
             });
 
+            window.navigation.addEventListener("navigatesuccess", () => {
+                this.updateNavButtons();
+            });
+
             this.listenToOnce(this, 'remove', () => {
                 if (navigator.clearAppBadge) {
                     navigator.clearAppBadge();
@@ -122,6 +126,18 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
 
         openWindow(url, x, y, w, h) {
             return window.open(url, "_blank", `left=${x},top=${y},width=${w},height=${h},noopener`);
+        },
+
+        updateNavButtons() {
+            if (!window.navigation || !('canGoBack' in window.navigation)) {
+                return;
+            }
+
+            const goBackBtn = $('#title-bar [data-action=goBack]');
+            const goForwardBtn = $('#title-bar [data-action=goForward]');
+
+            goBackBtn.attr('disabled', !window.navigation.canGoBack);
+            goForwardBtn.attr('disabled', !window.navigation.canGoForward);
         },
 
         getFavicon: function () {
@@ -177,6 +193,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         afterRender() {
+            this.updateNavButtons();
 
             let style = this.getThemeManager().getStyle();
             this.initStyleVariables(style);
