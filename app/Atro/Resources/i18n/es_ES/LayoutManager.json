@@ -10,12 +10,13 @@
     "sticked": "Pegado",
     "isLarge": "Large font size",
     "cssStyle": "CSS Styles",
-    "dynamicLogicVisible": "Conditions making panel visible"
+    "hiddenPerDefault": "Oculto por defecto"
   },
   "options": {
     "align": {
       "left": "Izquierda",
-      "right": "Derecha"
+      "right": "Derecha",
+      "center": "Centro"
     },
     "style": {
       "default": "Borrador",
@@ -28,6 +29,14 @@
   },
   "labels": {
     "New panel": "Nuevo panel",
-    "Layout": "Diseño"
+    "Layout": "Diseño",
+    "layoutManagement": "Gestión de la disposición",
+    "reset": "Restablecer disposición",
+    "fullEdit": "Edición completa",
+    "resetToSystem": "Restablecer la disposición del sistema",
+    "layoutSelection": "Selección del diseño",
+    "layoutCustomization": "Personalización del diseño",
+    "configure": "Configure",
+    "Current Layout": "Disposición actual"
   }
 }

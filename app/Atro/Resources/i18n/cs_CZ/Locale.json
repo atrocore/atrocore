@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "languageCode": "Kód jazyka",
+    "fallbackLanguageCode": "Kód náhradního jazyka",
+    "timeZone": "Časové pásmo",
+    "dateFormat": "Formát data",
+    "weekStart": "První den týdne",
+    "timeFormat": "Časový formát",
+    "thousandSeparator": "Tisíc oddělovačů",
+    "decimalMark": "Desetinná značka"
+  },
+  "labels": {
+    "sunday": "Neděle",
+    "monday": "Pondělí"
+  },
+  "exceptions": {
+    "localeIsUsed": "Používaný Locale nelze odstranit."
+  }
+}

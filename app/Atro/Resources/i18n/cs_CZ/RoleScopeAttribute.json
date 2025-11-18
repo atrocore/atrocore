@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attribute": "Atribut",
+    "roleScope": "Rozsah",
+    "readAction": "Přečtěte si",
+    "editAction": "Upravit"
+  }
+}

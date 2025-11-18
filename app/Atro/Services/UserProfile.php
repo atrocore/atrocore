@@ -69,8 +69,11 @@ class UserProfile extends User
         $entity->set('layoutProfileId', $layoutProfile->get('id'));
 
         if (empty($entity->get('dashboardLayout'))) {
-            $entity->set('dashboardLayout', $layoutProfile->get('dashboardLayout'));
-            $entity->set('dashletsOptions', $layoutProfile->get('dashletsOptions'));
+            $entity->set('dashboardLayout', $layoutProfile->get('dashboardLayout') ?: null);
+        }
+
+        if (empty($entity->get('dashletsOptions'))) {
+            $entity->set('dashletsOptions', $layoutProfile->get('dashletsOptions') ?: null);
         }
 
         if (empty($entity->get('favoritesList'))) {

@@ -148,15 +148,13 @@ class Hierarchy extends Record
 
     public function getTreeDataForSelectedNode(string $id, array $sortParams): array
     {
-        $treeBranches = [];
-        $this->createTreeBranches($this->getEntity($id), $treeBranches);
+        $entity = $this->getEntity($id);
 
-        if (empty($entity = $treeBranches[0])) {
-            throw new NotFound();
-        }
+        $treeBranches = [];
+        $this->createTreeBranches($entity, $treeBranches);
 
         $tree = [];
-        $this->prepareTreeForSelectedNode($entity, $tree, $sortParams);
+        $this->prepareTreeForSelectedNode($treeBranches[0] ?? $entity, $tree, $sortParams);
         $this->prepareTreeData($tree);
 
         $total = empty($tree[0]['total']) ? 0 : $tree[0]['total'];
@@ -164,11 +162,24 @@ class Hierarchy extends Record
         return ['total' => $total, 'list' => $tree];
     }
 
-    public function getTreeData(array $ids): array
+    public function getTreeData(array $params): array
     {
-        $tree = [];
+        if (!isset($params['ids'])) {
+            $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
+            $repository = $this->getRepository();
+            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
+            $selectParams['distinct'] = true;
+            $selectParams['select'] = ['id'];
+            $collection = $repository->find($selectParams);
 
+            $ids = array_column($collection->toArray(), 'id');
+        }else{
+            $ids = $params['ids'];
+        }
+
+        $tree = [];
         $treeBranches = [];
+
         foreach ($this->getRepository()->where(['id' => $ids])->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
@@ -195,23 +206,22 @@ class Hierarchy extends Record
 
     protected function createTreeBranches(HierarchyEntity $entity, array &$treeBranches): void
     {
-        $routes = $entity->getRoutes();
-        if (empty($routes)) {
-            $treeBranches[] = $entity;
-            return;
+        $parentsIds = [];
+        foreach ($entity->getRoutes() as $route) {
+            $parentsIds[] = array_pop($route);
         }
-        foreach ($routes as $route) {
-            $collection = [];
-            foreach ($this->getRepository()->where(['id' => $route])->find() as $item) {
-                $collection[$item->get('id')] = $item;
-            }
 
-            foreach ($route as $k => $id) {
-                $item = $collection[$id];
-                if (isset($route[$k + 1])) {
-                    $item->child = $collection[$route[$k + 1]];
+        if (empty($parentsIds)) {
+            $treeBranches[] = $entity;
+        } else {
+            $parents = $this->getRepository()->where(['id' => $parentsIds])->find();
+            if (empty($parents[0])) {
+                $treeBranches[] = $entity;
+            } else {
+                foreach ($parents as $parent) {
+                    $parent->child = $entity;
+                    $this->createTreeBranches($parent, $treeBranches);
                 }
-                $treeBranches[] = $item;
             }
         }
     }
@@ -222,6 +232,7 @@ class Hierarchy extends Record
 
         $tree[$entity->get('id')]['id'] = $entity->get('id');
         $tree[$entity->get('id')]['name'] = $value;
+        $tree[$entity->get('id')]['scope'] = $this->entityName;
         $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
@@ -426,39 +437,14 @@ class Hierarchy extends Record
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-        $link = $params['link'] ?? null;
-        $scope = $params['scope'] ?? null;
-
-        if (!empty($link) && $link !== '_self') {
-            $foreignLink = '';
-            foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
-                if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
-                    $foreignLink = $linkName;
-                    break;
-                }
-            }
-
-            if (!empty($foreignLink)) {
-                $where = [
-                    'type'      => 'isLinked',
-                    'attribute' => $foreignLink,
-                ];
-                if (!empty($params['foreignWhere'])) {
-                    $where['type'] = 'linkedWith';
-                    $where['subQuery'] = $params['foreignWhere'];
-                }
-                $params['where'][] = $where;
-            } else {
-                throw new BadRequest("Foreign link not found for ($scope: $link) on " . $this->entityName);
-            }
-        }
-        unset($params['foreignWhere']);
-        unset($params['scope']);
-        unset($params['link']);
+        $params = $this->getParamsForTree($params['link'] ?? '', $params['scope'] ?? '', $params);
 
         $records = $this->getRepository()->getChildrenArray($parentId, true, $params);
         if (empty($records)) {
-            return $result;
+            return [
+                'list'  => [],
+                'total' => 0
+            ];
         }
 
         $offset = $params['offset'];

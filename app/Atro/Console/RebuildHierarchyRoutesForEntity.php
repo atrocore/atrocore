@@ -65,6 +65,8 @@ class RebuildHierarchyRoutesForEntity extends AbstractConsole
                 ->from($conn->quoteIdentifier($tableName), 't')
                 ->leftJoin('t', $tableName.'_hierarchy', 'h', 't.id=h.entity_id')
                 ->where('h.id IS NULL AND t.routes IS NULL')
+                ->andWhere('t.deleted = :false')
+                ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->setFirstResult(0)
                 ->setMaxResults(20000)
                 ->fetchAllAssociative();

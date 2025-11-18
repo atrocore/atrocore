@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "entity": "Subjekt",
+    "compositeAttribute": "Složený atribut",
+    "nestedAttributes": "Vnořené atributy",
+    "attributeGroup": "Skupina atributů",
+    "attributePanel": "Panel atributů",
+    "type": "Typ atributu",
+    "code": "Kód",
+    "name": "Název atributu",
+    "products": "Produkty",
+    "isMultilang": "Vícejazyčný",
+    "fileType": "Typ souboru",
+    "pattern": "Vzor regexu",
+    "measure": "Míra",
+    "defaultUnit": "Výchozí jednotka",
+    "defaultDate": "Výchozí datum",
+    "isRequired": "Požadované",
+    "isReadOnly": "Pouze pro čtení",
+    "isProtected": "Chráněné stránky",
+    "tooltip": "Nápověda k nástrojům",
+    "maxLength": "Maximální délka",
+    "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
+    "useDisabledTextareaInViewMode": "Použití vypnuté textové oblasti v režimu zobrazení",
+    "amountOfDigitsAfterComma": "Počet číslic za čárkou",
+    "description": "Popis",
+    "classifications": "Klasifikace",
+    "extensibleEnum": "Seznam",
+    "min": "Min",
+    "max": "Max",
+    "notNull": "Zakázat nulovou hodnotu",
+    "trim": "Odstranění počátečních a koncových bílých znaků",
+    "classificationAttributes": "Atributy klasifikace",
+    "preparedName": "Název",
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "Na celou šířku",
+    "channel": "Kanál",
+    "attributeGroupSortOrder": "Pořadí řazení ve skupině atributů",
+    "conditionalRequired": "Požadované",
+    "conditionalVisible": "Viditelné",
+    "conditionalReadOnly": "Pouze pro čtení",
+    "conditionalProtected": "Chráněné stránky",
+    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením"
+  },
+  "labels": {
+    "Classification": "Klasifikace",
+    "addNewValue": "Přidání nové hodnoty",
+    "extensibleEnumOptions": "Možnosti seznamu",
+    "conditionalProperties": "Podmíněné vlastnosti"
+  },
+  "options": {
+    "type": {
+      "array": "Pole",
+      "bool": "Boolean",
+      "composite": "Kompozitní",
+      "date": "Datum",
+      "datetime": "Datum a čas",
+      "extensibleEnum": "Seznam",
+      "float": "Float",
+      "int": "Celé číslo",
+      "extensibleMultiEnum": "Vícehodnotový seznam",
+      "text": "Text",
+      "markdown": "Markdown",
+      "url": "Url",
+      "varchar": "Řetězec",
+      "wysiwyg": "HTML",
+      "rangeInt": "Rozsah celých čísel",
+      "rangeFloat": "Rozsah plováku",
+      "file": "Soubor"
+    }
+  },
+  "messages": {
+    "sameNumberOptions": "Je třeba nastavit stejný počet možností",
+    "productsCountWithAttribute": "Počet produktů, u kterých je tento atribut nastaven: <strong>{count}</strong>",
+    "removeAttribute(s)": "Všechny hodnoty tohoto(těchto) atributu(ů) jsou rovněž odstraněny. Opravdu chcete tento(tyto) atribut(y) odstranit?"
+  },
+  "filterLabels": {
+    "All": "Všechny"
+  },
+  "tooltips": {
+    "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"/^[A-Z]{1,10}$/\".",
+    "defaultDate": "Modifikátor hodnoty atributu (např. +5 dní, -3 měsíce)",
+    "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte."
+  },
+  "exceptions": {
+    "wrongAttributeEntity": "Není povoleno Subjekt byl vybrán. Entita musí být shodná s Attribute Panel a Attribute Group.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Atribut Entita musí být stejný jako v atributu Composite.",
+    "attributeNotBelongToEntity": "Atribut nepatří této entitě.",
+    "entityCannotBeChanged": "Entitu nelze změnit.",
+    "compositeAttributeNotFound": "Kompozitní atribut nebyl nalezen.",
+    "compositeAttributeCannotBeChild": "Složený atribut nemůže být potomkem.",
+    "fileTypeCannotBeDeleted": "Záznam nelze smazat, protože je použit v atributu \"%s\".",
+    "maxLessThanMin": "Hodnota Min by měla být menší než hodnota Max.",
+    "noAttributeConverterFound": "Převod atributu z typu '%s' na '%s' není možný.",
+    "attributeValueIsInUse": "Hodnota atributu se používá a nelze ji odstranit.",
+    "youCantChangeFieldOfTypeInAttribute": "Typ atributu nelze změnit.",
+    "attributeWithSuchCodeAlreadyExist": "Atribut s takovým kódem již existuje.",
+    "attributeIsUsedInProducts": "Atribut se používá v produktech. Nejprve prosím aktualizujte produkty.",
+    "attributeIsUsedInClassifications": "Atribut se používá v klasifikacích. Nejprve prosím aktualizujte klasifikace.",
+    "invalidType": "Typ atributu '{type}' je neplatný"
+  }
+}

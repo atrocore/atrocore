@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "minimumScore": "Minimální skóre, %",
+    "entity": "Subjekt",
+    "stagingEntity": "Subjekt etapizace",
+    "masterEntity": "Hlavní subjekt",
+    "matchingRules": "Pravidla porovnávání",
+    "foreignName": "Cizí název",
+    "matchedRecords": "Shodné záznamy"
+  },
+  "options": {
+    "type": {
+      "bidirectional": "Obousměrný",
+      "unidirectional": "Jednosměrný"
+    }
+  },
+  "tooltips": {
+    "foreignName": "Název pro zpětné přiřazení, např. \"staging\" může být cizí název pro přiřazení \"master\"."
+  },
+  "exceptions": {
+    "notValidCode": "Kód musí obsahovat pouze písmena, číslice a podtržítka."
+  }
+}

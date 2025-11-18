@@ -1,19 +1,21 @@
 {
-	"fields": {
-		"name": "Nazwa",
-		"description": "Opis",
-		"measure": "Miara",
-		"isMain": "Główny",
-		"multiplier": "Mnożnik",
-		"convertTo": "Konwertuj na",
-		"symbol": "Symbol",
-		"isActive": "Aktywny"
-	},
-	"labels": {
-		"unitSetDefault": "Ustaw jako domyślną"
-	},
-	"exceptions": {
-		"defaultIsRequired": "Miara musi mieć domyślną jednostkę.",
-		"unitIsUsed": "Jednostka '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'."
-	}
+  "fields": {
+    "name": "Nazwa",
+    "description": "Opis",
+    "measure": "Miara",
+    "isMain": "Główny",
+    "multiplier": "Mnożnik",
+    "convertTo": "Konwertuj na",
+    "symbol": "Symbol",
+    "isActive": "Aktywny"
+  },
+  "labels": {
+    "unitSetDefault": "Ustaw jako domyślną"
+  },
+  "exceptions": {
+    "defaultIsRequired": "Miara musi mieć domyślną jednostkę.",
+    "unitIsUsed": "Jednostka '%s' jest używana przez pole '%s' w jednostce '%s' dla rekordu '%s'.",
+    "unitIsUsedOnEntityAttribute": "Jednostka \"%s\" jest używana przez atrybut \"%s\" w %s \"%s\".",
+    "unitIsUsedOnClassificationAttribute": "Jednostka \"%s\" jest używana przez atrybut \"%s\" w klasyfikacji \"%s\"."
+  }
 }

@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "entity": "Encja",
+    "compositeAttribute": "Atrybut złożony",
+    "nestedAttributes": "Atrybuty zagnieżdżone",
+    "attributeGroup": "Grupa atrybutów",
+    "attributePanel": "Panel atrybutów",
+    "type": "Typ atrybutu",
+    "code": "Kod",
+    "name": "Nazwa atrybutu",
+    "products": "Produkty",
+    "isMultilang": "Wielojęzyczny",
+    "fileType": "Typ pliku",
+    "pattern": "Wzorzec Regex",
+    "measure": "Measure",
+    "defaultUnit": "Jednostka domyślna",
+    "defaultDate": "Data domyślna",
+    "isRequired": "Wymagane",
+    "isReadOnly": "Tylko do odczytu",
+    "isProtected": "Chroniony",
+    "tooltip": "Tooltip",
+    "maxLength": "Maksymalna długość",
+    "countBytesInsteadOfCharacters": "Liczenie bajtów zamiast znaków",
+    "useDisabledTextareaInViewMode": "Używanie wyłączonego obszaru tekstowego w trybie widoku",
+    "amountOfDigitsAfterComma": "Ilość cyfr po przecinku",
+    "description": "Description",
+    "classifications": "Klasyfikacje",
+    "extensibleEnum": "List",
+    "min": "Min",
+    "max": "Max",
+    "notNull": "Wyłącz wartość Null",
+    "trim": "Proszę usunąć początkowe i końcowe białe znaki",
+    "classificationAttributes": "Atrybuty klasyfikacji",
+    "preparedName": "Name",
+    "htmlSanitizer": "HTML Sanitizer",
+    "fullWidth": "Pełna szerokość",
+    "channel": "Kanał",
+    "attributeGroupSortOrder": "Kolejność sortowania w grupie atrybutów",
+    "conditionalRequired": "Wymagane",
+    "conditionalVisible": "Widoczny",
+    "conditionalReadOnly": "Tylko do odczytu",
+    "conditionalProtected": "Chroniony",
+    "conditionalDisableOptions": "Wyłączone opcje"
+  },
+  "labels": {
+    "Classification": "Klasyfikacja",
+    "addNewValue": "Proszę dodać nową wartość",
+    "extensibleEnumOptions": "Opcje list",
+    "conditionalProperties": "Właściwości warunkowe"
+  },
+  "options": {
+    "type": {
+      "array": "Tablica",
+      "bool": "Boolean",
+      "composite": "Kompozyt",
+      "date": "Data",
+      "datetime": "Data-czas",
+      "extensibleEnum": "List",
+      "float": "Liczba zmiennoprzecinkowa",
+      "int": "Liczba całkowita",
+      "extensibleMultiEnum": "Lista wielowartościowa",
+      "text": "Tekst",
+      "markdown": "Markdown",
+      "url": "Adres URL",
+      "varchar": "Ciąg znaków",
+      "wysiwyg": "HTML",
+      "rangeInt": "Zakres liczb całkowitych",
+      "rangeFloat": "Zakres liczb zmiennoprzecinkowych",
+      "file": "Plik"
+    }
+  },
+  "messages": {
+    "sameNumberOptions": "Należy ustawić taką samą liczbę opcji",
+    "productsCountWithAttribute": "Liczba produktów, dla których ustawiono ten atrybut: <strong>{count}</strong>",
+    "removeAttribute(s)": "Wszystkie wartości dla tego(tych) atrybutu(ów) również zostaną usunięte. Czy naprawdę chce Pan(i) usunąć ten(te) atrybut(y)?"
+  },
+  "filterLabels": {
+    "All": "Wszystkie"
+  },
+  "tooltips": {
+    "pattern": "Aby włączyć tylko wielkie litery o długości 10 znaków, proszę użyć \"/^[A-Z]{1,10}$/\".",
+    "defaultDate": "Modyfikator wartości atrybutu (np. +5 dni, -3 miesiące)",
+    "dropdown": "Proszę nie używać listy rozwijanej, jeśli na liście znajduje się więcej niż 300 opcji."
+  },
+  "exceptions": {
+    "wrongAttributeEntity": "Wybrano niedozwolony podmiot. Podmiot musi być taki sam jak panel atrybutów i grupa atrybutów.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Podmiot atrybutu musi być taki sam jak w atrybucie złożonym.",
+    "attributeNotBelongToEntity": "Atrybut nie należy do tego podmiotu.",
+    "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
+    "compositeAttributeNotFound": "Nie znaleziono atrybutu złożonego.",
+    "compositeAttributeCannotBeChild": "Atrybut złożony nie może być podrzędny.",
+    "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w atrybucie \"%s\".",
+    "maxLessThanMin": "Min powinna być mniejsza niż Max.",
+    "noAttributeConverterFound": "Konwersja atrybutu z typu '%s' na '%s' jest niemożliwa.",
+    "attributeValueIsInUse": "Wartość atrybutu jest używana i nie można jej usunąć.",
+    "youCantChangeFieldOfTypeInAttribute": "Nie można zmienić typu atrybutu.",
+    "attributeWithSuchCodeAlreadyExist": "Atrybut z takim kodem już istnieje.",
+    "attributeIsUsedInProducts": "Atrybut jest używany w produktach. Proszę najpierw zaktualizować produkty.",
+    "attributeIsUsedInClassifications": "Atrybut jest używany w klasyfikacjach. Proszę najpierw zaktualizować klasyfikacje.",
+    "invalidType": "Atrybut typu \"{type}\" jest nieprawidłowy"
+  }
+}

@@ -92,11 +92,13 @@ class Hierarchy extends AbstractRecordController
             throw new Forbidden();
         }
 
+        $params = [];
+
         if (!empty($request->get('ids'))) {
             $ids = (array)$request->get('ids');
-        } elseif (!empty($request->get('where'))) {
+            $params['ids'] = $ids;
+        } elseif (!empty($request->get('where')) || !empty($request->get('foreignWhere'))) {
             $params = [
-                'select'       => ['id'],
                 'where'        => $this->prepareWhereQuery($request->get('where')),
                 'foreignWhere' => $this->prepareWhereQuery($request->get('foreignWhere')),
                 'link'         => (string)$request->get('link'),
@@ -106,21 +108,16 @@ class Hierarchy extends AbstractRecordController
                 'asc'          => true,
                 'sortBy'       => 'id'
             ];
-
-            $result = $this->getRecordService()->findEntities($params);
-            if (!empty($result['total'])) {
-                $ids = array_column($result['collection']->toArray(), 'id');
-            }
         }
 
-        if (empty($ids)) {
+        if (empty($params)) {
             return [
                 'total' => 0,
                 'tree'  => []
             ];
         }
 
-        return $this->getRecordService()->getTreeData($ids);
+        return $this->getRecordService()->getTreeData($params);
     }
 
     public function actionInheritField($params, $data, $request): bool

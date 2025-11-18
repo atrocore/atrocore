@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "description": "Description",
+    "isActive": "Aktywny",
+    "reverseAssociation": "Odwrócone stowarzyszenie",
+    "code": "Kod",
+    "default": "Domyślny"
+  },
+  "exceptions": {
+    "associationIsLinkedWithRecords": "Stowarzyszenie jest powiązane z rekordem(ami). Proszę najpierw odłączyć rekord(y)",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Nie można dezaktywować powiązania z aktywnym rekordem (rekordami)"
+  }
+}

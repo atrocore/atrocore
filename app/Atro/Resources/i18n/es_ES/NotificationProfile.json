@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "isActive": "Activo",
+    "description": "Descripción",
+    "notificationRules": "Normas de notificación"
+  }
+}

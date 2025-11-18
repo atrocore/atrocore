@@ -1288,6 +1288,9 @@ class OpenApiGenerator
             case "link":
             case "linkParent":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
+                if(!empty($fieldData['protected'])) {
+                    $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"]['forRead'] = true;
+                }
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
                     'type'    => 'string',
                     'forRead' => true
@@ -1328,6 +1331,11 @@ class OpenApiGenerator
                     'type'  => 'array',
                     'items' => ['type' => 'string']
                 ];
+
+                if(!empty($fieldData['protected'])) {
+                    $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"]['forRead'] = true;
+                }
+
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
                     'type'    => 'object',
                     'forRead' => true
@@ -1335,6 +1343,10 @@ class OpenApiGenerator
                 break;
             default:
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+        }
+
+        if(!empty($fieldData['protected']) && !empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
+            $result['components']['schemas'][$entityName]['properties'][$fieldName]['forRead'] = true;
         }
     }
 

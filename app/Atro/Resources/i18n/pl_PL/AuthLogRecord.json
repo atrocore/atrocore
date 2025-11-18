@@ -1,21 +1,22 @@
 {
-	"fields": {
-		"username": "Nazwa użytkownika",
-		"ipAddress": "Adres IP",
-		"requestTime": "Czas żądania",
-		"createdAt": "Utworzono",
-		"isDenied": "Zostało odrzucone",
-		"denialReason": "Powód odrzucenia",
-		"user": "Użytkownik",
-		"authToken": "Utworzony token autoryzacyjny",
-		"requestUrl": "URL żądania",
-		"requestMethod": "Metoda żądania",
-		"authTokenIsActive": "Token autoryzacyjny jest aktywny"
-	},
-	"options": {
-		"denialReason": {
-			"CREDENTIALS": "Nieprawidłowe dane logowania",
-			"INACTIVE_USER": "Nieaktywny użytkownik"
-		}
-	}
+  "fields": {
+    "username": "Nazwa użytkownika",
+    "ipAddress": "Adres IP",
+    "requestTime": "Czas żądania",
+    "createdAt": "Utworzono",
+    "isDenied": "Zostało odrzucone",
+    "denialReason": "Powód odrzucenia",
+    "user": "Użytkownik",
+    "authToken": "Utworzony token autoryzacyjny",
+    "requestUrl": "URL żądania",
+    "requestMethod": "Metoda żądania",
+    "authTokenIsActive": "Token autoryzacyjny jest aktywny",
+    "actionHistoryRecords": "Historia akcji"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Nieprawidłowe dane logowania",
+      "INACTIVE_USER": "Nieaktywny użytkownik"
+    }
+  }
 }

@@ -1,8 +1,20 @@
 {
   "fields": {
-    "files": "Fichiers"
+    "files": "Fichiers",
+    "aspectRatio": "Rapport d'aspect",
+    "minSize": "Taille minimale, Kb",
+    "maxSize": "Taille maximale, Kb",
+    "minWidth": "Largeur minimale, px",
+    "minHeight": "Hauteur minimale, px",
+    "extensions": "Extensions",
+    "mimeTypes": "Types de Mime"
   },
   "exceptions": {
-    "fileTypeCannotBeDeleted": "L'enregistrement ne peut pas être supprimé car il est utilisé dans le champ \"%s\" de l'entité \"%s\"."
+    "fileTypeCannotBeDeleted": "L'enregistrement ne peut pas être supprimé car il est utilisé dans le champ \"%s\" de l'entité \"%s\".",
+    "aspectRatioMustBeInFormat": "Format de rapport d'aspect non valide. Veuillez utiliser le format largeur:hauteur, tel que 16:9."
+  },
+  "labels": {
+    "Image Settings": "Paramètres de l'image",
+    "General Settings": "Paramètres généraux"
   }
 }

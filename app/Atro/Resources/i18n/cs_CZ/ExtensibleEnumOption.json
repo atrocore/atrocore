@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "name": "Hodnota opce",
+    "color": "Barva",
+    "sortOrder": "Pořadí řazení",
+    "extensibleEnums": "Seznamy"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsSystem": "Systém vyžaduje možnost seznamu '%s'.",
+    "extensibleEnumOptionIsUsed": "Možnost seznamu \"%s\" je použita polem \"%s\" v entitě \"%s\" pro záznam \"%s\"."
+  }
+}

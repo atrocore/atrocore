@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "name": "Název",
+    "description": "Popis",
+    "selectionRecords": "Výběrové záznamy"
+  }
+}

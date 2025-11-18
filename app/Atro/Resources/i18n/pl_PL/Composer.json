@@ -19,7 +19,9 @@
     "suchModuleIsAlreadyInstalled": "Taki moduł jest już zainstalowany",
     "suchModuleVersionAlreadyInstalled": "Taka wersja modułu jest już zainstalowana",
     "noSuchModuleVersion": "Brak takiej wersji modułu",
-    "versionIsInvalid": "Nieprawidłowa wersja"
+    "versionIsInvalid": "Nieprawidłowa wersja",
+    "invalidVersion": "Wersja modułu jest nieprawidłowa.",
+    "downgradeProhibited": "Wersja modułu jest nieprawidłowa. Obniżenie wersji jest zabronione."
   },
   "labels": {
     "purchased": "Zakupiony",

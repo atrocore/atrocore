@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "code": "Código",
+    "files": "Archivos",
+    "storages": "Almacenes"
+  },
+  "exceptions": {
+    "folderStorageCannotBeChanged": "El Almacenamiento de carpetas no puede modificarse.",
+    "folderCreateFailed": "Falló la creación de la carpeta.",
+    "folderRenameFailed": "Ha fallado el cambio de nombre de la carpeta.",
+    "folderMoveFailed": "Ha fallado el movimiento de carpetas.",
+    "folderDeleteFailed": "El borrado de la carpeta ha fallado."
+  }
+}

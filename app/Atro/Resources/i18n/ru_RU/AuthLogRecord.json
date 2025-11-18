@@ -15,7 +15,8 @@
   },
   "options": {
     "denialReason": {
-      "CREDENTIALS": "Недопустимые учетные данные"
+      "CREDENTIALS": "Недопустимые учетные данные",
+      "INACTIVE_USER": "Неактивный пользователь"
     }
   }
 }

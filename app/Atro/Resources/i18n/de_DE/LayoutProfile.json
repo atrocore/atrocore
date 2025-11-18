@@ -7,12 +7,14 @@
     "layouts": "Layout",
     "parent": "Eltern-Layout-Profil",
     "navigation": "Menü Navigation",
-    "dashboardLayout": "Dashboard-Layout"
+    "dashboardLayout": "Dashboard-Layout",
+    "favoritesList": "Favoriten"
   },
   "labels": {
     "addGroup": "Gruppe hinzufügen",
     "Menu": "Menu",
-    "Dashboards": "Dashboards"
+    "Dashboards": "Dashboards",
+    "Favorites": "Favoriten"
   },
   "exceptions": {
     "defaultIsRequired": "Ein Standard-Layoutprofil sollte im System vorhanden sein"

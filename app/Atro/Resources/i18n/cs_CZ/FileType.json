@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "files": "Soubory",
+    "aspectRatio": "Poměr stran",
+    "minSize": "Minimální velikost, Kb",
+    "maxSize": "Maximální velikost, Kb",
+    "minWidth": "Minimální šířka, px",
+    "minHeight": "Minimální výška, px",
+    "extensions": "Rozšíření",
+    "mimeTypes": "Typy mime"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Záznam nelze odstranit, protože je použit v poli \"%s\" entity \"%s\".",
+    "aspectRatioMustBeInFormat": "Nesprávný formát poměru stran. Použijte prosím formát šířka:výška, například 16:9."
+  },
+  "labels": {
+    "General Settings": "Obecná nastavení",
+    "Image Settings": "Nastavení obrázků"
+  }
+}

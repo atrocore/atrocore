@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "configuration": "Konfigurace"
+  },
+  "exceptions": {
+    "notValidYaml": "Konfigurace není platná pro Yaml."
+  }
+}

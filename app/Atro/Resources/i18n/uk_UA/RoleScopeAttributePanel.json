@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attributePanel": "Панель атрибутів",
+    "roleScope": "Область застосування",
+    "readAction": "Читання",
+    "editAction": "Редагувати"
+  }
+}

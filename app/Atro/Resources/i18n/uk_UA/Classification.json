@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "Сутність",
+    "description": "Опис",
+    "release": "Реліз",
+    "synonyms": "Синоніми",
+    "code": "Код",
+    "isActive": "Активні",
+    "classifications": "Класифікації",
+    "classificationAttributes": "Класифікаційні атрибути",
+    "type": "Тип"
+  },
+  "options": {
+    "type": {
+      "general": "Загальний"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Вибрати групу атрибута"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "Сутність не може бути змінена.",
+    "classificationForToAnotherEntity": "Класифікація не може бути пов'язана з цим записом, оскільки він використовується для іншого об'єкта.",
+    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити."
+  }
+}

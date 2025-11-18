@@ -8,7 +8,8 @@
       "type": "text"
     },
     "selectionRecords": {
-      "type": "linkMultiple"
+      "type": "linkMultiple",
+      "auditableEnabled": true
     },
     "createdAt": {
       "type": "datetime",

@@ -5,7 +5,9 @@
     "assignmentPermission": "Uprawnienie do przypisywania",
     "dataPrivacyPermission": "Uprawnienie do ochrony danych osobowych",
     "users": "Użytkownicy",
-    "teams": "Zespoły"
+    "teams": "Zespoły",
+    "scopes": "Lunety",
+    "styleControlPermission": "Kontrola stylu"
   },
   "tooltips": {
     "assignmentPermission": "Pozwala na ograniczenie możliwości przypisywania rekordów i wysyłania wiadomości do innych użytkowników.\n\nwszystkie - brak ograniczeń\n\ndrużyna - może przypisywać i wysyłać tylko do członków zespołu\n\nnie - może przypisywać i wysyłać tylko do siebie",
@@ -36,7 +38,7 @@
     "read": "Odczyt",
     "edit": "Edytuj",
     "delete": "Usuń",
-    "stream": "Strumień",
+    "stream": "Aktywności",
     "create": "Utwórz"
   },
   "messages": {

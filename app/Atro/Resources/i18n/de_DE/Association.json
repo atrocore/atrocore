@@ -1,15 +1,10 @@
 {
   "fields": {
-    "associatedProducts": "Assoziierte Produkte",
     "isActive": "Aktiv",
-    "modifiedAt": "Geändert am",
-    "createdAt": "Erstellt am",
-    "createdBy": "Erstellt von",
-    "modifiedBy": "Geändert von",
-    "associations": "Assoziationen",
     "reverseAssociation": "Umgekehrte Assoziation",
     "code": "Code",
-    "default": "Standard"
+    "default": "Standard",
+    "description": "Beschreibung"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "Assoziation ist mit Datensatz(en) verknüpft. Bitte heben Sie die Verknüpfung mit dem/den Datensatz/en zuerst auf",

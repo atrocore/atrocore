@@ -30,7 +30,8 @@
     "finish": "Zakończ",
     "required": "Wymagane",
     "currentVersion": "Aktualna wersja",
-    "status": "Status"
+    "status": "Status",
+    "reportingEnabled": "Wysyłanie anonimowych raportów o błędach w celu szybszej identyfikacji i rozwiązywania problemów"
   },
   "errors": {
     "alreadyInstalled": "AtroCore już zainstalowany",

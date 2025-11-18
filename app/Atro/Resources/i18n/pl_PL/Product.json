@@ -1,12 +1,22 @@
 {
-	"fields": {
-		"number": "Numer",
-		"isActive": "Aktywny",
-		"image": "Obraz",
-		"price": "Cena",
-		"longDescription": "Długi opis",
-		"children": "Produkty potomne",
-		"parents": "Produkty nadrzędne",
-		"quantity": "Ilość"
-	}
+  "fields": {
+    "number": "Numer",
+    "isActive": "Aktywny",
+    "image": "Obraz",
+    "price": "Cena",
+    "longDescription": "Długi opis",
+    "children": "Produkty potomne",
+    "parents": "Produkty nadrzędne",
+    "quantity": "Ilość",
+    "description": "Krótki opis",
+    "mpn": "Numer producenta (MPN)",
+    "customsNumber": "Numer celny",
+    "countryOfOrigin": "Kraj pochodzenia",
+    "defaultSupplier": "Domyślny dostawca",
+    "note": "Notatka"
+  },
+  "labels": {
+    "manufacturer": "Producent",
+    "other": "Inne"
+  }
 }

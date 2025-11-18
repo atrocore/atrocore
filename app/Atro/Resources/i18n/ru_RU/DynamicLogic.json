@@ -1,6 +1,7 @@
 {
   "labels": {
-    "Field": "Поле"
+    "Field": "Поле",
+    "currentUser": "Текущий пользователь"
   },
   "options": {
     "operators": {
@@ -22,7 +23,11 @@
       "contains": "Содержит",
       "has": "Содержит",
       "notContains": "Не включает в себя",
-      "notHas": "Не включает в себя"
+      "notHas": "Не включает в себя",
+      "isLinked": "Связано",
+      "isNotLinked": "Не связано",
+      "inTeams": "В командах",
+      "notInTeams": "Не в командах"
     }
   }
 }

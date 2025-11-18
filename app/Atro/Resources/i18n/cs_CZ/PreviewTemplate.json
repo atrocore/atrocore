@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "entityType": "Subjekt",
+    "isActive": "Aktivní",
+    "template": "Šablona HTML/CSS"
+  }
+}

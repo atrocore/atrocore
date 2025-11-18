@@ -57,6 +57,7 @@
     let sortBy = null;
     let sortFields = [];
     let applyAdvancedFilter = false;
+    let showEmptyPlaceholder = false;
 
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
@@ -184,7 +185,7 @@
 
         if (
             data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
-            && ((canUseDataRequest() && whereData.length) || hasTextFilter)
+            && ((canUseDataRequest() && foreignWhereData.length) || hasTextFilter)
         ) {
             treeLoading = true;
             if (searchValue) {
@@ -274,28 +275,31 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.load_on_demand) {
+                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.load_on_demand) {
                         const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
                         $li.find('.jqtree-element').append($el);
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
                     }
                 }
-            }.bind(this)
+            }.bind(this),
+            onCanMove: function (node) {
+                return !isNodeInSubTree(node);
+            }
         };
 
         if (data) {
             treeData['data'] = data;
             treeData['autoOpen'] = true;
             treeData['dragAndDrop'] = false;
-
-            delete treeData['dataUrl'];
-            delete treeData['dataFilter'];
+            showEmptyPlaceholder = data.length === 0
         }
 
         $tree.tree(treeData);
         $tree.on('tree.load_data', e => {
             Notifier.notify(false)
+            showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
+
             if (callbacks?.treeLoad) {
                 callbacks.treeLoad(treeScope, treeData);
             }
@@ -401,11 +405,20 @@
             removeUnsetButton($el);
 
             if (selectNodeId && isSelectionEnabled) {
-                const button = document.createElement('span');
+                let button = document.createElement('span');
                 button.classList.add('reset-button', 'ph', 'ph-x', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callUnselectNode();
+                });
+                $el.append(button);
+
+                button = document.createElement('span');
+                button.classList.add('add-to-filter-button', 'ph', 'ph-plus-circle', 'pull-right');
+                button.addEventListener('click', () => {
+                    removeUnsetButton($el);
+                    callAddNodeToFilter();
+                    selectNodeId = null;
                 });
                 $el.append(button);
             }
@@ -415,6 +428,7 @@
     function removeUnsetButton($el): void {
         if ($el && $el.length) {
             $el.find('.reset-button').remove();
+            $el.find('.add-to-filter-button').remove();
         }
     }
 
@@ -606,6 +620,29 @@
     function callUnselectNode() {
         if (callbacks?.selectNode) {
             callbacks.selectNode({id: selectNodeId})
+        }
+    }
+
+    function callAddNodeToFilter() {
+        if (callbacks?.addNodeToFilter) {
+            const $tree = window.$(treeElement);
+            let node = $tree.tree('getNodeById', selectNodeId);
+            let name = ''
+            if (node) {
+                name = node.name;
+            }
+
+            callbacks.addNodeToFilter({
+                operator: 'linked_with',
+                id: activeItem.name,
+                field: activeItem.name,
+                value: [selectNodeId],
+                data: {
+                    nameHash: {
+                        [selectNodeId]: name
+                    }
+                }
+            })
         }
     }
 
@@ -1135,6 +1172,9 @@
 
                 <div class="panel-group category-tree" bind:this={treeElement}>
                 </div>
+                {#if showEmptyPlaceholder}
+                    <p>{Language.translate('No Data')}</p>
+                {/if}
             {/if}
         {/if}
     </div>
@@ -1253,6 +1293,14 @@
         position: absolute;
         top: 0;
         right: 0;
+        cursor: pointer;
+    }
+
+    :global(ul.jqtree-tree li.jqtree_common .add-to-filter-button) {
+        margin-top: 6px;
+        position: absolute;
+        top: 0;
+        right: 25px;
         cursor: pointer;
     }
 

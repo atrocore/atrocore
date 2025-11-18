@@ -9,5 +9,12 @@
   "hasTeam": false,
   "duplicatableRelations": [
     "selectionRecords"
+  ],
+  "modifiedExtendedRelations": [
+    "selectionRecords"
+  ],
+  "aclLevelList": [
+    "no",
+    "all"
   ]
 }

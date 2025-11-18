@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "subject": "Тема",
+    "body": "Тело",
+    "isHtml": "HTML"
+  },
+  "labels": {
+    "send": "Отправить"
+  },
+  "exceptions": {
+    "systemTemplatesCannotBeDeleted": "Системные шаблоны не могут быть удалены",
+    "systemTemplateCodeChanged": "Код системного шаблона не может быть изменен"
+  }
+}

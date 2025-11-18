@@ -5,6 +5,13 @@
     "lastAccess": "Fecha del último acceso",
     "createdAt": "Fecha de acceso",
     "isActive": "Está activo",
-    "actionHistoryRecords": "Histórico"
+    "actionHistoryRecords": "Histórico",
+    "lifetime": "Tiempo de vida",
+    "idleTime": "Tiempo de inactividad",
+    "authToken": "Authorization-Token"
+  },
+  "tooltips": {
+    "lifetime": "El tiempo de vida debe establecerse en horas. Cero significa que no hay caducidad.",
+    "idleTime": "El tiempo de inactividad debe fijarse en horas. Cero significa que no expira."
   }
 }

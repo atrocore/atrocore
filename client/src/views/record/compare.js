@@ -108,10 +108,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
                 })
-                this.handleRadioButtonsDisableState(false)
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
-                this.notify(false)
                 return;
             }
 
@@ -154,9 +152,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     buttons.removeClass('disabled');
                     this.handleRadioButtonsDisableState(false);
                 }
-            }).done(() => {
+            }).done((result) => {
                 this.notify('Merged', 'success');
-                this.trigger('merge-success');
+                this.trigger('merge-success', result);
+                this.getRouter().navigate(`#${this.scope}/view/${result.id}`,{trigger: true});
                 if (doneCallback) {
                     doneCallback();
                 }
@@ -164,17 +163,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getCompareUrl() {
-            return this.scope + '/action/merge'
+            return 'App/action/merge'
         },
 
         getCompareData(targetId, attributes, relationshipData) {
             return {
+                scope: this.scope,
                 attributes: {
                     input: attributes,
                     relationshipData: relationshipData
                 },
-                targetId: targetId,
-                sourceIds: this.getModels().filter(m => m.id !== targetId).map(m => m.id),
+                sourceIds: this.getModels().map(m => m.id),
             }
         },
 
@@ -352,6 +351,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderRelationshipsPanels() {
             if (this.isComparisonAcrossScopes()) {
+                this.handlePanelRendering('relationshipsPanels');
+                return;
+            }
+
+            let panelList = this.getRelationshipPanels();
+
+            if(panelList.length === 0) {
+                this.handlePanelRendering('relationshipsPanels');
                 return;
             }
 
@@ -361,7 +368,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
                 model: this.model,
-                relationshipsPanels: this.getRelationshipPanels(),
+                relationshipsPanels: panelList,
                 collection: this.collection,
                 models: this.getModels(),
                 distantModels: this.getDistantModels(),
@@ -400,8 +407,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     continue;
                 }
 
+
                 let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
                 let relationScope = relationDefs['entity'];
+
+                if(!this.getAcl().check(relationScope, 'read')) {
+                    continue;
+                }
 
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
@@ -409,6 +421,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        continue;
+                    }
                 }
 
                 let panelData = {
@@ -444,10 +459,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
+                if(!this.getAcl().check(relationDefs['entity'], 'read')) {
+                    return;
+                }
+
                 let relationName = relationDefs['relationName'];
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        return ;
+                    }
                 }
 
                 relationshipsPanels.push({
@@ -1042,6 +1064,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
             }
             Dep.prototype.remove.call(this, dontEmpty);
+        },
+
+        isPanelsLoading() {
+            return this.renderedPanels.length < this.fieldPanels.length + 1;
         }
     });
 });

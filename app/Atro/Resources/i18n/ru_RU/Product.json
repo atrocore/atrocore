@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "number": "Номер",
+    "isActive": "Активные",
+    "image": "Изображение",
+    "price": "Цена",
+    "description": "Краткое описание",
+    "longDescription": "Длинное описание",
+    "children": "Детские товары",
+    "parents": "Родительские продукты",
+    "quantity": "Количество",
+    "mpn": "Номер производителя (MPN)",
+    "customsNumber": "Таможенный номер",
+    "countryOfOrigin": "Страна происхождения",
+    "defaultSupplier": "Поставщик по умолчанию",
+    "note": "Заметка"
+  },
+  "labels": {
+    "manufacturer": "Производитель",
+    "other": "Другие"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "attribute": "Attribut",
+    "roleScope": "Geltungsbereich",
+    "readAction": "Lesen",
+    "editAction": "Bearbeiten"
+  }
+}

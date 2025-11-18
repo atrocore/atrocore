@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "matching": "Відповідність",
+    "staging": "Постановка",
+    "stagingEntity": "Організаційна одиниця",
+    "stagingEntityId": "Ідентифікатор організації-постановника",
+    "master": "Магістр",
+    "masterEntity": "Головна сутність",
+    "masterEntityId": "Ідентифікатор основної сутності",
+    "score": "Оцінка",
+    "status": "Статус"
+  },
+  "options": {
+    "status": {
+      "found": "Знайдено",
+      "confirmed": "Підтверджено.",
+      "rejected": "Відхилено"
+    }
+  }
+}

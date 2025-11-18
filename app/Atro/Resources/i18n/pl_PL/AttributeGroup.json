@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "Nazwa grupy",
+    "description": "Description",
+    "code": "Kod",
+    "isActive": "Aktywny",
+    "attributes": "Atrybuty",
+    "sortOrder": "Sort Order"
+  },
+  "messages": {
+    "unlinkAttributeGroupConfirmation": "Czy na pewno chce Pan odłączyć wszystkie atrybuty grupy atrybutów?"
+  },
+  "exceptions": {
+    "attributeGroupSsLinkedWithAttributes": "Grupa atrybutów jest powiązana z atrybutem(ami). Proszę najpierw odłączyć atrybut(y)",
+    "entityIsUsed": "Grupa atrybutów nie może zostać usunięta, ponieważ jest używana w kilku atrybutach."
+  }
+}

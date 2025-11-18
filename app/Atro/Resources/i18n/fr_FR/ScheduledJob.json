@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Nom",
-    "scheduling": "Programmation"
+    "scheduling": "Programmation",
+    "jobs": "Emplois"
   },
   "labels": {
     "executeNow": "Exécuter maintenant"
@@ -18,7 +19,10 @@
       "ComposerAutoUpdate": "Mise à jour automatique du système",
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
       "CheckUpdates": "Vérifier les mises à jour du système",
-      "ScanStorage": "Stockage par balayage"
+      "ScanStorage": "Stockage par balayage",
+      "ClearEntities": "Effacer les données supprimées",
+      "FindMatches": "Trouver des correspondances",
+      "CalculateScriptFieldsForEntities": "Calculer les champs du script"
     }
   },
   "tooltips": {

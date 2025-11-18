@@ -578,6 +578,9 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                         },
                         treeReset: (treeScope) => {
                             this.treeReset(treeScope)
+                        },
+                        addNodeToFilter: (data) => {
+                            this.addNodeToFilter(data)
                         }
                     },
                     renderLayoutEditor: container => {
@@ -699,6 +702,11 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
             }
 
             this.selectTreeNode();
+        },
+
+        addNodeToFilter(data) {
+            this.collection.whereAdditional = []
+            window.dispatchEvent(new CustomEvent('add-item-to-query-builder', { detail: data }));
         },
 
         parseRoute(routeStr) {

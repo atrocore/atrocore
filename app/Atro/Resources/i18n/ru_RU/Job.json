@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "status": "Статус",
+    "executeTime": "Выполнить при",
+    "pid": "PID",
+    "priority": "Приоритет",
+    "handler": "Обработчик",
+    "payload": "Параметры",
+    "scheduledJob": "Задание планировщика",
+    "message": "Сообщение",
+    "startedAt": "Начало",
+    "endedAt": "Закончилось на"
+  },
+  "labels": {
+    "cancel": "Отмена"
+  },
+  "options": {
+    "status": {
+      "Pending": "На рассмотрении",
+      "Success": "Успешно",
+      "Running": "Выполняется",
+      "Failed": "Не выполнено",
+      "Canceled": "Отменено",
+      "Awaiting": "В ожидании",
+      "Closed": "Закрытый"
+    }
+  },
+  "tooltips": {
+    "priority": "Больший номер означает более высокий приоритет"
+  },
+  "exceptions": {
+    "jobIsRunning": "Выполненное задание не может быть удалено."
+  }
+}

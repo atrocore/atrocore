@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "minimumScore": "Minimalny wynik, %",
+    "entity": "Encja",
+    "stagingEntity": "Podmiot etapowy",
+    "masterEntity": "Podmiot główny",
+    "matchingRules": "Zasady dopasowywania",
+    "foreignName": "Nazwa obca",
+    "matchedRecords": "Dopasowane rekordy"
+  },
+  "options": {
+    "type": {
+      "bidirectional": "Dwukierunkowy",
+      "unidirectional": "Jednokierunkowy"
+    }
+  },
+  "tooltips": {
+    "foreignName": "Nazwa dla dopasowania wstecznego, np. \"staging\" może być nazwą obcą dla dopasowania \"master\"."
+  },
+  "exceptions": {
+    "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry i podkreślenia."
+  }
+}

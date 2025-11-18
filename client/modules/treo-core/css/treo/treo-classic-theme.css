@@ -14951,7 +14951,8 @@ ul.jqtree-tree span.jqtree-border {
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover,
-ul.jqtree-tree li.jqtree-selected > .reset-button {
+ul.jqtree-tree li.jqtree-selected > .reset-button,
+ul.jqtree-tree li.jqtree-selected > .add-to-filter-button{
     color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
@@ -15732,7 +15733,6 @@ span.became .file-link {
 
 .bottom .panel .group-container > .group > .group-name {
     padding: 10px 0 10px 10px;
-    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group > .group-name .btn {
@@ -15740,8 +15740,9 @@ span.became .file-link {
     border-width: 0;
 }
 
-.bottom .panel .group-container > .group {
-    border-bottom: 1px solid #ececec;
+.bottom .panel .group-container > .group > .list-container .list > table {
+    border-top: 1px solid #e8eced;
+    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group .list td.over-visible[data-name="value"] {

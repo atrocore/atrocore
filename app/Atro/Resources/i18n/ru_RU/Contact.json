@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Название",
+    "firstName": "Имя",
+    "secondName": "Второе имя",
+    "gender": "Пол",
+    "title": "Должность",
+    "jobPosition": "Должность",
+    "email": "Эл. почта",
+    "phone": "Телефон",
+    "mobile": "Мобильный",
+    "street": "Улица",
+    "zip": "ZIP",
+    "box": "Коробка",
+    "city": "Город",
+    "accounts": "Контрагенты"
+  }
+}
