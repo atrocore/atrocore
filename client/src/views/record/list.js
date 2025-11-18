@@ -964,7 +964,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         merging: merging
                     }, function (dialog) {
                         dialog.render();
-                        this.notify(false);
                         this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
                     })
                 })
