@@ -64,6 +64,21 @@ class MatchedRecord extends Base
                 $goldenRecordHash = md5("goldenRecord_{$entity->get('matchingId')}_{$entity->get('stagingEntity')}_{$entity->get('stagingEntityId')}");
             }
             $entity->set('goldenRecordHash', $goldenRecordHash);
+
+            // remove golden record from another record
+            if (!empty($goldenRecordHash)) {
+                $exists = $this
+                    ->where([
+                        'id!='             => $entity->id,
+                        'goldenRecordHash' => $goldenRecordHash,
+                    ])
+                    ->findOne();
+                if (!empty($exists)) {
+                    $exists->set('goldenRecord', false);
+                    $exists->set('goldenRecordHash', null);
+                    $this->getEntityManager()->saveEntity($exists);
+                }
+            }
         }
     }
 
