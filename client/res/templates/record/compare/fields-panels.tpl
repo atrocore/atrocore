@@ -57,11 +57,13 @@
             {{#each fieldListInGroup }}
                 <tr class="list-row {{#if  different}}danger{{/if}}" data-field="{{field}}">
                     <td class="cell " title="{{translate label scope=../../scope category='fields'}}">
-                        {{#if attributeId}}
-                        <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
-                        {{else}}
-                        {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}
-                        {{/if}}
+                       <div class="field-name">
+                           {{#if attributeId}}
+                           <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
+                           {{else}}
+                           <span>{{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}</span>
+                           {{/if}}
+                       </div>
                     </td>
                     {{#each fieldValueRows}}
                         {{#if ../../../merging}}
