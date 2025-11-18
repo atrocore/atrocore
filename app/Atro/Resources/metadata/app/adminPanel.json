@@ -141,7 +141,8 @@
         "url": "#ThumbnailType",
         "label": "ThumbnailTypes",
         "description": "thumbnailTypes",
-        "icon": "ph ph-images-square"
+        "icon": "ph ph-images-square",
+        "docsUrl": "https://help.atrocore.com/atrocore/administration/file-management#thumbnail-configuration"
       },
       {
         "url": "#Folder",
