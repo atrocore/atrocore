@@ -18615,9 +18615,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     width: 250px !important;
 }
 
-.compare-records .compare-panel tr td:first-child {
+.compare-records .compare-panel tr td:first-child  div.field-name span{
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 .compare-records .compare-panel td {
@@ -18654,10 +18655,25 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.compare-records .compare-panel table td.cell .field {
+.compare-records .compare-panel table td.cell .field, .compare-records .compare-panel table td div.field-name {
     display: flex;
     align-items: center;
     text-align: center;
+
+}
+
+.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has(> input[type="checkbox"])) {
+    justify-content: flex-end;
+}
+
+.fields-compare-panel  table tr td{
+    height: 50px;
+    padding-bottom: 3px;
+    padding-top: 5px;
+}
+
+.compare-records .compare-panel table tr td div.field, .compare-records .compare-panel table td div.field-name {
+    height: 100%;
 }
 
 .compare-records .compare-panel table tr td.cell.no-center .field {
@@ -18670,8 +18686,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-records .compare-panel table td.cell .inline-actions {
     position: absolute;
-    right: 5px;
-    top: -10px;
+    left: 0;
+    top: -3px;
     z-index: 1000;
 }
 
@@ -18699,6 +18715,16 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     overflow: hidden;
     display: inline-block;
     max-width: 100%;
+}
+
+.compare-records .overlay {
+    position: absolute;
+    top: 0;
+    right: -50px;
+    left: -50px;
+    bottom: -30px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
 }
 
 .cards-container {
