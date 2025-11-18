@@ -22,7 +22,6 @@
             dropdownClass += ' dropdown-menu-right';
         }
     }
-    console.log(actions);
 </script>
 
 <div class="button-group {className}">
