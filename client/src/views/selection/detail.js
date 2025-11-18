@@ -424,8 +424,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 } catch (e) {
                 }
             }
-            let entities = this.model.get('entities') || [];
-            this.selectedScope = this.selectedScope ?? (entities.length > 0 ? this.model.get('entities')[0] : null)
+            let entities = this.getEntityTypes() || [];
+            this.selectedScope = this.selectedScope ?? (entities.length > 0 ? entities[0] : null)
             let view = this.getMainRecord();
             let entitySelectionModel = new Model();
 
