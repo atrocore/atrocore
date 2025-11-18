@@ -207,9 +207,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         refreshContent() {
-            if (this.comparisonAcrossEntities()) {
-                this.selectionViewMode = 'standard';
-            }
             this.reloadStyle(this.selectionViewMode);
 
             this.setupRecord();
@@ -224,14 +221,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             $(`.action[data-name="${selected}"]`).addClass('primary');
 
             if (this.comparisonAcrossEntities()) {
-                ['compare', 'merge'].forEach(name => {
+                ['merge'].forEach(name => {
                     $(`.action[data-name="${name}"]`).addClass('disabled').attr('disabled', true);
                 })
             }
         },
 
         setupRecord: function () {
-            if (['compare', 'merge'].includes(this.selectionViewMode)
+            if (['merge'].includes(this.selectionViewMode)
                 && (
                     this.comparisonAcrossEntities()
                     || this.selectionRecordModels.length < 2
@@ -317,7 +314,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         enableButtons() {
             this.availableModes.forEach(action => {
-                if (['compare', 'merge'].includes(action) && this.comparisonAcrossEntities()) {
+                if (['merge'].includes(action) && this.comparisonAcrossEntities()) {
                     return;
                 }
 
@@ -349,6 +346,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         getRecordViewName: function () {
             if (this.selectionViewMode === 'compare') {
+                if(this.comparisonAcrossEntities()) {
+                    return 'views/selection/record/detail/compare-entities';
+                }
                 return 'views/selection/record/detail/compare';
             }
 
