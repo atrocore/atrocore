@@ -344,6 +344,7 @@ Espo.define('views/main', 'view', function (Dep) {
                     showFilter: this.shouldShowFilter(),
                     createView: this.createView.bind(this),
                     isCollapsed: true,
+                    model: this.model,
                     loadActivities: (callback) => {
                         let el = this.options.el + ' .right-side-view .activities'
                         this.createView('activities', 'views/record/activities', {

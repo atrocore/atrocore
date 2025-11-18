@@ -670,7 +670,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.getMainRecord()?.applyMerge();
-        }
+        },
+
+        canLoadActivities: function () {
+            return true;
+        },
+
+        shouldSetupRightSideView: function () {
+            return true;
+        },
+
     });
 });
 
