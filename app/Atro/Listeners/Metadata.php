@@ -401,15 +401,23 @@ class Metadata extends AbstractListener
 
         foreach ($actions ?? [] as $action) {
             $params = [
-                'id'      => $action['id'],
-                'name'    => $action['name'],
-                'display' => $action['display'],
-                'type'    => $action['type'],
-                'acl'     => [
+                'id'            => $action['id'],
+                'name'          => $action['name'],
+                'display'       => $action['display'],
+                'type'          => $action['type'],
+                'acl'           => [
                     'scope'  => $action['source_entity'],
                     'action' => 'read',
                 ]
             ];
+
+            if (!empty($action['icon_class'])) {
+                $html = '<i class="ph ph-' . $action['icon_class'] . '"></i>';
+                if (empty($action['hide_text_label'])) {
+                    $html .= ' ' . $action['name'];
+                }
+                $params['html'] = $html;
+            }
 
             if ($action['type'] === 'email') {
                 $actionData = @json_decode($action['data'], true);

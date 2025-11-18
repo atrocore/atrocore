@@ -20,7 +20,8 @@
     "displayField": "Поле відображення",
     "focusField": "Поле фокусування",
     "webhookUrl": "URL",
-    "targetEntity": "Цільова сутність"
+    "targetEntity": "Цільова сутність",
+    "hideTextLabel": "Приховати текст на кнопці"
   },
   "labels": {
     "execute": "Виконати",

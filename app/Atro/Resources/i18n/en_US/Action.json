@@ -20,7 +20,8 @@
     "emailTemplate": "Email Template",
     "emailTo": "Email To",
     "emailCc": "Email CC",
-    "emailBcc": "Email BCC"
+    "emailBcc": "Email BCC",
+    "hideTextLabel": "Hide text label on the button"
   },
   "labels": {
     "execute": "Execute",

@@ -687,6 +687,34 @@
         }
       }
     },
+    "iconClass": {
+      "type": "varchar",
+      "view": "views/action/fields/icon-class",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "display",
+              "value": "single"
+            }
+          ]
+        }
+      }
+    },
+    "hideTextLabel": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "iconClass"
+            }
+          ]
+        }
+      }
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

@@ -209,8 +209,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
 
+            let forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
             Object.entries(this.model.defs.fields).forEach(function ([field, fieldDef]) {
+
+                if(forbiddenList.includes(field)) {
+                    return;
+                }
+
                 if (this.nonComparableFields.includes(field)) {
                     return;
                 }
@@ -732,11 +738,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.renderedPanels.length === this.fieldPanels.length + 1) {
                 this.notify(false)
                 this.handleRadioButtonsDisableState(false);
-                $('button[data-name="merge"]').removeClass('disabled');
-                $('button[data-name="merge"]').attr('disabled', false);
-                $('button[data-name="selectionView"]').removeClass('disabled');
-                $('button[data-name="selectionView"]').attr('disabled', false);
-                $('.button-container a').removeClass('disabled');
                 this.trigger('all-panels-rendered');
             }
         },

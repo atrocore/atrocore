@@ -6,7 +6,7 @@
     },
     "entityType": {
       "type": "enum",
-      "view": "views/fields/entity-type",
+      "view": "views/selection-record/fields/entity-type",
       "trim": true,
       "required": true
     },

@@ -86,15 +86,13 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: (dialog) => {
-                        this.trigger('cancel', dialog)
-                    }
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: (dialog) => {
+                    this.trigger('cancel', dialog)
                 }
-            ];
+            });
 
             if (this.getAcl().check('Selection', 'read') && this.selectionId) {
                 this.buttonList.push({
@@ -241,13 +239,19 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
-                view.render();
+                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                    ['merge', 'selectionView'].forEach(action => {
+                        $(`button[data-name="${action}"]`).removeClass('disabled');
+                        $(`button[data-name="${action}"]`).attr('disabled', false);
+                    });
+                    $('.button-container a').removeClass('disabled');
                 });
 
-                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+                view.render();
+
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
                 });
