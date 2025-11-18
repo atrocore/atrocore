@@ -1,22 +1,23 @@
 {
   "fields": {
-    "matching": "Passend dazu",
-    "staging": "Inszenierung",
+    "matching": "Abgleich",
+    "staging": "Staging",
     "stagingEntity": "Staging-Entität",
-    "stagingEntityId": "Staging Entity ID",
-    "master": "Meister",
+    "stagingEntityId": "Staging-Entitäts-ID",
+    "master": "Master",
     "masterEntity": "Master-Entität",
-    "masterEntityId": "Master Entity ID",
-    "score": "Ergebnis",
+    "masterEntityId": "Master-Entitäts-ID",
+    "score": "Punktzahl",
     "status": "Status",
     "manuallyAdded": "Manuell hinzugefügt",
-    "goldenRecord": "Goldene Aufzeichnung",
+    "goldenRecord": "Golden Record",
     "hash": "Eindeutiger Hash",
-    "goldenRecordHash": "Goldene Aufzeichnung Unique Hash"
+    "goldenRecordHash": "Golden Record Unique Hash"
   },
   "options": {
     "status": {
-      "found": "Gefunden",
+      "new": "Neu",
+      "preselected": "Vorausgewählt",
       "confirmed": "Bestätigt",
       "rejected": "Abgelehnt"
     }
