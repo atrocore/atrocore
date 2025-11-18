@@ -18695,6 +18695,16 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     max-width: 100%;
 }
 
+.compare-records .overlay {
+    position: absolute;
+    top: 0;
+    right: -50px;
+    left: -50px;
+    bottom: -30px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

@@ -225,7 +225,6 @@ Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep
                         merging: merging
                     }, function (dialog) {
                         dialog.render();
-                        this.notify(false)
                     });
                 });
             });
