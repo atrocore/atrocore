@@ -20,7 +20,8 @@
     "emailTemplate": "Plantilla de correo electrónico",
     "emailTo": "Enviar a",
     "emailCc": "Correo electrónico CC",
-    "emailBcc": "Correo electrónico CCO"
+    "emailBcc": "Correo electrónico CCO",
+    "hideTextLabel": "Ocultar etiqueta de texto en el botón"
   },
   "labels": {
     "execute": "Ejecute",
