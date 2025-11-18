@@ -20,7 +20,8 @@
     "mode": "Mode",
     "emailScript": "Script",
     "emailTemplate": "Modèle de courrier électronique",
-    "targetEntity": "Entité cible"
+    "targetEntity": "Entité cible",
+    "hideTextLabel": "Masquer l'étiquette de texte sur le bouton"
   },
   "labels": {
     "execute": "Exécuter",
