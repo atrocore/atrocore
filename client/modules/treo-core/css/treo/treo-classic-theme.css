@@ -9728,6 +9728,12 @@ body > #header .navbar-brand span.home-icon {
     height: 16px;
 }
 
+.icon-button {
+    width: 18px;
+    height: 18px;
+}
+
+
 .status-icons .ph {
     color: var(--status-icon-color);
 }
