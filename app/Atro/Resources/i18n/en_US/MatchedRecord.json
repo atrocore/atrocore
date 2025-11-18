@@ -8,7 +8,9 @@
     "masterEntity": "Master Entity",
     "masterEntityId": "Master Entity ID",
     "score": "Score",
-    "status": "Status"
+    "status": "Status",
+    "manuallyAdded": "Manually Added",
+    "goldenRecord": "Golden Record"
   },
   "options": {
     "status": {

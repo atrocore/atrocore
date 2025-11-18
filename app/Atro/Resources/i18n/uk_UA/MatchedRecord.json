@@ -8,7 +8,9 @@
     "masterEntity": "Головна сутність",
     "masterEntityId": "Ідентифікатор основної сутності",
     "score": "Оцінка",
-    "status": "Статус"
+    "status": "Статус",
+    "manuallyAdded": "Додано вручну",
+    "goldenRecord": "Золотий запис"
   },
   "options": {
     "status": {

@@ -24,6 +24,14 @@
         {
           "name": "score"
         }
+      ],
+      [
+        {
+          "name": "goldenRecord"
+        },
+        {
+          "name": "manuallyAdded"
+        }
       ]
     ]
   }

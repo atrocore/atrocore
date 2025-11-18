@@ -58,6 +58,13 @@
       "filterDisabled": true,
       "massUpdateDisabled": true
     },
+    "manuallyAdded": {
+      "type": "bool",
+      "protected": true
+    },
+    "goldenRecord": {
+      "type": "bool"
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
