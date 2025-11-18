@@ -18741,6 +18741,18 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     z-index: 1000;
 }
 
+.compare-entities .panel-body > div > .list > table td:first-child {
+    padding-left: 5px !important;
+}
+
+.compare-entities .list > table tbody tr:not(.active-dropdown):hover {
+    background-color: transparent;
+}
+
+.compare-entities .compare-panel table col.col-min-width{
+    min-width: 350px;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

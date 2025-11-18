@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare-entities', ['views', 'views/record/detail'], function (Dep, Detail) {
+Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -16,14 +16,14 @@ Espo.define('views/selection/record/detail/compare-entities', ['views', 'views/r
 
         models: [],
 
-        hidePanelNavigation: true,
+        detailComparisonView: 'views/selection/record/detail/detail-comparison-view',
 
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.models = this.options.models || this.models;
-            this.model = this.getModels().length ? this.getModels()[0] : null;
+            this.model = this.models.length ? this.models[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
         },
 
@@ -32,7 +32,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['views', 'views/r
             return {
                 title: '',
                 columns: columns,
-                columnLength: column.length,
+                columnLength: columns.length,
                 scope: this.scope,
                 showOverlay: this.showOverlay
             };
@@ -64,12 +64,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['views', 'views/r
         getColumns() {
             let columns = [];
 
-            columns.push({
-                name: this.translate('Name'),
-                isFirst: true,
-            });
-
-            this.getModels().forEach((model) => {
+            this.models.forEach((model) => {
                 let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type'])
                 return columns.push({
                     id: model.id,
@@ -82,5 +77,23 @@ Espo.define('views/selection/record/detail/compare-entities', ['views', 'views/r
 
             return columns;
         },
+
+        afterRender(){
+            this.models.forEach(m => {
+                this.createView('compareDetail' + m.id, this.detailComparisonView, {
+                    el: this.options.el + `[data-id="${m.id}"]`,
+                    scope: this.scope,
+                    mode: 'detail',
+                    model: m
+                }, view => {
+
+                    view.render();
+
+                    this.listenTo(this.model, 'sync', () => {
+                        view.reRender();
+                    });
+                });
+            });
+        }
     });
 });

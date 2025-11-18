@@ -1,4 +1,4 @@
-<div class="detail compare-records"  id="{{id}}" style="position: relative">
+<div class="detail compare-entities"  id="{{id}}" style="position: relative">
     {{#if showOverlay }}
     <div class="overlay"></div>
     {{/if}}
@@ -15,7 +15,12 @@
                     <div class="panel-body">
                         <div class="list-container">
                             <div class="list">
-                                <table class="table full-table table-striped table-fixed table-scrolled table-bordered">
+                                <table class="table full-table table-fixed table-scrolled table-bordered">
+                                    <colgroup>
+                                        {{#each columns}}
+                                            <col class="col-min-width">
+                                        {{/each}}
+                                    </colgroup>
                                     <thead>
                                     <tr>
                                         {{#each columns}}
@@ -31,10 +36,9 @@
                                     </thead>
                                     <tbody>
                                     <tr class="list-row">
-                                        <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
-                                    </tr>
-                                    <tr class="list-row">
-                                        <td class="cell" colspan="{{columnLength}}"> {{translate 'Loading...'}}</td>
+                                        {{#each columns}}
+                                        <td  data-id="{{id}}"> {{translate 'Loading...'}}</td>
+                                        {{/each}}
                                     </tr>
                                     </tbody>
                                 </table>
@@ -44,8 +48,5 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="compare-panel  list col-md-12" data-name="relationshipsPanels"></div>
     </div>
 </div>
