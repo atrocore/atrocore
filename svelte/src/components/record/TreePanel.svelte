@@ -31,7 +31,7 @@
 
     export let showApplySortOrder: boolean = true
 
-    export let canBuildTree = true;
+    export let canBuildTree: boolean = true;
 
     export let selectedScope: string | null = null;
 
@@ -46,18 +46,18 @@
     let searchInputElement: HTMLInputElement;
     let treeItems: [] = [];
     let activeItem: object;
-    let layoutLoading = false;
-    let treeLoading = false;
-    let searchValue = '';
-    let treeScope;
-    let layoutData;
-    let selectNodeId;
-    let isHidden = false;
-    let sortAsc = true;
-    let sortBy = null;
-    let sortFields = [];
-    let applyAdvancedFilter = false;
-    let showEmptyPlaceholder = false;
+    let layoutLoading: boolean = false;
+    let treeLoading: boolean = false;
+    let searchValue: string = '';
+    let treeScope: string;
+    let layoutData: any;
+    let selectNodeId: string | null = null;
+    let isHidden: boolean = false;
+    let sortAsc: boolean = true;
+    let sortBy: string|null = null;
+    let sortFields: Array = [];
+    let applyAdvancedFilter: boolean = false;
+    let showEmptyPlaceholder: boolean = false;
 
     $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
