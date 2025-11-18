@@ -497,6 +497,9 @@ class Util
                             }
                         }
 
+                    } else {
+                        // If the key $keyArr[$i] does not exist in $elem, we don't need to continue and try to unset.
+                        break;
                     }
                 }
             }
