@@ -20,7 +20,8 @@
     "emailTemplate": "Шаблон электронной почты",
     "emailTo": "Email To",
     "emailCc": "Email CC",
-    "emailBcc": "Email BCC"
+    "emailBcc": "Email BCC",
+    "hideTextLabel": "Скрыть текстовую метку на кнопке"
   },
   "labels": {
     "execute": "Выполнить",
