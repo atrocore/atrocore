@@ -24,10 +24,6 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
-            {
               "type": "isNotEmpty",
               "attribute": "matchingId"
             }
@@ -61,10 +57,6 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
             {
               "type": "isNotEmpty",
               "attribute": "matchingId"

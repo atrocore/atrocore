@@ -14,6 +14,7 @@ namespace Atro\Migrations;
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\EntityManager;
 
 class V2Dot1Dot28 extends Base
@@ -36,6 +37,14 @@ class V2Dot1Dot28 extends Base
             $this->exec("ALTER TABLE matched_record ADD golden_record_hash VARCHAR(255) DEFAULT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469E6FB4A73AEB3B4E33 ON matched_record (golden_record_hash, deleted)");
         }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('status', ':null')
+            ->where('status = :found')
+            ->setParameter('null', null, ParameterType::NULL)
+            ->setParameter('found', 'found')
+            ->executeQuery();
     }
 
     protected function exec(string $sql): void

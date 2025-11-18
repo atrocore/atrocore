@@ -12,6 +12,7 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
@@ -39,6 +40,21 @@ class MatchedRecord extends Base
         parent::beforeSave($entity, $options);
 
         if ($entity->isNew()) {
+            $matching = $this->getEntityManager()->getRepository('Matching')->get($entity->get('matchingId'));
+            if (empty($matching)) {
+                throw new NotFound("Matching record with id {$entity->get('matchingId')} not found.");
+            }
+
+            if (!empty($entity->get('stagingId'))) {
+                $entity->set('stagingEntity', $matching->get('stagingEntity'));
+                $entity->set('stagingEntityId', $entity->get('stagingId'));
+            }
+
+            if (!empty($entity->get('masterId'))) {
+                $entity->set('masterEntity', $matching->get('masterEntity'));
+                $entity->set('masterEntityId', $entity->get('masterId'));
+            }
+
             $entity->set('hash', $this->createUniqHash($entity));
         }
 
