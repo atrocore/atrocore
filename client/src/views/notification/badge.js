@@ -77,20 +77,15 @@ Espo.define('views/notification/badge', 'view', function (Dep) {
                             if (navigator.setAppBadge && this.isPWAMode()) {
                                 navigator.setAppBadge(count);
                             }
-                        } else {
-                            if (navigator.clearAppBadge) {
-                                navigator.clearAppBadge();
-                            }
-                        }
-                    } else {
-                        if (navigator.clearAppBadge) {
-                            navigator.clearAppBadge();
+
+                            this.refreshList();
+                            return;
                         }
                     }
-                } else {
-                    if (navigator.clearAppBadge) {
-                        navigator.clearAppBadge();
-                    }
+                }
+
+                if (navigator.clearAppBadge) {
+                    navigator.clearAppBadge();
                 }
 
                 this.refreshList();
