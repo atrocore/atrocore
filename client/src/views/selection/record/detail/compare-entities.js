@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/record/detail'], function (Dep, Detail) {
+Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/record/detail', 'views/selection/record/detail/compare'], function (Dep, Detail, Compare) {
 
     return Dep.extend({
 
@@ -19,6 +19,15 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         detailComparisonView: 'views/selection/record/detail/detail-comparison-view',
 
         showOverlay: true,
+
+        events: {
+            'click a.swap-entity': function (e) {
+                Compare.prototype.afterSwapButtonClick.call(this, e)
+            },
+            'click  a.remove-entity': function (e) {
+                Compare.prototype.afterRemoveButtonClicked.call(this, e);
+            }
+        },
 
         setup() {
             this.models = [];
@@ -32,12 +41,24 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                 this.models.forEach(model => {
                     model.trigger('overview-filters-changed')
                 });
-            })
+            });
+
+            this.listenToOnce(this, 'after:render', () => {
+                this.$el.find('th').each(function (e) {
+
+                    $(this).on('mouseenter', function (e) {
+                        e.stopPropagation();
+                        $(this).find('div.inline-actions').removeClass('hidden')
+                    }.bind(this)).on('mouseleave', function (e) {
+                        e.stopPropagation();
+                        $(this).find('div.inline-actions').addClass('hidden')
+                    }.bind(this));
+                });
+            });
         },
 
         data() {
             let columns = this.getColumns();
-            console.log(100 / columns.length)
             return {
                 title: '',
                 columns: columns,
@@ -91,7 +112,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             let count = 0;
             this.models.forEach(m => {
                 this.createView(m.id, this.detailComparisonView, {
-                    el: this.options.el + ` [data-id="${m.id}"]`,
+                    el: this.options.el + ` .record-content[data-id="${m.id}"]`,
                     scope: m.name,
                     mode: 'detail',
                     model: m
