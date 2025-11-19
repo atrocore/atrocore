@@ -61,7 +61,24 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
 
             this.listenTo(this.model, 'after:unrelate', () => {
+                this.refreshContent();
+                window.treePanelComponent.rebuildTree();
+                this.notify(this.notify(this.translate('Done'), 'success'));
+            });
+
+            this.listenTo(this.model, 'after:relate', () => {
                 this.setupCustomButtons();
+                this.notify(this.translate('Loading...'));
+                this.model.fetch().then(() => {
+                    if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                        this.reloadModels(() => this.refreshContent());
+                        window.treePanelComponent.rebuildTree();
+                        this.notify(this.notify(this.translate('Done'), 'success'));
+                    } else {
+                        this.refreshContent();
+                        this.notify(this.notify(this.translate('Done'), 'success'));
+                    }
+                });
             });
 
             this.listenTo(this.model, 'init-collection:selectionRecords', (collection) => {
@@ -423,23 +440,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', () => {
-                        this.afterItemAdded()
+                        this.model.trigger('after:relate', 'selections');
                     });
                 });
             }
         },
 
-        afterItemAdded() {
-            this.model.trigger('after:relate', 'selections');
-            this.model.fetch().then(() => {
-                if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                    this.notify(this.translate('Loading...'));
-                    this.reloadModels(() => this.refreshContent())
-                } else {
-                    this.refreshContent();
-                }
-            });
-        },
 
         afterRender() {
             this.treeAllowed = false
@@ -509,20 +515,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                     entityId: data.id,
                                     selectionsIds: [this.model.id]
                                 }).then(_ => {
-                                    this.model.fetch().then(_ => {
-                                        if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                                            this.notify(this.translate('Loading...'));
-                                            this.reloadModels(() => {
-                                                this.refreshContent();
-                                                window.treePanelComponent.rebuildTree();
-                                            });
-                                            this.notify(this.notify(this.translate('Done'), 'success'));
-                                        } else {
-                                            this.refreshContent();
-                                            this.notify(this.notify(this.translate('Done'), 'success'));
-                                        }
-                                    });
-                                })
+                                    this.model.trigger('after:relate', 'selections');
+                                });
                             }
                         },
 
@@ -620,13 +614,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         afterRemoveSelectedRecords(selectedRecordIds) {
             if (this.selectionViewMode !== 'standard') {
                 this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
-                window.treePanelComponent.rebuildTree();
             } else {
                 this.selectionRecords = this.selectionRecords.filter(record => !selectedRecordIds.includes(record.id))
             }
 
-            this.refreshContent();
-            this.notify(this.notify(this.translate('Done'), 'success'));
+            this.model.trigger('after:unrelate')
         },
 
         afterChangedSelectedRecords(_) {
