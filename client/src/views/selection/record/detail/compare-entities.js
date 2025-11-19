@@ -30,7 +30,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
                 this.models.forEach(model => {
-                     model.trigger('overview-filters-changed')
+                    model.trigger('overview-filters-changed')
                 });
             })
         },
@@ -51,7 +51,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return this.getParentView().getCompareButtons();
         },
 
-        canLoadActivities(){
+        canLoadActivities() {
             return true;
         },
 
@@ -87,7 +87,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return columns;
         },
 
-        afterRender(){
+        afterRender() {
             let count = 0;
             this.models.forEach(m => {
                 this.createView(m.id, this.detailComparisonView, {
@@ -98,7 +98,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                 }, view => {
                     view.render(() => {
                         count++;
-                        if(count === this.models.length) {
+                        if (count === this.models.length) {
                             this.trigger('detailPanelsLoaded', {list: []});
                             this.trigger('all-panels-rendered')
                             this.$el.find('.overlay').addClass('hidden');

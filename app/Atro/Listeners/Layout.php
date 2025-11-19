@@ -29,12 +29,12 @@ class Layout extends AbstractListener
             if (empty($event->getArgument('params')['isCustom'])) {
                 $scope = $event->getArgument('params')['scope'];
 
-                if($scope === 'Settings' && $this->getUser()->isAdmin()) {
+                if ($scope === 'Settings' && $this->getUser()->isAdmin()) {
                     $result[] = ['name' => '_admin'];
                     $event->setArgument('result', $result);
                 }
                 // add admin navigation
-                if($this->isAdminView($scope) && $this->getUser()->isAdmin()) {
+                if ($this->isAdminView($scope) && $this->getUser()->isAdmin()) {
                     $result[] = ['name' => '_admin'];
                     $event->setArgument('result', $result);
                 }
@@ -63,28 +63,28 @@ class Layout extends AbstractListener
             }
         }
 
-        if($event->getArgument('params')['viewType'] === 'rightSideView') {
+        if ($event->getArgument('params')['viewType'] === 'rightSideView') {
             $result = $event->getArgument('result');
             if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
                 $scope = $event->getArgument('params')['scope'];
                 $result = [
                     [
                         "label" => "accessManagement",
-                        "rows" => []
+                        "rows"  => []
                     ]
                 ];
 
                 $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
 
-                if(!empty($scopeDefs['hasOwner'])) {
+                if (!empty($scopeDefs['hasOwner'])) {
                     $result[0]['rows'][] = [["name" => "ownerUser", "fullWidth" => true]];
                 }
 
-                if(!empty($scopeDefs['hasAssignedUser'])) {
+                if (!empty($scopeDefs['hasAssignedUser'])) {
                     $result[0]['rows'][] = [["name" => "assignedUser", "fullWidth" => true]];
                 }
 
-                if(!empty($scopeDefs['hasTeam'])) {
+                if (!empty($scopeDefs['hasTeam'])) {
                     $result[0]['rows'][] = [["name" => "teams", "fullWidth" => true]];
                 }
 
@@ -92,7 +92,7 @@ class Layout extends AbstractListener
                 $result[0]['rows'][] = [["name" => "created", "fullWidth" => true]];
                 $result[0]['rows'][] = [["name" => "modified", "fullWidth" => true]];
 
-                if(!empty($scopeDefs['stream'])) {
+                if (!empty($scopeDefs['stream'])) {
                     $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
                 }
 
@@ -100,7 +100,7 @@ class Layout extends AbstractListener
             }
         }
 
-        if($event->getArgument('params')['viewType'] === 'selection') {
+        if ($event->getArgument('params')['viewType'] === 'selection') {
             $result = $event->getArgument('result');
             if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
                 $scope = $event->getArgument('params')['scope'];
@@ -108,9 +108,9 @@ class Layout extends AbstractListener
 
                 $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
 
-                if(!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'type']))) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'type']))) {
                     $result[] = ["name" => "name"];
-                }else{
+                } else {
                     $result[] = ["name" => "id"];
                 }
 
@@ -121,11 +121,11 @@ class Layout extends AbstractListener
         $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 
-    protected  function isAdminView($scope): bool
+    protected function isAdminView($scope): bool
     {
         foreach ($this->getMetadata()->get(['app', 'adminPanel']) as $panel) {
             foreach ($panel['itemList'] as $item) {
-                if(!empty($item['url']) && (str_starts_with($item['url'], "#$scope/") || $item['url'] === "#$scope")) {
+                if (!empty($item['url']) && (str_starts_with($item['url'], "#$scope/") || $item['url'] === "#$scope")) {
                     return true;
                 }
             }

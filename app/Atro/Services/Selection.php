@@ -27,6 +27,7 @@ use Espo\ORM\IEntity;
 class Selection extends Base
 {
     protected $mandatorySelectAttributeList = ['name', 'entityTypes', 'type'];
+
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
         $selection = $this->getEntityManager()->getEntity('Selection');

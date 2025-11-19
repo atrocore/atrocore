@@ -57,7 +57,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.listenTo(this.model, 'sync after:inlineEditSave after:set-detail-mode', () => {
                 this.setupCustomButtons();
-                setTimeout(() =>  this.enableButtons(), 300);
+                setTimeout(() => this.enableButtons(), 300);
             });
 
             this.listenTo(this.model, 'after:unrelate', () => {
@@ -87,8 +87,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                 if (record.isPanelsLoading()) {
                     $('#main > .content-wrapper > main').css('overflow-y', 'hidden')
-                }else{
-                   setTimeout(() =>  this.enableButtons(), 300)
+                } else {
+                    setTimeout(() => this.enableButtons(), 300)
                 }
             });
 
@@ -131,9 +131,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
-            this.addMenuItem('buttons',{name:'merge', style:'hidden'}, true, false, true);
+            this.addMenuItem('buttons', {name: 'merge', style: 'hidden'}, true, false, true);
 
-            if(!this.model.get('type') || this.model.get('type') === 'single') {
+            if (!this.model.get('type') || this.model.get('type') === 'single') {
                 this.addMenuItem('buttons', {
                     name: 'merge',
                     action: 'showSelectionView',
@@ -237,7 +237,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.comparisonAcrossEntities()
                     || this.selectionRecordModels.length < 2
                     || !(this.getEntityTypes().map(e => this.getAcl().check(e, 'read')).reduce((prev, current) => prev && current, true)))
-                ) {
+            ) {
                 if (this.selectionRecordModels.length < 2) {
                     this.notify('You need at least two item for comparison', 'error');
                 }
@@ -351,7 +351,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         getRecordViewName: function () {
             if (this.selectionViewMode === 'compare') {
-                if(this.comparisonAcrossEntities()) {
+                if (this.comparisonAcrossEntities()) {
                     return 'views/selection/record/detail/compare-entities';
                 }
                 return 'views/selection/record/detail/compare';
@@ -372,7 +372,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
-            if(this.model.get('type') === 'single') {
+            if (this.model.get('type') === 'single') {
                 let foreignScope = this.getEntityTypes()[0];
                 let viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
                 this.notify('Loading...');
@@ -393,7 +393,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         })
                     }, this);
                 });
-            }else{
+            } else {
                 this.setupCustomButtons();
                 let scope = 'SelectionRecord';
                 let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
@@ -423,7 +423,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', () => {
-                       this.afterItemAdded()
+                        this.afterItemAdded()
                     });
                 });
             }
@@ -691,7 +691,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return entityTypes;
             }
 
-            return  [];
+            return [];
         },
 
         actionMerge() {
