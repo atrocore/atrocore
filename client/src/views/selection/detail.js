@@ -197,6 +197,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         reloadModels(callback) {
             List.prototype.loadSelectionRecordModels.call(this, this.model.id).then(models => {
                 this.selectionRecordModels = models;
+                //we clean to remove dead id
+                this.selectedIds = this.selectedIds.filter(id => models.map(m => m.id).includes(id));
                 if (this.selectedIds.length === 0) {
                     for (const model of this.selectionRecordModels) {
                         if (this.selectedIds.length >= this.maxForComparison) {
@@ -540,8 +542,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.model.trigger('after:unrelate')
         },
 
-        afterChangedSelectedRecords(_) {
+        afterChangedSelectedRecords(changedIds) {
             this.notify(this.translate('Loading...'));
+            this.selectedIds = this.selectedIds.concat(changedIds);
             this.reloadModels(() => {
                 this.refreshContent();
             });

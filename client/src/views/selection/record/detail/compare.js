@@ -58,7 +58,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     this.notify('Loading...');
                     this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
                         entityId: model.id
-                    }).then(() => this.getParentView().afterChangedSelectedRecords([selectionRecordId]));
+                    }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
                 });
             });
         },
