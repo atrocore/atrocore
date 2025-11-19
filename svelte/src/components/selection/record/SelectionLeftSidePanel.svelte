@@ -3,14 +3,36 @@
     import {onMount} from "svelte";
     import {Storage} from "../../../utils/Storage";
     import BaseSidebar from "../../record/BaseSidebar.svelte";
+    import {GroupedRecords, Record} from "./interfaces/Record";
 
     export let scope: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let isCollapsed: boolean = false;
+    export let records: Record[];
+    export let selectedIds: string[];
+
+    export let onItemClicked: Function = (id: string) => {
+    };
 
     let isPinned: boolean = true;
+    let data: GroupedRecords = {};
+
+    export function setSelectedIds(ids: string[]) {
+        selectedIds = ids;
+    }
+
+    export function setRecords(value: Record[]) {
+        records = value;
+        data = {};
+        records.forEach((record: any) => {
+            if (!data[record.entityType]) {
+                data[record.entityType] = [];
+            }
+            data[record.entityType].push(record);
+        });
+    }
 
     function onSidebarPin(e: CustomEvent): void {
         Storage.set('catalog-tree-panel-pin', scope, isPinned ? 'pin' : 'not-pinned');
@@ -26,18 +48,78 @@
 
     onMount(() => {
         const savedWidth = Storage.get('panelWidth', scope);
+
         if (savedWidth) {
             currentWidth = parseInt(savedWidth) || minWidth;
         }
+
         isPinned = Storage.get('catalog-tree-panel-pin', scope) !== 'not-pinned';
-    })
+
+        setRecords(records);
+    });
+
 </script>
 
-<BaseSidebar className="catalog-tree-panel" position="left" bind:width={currentWidth} bind:isCollapsed={isCollapsed}
-             bind:isPinned={isPinned} {minWidth} {maxWidth} on:sidebar-resize={onSidebarResize}
-             on:sidebar-collapse={onSidebarCollapse} on:sidebar-pin={onSidebarPin}>
-    <div class="test">
-
+<BaseSidebar
+        className="catalog-tree-panel"
+        position="left"
+        bind:width={currentWidth}
+        bind:isCollapsed={isCollapsed}
+        bind:isPinned={isPinned} {minWidth} {maxWidth} on:sidebar-resize={onSidebarResize}
+        on:sidebar-collapse={onSidebarCollapse} on:sidebar-pin={onSidebarPin}
+>
+    <div class="records">
+        {#each Object.keys(data).sort((a, b) => a.localeCompare(b)) as entityType}
+            <div>
+                <span class="title">{entityType}</span>
+                <ul>
+                    {#each data[entityType] as record }
+                        <li title="{record.name}">
+                            <a href="#{record.entityType}/view/{record.id}" target="_blank" on:click={(e) => { onItemClicked(e, record.id) }}
+                               class:active="{selectedIds.includes(record.id)}">{record.name}</a>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
+        {/each}
     </div>
 
 </BaseSidebar>
+
+<style>
+    .records {
+        margin-top: 20px;
+    }
+
+    div .title {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    div ul {
+        list-style: none;
+        padding: 8px 0;
+    }
+
+    div ul li {
+        padding: 2px 0;
+    }
+
+    div ul li a {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        display: inline-block;
+        max-width: 100%;
+        text-decoration: none;
+        color: var(--primary-font-color);
+    }
+
+    div ul li a:hover, div ul li a:focus {
+        text-decoration: none;
+    }
+
+    div ul li a.active {
+        color: var(--link-color);
+    }
+</style>
