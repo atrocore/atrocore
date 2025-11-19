@@ -14,7 +14,33 @@
     "type": {
       "type": "enum",
       "required": true,
-      "options": ["single", "multi"]
+      "options": ["single", "multiple"],
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "type",
+              "value": "multiple"
+            },
+            {
+              "type": "greaterThan",
+              "attribute": "entityTypesCount",
+              "value": 1
+            }
+          ]
+        }
+      }
+    },
+    "entityTypes": {
+      "type": "jsonArray",
+      "readOnly": true,
+      "notStorable": true
+    },
+    "entityTypesCount": {
+      "type": "int",
+      "readOnly": true,
+      "notStorable": true
     },
     "createdAt": {
       "type": "datetime",
@@ -31,11 +57,6 @@
     "modifiedBy": {
       "type": "link",
       "readOnly": true
-    },
-    "entities": {
-      "type": "jsonArray",
-      "readOnly": true,
-      "notStorable": true
     }
   },
   "links": {

@@ -3,5 +3,16 @@
     "name": "Name",
     "description": "Beschreibung",
     "selectionRecords": "Auswahldatensätze"
+  },
+  "options": {
+    "type": {
+      "single": "Einzelne Entität",
+      "multiple": "Mehrere Entitäten"
+
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Sie können 'Einzelne Entität' nicht auswählen, da Ihre Datensätze mehrere Entitäten enthalten."
+
   }
 }

@@ -50,23 +50,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.listenTo(this.model, 'sync', () => {
-                this.setupCustomButtons();
                 if (this.isRendered()) {
                     this.renderLeftPanel();
                 }
-            })
+            });
 
-            // this.listenTo(this.model, 'after:s', () => {
-            //     this.setupCustomButtons();
-            //     if (this.isRendered()) {
-            //         this.renderLeftPanel();
-            //     }
-            // })
+            this.listenTo(this.model, 'sync after:inlineEditSave after:set-detail-mode', () => {
+                this.setupCustomButtons();
+                setTimeout(() =>  this.enableButtons(), 300);
+            });
 
-            this.listenTo(this.model, 'after:change-mode after:unrelate', (mode) => {
-                if (mode === 'detail') {
-                    this.setupCustomButtons();
-                }
+            this.listenTo(this.model, 'after:unrelate', () => {
+                this.setupCustomButtons();
             });
 
             this.listenTo(this.model, 'init-collection:selectionRecords', (collection) => {
@@ -132,11 +127,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setupCustomButtons() {
-            if (!this.model.get('entities')) {
+            if (!this.model.get('entityTypes')) {
                 return;
             }
 
-            if(this.model.get('type') && this.model.get('type') === 'single') {
+            this.addMenuItem('buttons',{name:'merge', style:'hidden'}, true, false, true);
+
+            if(!this.model.get('type') || this.model.get('type') === 'single') {
                 this.addMenuItem('buttons', {
                     name: 'merge',
                     action: 'showSelectionView',
@@ -230,14 +227,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             $(`.action[data-name="${selected}"]`).addClass('primary');
 
             if (this.comparisonAcrossEntities()) {
-                ['merge'].forEach(name => {
-                    $(`.action[data-name="${name}"]`).addClass('disabled').attr('disabled', true);
-                })
+                $(`.action[data-name="merge"]`).addClass('disabled').attr('disabled', true);
             }
         },
 
         setupRecord: function () {
-            if (['merge'].includes(this.selectionViewMode)
+            if (this.selectionViewMode === 'merge'
                 && (
                     this.comparisonAcrossEntities()
                     || this.selectionRecordModels.length < 2
@@ -324,7 +319,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         enableButtons() {
             this.availableModes.forEach(action => {
 
-                if (['merge'].includes(action) && this.comparisonAcrossEntities()) {
+                if (action === 'merge' && this.comparisonAcrossEntities()) {
                     return;
                 }
 
@@ -377,47 +372,72 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
-            this.setupCustomButtons();
-            let scope = 'SelectionRecord';
-            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
-
-            let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
-
-            if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
-                attributes.ownerUserId = this.getUser().id;
-                attributes.ownerUserName = this.getUser().get('name');
-            }
-            if (this.getMetadata().get(['scopes', scope, 'hasAssignedUser'])) {
-                attributes.assignedUserId = this.getUser().id;
-                attributes.assignedUserName = this.getUser().get('name');
-            }
-
-            this.createView('quickCreate', viewName, {
-                scope: scope,
-                fullFormDisabled: true,
-                relate: {
-                    model: this.model,
-                    link: 'selections',
-                    panelName: 'selectionRecords'
-                },
-                layoutRelatedScope: "Selection.selectionRecords",
-                attributes: attributes,
-            }, view => {
-                view.render();
-                view.notify(false);
-                this.listenToOnce(view, 'after:save', () => {
-                    if (this.mode !== 'edit') {
-                        this.model.trigger('after:relate', 'selections');
-                        this.model.fetch().then(() => {
-                            if (['compare', 'merge'].includes(this.selectionViewMode)) {
-                                this.notify(this.translate('Loading...'));
-                                this.reloadModels(() => this.refreshContent())
-                            } else {
-                                this.refreshContent();
-                            }
-                        });
-                    }
+            if(this.model.get('type') === 'single') {
+                let foreignScope = this.getEntityTypes()[0];
+                let viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
+                this.notify('Loading...');
+                this.createView('selectRecords', viewName, {
+                    scope: foreignScope,
+                    createButton: false,
+                }, view => {
+                    view.render();
+                    this.notify(false);
+                    this.listenToOnce(view, 'select', function (model) {
+                        this.clearView('selectRecords');
+                        this.ajaxPostRequest('SelectionRecord', {
+                            entityType: foreignScope,
+                            entityId: model.id,
+                            selectionsIds: [this.model.id]
+                        }).then(() => {
+                            this.afterItemAdded();
+                        })
+                    }, this);
                 });
+            }else{
+                this.setupCustomButtons();
+                let scope = 'SelectionRecord';
+                let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
+                let attributes = {_entityFrom: _.extend(this.model.attributes, {_entityName: this.model.name})};
+
+                if (this.getMetadata().get(['scopes', scope, 'hasOwner'])) {
+                    attributes.ownerUserId = this.getUser().id;
+                    attributes.ownerUserName = this.getUser().get('name');
+                }
+                if (this.getMetadata().get(['scopes', scope, 'hasAssignedUser'])) {
+                    attributes.assignedUserId = this.getUser().id;
+                    attributes.assignedUserName = this.getUser().get('name');
+                }
+
+                this.createView('quickCreate', viewName, {
+                    scope: scope,
+                    fullFormDisabled: true,
+                    relate: {
+                        model: this.model,
+                        link: 'selections',
+                        panelName: 'selectionRecords'
+                    },
+                    layoutRelatedScope: "Selection.selectionRecords",
+                    attributes: attributes,
+                }, view => {
+                    view.render();
+                    view.notify(false);
+                    this.listenToOnce(view, 'after:save', () => {
+                       this.afterItemAdded()
+                    });
+                });
+            }
+        },
+
+        afterItemAdded() {
+            this.model.trigger('after:relate', 'selections');
+            this.model.fetch().then(() => {
+                if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                    this.notify(this.translate('Loading...'));
+                    this.reloadModels(() => this.refreshContent())
+                } else {
+                    this.refreshContent();
+                }
             });
         },
 
@@ -657,8 +677,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getEntityTypes() {
-            if (this.model.get('entities')) {
-                return this.model.get('entities');
+            if (this.model.get('entityTypes')) {
+                return this.model.get('entityTypes');
             }
 
             if (this.selectionRecordModels) {
