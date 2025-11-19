@@ -24,7 +24,6 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
                     this.applyOverviewFilters();
                 });
                 this.listenTo(this.model, 'sync overview-filters-changed', () => {
-                    debugger
                     this.applyOverviewFilters();
                 });
             }
