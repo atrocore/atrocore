@@ -204,7 +204,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     for (let key in middle.nestedViews) {
                         middle.clearView(key);
                     }
-
                     middle._loadNestedViews(() => {
                         if (middleOnly) {
                             middle.reRender()
@@ -1545,7 +1544,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         applyOverviewFilters() {
             // skip overview filters
-
             if (!this.model || this.model.isNew()
                 || !this.getMetadata().get(['scopes', this.scope, 'object'])
                 || this.getMetadata().get(['scopes', this.scope, 'overviewFilters']) === false
