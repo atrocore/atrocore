@@ -24,53 +24,63 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         events: _.extend({
             'click div.inline-actions a.swap-entity': function (e) {
-                let id = $(e.currentTarget).data('id');
-                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-                let entityType = $(e.currentTarget).data('entity-type');
-
-                if (!id || !entityType || !selectionRecordId) {
-                    return;
-                }
-
-                const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
-
-                this.createView('select', viewName, {
-                    scope: entityType,
-                    createButton: false,
-                    multiple: false
-                }, (dialog) => {
-                    dialog.render();
-                    dialog.once('select', model => {
-                        this.notify('Loading...');
-                        this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
-                            entityId: model.id
-                        }).then(() => this.getParentView().afterChangedSelectedRecords([selectionRecordId]));
-                    });
-                });
+                this.afterSwapButtonClick(e)
             },
             'click div.inline-actions a.remove-entity': function (e) {
-                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-                if (!selectionRecordId) {
-                    return;
-                }
-                this.notify('Removing...');
-                $.ajax({
-                    url: `SelectionRecord/${selectionRecordId}`,
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: () => {
-                        this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
-                    }
-                });
+                this.afterRemoveButtonClicked(e);
             }
         }, Dep.prototype.events),
+
+        afterSwapButtonClick(e) {
+            let id = $(e.currentTarget).data('id');
+            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+            let entityType = $(e.currentTarget).data('entity-type');
+
+            if (!id || !entityType || !selectionRecordId) {
+                return;
+            }
+
+            const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+            this.notify('Loading...');
+            this.createView('select', viewName, {
+                scope: entityType,
+                createButton: false,
+                multiple: false
+            }, (dialog) => {
+                dialog.render(() => {
+                    this.notify(false);
+                });
+                dialog.once('select', model => {
+                    this.notify('Loading...');
+                    this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
+                        entityId: model.id
+                    }).then(() => this.getParentView().afterChangedSelectedRecords([selectionRecordId]));
+                });
+            });
+        },
+
+        afterRemoveButtonClicked(e) {
+            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+            if (!selectionRecordId) {
+                return;
+            }
+            this.notify('Removing...');
+            $.ajax({
+                url: `SelectionRecord/${selectionRecordId}`,
+                type: 'DELETE',
+                contentType: 'application/json',
+                success: () => {
+                    this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
+                }
+            });
+        },
 
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.hidePanelNavigation = true;
-            if(!this.selectedFilters) {
+            if (!this.selectedFilters) {
                 this.selectedFilters = {}
             }
             this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
@@ -129,7 +139,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             return this.getParentView().getCompareButtons();
         },
 
-        canLoadActivities(){
+        canLoadActivities() {
             return true;
         },
 

@@ -18,12 +18,16 @@
                                     <thead>
                                     <tr>
                                         {{#each columns}}
-                                        <th class="text-center">
+                                        <th class="text-center" style="position: relative; padding-right: 40px; padding-left: 35px">
                                             {{{name}}}
-                                            {{#if _error}}
-                                            <br>
-                                            <span class="danger"> ({{_error}})</span>
-                                            {{/if}}
+                                            <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
+                                                <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
+                                                    <i class="ph ph-swap"></i>
+                                                </a>
+                                                <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
+                                                    <i class="ph ph-trash-simple"></i>
+                                                </a>
+                                            </div>
                                         </th>
                                         {{/each}}
                                     </tr>
@@ -31,7 +35,7 @@
                                     <tbody>
                                     <tr class="list-row">
                                         {{#each columns}}
-                                        <td  data-id="{{id}}"> {{translate 'Loading...'}}</td>
+                                        <td class="record-content" data-id="{{id}}"> {{translate 'Loading...'}}</td>
                                         {{/each}}
                                     </tr>
                                     </tbody>
