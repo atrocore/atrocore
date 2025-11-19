@@ -29,11 +29,13 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
         data() {
             let columns = this.getColumns();
+            console.log(100 / columns.length)
             return {
                 title: '',
                 columns: columns,
                 columnLength: columns.length,
                 scope: this.scope,
+                size: 100 / columns.length,
                 showOverlay: this.showOverlay
             };
         },
@@ -71,7 +73,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
                     label: model.get('name') ?? model.get('id'),
-                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank" title="${model.get('name')}"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
                 });
             });
 

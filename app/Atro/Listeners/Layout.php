@@ -100,6 +100,24 @@ class Layout extends AbstractListener
             }
         }
 
+        if($event->getArgument('params')['viewType'] === 'selection') {
+            $result = $event->getArgument('result');
+            if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
+                $scope = $event->getArgument('params')['scope'];
+                $result = [];
+
+                $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
+
+                if(!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'type']))) {
+                    $result[] = ["name" => "name"];
+                }else{
+                    $result[] = ["name" => "id"];
+                }
+
+                $event->setArgument('result', $result);
+            }
+        }
+
         $this->getEventManager()->dispatch($event->getArgument('target'), $event->getArgument('params')['viewType'], $event);
     }
 

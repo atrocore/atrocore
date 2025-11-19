@@ -19,6 +19,7 @@
     $: {
         switch (reelType) {
             case 'list':
+            case 'selection':
                 LayoutComponent = ListLayout;
                 break
             case 'leftSidebar':

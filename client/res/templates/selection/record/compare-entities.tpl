@@ -12,7 +12,7 @@
                                 <table class="table full-table table-fixed table-scrolled table-bordered">
                                     <colgroup>
                                         {{#each columns}}
-                                            <col class="col-min-width">
+                                            <col class="col-min-width" style="width: {{../size}}%">
                                         {{/each}}
                                     </colgroup>
                                     <thead>

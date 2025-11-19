@@ -14,7 +14,7 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
     return Dep.extend({
         bottomView: false,
 
-        layoutName: 'list',
+        layoutName: 'selection',
 
         prepareLayoutData(data) {
             let layout = [
