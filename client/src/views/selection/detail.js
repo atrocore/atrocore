@@ -56,9 +56,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             })
 
-            this.listenTo(this.model, 'after:change-mode after:unrelate', (mode) => {
+            this.listenTo(this.model, 'after:unrelate', () => {
+                this.setupCustomButtons();
+            });
+
+            this.listenTo(this.model, 'after:change-mode', (mode) => {
                 if (mode === 'detail') {
                     this.setupCustomButtons();
+                    setTimeout(() =>  this.enableButtons(), 300)
                 }
             });
 
@@ -308,6 +313,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.enableButtons();
                     this.notify(false);
                 });
+
 
                 if (this.isRendered()) {
                     view.render();
