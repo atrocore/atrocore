@@ -51,6 +51,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     this.notify(false);
                 });
                 dialog.once('select', model => {
+                    if(model.id === id) {
+                        this.notify(this.translate('notModified', 'messages'));
+                        return;
+                    }
                     this.notify('Loading...');
                     this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
                         entityId: model.id
