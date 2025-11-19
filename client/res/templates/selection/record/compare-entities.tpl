@@ -1,6 +1,6 @@
 <div class="detail compare-entities"  id="{{id}}" style="position: relative">
     {{#if showOverlay }}
-        <div class="overlay"></div>
+        <div class="overlay shimmer-container"></div>
     {{/if}}
     <div class="row">
         <div class="fields-compare-panel col-md-12">

@@ -65,7 +65,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderedPanels = [];
             this.hideButtonPanel = false;
             this.selectedFilters =  this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
-            this.selectionModel = this.options.selectionModel;
+            this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;

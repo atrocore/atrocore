@@ -18735,7 +18735,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     max-width: 100%;
 }
 
-.compare-records .overlay {
+.compare-records .overlay, .compare-entities .overlay {
     position: absolute;
     top: 0;
     right: -50px;
@@ -18743,8 +18743,39 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     bottom: -30px;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 1000;
+    background-repeat: no-repeat;
+
 }
 
+.shimmer-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -50px;
+    left: -50px;
+    bottom: -30px;
+    background-image: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(255, 255, 255, 0.5) 20%,
+            rgba(255, 255, 255, 0.5) 35%,
+            rgba(0, 0, 0, 0) 50%
+    );
+
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% 0;
+    }
+}
+
+.compare-entities {
+    height: calc(100vh - 250px);
+}
 .compare-entities .panel-body > div > .list > table td:first-child {
     padding-left: 5px !important;
 }
@@ -18765,7 +18796,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: block;
 }
 
-.compare-entities table td .side-view {
+.compare-entities table tr.list-row, .compare-entities table td .side-view {
     height: calc(100vh - 400px);
     overflow-y: auto;
     overflow-x: hidden;

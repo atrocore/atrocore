@@ -16,6 +16,20 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
 
         layoutName: 'selection',
 
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (!this.model.isNew() && (this.type === 'detail' || this.type === 'edit') && !this.isSmall) {
+                this.listenTo(this, 'after:render', () => {
+                    this.applyOverviewFilters();
+                });
+                this.listenTo(this.model, 'sync overview-filters-changed', () => {
+                    debugger
+                    this.applyOverviewFilters();
+                });
+            }
+        },
+
         prepareLayoutData(data) {
             let layout = [
                 {
@@ -33,6 +47,14 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
             }
 
             data.layout = layout;
-        }
+        },
+
+        applyOverviewFilters() {
+            let thisClone = Espo.utils.clone(this);
+            thisClone.scope = 'Selection';
+
+            Dep.prototype.applyOverviewFilters.call(thisClone);
+
+        },
     });
 });

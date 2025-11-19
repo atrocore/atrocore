@@ -18,13 +18,21 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
         detailComparisonView: 'views/selection/record/detail/detail-comparison-view',
 
+        showOverlay: true,
+
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.models = this.options.models || this.models;
             this.model = this.models.length ? this.models[0] : null;
-            this.scope = this.name = this.options.scope || this.model?.name;
+            this.scope = this.options.scope || this.selectionModel?.name;
+
+            this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
+                this.models.forEach(model => {
+                     model.trigger('overview-filters-changed')
+                });
+            })
         },
 
         data() {
@@ -34,7 +42,6 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                 title: '',
                 columns: columns,
                 columnLength: columns.length,
-                scope: this.scope,
                 size: 100 / columns.length,
                 showOverlay: this.showOverlay
             };
@@ -83,9 +90,9 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         afterRender(){
             let count = 0;
             this.models.forEach(m => {
-                this.createView('compareDetail' + m.id, this.detailComparisonView, {
+                this.createView(m.id, this.detailComparisonView, {
                     el: this.options.el + ` [data-id="${m.id}"]`,
-                    scope: this.scope,
+                    scope: m.name,
                     mode: 'detail',
                     model: m
                 }, view => {
@@ -94,6 +101,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                         if(count === this.models.length) {
                             this.trigger('detailPanelsLoaded', {list: []});
                             this.trigger('all-panels-rendered')
+                            this.$el.find('.overlay').addClass('hidden');
                         }
                     });
 
