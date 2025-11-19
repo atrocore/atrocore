@@ -15905,6 +15905,8 @@ select {
 
 .field .metadata .checkbox-item {
     margin-right: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
@@ -15912,7 +15914,10 @@ select {
 }
 
 .field .metadata .checkbox-item label {
-    margin-left: 3px;
+    margin-left: 2px;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 13px;
 }
 
 .field .status-icons, .field .inline-actions {
