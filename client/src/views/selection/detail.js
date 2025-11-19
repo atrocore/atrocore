@@ -56,6 +56,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             })
 
+            // this.listenTo(this.model, 'after:s', () => {
+            //     this.setupCustomButtons();
+            //     if (this.isRendered()) {
+            //         this.renderLeftPanel();
+            //     }
+            // })
+
             this.listenTo(this.model, 'after:change-mode after:unrelate', (mode) => {
                 if (mode === 'detail') {
                     this.setupCustomButtons();
@@ -129,13 +136,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
-            this.addMenuItem('buttons', {
-                name: 'merge',
-                action: 'showSelectionView',
-                style: this.selectionViewMode === 'merge' ? 'primary' : null,
-                html: '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge'),
-                disabled: true,
-            }, true, false, true);
+            if(this.model.get('type') && this.model.get('type') === 'single') {
+                this.addMenuItem('buttons', {
+                    name: 'merge',
+                    action: 'showSelectionView',
+                    style: this.selectionViewMode === 'merge' ? 'primary' : null,
+                    html: '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge'),
+                    disabled: true,
+                }, true, false, true);
+            }
 
             this.addMenuItem('buttons', {
                 name: 'compare',

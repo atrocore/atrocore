@@ -11,6 +11,11 @@
       "type": "linkMultiple",
       "auditableEnabled": true
     },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "options": ["single", "multi"]
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

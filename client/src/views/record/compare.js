@@ -42,6 +42,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         models: null,
 
+        selectionModel: null,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -63,7 +65,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderedPanels = [];
             this.hideButtonPanel = false;
             this.selectedFilters =  this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
-            this.selectionId = this.options.selectionId || this.selectionId;
+            this.selectionModel = this.options.selectionModel;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;

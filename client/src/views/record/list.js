@@ -872,7 +872,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.entityType,
                 entityIds: this.checkedList
             }).then(result => {
-                this.getRouter().navigate('#Selection/view/' + result.id, { trigger: true });
+                this.getModelFactory().create('Selection', (selectionModel) => {
+                    selectionModel.set(result);
+                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
+                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
+                });
             });
         },
 
@@ -956,17 +960,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityIds: this.checkedList
             }).then(result => {
                 this.loadSelectionRecordModels(result.id).then((models) => {
-                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: models,
-                        selectionId: result.id,
-                        scope: this.entityType,
-                        merging: merging
-                    }, function (dialog) {
-                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                        dialog.render();
-                    })
-                })
+                    this.getModelFactory().create('Selection', (selectionModel) => {
+                        selectionModel.set(result);
+                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: models,
+                            selectionModel: selectionModel,
+                            scope: this.entityType,
+                            merging: merging
+                        }, function (dialog) {
+                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                            dialog.render();
+                        })
+                    });
+                });
             });
 
             this.notify(this.translate('Loading'))
