@@ -292,6 +292,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             let link;
             let color;
             let iconClass;
+            let createDisabled;
 
             let colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
@@ -318,6 +319,10 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 translateCategory = 'scopeNamesPlural';
                 items = [];
                 link = `#${tab}`;
+
+                if (!this.getAcl().check(tab, 'create')) {
+                    createDisabled = true;
+                }
             }
             let label = this.getLanguage().translate(name, translateCategory);
             result = {
@@ -328,7 +333,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 name: name,
                 items: items,
                 group: group,
-                createDisabled: this.getAcl().check(tab, 'create') === false,
+                createDisabled: createDisabled,
             };
 
             if (iconClass) {
