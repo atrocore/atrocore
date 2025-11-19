@@ -39,6 +39,7 @@ import ContentFilter from "./components/record/ContentFilter.svelte";
 import AnchorNavigation from "./components/record/header/navigation/AnchorNavigation.svelte";
 import DashboardHeader from "./components/record/header/DashboardHeader.svelte";
 import {default as Administration} from "./components/admin/Index.svelte";
+import SelectionLeftSidePanel from "./components/selection/record/SelectionLeftSidePanel.svelte";
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;
@@ -76,4 +77,5 @@ export {
     AnchorNavigation,
     RebuildDatabaseModal,
     Administration,
+    SelectionLeftSidePanel
 };

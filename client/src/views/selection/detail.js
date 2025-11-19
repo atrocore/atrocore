@@ -62,7 +62,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.listenTo(this.model, 'after:unrelate', () => {
                 this.refreshContent();
-                window.treePanelComponent.rebuildTree();
+                // window.leftSidePanel.rebuildTree();
                 this.notify(this.notify(this.translate('Done'), 'success'));
             });
 
@@ -72,7 +72,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.model.fetch().then(() => {
                     if (['compare', 'merge'].includes(this.selectionViewMode)) {
                         this.reloadModels(() => this.refreshContent());
-                        window.treePanelComponent.rebuildTree();
+                        // window.leftSidePanel.rebuildTree();
                         this.notify(this.notify(this.translate('Done'), 'success'));
                     } else {
                         this.refreshContent();
@@ -84,7 +84,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.listenTo(this.model, 'init-collection:selectionRecords', (collection) => {
                 this.listenTo(collection, 'sync', () => {
                     this.selectionRecords = collection.models.map(m => m.attributes);
-                    window.treePanelComponent.rebuildTree();
+                    // window.leftSidePanel.rebuildTree();
                     if (collection.models.length > 1) {
                         this.enableButtons()
                     }
@@ -93,7 +93,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.listenTo(this.model, 'selection-record:loaded', (list) => {
                 this.selectionRecords = list;
-                window.treePanelComponent.rebuildTree();
+                // window.leftSidePanel.rebuildTree();
             });
 
             this.listenToOnce(this, 'after:render', () => {
@@ -454,127 +454,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         renderLeftPanel() {
-            if (window.treePanelComponent) {
+            if (window.leftSidePanel) {
                 try {
-                    window.treePanelComponent.$destroy();
+                    window.leftSidePanel.$destroy();
                 } catch (e) {
                 }
             }
-            let entities = this.getEntityTypes() || [];
-            this.selectedScope = this.selectedScope ?? (entities.length > 0 ? entities[0] : null)
-            let view = this.getMainRecord();
-            let entitySelectionModel = new Model();
 
-            window.treePanelComponent = new Svelte.TreePanel({
+            window.leftSidePanel = new Svelte.SelectionLeftSidePanel({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
                 anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                 props: {
-                    scope: this.scope,
-                    model: this.model,
-                    mode: 'detail',
-                    showApplyQuery: false,
-                    showApplySortOrder: false,
-                    canBuildTree: entities.length > 0,
-                    selectedScope: this.selectedScope,
-                    canOpenNode: false,
-                    showEntitySelector: true,
-                    callbacks: {
-                        selectNode: data => {
-                            if (!this.getAcl().check('Selection', 'edit')) {
-                                return
-                            }
-                            if (window.treePanelComponent.getActiveItem() !== '_self') {
-                                view.selectNode(data);
-                                return;
-                            }
 
-                            let selected = false;
-                            if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
-                                selected = this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id);
-                            }
-
-                            if (selected) {
-                                this.deleteSelectionRecords(entitySelectionModel.get('entityId'), data.id);
-                            } else {
-                                let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
-
-                                if (this.getTotalRecords() >= maxComparableItem) {
-                                    this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
-                                    return;
-                                }
-
-                                if (entitySelectionModel.get('entityId')
-                                    && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]
-                                    && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(data.id)) {
-                                    return;
-                                }
-
-                                this.notify(this.translate('Adding...'));
-                                this.ajaxPostRequest(`SelectionRecord`, {
-                                    entityType: entitySelectionModel.get('entityId'),
-                                    entityId: data.id,
-                                    selectionsIds: [this.model.id]
-                                }).then(_ => {
-                                    this.model.trigger('after:relate', 'selections');
-                                });
-                            }
-                        },
-
-                        treeLoad: (treeScope, treeData) => {
-                            if (view && view.treeLoad && typeof view.treeLoad === 'function') {
-                                view.treeLoad(data);
-                            }
-                        },
-
-                        treeReset: () => {
-                            if (view && typeof view.treeReset === 'function') {
-                                view.treeReset(data);
-                            }
-                        },
-
-                        treeWidthChanged: (width) => {
-                            if (view && typeof view.onTreeResize === 'function') {
-                                view.onTreeResize(width)
-                            }
-                        },
-
-                        shouldBeSelected: (activeItem, nodeId) => {
-                            if (activeItem !== '_self') {
-                                return;
-                            }
-
-                            if (entitySelectionModel.get('entityId') && this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')]) {
-                                return this.getSelectionRecordEntityIds()[entitySelectionModel.get('entityId')].includes(nodeId);
-                            }
-                            return false;
-                        },
-
-                        onEntitySelectorAvailable: (element) => {
-                            if (entities.length) {
-                                entitySelectionModel.set('entityId', this.selectedScope);
-                                entitySelectionModel.set('entityName', this.translate(this.selectedScope, 'scopeNames'));
-                            }
-
-                            this.createView('entitySelect', 'views/selection-record/fields/entity-type', {
-                                el: `${this.options.el} .content-wrapper .entity-selector`,
-                                model: entitySelectionModel,
-                                name: 'entityId',
-                                params: {
-                                    required: true
-                                },
-                                mode: 'edit',
-                                createDisabled: true
-                            }, (view) => {
-                                view.render();
-                                this.listenTo(view, 'change', () => {
-                                    window.treePanelComponent.setSelectedScope(entitySelectionModel.get('entityId'));
-                                    this.selectedScope = entitySelectionModel.get('entityId');
-                                    window.treePanelComponent.setCanBuildTree(true);
-                                    window.treePanelComponent.rebuildTree()
-                                })
-                            })
-                        }
-                    },
                 }
             })
         },
@@ -625,7 +516,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.notify(this.translate('Loading...'));
             this.reloadModels(() => {
                 this.refreshContent();
-                window.treePanelComponent.rebuildTree();
+                window.leftSidePanel.rebuildTree();
             });
             this.notify(this.notify(this.translate('Done'), 'success'));
         },
