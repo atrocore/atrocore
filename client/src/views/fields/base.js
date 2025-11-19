@@ -406,6 +406,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initStatusContainer: function () {
+
             if (!['detail', 'edit'].includes(this.mode)) {
                 return;
             }

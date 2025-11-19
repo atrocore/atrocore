@@ -1,17 +1,11 @@
 <div class="detail compare-entities"  id="{{id}}" style="position: relative">
     {{#if showOverlay }}
-    <div class="overlay"></div>
+        <div class="overlay"></div>
     {{/if}}
     <div class="row">
         <div class="fields-compare-panel col-md-12">
             <div class="compare-panel list col-md-12">
-                <div class="panel panel-default panel-{{name}}" data-name="{{name}}">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            {{title}}
-                        </h4>
-                    </div>
-
+                <div class="panel panel-default panel-entities" data-name="entities">
                     <div class="panel-body">
                         <div class="list-container">
                             <div class="list">

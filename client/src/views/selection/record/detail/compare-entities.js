@@ -79,15 +79,21 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         },
 
         afterRender(){
+            let count = 0;
             this.models.forEach(m => {
                 this.createView('compareDetail' + m.id, this.detailComparisonView, {
-                    el: this.options.el + `[data-id="${m.id}"]`,
+                    el: this.options.el + ` [data-id="${m.id}"]`,
                     scope: this.scope,
                     mode: 'detail',
                     model: m
                 }, view => {
-
-                    view.render();
+                    view.render(() => {
+                        count++;
+                        if(count === this.models.length) {
+                            this.trigger('detailPanelsLoaded', {list: []});
+                            this.trigger('all-panels-rendered')
+                        }
+                    });
 
                     this.listenTo(this.model, 'sync', () => {
                         view.reRender();

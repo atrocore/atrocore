@@ -314,6 +314,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         enableButtons() {
             this.availableModes.forEach(action => {
+
                 if (['merge'].includes(action) && this.comparisonAcrossEntities()) {
                     return;
                 }

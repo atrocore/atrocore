@@ -18555,7 +18555,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
 }
 
-.compare-records .compare-panel {
+.compare-records .compare-panel, .compare-entities .compare-panel  {
     background-color: white;
     width: 100%;
     padding: 0;
@@ -18589,15 +18589,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: red;
 }
 
-.compare-records .compare-panel .panel-body {
+.compare-records .compare-panel .panel-body  {
     padding: 0 0 0 0 !important;
+}
+
+.compare-entities .compare-panel .panel-body {
+    padding: 40px 0 0 0 !important;
 }
 
 .compare-records .compare-panel .panel-body > div:last-child > .list:last-child {
     margin-bottom: 0;
 }
 
-.compare-records .compare-panel .panel-body div.list {
+.compare-records .compare-panel .panel-body div.list, .compare-entities .compare-panel .panel-body div.list {
     overflow-x: auto;
     margin-left: 0;
     margin-right: 0;
@@ -18751,6 +18755,20 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-entities .compare-panel table col.col-min-width{
     min-width: 350px;
+}
+
+.compare-entities .middle .panel-heading {
+    display: none;
+}
+
+.compare-entities .form-group[data-name="files"] > label {
+    display: block;
+}
+
+.compare-entities table td .side-view {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .cards-container {

@@ -204,6 +204,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     for (let key in middle.nestedViews) {
                         middle.clearView(key);
                     }
+
                     middle._loadNestedViews(() => {
                         if (middleOnly) {
                             middle.reRender()

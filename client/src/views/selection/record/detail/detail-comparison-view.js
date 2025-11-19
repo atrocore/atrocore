@@ -14,6 +14,25 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
     return Dep.extend({
         bottomView: false,
 
-        layoutName: 'detail',
+        layoutName: 'list',
+
+        prepareLayoutData(data) {
+            let layout = [
+                {
+                    label: "",
+                    style: "",
+                    rows: []
+                }
+            ];
+
+            for (const fieldData of data.layout) {
+                layout[0].rows.push([{
+                    name: fieldData.name,
+                    fullWidth: true
+                }])
+            }
+
+            data.layout = layout;
+        }
     });
 });
