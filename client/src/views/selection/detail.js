@@ -404,7 +404,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         actionAddItem() {
-
             if (this.model.get('type') === 'single') {
                 let foreignScope = this.getEntityTypes()[0];
                 let viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
@@ -423,8 +422,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             selectionsIds: [this.model.id]
                         }).then(() => {
                             this.model.trigger('after:relate', 'selections');
-                            this.selectedIds.push(model.id);
-                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            if(this.toggleSelected(model.id)) {
+                                window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            }
                         })
                     }, this);
                 });
@@ -458,8 +458,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', () => {
-                        this.selectedIds.push(view.getView('record').model.get('entityId'));
-                        window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                        if( view.getView('record')?.model) {
+                            if(this.toggleSelected(view.getView('record').model.get('entityId'))) {
+                                window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            }
+                        }
                         this.model.trigger('after:relate', 'selections');
                     });
                 });
@@ -488,33 +491,42 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     records: this.getRecordForPanels(),
                     selectedIds: this.selectedIds,
                     onItemClicked: (e, itemId) => {
-                        if(this.selectionViewMode === 'standard') {
-                            return;
-                        }
-
                         e.preventDefault();
 
-                        if (this.selectedIds.includes(itemId)) {
-                            if (this.selectedIds.length === 2) {
-                                this.notify('You cannot removed less than 2 records')
-                                return;
-                            }
-                            this.selectedIds = this.selectedIds.filter(id => id !== itemId)
-                        } else {
-                            let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
-
-                            if (this.selectedIds.length >= maxComparableItem) {
-                                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
-                                return;
-                            }
-
-                            this.selectedIds.push(itemId);
-
+                        if(this.toggleSelected(itemId)){
+                            this.setupRecord();
+                            window.leftSidePanel.setSelectedIds(this.selectedIds);
                         }
+                    },
+                    onSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionRecordModels.forEach(model => {
+                            if(model.name === entityType && !this.selectedIds.includes(model.id)){
+                                if(this.toggleSelected(model.id)){
+                                    shouldReload = true;
+                                }
+                            }
+                        });
 
-                        this.setupRecord();
+                        if(shouldReload) {
+                            this.setupRecord();
+                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                        }
+                    },
+                    onUnSelectAll: (entityType) => {
+                        let shouldReload = false;
+                        this.selectionRecordModels.reverse().forEach(model => {
+                            if(model.name === entityType && this.selectedIds.includes(model.id)){
+                               if(this.toggleSelected(model.id)){
+                                   shouldReload = true;
+                               }
+                            }
+                        });
 
-                        window.leftSidePanel.setSelectedIds(this.selectedIds);
+                        if(shouldReload) {
+                            this.setupRecord();
+                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                        }
                     }
                 }
             })
@@ -540,6 +552,26 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.model.trigger('after:unrelate')
+        },
+
+        toggleSelected(itemId) {
+            if (this.selectedIds.includes(itemId)) {
+                if (this.selectedIds.length === 2) {
+                    this.notify(this.translate('minimumRecordForComparison', 'messages'));
+                    return;
+                }
+                this.selectedIds = this.selectedIds.filter(id => id !== itemId);
+            } else {
+                let maxComparableItem = this.getConfig().get('maxComparableItem') || 10;
+
+                if (this.selectedIds.length >= maxComparableItem) {
+                    this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem));
+                    return;
+                }
+
+                this.selectedIds.push(itemId);
+            }
+            return true;
         },
 
         afterChangedSelectedRecords(changedIds) {

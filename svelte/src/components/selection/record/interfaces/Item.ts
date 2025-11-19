@@ -8,11 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-export  interface Record {
+export  interface Item {
     id: string;
     name: string;
     entityType: string;
 }
-export  interface GroupedRecords {
-    [key: string]: Record[];
+
+export  interface GroupedItems {
+    [key: string]: Item[];
 }

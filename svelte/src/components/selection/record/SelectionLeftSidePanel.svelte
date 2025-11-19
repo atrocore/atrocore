@@ -1,29 +1,51 @@
 <script lang="ts">
 
-    import {onMount} from "svelte";
+    import {onMount, tick} from "svelte";
     import {Storage} from "../../../utils/Storage";
     import BaseSidebar from "../../record/BaseSidebar.svelte";
-    import {GroupedRecords, Record} from "./interfaces/Record";
+    import {GroupedItems, Item} from "./interfaces/Item";
+    import {Language} from "../../../utils/Language";
 
     export let scope: string;
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
     export let isCollapsed: boolean = false;
-    export let records: Record[];
+    export let records: Item[];
     export let selectedIds: string[];
 
     export let onItemClicked: Function = (id: string) => {
     };
 
-    let isPinned: boolean = true;
-    let data: GroupedRecords = {};
+    export let onSelectAll: Function = (entityType: string) => {
+    };
 
-    export function setSelectedIds(ids: string[]) {
+    export let onUnSelectAll: Function = (entityType: string) => {
+    };
+
+    $: selectedIdSet = new Set(selectedIds);
+
+    // 2. Create a reactive object that maps entityType -> boolean
+    $: hasSelectedByType = calculateSelectedStatus(records, selectedIdSet);
+
+    function calculateSelectedStatus(recs: Record<any, any>[], ids: Set<string>) {
+        const status: Record<string, boolean> = {};
+        recs.forEach(r => {
+            if (!status[r.entityType] && ids.has(r.id)) {
+                status[r.entityType] = true;
+            }
+        });
+        return status;
+    }
+
+    let isPinned: boolean = true;
+    let data: GroupedItems = {};
+
+    export  function setSelectedIds(ids: string[]) {
         selectedIds = ids;
     }
 
-    export function setRecords(value: Record[]) {
+    export function setRecords(value: Item[]) {
         records = value;
         data = {};
         records.forEach((record: any) => {
@@ -44,6 +66,14 @@
 
     function onSidebarResize(e: CustomEvent): void {
         Storage.set('panelWidth', scope, currentWidth.toString());
+    }
+
+    function handledSelectAllButton(entityType: string): void {
+        if(hasSelectedByType[entityType]) {
+            onUnSelectAll(entityType);
+        }else{
+            onSelectAll(entityType);
+        }
     }
 
     onMount(() => {
@@ -71,7 +101,11 @@
     <div class="records">
         {#each Object.keys(data).sort((a, b) => a.localeCompare(b)) as entityType}
             <div>
-                <span class="title">{entityType}</span>
+                <div class="title">
+                    <span class="title">{entityType}</span>
+                    <button class="small filter-button"  on:click={() => handledSelectAllButton(entityType)}>{ hasSelectedByType[entityType] ? Language.translate('unselectAll') : Language.translate('selectAll')}</button>
+                </div>
+
                 <ul>
                     {#each data[entityType] as record }
                         <li title="{record.name}">
@@ -87,6 +121,10 @@
 </BaseSidebar>
 
 <style>
+    .title {
+        display: flex;
+        justify-content: space-between;
+    }
     .records {
         margin-top: 20px;
     }
