@@ -8,5 +8,11 @@
     "masterEntityId": "Master-Entitäts-ID",
     "score": "Punktzahl",
     "hash": "Eindeutiger Hash"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplikat",
+      "masterRecord": "Master Record"
+    }
   }
 }

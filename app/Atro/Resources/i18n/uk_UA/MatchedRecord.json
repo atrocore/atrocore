@@ -8,5 +8,11 @@
     "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
     "hash": "Унікальний хеш"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Дублікат",
+      "masterRecord": "Мастер запис"
+    }
   }
 }

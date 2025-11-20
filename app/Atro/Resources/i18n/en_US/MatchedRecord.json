@@ -8,5 +8,11 @@
     "masterEntityId": "Master Entity ID",
     "score": "Score",
     "hash": "Unique Hash"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplicate",
+      "masterRecord": "Master Record"
+    }
   }
 }

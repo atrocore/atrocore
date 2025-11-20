@@ -19,7 +19,7 @@ use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
-    protected $mandatorySelectAttributeList = ['stagingEntity', 'stagingEntityId', 'masterEntity', 'masterEntityId'];
+    protected $mandatorySelectAttributeList = ['sourceEntity', 'sourceEntityId', 'masterEntity', 'masterEntityId'];
 
     public function getMatchedRecords(string $code, string $entityName, string $entityId, array $statuses): array
     {
@@ -68,10 +68,10 @@ class MatchedRecord extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        $entity->set('stagingId', $entity->get('stagingEntityId'));
-        $stagingEntity = $this->getEntityManager()->getEntity($entity->get('stagingEntity'), $entity->get('stagingEntityId'));
-        if (!empty($stagingEntity)) {
-            $entity->set('stagingName', $stagingEntity->get('name'));
+        $entity->set('sourceId', $entity->get('sourceEntityId'));
+        $sourceEntity = $this->getEntityManager()->getEntity($entity->get('sourceEntity'), $entity->get('sourceEntityId'));
+        if (!empty($sourceEntity)) {
+            $entity->set('sourceName', $sourceEntity->get('name'));
         }
 
         $entity->set('masterId', $entity->get('masterEntityId'));

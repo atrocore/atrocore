@@ -8,5 +8,11 @@
     "masterEntityId": "Идентификатор мастер сущности",
     "score": "Оценка",
     "hash": "Уникальный хэш"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Дубликат",
+      "masterRecord": "Мастер запись"
+    }
   }
 }

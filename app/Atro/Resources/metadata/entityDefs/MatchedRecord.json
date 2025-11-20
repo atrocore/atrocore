@@ -4,7 +4,7 @@
       "type": "enum",
       "options": [
         "duplicate",
-        "staging"
+        "masterRecord"
       ],
       "required": true,
       "protected": true
@@ -86,23 +86,18 @@
     "asc": false
   },
   "indexes": {
-    "matchingId": {
-      "columns": [
-        "matchingId"
-      ]
-    },
     "stagingEntity": {
       "columns": [
-        "matchingId",
-        "stagingEntity",
-        "stagingEntityId"
+        "type",
+        "sourceEntity",
+        "sourceEntityId"
       ]
     },
     "masterEntity": {
       "columns": [
-        "matchingId",
+        "type",
         "masterEntity",
-        "matchingId"
+        "masterEntityId"
       ]
     }
   }
