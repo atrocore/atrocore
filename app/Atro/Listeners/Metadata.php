@@ -2158,6 +2158,8 @@ class Metadata extends AbstractListener
             return;
         }
 
+        return;
+
         // set matching rules types
         foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
             $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
