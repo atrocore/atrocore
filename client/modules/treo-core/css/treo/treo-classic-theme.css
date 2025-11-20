@@ -18618,7 +18618,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel tr td:first-child {
-    width: 250px !important;
+    min-width: 250px !important;
 }
 
 .compare-records .compare-panel tr td:first-child  div.field-name span{
@@ -18627,8 +18627,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     overflow: hidden;
 }
 
-.compare-records .compare-panel td {
-    min-width: 150px !important;
+.compare-records .compare-panel tr td {
+    min-width: 150px;
+}
+
+.compare-records .compare-panel tr td.merge-radio {
+    min-width: 50px;
 }
 
 .compare-records .compare-panel .attachment-preview a {
@@ -18654,6 +18658,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     align-items: center;
     width: 100%;
     min-width: 0 !important;
+    height: 100%;
 }
 
 .compare-records .compare-panel table td.cell {
@@ -18668,14 +18673,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 }
 
-.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has(> input[type="checkbox"])) {
+.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has(> input[type="checkbox"])):has(input),
+.compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has(> input[type="checkbox"])):has(input) {
     justify-content: flex-end;
 }
 
 .fields-compare-panel  table tr td{
-    height: 50px;
+    height: 47px;
     padding-bottom: 3px;
-    padding-top: 5px;
+    padding-top: 3px;
+}
+
+.compare-records[data-mode="merge"] .fields-compare-panel  table tr td {
+    height: 42px;
 }
 
 .compare-records .compare-panel table tr td div.field, .compare-records .compare-panel table td div.field-name {
@@ -18695,6 +18705,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     left: 0;
     top: -3px;
     z-index: 1000;
+}
+
+.compare-records .compare-panel table td.cell .inline-actions .ph {
+    font-size: 14px;
 }
 
 .compare-records .compare-panel table td.cell:first-child {

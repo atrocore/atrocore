@@ -56,9 +56,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             })
 
-            this.listenTo(this.model, 'after:change-mode after:unrelate', (mode) => {
+            this.listenTo(this.model, 'after:unrelate', () => {
+                this.setupCustomButtons();
+            });
+
+            this.listenTo(this.model, 'after:change-mode', (mode) => {
                 if (mode === 'detail') {
                     this.setupCustomButtons();
+                    setTimeout(() =>  this.enableButtons(), 300)
                 }
             });
 
@@ -308,6 +313,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.enableButtons();
                     this.notify(false);
                 });
+
 
                 if (this.isRendered()) {
                     view.render();
@@ -636,7 +642,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getMergeButtons(disabled = true) {
-            return Object.assign(this.getCompareButtons(), this.getAcl().check(this.model.get('entities')[0], 'create') ? {
+            return Object.assign(this.getCompareButtons(), this.getEntityTypes().length && this.getAcl().check(this.getEntityTypes()[0], 'create') ? {
                 buttons: [{
                     label: this.translate('Merge'),
                     name: 'merge',
@@ -670,7 +676,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.getMainRecord()?.applyMerge();
-        }
+        },
+
+        canLoadActivities: function () {
+            return true;
+        },
+
+        shouldSetupRightSideView: function () {
+            return true;
+        },
+
     });
 });
 

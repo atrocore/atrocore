@@ -86,4 +86,13 @@ class SelectionRecord extends Base
             throw new BadRequest("Selection record already exists");
         }
     }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        $this->getEntityManager()->getRepository('SelectionSelectionRecord')
+            ->where(['selectionRecordId' => $entity->get('id')])
+            ->removeCollection();
+    }
 }

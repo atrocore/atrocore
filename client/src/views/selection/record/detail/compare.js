@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare', ['views/record/compare'], function (Dep) {
+Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'views/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -127,6 +127,25 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
 
         getRecordButtons() {
             return this.getParentView().getCompareButtons();
+        },
+
+        canLoadActivities(){
+            return true;
+        },
+
+        getSvelteSideViewProps(parentView) {
+            let thisClone = Espo.utils.clone(this);
+
+            thisClone.scope = 'Selection';
+            thisClone.model = this.selectionModel;
+            thisClone.mode = 'detail';
+
+            let option = Detail.prototype.getSvelteSideViewProps.call(thisClone, parentView);
+
+            option.showSummary = true;
+            option.isCollapsed = false;
+
+            return option;
         }
     });
 
