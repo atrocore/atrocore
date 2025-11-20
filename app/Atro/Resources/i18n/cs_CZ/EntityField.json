@@ -1,7 +1,7 @@
 {
   "fields": {
     "type": "Typ",
-    "entity": "Subjekt",
+    "entity": "Entita",
     "isMultilang": "Vícejazyčný",
     "required": "Požadované",
     "notNull": "Zakázat nulovou hodnotu",
@@ -9,7 +9,7 @@
     "protected": "Chráněné stránky",
     "unique": "Unikátní",
     "index": "Databázový index",
-    "measure": "Míra",
+    "measure": "Měrná jednotka",
     "trim": "Odstranění počátečních a koncových bílých znaků",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
