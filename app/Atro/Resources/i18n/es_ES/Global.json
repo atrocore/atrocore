@@ -491,7 +491,11 @@
     "unitPart": "(Unit)",
     "unlinkAll": "Desenlazar todo",
     "addItem": "Agregar elemento",
-    "accessManagement": "Access Management"
+    "accessManagement": "Access Management",
+    "unselectAll": "Deseleccionar todo",
+    "splitHorizontal": "Dividir horizontalmente",
+    "splitVertical": "Dividir verticalmente",
+    "expandWindow": "Ampliar ventana"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -595,7 +599,8 @@
     "removeRelatedRecords": "¿Está seguro de que desea eliminar todos los registros de la Asociación seleccionada del registro actual? Se conservarán todos los registros relacionados.",
     "queryHasErrors": "Hay algunos errores en su consulta",
     "actionExecuted": "La acción \"%s\" se ha ejecutado correctamente",
-    "linked": "Los registros se vincularon con éxito."
+    "linked": "Los registros se vincularon con éxito.",
+    "minimumRecordForComparison": "No puede tener menos de {count} registros."
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
