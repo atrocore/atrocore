@@ -491,7 +491,11 @@
     "typeToSearch": "Wpisz i naciśnij Enter...",
     "addItem": "Dodaj element",
     "language": "Język",
-    "Activities": "Aktywności"
+    "Activities": "Aktywności",
+    "splitVertical": "Podział pionowy",
+    "unselectAll": "Odznacz wszystko",
+    "splitHorizontal": "Podział w poziomie",
+    "expandWindow": "Proszę rozwinąć okno"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -595,7 +599,8 @@
     "unableToDuplicateRecord": "Nie można powielić. Rekord z wartością unikalnego pola już istnieje.",
     "youHaveErrorsInFilter": "Filtr zawiera pewne błędy.",
     "theSavedFilterMightBeCorrupt": "Format nie jest obsługiwany, zapisany filtr może być uszkodzony.",
-    "deletePermanentlyRecordConfirmation": "Czy na pewno chce Pan/Pani trwale usunąć rekord?"
+    "deletePermanentlyRecordConfirmation": "Czy na pewno chce Pan/Pani trwale usunąć rekord?",
+    "minimumRecordForComparison": "Nie można mieć mniej niż {count} rekordów."
   },
   "boolFilters": {
     "onlyActive": "Aktywne",
