@@ -39,6 +39,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             if (this.options.params.selectionViewMode && this.availableModes.includes(this.options.params.selectionViewMode)) {
                 this.selectionViewMode = this.options.params.selectionViewMode;
                 this.selectionRecordModels = this.options.params.models;
+                if ( this.selectionRecordModels) {
+                    this.selectedIds = [];
+                    for (const model of this.selectionRecordModels) {
+                        if (this.selectedIds.length >= this.maxForComparison) {
+                            break;
+                        }
+
+                        this.selectedIds.push(model.id);
+                    }
+                }
             }
         },
 
