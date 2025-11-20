@@ -94,7 +94,8 @@
     "leftSidebar": "Linke Seitenansicht",
     "rightSideView": "Rechte Seitenansicht",
     "kanban": "Kanban",
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "selection": "Auswahl"
   },
   "fieldTypes": {
     "color": "Farbe",

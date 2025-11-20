@@ -153,6 +153,7 @@
   },
   "labels": {
     "selectAll": "Вибрати все",
+    "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",
     "jobManager": "Менеджер завдань",
     "customizeLayout": "Налаштувати макет",
@@ -594,7 +595,8 @@
     "closePanelConfirmation": "Ви дійсно хочете закрити панель?",
     "removeRelatedRecords": "Ви впевнені, що хочете видалити всі записи для вибраної Асоціації з поточного запису? Всі пов'язані записи будуть збережені.",
     "deletePermanentlyRecordConfirmation": "Ви впевнені, що хочете назавжди видалити запис?",
-    "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?"
+    "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?",
+    "minimumRecordForComparison": "Ви не можете мати менше {count} записів"
   },
   "boolFilters": {
     "onlyActive": "Активні",

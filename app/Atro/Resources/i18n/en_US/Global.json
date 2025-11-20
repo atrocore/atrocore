@@ -452,6 +452,7 @@
     "galleryZoom": "Zoom",
     "galleryBackground": "Background",
     "selectAll": "Select All",
+    "unselectAll": "Unselect All",
     "contentLanguages": "Content Languages",
     "openSearchFilter": "Open search filter",
     "applySearch": "Apply Search",
@@ -598,7 +599,8 @@
     "unableToDuplicateRecord": "Unable to duplicate. A record with a value of the unique field already exists.",
     "youHaveErrorsInFilter": "The filter have some errors.",
     "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt.",
-    "closePanelConfirmation": "Are you sure you want to close the panel?"
+    "closePanelConfirmation": "Are you sure you want to close the panel?",
+    "minimumRecordForComparison": "You cannot have less than {count} records."
   },
   "boolFilters": {
     "onlyActive": "Active",

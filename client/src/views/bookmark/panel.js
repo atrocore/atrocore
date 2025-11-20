@@ -216,16 +216,21 @@ Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep
                 entityIds: collection.models.map(v => v.id)
             }).then(result => {
                 List.prototype.loadSelectionRecordModels.call(this, result.id).then(models => {
-                    let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: models,
-                        selectionId: result.id,
-                        scope: group.key,
-                        mode: "details",
-                        merging: merging
-                    }, function (dialog) {
-                        dialog.render();
+                    this.getModelFactory().create('Selection', (selectionModel) => {
+                       selectionModel.set(result);
+                        let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: models,
+                            selectionId: result.id,
+                            selectionModel: selectionModel,
+                            scope: group.key,
+                            mode: "details",
+                            merging: merging
+                        }, function (dialog) {
+                            dialog.render();
+                        });
                     });
+
                 });
             });
         }

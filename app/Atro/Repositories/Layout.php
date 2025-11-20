@@ -31,6 +31,7 @@ class Layout extends Base
             switch ($reelType) {
                 case 'list':
                 case 'leftSidebar':
+                case 'selection':
                 case 'kanban':
                     $repository = $this->getEntityManager()->getRepository('LayoutListItem');
                     $listItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];

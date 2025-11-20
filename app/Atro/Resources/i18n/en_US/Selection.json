@@ -3,5 +3,14 @@
     "name": "Name",
     "description": "Description",
     "selectionRecords": "Selection Records"
+  },
+  "options": {
+    "type": {
+      "single": "Single Entity",
+      "multiple": "Multiple Entities"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "You cannot set 'Single Entity', because you have many entities in your records."
   }
 }

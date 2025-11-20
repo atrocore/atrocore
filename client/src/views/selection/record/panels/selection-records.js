@@ -30,14 +30,7 @@ Espo.define('views/selection/record/panels/selection-records', 'views/record/pan
         },
 
         actionCreateRelated (data) {
-            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
-
-            if (this.collection.models.length >=  maxComparableItem) {
-                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
-                return;
-            }
-
-            Dep.prototype.actionCreateRelated.call(this, data);
+            this.getParentView().getParentView().getParentView().actionAddItem();
         }
     });
 });
