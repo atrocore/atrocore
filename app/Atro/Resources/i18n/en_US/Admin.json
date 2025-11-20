@@ -89,7 +89,7 @@
     "kanban": "Kanban",
     "upload": "Upload",
     "leftSidebar": "Left Side View",
-    "rightSideView": "Right Side view"
+    "selection": "Selection"
   },
   "fieldTypes": {
     "color": "Color",

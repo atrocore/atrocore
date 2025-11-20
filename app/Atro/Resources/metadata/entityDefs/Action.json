@@ -694,9 +694,29 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "equals",
-              "attribute": "display",
-              "value": "single"
+              "type": "or",
+              "value": [
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "in",
+                      "attribute": "usage",
+                      "value": ["record", "entity"]
+                    },
+                    {
+                      "type": "equals",
+                      "attribute": "display",
+                      "value": "single"
+                    }
+                  ]
+                },
+                {
+                  "type": "equals",
+                  "attribute": "usage",
+                  "value": "field"
+                }
+              ]
             }
           ]
         }

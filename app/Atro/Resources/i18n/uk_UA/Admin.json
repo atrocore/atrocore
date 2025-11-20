@@ -89,7 +89,8 @@
     "relationships": "Відносини",
     "leftSidebar": "Вид зліва",
     "rightSideView": "Вид з правого боку",
-    "upload": "Завантажити"
+    "upload": "Завантажити",
+    "selection": "Вибір"
   },
   "fields": {
     "request": "Запит",

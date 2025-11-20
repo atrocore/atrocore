@@ -60,6 +60,11 @@ Espo.define('views/record/compare-version', 'views/record/compare', function (De
                 targetId: this.model.id,
                 versionName: this.getParentView().currentVersion
             }
-        }
+        },
+
+        setupFieldPanels() {
+            Dep.prototype.setupFieldPanels.call(this);
+            this.fieldPanels[0].filter = (field) => !field.attributeId && field !== 'id';
+        },
     });
 });

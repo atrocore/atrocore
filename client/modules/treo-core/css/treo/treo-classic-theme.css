@@ -3750,7 +3750,8 @@ a[role=button].primary:active, a[role=button].primary.active,
 .btn-link:has(> .ph:only-of-type),
 .btn-link:has(> .ph-fill:only-of-type),
 a:has(> .ph:only-of-type),
-a:has(> .ph-fill:only-of-type) {
+a:has(> .ph-fill:only-of-type),
+a:has(> img):hover {
     text-decoration: none;
 }
 
@@ -9728,6 +9729,12 @@ body > #header .navbar-brand span.home-icon {
     width: 16px;
     height: 16px;
 }
+
+.icon-button {
+    width: 18px;
+    height: 18px;
+}
+
 
 .status-icons .ph {
     color: var(--status-icon-color);
@@ -15914,6 +15921,8 @@ select {
 
 .field .metadata .checkbox-item {
     margin-right: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
@@ -15921,7 +15930,10 @@ select {
 }
 
 .field .metadata .checkbox-item label {
-    margin-left: 3px;
+    margin-left: 2px;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 13px;
 }
 
 .field .status-icons, .field .inline-actions {
@@ -18563,7 +18575,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
 }
 
-.compare-records .compare-panel {
+.compare-records .compare-panel, .compare-entities .compare-panel  {
     background-color: white;
     width: 100%;
     padding: 0;
@@ -18597,15 +18609,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: red;
 }
 
-.compare-records .compare-panel .panel-body {
+.compare-records .compare-panel .panel-body  {
     padding: 0 0 0 0 !important;
+}
+
+.compare-entities  {
+    padding: 40px 0 0 0 !important;
 }
 
 .compare-records .compare-panel .panel-body > div:last-child > .list:last-child {
     margin-bottom: 0;
 }
 
-.compare-records .compare-panel .panel-body div.list {
+.compare-records .compare-panel .panel-body div.list, .compare-entities .compare-panel .panel-body div.list {
     overflow-x: auto;
     margin-left: 0;
     margin-right: 0;
@@ -18620,16 +18636,21 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel tr td:first-child {
-    width: 250px !important;
+    min-width: 250px !important;
 }
 
-.compare-records .compare-panel tr td:first-child {
+.compare-records .compare-panel tr td:first-child  div.field-name span{
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
 }
 
-.compare-records .compare-panel td {
-    min-width: 150px !important;
+.compare-records .compare-panel tr td {
+    min-width: 150px;
+}
+
+.compare-records .compare-panel tr td.merge-radio {
+    min-width: 50px;
 }
 
 .compare-records .compare-panel .attachment-preview a {
@@ -18655,6 +18676,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     align-items: center;
     width: 100%;
     min-width: 0 !important;
+    height: 100%;
 }
 
 .compare-records .compare-panel table td.cell {
@@ -18662,10 +18684,30 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.compare-records .compare-panel table td.cell .field {
+.compare-records .compare-panel table td.cell .field, .compare-records .compare-panel table td div.field-name {
     display: flex;
     align-items: center;
     text-align: center;
+
+}
+
+.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has(> input[type="checkbox"])):has(input),
+.compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has(> input[type="checkbox"])):has(input) {
+    justify-content: flex-end;
+}
+
+.fields-compare-panel  table tr td{
+    height: 47px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+.compare-records[data-mode="merge"] .fields-compare-panel  table tr td {
+    height: 42px;
+}
+
+.compare-records .compare-panel table tr td div.field, .compare-records .compare-panel table td div.field-name {
+    height: 100%;
 }
 
 .compare-records .compare-panel table tr td.cell.no-center .field {
@@ -18678,9 +18720,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-records .compare-panel table td.cell .inline-actions {
     position: absolute;
-    right: 5px;
-    top: -10px;
+    left: 0;
+    top: -3px;
     z-index: 1000;
+}
+
+.compare-records .compare-panel table td.cell .inline-actions .ph {
+    font-size: 14px;
 }
 
 .compare-records .compare-panel table td.cell:first-child {
@@ -18701,12 +18747,79 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-right: 20px;
 }
 
-.compare-records th.inline-actions > a, .compare-records td .field > a {
+.compare-records th.inline-actions > a,  .compare-records td .field > a, .compare-entities th > a {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
     max-width: 100%;
+}
+
+.compare-records .overlay, .compare-entities .overlay {
+    position: absolute;
+    top: 0;
+    right: -50px;
+    left: -50px;
+    bottom: -30px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    background-repeat: no-repeat;
+
+}
+
+.shimmer-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -50px;
+    left: -50px;
+    bottom: -30px;
+    background-image: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(255, 255, 255, 0.5) 20%,
+            rgba(255, 255, 255, 0.5) 35%,
+            rgba(0, 0, 0, 0) 50%
+    );
+
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% 0;
+    }
+}
+
+.compare-entities {
+    height: calc(100vh - 250px);
+}
+.compare-entities .panel-body > div > .list > table td:first-child {
+    padding-left: 5px !important;
+}
+
+.compare-entities .list > table tbody tr:not(.active-dropdown):hover {
+    background-color: transparent;
+}
+
+.compare-entities .compare-panel table col.col-min-width{
+    min-width: 350px;
+}
+
+.compare-entities .middle .panel-heading {
+    display: none;
+}
+
+.compare-entities .form-group[data-name="files"] > label {
+    display: block;
+}
+
+.compare-entities table tr.list-row, .compare-entities table td .side-view {
+    height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .cards-container {

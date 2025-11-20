@@ -26,10 +26,13 @@ use Espo\ORM\IEntity;
 
 class Selection extends Base
 {
-    protected $mandatorySelectAttributeList = ['name', 'entities'];
+    protected $mandatorySelectAttributeList = ['name', 'entityTypes', 'type'];
+
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
         $selection = $this->getEntityManager()->getEntity('Selection');
+        $selection->set('type', 'single');
+        $selection->set('entityTypes', [$scope]);
         $this->getEntityManager()->saveEntity($selection);
 
         foreach ($entityIds as $entityId) {
@@ -50,7 +53,7 @@ class Selection extends Base
 
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
-        $loadEntities = !empty($selectParams['select']) && in_array('entities', $selectParams['select']);
+        $loadEntities = !empty($selectParams['select']) && in_array('entityTypes', $selectParams['select']);
         foreach ($collection as $entity) {
             $entity->_loadEntity = $loadEntities;
         }
@@ -61,7 +64,9 @@ class Selection extends Base
     public function prepareEntityForOutput(Entity $entity)
     {
         if (!property_exists($entity, '_loadEntity') || !empty($entity->_loadEntity)) {
-            $entity->set('entities', $this->getRepository()->getEntities($entity->id));
+            $entityTypes = $this->getRepository()->getEntities($entity->id);
+            $entity->set('entityTypes', $entityTypes);
+            $entity->set('entityTypesCount', count($entityTypes));
         }
 
         parent::prepareEntityForOutput($entity);

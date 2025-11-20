@@ -212,6 +212,7 @@ class Action extends Base
                 'display' => $action['display'] ?? null,
                 'type'    => $action['type'] ?? null,
                 'html' => $action['html'] ?? null,
+                'tooltip' => $action['tooltip'] ?? null,
                 'data'    => [
                     'action_id' => $action['id'],
                     'entity_id' => $id

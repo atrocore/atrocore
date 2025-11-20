@@ -41,7 +41,6 @@
 
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
-    let entitySelectorElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
     let treeItems: [] = [];
@@ -75,18 +74,6 @@
                 return {name: item, label: Language.translate(item, 'fields', sortScope)}
             })
         }
-    }
-
-    export function setCanBuildTree(value: boolean) {
-        canBuildTree = value;
-    }
-
-    export function setSelectedScope(value: string) {
-        selectedScope = value;
-    }
-
-    export function getActiveItem() {
-        return activeItem.name;
     }
 
     export function handleCollectionSearch(searchedCollection) {
@@ -734,9 +721,6 @@
     }
 
     function openNodes($tree, ids, onFinished) {
-        if (!canOpenNode) {
-            return;
-        }
         if (!Array.isArray(ids) || ids.length === 0) {
             onFinished()
             return
@@ -1054,12 +1038,6 @@
         });
     });
 
-    function createEntitySelectorView(node) {
-        if (callbacks?.onEntitySelectorAvailable) {
-            callbacks.onEntitySelectorAvailable(node);
-        }
-    }
-
     function onSidebarResize(e: CustomEvent): void {
         Storage.set('panelWidth', scope, currentWidth.toString());
 
@@ -1164,11 +1142,6 @@
                         </div>
                     {/if}
                 </div>
-                {#if activeItem.name === '_self' && showEntitySelector}
-                    <div class="entity-selector" style="margin: 20px 0;" use:createEntitySelectorView
-                         bind:this={entitySelectorElement}>
-                    </div>
-                {/if}
 
                 <div class="panel-group category-tree" bind:this={treeElement}>
                 </div>

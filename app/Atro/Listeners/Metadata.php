@@ -411,10 +411,12 @@ class Metadata extends AbstractListener
                 ]
             ];
 
-            if (!empty($action['icon_class'])) {
-                $html = '<i class="ph ph-' . $action['icon_class'] . '"></i>';
+            if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
+                $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
+                }else{
+                    $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
             }

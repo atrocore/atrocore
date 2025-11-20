@@ -31,6 +31,7 @@ class Layout extends Base
         switch ($reelType) {
             case 'list';
             case 'leftSidebar':
+            case 'selection':
             case 'kanban':
                 /* @var $listItems EntityCollection */
                 $listItems = $this->get('listItems');
