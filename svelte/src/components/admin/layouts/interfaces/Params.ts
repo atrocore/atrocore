@@ -8,5 +8,6 @@ export default interface Params {
     dataAttributeList: string[];
     dataAttributesDefs: any,
     allowSwitch: boolean,
-    fieldTypes: string[]
+    fieldTypes: string[],
+    openEditLabelDialog: Function
 }

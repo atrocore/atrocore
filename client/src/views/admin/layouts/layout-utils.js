@@ -114,9 +114,8 @@ Espo.define('views/admin/layouts/layout-utils', [], function () {
                             });
                         },
 
-                        opedEditLabelDialog: (scope, field, callback) => {
-                            let key = `${scope}.fields.${field}`,
-                                data = null;
+                        openEditLabelDialog: (scope, field, callback, key = null) => {
+                            key = key ?? `${scope}.fields.${field}`, data = null;
 
                             this.wait(true);
                             this.notify('Loading...');
