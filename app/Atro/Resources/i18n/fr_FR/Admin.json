@@ -215,6 +215,7 @@
     "massUpdate": "Mise à jour des masses",
     "kanban": "Kanban",
     "leftSidebar": "Vue du côté gauche",
-    "upload": "Télécharger"
+    "upload": "Télécharger",
+    "selection": "Sélection"
   }
 }
