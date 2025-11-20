@@ -528,7 +528,8 @@
     "scopeFilter": "Canal",
     "Activities": "Activités",
     "accessManagement": "Gestion de l'accès",
-    "Attributes": "Attributs"
+    "Attributes": "Attributs",
+    "unselectAll": "Désélectionner tout"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",
@@ -632,7 +633,8 @@
     "fillEmptyFieldBeforeMerging": "Certains champs vides sont obligatoires, veuillez les remplir avant de fusionner.",
     "unableToDuplicateRecord": "Impossible de dupliquer. Un enregistrement avec une valeur du champ unique existe déjà.",
     "youHaveErrorsInFilter": "Le filtre comporte quelques erreurs.",
-    "theSavedFilterMightBeCorrupt": "n'est pas pris en charge, le filtre enregistré peut être corrompu."
+    "theSavedFilterMightBeCorrupt": "n'est pas pris en charge, le filtre enregistré peut être corrompu.",
+    "minimumRecordForComparison": "Vous ne pouvez pas avoir moins de {count} enregistrements."
   },
   "scopeNamesPlural": {
     "Classification": "Classification",
