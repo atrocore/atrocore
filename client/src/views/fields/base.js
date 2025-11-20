@@ -763,7 +763,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             dynamicActions.forEach(action => {
                 const forEditModeOnly = !!this.getMetadata().get(['action', 'typesData', action.type || '', 'forEditModeOnly'])
-                const $button = $(`<a href="javascript:" data-for-edit-only="${forEditModeOnly}" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.label}</a>`);
+                const $button = $(`<a href="javascript:" data-for-edit-only="${forEditModeOnly}" class="dynamic-action hidden" style="margin-left: 3px" title="${action.label}">${action.html ?? action.label}</a>`);
 
                 if (inlineActions.size()) {
                     inlineActions.prepend($button);

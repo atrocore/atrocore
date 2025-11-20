@@ -3750,7 +3750,8 @@ a[role=button].primary:active, a[role=button].primary.active,
 .btn-link:has(> .ph:only-of-type),
 .btn-link:has(> .ph-fill:only-of-type),
 a:has(> .ph:only-of-type),
-a:has(> .ph-fill:only-of-type) {
+a:has(> .ph-fill:only-of-type),
+a:has(> img):hover {
     text-decoration: none;
 }
 

@@ -415,6 +415,8 @@ class Metadata extends AbstractListener
                 $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
+                }else{
+                    $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
             }
