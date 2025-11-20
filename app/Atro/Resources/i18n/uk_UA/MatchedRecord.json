@@ -1,25 +1,12 @@
 {
   "fields": {
-    "matching": "Відповідність",
-    "staging": "Етап",
-    "stagingEntity": "Етапна сутність",
-    "stagingEntityId": "Ідентифікатор етапної сутністі",
+    "source": "Джерело",
+    "sourceEntity": "Джерело",
+    "sourceEntityId": "Ідентифікатор джерела",
     "master": "Мастер",
     "masterEntity": "Мастер сутність",
     "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
-    "status": "Статус",
-    "manuallyAdded": "Додано вручну",
-    "goldenRecord": "Золотий запис",
-    "hash": "Унікальний хеш",
-    "goldenRecordHash": "Унікальний хеш Золотого запису"
-  },
-  "options": {
-    "status": {
-      "confirmed": "Підтверджено",
-      "rejected": "Відхилено",
-      "new": "Новий",
-      "preselected": "Попередньо обраний"
-    }
+    "hash": "Унікальний хеш"
   }
 }

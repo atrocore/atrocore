@@ -1,50 +1,28 @@
 {
   "fields": {
-    "matching": {
-      "type": "link",
-      "entity": "Matching",
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "attribute": "id",
-              "type": "isNotEmpty"
-            }
-          ]
-        }
-      }
+    "type": {
+      "type": "enum",
+      "options": [
+        "duplicate",
+        "staging"
+      ],
+      "required": true,
+      "protected": true
     },
-    "staging": {
+    "source": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/staging",
+      "view": "views/matched-record/fields/source",
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "matchingId"
-            }
-          ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "varchar",
       "view": "views/matching/fields/entity-type",
       "protected": true
     },
-    "stagingEntityId": {
+    "sourceEntityId": {
       "type": "varchar",
       "protected": true
     },
@@ -54,24 +32,7 @@
       "view": "views/matched-record/fields/master",
       "filterDisabled": true,
       "massUpdateDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "matchingId"
-            }
-          ]
-        },
-        "readOnly": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
     "masterEntity": {
       "type": "varchar",
@@ -86,33 +47,7 @@
       "type": "int",
       "protected": true
     },
-    "status": {
-      "type": "enum",
-      "default": "new",
-      "notNull": true,
-      "required": true,
-      "options": [
-        "confirmed",
-        "preselected",
-        "new",
-        "rejected"
-      ],
-      "customizable": false
-    },
     "hash": {
-      "type": "varchar",
-      "unique": true,
-      "protected": true
-    },
-    "manuallyAdded": {
-      "type": "bool",
-      "protected": true,
-      "default": true
-    },
-    "goldenRecord": {
-      "type": "bool"
-    },
-    "goldenRecordHash": {
       "type": "varchar",
       "unique": true,
       "protected": true

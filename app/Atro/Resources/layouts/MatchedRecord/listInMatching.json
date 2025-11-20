@@ -1,20 +1,11 @@
 [
   {
-    "name": "staging"
+    "name": "type"
   },
   {
     "name": "master"
   },
   {
-    "name": "status"
-  },
-  {
     "name": "score"
-  },
-  {
-    "name": "goldenRecord"
-  },
-  {
-    "name": "manuallyAdded"
   }
 ]

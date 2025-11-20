@@ -1,23 +1,14 @@
 [
   {
-    "name": "matching"
+    "name": "type"
   },
   {
-    "name": "staging"
+    "name": "source"
   },
   {
     "name": "master"
   },
   {
-    "name": "status"
-  },
-  {
     "name": "score"
-  },
-  {
-    "name": "goldenRecord"
-  },
-  {
-    "name": "manuallyAdded"
   }
 ]

@@ -8,12 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matched-record/fields/master', 'views/fields/link', Dep => {
+Espo.define('views/matched-record/fields/source', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
         setup() {
-            this.options.foreignScope = this.model.get('masterEntity');
+            this.options.foreignScope = this.model.get('sourceEntity');
 
             Dep.prototype.setup.call(this);
         },

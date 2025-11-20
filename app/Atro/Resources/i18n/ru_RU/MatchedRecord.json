@@ -1,25 +1,12 @@
 {
   "fields": {
-    "matching": "Соответствие",
-    "staging": "Этап",
-    "stagingEntity": "Этапная сущность",
-    "stagingEntityId": "Идентификатор этапная сущность",
+    "source": "Источник",
+    "sourceEntity": "Источник",
+    "sourceEntityId": "Идентификатор источника",
     "master": "Мастер",
     "masterEntity": "Мастер сущность",
     "masterEntityId": "Идентификатор мастер сущности",
     "score": "Оценка",
-    "status": "Статус",
-    "manuallyAdded": "Добавлено вручную",
-    "goldenRecord": "Золотая запись",
-    "hash": "Уникальный хэш",
-    "goldenRecordHash": "Уникальный хэш Золотой записи"
-  },
-  "options": {
-    "status": {
-      "confirmed": "Подтверждено",
-      "rejected": "Отклонено",
-      "new": "Новый",
-      "preselected": "Предварительно выбранный"
-    }
+    "hash": "Уникальный хэш"
   }
 }

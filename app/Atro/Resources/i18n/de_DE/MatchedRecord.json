@@ -1,25 +1,12 @@
 {
   "fields": {
-    "matching": "Abgleich",
-    "staging": "Staging",
-    "stagingEntity": "Staging-Entität",
-    "stagingEntityId": "Staging-Entitäts-ID",
+    "source": "Quelle",
+    "sourceEntity": "Quellentität",
+    "sourceEntityId": "Quelle-Entitäts-ID",
     "master": "Master",
     "masterEntity": "Master-Entität",
     "masterEntityId": "Master-Entitäts-ID",
     "score": "Punktzahl",
-    "status": "Status",
-    "manuallyAdded": "Manuell hinzugefügt",
-    "goldenRecord": "Golden Record",
-    "hash": "Eindeutiger Hash",
-    "goldenRecordHash": "Golden Record Unique Hash"
-  },
-  "options": {
-    "status": {
-      "new": "Neu",
-      "preselected": "Vorausgewählt",
-      "confirmed": "Bestätigt",
-      "rejected": "Abgelehnt"
-    }
+    "hash": "Eindeutiger Hash"
   }
 }
