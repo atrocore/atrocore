@@ -491,7 +491,11 @@
     "varcharPart": "(řetězec)",
     "Help Center": "Centrum nápovědy",
     "Compare": "Porovnat",
-    "addItem": "Přidat položku"
+    "addItem": "Přidat položku",
+    "unselectAll": "Zrušit výběr všech",
+    "splitHorizontal": "Horizontální rozdělení",
+    "splitVertical": "Vertikální rozdělení",
+    "expandWindow": "Rozbalit okno"
   },
   "fields": {
     "width": "Šířka",
@@ -701,7 +705,8 @@
     "writeYourCommentHere": "Napište svůj komentář zde",
     "checkForNewNotifications": "Kontrola nových oznámení",
     "massFollowResultSingle": "Nyní je sledován {count} záznam",
-    "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota."
+    "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota.",
+    "minimumRecordForComparison": "Nemůžete mít méně než {počet} záznamů."
   },
   "boolFilters": {
     "onlyActive": "Aktivní",
