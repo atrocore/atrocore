@@ -31,14 +31,6 @@
 
     export let showApplySortOrder: boolean = true
 
-    export let canBuildTree: boolean = true;
-
-    export let selectedScope: string | null = null;
-
-    export let canOpenNode: boolean = true;
-
-    export let showEntitySelector: boolean = false;
-
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
@@ -53,7 +45,7 @@
     let selectNodeId: string | null = null;
     let isHidden: boolean = false;
     let sortAsc: boolean = true;
-    let sortBy: string|null = null;
+    let sortBy: string | null = null;
     let sortFields: Array = [];
     let applyAdvancedFilter: boolean = false;
     let showEmptyPlaceholder: boolean = false;
@@ -154,10 +146,6 @@
     }
 
     function buildTree(data = null): void {
-        if (!canBuildTree && activeItem.name === '_self') {
-            return;
-        }
-
         if (!activeItem) {
             return;
         }
