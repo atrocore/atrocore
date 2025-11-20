@@ -166,7 +166,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.updateUrl(data.name);
 
-            if ( window.leftSidePanel) {
+            if (window.leftSidePanel) {
                 window.leftSidePanel.setSelectionViewMode(data.name);
             }
 
@@ -223,7 +223,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getRecordForPanels() {
-            if(this.selectionViewMode === 'standard' && this.collection) {
+            if (this.selectionViewMode === 'standard' && this.collection) {
                 return this.collection.models.map(model => {
                     return {
                         id: model.get('entityId'),
@@ -424,7 +424,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             selectionsIds: [this.model.id]
                         }).then(() => {
                             this.model.trigger('after:relate', 'selections');
-                            if(this.toggleSelected(model.id)) {
+                            if (this.toggleSelected(model.id)) {
                                 window.leftSidePanel?.setSelectedIds(this.selectedIds);
                             }
                         })
@@ -460,8 +460,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', () => {
-                        if( view.getView('record')?.model) {
-                            if(this.toggleSelected(view.getView('record').model.get('entityId'))) {
+                        if (view.getView('record')?.model) {
+                            if (this.toggleSelected(view.getView('record').model.get('entityId'))) {
                                 window.leftSidePanel?.setSelectedIds(this.selectedIds);
                             }
                         }
@@ -494,12 +494,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     selectedIds: this.selectedIds,
                     selectionViewMode: this.selectionViewMode,
                     onItemClicked: (e, itemId) => {
-                        if(this.selectionViewMode === 'standard') {
+                        if (this.selectionViewMode === 'standard') {
                             return;
                         }
                         e.preventDefault();
 
-                        if(this.toggleSelected(itemId)){
+                        if (this.toggleSelected(itemId)) {
                             this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
                         }
@@ -507,14 +507,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     onSelectAll: (entityType) => {
                         let shouldReload = false;
                         this.selectionRecordModels.forEach(model => {
-                            if(model.name === entityType && !this.selectedIds.includes(model.id)){
-                                if(this.toggleSelected(model.id)){
+                            if (model.name === entityType && !this.selectedIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
                                     shouldReload = true;
                                 }
                             }
                         });
 
-                        if(shouldReload) {
+                        if (shouldReload) {
                             this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
                         }
@@ -522,14 +522,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     onUnSelectAll: (entityType) => {
                         let shouldReload = false;
                         this.selectionRecordModels.reverse().forEach(model => {
-                            if(model.name === entityType && this.selectedIds.includes(model.id)){
-                               if(this.toggleSelected(model.id)){
-                                   shouldReload = true;
-                               }
+                            if (model.name === entityType && this.selectedIds.includes(model.id)) {
+                                if (this.toggleSelected(model.id)) {
+                                    shouldReload = true;
+                                }
                             }
                         });
 
-                        if(shouldReload) {
+                        if (shouldReload) {
                             this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
                         }
