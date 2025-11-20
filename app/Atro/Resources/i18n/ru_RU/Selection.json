@@ -3,5 +3,14 @@
     "name": "Название",
     "description": "Описание",
     "selectionRecords": "Записи о выборе"
+  },
+  "options": {
+    "type": {
+      "single": "Единое целое",
+      "multiple": "Многочисленные субъекты"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Вы не можете установить значение 'Single Entity', потому что в Ваших записях есть много сущностей."
   }
 }
