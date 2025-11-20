@@ -1,5 +1,6 @@
 {
   "iconClass": "approximate-equals",
   "controller": "controllers/record",
-  "acl": "acl/matched-record"
+  "acl": "acl/matched-record",
+  "createDisabled": true
 }

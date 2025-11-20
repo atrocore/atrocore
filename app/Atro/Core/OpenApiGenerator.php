@@ -292,22 +292,24 @@ class OpenApiGenerator
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
-                $result['paths']["/{$scopeName}"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Create a record of the $scopeName",
-                    "description" => "Create a record of the $scopeName",
-                    "operationId" => "create{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => $schema,
+                if (!in_array($scopeName, ['Matching'])) {
+                    $result['paths']["/{$scopeName}"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Create a record of the $scopeName",
+                        "description" => "Create a record of the $scopeName",
+                        "operationId" => "create{$scopeName}Item",
+                        'security'    => [['Authorization-Token' => []]],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => $schema,
+                                ],
                             ],
                         ],
-                    ],
-                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
-                ];
+                        "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
+                    ];
+                }
 
                 $putSchema = $schema;
                 unset($putSchema['properties']['id']);
@@ -339,34 +341,36 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
                 ];
 
-                $result['paths']["/{$scopeName}/{id}"]['delete'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Delete a record of the $scopeName",
-                    "description" => "Delete a record of the $scopeName",
-                    "operationId" => "delete{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string",
+                if (!in_array($scopeName, ['Matching'])) {
+                    $result['paths']["/{$scopeName}/{id}"]['delete'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Delete a record of the $scopeName",
+                        "description" => "Delete a record of the $scopeName",
+                        "operationId" => "delete{$scopeName}Item",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "id",
+                                "in"       => "path",
+                                "required" => true,
+                                "schema"   => [
+                                    "type" => "string",
+                                ],
+                            ],
+                            [
+                                "name"        => "permanently",
+                                "in"          => "header",
+                                "required"    => false,
+                                "description" => "Set to TRUE if you want to delete the record permanently",
+                                "schema"      => [
+                                    "type"    => "boolean",
+                                    "example" => false,
+                                ],
                             ],
                         ],
-                        [
-                            "name"        => "permanently",
-                            "in"          => "header",
-                            "required"    => false,
-                            "description" => "Set to TRUE if you want to delete the record permanently",
-                            "schema"      => [
-                                "type"    => "boolean",
-                                "example" => false,
-                            ],
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean']),
-                ];
+                        "responses"   => self::prepareResponses(['type' => 'boolean']),
+                    ];
+                }
             }
 
             if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive']) && $scopeName !== 'MatchedRecord') {

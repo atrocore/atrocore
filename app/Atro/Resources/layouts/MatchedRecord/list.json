@@ -1,6 +1,7 @@
 [
   {
-    "name": "type"
+    "name": "type",
+    "link": true
   },
   {
     "name": "source"
