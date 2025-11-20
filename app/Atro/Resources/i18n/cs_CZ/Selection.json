@@ -3,5 +3,14 @@
     "name": "Název",
     "description": "Popis",
     "selectionRecords": "Výběrové záznamy"
+  },
+  "options": {
+    "type": {
+      "single": "Jeden subjekt",
+      "multiple": "Více subjektů"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit."
   }
 }
