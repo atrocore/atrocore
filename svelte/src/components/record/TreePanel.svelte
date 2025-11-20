@@ -129,6 +129,7 @@
         const isClosed = window.$(node.element).find('.load-items').hasClass('ph-caret-right')
 
         if (isClosed && !node.getData().length) {
+            Notifier.notify('Loading...')
             const resp = await Utils.getRequest(generateSubTreeUrl(node))
             const data = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
             $tree.tree('loadData', data, node);
@@ -250,7 +251,10 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.load_on_demand) {
+                    if (node.load_on_demand) {
+                        node.has_children = true;
+                    }
+                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.has_children) {
                         const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
                         $li.find('.jqtree-element').append($el);
                         $el.on('click', () => toggleSubTree($tree, node));
@@ -471,9 +475,6 @@
         }
 
         let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
-        if (selectedScope) {
-            url += `&selectedScope=${selectedScope}`;
-        }
         if (sortBy) {
             url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
         }
@@ -525,7 +526,16 @@
     }
 
     function generateSubTreeUrl(node) {
+        const foreignWhere = getForeignWhereData()
         let url = scope + `/action/Tree?isTreePanel=1&scope=${scope}&link=_self`;
+        if (
+            Metadata.get(['scopes', scope, 'type']) === 'Hierarchy' &&
+            Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
+            && ((canUseDataRequest() && foreignWhere.length) || hasTextFilter)
+        ){
+            url = `${scope}/action/TreeData?scope=${scope}&link=_self`
+        }
+
         if (node.showMoreDirection) {
             let offset = node.offset;
             let maxSize1 = maxSize;
@@ -546,8 +556,6 @@
             url += '&node=' + node.id + '&offset=0&maxSize=' + maxSize;
         }
 
-
-        const foreignWhere = getForeignWhereData()
         foreignWhere.push({
             operator: 'linked_with',
             id: activeItem.name,
@@ -640,6 +648,9 @@
     }
 
     function filterResponse(response, direction = null) {
+        if (response.tree){
+            return response.tree;
+        }
         if (!response.list) {
             return response;
         }
