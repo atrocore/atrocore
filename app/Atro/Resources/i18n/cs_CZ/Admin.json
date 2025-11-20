@@ -88,7 +88,8 @@
     "massUpdate": "Hromadná aktualizace",
     "kanban": "Kanban",
     "upload": "Nahrát",
-    "leftSidebar": "Pohled z levé strany"
+    "leftSidebar": "Pohled z levé strany",
+    "selection": "Výběr"
   },
   "fieldTypes": {
     "color": "Barva",
