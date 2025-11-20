@@ -4584,6 +4584,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     padding: 12px 8px;
     font-size: 18px;
     line-height: 19px;
+    margin-left: 15px;
 }
 
 .navbar-brand:hover, .navbar-brand:focus {
@@ -4605,7 +4606,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     position: relative;
     float: right;
     padding: 0;
-    margin: auto 15px auto 10px;
+    margin: auto 0 auto 10px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;

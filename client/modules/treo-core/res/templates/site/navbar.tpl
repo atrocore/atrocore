@@ -3,7 +3,9 @@
         <button type="button" class="navbar-toggle">
             <i class="ph ph-list"></i>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
+        {{#if hasLogo }}
+            <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
+        {{/if}}
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
             <button type="button" class="search-toggle pull-left visible-xs">

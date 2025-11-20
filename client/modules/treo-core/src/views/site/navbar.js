@@ -55,7 +55,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 hasJM: this.getAcl().check('Job', 'read'),
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
-                hasLocaleSwitcher: this.hasLocaleSwitcher()
+                hasLocaleSwitcher: this.hasLocaleSwitcher(),
+                hasLogo: !this.getConfig().get('disableToolbarLogo')
             }, Dep.prototype.data.call(this));
         },
 
