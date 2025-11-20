@@ -133,7 +133,7 @@
     }
 
     function openLabelDialog(field) {
-        params.opedEditLabelDialog(params.scope, field.name, (label) => {
+        params.openEditLabelDialog(params.scope, field.name, (label) => {
             selectedFields = selectedFields.map(item => {
                 if (item.name === field.name) {
                     item.label = label
