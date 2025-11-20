@@ -302,14 +302,14 @@
             await tick();
 
             $queryBuilder.find('.rule-filter-container select:not(.selectized)').selectize({
-                onFocus: function() {
+                onFocus: function () {
                     if (this.getValue() === defaultValue) {
                         this.clear();
                     }
                 },
 
-                onBlur: function() {
-                    if(!this.getValue()) {
+                onBlur: function () {
+                    if (!this.getValue()) {
                         this.setValue("-1")
                     }
                 }
@@ -393,15 +393,15 @@
             await tick();
             if (rule.$el) {
                 rule.$el.find('.rule-filter-container select:not(.selectized)').selectize({
-                    onFocus: function() {
+                    onFocus: function () {
                         if (this.getValue() === defaultValue) {
                             this.clear();
                         }
                     },
-                    onBlur: function() {
-                       if(!this.getValue()) {
-                           this.setValue("-1")
-                       }
+                    onBlur: function () {
+                        if (!this.getValue()) {
+                            this.setValue("-1")
+                        }
                     }
                 });
             }
@@ -522,13 +522,13 @@
 
             const $queryBuilder = window.$(queryBuilderElement);
             $queryBuilder.find('.rule-filter-container select').selectize({
-                onFocus: function() {
+                onFocus: function () {
                     if (this.getValue() === defaultValue) {
                         this.clear();
                     }
                 },
-                onBlur: function() {
-                    if(!this.getValue()) {
+                onBlur: function () {
+                    if (!this.getValue()) {
                         this.setValue("-1")
                     }
                 }
@@ -574,8 +574,8 @@
 
         let createFieldView = (name: string, fieldType: string, label: string, params = {}, order = 0) => {
             return new Promise((resolve) => {
-                let  view =  Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
-                if(attribute.type === 'script') {
+                let view = Metadata.get(['fields', attribute.type, 'view']) ?? `views/fields/${fieldType}`;
+                if (attribute.type === 'script') {
                     view = `views/fields/${attribute.outputType}`
                 }
                 let exitingFilter = filters.find(f => f.id === name);
@@ -593,8 +593,8 @@
                         let filter = view.createQueryBuilderFilter(attribute.type);
                         if (filter) {
                             filter.label = label;
-                            if(attribute.channelId) {
-                                filter.label += ' / '+ attribute.channelName;
+                            if (attribute.channelId) {
+                                filter.label += ' / ' + attribute.channelName;
                             }
                             filter.optgroup = Language.translate('Attributes');
                             filter.order = order;
@@ -622,10 +622,10 @@
                 let languages = referenceData['Language'] || {};
                 let i = 0;
                 Object.keys(languages || {}).forEach((lang) => {
-                   i++;
+                    i++;
                     let currentLabel = label;
                     let currentName = name + '_' + underscoreToCamelCase(lang.toLowerCase());
-                    if (languages[lang]['role'] !== 'main' ) {
+                    if (languages[lang]['role'] !== 'main') {
                         currentLabel = currentLabel + ' / ' + languages[lang]['name']
                     }
                     promises.push(createFieldView(currentName, fieldType, currentLabel, params, i));
@@ -830,6 +830,17 @@
         });
     }
 
+    function addItemToQueryBuilder(event: CustomEvent) {
+        let rules = window.$(queryBuilderElement).queryBuilder('getRules');
+        if (rules['condition'] === 'AND') {
+            rules['rules'].push(event.detail);
+        }else{
+            rules = {condition: 'AND', rules: [rules, event.detail], valid: true};
+        }
+        window.$(queryBuilderElement).queryBuilder('setRules', rules);
+        applyFilter()
+    }
+
     function copySaveSearch(item) {
         searchManager.update({queryBuilder: item.data, queryBuilderApplied: false});
         prepareFilters(() => {
@@ -839,7 +850,7 @@
                 initQueryBuilderFilter();
                 advancedFilterChecked = false;
                 let checked = get(savedSearchStore.selectedSavedItemIds);
-                if(checked.includes(item.id)){
+                if (checked.includes(item.id)) {
                     savedSearchStore.toggleSavedItemSelection(item.id);
                     checked = get(savedSearchStore.selectedSavedItemIds);
                     searchManager.update({
@@ -894,7 +905,7 @@
         let hasChanged = false;
         let cleanUpRule = (rule: Rule) => {
             if (rule.rules) {
-                let newRules: Rule[]|null = null;
+                let newRules: Rule[] | null = null;
                 for (const rulesKey in rule.rules) {
                     if (rule.rules[rulesKey].id) {
                         if (!exists(rule.rules[rulesKey].id)) {
@@ -1061,11 +1072,14 @@
             initQueryBuilderFilter();
         });
 
+        window.addEventListener('add-item-to-query-builder', addItemToQueryBuilder);
+
         return () => {
             searchManager.collection.off('filter-state:changed');
             selectBoolSub();
             selectSavedSub();
             advancedFilterCheckedSub();
+            window.removeEventListener('add-item-to-query-builder', addItemToQueryBuilder);
         }
     })
 </script>
@@ -1107,7 +1121,8 @@
     {/if}
 
     <div class="advanced-filters">
-        <FilterGroup title={editingSavedSearch ? editingSavedSearch.name : Language.translate('Advanced Filter')} bind:opened={queryBuilderOpened}>
+        <FilterGroup title={editingSavedSearch ? editingSavedSearch.name : Language.translate('Advanced Filter')}
+                     bind:opened={queryBuilderOpened}>
             <span class="icons-wrapper" slot="icons">
                 {#if !editingSavedSearch}
                 <span class="toggle" class:disabled={advancedFilterDisabled} class:active={advancedFilterChecked}
