@@ -109,6 +109,16 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             this.validationPattern = this.convertStrToRegex(patternString);
 
             this.setScriptDefaultValue();
+
+            if(this.mode === 'listLink' && this.model.id) {
+                this.events[`click a[data-id="${this.model.id}"]`] = function (e) {
+                    if(this.model.get('deleted')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.notify(this.translate('notPossibleToOpenDetailView', 'messages'), 'error');
+                    }
+                }
+            }
         },
 
         setupSearch: function () {
