@@ -88,7 +88,8 @@
     "relationships": "Relaciones",
     "kanban": "Kanban",
     "leftSidebar": "Vista lateral izquierda",
-    "upload": "Subir"
+    "upload": "Subir",
+    "selection": "Selección"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
