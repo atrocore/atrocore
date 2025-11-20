@@ -13,6 +13,7 @@
     export let isCollapsed: boolean = false;
     export let records: Item[];
     export let selectedIds: string[];
+    export let selectionViewMode: string = 'standard'
 
     export let onItemClicked: Function = (id: string) => {
     };
@@ -43,6 +44,10 @@
 
     export  function setSelectedIds(ids: string[]) {
         selectedIds = ids;
+    }
+
+    export  function setSelectionViewMode(value: string[]) {
+        selectionViewMode = value;
     }
 
     export function setRecords(value: Item[]) {
@@ -103,14 +108,16 @@
             <div>
                 <div class="title">
                     <span class="title">{entityType}</span>
-                    <button class="small filter-button"  on:click={() => handledSelectAllButton(entityType)}>{ hasSelectedByType[entityType] ? Language.translate('unselectAll') : Language.translate('selectAll')}</button>
+                    {#if selectionViewMode !== 'standard'}
+                        <button class="small filter-button"  on:click={() => handledSelectAllButton(entityType)}>{ hasSelectedByType[entityType] ? Language.translate('unselectAll') : Language.translate('selectAll')}</button>
+                    {/if}
                 </div>
 
                 <ul>
                     {#each data[entityType] as record }
                         <li title="{record.name}">
                             <a href="#{record.entityType}/view/{record.id}" target="_blank" on:click={(e) => { onItemClicked(e, record.id) }}
-                               class:active="{selectedIds.includes(record.id)}">{record.name}</a>
+                               class:active="{selectionViewMode !== 'standard' && selectedIds.includes(record.id)}">{record.name}</a>
                         </li>
                     {/each}
                 </ul>

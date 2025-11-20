@@ -91,8 +91,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.listenTo(collection, 'sync', () => {
                     if (this.selectionViewMode === 'standard' && window.leftSidePanel) {
                         window.leftSidePanel.setRecords(this.getRecordForPanels());
-                        this.selectedIds = [];
-                        window.leftSidePanel.setSelectedIds([]);
                     }
 
                     if (collection.models.length > 1) {
@@ -167,6 +165,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.updateUrl(data.name);
+
+            if ( window.leftSidePanel) {
+                window.leftSidePanel.setSelectionViewMode(data.name);
+            }
 
             // if we change from compare to merge or vis-versa
             if (['compare', 'merge'].includes(this.selectionViewMode) && ['compare', 'merge'].includes(data.name)) {
@@ -490,7 +492,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 props: {
                     records: this.getRecordForPanels(),
                     selectedIds: this.selectedIds,
+                    selectionViewMode: this.selectionViewMode,
                     onItemClicked: (e, itemId) => {
+                        if(this.selectionViewMode === 'standard') {
+                            return;
+                        }
                         e.preventDefault();
 
                         if(this.toggleSelected(itemId)){
