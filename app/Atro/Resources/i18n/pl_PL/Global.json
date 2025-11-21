@@ -495,7 +495,8 @@
     "splitVertical": "Podział pionowy",
     "unselectAll": "Odznacz wszystko",
     "splitHorizontal": "Podział w poziomie",
-    "expandWindow": "Proszę rozwinąć okno"
+    "expandWindow": "Proszę rozwinąć okno",
+    "matchings": "Dopasowania"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -744,7 +745,9 @@
     "entity": "Encja",
     "created": "Utworzony",
     "modified": "Zmodyfikowany",
-    "sorting": "Sort Order"
+    "sorting": "Sort Order",
+    "goldenRecord": "Złota płyta",
+    "sourceRecords": "Zapisy źródłowe"
   },
   "dashlets": {
     "Stream": "Aktywności",
