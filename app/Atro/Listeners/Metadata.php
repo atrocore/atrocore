@@ -2158,6 +2158,34 @@ class Metadata extends AbstractListener
             return;
         }
 
+        foreach ($this->getConfig()->get('referenceData.Matching') ?? [] as $code => $matching) {
+            if (empty($matching['type'])) {
+                continue;
+            }
+
+            if ($matching['type'] === 'masterRecord') {
+                $data['entityDefs'][$matching['sourceEntity']]['fields']['goldenRecord'] = [
+                    'type' => 'link',
+                ];
+                $data['entityDefs'][$matching['sourceEntity']]['links']['goldenRecord'] = [
+                    'type'    => 'belongsTo',
+                    'foreign' => 'recordSources',
+                    'entity'  => $matching['masterEntity'],
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['fields']['recordSources'] = [
+                    'type'   => 'linkMultiple',
+                    'noLoad' => true,
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['links']['recordSources'] = [
+                    'type'    => 'hasMany',
+                    'foreign' => 'goldenRecord',
+                    'entity'  => $matching['sourceEntity'],
+                ];
+            }
+        }
+
         return;
 
         // set matching rules types

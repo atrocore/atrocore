@@ -58,10 +58,9 @@ class Matching extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isAttributeChanged('code')) {
+        if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
             $this->rebuild();
         }
-
 //        $this->unmarkAllMatchingSearched($entity);
     }
 
@@ -211,7 +210,13 @@ class Matching extends ReferenceData
 
     protected function rebuild(): void
     {
-        (new \Atro\Core\Application())->getContainer()->get('dataManager')->rebuild();
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => "Rebuild database",
+            'type'     => 'Rebuild',
+            'priority' => 800,
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 
     protected function init()

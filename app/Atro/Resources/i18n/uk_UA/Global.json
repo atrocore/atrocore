@@ -639,6 +639,8 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "goldenRecord": "Золотий запис",
+    "recordSources": "Джерела запису",
     "classifications": "Класифікації",
     "classification": "Класифікація",
     "status": "Статус",

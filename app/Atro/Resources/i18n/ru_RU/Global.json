@@ -636,6 +636,8 @@
     "cancel": "Отмена"
   },
   "fields": {
+    "goldenRecord": "Золотая запись",
+    "recordSources": "Источники записи",
     "status": "Статус",
     "folderPath": "Путь папки",
     "connection": "Соединение",

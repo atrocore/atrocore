@@ -644,6 +644,8 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "goldenRecord": "Golden Record",
+    "recordSources": "Record Sources",
     "routes": "Route(s)",
     "width": "Width",
     "height": "Height",
