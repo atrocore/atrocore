@@ -194,6 +194,7 @@ class MatchedRecord extends Base
             'masterEntity'   => $matching->get('masterEntity'),
             'masterEntityId' => $masterId,
             'score'          => $score,
+            'matchingId'     => $matching->id,
         ]);
 
         if (!empty($exists = $this->where(['hash' => $this->createUniqHash($matchedRecord)])->findOne())) {

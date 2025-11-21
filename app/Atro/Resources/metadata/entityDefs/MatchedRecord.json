@@ -52,6 +52,11 @@
       "unique": true,
       "protected": true
     },
+    "matching": {
+      "type": "link",
+      "entity": "Matching",
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

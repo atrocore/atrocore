@@ -63,7 +63,12 @@ class Matching extends ReferenceData
         if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
             $this->rebuild();
         }
-        $this->unmarkAllMatchingSearched($entity);
+
+        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive')) {
+            if (!empty($entity->get('isActive'))) {
+                $this->unmarkAllMatchingSearched($entity);
+            }
+        }
     }
 
     protected function afterRemove(OrmEntity $entity, array $options = [])
