@@ -66,6 +66,17 @@ class Matching extends ReferenceData
         $this->unmarkAllMatchingSearched($entity);
     }
 
+    protected function afterRemove(OrmEntity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
+            if ($rule->get('matchingId') === $entity->get('id')) {
+                $this->getEntityManager()->removeEntity($rule);
+            }
+        }
+    }
+
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
     {
         if ($link === 'matchingRules') {
