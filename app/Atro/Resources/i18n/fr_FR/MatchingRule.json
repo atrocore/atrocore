@@ -6,7 +6,8 @@
     "masterEntity": "Entité maîtresse",
     "matchingRuleSet": "Fixer",
     "matchingRules": "Règles de correspondance",
-    "operator": "Opérateur"
+    "operator": "Opérateur",
+    "masterField": "Domaine principal"
   },
   "options": {
     "type": {
