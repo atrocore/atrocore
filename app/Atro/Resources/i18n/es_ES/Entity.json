@@ -39,7 +39,9 @@
     "textFilterFields": "Campos de filtro de texto",
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
-    "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación"
+    "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
+    "hasDuplicates": "Tiene duplicados",
+    "masterEntity": "Entidad principal"
   },
   "options": {
     "type": {
