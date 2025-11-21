@@ -4,6 +4,7 @@
     "namePlural": "Name Plural",
     "disabled": "Deaktiviert",
     "hasDuplicates": "Enthält Duplikate",
+    "masterEntity": "Master-Entität",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",

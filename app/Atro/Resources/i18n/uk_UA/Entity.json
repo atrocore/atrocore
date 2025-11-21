@@ -5,6 +5,7 @@
     "disabled": "Відключено",
     "customizable": "Налаштовується",
     "hasDuplicates": "Має дублікати",
+    "masterEntity": "Мастер сутність",
     "hasArchive": "Архівується",
     "hasActive": "Активується",
     "hideFieldTypeFilters": "Приховати фільтри типів полів",

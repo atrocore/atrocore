@@ -169,7 +169,9 @@
         {
           "name": "hasDuplicates"
         },
-        false
+        {
+          "name": "masterEntity"
+        }
       ]
     ]
   },

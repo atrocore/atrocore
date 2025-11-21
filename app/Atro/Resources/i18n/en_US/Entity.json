@@ -5,6 +5,7 @@
     "disabled": "Disabled",
     "customizable": "Customizable",
     "hasDuplicates": "Has Duplicates",
+    "masterEntity": "Master Entity",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
