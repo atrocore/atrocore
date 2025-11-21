@@ -8,9 +8,15 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matching-rule/fields/master-entity', 'views/matching-rule/fields/source-entity', Dep => {
+Espo.define('views/matched-record/fields/source', 'views/fields/link', Dep => {
 
     return Dep.extend({
+
+        setup() {
+            this.options.foreignScope = this.model.get('sourceEntity');
+
+            Dep.prototype.setup.call(this);
+        },
 
     });
 });

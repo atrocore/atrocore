@@ -34,7 +34,7 @@ class Contains extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('targetField'));
+        $columnName = Util::toUnderScore($this->rule->get('masterField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
@@ -46,7 +46,7 @@ class Contains extends AbstractMatchingRule
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
         $stageValue = $stageEntity->get($this->rule->get('sourceField'));
-        $masterValue = $masterEntityData[$this->rule->get('targetField')];
+        $masterValue = $masterEntityData[$this->rule->get('masterField')];
 
         if (!empty($stageValue) && !empty($masterValue) && strpos($masterValue, $stageValue) !== false) {
             return $this->rule->get('weight') ?? 0;

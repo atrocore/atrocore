@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\ReferenceData;
 use Atro\Core\Utils\Util;
@@ -26,19 +25,31 @@ use Espo\ORM\EntityCollection;
 
 class Matching extends ReferenceData
 {
+    public static function createCodeForDuplicate(string $entityName): string
+    {
+        return "$entityName-D2D";
+    }
+
+    public static function createCodeForMasterRecord(string $entityName): string
+    {
+        return "$entityName-S2M";
+    }
+
     public static function prepareFieldName(string $code): string
     {
-        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($code)));
+        $parts = explode('-', $code);
+
+        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($parts[0])));
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
-        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'bidirectional') {
-            $entity->set('stagingEntity', $entity->get('entity'));
+        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
+            $entity->set('sourceEntity', $entity->get('entity'));
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
-        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'bidirectional') {
+        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'masterRecord') {
             $entity->set('foreignName', $entity->get('name'));
         }
 
@@ -49,19 +60,25 @@ class Matching extends ReferenceData
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isAttributeChanged('code')) {
+        if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
             $this->rebuild();
         }
 
-        $this->unmarkAllMatchingSearched($entity);
+        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive')) {
+            if (!empty($entity->get('isActive'))) {
+                $this->unmarkAllMatchingSearched($entity);
+            }
+        }
     }
 
-    public function validateCode(OrmEntity $entity): void
+    protected function afterRemove(OrmEntity $entity, array $options = [])
     {
-        parent::validateCode($entity);
+        parent::afterRemove($entity, $options);
 
-        if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
-            throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
+        foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
+            if ($rule->get('matchingId') === $entity->get('id')) {
+                $this->getEntityManager()->removeEntity($rule);
+            }
         }
     }
 
@@ -121,7 +138,7 @@ class Matching extends ReferenceData
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
-            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
             ->where('id=:id')
             ->setParameter('id', $entity->id)
             ->fetchAssociative();
@@ -135,7 +152,7 @@ class Matching extends ReferenceData
 
         $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
             ->set($column, ':false')
             ->where("$column = :true")
             ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -168,8 +185,8 @@ class Matching extends ReferenceData
             'payload'  => [
                 'matchingId' => $matching->id,
                 'entityName' => $entity->getEntityName(),
-                'entityId'   => $entity->id
-            ]
+                'entityId'   => $entity->id,
+            ],
         ]);
         $this->getEntityManager()->saveEntity($jobEntity);
     }
@@ -190,7 +207,7 @@ class Matching extends ReferenceData
             ->where("{$alias}.deleted=:false")
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
-        if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
+        if ($matching->get('masterEntity') === $matching->get('sourceEntity')) {
             $qb
                 ->andWhere("{$alias}.id != :id")
                 ->setParameter('id', $entity->get('id'));
@@ -211,7 +228,13 @@ class Matching extends ReferenceData
 
     protected function rebuild(): void
     {
-        (new \Atro\Core\Application())->getContainer()->get('dataManager')->rebuild();
+        $jobEntity = $this->getEntityManager()->getEntity('Job');
+        $jobEntity->set([
+            'name'     => "Rebuild database",
+            'type'     => 'Rebuild',
+            'priority' => 800,
+        ]);
+        $this->getEntityManager()->saveEntity($jobEntity);
     }
 
     protected function init()

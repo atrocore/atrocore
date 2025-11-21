@@ -156,6 +156,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "matchings": "Matchings",
     "basic": "Basic",
     "script": "Script",
     "phpCode": "PHP Code",
@@ -648,6 +649,8 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "goldenRecord": "Golden Record",
+    "sourceRecords": "Source Records",
     "routes": "Route(s)",
     "width": "Width",
     "height": "Height",

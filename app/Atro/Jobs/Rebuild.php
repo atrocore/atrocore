@@ -1,3 +1,4 @@
+<?php
 /**
  * AtroCore Software
  *
@@ -8,15 +9,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matched-record/fields/staging', 'views/fields/link', Dep => {
+declare(strict_types=1);
 
-    return Dep.extend({
+namespace Atro\Jobs;
 
-        setup() {
-            this.options.foreignScope = this.model.get('stagingEntity');
+use Atro\Entities\Job;
 
-            Dep.prototype.setup.call(this);
-        },
-
-    });
-});
+class Rebuild extends AbstractJob implements JobInterface
+{
+    public function run(Job $job): void
+    {
+        $this->getContainer()->get('dataManager')->rebuild();
+    }
+}

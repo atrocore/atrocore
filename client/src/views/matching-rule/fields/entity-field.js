@@ -55,10 +55,10 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
 
             $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
                 if (item.id === matchingId) {
-                    if (this.name === 'targetField') {
+                    if (this.name === 'masterField') {
                         entityName = item.masterEntity;
                     } else if (this.name === 'sourceField') {
-                        entityName = item.stagingEntity;
+                        entityName = item.sourceEntity;
                     }
                 }
             })

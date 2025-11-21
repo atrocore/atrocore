@@ -2160,6 +2160,38 @@ class Metadata extends AbstractListener
             return;
         }
 
+        foreach ($this->getConfig()->get('referenceData.Matching') ?? [] as $code => $matching) {
+            if (empty($matching['type'])) {
+                continue;
+            }
+
+            if ($matching['type'] === 'masterRecord') {
+                $sourceRecords = 'sourceRecords'.$matching['sourceEntity'];
+
+                $data['entityDefs'][$matching['sourceEntity']]['fields']['goldenRecord'] = [
+                    'type'         => 'link',
+                    'customizable' => false,
+                ];
+                $data['entityDefs'][$matching['sourceEntity']]['links']['goldenRecord'] = [
+                    'type'    => 'belongsTo',
+                    'foreign' => $sourceRecords,
+                    'entity'  => $matching['masterEntity'],
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['fields'][$sourceRecords] = [
+                    'type'         => 'linkMultiple',
+                    'noLoad'       => true,
+                    'customizable' => false,
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['links'][$sourceRecords] = [
+                    'type'    => 'hasMany',
+                    'foreign' => 'goldenRecord',
+                    'entity'  => $matching['sourceEntity'],
+                ];
+            }
+        }
+
         // set matching rules types
         foreach ($data['entityDefs']['MatchingRule']['fields']['type']['options'] ?? [] as $type) {
             $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($type);
@@ -2174,7 +2206,7 @@ class Metadata extends AbstractListener
 
         foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
             $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching['code']);
-            $data['entityDefs'][$matching['stagingEntity']]['fields'][$fieldName] = [
+            $data['entityDefs'][$matching['sourceEntity']]['fields'][$fieldName] = [
                 'type'                 => 'bool',
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,
@@ -2185,22 +2217,22 @@ class Metadata extends AbstractListener
                 "emHidden"             => true
             ];
 
-            if (empty($matching['isActive'])) {
-                continue;
-            }
+//            if (empty($matching['isActive'])) {
+//                continue;
+//            }
 
-            // add right panel
-            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
-                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
-                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
-                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
-                        'name'     => 'matchedRecords',
-                        'label'    => 'matchedRecords',
-                        'view'     => 'views/record/panels/side/matchings',
-                        'aclScope' => 'MatchedRecord',
-                    ];
-                }
-            }
+//            // add right panel
+//            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
+//                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
+//                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
+//                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
+//                        'name'     => 'matchedRecords',
+//                        'label'    => 'matchedRecords',
+//                        'view'     => 'views/record/panels/side/matchings',
+//                        'aclScope' => 'MatchedRecord',
+//                    ];
+//                }
+//            }
         }
     }
 

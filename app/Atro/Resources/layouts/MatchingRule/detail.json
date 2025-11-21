@@ -33,7 +33,7 @@
       ],
       [
         {
-          "name": "stagingEntity"
+          "name": "sourceEntity"
         },
         {
           "name": "masterEntity"
@@ -44,7 +44,7 @@
           "name": "sourceField"
         },
         {
-          "name": "targetField"
+          "name": "masterField"
         }
       ]
     ]

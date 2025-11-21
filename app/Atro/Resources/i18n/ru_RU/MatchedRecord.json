@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Подходящий",
-    "staging": "Постановка",
-    "stagingEntity": "Постановочная сущность",
-    "stagingEntityId": "Идентификатор объекта постановки",
+    "source": "Источник",
+    "sourceEntity": "Источник",
+    "sourceEntityId": "Идентификатор источника",
     "master": "Мастер",
-    "masterEntity": "Главная сущность",
-    "masterEntityId": "ID основной сущности",
+    "masterEntity": "Мастер сущность",
+    "masterEntityId": "Идентификатор мастер сущности",
     "score": "Оценка",
-    "status": "Статус"
+    "hash": "Уникальный хэш"
   },
   "options": {
-    "status": {
-      "found": "Найдено",
-      "confirmed": "Подтверждено",
-      "rejected": "Отклонено"
+    "type": {
+      "duplicate": "Дубликат",
+      "masterRecord": "Мастер запись"
     }
   }
 }
