@@ -42,7 +42,8 @@
     "variables": "Variables",
     "favicon": "Favicon",
     "notificationSmtpConnection": "Conexión para notificaciones por correo electrónico",
-    "passwordRegexPattern": "Patrón Regex de contraseña"
+    "passwordRegexPattern": "Patrón Regex de contraseña",
+    "disableToolbarLogo": "Desactivar logotipo de cabecera"
   },
   "tooltips": {
     "recordsPerPage": "Número de registros a mostrar inicialmente en las vistas.",
