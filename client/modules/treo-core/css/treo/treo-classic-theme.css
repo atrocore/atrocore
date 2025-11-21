@@ -3869,6 +3869,7 @@ tbody.collapse.in {
     font-size: 14px;
     text-align: left;
     background-color: #fff;
+    color: #000;
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0;
@@ -15871,6 +15872,7 @@ select {
     -moz-appearance: none;
     appearance: none;
     padding-right: 20px !important;
+    text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 768px) {
@@ -17982,6 +17984,7 @@ span[data-img-src]::after {
     display: inline-block;
     text-align: center;
     font-size: 14px;
+    filter: brightness(0) !important;
 }
 
 .favorites-dropdown ul .favorite.active:before {
