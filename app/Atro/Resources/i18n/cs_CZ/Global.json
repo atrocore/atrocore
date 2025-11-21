@@ -599,7 +599,9 @@
     "conditionalProperties": "Podmíněné vlastnosti",
     "sorting": "Pořadí řazení",
     "associateEverything": "Přiřadit každý záznam ke každému jinému záznamu",
-    "routes": "Trasa (trasy)"
+    "routes": "Trasa (trasy)",
+    "goldenRecord": "Zlatý rekord",
+    "sourceRecords": "Zdrojové záznamy"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
