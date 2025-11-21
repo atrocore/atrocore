@@ -432,7 +432,7 @@
     "color": "Цвет",
     "editLabels": "Редактирование этикеток",
     "Duplicates": "Дубликаты",
-    "matchedRecords": "Matched Records",
+    "matchedRecords": "Сопоставленные записи",
     "noMatches": "Нет совпадений",
     "script": "Скрипт",
     "phpCode": "Код PHP",
@@ -639,10 +639,10 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Массовое обновление",
+    "update": "Обновить массово",
     "delete": "Удалить",
     "select": "Выбрать",
-    "cancel": "Отмена"
+    "cancel": "Отменить"
   },
   "fields": {
     "primaryRecord": "Первичная запись",
