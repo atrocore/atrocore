@@ -39,7 +39,9 @@
     "textFilterFields": "Champs du filtre de texte",
     "nonDuplicatableFields": "Champs non dupliqués",
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
-    "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification"
+    "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
+    "hasDuplicates": "A des doublons",
+    "masterEntity": "Entité maîtresse"
   },
   "options": {
     "type": {
