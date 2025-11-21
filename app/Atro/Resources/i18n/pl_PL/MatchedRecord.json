@@ -6,11 +6,13 @@
     "score": "Wynik",
     "source": "Źródło",
     "sourceEntityId": "Identyfikator podmiotu źródłowego",
-    "hash": "Unikalny skrót"
+    "hash": "Unikalny skrót",
+    "sourceEntity": "Źródłowa Jednostka"
   },
   "options": {
     "type": {
-      "masterRecord": "Główny rekord"
+      "masterRecord": "Główny rekord",
+      "duplicate": "Duplikat"
     }
   }
 }
