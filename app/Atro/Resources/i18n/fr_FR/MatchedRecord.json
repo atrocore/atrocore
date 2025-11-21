@@ -6,11 +6,13 @@
     "score": "Score",
     "source": "Source",
     "sourceEntityId": "ID de l'entité source",
-    "hash": "Hash unique"
+    "hash": "Hash unique",
+    "sourceEntity": "Entité source"
   },
   "options": {
     "type": {
-      "masterRecord": "Dossier principal"
+      "masterRecord": "Dossier principal",
+      "duplicate": "Duplicata"
     }
   }
 }
