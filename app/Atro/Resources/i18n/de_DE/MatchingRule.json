@@ -4,7 +4,7 @@
     "weight": "Gewicht",
     "sourceField": "Quelle Feld",
     "targetField": "Zielfeld",
-    "stagingEntity": "Staging-Entität",
+    "sourceEntity": "Quellentität",
     "masterEntity": "Master-Entität",
     "matchingRuleSet": "Setzen Sie",
     "matchingRules": "Übereinstimmungsregeln",
@@ -12,14 +12,14 @@
   },
   "options": {
     "type": {
-      "equal": "Gleichberechtigt",
-      "like": "Wie",
-      "contains": "Enthält",
-      "set": "Setzen Sie"
+      "equal": "Equal",
+      "like": "Like",
+      "contains": "Contains",
+      "set": "Set"
     },
     "operator": {
-      "and": "UND",
-      "or": "ODER"
+      "and": "AND",
+      "or": "OR"
     }
   }
 }

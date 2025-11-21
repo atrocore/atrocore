@@ -59,10 +59,10 @@
         }
       }
     },
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "varchar",
       "notStorable": true,
-      "view": "views/matching-rule/fields/staging-entity",
+      "view": "views/matching-rule/fields/source-entity",
       "readOnly": true
     },
     "masterEntity": {

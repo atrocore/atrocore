@@ -4,22 +4,22 @@
     "weight": "Вага",
     "sourceField": "Поле джерела",
     "targetField": "Цільове поле",
-    "stagingEntity": "Організаційна одиниця",
-    "masterEntity": "Головна сутність",
+    "sourceEntity": "Джерело",
+    "masterEntity": "Мастер",
     "matchingRuleSet": "Набір",
     "matchingRules": "Правила збігу",
     "operator": "Оператор"
   },
   "options": {
     "type": {
-      "equal": "Дорівнює",
-      "like": "Наприклад.",
-      "contains": "Містить",
-      "set": "Набір"
+      "equal": "Equal",
+      "like": "Like",
+      "contains": "Contains",
+      "set": "Set"
     },
     "operator": {
-      "and": "І",
-      "or": "АБО"
+      "and": "AND",
+      "or": "OR"
     }
   }
 }
