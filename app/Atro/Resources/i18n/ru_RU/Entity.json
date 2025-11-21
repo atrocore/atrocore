@@ -4,6 +4,7 @@
     "namePlural": "Имя во множественном числе",
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
+    "hasDuplicates": "Имеет дубликаты",
     "hasArchive": "Архивируемый",
     "hasActive": "Активируемый",
     "hideFieldTypeFilters": "Скрыть фильтры типов полей",
@@ -39,7 +40,6 @@
     "textFilterFields": "Поля текстового фильтра",
     "nonDuplicatableFields": "Не дублирующиеся поля",
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
-    "checkForDuplicates": "Проверьте наличие дубликатов",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически"
   },
   "options": {

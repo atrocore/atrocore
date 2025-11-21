@@ -163,7 +163,8 @@ class Entity extends ReferenceData
             'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc'
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+            'hasDuplicates'         => in_array($row['type'], ['Base', 'Hierarchy']) && !empty($this->getEntityManager()->getRepository('Matching')->getEntityByCode(Matching::createCodeForDuplicate($code))),
         ]);
     }
 
@@ -354,6 +355,25 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
+            } elseif ($field === 'hasDuplicates') {
+                $code = Matching::createCodeForDuplicate($entity->id);
+                if (!empty($entity->get($field))) {
+                    $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                    $matching->set([
+                        'name'         => "Duplicate for {$entity->id}",
+                        'code'         => $code,
+                        'type'         => 'duplicate',
+                        'minimumScore' => 100,
+                        'entity'       => $entity->id,
+                        'isActive'     => false,
+                    ]);
+                    $this->getEntityManager()->saveEntity($matching);
+                } else {
+                    $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                    if (!empty($matching)){
+                        $this->getEntityManager()->removeEntity($matching);
+                    }
+                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 

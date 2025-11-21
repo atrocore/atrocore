@@ -3,6 +3,7 @@
     "name": "Name Singular",
     "namePlural": "Name Plural",
     "disabled": "Deaktiviert",
+    "hasDuplicates": "Enthält Duplikate",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",
@@ -37,7 +38,6 @@
     "textFilterFields": "Textfilterfelder",
     "nonDuplicatableFields": "Nicht-duplizierbare Felder",
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
-    "checkForDuplicates": "Prüfung auf Duplikate",
     "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen",
     "customizable": "Anpassbar",
     "fields": "Felder"

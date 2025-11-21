@@ -469,6 +469,23 @@
         }
       }
     },
+    "hasDuplicates": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "hideFieldTypeFilters": {
       "type": "bool",
       "conditionalProperties": {
@@ -672,23 +689,6 @@
       "type": "bool",
       "view": "views/entity/fields/link-attributes-with-classification-automatically",
       "tooltip": true
-    },
-    "checkForDuplicates": {
-      "type": "bool",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            }
-          ]
-        }
-      }
     }
   },
   "links": {

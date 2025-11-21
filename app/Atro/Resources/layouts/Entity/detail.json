@@ -76,12 +76,6 @@
       ],
       [
         {
-          "name": "checkForDuplicates"
-        },
-        false
-      ],
-      [
-        {
           "name": "deleteWithoutConfirmation"
         },
         false
@@ -157,6 +151,12 @@
       [
         {
           "name": "hasAssociate"
+        },
+        false
+      ],
+      [
+        {
+          "name": "hasDuplicates"
         },
         false
       ],

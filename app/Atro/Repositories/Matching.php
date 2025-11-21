@@ -26,6 +26,11 @@ use Espo\ORM\EntityCollection;
 
 class Matching extends ReferenceData
 {
+    public static function createCodeForDuplicate(string $entityName): string
+    {
+        return "$entityName-D2D";
+    }
+
     public static function prepareFieldName(string $code): string
     {
         return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($code)));
@@ -33,12 +38,12 @@ class Matching extends ReferenceData
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
-        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'bidirectional') {
-            $entity->set('stagingEntity', $entity->get('entity'));
+        if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
+            $entity->set('sourceEntity', $entity->get('entity'));
             $entity->set('masterEntity', $entity->get('entity'));
         }
 
-        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'bidirectional') {
+        if ($entity->isAttributeChanged('name') && $entity->get('type') === 'masterRecord') {
             $entity->set('foreignName', $entity->get('name'));
         }
 
@@ -53,16 +58,7 @@ class Matching extends ReferenceData
             $this->rebuild();
         }
 
-        $this->unmarkAllMatchingSearched($entity);
-    }
-
-    public function validateCode(OrmEntity $entity): void
-    {
-        parent::validateCode($entity);
-
-        if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
-            throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
-        }
+//        $this->unmarkAllMatchingSearched($entity);
     }
 
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
@@ -168,8 +164,8 @@ class Matching extends ReferenceData
             'payload'  => [
                 'matchingId' => $matching->id,
                 'entityName' => $entity->getEntityName(),
-                'entityId'   => $entity->id
-            ]
+                'entityId'   => $entity->id,
+            ],
         ]);
         $this->getEntityManager()->saveEntity($jobEntity);
     }
