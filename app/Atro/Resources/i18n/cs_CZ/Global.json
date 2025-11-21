@@ -495,7 +495,8 @@
     "unselectAll": "Zrušit výběr všech",
     "splitHorizontal": "Horizontální rozdělení",
     "splitVertical": "Vertikální rozdělení",
-    "expandWindow": "Rozbalit okno"
+    "expandWindow": "Rozbalit okno",
+    "matchings": "Shody"
   },
   "fields": {
     "width": "Šířka",
