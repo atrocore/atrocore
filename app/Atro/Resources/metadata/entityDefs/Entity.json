@@ -469,6 +469,10 @@
         }
       }
     },
+    "matchingDisabled": {
+      "type": "bool",
+      "protected": true
+    },
     "hasDuplicates": {
       "type": "bool",
       "conditionalProperties": {
@@ -481,6 +485,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
             }
           ]
         }

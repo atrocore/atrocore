@@ -356,22 +356,24 @@ class Entity extends ReferenceData
                 }
                 $saveMetadata = true;
             } elseif ($field === 'hasDuplicates') {
-                $code = Matching::createCodeForDuplicate($entity->id);
-                if (!empty($entity->get($field))) {
-                    $matching = $this->getEntityManager()->getRepository('Matching')->get();
-                    $matching->set([
-                        'name'         => "Duplicate for {$entity->id}",
-                        'code'         => $code,
-                        'type'         => 'duplicate',
-                        'minimumScore' => 100,
-                        'entity'       => $entity->id,
-                        'isActive'     => false,
-                    ]);
-                    $this->getEntityManager()->saveEntity($matching);
-                } else {
-                    $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
-                    if (!empty($matching)){
-                        $this->getEntityManager()->removeEntity($matching);
+                if (empty($entity->get('matchingDisabled'))) {
+                    $code = Matching::createCodeForDuplicate($entity->id);
+                    if (!empty($entity->get($field))) {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                        $matching->set([
+                            'name'         => "Duplicate for {$entity->id}",
+                            'code'         => $code,
+                            'type'         => 'duplicate',
+                            'minimumScore' => 100,
+                            'entity'       => $entity->id,
+                            'isActive'     => false,
+                        ]);
+                        $this->getEntityManager()->saveEntity($matching);
+                    } else {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                        if (!empty($matching)) {
+                            $this->getEntityManager()->removeEntity($matching);
+                        }
                     }
                 }
             } else {
