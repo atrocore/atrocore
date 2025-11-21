@@ -42,7 +42,8 @@
     "favicon": "Фавикон",
     "favoritesIconsDisabled": "Отключите значки для Избранного",
     "automaticFileExtensionCorrection": "Автоматически корректируйте расширение файла",
-    "defaultStyle": "Стиль по умолчанию"
+    "defaultStyle": "Стиль по умолчанию",
+    "disableToolbarLogo": "Отключите логотип заголовка"
   },
   "tooltips": {
     "fileNameRegexPattern": "Разрешены только строчные буквы с макс. длиной 24 символа используйте \"/^[a-z]{1,24}$/\".",
