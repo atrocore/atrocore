@@ -42,7 +42,8 @@
     "onlyStableReleases": "N'utilisez que des versions stables",
     "favoritesIconsDisabled": "Désactiver les icônes pour les favoris",
     "automaticFileExtensionCorrection": "Correction automatique de l'extension de fichier",
-    "defaultStyle": "Style par défaut"
+    "defaultStyle": "Style par défaut",
+    "disableToolbarLogo": "Désactiver le logo de l'en-tête"
   },
   "tooltips": {
     "recordsPerPage": "Nombre d'enregistrements initialement affichés dans les vues en liste.",
