@@ -3,8 +3,6 @@
     "matching": "Dopasowanie",
     "weight": "Waga",
     "sourceField": "Pole źródłowe",
-    "targetField": "Pole docelowe",
-    "stagingEntity": "Podmiot etapowy",
     "masterEntity": "Podmiot główny",
     "matchingRuleSet": "Zestaw",
     "matchingRules": "Zasady dopasowywania",
