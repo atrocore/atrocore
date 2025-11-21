@@ -11,16 +11,7 @@
       "trim": true,
       "unique": true,
       "customizable": false,
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
     "type": {
       "type": "enum",
