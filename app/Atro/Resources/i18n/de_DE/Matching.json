@@ -16,5 +16,8 @@
       "duplicate": "Duplikat",
       "masterRecord": "Master Record"
     }
+  },
+  "labels": {
+    "configureMatching": "Konfigurieren Matching"
   }
 }

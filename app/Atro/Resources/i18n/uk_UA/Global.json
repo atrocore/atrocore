@@ -152,6 +152,7 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "matchings": "Відповідності",
     "selectAll": "Вибрати все",
     "contentLanguages": "Мови контенту",
     "jobManager": "Менеджер завдань",

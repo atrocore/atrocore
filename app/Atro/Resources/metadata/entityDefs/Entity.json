@@ -475,6 +475,7 @@
     },
     "hasDuplicates": {
       "type": "bool",
+      "view": "views/entity/fields/has-duplicates",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

@@ -8,27 +8,15 @@
           "name": "name"
         },
         {
-          "name": "foreignName"
-        }
-      ],
-      [
-        {
           "name": "code"
-        },
-        {
-          "name": "isActive"
         }
       ],
       [
         {
           "name": "type"
         },
-        false
-      ],
-      [
         {
-          "name": "description",
-          "fullWidth": true
+          "name": "isActive"
         }
       ],
       [
@@ -45,6 +33,18 @@
         },
         {
           "name": "masterEntity"
+        }
+      ],
+      [
+        {
+          "name": "foreignName"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
         }
       ]
     ]

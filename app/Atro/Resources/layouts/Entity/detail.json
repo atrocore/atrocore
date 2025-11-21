@@ -156,13 +156,18 @@
       ],
       [
         {
-          "name": "hasDuplicates"
+          "name": "autoDeleteAfterDays"
         },
         false
-      ],
+      ]
+    ]
+  },
+  {
+    "label": "matchings",
+    "rows": [
       [
         {
-          "name": "autoDeleteAfterDays"
+          "name": "hasDuplicates"
         },
         false
       ]
@@ -171,7 +176,7 @@
   {
     "label": "hierarchyManagement",
     "rows": [
-          [
+      [
         {
           "name": "multiParents"
         },

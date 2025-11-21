@@ -361,6 +361,7 @@ class Entity extends ReferenceData
                     if (!empty($entity->get($field))) {
                         $matching = $this->getEntityManager()->getRepository('Matching')->get();
                         $matching->set([
+                            'id'           => $code,
                             'name'         => "Duplicate for {$entity->id}",
                             'code'         => $code,
                             'type'         => 'duplicate',

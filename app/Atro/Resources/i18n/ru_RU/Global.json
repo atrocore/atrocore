@@ -54,7 +54,7 @@
     "Association": "Ассоциация",
     "AttributePanel": "Панель атрибутов",
     "MatchedRecord": "Сопоставленная запись",
-    "Matching": "Подходящий",
+    "Matching": "Соответствие",
     "ThumbnailType": "Тип миниатюры",
     "ActionLog": "Журнал действий",
     "IncomingWebhook": "Входящий Webhook",
@@ -122,7 +122,7 @@
     "HtmlSanitizer": "Санитайзеры HTML",
     "Bookmark": "Закладки",
     "MatchedRecord": "Сопоставленные записи",
-    "Matching": "Матчи",
+    "Matching": "Соответствия",
     "ThumbnailType": "Типы миниатюр",
     "ActionLog": "Журналы действий",
     "IncomingWebhook": "Входящие Webhooks",
@@ -149,6 +149,7 @@
     "Action": "Действия"
   },
   "labels": {
+    "matchings": "Соответствия",
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",
     "attachFiles": "Прикрепить файлы",
