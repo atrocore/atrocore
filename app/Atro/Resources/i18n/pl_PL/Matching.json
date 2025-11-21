@@ -9,7 +9,11 @@
   },
   "options": {
     "type": {
-      "duplicate": "Duplikat"
+      "duplicate": "Duplikat",
+      "masterRecord": "Główny rekord"
     }
+  },
+  "labels": {
+    "configureMatching": "Konfiguracja dopasowania"
   }
 }
