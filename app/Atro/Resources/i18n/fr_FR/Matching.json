@@ -4,6 +4,12 @@
     "entity": "Entité",
     "masterEntity": "Entité maîtresse",
     "matchingRules": "Règles de correspondance",
-    "matchedRecords": "Disques appariés"
+    "matchedRecords": "Disques appariés",
+    "sourceEntity": "Entité source"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplicata"
+    }
   }
 }
