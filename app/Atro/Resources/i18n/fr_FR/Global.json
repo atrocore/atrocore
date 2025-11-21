@@ -100,7 +100,8 @@
     "classification": "Classification",
     "entity": "Entité",
     "created": "Créé",
-    "url": "URL"
+    "url": "URL",
+    "goldenRecord": "Disque d'or"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -529,7 +530,8 @@
     "Activities": "Activités",
     "accessManagement": "Gestion de l'accès",
     "Attributes": "Attributs",
-    "unselectAll": "Désélectionner tout"
+    "unselectAll": "Désélectionner tout",
+    "matchings": "Matchs"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",
