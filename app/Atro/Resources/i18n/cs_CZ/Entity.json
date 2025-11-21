@@ -39,7 +39,9 @@
     "textFilterFields": "Pole textového filtru",
     "nonDuplicatableFields": "Neduplikovaná pole",
     "deleteValuesAfterUnlinkingClassification": "Odstranění hodnot atributů po zrušení propojení klasifikací",
-    "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací"
+    "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
+    "hasDuplicates": "Má duplikáty",
+    "masterEntity": "Hlavní subjekt"
   },
   "options": {
     "type": {
