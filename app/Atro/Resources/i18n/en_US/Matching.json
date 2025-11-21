@@ -2,7 +2,7 @@
   "fields": {
     "minimumScore": "Minimum Score, %",
     "entity": "Entity",
-    "stagingEntity": "Staging Entity",
+    "sourceEntity": "Source Entity",
     "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules",
     "foreignName": "Foreign Name",
@@ -10,14 +10,11 @@
   },
   "options": {
     "type": {
-      "bidirectional": "Bidirectional",
-      "unidirectional": "Unidirectional"
+      "duplicate": "Duplicate",
+      "masterRecord": "Master Record"
     }
   },
   "tooltips": {
-    "foreignName": "Name for a backward matching, e.g. 'staging' could be foreign name for 'master' matching."
-  },
-  "exceptions": {
-    "notValidCode": "Code must contain only letters, numbers, and underscores."
+    "foreignName": "Name for a backward matching, e.g. 'source' could be foreign name for 'master' matching."
   }
 }

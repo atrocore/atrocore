@@ -4,7 +4,7 @@
     "sourceEntity": "Джерело",
     "sourceEntityId": "Ідентифікатор джерела",
     "master": "Мастер",
-    "masterEntity": "Мастер сутність",
+    "masterEntity": "Мастер",
     "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
     "hash": "Унікальний хеш"

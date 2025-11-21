@@ -2,22 +2,19 @@
   "fields": {
     "minimumScore": "Минимальный балл, %",
     "entity": "Сущность",
-    "stagingEntity": "Постановочная сущность",
-    "masterEntity": "Главная сущность",
+    "sourceEntity": "Источник",
+    "masterEntity": "Мастер",
     "matchingRules": "Правила подбора",
-    "foreignName": "Иностранное имя",
-    "matchedRecords": "Matched Records"
+    "foreignName": "Обратное название",
+    "matchedRecords": "Сопоставленные записи"
   },
   "options": {
     "type": {
-      "bidirectional": "Двунаправленный",
-      "unidirectional": "Однонаправленный"
+      "duplicate": "Дубликат",
+      "masterRecord": "Мастер запись"
     }
   },
   "tooltips": {
-    "foreignName": "Имя для обратного сопоставления, например, 'staging' может быть иностранным именем для сопоставления с 'master'."
-  },
-  "exceptions": {
-    "notValidCode": "Код должен содержать только буквы, цифры и символы подчеркивания."
+    "foreignName": "Имя для обратного сопоставления, например, 'source' может быть иностранным именем для сопоставления с 'master'."
   }
 }

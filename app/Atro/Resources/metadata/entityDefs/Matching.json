@@ -17,19 +17,10 @@
       "type": "enum",
       "required": true,
       "options": [
-        "bidirectional",
-        "unidirectional"
+        "duplicate",
+        "masterRecord"
       ],
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
     "description": {
       "type": "text"
@@ -45,22 +36,14 @@
       "type": "varchar",
       "trim": true,
       "tooltip": true,
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
+              "value": "masterRecord"
             }
           ]
         }
@@ -69,46 +52,30 @@
     "entity": {
       "type": "varchar",
       "view": "views/matching/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "bidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "bidirectional"
+              "value": "duplicate"
             }
           ]
         }
       }
     },
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "varchar",
       "view": "views/matching/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
+              "value": "masterRecord"
             }
           ]
         }
@@ -117,22 +84,14 @@
     "masterEntity": {
       "type": "varchar",
       "view": "views/matching/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
+              "value": "masterRecord"
             }
           ]
         }
