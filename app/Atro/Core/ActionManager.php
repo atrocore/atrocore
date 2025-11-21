@@ -58,8 +58,11 @@ class ActionManager
                 'where'        => $input->where,
             ];
 
-            if (property_exists($input, 'actionSetLinkerId')) {
-                $data['actionSetLinkerId'] = $input->actionSetLinkerId;
+            unset($input->where);
+            foreach ($input as $key => $value) {
+                if (!in_array($key, ['massAction', 'actionId'])) {
+                    $data[$key] = $value;
+                }
             }
 
             $params = [
@@ -68,15 +71,15 @@ class ActionManager
                     'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
                 'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
                 'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
-                'where'              => json_decode(json_encode($input->where), true),
+                'where'              => json_decode(json_encode($data['where']), true),
                 'additionalJobData'  => $data,
             ];
 
             $this->getServiceFactory()->create($action->get('sourceEntity'))->executeMassAction($params,
-                function ($id) use ($action) {
-                    $input = new \stdClass();
-                    $input->entityId = $id;
-                    $this->executeNow($action, $input);
+                function ($id) use ($action, $input) {
+                    $newInput = clone $input;
+                    $newInput->entityId = $id;
+                    $this->executeNow($action, $newInput);
                 });
 
             return true;

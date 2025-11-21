@@ -612,9 +612,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.executeDynamicMassActionRequest(data)
         },
 
-        executeDynamicMassActionRequest(data) {
+        executeDynamicMassActionRequest(data, callback) {
             let requestData = {
-                actionId: data.id
+                actionId: data.id,
+                ...(data.requestData || {})
             };
 
             if (this.allResultIsChecked) {
@@ -639,6 +640,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.notify(response.message, 'error');
                     }
                     this.collection.fetch();
+                }
+                if (callback) {
+                    callback()
                 }
             });
         },
@@ -875,7 +879,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.getModelFactory().create('Selection', (selectionModel) => {
                     selectionModel.set(result);
                     this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
-                    this.getRouter().dispatch('Selection', 'view', {model: selectionModel})
+                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
                 });
             });
         },
