@@ -9,7 +9,8 @@
   },
   "options": {
     "type": {
-      "masterRecord": "Registro maestro"
+      "masterRecord": "Registro maestro",
+      "duplicate": "Duplicar"
     }
   },
   "labels": {
