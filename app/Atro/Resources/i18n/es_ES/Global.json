@@ -495,7 +495,8 @@
     "unselectAll": "Deseleccionar todo",
     "splitHorizontal": "Dividir horizontalmente",
     "splitVertical": "Dividir verticalmente",
-    "expandWindow": "Ampliar ventana"
+    "expandWindow": "Ampliar ventana",
+    "matchings": "Partidos"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -744,7 +745,9 @@
     "modified": "Modificado",
     "sorting": "ordenar Orden",
     "code": "Código",
-    "team": "Equipo"
+    "team": "Equipo",
+    "goldenRecord": "Disco de oro",
+    "sourceRecords": "Registros de origen"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",
