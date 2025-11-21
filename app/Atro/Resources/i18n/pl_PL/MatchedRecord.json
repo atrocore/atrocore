@@ -3,6 +3,14 @@
     "master": "Mistrzu",
     "masterEntity": "Podmiot główny",
     "masterEntityId": "Identyfikator podmiotu głównego",
-    "score": "Wynik"
+    "score": "Wynik",
+    "source": "Źródło",
+    "sourceEntityId": "Identyfikator podmiotu źródłowego",
+    "hash": "Unikalny skrót"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Główny rekord"
+    }
   }
 }
