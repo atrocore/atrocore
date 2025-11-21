@@ -3,6 +3,15 @@
     "master": "Maestro",
     "masterEntity": "Entidad principal",
     "masterEntityId": "ID de la entidad principal",
-    "score": "Puntuación"
+    "score": "Puntuación",
+    "source": "Fuente",
+    "sourceEntity": "Entidad de origen",
+    "sourceEntityId": "ID de la entidad de origen",
+    "hash": "Hash único"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Registro maestro"
+    }
   }
 }
