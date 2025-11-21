@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -41,6 +41,12 @@ class Selection extends Base
                 }
 
                 $entity->set('name', $date->format('Y-m-d H:i') . ' by ' . $user->get('name'));
+            }
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged('type')) {
+            if ($entity->get('type') === 'single' && count($this->getEntities($entity->id)) > 1) {
+                throw new BadRequest($this->getLanguage()->translate('cannotSetToSingle', 'messages', 'Selection'));
             }
         }
 

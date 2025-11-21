@@ -17,7 +17,7 @@
             {{#each columns}}
             {{#unless isFirst }}
             {{#if ../merging }}
-                <th>
+                <th >
                    <div class="center-child">
                        {{#unless ../hideCheckAll}}
                        <input type="radio" disabled="disabled" name="check-all" value="{{id}}" data-id="{{id}}">
@@ -57,15 +57,17 @@
             {{#each fieldListInGroup }}
                 <tr class="list-row {{#if  different}}danger{{/if}}" data-field="{{field}}">
                     <td class="cell " title="{{translate label scope=../../scope category='fields'}}">
-                        {{#if attributeId}}
-                        <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
-                        {{else}}
-                        {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}
-                        {{/if}}
+                       <div class="field-name">
+                           {{#if attributeId}}
+                           <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
+                           {{else}}
+                           <span>{{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}</span>
+                           {{/if}}
+                       </div>
                     </td>
                     {{#each fieldValueRows}}
                         {{#if ../../../merging}}
-                        <td>
+                        <td class="merge-radio">
                            <div class="center-child" >
                                <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
                            </div>

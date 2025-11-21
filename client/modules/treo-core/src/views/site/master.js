@@ -53,9 +53,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 const width = window.outerWidth;
                 const height = window.outerHeight;
 
-                window.open('/', '_blank',
-                    `width=${width},height=${height},left=${screenX},top=${screenY},noopener`
-                );
+                this.openWindow('/', screenX, screenY, width, height);
             },
             'click #title-bar [data-action=reload]': function () {
                 window.location.reload();
@@ -65,7 +63,23 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             },
             'click #title-bar [data-action=goForward]': function () {
                 window.history.forward();
-            }
+            },
+            'click #title-bar [data-action=splitHorizontal]': function () {
+                const workArea = this.getScreenWorkArea();
+
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
+                this.openWindow(window.location.href, workArea.screenLeft + workArea.screenWidth / 2, workArea.screenTop, workArea.screenWidth / 2, workArea.screenHeight);
+            },
+            'click #title-bar [data-action=splitVertical]': function () {
+                const workArea = this.getScreenWorkArea();
+
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth, workArea.screenHeight / 2);
+                this.openWindow(window.location.href, workArea.screenLeft, workArea.screenTop + workArea.screenHeight / 2, workArea.screenWidth, workArea.screenHeight / 2);
+            },
+            'click #title-bar [data-action=expand]': function () {
+                const workArea = this.getScreenWorkArea();
+                this.moveCurrentWindow(workArea.screenLeft, workArea.screenTop, workArea.screenWidth, workArea.screenHeight);
+            },
         },
 
         data: function () {
@@ -79,6 +93,10 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 sessionStorage.tabId = Math.random().toString(36).substr(2, 25);
             }
 
+            if (navigator.clearAppBadge) {
+                navigator.clearAppBadge();
+            }
+
             window.addEventListener('appinstalled',  () => {
                 if ('windowControlsOverlay' in navigator && !navigator.windowControlsOverlay.visible) {
                     this.createView('hideTitleModal', 'views/modals/hide-title-bar', {}, view => {
@@ -86,6 +104,46 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                     });
                 }
             });
+
+            window.navigation.addEventListener("navigatesuccess", () => {
+                this.updateNavButtons();
+            });
+
+            this.listenToOnce(this, 'remove', () => {
+                if (navigator.clearAppBadge) {
+                    navigator.clearAppBadge();
+                }
+            });
+        },
+
+        getScreenWorkArea: function () {
+            const screenLeft = window.screen.availLeft ?? 0;
+            const screenTop = window.screen.availTop ?? 0;
+            const screenWidth = window.screen.availWidth;
+            const screenHeight = window.screen.availHeight;
+
+            return {screenLeft, screenTop, screenWidth, screenHeight};
+        },
+
+        moveCurrentWindow(x, y, w, h) {
+            window.resizeTo(w, h);
+            window.moveTo(x, y);
+        },
+
+        openWindow(url, x, y, w, h) {
+            return window.open(url, "_blank", `left=${x},top=${y},width=${w},height=${h},noopener`);
+        },
+
+        updateNavButtons() {
+            if (!window.navigation || !('canGoBack' in window.navigation)) {
+                return;
+            }
+
+            const goBackBtn = $('#title-bar [data-action=goBack]');
+            const goForwardBtn = $('#title-bar [data-action=goForward]');
+
+            goBackBtn.attr('disabled', !window.navigation.canGoBack);
+            goForwardBtn.attr('disabled', !window.navigation.canGoForward);
         },
 
         getFavicon: function () {
@@ -141,6 +199,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
         },
 
         afterRender() {
+            this.updateNavButtons();
 
             let style = this.getThemeManager().getStyle();
             this.initStyleVariables(style);

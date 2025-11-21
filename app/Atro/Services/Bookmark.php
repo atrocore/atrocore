@@ -124,7 +124,8 @@ class Bookmark extends Base
                     'offset'         => $index,
                     'total'          => $collection->count(),
                     'disabled'       => false,
-                    'load_on_demand' => false
+                    'load_on_demand' => false,
+                    'scope'          => $scope
                 ];
                 $index++;
             }
@@ -162,7 +163,8 @@ class Bookmark extends Base
                     'offset'         => $offset + $key,
                     'total'          => $total,
                     'disabled'       => false,
-                    'load_on_demand' => false
+                    'load_on_demand' => false,
+                    'scope'          => $scope
                 ];
             }
         }

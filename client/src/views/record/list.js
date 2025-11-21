@@ -612,9 +612,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.executeDynamicMassActionRequest(data)
         },
 
-        executeDynamicMassActionRequest(data) {
+        executeDynamicMassActionRequest(data, callback) {
             let requestData = {
-                actionId: data.id
+                actionId: data.id,
+                ...(data.requestData || {})
             };
 
             if (this.allResultIsChecked) {
@@ -639,6 +640,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.notify(response.message, 'error');
                     }
                     this.collection.fetch();
+                }
+                if (callback) {
+                    callback()
                 }
             });
         },
@@ -872,7 +876,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.entityType,
                 entityIds: this.checkedList
             }).then(result => {
-                this.getRouter().navigate('#Selection/view/' + result.id, { trigger: true });
+                this.getModelFactory().create('Selection', (selectionModel) => {
+                    selectionModel.set(result);
+                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
+                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
+                });
             });
         },
 
@@ -956,18 +964,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityIds: this.checkedList
             }).then(result => {
                 this.loadSelectionRecordModels(result.id).then((models) => {
-                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: models,
-                        selectionId: result.id,
-                        scope: this.entityType,
-                        merging: merging
-                    }, function (dialog) {
-                        dialog.render();
-                        this.notify(false);
-                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                    })
-                })
+                    this.getModelFactory().create('Selection', (selectionModel) => {
+                        selectionModel.set(result);
+                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: models,
+                            selectionModel: selectionModel,
+                            scope: this.entityType,
+                            merging: merging
+                        }, function (dialog) {
+                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                            dialog.render();
+                        })
+                    });
+                });
             });
 
             this.notify(this.translate('Loading'))
@@ -977,7 +987,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         loadSelectionRecordModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=10`)
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`)
                     .then(result => {
                         let entityByScope = {};
                         let order = 0;

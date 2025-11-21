@@ -42,7 +42,8 @@
     "customStylesheet": "CSS",
     "reportingEnabled": "Anonyme Fehlerberichte senden",
     "currencyRates": "Werte bewerten",
-    "disableEmailDelivery": "E-Mail-Zustellung deaktivieren"
+    "disableEmailDelivery": "E-Mail-Zustellung deaktivieren",
+    "disableToolbarLogo": "Header-Logo deaktivieren"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Obergrenze für die Anzahl der Aufgaben oder Prozesse, die gleichzeitig im Hintergrund eines Servers laufen können.",

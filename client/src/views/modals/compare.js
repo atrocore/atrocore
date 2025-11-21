@@ -35,7 +35,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         fullHeight: true,
 
-        selectionId: null,
+        selectionModel: null,
 
         setup: function () {
             this.model = this.options.model;
@@ -52,7 +52,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.collection = this.options.collection ?? this.collection;
             this.models = this.options.models || this.models;
-            this.selectionId = this.options.selectionId || this.selectionId;
+            this.selectionModel = this.options.selectionModel || this.selectionModel;
 
             Modal.prototype.setup.call(this)
 
@@ -94,16 +94,16 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 }
             });
 
-            if (this.getAcl().check('Selection', 'read') && this.selectionId) {
+            if (this.getAcl().check('Selection', 'read') && this.selectionModel) {
                 this.buttonList.push({
                     name: "selectionView",
                     label: "Selection View",
                     disabled: true,
                     onClick: (dialog) => {
-                        const link = '#Selection/view/' + this.selectionId + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
+                        const link = '#Selection/view/' + this.selectionModel.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
                         this.getRouter().navigate(link, {trigger: false});
                         let options = {
-                            id: this.selectionId,
+                            id: this.selectionModel.id,
                             selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
                             models: this.getModels()
                         }
@@ -123,7 +123,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 instanceComparison: this.instanceComparison,
                 collection: this.options.collection,
                 models: this.options.models,
-                selectionId: this.options.selectionId,
+                selectionModel: this.options.selectionModel,
                 scope: this.scope,
                 merging: this.options.merging
             };

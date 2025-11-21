@@ -24,7 +24,7 @@ class AttributePanel extends ReferenceData
             return $this->getEntityManager()->getRepository('Attribute')
                 ->where(['attributePanelId' => $entity->get('id')])
                 ->order('sortOrder', 'ASC')
-                ->find();
+                ->find($selectParams);
         }
 
         return parent::findRelated($entity, $link, $selectParams);

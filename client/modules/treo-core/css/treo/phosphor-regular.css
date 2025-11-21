@@ -2,7 +2,7 @@
   font-family: "Phosphor";
   src:
     url('../../fonts/Phosphor.woff2') format("woff2"),
-    url('../../assets/fonts/Phosphor.ttf') format("truetype");
+    url('../../fonts/Phosphor.ttf') format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: block;
