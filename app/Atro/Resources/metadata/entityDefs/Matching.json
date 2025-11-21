@@ -32,23 +32,6 @@
       "max": 100,
       "default": 100
     },
-    "foreignName": {
-      "type": "varchar",
-      "trim": true,
-      "tooltip": true,
-      "protected": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "masterRecord"
-            }
-          ]
-        }
-      }
-    },
     "entity": {
       "type": "varchar",
       "view": "views/fields/entity-type",

@@ -37,12 +37,6 @@
       ],
       [
         {
-          "name": "foreignName"
-        },
-        false
-      ],
-      [
-        {
           "name": "description",
           "fullWidth": true
         }

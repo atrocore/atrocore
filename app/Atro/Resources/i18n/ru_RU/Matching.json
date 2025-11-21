@@ -5,7 +5,6 @@
     "sourceEntity": "Источник",
     "masterEntity": "Мастер",
     "matchingRules": "Правила подбора",
-    "foreignName": "Обратное название",
     "matchedRecords": "Сопоставленные записи"
   },
   "options": {
@@ -13,9 +12,6 @@
       "duplicate": "Дубликат",
       "masterRecord": "Мастер запись"
     }
-  },
-  "tooltips": {
-    "foreignName": "Имя для обратного сопоставления, например, 'source' может быть иностранным именем для сопоставления с 'master'."
   },
   "labels": {
     "configureMatching": "Настроить сопоставление"

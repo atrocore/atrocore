@@ -1,15 +1,11 @@
 {
   "fields": {
-    "foreignName": "Fremdname",
     "minimumScore": "Mindestpunktzahl, %",
     "sourceEntity": "Quellentität",
     "masterEntity": "Master-Entität",
     "matchingRules": "Übereinstimmungsregeln",
     "entity": "Entität",
     "matchedRecords": "Übereinstimmende Datensätze"
-  },
-  "tooltips": {
-    "foreignName": "Name für eine Rückwärtsübereinstimmung, z. B. könnte „Quelle“ ein Fremdname für eine „Master“-Übereinstimmung sein."
   },
   "options": {
     "type": {

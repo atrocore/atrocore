@@ -5,7 +5,6 @@
     "sourceEntity": "Джерело",
     "masterEntity": "Мастер",
     "matchingRules": "Правила збігу",
-    "foreignName": "Зворотня назва",
     "matchedRecords": "Співставлені записи"
   },
   "options": {
@@ -13,9 +12,6 @@
       "duplicate": "Дублікат",
       "masterRecord": "Мастер запис"
     }
-  },
-  "tooltips": {
-    "foreignName": "Назва для зворотного збігу, наприклад, \"джерело\" може бути зворотньою назвою для збігу \"майстер\"."
   },
   "labels": {
     "configureMatching": "Налаштувати відповідність"

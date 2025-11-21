@@ -5,7 +5,6 @@
     "sourceEntity": "Source Entity",
     "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules",
-    "foreignName": "Foreign Name",
     "matchedRecords": "Matched Records"
   },
   "options": {
@@ -13,9 +12,6 @@
       "duplicate": "Duplicate",
       "masterRecord": "Master Record"
     }
-  },
-  "tooltips": {
-    "foreignName": "Name for a backward matching, e.g. 'source' could be foreign name for 'master' matching."
   },
   "labels": {
     "configureMatching": "Configure Matching"
