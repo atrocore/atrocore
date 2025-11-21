@@ -640,7 +640,7 @@
   },
   "fields": {
     "goldenRecord": "Золотий запис",
-    "recordSources": "Джерела запису",
+    "sourceRecords": "Джерела запису",
     "classifications": "Класифікації",
     "classification": "Класифікація",
     "status": "Статус",

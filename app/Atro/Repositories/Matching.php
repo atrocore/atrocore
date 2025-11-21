@@ -37,7 +37,9 @@ class Matching extends ReferenceData
 
     public static function prepareFieldName(string $code): string
     {
-        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($code)));
+        $parts = explode('-', $code);
+
+        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($parts[0])));
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
@@ -61,7 +63,7 @@ class Matching extends ReferenceData
         if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
             $this->rebuild();
         }
-//        $this->unmarkAllMatchingSearched($entity);
+        $this->unmarkAllMatchingSearched($entity);
     }
 
     public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
@@ -120,7 +122,7 @@ class Matching extends ReferenceData
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
-            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
             ->where('id=:id')
             ->setParameter('id', $entity->id)
             ->fetchAssociative();
@@ -134,7 +136,7 @@ class Matching extends ReferenceData
 
         $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
         $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('stagingEntity')))))
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
             ->set($column, ':false')
             ->where("$column = :true")
             ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -189,7 +191,7 @@ class Matching extends ReferenceData
             ->where("{$alias}.deleted=:false")
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
-        if ($matching->get('masterEntity') === $matching->get('stagingEntity')) {
+        if ($matching->get('masterEntity') === $matching->get('sourceEntity')) {
             $qb
                 ->andWhere("{$alias}.id != :id")
                 ->setParameter('id', $entity->get('id'));

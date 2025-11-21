@@ -637,7 +637,7 @@
   },
   "fields": {
     "goldenRecord": "Золотая запись",
-    "recordSources": "Источники записи",
+    "sourceRecords": "Источники записи",
     "status": "Статус",
     "folderPath": "Путь папки",
     "connection": "Соединение",

@@ -684,7 +684,7 @@
   },
   "fields": {
     "goldenRecord": "Golden Record",
-    "recordSources": "Datensatzquellen",
+    "sourceRecords": "Quelldatensätze",
     "width": "Breite",
     "height": "Höhe",
     "action": "Aktion",
