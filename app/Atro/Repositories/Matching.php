@@ -30,6 +30,11 @@ class Matching extends ReferenceData
         return "$entityName-D2D";
     }
 
+    public static function createCodeForMasterRecord(string $entityName): string
+    {
+        return "$entityName-S2M";
+    }
+
     public static function prepareFieldName(string $code): string
     {
         return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($code)));

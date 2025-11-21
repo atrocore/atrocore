@@ -30,7 +30,7 @@ Espo.define('views/entity/fields/master-entity', 'views/fields/entity-type',
             $cell.find('.configure-matching').parent().remove();
 
             if (this.model.get(this.name)) {
-                const $link = $(`<a href="/#Matching/view/${this.model.id}-D2D" class="hidden" title="${this.translate('configureMatching', 'labels', 'Matching')}"><i class="ph ph-gear-six configure-matching"></i></a>`);
+                const $link = $(`<a href="/#Matching/view/${this.model.id}-S2M" class="hidden" title="${this.translate('configureMatching', 'labels', 'Matching')}"><i class="ph ph-gear-six configure-matching"></i></a>`);
                 if (inlineActions.size()) {
                     inlineActions.prepend($link);
                 } else {
