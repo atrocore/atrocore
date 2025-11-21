@@ -3,6 +3,15 @@
     "master": "Mistr",
     "masterEntity": "Hlavní subjekt",
     "masterEntityId": "ID hlavního subjektu",
-    "score": "Skóre"
+    "score": "Skóre",
+    "source": "Zdroj:",
+    "sourceEntity": "Zdrojový subjekt",
+    "sourceEntityId": "ID zdrojového subjektu",
+    "hash": "Jedinečný kód Hash"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Hlavní záznam"
+    }
   }
 }
