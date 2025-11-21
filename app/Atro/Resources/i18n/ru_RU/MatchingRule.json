@@ -1,6 +1,6 @@
 {
   "fields": {
-    "matching": "Подходящий",
+    "matching": "Соответствие",
     "weight": "Вес",
     "sourceField": "Поле источника",
     "masterField": "Поле мастера",
