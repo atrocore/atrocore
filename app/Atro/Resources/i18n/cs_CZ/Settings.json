@@ -42,7 +42,8 @@
     "defaultStyle": "Výchozí styl",
     "customHeadCode": "Kód hlavy",
     "customStylesheetPath": "Cesta k souboru SSS",
-    "customStylesheet": "CSS"
+    "customStylesheet": "CSS",
+    "disableToolbarLogo": "Zakázat logo v záhlaví"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Horní limit počtu úloh nebo procesů, které mohou být spuštěny současně na pozadí serveru.",
