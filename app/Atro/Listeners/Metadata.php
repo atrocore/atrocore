@@ -2165,7 +2165,8 @@ class Metadata extends AbstractListener
 
             if ($matching['type'] === 'masterRecord') {
                 $data['entityDefs'][$matching['sourceEntity']]['fields']['goldenRecord'] = [
-                    'type' => 'link',
+                    'type'         => 'link',
+                    'customizable' => false,
                 ];
                 $data['entityDefs'][$matching['sourceEntity']]['links']['goldenRecord'] = [
                     'type'    => 'belongsTo',
@@ -2174,8 +2175,9 @@ class Metadata extends AbstractListener
                 ];
 
                 $data['entityDefs'][$matching['masterEntity']]['fields']['recordSources'] = [
-                    'type'   => 'linkMultiple',
-                    'noLoad' => true,
+                    'type'         => 'linkMultiple',
+                    'noLoad'       => true,
+                    'customizable' => false,
                 ];
 
                 $data['entityDefs'][$matching['masterEntity']]['links']['recordSources'] = [
