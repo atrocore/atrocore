@@ -9,7 +9,11 @@
   },
   "options": {
     "type": {
-      "duplicate": "Duplicata"
+      "duplicate": "Duplicata",
+      "masterRecord": "Dossier principal"
     }
+  },
+  "labels": {
+    "configureMatching": "Configurer l'appariement"
   }
 }
