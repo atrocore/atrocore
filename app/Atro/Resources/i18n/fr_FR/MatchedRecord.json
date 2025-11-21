@@ -3,6 +3,14 @@
     "master": "Maître",
     "masterEntity": "Entité maîtresse",
     "masterEntityId": "ID de l'entité maître",
-    "score": "Score"
+    "score": "Score",
+    "source": "Source",
+    "sourceEntityId": "ID de l'entité source",
+    "hash": "Hash unique"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Dossier principal"
+    }
   }
 }
