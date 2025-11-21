@@ -1,20 +1,8 @@
 {
   "fields": {
-    "matching": "Dopasowanie",
-    "staging": "Inscenizacja",
-    "stagingEntity": "Podmiot etapowy",
-    "stagingEntityId": "Identyfikator podmiotu etapowego",
     "master": "Mistrzu",
     "masterEntity": "Podmiot główny",
     "masterEntityId": "Identyfikator podmiotu głównego",
-    "score": "Wynik",
-    "status": "Status"
-  },
-  "options": {
-    "status": {
-      "found": "Znaleziono",
-      "confirmed": "Potwierdzono",
-      "rejected": "Odrzucono"
-    }
+    "score": "Wynik"
   }
 }

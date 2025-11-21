@@ -1,20 +1,8 @@
 {
   "fields": {
-    "matching": "Correspondance",
-    "staging": "Mise en scène",
-    "stagingEntity": "Entité de transit",
-    "stagingEntityId": "ID de l'entité de transit",
     "master": "Maître",
     "masterEntity": "Entité maîtresse",
     "masterEntityId": "ID de l'entité maître",
-    "score": "Score",
-    "status": "Statut"
-  },
-  "options": {
-    "status": {
-      "found": "Trouvé",
-      "confirmed": "Confirmé",
-      "rejected": "Rejeté"
-    }
+    "score": "Score"
   }
 }
