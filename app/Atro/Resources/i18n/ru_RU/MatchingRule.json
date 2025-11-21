@@ -2,8 +2,8 @@
   "fields": {
     "matching": "Подходящий",
     "weight": "Вес",
-    "sourceField": "Источник Поле",
-    "targetField": "Целевое поле",
+    "sourceField": "Поле источника",
+    "masterField": "Поле мастера",
     "sourceEntity": "Источник",
     "masterEntity": "Мастер",
     "matchingRuleSet": "Набор",

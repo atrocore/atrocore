@@ -3,7 +3,7 @@
     "matching": "Matching",
     "weight": "Weight",
     "sourceField": "Source Field",
-    "targetField": "Target Field",
+    "masterField": "Master Field",
     "sourceEntity": "Source Entity",
     "masterEntity": "Master Entity",
     "matchingRuleSet": "Set",

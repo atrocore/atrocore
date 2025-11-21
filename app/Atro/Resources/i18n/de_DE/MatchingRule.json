@@ -3,7 +3,7 @@
     "matching": "Passend dazu",
     "weight": "Gewicht",
     "sourceField": "Quelle Feld",
-    "targetField": "Zielfeld",
+    "masterField": "Master Feld",
     "sourceEntity": "Quellentität",
     "masterEntity": "Master-Entität",
     "matchingRuleSet": "Setzen Sie",

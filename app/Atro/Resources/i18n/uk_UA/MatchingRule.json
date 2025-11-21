@@ -3,7 +3,7 @@
     "matching": "Відповідність",
     "weight": "Вага",
     "sourceField": "Поле джерела",
-    "targetField": "Цільове поле",
+    "masterField": "Поле мастеру",
     "sourceEntity": "Джерело",
     "masterEntity": "Мастер",
     "matchingRuleSet": "Набір",

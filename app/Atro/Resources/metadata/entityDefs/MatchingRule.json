@@ -120,7 +120,7 @@
         }
       }
     },
-    "targetField": {
+    "masterField": {
       "type": "enum",
       "view": "views/matching-rule/fields/entity-field",
       "conditionalProperties": {
