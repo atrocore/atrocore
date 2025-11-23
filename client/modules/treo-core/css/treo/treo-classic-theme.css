@@ -18764,7 +18764,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     right: -50px;
     left: -50px;
     bottom: -30px;
-    background-color: rgba(0, 0, 0, 0);
     z-index: 1000;
     background-repeat: no-repeat;
 
