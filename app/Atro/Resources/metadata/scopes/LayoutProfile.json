@@ -23,5 +23,6 @@
     "all"
   ],
   "emHidden": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

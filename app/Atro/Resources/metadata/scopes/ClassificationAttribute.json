@@ -15,5 +15,6 @@
   "hasTeam": true,
   "streamDisabled": true,
   "attributesDisabled": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

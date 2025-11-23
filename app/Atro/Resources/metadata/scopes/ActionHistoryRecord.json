@@ -29,5 +29,6 @@
   "bookmarkDisabled": true,
   "actionDisabled": true,
   "hideFieldTypeFilters": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }
