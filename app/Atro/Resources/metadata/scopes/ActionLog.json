@@ -16,5 +16,6 @@
   "disableActionHistory": true,
   "attributesDisabled": true,
   "matchingDisabled": true,
+  "mergeDisabled": true,
   "selectionDisabled": true
 }

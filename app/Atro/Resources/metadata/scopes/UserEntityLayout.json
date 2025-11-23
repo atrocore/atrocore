@@ -10,5 +10,6 @@
   "disabled": true,
   "type": "Base",
   "emHidden": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

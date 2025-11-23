@@ -4,5 +4,6 @@
   "notificationDisabled": true,
   "bookmarkDisabled": true,
   "actionDisabled": true,
+  "mergeDisabled": true,
   "selectionDisabled": true
 }

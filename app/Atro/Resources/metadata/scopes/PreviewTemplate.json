@@ -16,5 +16,6 @@
   "leftSidebarDisabled": true,
   "emHidden": true,
   "hideFieldTypeFilters": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

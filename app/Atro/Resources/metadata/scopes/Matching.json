@@ -16,5 +16,6 @@
   "bookmarkDisabled": true,
   "emHidden": true,
   "hideFieldTypeFilters": true,
-  "hasActive": true
+  "hasActive": true,
+  "selectionDisabled": true
 }

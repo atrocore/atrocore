@@ -2,5 +2,6 @@
   "acl": false,
   "streamDisabled": true,
   "notificationDisabled": true,
-  "emHidden": true
+  "emHidden": true,
+  "selectionDisabled": true
 }

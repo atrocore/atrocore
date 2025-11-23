@@ -16,5 +16,6 @@
   "aclLevelList": [
     "no",
     "all"
-  ]
+  ],
+  "selectionDisabled": true
 }

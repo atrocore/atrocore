@@ -12,5 +12,6 @@
   "duplicatableRelations": [
     "scopes"
   ],
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

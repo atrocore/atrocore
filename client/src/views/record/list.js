@@ -1096,6 +1096,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 this.removeMassAction('merge');
             }
 
+            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
+               this.removeMassAction('select');
+               this.removeMassAction('compare');
+               this.removeMassAction('merge');
+            }
+
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
                 var acl = defs.acl;
