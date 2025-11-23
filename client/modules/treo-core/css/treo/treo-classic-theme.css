@@ -18876,3 +18876,29 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .cards-container.first-steps-dashlet > .card.completed:hover {
     opacity: 1;
 }
+
+.list-container > .list > table tr td.cell > div {
+    padding: 5px;
+}
+
+.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
+    position: relative;
+    min-width: 200px;
+}
+
+.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
+    background-color: var(--field-inline-edit-color);
+}
+
+.list-container > .list > table tr td.cell >div:not(.inline-actions)  {
+    min-height: 30px;
+}
+
+.list-container > .list > table tr td.cell .inline-actions {
+    position: absolute;
+    top: -2px;
+    right: 0;
+    z-index: 1500;
+    padding: 0;
+    background-color: transparent;
+}

@@ -1300,6 +1300,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.refreshLayout()
                 })
             }
+
+
         },
 
         afterSave: function () {
@@ -2354,6 +2356,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
+                // debugger
                 this.prepareInternalLayout(internalLayout, model);
 
                 const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
@@ -2442,6 +2445,34 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var built = 0;
                 modelList.forEach(function (model) {
                     this.buildRow(i, model, function (view) {
+
+                        this.listenTo(model, 'change', () => {
+                            if ( this.inlineEditModeIsOn) {
+                                this.setIsChanged();
+                            }
+                        });
+
+                        this.listenTo(view, 'after:render', () => {
+                            var fieldInEditMode = null;
+                            for (var field in view.nestedViews) {
+                                var fieldView = view.nestedViews[field];
+                                this.listenTo(fieldView, 'edit', function (view) {
+                                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
+                                        // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
+                                    }
+                                    fieldInEditMode = view;
+                                }, this);
+
+                                this.listenTo(fieldView, 'inline-edit-on', function () {
+                                    this.inlineEditModeIsOn = true;
+                                }, this);
+                                this.listenTo(fieldView, 'inline-edit-off', function () {
+                                    this.inlineEditModeIsOn = false;
+                                    this.setIsNotChanged();
+                                }, this);
+                            }
+                        })
+
                         this.listenToOnce(view, 'after:render', () => {
                             if (!view.$el) {
                                 return;
@@ -3063,6 +3094,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }, this);
                 model.fetch({ main: true });
             }, this);
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
         },
     });
 });
