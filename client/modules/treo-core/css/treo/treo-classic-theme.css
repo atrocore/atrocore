@@ -15923,7 +15923,6 @@ select {
 }
 
 .field .metadata .checkbox-item {
-    margin-right: 10px;
     display: flex;
     align-items: center;
 }
