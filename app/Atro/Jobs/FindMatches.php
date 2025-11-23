@@ -43,7 +43,7 @@ class FindMatches extends AbstractJob implements JobInterface
             $limit = 5000;
 
             while (true) {
-                $collection = $this->getEntityManager()->getRepository($matching->get('stagingEntity'))
+                $collection = $this->getEntityManager()->getRepository($matching->get('sourceEntity'))
                     ->where([$fieldName => false])
                     ->limit($offset, $limit)
                     ->find();

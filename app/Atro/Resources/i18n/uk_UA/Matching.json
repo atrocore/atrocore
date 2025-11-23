@@ -2,22 +2,18 @@
   "fields": {
     "minimumScore": "Мінімальний бал, %.",
     "entity": "Сутність",
-    "stagingEntity": "Організаційна одиниця",
-    "masterEntity": "Головна сутність",
+    "sourceEntity": "Джерело",
+    "masterEntity": "Мастер",
     "matchingRules": "Правила збігу",
-    "foreignName": "Іноземна назва",
-    "matchedRecords": "Відповідні записи"
+    "matchedRecords": "Співставлені записи"
   },
   "options": {
     "type": {
-      "bidirectional": "Двонаправлений",
-      "unidirectional": "Односпрямований"
+      "duplicate": "Дублікат",
+      "masterRecord": "Мастер запис"
     }
   },
-  "tooltips": {
-    "foreignName": "Назва для зворотного збігу, наприклад, \"стадія\" може бути іноземною назвою для збігу \"майстер\"."
-  },
-  "exceptions": {
-    "notValidCode": "Код повинен містити лише літери, цифри та підкреслення."
+  "labels": {
+    "configureMatching": "Налаштувати відповідність"
   }
 }

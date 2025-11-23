@@ -1,23 +1,19 @@
 {
   "fields": {
-    "foreignName": "Fremdname",
     "minimumScore": "Mindestpunktzahl, %",
-    "stagingEntity": "Staging-Entität",
+    "sourceEntity": "Quellentität",
     "masterEntity": "Master-Entität",
     "matchingRules": "Übereinstimmungsregeln",
     "entity": "Entität",
     "matchedRecords": "Übereinstimmende Datensätze"
   },
-  "tooltips": {
-    "foreignName": "Name für eine Rückwärtsübereinstimmung, z. B. könnte „Staging“ ein Fremdname für eine „Master“-Übereinstimmung sein."
-  },
   "options": {
     "type": {
-      "bidirectional": "Bidirektional",
-      "unidirectional": "Unidirektional"
+      "duplicate": "Duplikat",
+      "masterRecord": "Master Record"
     }
   },
-  "exceptions": {
-    "notValidCode": "Der Code darf nur Buchstaben, Zahlen und Unterstriche enthalten."
+  "labels": {
+    "configureMatching": "Matching konfigurieren"
   }
 }

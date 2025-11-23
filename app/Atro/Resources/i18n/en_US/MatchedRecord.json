@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Matching",
-    "staging": "Staging",
-    "stagingEntity": "Staging Entity",
-    "stagingEntityId": "Staging Entity ID",
+    "source": "Source",
+    "sourceEntity": "Source Entity",
+    "sourceEntityId": "Source Entity ID",
     "master": "Master",
     "masterEntity": "Master Entity",
     "masterEntityId": "Master Entity ID",
     "score": "Score",
-    "status": "Status"
+    "hash": "Unique Hash"
   },
   "options": {
-    "status": {
-      "found": "Found",
-      "confirmed": "Confirmed",
-      "rejected": "Rejected"
+    "type": {
+      "duplicate": "Duplicate",
+      "masterRecord": "Master Record"
     }
   }
 }

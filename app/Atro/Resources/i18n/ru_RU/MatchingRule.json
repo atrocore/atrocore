@@ -2,24 +2,24 @@
   "fields": {
     "matching": "Подходящий",
     "weight": "Вес",
-    "sourceField": "Источник Поле",
-    "targetField": "Target Field",
-    "stagingEntity": "Постановочная сущность",
-    "masterEntity": "Главная сущность",
-    "matchingRuleSet": "Установите",
+    "sourceField": "Поле источника",
+    "masterField": "Поле мастера",
+    "sourceEntity": "Источник",
+    "masterEntity": "Мастер",
+    "matchingRuleSet": "Набор",
     "matchingRules": "Правила подбора",
     "operator": "Оператор"
   },
   "options": {
     "type": {
-      "equal": "Равный",
-      "like": "Например,",
-      "contains": "Содержит",
-      "set": "Установите"
+      "equal": "Equal",
+      "like": "Like",
+      "contains": "Contains",
+      "set": "Set"
     },
     "operator": {
-      "and": "И",
-      "or": "ИЛИ"
+      "and": "AND",
+      "or": "OR"
     }
   }
 }

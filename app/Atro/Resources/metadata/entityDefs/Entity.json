@@ -469,6 +469,54 @@
         }
       }
     },
+    "matchingDisabled": {
+      "type": "bool",
+      "protected": true
+    },
+    "hasDuplicates": {
+      "type": "bool",
+      "view": "views/entity/fields/has-duplicates",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
+            }
+          ]
+        }
+      }
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "view": "views/entity/fields/master-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
+            }
+          ]
+        }
+      }
+    },
     "hideFieldTypeFilters": {
       "type": "bool",
       "conditionalProperties": {
@@ -672,23 +720,6 @@
       "type": "bool",
       "view": "views/entity/fields/link-attributes-with-classification-automatically",
       "tooltip": true
-    },
-    "checkForDuplicates": {
-      "type": "bool",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            }
-          ]
-        }
-      }
     }
   },
   "links": {

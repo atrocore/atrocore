@@ -5,24 +5,18 @@
     "rows": [
       [
         {
-          "name": "matching"
-        },
-        false
-      ],
-      [
-        {
-          "name": "staging"
+          "name": "type"
         },
         {
-          "name": "master"
+          "name": "score"
         }
       ],
       [
         {
-          "name": "status"
+          "name": "source"
         },
         {
-          "name": "score"
+          "name": "master"
         }
       ]
     ]

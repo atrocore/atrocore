@@ -39,7 +39,6 @@
     "textFilterFields": "Pola filtra tekstu",
     "nonDuplicatableFields": "Pola niepowielone",
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
-    "checkForDuplicates": "Proszę sprawdzić duplikaty",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją"
   },
   "options": {

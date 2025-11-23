@@ -103,14 +103,14 @@ class MatchingManager
 
             if ($matching->get('masterEntity') === $entity->getEntityName()) {
                 $fields = [];
-                $this->collectAllMatchingFields($matching->get('matchingRules'), 'targetField', $fields);
+                $this->collectAllMatchingFields($matching->get('matchingRules'), 'masterField', $fields);
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
                         $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
                         break;
                     }
                 }
-            } elseif ($matching->get('stagingEntity') === $entity->getEntityName()) {
+            } elseif ($matching->get('sourceEntity') === $entity->getEntityName()) {
                 $fields = [];
                 $this->collectAllMatchingFields($matching->get('matchingRules'), 'sourceField', $fields);
                 foreach ($fields as $field) {
@@ -157,7 +157,7 @@ class MatchingManager
                     ->createMatchedRecord($matching, $entity->id, $row['id'], $percentageScore);
             }
 
-            if ($matching->get('type') === 'bidirectional') {
+            if ($matching->get('type') === 'duplicate') {
                 $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id']);
             }
         }

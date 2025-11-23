@@ -510,8 +510,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         e.preventDefault();
 
                         if (this.toggleSelected(itemId)) {
-                            this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
+                            this.setupRecord();
                         }
                     },
                     onSelectAll: (entityType) => {
@@ -525,8 +525,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         });
 
                         if (shouldReload) {
-                            this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
+                            this.setupRecord();
                         }
                     },
                     onUnSelectAll: (entityType) => {
@@ -540,8 +540,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         });
 
                         if (shouldReload) {
-                            this.setupRecord();
                             window.leftSidePanel.setSelectedIds(this.selectedIds);
+                            this.setupRecord();
                         }
                     }
                 }
@@ -573,7 +573,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         toggleSelected(itemId) {
             if (this.selectedIds.includes(itemId)) {
                 if (this.selectedIds.length === 2) {
-                    this.notify(this.translate('minimumRecordForComparison', 'messages'));
+                    this.notify(this.translate('minimumRecordForComparison', 'messages').replace('{count}', 2));
                     return;
                 }
                 this.selectedIds = this.selectedIds.filter(id => id !== itemId);

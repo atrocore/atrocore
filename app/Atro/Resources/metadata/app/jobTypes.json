@@ -1,4 +1,8 @@
 {
+  "Rebuild": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\Rebuild"
+  },
   "ClearEntities": {
     "scheduledJob": true,
     "handler": "\\Atro\\Jobs\\ClearEntities"

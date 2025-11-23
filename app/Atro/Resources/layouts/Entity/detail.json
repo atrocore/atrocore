@@ -76,12 +76,6 @@
       ],
       [
         {
-          "name": "checkForDuplicates"
-        },
-        false
-      ],
-      [
-        {
           "name": "deleteWithoutConfirmation"
         },
         false
@@ -169,9 +163,22 @@
     ]
   },
   {
+    "label": "matchings",
+    "rows": [
+      [
+        {
+          "name": "hasDuplicates"
+        },
+        {
+          "name": "masterEntity"
+        }
+      ]
+    ]
+  },
+  {
     "label": "hierarchyManagement",
     "rows": [
-          [
+      [
         {
           "name": "multiParents"
         },
