@@ -239,8 +239,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
                                     value: this.models.map(m => m.id)
                                 }
                             ]
-                        })
-                        ]
+                        })]
                     ).then(results => {
                         let relationList = results[1].list;
                         let uniqueList = {};
