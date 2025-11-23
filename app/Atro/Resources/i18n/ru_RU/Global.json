@@ -53,8 +53,8 @@
     "ExtensibleEnumExtensibleEnumOption": "Список (опция \"Список\")",
     "Association": "Ассоциация",
     "AttributePanel": "Панель атрибутов",
-    "MatchedRecord": "Соответствующая запись",
-    "Matching": "Подходящий",
+    "MatchedRecord": "Сопоставленная запись",
+    "Matching": "Соответствие",
     "ThumbnailType": "Тип миниатюры",
     "ActionLog": "Журнал действий",
     "IncomingWebhook": "Входящий Webhook",
@@ -121,8 +121,8 @@
     "NotificationRule": "Правила уведомления",
     "HtmlSanitizer": "Санитайзеры HTML",
     "Bookmark": "Закладки",
-    "MatchedRecord": "Matched Records",
-    "Matching": "Матчи",
+    "MatchedRecord": "Сопоставленные записи",
+    "Matching": "Соответствия",
     "ThumbnailType": "Типы миниатюр",
     "ActionLog": "Журналы действий",
     "IncomingWebhook": "Входящие Webhooks",
@@ -149,6 +149,7 @@
     "Action": "Действия"
   },
   "labels": {
+    "matchings": "Соответствия",
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",
     "attachFiles": "Прикрепить файлы",
@@ -635,6 +636,8 @@
     "cancel": "Отмена"
   },
   "fields": {
+    "goldenRecord": "Золотая запись",
+    "sourceRecords": "Источники записи",
     "status": "Статус",
     "folderPath": "Путь папки",
     "connection": "Соединение",

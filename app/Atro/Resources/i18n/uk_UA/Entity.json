@@ -4,6 +4,8 @@
     "namePlural": "Ім'я множина",
     "disabled": "Відключено",
     "customizable": "Налаштовується",
+    "hasDuplicates": "Має дублікати",
+    "masterEntity": "Мастер сутність",
     "hasArchive": "Архівується",
     "hasActive": "Активується",
     "hideFieldTypeFilters": "Приховати фільтри типів полів",
@@ -39,8 +41,7 @@
     "hasAssociate": "має пов'язані записи",
     "nonDuplicatableFields": "Недубльовані поля",
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
-    "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
-    "checkForDuplicates": "Перевірте на наявність дублікатів"
+    "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації"
   },
   "options": {
     "type": {

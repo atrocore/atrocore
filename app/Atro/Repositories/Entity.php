@@ -153,7 +153,7 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        return array_merge($row, [
+        $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
             'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
@@ -163,8 +163,28 @@ class Entity extends ReferenceData
             'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc'
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
         ]);
+
+        if (in_array($row['type'], ['Base', 'Hierarchy'])) {
+            $duplicateMatching = $this
+                ->getEntityManager()
+                ->getRepository('Matching')
+                ->getEntityByCode(Matching::createCodeForDuplicate($code));
+
+            $res['hasDuplicates'] = !empty($duplicateMatching);
+
+            $masterEntityMatching = $this
+                ->getEntityManager()
+                ->getRepository('Matching')
+                ->getEntityByCode(Matching::createCodeForMasterRecord($code));
+
+            if (!empty($masterEntityMatching)) {
+                $res['masterEntity'] = $masterEntityMatching->get('masterEntity');
+            }
+        }
+
+        return $res;
     }
 
     protected function getAllItems(array $params = []): array
@@ -354,6 +374,51 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
+            } elseif ($field === 'hasDuplicates') {
+                if (empty($entity->get('matchingDisabled'))) {
+                    $code = Matching::createCodeForDuplicate($entity->id);
+                    if (!empty($entity->get($field))) {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                        $matching->set([
+                            'id'           => $code,
+                            'name'         => "Duplicate for {$entity->id}",
+                            'code'         => $code,
+                            'type'         => 'duplicate',
+                            'minimumScore' => 100,
+                            'entity'       => $entity->id,
+                            'isActive'     => false,
+                        ]);
+                        $this->getEntityManager()->saveEntity($matching);
+                    } else {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                        if (!empty($matching)) {
+                            $this->getEntityManager()->removeEntity($matching);
+                        }
+                    }
+                }
+            } elseif ($field === 'masterEntity') {
+                if (empty($entity->get('matchingDisabled'))) {
+                    $code = Matching::createCodeForMasterRecord($entity->id);
+                    if (!empty($masterEntity = $entity->get($field))) {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                        $matching->set([
+                            'id'           => $code,
+                            'name'         => "Master Record for {$entity->id}",
+                            'code'         => $code,
+                            'type'         => 'masterRecord',
+                            'minimumScore' => 100,
+                            'sourceEntity' => $entity->id,
+                            'masterEntity' => $masterEntity,
+                            'isActive'     => false,
+                        ]);
+                        $this->getEntityManager()->saveEntity($matching);
+                    } else {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                        if (!empty($matching)) {
+                            $this->getEntityManager()->removeEntity($matching);
+                        }
+                    }
+                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 

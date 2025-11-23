@@ -1,6 +1,8 @@
 {
   "iconClass": "shuffle",
   "controller": "controllers/record",
+  "acl": "acl/matching",
+  "createDisabled": true,
   "relationshipPanels": {
     "matchingRules": {
       "select": false,

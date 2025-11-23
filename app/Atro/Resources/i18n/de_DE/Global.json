@@ -152,6 +152,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "matchings": "Matchings",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
@@ -461,7 +462,7 @@
     "reloadPage": "Seite neu laden",
     "splitHorizontal": "Horizontal teilen",
     "splitVertical": "Vertikal teilen",
-    "expand": "Fenster erweitern",
+    "expandWindow": "Fenster erweitern",
     "Compare": "Vergleichen",
     "Standard": "Standard",
     "addItem": "Entität hinzufügen",
@@ -687,6 +688,8 @@
     "select": "Wählen"
   },
   "fields": {
+    "goldenRecord": "Golden Record",
+    "sourceRecords": "Quelldatensätze",
     "width": "Breite",
     "height": "Höhe",
     "action": "Aktion",

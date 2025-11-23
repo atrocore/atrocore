@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Відповідність",
-    "staging": "Постановка",
-    "stagingEntity": "Організаційна одиниця",
-    "stagingEntityId": "Ідентифікатор організації-постановника",
-    "master": "Магістр",
-    "masterEntity": "Головна сутність",
-    "masterEntityId": "Ідентифікатор основної сутності",
+    "source": "Джерело",
+    "sourceEntity": "Джерело",
+    "sourceEntityId": "Ідентифікатор джерела",
+    "master": "Мастер",
+    "masterEntity": "Мастер",
+    "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
-    "status": "Статус"
+    "hash": "Унікальний хеш"
   },
   "options": {
-    "status": {
-      "found": "Знайдено",
-      "confirmed": "Підтверджено.",
-      "rejected": "Відхилено"
+    "type": {
+      "duplicate": "Дублікат",
+      "masterRecord": "Мастер запис"
     }
   }
 }

@@ -1,15 +1,13 @@
 [
   {
-    "name": "matching"
+    "name": "type",
+    "link": true
   },
   {
-    "name": "staging"
+    "name": "source"
   },
   {
     "name": "master"
-  },
-  {
-    "name": "status"
   },
   {
     "name": "score"

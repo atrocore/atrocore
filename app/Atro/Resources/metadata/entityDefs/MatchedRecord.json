@@ -1,24 +1,28 @@
 {
   "fields": {
-    "matching": {
-      "type": "link",
-      "entity": "Matching",
+    "type": {
+      "type": "enum",
+      "options": [
+        "duplicate",
+        "masterRecord"
+      ],
+      "required": true,
       "protected": true
     },
-    "staging": {
+    "source": {
       "type": "link",
       "notStorable": true,
-      "view": "views/matched-record/fields/staging",
+      "view": "views/matched-record/fields/source",
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "varchar",
       "view": "views/matching/fields/entity-type",
       "protected": true
     },
-    "stagingEntityId": {
+    "sourceEntityId": {
       "type": "varchar",
       "protected": true
     },
@@ -43,20 +47,15 @@
       "type": "int",
       "protected": true
     },
-    "status": {
-      "type": "enum",
-      "options": [
-        "found",
-        "confirmed",
-        "rejected"
-      ]
-    },
     "hash": {
       "type": "varchar",
       "unique": true,
-      "protected": true,
-      "filterDisabled": true,
-      "massUpdateDisabled": true
+      "protected": true
+    },
+    "matching": {
+      "type": "link",
+      "entity": "Matching",
+      "protected": true
     },
     "createdAt": {
       "type": "datetime",
@@ -92,23 +91,18 @@
     "asc": false
   },
   "indexes": {
-    "matchingId": {
-      "columns": [
-        "matchingId"
-      ]
-    },
     "stagingEntity": {
       "columns": [
-        "matchingId",
-        "stagingEntity",
-        "stagingEntityId"
+        "type",
+        "sourceEntity",
+        "sourceEntityId"
       ]
     },
     "masterEntity": {
       "columns": [
-        "matchingId",
+        "type",
         "masterEntity",
-        "matchingId"
+        "masterEntityId"
       ]
     }
   }

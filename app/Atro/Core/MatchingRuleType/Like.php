@@ -34,7 +34,7 @@ class Like extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('targetField'));
+        $columnName = Util::toUnderScore($this->rule->get('masterField'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
@@ -46,7 +46,7 @@ class Like extends AbstractMatchingRule
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
         $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField')))));
-        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('targetField')])));
+        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('masterField')])));
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;

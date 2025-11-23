@@ -39,7 +39,6 @@
     "textFilterFields": "Campos de filtro de texto",
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
-    "checkForDuplicates": "Comprobar si hay duplicados",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación"
   },
   "options": {

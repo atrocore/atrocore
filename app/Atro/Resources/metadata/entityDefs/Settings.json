@@ -226,6 +226,10 @@
       "layoutMassUpdateDisabled": true,
       "filterDisabled": true,
       "noLoad": true
+    },
+    "disableToolbarLogo": {
+      "type": "bool",
+      "default": false
     }
   },
   "links": {

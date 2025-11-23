@@ -11,34 +11,16 @@
       "trim": true,
       "unique": true,
       "customizable": false,
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
     "type": {
       "type": "enum",
       "required": true,
       "options": [
-        "bidirectional",
-        "unidirectional"
+        "duplicate",
+        "masterRecord"
       ],
-      "conditionalProperties": {
-        "protected": {
-          "conditionGroup": [
-            {
-              "type": "isNotEmpty",
-              "attribute": "id"
-            }
-          ]
-        }
-      }
+      "protected": true
     },
     "description": {
       "type": "text"
@@ -50,74 +32,33 @@
       "max": 100,
       "default": 100
     },
-    "foreignName": {
-      "type": "varchar",
-      "trim": true,
-      "tooltip": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        }
-      }
-    },
     "entity": {
       "type": "varchar",
-      "view": "views/matching/fields/entity-type",
+      "view": "views/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "bidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "bidirectional"
+              "value": "duplicate"
             }
           ]
         }
       }
     },
-    "stagingEntity": {
+    "sourceEntity": {
       "type": "varchar",
-      "view": "views/matching/fields/entity-type",
+      "view": "views/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
+              "value": "masterRecord"
             }
           ]
         }
@@ -125,23 +66,15 @@
     },
     "masterEntity": {
       "type": "varchar",
-      "view": "views/matching/fields/entity-type",
+      "view": "views/fields/entity-type",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
             {
               "type": "equals",
               "attribute": "type",
-              "value": "unidirectional"
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "unidirectional"
+              "value": "masterRecord"
             }
           ]
         }
