@@ -1307,9 +1307,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.trigger('edit', this);
             this.setMode('edit');
-            //
+
             this.initialAttributes = this.model.getClonedAttributes();
-            //
+
             if(this.isListView()) {
                 let width = this.getCellElement().get(0).getBoundingClientRect().width;
 
@@ -1322,7 +1322,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.addInlineEditLinks();
                 this.initSaveAfterOutsideClick();
             }, this);
-            //
+
             this.inlineEditModeIsOn = true;
             this.reRender(true);
             this.trigger('inline-edit-on');
