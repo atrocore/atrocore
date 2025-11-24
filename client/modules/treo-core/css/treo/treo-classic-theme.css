@@ -10677,13 +10677,18 @@ td.cell > textarea:focus {
 .cell[data-mode=edit] > .field > .field-value-container,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
-.record > .edit .cell > .field > .field-value-container {
+.record > .edit .cell > .field > .field-value-container,
+td.cell[data-mode=edit] > input[type=checkbox]:not([disabled]),
+td.cell[data-mode=edit] > input[type=radio]:not([disabled]),
+td.cell[data-mode=edit] > .field-value-container {
     margin: 0 10px;
     line-height: inherit;
 }
 
 .cell > .field .form-control,
-.cell > .field .selectize-input {
+.cell > .field .selectize-input,
+td.cell  .form-control,
+td.cell  .selectize-input{
     border-left: 0;
     border-right: 0;
     margin-bottom: 0;
@@ -10703,11 +10708,13 @@ td.cell .input-group > .input-group-btn button{
     border-radius: 0;
 }
 
-.cell > .field > .input-group > .input-group-btn button:hover {
+.cell > .field > .input-group > .input-group-btn button:hover,
+td.cell > .input-group > .input-group-btn button:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
 
-.cell > .field > .input-group > .input-group-btn button:active {
+.cell > .field > .input-group > .input-group-btn button:active,
+td.cell > .input-group > .input-group-btn button:active {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -18918,11 +18925,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: absolute;
     top: -2px;
     left: 0;
-    z-index: 1000;
+    z-index: 100;
     padding: 0;
     background-color: transparent;
 }
 
 .list-container > .list > table tr td.cell .form-control.selectize-control {
     min-width: 0;
+}
+
+.modal-body > div > .list > table td.cell:first-child .inline-actions {
+    left: 10px;
 }
