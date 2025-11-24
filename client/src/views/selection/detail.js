@@ -416,7 +416,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         actionAddItem() {
-            if (this.model.get('type') === 'single') {
+            if (this.model.get('type') === 'single' && this.getEntityTypes().length > 0) {
                 let foreignScope = this.getEntityTypes()[0];
                 let viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
                 this.notify('Loading...');
