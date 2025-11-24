@@ -2356,7 +2356,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
-                // debugger
                 this.prepareInternalLayout(internalLayout, model);
 
                 const entityDisabled = this.getMetadata().get(['scopes', model.name, 'disabled'])
@@ -3084,8 +3083,12 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.isChanged = false;
             this.setConfirmLeaveOut(false);
         },
+
         initListenToInlineMode(view) {
-            debugger
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+
+
+
             this.listenTo(view.model, 'change', () => {
                 if ( this.inlineEditModeIsOn) {
                     this.setIsChanged();
@@ -3094,9 +3097,19 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             this.listenTo(view, 'after:render', () => {
 
-                var fieldInEditMode = null;
-                for (var field in view.nestedViews) {
-                    var fieldView = view.nestedViews[field];
+                let fieldInEditMode = null;
+                for (let field in view.nestedViews) {
+                    let fieldView = view.nestedViews[field];
+
+                    if(typeof fieldView.setReadOnly !== 'function') {
+                        continue;
+                    }
+
+                    if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
+                        fieldView.setReadOnly(true);
+                        fieldView.reRender();
+                    }
+
                     this.listenTo(fieldView, 'edit', function (view) {
                         if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
                             // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.

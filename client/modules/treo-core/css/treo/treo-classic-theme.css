@@ -18886,19 +18886,27 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-width: 200px;
 }
 
-.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
+.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list > table tr td.cell >div:not(.inline-actions)  {
+.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group)  {
     min-height: 30px;
 }
 
 .list-container > .list > table tr td.cell .inline-actions {
     position: absolute;
-    top: -2px;
-    right: 0;
+    top: -3px;
+    left: 0;
     z-index: 1500;
     padding: 0;
     background-color: transparent;
+}
+
+.list-container > .list > table tr td.cell .form-control.selectize-control {
+    min-width: 0;
+}
+
+.list-container > .list > table tr td.cell .form-control.selectize-control .selectize-input {
+    background-color: #fff;
 }

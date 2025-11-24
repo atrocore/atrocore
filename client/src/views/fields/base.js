@@ -339,7 +339,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.toggleRequiredMarker();
 
                 if (this.readOnly) {
-                    // debugger
                     this.getCellElement().attr('data-readonly', 'true');
                 } else {
                     this.getCellElement().removeAttr('data-readonly');
@@ -1314,6 +1313,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 let width = this.getCellElement().get(0).getBoundingClientRect().width;
 
                 this.getCellElement().css('width', width+'px')
+                this.getCellElement().css('min-width', width+'px')
+                this.getCellElement().css('max-width', width+'px')
             }
             this.once('after:render', function () {
                 this.inlineEditFocusing();
@@ -1752,7 +1753,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isListView() {
-            return this.getRecordView()?.type === 'list';
+            return ['list', 'listLink'].includes(this.initialMode)
         }
 
     });
