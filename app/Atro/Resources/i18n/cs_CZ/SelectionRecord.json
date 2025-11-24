@@ -3,5 +3,8 @@
     "name": "Název",
     "entityId": "Záznam",
     "entityType": "Subjekt"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Výběr zakázán pro entitu \"%s\"."
   }
 }
