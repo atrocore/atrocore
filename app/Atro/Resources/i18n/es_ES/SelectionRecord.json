@@ -3,5 +3,8 @@
     "name": "Nombre",
     "entityId": "Registre",
     "entityType": "Entidad"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Selección desactivada para la entidad '%s'."
   }
 }
