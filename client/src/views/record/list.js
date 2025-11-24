@@ -3096,7 +3096,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
             });
 
             this.listenTo(view, 'after:render', () => {
-
                 let fieldInEditMode = null;
                 for (let field in view.nestedViews) {
                     let fieldView = view.nestedViews[field];
@@ -3107,13 +3106,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
                     if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
                         fieldView.setReadOnly(true);
-                        fieldView.reRender();
                     }
 
                     this.listenTo(fieldView, 'edit', function (view) {
-                        if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                            // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
-                        }
                         fieldInEditMode = view;
                     }, this);
 

@@ -178,11 +178,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.reRender();
                 }
             }
+
+            this.getCellElement()?.attr('data-readonly', true);
         },
 
         setNotReadOnly: function () {
             if (this.readOnlyLocked) return;
             this.readOnly = false;
+            this.getCellElement()?.removeAttr('data-readonly');
         }, /**
          * Get label element. Works only after rendered.
          * {jQuery}
@@ -339,7 +342,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.toggleRequiredMarker();
 
                 if (this.readOnly) {
-                    this.getCellElement().attr('data-readonly', 'true');
+                    this.getCellElement().attr('data-readonly', true);
                 } else {
                     this.getCellElement().removeAttr('data-readonly');
                 }

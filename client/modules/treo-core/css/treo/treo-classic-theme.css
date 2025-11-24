@@ -18883,6 +18883,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-width: 200px;
 }
 
+.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
+    display: inline-block;
+}
+
 .list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
     background-color: var(--field-inline-edit-color);
 }
@@ -18895,7 +18899,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: absolute;
     top: -3px;
     left: 0;
-    z-index: 1500;
+    z-index: 100;
     padding: 0;
     background-color: transparent;
 }
