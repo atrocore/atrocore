@@ -26,6 +26,10 @@ class SelectionRecord extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
+        if($this->getMetadata()->get(['scopes', $entity->get('entityType'), 'selectionDisabled'])) {
+            throw new BadRequest(str_replace('%s', $entity->get('entityType'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionRecord')));
+        }
+
         $select = ['id'];
 
         if ($this->getMetadata()->get(['entityDefs', $entity->get('entityType'), 'fields', 'name'])) {

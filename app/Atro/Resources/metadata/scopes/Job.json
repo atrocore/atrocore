@@ -14,5 +14,6 @@
   "autoDeleteAfterDays": 21,
   "clearDeletedAfterDays": 35,
   "hideFieldTypeFilters": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }
