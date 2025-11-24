@@ -18703,14 +18703,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     max-width: 100%;
 }
 
-.compare-records .overlay {
+.compare-records .overlay, .compare-entities .overlay {
     position: absolute;
     top: 0;
-    right: -50px;
-    left: -50px;
-    bottom: -30px;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+    right: -20px;
+    left: -20px;
+    bottom: -50px;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .cards-container {
