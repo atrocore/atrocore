@@ -3,5 +3,8 @@
     "name": "Nom",
     "entityId": "Enregistrer",
     "entityType": "Entité"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Sélection désactivée pour l'entité '%s'."
   }
 }
