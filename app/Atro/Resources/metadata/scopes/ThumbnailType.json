@@ -12,5 +12,6 @@
   "notifications": false,
   "bookmarkDisabled": true,
   "openApiHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true
 }

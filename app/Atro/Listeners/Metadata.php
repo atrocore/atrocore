@@ -258,6 +258,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$relationshipEntity]['acl'] = false;
             $data['scopes'][$relationshipEntity]['streamDisabled'] = true;
             $data['scopes'][$relationshipEntity]['matchingDisabled'] = true;
+            $data['scopes'][$relationshipEntity]['selectionDisabled'] = true;
         }
     }
 

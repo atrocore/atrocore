@@ -17,5 +17,6 @@
   "attributesDisabled": true,
   "bookmarkDisabled": true,
   "matchingDisabled": true,
-  "leftSidebarDisabled": true
+  "leftSidebarDisabled": true,
+  "selectionDisabled": true
 }

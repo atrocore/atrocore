@@ -10,5 +10,6 @@
   "type": "Base",
   "object": true,
   "hideFieldTypeFilters": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

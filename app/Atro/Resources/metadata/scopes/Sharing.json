@@ -12,5 +12,6 @@
   "hideFieldTypeFilters": true,
   "bookmarkDisabled": true,
   "emHidden": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

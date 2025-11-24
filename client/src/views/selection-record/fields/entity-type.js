@@ -12,9 +12,14 @@ Espo.define('views/selection-record/fields/entity-type', 'views/fields/entity-ty
     Dep => {
         return Dep.extend({
             checkAvailability(entityType) {
-                if(!this.getAcl().check(entityType, 'read') && entityType !== this.model.get(this.name)) {
+                if (this.getMetadata().get(['scopes', entityType, 'selectionDisabled'])) {
                     return false;
                 }
+
+                if (!this.getAcl().check(entityType, 'read') && entityType !== this.model.get(this.name)) {
+                    return false;
+                }
+
                 return Dep.prototype.checkAvailability.call(this, entityType);
             },
         });

@@ -1,5 +1,6 @@
 {
   "acl": false,
   "streamDisabled": true,
-  "bookmarkDisabled": true
+  "bookmarkDisabled": true,
+  "selectionDisabled": true
 }
