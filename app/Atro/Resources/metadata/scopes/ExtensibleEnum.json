@@ -14,5 +14,6 @@
   "hasOwner": true,
   "hasAssignedUser": true,
   "hasTeam": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }
