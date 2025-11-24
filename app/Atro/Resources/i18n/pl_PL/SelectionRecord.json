@@ -3,5 +3,8 @@
     "name": "Name",
     "entityId": "Rekord",
     "entityType": "Encja"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Wybór wyłączony dla podmiotu \"%s\"."
   }
 }
