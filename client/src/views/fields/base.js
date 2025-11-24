@@ -701,7 +701,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 $cell.prepend($editLink);
             }
 
-
             const name = this.originalName || this.name;
             $cell.off(`click.on-${name}`);
             if (['detail', 'list', 'listLink'].includes(this.mode) ) {
@@ -940,7 +939,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         toggleVisibility() {
             const conditions = this.getConditions('visible');
-
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
                     this.getCellElement().show();
