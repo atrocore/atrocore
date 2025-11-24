@@ -35,7 +35,7 @@ class ExtensibleEnumOptionLayout extends AbstractLayoutListener
             }
 
             if (!$this->isAdminPage($event) && !str_contains($jsonString, ': "name"')){
-                array_unshift($result[0]['rows'][0], ['name' => 'name']);
+                array_splice($result[0]['rows'][0], 1, 0, ['name' => 'name']);
             }
 
             $event->setArgument('result', $result);
@@ -48,7 +48,7 @@ class ExtensibleEnumOptionLayout extends AbstractLayoutListener
             $result = $event->getArgument('result');
 
             if (!in_array('name', array_column($result, 'name'))) {
-                array_splice($result, 1, 0, [['name' => 'name']]);
+                array_splice($result, 2, 0, [['name' => 'name']]);
             }
 
             $event->setArgument('result', $result);
