@@ -428,7 +428,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 label.append('<sup class="status-icons"></sup>');
             }
 
-
             if (this.getCellElement().children('.inline-actions').size() === 0) {
                 this.getCellElement().prepend('<div class="pull-right inline-actions"></div>');
             }
