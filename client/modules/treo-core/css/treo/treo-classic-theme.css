@@ -18942,7 +18942,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     margin: 4px 0 0;
 }
 
-.list-container > .list > table tr td.cell:first-child {
+.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]){
     text-align: center;
     vertical-align: middle;
 }
