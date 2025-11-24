@@ -2446,32 +2446,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 modelList.forEach(function (model) {
                     this.buildRow(i, model, function (view) {
 
-                        this.listenTo(model, 'change', () => {
-                            if ( this.inlineEditModeIsOn) {
-                                this.setIsChanged();
-                            }
-                        });
-
-                        this.listenTo(view, 'after:render', () => {
-                            var fieldInEditMode = null;
-                            for (var field in view.nestedViews) {
-                                var fieldView = view.nestedViews[field];
-                                this.listenTo(fieldView, 'edit', function (view) {
-                                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
-                                        // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
-                                    }
-                                    fieldInEditMode = view;
-                                }, this);
-
-                                this.listenTo(fieldView, 'inline-edit-on', function () {
-                                    this.inlineEditModeIsOn = true;
-                                }, this);
-                                this.listenTo(fieldView, 'inline-edit-off', function () {
-                                    this.inlineEditModeIsOn = false;
-                                    this.setIsNotChanged();
-                                }, this);
-                            }
-                        })
+                        this.initListenToInlineMode(view);
 
                         this.listenToOnce(view, 'after:render', () => {
                             if (!view.$el) {
@@ -3109,5 +3084,35 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.isChanged = false;
             this.setConfirmLeaveOut(false);
         },
+        initListenToInlineMode(view) {
+            debugger
+            this.listenTo(view.model, 'change', () => {
+                if ( this.inlineEditModeIsOn) {
+                    this.setIsChanged();
+                }
+            });
+
+            this.listenTo(view, 'after:render', () => {
+
+                var fieldInEditMode = null;
+                for (var field in view.nestedViews) {
+                    var fieldView = view.nestedViews[field];
+                    this.listenTo(fieldView, 'edit', function (view) {
+                        if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
+                            // fieldInEditMode.inlineEditClose(); // if the value can't be saved the field shouldn't be closed.
+                        }
+                        fieldInEditMode = view;
+                    }, this);
+
+                    this.listenTo(fieldView, 'inline-edit-on', function () {
+                        this.inlineEditModeIsOn = true;
+                    }, this);
+                    this.listenTo(fieldView, 'inline-edit-off', function () {
+                        this.inlineEditModeIsOn = false;
+                        this.setIsNotChanged();
+                    }, this);
+                }
+            })
+        }
     });
 });
