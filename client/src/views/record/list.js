@@ -1300,8 +1300,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.refreshLayout()
                 })
             }
-
-
         },
 
         afterSave: function () {
@@ -3086,8 +3084,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         initListenToInlineMode(view) {
             let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
-
-
 
             this.listenTo(view.model, 'change', () => {
                 if ( this.inlineEditModeIsOn) {
