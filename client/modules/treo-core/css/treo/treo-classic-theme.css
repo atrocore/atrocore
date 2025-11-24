@@ -10623,8 +10623,8 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
-td.cell  :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
-td.cell :has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+td.cell:where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+td.cell:not(:first-child):has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 td.cell  > input:not([type=radio]):not([type=checkbox]),
 td.cell  .selectize-control > .selectize-input{
     background-color: var(--field-inline-edit-color);
@@ -18898,7 +18898,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 
-.list-container > .list > table tr td.cell:not([data-mode=edit]) > div {
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div , .list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]){
     padding: 5px;
 }
 
@@ -18936,4 +18936,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-body > div > .list > table td.cell:first-child .inline-actions {
     left: 10px;
+}
+
+.list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
+    margin: 4px 0 0;
+}
+
+.list-container > .list > table tr td.cell:first-child input[type="checkbox"] {
+    margin: 6px 0 0;
 }
