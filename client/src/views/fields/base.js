@@ -293,7 +293,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             this.readOnly = this.readOnly || this.name === 'id' || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.model.getFieldParam(this.name, 'inlineEditDisabled') || this.inlineEditDisabled;
-
             this.inheritanceActionDisabled = this.options.inheritanceActionDisabled || this.params.inheritanceActionDisabled || this.model.getFieldParam(this.name, 'inheritanceActionDisabled') || this.inheritanceActionDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
             this.fieldActionsDisabled = this.options.fieldActionsDisabled || this.fieldActionsDisabled;
@@ -353,7 +352,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initInlineActions();
                 this.initInheritanceActions();
             }
-
 
             if ((this.mode == 'detail' || this.mode == 'edit') && this.tooltip) {
                 const tooltipLinkValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'tooltipLink']);
