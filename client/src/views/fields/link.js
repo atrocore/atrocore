@@ -149,7 +149,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getSelectBoolFilterList: function () {
-            return this.selectBoolFilterList;
+            return Espo.Utils.cloneDeep(this.selectBoolFilterList);
         },
 
         getSelectPrimaryFilterName: function () {
@@ -161,6 +161,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.selectBoolFilterList = Espo.Utils.cloneDeep(this.selectBoolFilterList)
 
             if (this.nameName === null) {
                 this.nameName = this.name + 'Name';
@@ -1107,7 +1109,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             view.selectBoolFilterList = this.selectBoolFilterList;
             view.boolFilterData = {};
 
-            if(view.selectBoolFilterList?.length) {
+            if (view.selectBoolFilterList?.length) {
                 let boolList = this.getMetadata().get(['entityDefs', this.foreignScope, 'boolFilterList']) || [];
                 let hiddenList = this.getMetadata().get(['entityDefs', this.foreignScope, 'hiddenBoolFilterList']) || [];
                 view.selectBoolFilterList = view.selectBoolFilterList.filter((val) => boolList.includes(val) && hiddenList.includes(val))
