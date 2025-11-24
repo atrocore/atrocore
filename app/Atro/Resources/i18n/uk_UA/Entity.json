@@ -45,10 +45,11 @@
   },
   "options": {
     "type": {
-      "Base": "Base",
+      "Base": "Базова",
       "Hierarchy": "Ієрархія",
       "ReferenceData": "Довідник",
-      "Archive": "Архів"
+      "Archive": "Архів",
+      "Derivative": "Похідна"
     },
     "sortDirection": {
       "asc": "За зростанням",
