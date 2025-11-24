@@ -238,6 +238,10 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'Derivative') {
+            throw new Forbidden();
+        }
+
         if ($entity->get('type') == 'linkMultiple') {
             if (
                 ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData' && $entity->isNew())
