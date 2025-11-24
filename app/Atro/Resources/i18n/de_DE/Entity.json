@@ -41,7 +41,9 @@
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
     "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen",
     "customizable": "Anpassbar",
-    "fields": "Felder"
+    "fields": "Felder",
+    "primaryEntity": "Primäre Entität",
+    "derivedEntities": "Derived Entities"
   },
   "options": {
     "type": {

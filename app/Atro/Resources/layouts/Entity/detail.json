@@ -159,6 +159,12 @@
           "name": "autoDeleteAfterDays"
         },
         false
+      ],
+      [
+        {
+          "name": "primaryEntity"
+        },
+        false
       ]
     ]
   },

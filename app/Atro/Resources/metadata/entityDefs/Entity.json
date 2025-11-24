@@ -496,6 +496,51 @@
         }
       }
     },
+    "primaryEntity": {
+      "type": "link",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Derivative"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Derivative"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "derivedEntities": {
+      "type": "linkMultiple",
+      "noLoad": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "masterEntity": {
       "type": "varchar",
       "view": "views/entity/fields/master-entity",
@@ -724,6 +769,16 @@
     }
   },
   "links": {
+    "primaryEntity": {
+      "type": "belongsTo",
+      "foreign": "derivedEntities",
+      "entity": "Entity"
+    },
+    "derivedEntities": {
+      "type": "hasMany",
+      "foreign": "primaryEntity",
+      "entity": "Entity"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

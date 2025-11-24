@@ -41,7 +41,9 @@
     "hasAssociate": "має пов'язані записи",
     "nonDuplicatableFields": "Недубльовані поля",
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
-    "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації"
+    "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
+    "primaryEntity": "Первинна сутність",
+    "derivedEntities": "Похідні сутності"
   },
   "options": {
     "type": {
