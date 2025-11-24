@@ -60,6 +60,9 @@
             } else {
                 Storage.set('user', 'locale', locale)
             }
+
+            LayoutManager.clearListAndDetailCache()
+
             await Utils.patchRequest('/UserProfile/' + userData.user.id, {
                 disabledLanguages: Object.keys(languages).filter(item => item !== newDefaultCode)
             })
