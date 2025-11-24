@@ -18711,21 +18711,25 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel table td.cell .field, .compare-records .compare-panel table td div.field-name {
-    display: flex;
+    display: flex !important;
     align-items: center;
     text-align: center;
 
 }
 
-.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has(> input[type="checkbox"])):has(input),
-.compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has(> input[type="checkbox"])):has(input) {
+.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has( input[type="checkbox"])):has(input),
+.compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has( input[type="checkbox"])):has(input) {
     justify-content: flex-end;
 }
 
-.fields-compare-panel  table tr td{
+.fields-compare-panel  table tr td, .fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly]) {
     height: 47px;
     padding-bottom: 3px;
     padding-top: 3px;
+}
+
+.fields-compare-panel  .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
+    margin: 0;
 }
 
 .compare-records[data-mode="merge"] .fields-compare-panel  table tr td {
