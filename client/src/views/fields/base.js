@@ -1277,7 +1277,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
             const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
-
             if (fieldActions.size()) {
                 fieldActions.append($saveLink);
                 fieldActions.append($cancelLink);
