@@ -1,7 +1,7 @@
 {
   "fields": {
     "source": "Источник",
-    "sourceEntity": "Источник",
+    "sourceEntity": "Исходная сущность",
     "sourceEntityId": "Идентификатор источника",
     "master": "Мастер",
     "masterEntity": "Мастер сущность",
