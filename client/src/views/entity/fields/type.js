@@ -16,7 +16,6 @@ Espo.define('views/entity/fields/type', 'views/fields/enum',
 
             if (this.model.get('primaryEntityId')) {
                 this.model.set(this.name, 'Derivative');
-                this.setReadOnly(true);
             }
 
         },

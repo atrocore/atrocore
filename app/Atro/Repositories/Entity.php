@@ -295,10 +295,15 @@ class Entity extends ReferenceData
 
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
-            if (!file_exists(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json")){
+            $entityType = $entity->get('type');
+            if ($entity->get('type') === 'Derivative' && $type === 'clientDefs') {
+                $entityType = $this->getMetadata()->get("scopes.{$entity->get('primaryEntityId')}.type");
+            }
+            $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
+            if (!file_exists($filePath)){
                 continue;
             }
-            $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
+            $contents = file_get_contents($filePath);
             if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
                 $contents = str_replace('{entityType}', $entity->get('code'), $contents);
             }
@@ -527,7 +532,7 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
+        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false && $entity->get('type') !== 'Derivative') {
             throw new Forbidden();
         }
 
