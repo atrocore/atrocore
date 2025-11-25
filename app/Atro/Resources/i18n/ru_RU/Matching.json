@@ -2,7 +2,7 @@
   "fields": {
     "minimumScore": "Минимальный балл, %",
     "entity": "Сущность",
-    "sourceEntity": "Источник",
+    "sourceEntity": "Исходная сущность",
     "masterEntity": "Мастер",
     "matchingRules": "Правила подбора",
     "matchedRecords": "Сопоставленные записи"
