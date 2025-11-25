@@ -41,14 +41,17 @@
     "textFilterFields": "Поля текстового фильтра",
     "nonDuplicatableFields": "Не дублирующиеся поля",
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
-    "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически"
+    "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
+    "primaryEntity": "Первичная сущность",
+    "derivedEntities": "Производные сущности"
   },
   "options": {
     "type": {
-      "Base": "База",
+      "Base": "Базовая",
       "Hierarchy": "Иерархия",
       "ReferenceData": "Ссылка",
-      "Archive": "Архив"
+      "Archive": "Архив",
+      "Derivative": "Производная"
     },
     "sortDirection": {
       "asc": "Восходящий",

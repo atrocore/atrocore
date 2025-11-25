@@ -83,7 +83,7 @@ Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/
         },
 
         panelVisible() {
-            return this.model.get('hasAttribute');
+            return this.model.get('hasAttribute') && this.model.get('type') !== 'Derivative';
         },
     })
 );

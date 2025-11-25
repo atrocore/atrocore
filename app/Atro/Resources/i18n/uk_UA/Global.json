@@ -644,6 +644,8 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "primaryRecord": "Первинний запис",
+    "derivedRecords": "Похідні записи",
     "goldenRecord": "Золотий запис",
     "sourceRecords": "Джерела запису",
     "classifications": "Класифікації",

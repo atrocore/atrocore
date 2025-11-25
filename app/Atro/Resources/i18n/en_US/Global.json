@@ -649,6 +649,8 @@
   },
   "fields": {
     "__currentUser": "Current User",
+    "primaryRecord": "Primary Record",
+    "derivedRecords": "Derived Records",
     "goldenRecord": "Golden Record",
     "sourceRecords": "Source Records",
     "routes": "Route(s)",
