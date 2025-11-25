@@ -747,7 +747,9 @@
     "code": "Código",
     "team": "Equipo",
     "goldenRecord": "Disco de oro",
-    "sourceRecords": "Registros de origen"
+    "sourceRecords": "Registros de origen",
+    "primaryRecord": "Registro primario",
+    "derivedRecords": "Registros derivados"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",
