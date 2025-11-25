@@ -2202,14 +2202,34 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
             }
 
-            // @todo add link to the primary entity
-
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'type'            => 'Derivative',
                 'primaryEntityId' => $primaryEntity,
-                'customizable'    => false
+                'customizable'    => false,
+                'layouts'         => false
             ]);
+
+            // add link to the primary entity
+            $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
+                'type'     => 'link',
+                'required' => true
+            ];
+            $data['entityDefs'][$scope]['links']['primaryRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => 'derivedRecords',
+                'entity'  => $primaryEntity
+            ];
+
+            $data['entityDefs'][$primaryEntity]['fields']['derivedRecords'] = [
+                'type'   => 'linkMultiple',
+                'noLoad' => true
+            ];
+            $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
+                'type'    => 'hasMany',
+                'foreign' => 'primaryRecord',
+                'entity'  => $scope
+            ];
         }
     }
 

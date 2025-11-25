@@ -70,6 +70,7 @@ class LayoutManager
         $viewType = $this->sanitizeInput($viewType);
 
         if ($this->getMetadata()->get("scopes.$scope.type") === 'Derivative') {
+            $derivativeScope = $scope;
             $scope = $this->getMetadata()->get("scopes.$scope.primaryEntityId");
         }
 
@@ -149,6 +150,12 @@ class LayoutManager
                 if (!empty($row['name']) && empty($row['notSortable']) && !empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $row['name'], 'notStorable']))) {
                     $layout[$k]['notSortable'] = true;
                 }
+            }
+        }
+
+        if (!empty($derivativeScope)) {
+            if ($viewType === 'detail') {
+                array_unshift($layout[0]['rows'], [false, ['name' => 'primaryRecord']]);
             }
         }
 
