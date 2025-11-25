@@ -428,8 +428,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 label.append('<sup class="status-icons"></sup>');
             }
 
-            if (this.getCellElement().children('.inline-actions').size() === 0) {
-                this.getCellElement().prepend('<div class="pull-right inline-actions"></div>');
+            let $cell = this.getCellElement();
+
+            if(this.isListView() && this.getCellElement().children('div').size() !== 0) {
+               $cell = this.getCellElement().children('div')
+            }
+
+            if ($cell.children('.inline-actions').size() === 0) {
+                $cell.prepend('<div class="pull-right inline-actions"></div>');
             }
         },
 
@@ -685,7 +691,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initInlineEdit: function () {
-            const $cell = this.getCellElement();
+            let $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
 
             $cell.find('.inline-edit').parent().remove();
@@ -698,6 +704,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 $cell.prepend($editLink);
             }
 
+            if(this.isListView() && this.getCellElement().children('div').size() !== 0) {
+                $cell = this.getCellElement().children('div')
+            }
             const name = this.originalName || this.name;
             $cell.off(`click.on-${name}`);
             if (['detail', 'list', 'listLink'].includes(this.mode) ) {
