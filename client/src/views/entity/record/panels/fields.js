@@ -12,11 +12,20 @@ Espo.define('views/entity/record/panels/fields', 'views/record/panels/relationsh
     Dep => Dep.extend({
 
         setup() {
+            Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, 'change:type', () => {
+                this.reRender();
+            });
+        },
+
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
             if (this.model.get('type') === 'Derivative') {
-                this.defs.create = false;
+                this.$el.parent().find('[data-action="createRelated"]').remove();
             }
 
-            Dep.prototype.setup.call(this);
         },
 
     })

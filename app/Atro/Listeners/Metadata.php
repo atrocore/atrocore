@@ -2193,6 +2193,8 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
+                $fieldDefs['customizable'] = false;
+
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
             if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
@@ -2206,7 +2208,6 @@ class Metadata extends AbstractListener
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'type'            => 'Derivative',
                 'primaryEntityId' => $primaryEntity,
-                'customizable'    => false,
                 'layouts'         => false
             ]);
 

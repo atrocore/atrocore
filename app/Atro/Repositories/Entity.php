@@ -532,7 +532,7 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false && $entity->get('type') !== 'Derivative') {
+        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
             throw new Forbidden();
         }
 
