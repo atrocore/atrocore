@@ -761,7 +761,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     if(this.isListView()) {
-                        $editLink.parent().css('top', (($cell.height() / 2) - 5 ) + 'px')
+                        $editLink.parent().css('top', (($cell.height() / 2) - 8 ) + 'px')
                     }
                     $editLink.removeClass('hidden');
                 }

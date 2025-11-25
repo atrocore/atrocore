@@ -18722,10 +18722,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: flex-end;
 }
 
-.fields-compare-panel  table tr td, .fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly]) {
+.fields-compare-panel  table tr td,
+.fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
     height: 47px;
     padding-bottom: 3px;
-    padding-top: 3px;
+    padding-top: 15px;
 }
 
 .fields-compare-panel  .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
@@ -18748,10 +18749,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-align: initial;
 }
 
-.compare-records .compare-panel table td.cell .inline-actions {
+.compare-records .compare-panel .list-container > .list > table tr td.cell div.inline-actions {
     position: absolute;
     left: 0;
-    top: -3px;
+    top: 0;
     z-index: 1000;
 }
 
@@ -18923,7 +18924,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
 }
 
-.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:hover {
+.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
     background-color: var(--field-inline-edit-color);
 }
 
