@@ -2,7 +2,7 @@
   "fields": {
     "post": "Poste",
     "attachments": "Pièces jointes",
-    "type": "Type",
+    "type": "Typ",
     "createdByGender": "Créé par le genre",
     "data": "Données"
   },
