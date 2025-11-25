@@ -2168,11 +2168,10 @@ class Metadata extends AbstractListener
                 continue;
             }
 
-            // clone client defs
-            $data['clientDefs'][$scope] = $data['clientDefs'][$scopeDefs['primaryEntityId']];
+            $primaryEntity = $scopeDefs['primaryEntityId'];
 
             // clone entity defs
-            foreach ($data['entityDefs'][$scopeDefs['primaryEntityId']]['fields'] ?? [] as $fieldName => $fieldDefs) {
+            foreach ($data['entityDefs'][$primaryEntity]['fields'] ?? [] as $fieldName => $fieldDefs) {
                 if (empty($fieldDefs['type'])) {
                     continue;
                 }
@@ -2187,7 +2186,7 @@ class Metadata extends AbstractListener
                 }
 
                 if ($fieldDefs['type'] === 'link') {
-                    $linkDefs = $data['entityDefs'][$scopeDefs['primaryEntityId']]['links'][$fieldName] ?? null;
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
                     if (!empty($linkDefs['foreign'])) {
                         unset($linkDefs['foreign']);
                     }
@@ -2196,17 +2195,19 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
-            if (!empty($data['entityDefs'][$scopeDefs['primaryEntityId']]['indexes'])) {
-                $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$scopeDefs['primaryEntityId']]['indexes'];
+            if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
+                $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
             }
-            if (!empty($data['entityDefs'][$scopeDefs['primaryEntityId']]['collection'])) {
-                $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$scopeDefs['primaryEntityId']]['collection'];
+            if (!empty($data['entityDefs'][$primaryEntity]['collection'])) {
+                $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
             }
 
+            // @todo add link to the primary entity
+
             // clone scope defs
-            $data['scopes'][$scope] = array_merge($data['scopes'][$scopeDefs['primaryEntityId']], [
+            $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'type'            => 'Derivative',
-                'primaryEntityId' => $scopeDefs['primaryEntityId'],
+                'primaryEntityId' => $primaryEntity,
                 'customizable'    => false
             ]);
         }
