@@ -8,7 +8,7 @@
     "name": "Nom",
     "emailAddress": "Courriel",
     "description": "Description",
-    "type": "Type",
+    "type": "Typ",
     "isActive": "Actif",
     "username": "Nom d'utilisateur",
     "sortOrder": "Ordre de tri",
