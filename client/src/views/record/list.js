@@ -2442,6 +2442,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var built = 0;
                 modelList.forEach(function (model) {
                     this.buildRow(i, model, function (view) {
+
+                        this.initListenToInlineMode(view);
+
                         this.listenToOnce(view, 'after:render', () => {
                             if (!view.$el) {
                                 return;
@@ -3064,5 +3067,56 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 model.fetch({ main: true });
             }, this);
         },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
+        },
+
+        initListenToInlineMode(view) {
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+
+            this.listenTo(view.model, 'change', () => {
+                if ( this.inlineEditModeIsOn) {
+                    this.setIsChanged();
+                }
+            });
+
+            this.listenTo(view, 'after:render', () => {
+                let fieldInEditMode = null;
+                for (let field in view.nestedViews) {
+                    let fieldView = view.nestedViews[field];
+
+                    if(typeof fieldView.setReadOnly !== 'function') {
+                        continue;
+                    }
+
+                    if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
+                        fieldView.setReadOnly(true);
+                    }
+
+                    this.listenTo(fieldView, 'edit', function (view) {
+                        fieldInEditMode = view;
+                    }, this);
+
+                    this.listenTo(fieldView, 'inline-edit-on', function () {
+                        this.inlineEditModeIsOn = true;
+                    }, this);
+                    this.listenTo(fieldView, 'inline-edit-off', function () {
+                        this.inlineEditModeIsOn = false;
+                        this.setIsNotChanged();
+                    }, this);
+                }
+            })
+        }
     });
 });

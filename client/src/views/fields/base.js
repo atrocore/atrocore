@@ -90,6 +90,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         fieldActionsDisabled: false,
 
+        initialMode: null,
+
         translate: function (name, category, scope) {
             if (category === 'fields' && scope === this.model.name && this.model.getFieldParam(name, 'label')) {
                 return this.model.getFieldParam(name, 'label');
@@ -107,6 +109,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getCellElement: function () {
+            if (this.isListView()) {
+                return this.$el;
+            }
             return this.$el.parent();
         },
 
@@ -173,11 +178,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.reRender();
                 }
             }
+
+            this.getCellElement()?.attr('data-readonly', true);
         },
 
         setNotReadOnly: function () {
             if (this.readOnlyLocked) return;
             this.readOnly = false;
+            this.getCellElement()?.removeAttr('data-readonly');
         }, /**
          * Get label element. Works only after rendered.
          * {jQuery}
@@ -280,7 +288,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.measureId = this.params.measureId;
             }
 
-            this.mode = this.options.mode || this.mode;
+            this.initialMode = this.mode = this.options.mode || this.mode;
 
             this.readOnly = this.readOnly || this.name === 'id' || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
@@ -333,7 +341,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.toggleRequiredMarker();
 
                 if (this.readOnly) {
-                    this.getCellElement().attr('data-readonly', 'true');
+                    this.getCellElement().attr('data-readonly', true);
                 } else {
                     this.getCellElement().removeAttr('data-readonly');
                 }
@@ -400,20 +408,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
                 this.listenTo(this, 'change', function () {
                     var attributes = this.fetch();
-                    this.model.set(attributes, { ui: true });
+                    this.model.set(attributes, {ui: true});
                 });
             }
         },
 
         initStatusContainer: function () {
 
-            if (!['detail', 'edit'].includes(this.mode)) {
+            if (!['detail', 'edit', 'list', 'listLink'].includes(this.mode)) {
                 return;
             }
 
-            if (this.name === 'label') {
-                // debugger
-            }
             if (this.$el.parents('.stream-head-container').size() > 0) {
                 return;
             }
@@ -694,11 +699,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             const name = this.originalName || this.name;
-            this.$el.parent().off(`click.on-${name}`);
-            if (this.mode === 'detail') {
+            $cell.off(`click.on-${name}`);
+            if (['detail', 'list', 'listLink'].includes(this.mode) ) {
                 let lastClickTime = 0;
 
-                this.$el.parent().on(`click.on-${name}`, e => {
+                $cell.on(`click.on-${name}`, e => {
                     // check if double-click for ignoring
                     const now = Date.now();
                     if (now - lastClickTime < 300) {
@@ -733,12 +738,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (this.disabled || this.readOnly) {
                     return;
                 }
-                if (this.mode == 'detail') {
+
+                if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
+                    return;
+                }
+
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $editLink.removeClass('hidden');
                 }
             }.bind(this)).on('mouseleave', function (e) {
                 e.stopPropagation();
-                if (this.mode == 'detail') {
+                if (['detail', 'list', 'listLink'].includes(this.mode)) {
                     $editLink.addClass('hidden');
                 }
             }.bind(this));
@@ -773,7 +783,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 $button.on('click', () => {
-                    recordView.actionDynamicAction({ id: action.data.action_id })
+                    recordView.actionDynamicAction({id: action.data.action_id})
                 });
             })
 
@@ -908,7 +918,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (['edit', 'detail'].includes(this.mode)) {
+            if (this.isListView()) {
+                this.initStatusContainer();
+                if (!this.inlineEditDisabled) {
+                    this.initInlineEdit();
+                }
+            }
+
+            if (['edit', 'detail'].includes(this.mode) && !this.isListView()) {
                 this.toggleVisibility();
             }
         },
@@ -921,9 +938,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getConditions('visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
-                    this.$el.parent().show();
+                    this.getCellElement().show();
                 } else {
-                    this.$el.parent().hide();
+                    this.getCellElement().hide();
                 }
             }
         },
@@ -981,7 +998,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
         },
 
-        getFieldForConditions(){
+        getFieldForConditions() {
             return this.originalName || this.name
         },
 
@@ -1082,7 +1099,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             var model = this.model;
             var prev = Espo.Utils.cloneDeep(this.initialAttributes);
 
-            model.set(data, { silent: true });
+            model.set(data, {silent: true});
             data = model.attributes;
 
             var attrs = false;
@@ -1101,7 +1118,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.validate()) {
                 this.notify(this.translate('Record cannot be saved'), 'error');
-                model.set(prev, { silent: true });
+                model.set(prev, {silent: true});
                 return;
             }
 
@@ -1243,6 +1260,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             $cell.find('.inline-edit-link').addClass('hidden');
+
             $saveLink.click(function () {
                 this.inlineEditSave();
             }.bind(this));
@@ -1259,7 +1277,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             this.inlineEditModeIsOn = false;
-            this.setMode('detail');
+            this.setMode(this.initialMode);
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
                 if (this.model._fetchAfterInlineEditClose && $('.inline-cancel-link').length === 0) {
@@ -1280,11 +1298,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return false;
             }
 
+            if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
+                return;
+            }
+
             this.trigger('edit', this);
             this.setMode('edit');
 
             this.initialAttributes = this.model.getClonedAttributes();
 
+            if(this.isListView()) {
+                let width = this.getCellElement().get(0).getBoundingClientRect().width;
+
+                this.getCellElement().css('width', width+'px')
+                this.getCellElement().css('min-width', width+'px')
+                this.getCellElement().css('max-width', width+'px')
+            }
             this.once('after:render', function () {
                 this.inlineEditFocusing();
                 this.addInlineEditLinks();
@@ -1304,11 +1333,21 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         initSaveAfterOutsideClick() {
             this.killAfterOutsideClickListener();
             const name = this.originalName || this.name;
-            this.$el.parents('.middle').on(`click.anywhere-for-${name}`, e => {
+             this.getElementForOutsideClick().on(`click.anywhere-for-${name}`, e => {
                 if (this.mode === 'edit') {
-                    let selector = `.cell[data-name=${this.name}]`;
-                    if (this.originalName) {
-                        selector += `, .cell[data-name="${this.originalName}"]`;
+                    let selector = '';
+                    if(this.isListView()) {
+                        selector = `[data-id=${this.model.id}] .cell[data-name=${this.name}]`;
+
+                        if (this.originalName) {
+                            selector += `, [data-id=${this.model.id}] .cell[data-name="${this.originalName}"]`;
+                        }
+                    }else{
+                        selector = `.cell[data-name=${this.name}]`;
+
+                        if (this.originalName) {
+                            selector += `, .cell[data-name="${this.originalName}"]`;
+                        }
                     }
 
                     const $target = $(e.target);
@@ -1325,6 +1364,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     }
                 }
             });
+        },
+
+        getElementForOutsideClick() {
+            if(this.getRecordView().type === 'detail') {
+                return   this.$el.parents('.middle');
+            }else{
+                return this.getRecordView().$el;
+            }
         },
 
         inlineEditFocusing() {
@@ -1426,7 +1473,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         fetchToModel: function () {
-            this.model.set(this.fetch(), { silent: true });
+            this.model.set(this.fetch(), {silent: true});
         },
 
         fetch: function () {
@@ -1460,7 +1507,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (!Espo[key]) {
                 Espo[key] = [];
-                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, { extensibleEnumId: extensibleEnumId }, { async: false }).then(res => {
+                this.ajaxGetRequest(`ExtensibleEnum/action/getExtensibleEnumOptions`, {extensibleEnumId: extensibleEnumId}, {async: false}).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1483,10 +1530,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 };
 
                 if (customOptions) {
-                    options = { ...options, ...customOptions }
+                    options = {...options, ...customOptions}
                 }
 
-                this.ajaxGetRequest(scope, options, { async: false }).then(res => {
+                this.ajaxGetRequest(scope, options, {async: false}).then(res => {
                     if (res.list) {
                         Espo[key] = res.list;
                     }
@@ -1512,7 +1559,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             let key = 'measure_data_' + measureId;
             if (!Espo[key]) {
                 Espo[key] = {};
-                this.ajaxGetRequest(`Measure/action/measureWithUnits`, { id: measureId }, { async: false }).then(res => {
+                this.ajaxGetRequest(`Measure/action/measureWithUnits`, {id: measureId}, {async: false}).then(res => {
                     Espo[key] = res;
                 });
             }
@@ -1530,8 +1577,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         loadUnitOptions() {
             this.unitList = [''];
-            this.unitListTranslates = { '': '' };
-            this.unitListSymbols = { '': '' };
+            this.unitListTranslates = {'': ''};
+            this.unitListSymbols = {'': ''};
 
             if (this.measureId) {
                 let nameField = 'name'
@@ -1702,6 +1749,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 });
             }
         },
+
+        isListView() {
+            return ['list', 'listLink'].includes(this.initialMode)
+        }
 
     });
 });

@@ -210,101 +210,49 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
             }
 
-            if (this.mode != 'list') {
-                this.addActionHandler('selectLink', function () {
-                    this.selectLink();
+            this.addActionHandler('selectLink', function () {
+                this.selectLink();
+            });
+            this.addActionHandler('clearLink', function () {
+                this.clearLink();
+            });
+            this.addActionHandler('createLink', function () {
+                const attributes = _.extend((this.getCreateAttributes() || {}), {
+                    _entityFrom: _.extend(this.model.attributes, {
+                        _entityName: this.model.name,
+                        _createLinkName: this.name
+                    })
                 });
-                this.addActionHandler('clearLink', function () {
-                    this.clearLink();
-                });
-                this.addActionHandler('createLink', function () {
-                    const attributes = _.extend((this.getCreateAttributes() || {}), {
-                        _entityFrom: _.extend(this.model.attributes, {
-                            _entityName: this.model.name,
-                            _createLinkName: this.name
-                        })
-                    });
-                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasOwner'])) {
-                        attributes.ownerUserId = this.getUser().id;
-                        attributes.ownerUserName = this.getUser().get('name');
-                    }
-                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasAssignedUser'])) {
-                        attributes.assignedUserId = this.getUser().id;
-                        attributes.assignedUserName = this.getUser().get('name');
-                    }
-                    if (this.getMetadata().get(['scopes', this.foreignScope, 'hasTeam'])) {
-                        attributes.teamsIds = this.model.get('teamsIds') || null;
-                        attributes.teamsNames = this.model.get('teamsNames') || null;
-                    }
+                if (this.getMetadata().get(['scopes', this.foreignScope, 'hasOwner'])) {
+                    attributes.ownerUserId = this.getUser().id;
+                    attributes.ownerUserName = this.getUser().get('name');
+                }
+                if (this.getMetadata().get(['scopes', this.foreignScope, 'hasAssignedUser'])) {
+                    attributes.assignedUserId = this.getUser().id;
+                    attributes.assignedUserName = this.getUser().get('name');
+                }
+                if (this.getMetadata().get(['scopes', this.foreignScope, 'hasTeam'])) {
+                    attributes.teamsIds = this.model.get('teamsIds') || null;
+                    attributes.teamsNames = this.model.get('teamsNames') || null;
+                }
 
-                    this.notify('Loading...');
-                    this.createView('quickCreate', 'views/modals/edit', {
-                        scope: this.foreignScope,
-                        fullFormDisabled: true,
-                        attributes: (this.mode === 'edit') ? attributes : null,
-                    }, view => {
-                        view.once('after:render', () => {
-                            this.notify(false);
-                        });
-                        view.render();
-
-                        this.listenToOnce(view, 'after:save', function (model) {
-                            this.clearView('quickCreate');
-                            this.select(model);
-                        }.bind(this));
-                    });
-                });
-            }
-
-            if (this.mode == 'search') {
-                this.addActionHandler('selectLinkOneOf', function () {
-                    this.notify('Loading...');
-
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
-
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        boolFilterData: this.getBoolFilterData(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true,
-                        massRelateEnabled: true,
-                        sortBy: this.sortBy,
-                        sortAsc: this.sortAsc
-                    }, function (view) {
-                        view.render();
+                this.notify('Loading...');
+                this.createView('quickCreate', 'views/modals/edit', {
+                    scope: this.foreignScope,
+                    fullFormDisabled: true,
+                    attributes: (this.mode === 'edit') ? attributes : null,
+                }, view => {
+                    view.once('after:render', () => {
                         this.notify(false);
-                        this.listenToOnce(view, 'select', function (models) {
-                            this.clearView('dialog');
-                            if (models.massRelate) {
-                                if (models.where.length === 0) {
-                                    // force subquery if primary filter "all" is used in modal
-                                    models.where = [{ asc: true }]
-                                }
-                                this.addLinkSubQuery(models);
-                                return;
-                            }
-                            if (Object.prototype.toString.call(models) !== '[object Array]') {
-                                models = [models];
-                            }
-                            models.forEach(function (model) {
-                                this.addLinkOneOf(model.id, model.get('name'));
-                            }, this);
-                        });
-                    }, this);
+                    });
+                    view.render();
+
+                    this.listenToOnce(view, 'after:save', function (model) {
+                        this.clearView('quickCreate');
+                        this.select(model);
+                    }.bind(this));
                 });
-
-                this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id').toString();
-                    this.deleteLinkOneOf(id);
-                };
-
-                this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
-                    this.deleteLinkSubQuery();
-                };
-            }
+            });
         },
 
         select: function (model) {
