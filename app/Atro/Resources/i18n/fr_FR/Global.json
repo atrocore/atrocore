@@ -102,7 +102,9 @@
     "created": "Créé",
     "url": "URL",
     "goldenRecord": "Disque d'or",
-    "sourceRecords": "Elements source"
+    "sourceRecords": "Elements source",
+    "primaryRecord": "Enregistrement primaire",
+    "derivedRecords": "Enregistrements dérivés"
   },
   "scopeNames": {
     "Classification": "Classification",
