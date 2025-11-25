@@ -2,7 +2,7 @@
   "fields": {
     "isActive": "Aktivní",
     "type": "Typ",
-    "sourceEntity": "Zdrojový subjekt",
+    "sourceEntity": "Zdrojová entita",
     "inBackground": "Provést na pozadí",
     "usage": "Použití",
     "massAction": "Hromadná akce",
