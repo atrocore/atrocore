@@ -249,6 +249,10 @@ class EntityField extends ReferenceData
             ) {
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
             }
+
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'Derivative') {
+                throw new BadRequest("It is not possible to create a relationship with an entity of type 'Derivative'.");
+            }
         }
 
         if (!$entity->isNew() && $entity->get('type') === 'bool' && !empty($entity->get('notNull')) && $entity->isAttributeChanged('notNull')) {
