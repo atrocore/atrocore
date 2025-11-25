@@ -110,6 +110,8 @@ class Metadata extends AbstractListener
 
         $this->addThumbnailFieldsByTypesToFile($data);
 
+        $this->prepareDerivatives($data);
+
         $event->setArgument('data', $data);
     }
 
@@ -2152,6 +2154,61 @@ class Metadata extends AbstractListener
 
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
             }
+        }
+    }
+
+    protected function prepareDerivatives(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+                continue;
+            }
+
+            // clone client defs
+            $data['clientDefs'][$scope] = $data['clientDefs'][$scopeDefs['primaryEntityId']];
+
+            // clone entity defs
+            foreach ($data['entityDefs'][$scopeDefs['primaryEntityId']]['fields'] ?? [] as $fieldName => $fieldDefs) {
+                if (empty($fieldDefs['type'])) {
+                    continue;
+                }
+
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    continue;
+                }
+
+                // disable unique indexes
+                if (!empty($fieldDefs['unique'])) {
+                    $fieldDefs['unique'] = false;
+                }
+
+                if ($fieldDefs['type'] === 'link') {
+                    $linkDefs = $data['entityDefs'][$scopeDefs['primaryEntityId']]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['foreign'])) {
+                        unset($linkDefs['foreign']);
+                    }
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
+
+                $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
+            }
+            if (!empty($data['entityDefs'][$scopeDefs['primaryEntityId']]['indexes'])) {
+                $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$scopeDefs['primaryEntityId']]['indexes'];
+            }
+            if (!empty($data['entityDefs'][$scopeDefs['primaryEntityId']]['collection'])) {
+                $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$scopeDefs['primaryEntityId']]['collection'];
+            }
+
+            // clone scope defs
+            $data['scopes'][$scope] = array_merge($data['scopes'][$scopeDefs['primaryEntityId']], [
+                'type'            => 'Derivative',
+                'primaryEntityId' => $scopeDefs['primaryEntityId'],
+                'customizable'    => false
+            ]);
         }
     }
 

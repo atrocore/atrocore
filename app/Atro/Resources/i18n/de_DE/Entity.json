@@ -43,7 +43,7 @@
     "customizable": "Anpassbar",
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
-    "derivedEntities": "Derived Entities"
+    "derivedEntities": "Abgeleitete Entitäten"
   },
   "options": {
     "type": {
