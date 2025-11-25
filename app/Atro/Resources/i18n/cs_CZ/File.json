@@ -34,7 +34,7 @@
     "cannotDefineFileName": "Systém nemůže rozpoznat název souboru z adresy URL.",
     "urlExpected": "Byla zadána nesprávná adresa URL",
     "fileExtensionCorrectedAutomatically": "Přípona souboru byla automaticky opravena.",
-    "downloadJobsCreated": "Byla vytvořena úloha pro přípravu vašeho souboru zip"
+    "downloadJobsCreated": "Byla vytvořena úloha na pozadí pro přípravu archivačního souboru."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Příponu souboru nelze změnit.",
