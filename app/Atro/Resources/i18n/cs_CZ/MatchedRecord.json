@@ -5,7 +5,7 @@
     "masterEntityId": "ID hlavního subjektu",
     "score": "Skóre",
     "source": "Zdroj:",
-    "sourceEntity": "Zdrojový subjekt",
+    "sourceEntity": "Zdrojová entita",
     "sourceEntityId": "ID zdrojového subjektu",
     "hash": "Jedinečný kód Hash"
   },
