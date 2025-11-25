@@ -70,7 +70,7 @@ Espo.define('views/record/panels/side/matchings', 'view', Dep => {
                     target: this.$el.find('.mr-content-filter').get(0),
                     props: {
                         scope: this.model.name,
-                        allFilters: ['confirmed', 'found', 'rejected'],
+                        allFilters: this.getMetadata().get('entityDefs.MatchedRecord.fields.status.options') || [],
                         storageKey: 'mrFilter',
                         translationScope: 'MatchedRecord',
                         translationField: 'status',

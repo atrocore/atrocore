@@ -122,7 +122,7 @@ class Base
                 continue;
             }
 
-            if(!empty($textFilterFields)) {
+            if (!empty($textFilterFields)) {
                 if (in_array($field, $textFilterFields)) {
                     $result[] = $field;
                 }
@@ -331,8 +331,8 @@ class Base
                         $link = substr($item['id'], -2) === 'Id' ? substr($item['id'], 0, -2) : $item['id'];
                         $entity = $seed->getRelationParam($link, 'entity');
                         $relationType = $seed->getRelationType($link);
-                        if($entity === 'User'){
-                            if($relationType === 'belongsTo'){
+                        if ($entity === 'User') {
+                            if ($relationType === 'belongsTo') {
                                 switch ($type) {
                                     case 'is_me':
                                         $item = [
@@ -352,75 +352,75 @@ class Base
                                         $item = [
                                             "attribute" => $item['id'],
                                             "type"      => "in",
-                                            "subQuery" => [
+                                            "subQuery"  => [
                                                 [
                                                     "attribute" => "teams",
-                                                    "type"  =>  "linkedWith",
-                                                    "value" => $this->getUser()->getTeamIdList()
+                                                    "type"      => "linkedWith",
+                                                    "value"     => $this->getUser()->getTeamIdList()
                                                 ]
                                             ]
                                         ];
                                         break;
                                 }
-                            }else{
+                            } else {
                                 switch ($type) {
                                     case 'include_me':
                                         $item = [
                                             "attribute" => $item['id'],
-                                            "type" => "linkedWith",
-                                            "value" => [$this->getUser()->id]
+                                            "type"      => "linkedWith",
+                                            "value"     => [$this->getUser()->id]
                                         ];
                                         break;
                                     case 'exclude_me':
                                         $item = [
                                             "attribute" => $item['id'],
-                                            "type" => "notLinkedWith",
-                                            "value" => [$this->getUser()->id]
+                                            "type"      => "notLinkedWith",
+                                            "value"     => [$this->getUser()->id]
                                         ];
                                         break;
                                     case 'is_team_member':
                                         $item = [
                                             "attribute" => $item['id'],
-                                            "type" => "linkedWith",
-                                            "subQuery" => [
+                                            "type"      => "linkedWith",
+                                            "subQuery"  => [
                                                 [
                                                     "attribute" => "teams",
-                                                    "type" => "linkedWith",
-                                                    "value" => $this->getUser()->getTeamIdList()
+                                                    "type"      => "linkedWith",
+                                                    "value"     => $this->getUser()->getTeamIdList()
                                                 ]
                                             ]
                                         ];
                                         break;
                                 }
                             }
-                        }else if ($entity === 'Team' && $relationType == 'belongsTo') {
+                        } else if ($entity === 'Team' && $relationType == 'belongsTo') {
                             switch ($type) {
                                 case 'is_my_team':
                                     $item = [
                                         "attribute" => $item['id'],
-                                        "type"      =>  "in",
+                                        "type"      => "in",
                                         "value"     => $this->getUser()->getTeamIdList()
                                     ];
                                     break;
                                 case 'is_not_my_team':
                                     $item = [
-                                        'type' => 'or',
+                                        'type'  => 'or',
                                         'value' => [
                                             [
                                                 "attribute" => $item['id'],
-                                                "type" => "notIn",
-                                                "value" => $this->getUser()->getTeamIdList()
+                                                "type"      => "notIn",
+                                                "value"     => $this->getUser()->getTeamIdList()
                                             ],
                                             [
                                                 "attribute" => $item['id'],
-                                                "type" => "isNull",
+                                                "type"      => "isNull",
                                             ]
 
                                         ]
                                     ];
                                     break;
                             }
-                        }else{
+                        } else {
                             $item = [];
                         }
                     } else {
@@ -1301,7 +1301,7 @@ class Base
                     ];
                     break;
             }
-            if(!empty($subQuery)) {
+            if (!empty($subQuery)) {
                 $item['subQuery'] = $subQuery;
             }
         }
@@ -1337,11 +1337,12 @@ class Base
 
         if (!empty($item['subQuery'])) {
             $link = substr($attribute, -2) === 'Id' ? substr($attribute, 0, -2) : $attribute;
-            $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']);
+            $foreignEntity = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'entity']) ?? $item['foreignEntity'] ?? null;
+            $foreignField = $item['foreignField'] ?? 'id';
             if (!empty($foreignEntity)) {
                 $foreignRepository = $this->getEntityManager()->getRepository($foreignEntity);
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
-                $sp['select'] = ['id'];
+                $sp['select'] = [$foreignField];
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [
@@ -1451,9 +1452,9 @@ class Base
 
                 case 'in':
                     if (!empty($item['attribute'])) {
-                        $hasEmpty = is_array($value)  && in_array('', $value);
+                        $hasEmpty = is_array($value) && in_array('', $value);
                         $value = $this->prepareValueOptions($value, $item['attribute']);
-                        if($hasEmpty) {
+                        if ($hasEmpty) {
                             $value[] = '';
                         }
                     }
@@ -1462,9 +1463,9 @@ class Base
 
                 case 'notIn':
                     if (!empty($item['attribute'])) {
-                        $hasEmpty = is_array($value)  && in_array('', $value);
+                        $hasEmpty = is_array($value) && in_array('', $value);
                         $value = $this->prepareValueOptions($value, $item['attribute']);
-                        if($hasEmpty) {
+                        if ($hasEmpty) {
                             $value[] = '';
                         }
                     }
@@ -1878,17 +1879,17 @@ class Base
 
                     $entities = $this->getEntityManager()->getRepository('SavedSearch')->where(['id' => $value])->find();
 
-                    if(empty($entities)) {
+                    if (empty($entities)) {
                         break;
                     }
 
                     $item = [
-                        "type" => "and",
+                        "type"  => "and",
                         "value" => []
                     ];
 
                     foreach ($entities as $entity) {
-                        if(empty($entity->get('data'))) {
+                        if (empty($entity->get('data'))) {
                             continue;
                         }
                         $where = [json_decode(json_encode($entity->get('data')), true)];
@@ -1896,7 +1897,7 @@ class Base
                         $item["value"][] = $where[0];
                     }
 
-                    if(!empty($item["value"])) {
+                    if (!empty($item["value"])) {
                         $part = $this->getWherePart($item, $result);
                     }
             }
@@ -2161,7 +2162,7 @@ class Base
                     $value = str_replace($decimalMark, '.', $value);
                     $value = $attributeType === 'int' ? intval($value) : floatval($value);
                     //avoid the range limit for INTEGER in database
-                    if($attributeType === 'int' && abs($value) > (2^31)) {
+                    if ($attributeType === 'int' && abs($value) > (2 ^ 31)) {
                         continue;
                     }
                     $group[$field] = $value;

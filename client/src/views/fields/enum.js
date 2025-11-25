@@ -63,7 +63,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
         data: function () {
             for (let i = 0; i < this.params.options.length; i++) {
                 let option = this.params.options[i];
-                if(option === "") {
+                if(option === "" || option === '__empty__') {
                     this.params.options[i] = "__empty__"
                     this.translatedOptions["__empty__"] =  ' ';
                 }

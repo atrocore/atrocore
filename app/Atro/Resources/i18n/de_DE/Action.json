@@ -21,6 +21,7 @@
     "focusField": "Fokusfeld",
     "displayField": "Anzeigefeld",
     "webhookUrl": "URL",
+    "hideTextLabel": "Text auf der Schaltfläche ausblenden",
     "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
     "updateType": "Aktualisierungstyp",
     "updateScript": "Script"

@@ -8,5 +8,6 @@
   "streamDisabled": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "selectionDisabled": true
 }

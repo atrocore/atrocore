@@ -1,12 +1,13 @@
 {
-    "entity": false,
-    "layouts": false,
-    "tab": false,
-    "acl": false,
-    "customizable": false,
-    "streamDisabled": true,
-    "notificationDisabled": true,
-    "bookmarkDisabled": true,
-    "actionDisabled": true,
-    "emHidden": true
+  "entity": false,
+  "layouts": false,
+  "tab": false,
+  "acl": false,
+  "customizable": false,
+  "streamDisabled": true,
+  "notificationDisabled": true,
+  "bookmarkDisabled": true,
+  "actionDisabled": true,
+  "emHidden": true,
+  "selectionDisabled": true
 }

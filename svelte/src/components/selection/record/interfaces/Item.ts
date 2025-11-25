@@ -1,4 +1,4 @@
-/**
+/*
  * AtroCore Software
  *
  * This source file is available under GNU General Public License version 3 (GPLv3).
@@ -8,15 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/matched-record/fields/staging', 'views/fields/link', Dep => {
+export  interface Item {
+    id: string;
+    name: string;
+    entityType: string;
+}
 
-    return Dep.extend({
-
-        setup() {
-            this.options.foreignScope = this.model.get('stagingEntity');
-
-            Dep.prototype.setup.call(this);
-        },
-
-    });
-});
+export  interface GroupedItems {
+    [key: string]: Item[];
+}

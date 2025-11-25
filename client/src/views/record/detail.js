@@ -2166,7 +2166,9 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 layout.push(panel);
             }
 
-            this.loadListOptionsDataFromLayout(layout)
+            if (typeof this.loadListOptionsDataFromLayout == 'function') {
+                this.loadListOptionsDataFromLayout(layout)
+            }
 
             return this.prepareLayoutAfterConverting(layout);
         },
@@ -2794,7 +2796,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         selectNode(data) {
-            if (['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
+            if (data.scope === this.scope) {
                 window.location.href = `/#${this.scope}/view/${data.id}`;
             } else {
                 this.getStorage().set('selectedNodeId', this.scope, data.id);

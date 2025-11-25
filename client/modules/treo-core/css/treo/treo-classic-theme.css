@@ -1408,7 +1408,7 @@ td, th {
     content: "\e260"
 }
 
-*, *:before, *:after  {
+*, *:before, *:after {
     box-sizing: border-box
 }
 
@@ -3750,7 +3750,8 @@ a[role=button].primary:active, a[role=button].primary.active,
 .btn-link:has(> .ph:only-of-type),
 .btn-link:has(> .ph-fill:only-of-type),
 a:has(> .ph:only-of-type),
-a:has(> .ph-fill:only-of-type) {
+a:has(> .ph-fill:only-of-type),
+a:has(> img):hover {
     text-decoration: none;
 }
 
@@ -3868,6 +3869,7 @@ tbody.collapse.in {
     font-size: 14px;
     text-align: left;
     background-color: #fff;
+    color: #000;
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0;
@@ -4583,6 +4585,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     padding: 12px 8px;
     font-size: 18px;
     line-height: 19px;
+    margin-left: 15px;
 }
 
 .navbar-brand:hover, .navbar-brand:focus {
@@ -4604,7 +4607,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     position: relative;
     float: right;
     padding: 0;
-    margin: auto 15px auto 10px;
+    margin: auto 0 auto 10px;
     background-color: transparent;
     background-image: none;
     border: 1px solid transparent;
@@ -6533,6 +6536,7 @@ button.close {
 .modal-footer .btn-group .btn-select-field {
     margin-left: 20px !important;
 }
+
 .modal-footer .btn-group .btn-select-attribute {
     margin-left: 5px !important;
 }
@@ -9728,6 +9732,12 @@ body > #header .navbar-brand span.home-icon {
     height: 16px;
 }
 
+.icon-button {
+    width: 18px;
+    height: 18px;
+}
+
+
 .status-icons .ph {
     color: var(--status-icon-color);
 }
@@ -10366,37 +10376,37 @@ table.table > thead th > div > a {
     width: auto;
 }
 
-.panel .panel-heading .panel-title .list-actions-container{
+.panel .panel-heading .panel-title .list-actions-container {
     margin-left: 8px;
     text-transform: none;
 }
 
-.panel .panel-heading .panel-title .list-actions-container .dropdown-menu{
+.panel .panel-heading .panel-title .list-actions-container .dropdown-menu {
     z-index: 99999;
 }
 
 @media screen and (min-width: 768px) {
-    .relationship-container > .list > .table .record-checkbox{
+    .relationship-container > .list > .table .record-checkbox {
         visibility: hidden;
     }
 
-    .relationship-container > .list > .table tr:hover .record-checkbox{
+    .relationship-container > .list > .table tr:hover .record-checkbox {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .record-checkbox:checked{
+    .relationship-container > .list > .table .record-checkbox:checked {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .select-all{
+    .relationship-container > .list > .table .select-all {
         visibility: hidden;
     }
 
-    .relationship-container > .list > .table tr:hover .select-all{
+    .relationship-container > .list > .table tr:hover .select-all {
         visibility: visible;
     }
 
-    .relationship-container > .list > .table .select-all:checked{
+    .relationship-container > .list > .table .select-all:checked {
         visibility: visible;
     }
 }
@@ -10612,7 +10622,11 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 
 .cell > .field :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
-.cell > .field > input:not([type=radio]):not([type=checkbox]) {
+.cell > .field > input:not([type=radio]):not([type=checkbox]),
+td.cell :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
+td.cell:not(:first-child):has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+td.cell  > input:not([type=radio]):not([type=checkbox]),
+td.cell  .selectize-control > .selectize-input{
     background-color: var(--field-inline-edit-color);
     margin-top: -1px;
     border-top: 1px solid transparent;
@@ -10632,9 +10646,19 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell > .field > :where(.range-container, .unit-group) > .unit-select select:focus,
 .cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
 .cell > .field > .array-control-container .selectize-input.focus,
-.cell > .field > textarea:focus {
+.cell > .field > textarea:focus,
+td.cell  .selectize-control > .selectize-input.focus,
+td.cell .input-group:has(.selectize-input.focus),
+td.cell .input-group:has(> input:focus),
+td.cell > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
+td.cell > :where(.range-container, .unit-group) > .unit-select select:focus,
+td.cell > input:not([type=radio]):not([type=checkbox]):focus,
+td.cell > .array-control-container .selectize-input.focus,
+td.cell > textarea:focus {
     border-bottom-color: #06c;
 }
+
+
 
 .cell > .field > a,
 .cell > .field > span.pre-label,
@@ -10653,35 +10677,44 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell[data-mode=edit] > .field > .field-value-container,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
-.record > .edit .cell > .field > .field-value-container {
+.record > .edit .cell > .field > .field-value-container,
+td.cell[data-mode=edit] > input[type=checkbox]:not([disabled]),
+td.cell[data-mode=edit] > input[type=radio]:not([disabled]),
+td.cell[data-mode=edit] > .field-value-container {
     margin: 0 10px;
     line-height: inherit;
 }
 
 .cell > .field .form-control,
-.cell > .field .selectize-input {
+.cell > .field .selectize-input,
+td.cell  .form-control,
+td.cell  .selectize-input{
     border-left: 0;
     border-right: 0;
     margin-bottom: 0;
 }
 
-.cell > .field .input-group > .input-group-btn {
+.cell > .field .input-group > .input-group-btn,
+td.cell > .input-group > .input-group-btn  {
     background-color: var(--field-inline-edit-color);
     gap: 5px;
     margin: 0 0 0 10px;
 }
 
-.cell > .field .input-group > .input-group-btn button {
+.cell > .field .input-group > .input-group-btn button,
+td.cell .input-group > .input-group-btn button{
     background-color: transparent;
     border: 0;
     border-radius: 0;
 }
 
-.cell > .field > .input-group > .input-group-btn button:hover {
+.cell > .field > .input-group > .input-group-btn button:hover,
+td.cell > .input-group > .input-group-btn button:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
 
-.cell > .field > .input-group > .input-group-btn button:active {
+.cell > .field > .input-group > .input-group-btn button:active,
+td.cell > .input-group > .input-group-btn button:active {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -11866,7 +11899,7 @@ span.became > .value-container {
 }
 
 .selectize-control.multi .selectize-input .label.colored-enum > i,
-.selectize-control.multi .selectize-input  .label.colored-multi-enum > i {
+.selectize-control.multi .selectize-input .label.colored-multi-enum > i {
     margin-inline-start: 0;
 }
 
@@ -13327,7 +13360,7 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .navbar-inverse {
-    background-color: var( --toolbar-background-color);
+    background-color: var(--toolbar-background-color);
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -14830,6 +14863,19 @@ ul.jqtree-tree li.jqtree_common {
     list-style-type: none;
 }
 
+ul.jqtree-tree .load-items.ph {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+li.sub-tree-container > div.jqtree_common .jqtree-toggler{
+    display: none;
+}
+
+li.sub-tree-container > ul.jqtree_common {
+    margin-left: 5px;
+}
+
 ul.jqtree-tree .jqtree-toggler {
     border-bottom: none;
     color: #333;
@@ -14937,7 +14983,8 @@ ul.jqtree-tree span.jqtree-border {
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover,
-ul.jqtree-tree li.jqtree-selected > .reset-button {
+ul.jqtree-tree li.jqtree-selected > .reset-button,
+ul.jqtree-tree li.jqtree-selected > .add-to-filter-button{
     color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
@@ -15718,7 +15765,6 @@ span.became .file-link {
 
 .bottom .panel .group-container > .group > .group-name {
     padding: 10px 0 10px 10px;
-    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group > .group-name .btn {
@@ -15726,8 +15772,9 @@ span.became .file-link {
     border-width: 0;
 }
 
-.bottom .panel .group-container > .group {
-    border-bottom: 1px solid #ececec;
+.bottom .panel .group-container > .group > .list-container .list > table {
+    border-top: 1px solid #e8eced;
+    border-bottom: 1px solid #e8eced;
 }
 
 .bottom .panel .group-container > .group .list td.over-visible[data-name="value"] {
@@ -15848,6 +15895,7 @@ select {
     -moz-appearance: none;
     appearance: none;
     padding-right: 20px !important;
+    text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 768px) {
@@ -15898,7 +15946,8 @@ select {
 }
 
 .field .metadata .checkbox-item {
-    margin-right: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .field .metadata .checkbox-item input:hover, .field .metadata .checkbox-item label:hover {
@@ -15906,7 +15955,10 @@ select {
 }
 
 .field .metadata .checkbox-item label {
-    margin-left: 3px;
+    margin-left: 2px;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 13px;
 }
 
 .field .status-icons, .field .inline-actions {
@@ -16161,7 +16213,6 @@ ins.diffins, ins.diffmod {
     background: #dfd;
     text-decoration: none;
 }
-
 
 
 .button-container {
@@ -17883,7 +17934,7 @@ span[data-img-src]::after {
 }
 
 .navbar-favorites .favorite:not(.active):hover,
-.favorites-dropdown  .favorite:not(.active):hover {
+.favorites-dropdown .favorite:not(.active):hover {
     background-color: rgba(0, 0, 0, .05);
 }
 
@@ -17955,6 +18006,7 @@ span[data-img-src]::after {
     display: inline-block;
     text-align: center;
     font-size: 14px;
+    filter: brightness(0) !important;
 }
 
 .favorites-dropdown ul .favorite.active:before {
@@ -18104,7 +18156,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     line-height: 1;
 }
 
-.panel-stream .header .filter .filter-item:hover,  .panel-stream .header .filter .filter-item:focus {
+.panel-stream .header .filter .filter-item:hover, .panel-stream .header .filter .filter-item:focus {
     text-decoration: none;
 }
 
@@ -18549,7 +18601,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
 }
 
-.compare-records .compare-panel {
+.compare-records .compare-panel, .compare-entities .compare-panel  {
     background-color: white;
     width: 100%;
     padding: 0;
@@ -18583,15 +18635,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: red;
 }
 
-.compare-records .compare-panel .panel-body {
+.compare-records .compare-panel .panel-body  {
     padding: 0 0 0 0 !important;
+}
+
+.compare-entities  {
+    padding: 40px 0 0 0 !important;
 }
 
 .compare-records .compare-panel .panel-body > div:last-child > .list:last-child {
     margin-bottom: 0;
 }
 
-.compare-records .compare-panel .panel-body div.list {
+.compare-records .compare-panel .panel-body div.list, .compare-entities .compare-panel .panel-body div.list {
     overflow-x: auto;
     margin-left: 0;
     margin-right: 0;
@@ -18606,16 +18662,21 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .compare-panel tr td:first-child {
-    width: 250px !important;
+    min-width: 250px !important;
 }
 
-.compare-records .compare-panel tr td:first-child {
+.compare-records .compare-panel tr td:first-child  div.field-name span{
     text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
 }
 
-.compare-records .compare-panel td {
-    min-width: 150px !important;
+.compare-records .compare-panel tr td {
+    min-width: 150px;
+}
+
+.compare-records .compare-panel tr td.merge-radio {
+    min-width: 50px;
 }
 
 .compare-records .compare-panel .attachment-preview a {
@@ -18641,6 +18702,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     align-items: center;
     width: 100%;
     min-width: 0 !important;
+    height: 100%;
 }
 
 .compare-records .compare-panel table td.cell {
@@ -18648,25 +18710,53 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.compare-records .compare-panel table td.cell .field {
-    display: flex;
+.compare-records .compare-panel table td.cell .field, .compare-records .compare-panel table td div.field-name {
+    display: flex !important;
     align-items: center;
     text-align: center;
+
+}
+
+.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has( input[type="checkbox"])):has(input),
+.compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has( input[type="checkbox"])):has(input) {
+    justify-content: flex-end;
+}
+
+.fields-compare-panel  table tr td, .fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly]) {
+    height: 47px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+.fields-compare-panel  .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
+    margin: 0;
+}
+
+.compare-records[data-mode="merge"] .fields-compare-panel  table tr td {
+    height: 42px;
+}
+
+.compare-records .compare-panel table tr td div.field, .compare-records .compare-panel table td div.field-name {
+    height: 100%;
 }
 
 .compare-records .compare-panel table tr td.cell.no-center .field {
     text-align: initial !important;
 }
 
-.compare-records .compare-panel table td.cell .field .selectize-control{
+.compare-records .compare-panel table td.cell .field .selectize-control {
     text-align: initial;
 }
 
 .compare-records .compare-panel table td.cell .inline-actions {
     position: absolute;
-    right: 5px;
-    top: -10px;
+    left: 0;
+    top: -3px;
     z-index: 1000;
+}
+
+.compare-records .compare-panel table td.cell .inline-actions .ph {
+    font-size: 14px;
 }
 
 .compare-records .compare-panel table td.cell:first-child {
@@ -18687,12 +18777,76 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-right: 20px;
 }
 
-.compare-records th.inline-actions > a,  .compare-records td .field > a{
+.compare-records th.inline-actions > a,  .compare-records td .field > a, .compare-entities th > a {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
     max-width: 100%;
+}
+
+.compare-records .overlay, .compare-entities .overlay {
+    position: absolute;
+    top: 0;
+    right: -20px;
+    left: -20px;
+    bottom: -50px;
+    z-index: 100;
+}
+
+.shimmer-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-image: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.05) 0%,
+            rgba(255, 255, 255, 0.1) 20%,
+            rgba(255, 255, 255, 0.1) 35%,
+            rgba(0, 0, 0, 0.05) 50%
+    );
+
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% 0;
+    }
+}
+
+.compare-entities {
+    height: calc(100vh - 250px);
+}
+.compare-entities .panel-body > div > .list > table td:first-child {
+    padding-left: 5px !important;
+}
+
+.compare-entities .list > table tbody tr:not(.active-dropdown):hover {
+    background-color: transparent;
+}
+
+.compare-entities .compare-panel table col.col-min-width{
+    min-width: 350px;
+}
+
+.compare-entities .middle .panel-heading {
+    display: none;
+}
+
+.compare-entities .form-group[data-name="files"] > label {
+    display: block;
+}
+
+.compare-entities table tr.list-row, .compare-entities table td .side-view {
+    height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .cards-container {
@@ -18712,7 +18866,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .cards-container > .card:hover {
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .cards-container > .card .icon {
@@ -18745,4 +18899,54 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .cards-container.first-steps-dashlet > .card.completed:hover {
     opacity: 1;
+}
+
+
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div , .list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]){
+    padding: 5px;
+}
+
+
+.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
+    position: relative;
+    min-width: 200px;
+    padding-top: 13px;
+}
+
+.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
+    display: inline-block;
+}
+
+.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
+    background-color: var(--field-inline-edit-color);
+}
+
+.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group)  {
+    min-height: 30px;
+}
+
+.list-container > .list > table tr td.cell .inline-actions {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    background-color: transparent;
+}
+
+.list-container > .list > table tr td.cell .form-control.selectize-control {
+    min-width: 0;
+}
+
+.modal-body > div > .list > table td.cell:first-child .inline-actions {
+    left: 10px;
+}
+
+.list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
+    margin: 4px 0 0;
+}
+
+.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]){
+    text-align: center;
+    vertical-align: middle;
 }

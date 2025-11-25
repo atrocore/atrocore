@@ -3,27 +3,8 @@
   "object": true,
   "entity": true,
   "layouts": false,
-  "tab": true,
-  "acl": true,
-  "aclActionList": [
-    "read",
-    "edit",
-    "delete"
-  ],
-  "aclActionLevelListMap": {
-    "read": [
-      "all",
-      "no"
-    ],
-    "edit": [
-      "all",
-      "no"
-    ],
-    "delete": [
-      "all",
-      "no"
-    ]
-  },
+  "tab": false,
+  "acl": false,
   "customizable": false,
   "importable": false,
   "notifications": false,
@@ -34,5 +15,8 @@
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
   "attributesDisabled": true,
-  "matchingDisabled": true
+  "bookmarkDisabled": true,
+  "matchingDisabled": true,
+  "leftSidebarDisabled": true,
+  "selectionDisabled": true
 }

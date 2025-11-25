@@ -12,7 +12,9 @@
                                  <img src="{{iconSrc}}" class="favorite-icon icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{/if}}
                         {{/if}}
+                        {{#unless createDisabled}}
                         <img src="{{../plusIcon}}" data-action="quickFavCreate" data-name="{{name}}" title="{{translate "Create"}}" class="favorite-icon icon plus-icon hidden" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
+                        {{/unless}}
                         <span class="full-label">{{label}}</span>
                     </span>
                 </a>

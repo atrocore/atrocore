@@ -21,6 +21,7 @@
     "focusField": "Поле фокусування",
     "webhookUrl": "URL",
     "targetEntity": "Цільова сутність",
+    "hideTextLabel": "Приховати текст на кнопці",
     "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
     "updateType": "Тип оновлення",
     "updateScript": "Скрипт"

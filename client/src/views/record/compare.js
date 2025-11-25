@@ -38,7 +38,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         disableModelFetch: true,
 
+        showOverlay: true,
+
         models: null,
+
+        selectionModel: null,
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
@@ -61,7 +65,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderedPanels = [];
             this.hideButtonPanel = false;
             this.selectedFilters =  this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
-            this.selectionId = this.options.selectionId || this.selectionId;
+            this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
@@ -96,6 +100,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 relationshipsPanels.changeViewMode('detail');
                 this.renderFieldsPanels();
                 relationshipsPanels.merging = false;
+                this.$el.find('div.compare-records').attr('data-mode','compare')
             }
         },
 
@@ -110,6 +115,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 })
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
+                this.$el.find('div.compare-records').attr('data-mode','merge')
                 return;
             }
 
@@ -152,9 +158,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     buttons.removeClass('disabled');
                     this.handleRadioButtonsDisableState(false);
                 }
-            }).done(() => {
+            }).done((result) => {
                 this.notify('Merged', 'success');
-                this.trigger('merge-success');
+                this.trigger('merge-success', result);
+                this.getRouter().navigate(`#${this.scope}/view/${result.id}`,{trigger: true});
                 if (doneCallback) {
                     doneCallback();
                 }
@@ -162,17 +169,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         getCompareUrl() {
-            return this.scope + '/action/merge'
+            return 'App/action/merge'
         },
 
         getCompareData(targetId, attributes, relationshipData) {
             return {
+                scope: this.scope,
                 attributes: {
                     input: attributes,
                     relationshipData: relationshipData
                 },
-                targetId: targetId,
-                sourceIds: this.getModels().filter(m => m.id !== targetId).map(m => m.id),
+                sourceIds: this.getModels().map(m => m.id),
             }
         },
 
@@ -208,8 +215,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
 
+            let forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
             Object.entries(this.model.defs.fields).forEach(function ([field, fieldDef]) {
+
+                if(forbiddenList.includes(field)) {
+                    return;
+                }
+
                 if (this.nonComparableFields.includes(field)) {
                     return;
                 }
@@ -316,7 +329,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     hideCheckAll: index !== 0,
                     el: `${this.options.el} [data-name="${panel.name}"] .list-container`
                 }, view => {
-                    view.render();
                     this.listenTo(view, 'data:change', fieldDefs => {
                         this.prepareFieldsData();
 
@@ -331,15 +343,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                             }
                         }
 
-                    })
-                    if (view.isRendered()) {
-                        this.handlePanelRendering(panel.name);
-                        this.trigger('after:fields-panel-rendered');
-                    }
-                    this.listenTo(view, 'after:render', () => {
-                        this.handlePanelRendering(panel.name);
-                        this.trigger('after:fields-panel-rendered');
                     });
+
+                    view.render(() => {
+                        this.handlePanelRendering(panel.name);
+                        this.trigger('after:fields-panel-rendered', panel.name);
+                    });
+
                 }, true);
             });
         },
@@ -350,6 +360,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderRelationshipsPanels() {
             if (this.isComparisonAcrossScopes()) {
+                this.handlePanelRendering('relationshipsPanels');
+                return;
+            }
+
+            let panelList = this.getRelationshipPanels();
+
+            if(panelList.length === 0) {
+                this.handlePanelRendering('relationshipsPanels');
                 return;
             }
 
@@ -359,7 +377,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.createView('relationshipsPanels', this.relationshipsPanelsView, {
                 scope: this.scope,
                 model: this.model,
-                relationshipsPanels: this.getRelationshipPanels(),
+                relationshipsPanels: panelList,
                 collection: this.collection,
                 models: this.getModels(),
                 distantModels: this.getDistantModels(),
@@ -370,15 +388,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
                 selectedFilters: this.selectedFilters
             }, view => {
-                view.render();
-                if (view.isRendered()) {
-                    this.handlePanelRendering('relationshipsPanels');
-                }
+
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.handlePanelRendering('relationshipsPanels');
                     this.trigger('after:relationship-panels-render')
-                    this.notify(false)
                 });
+
+                view.render();
 
             }, true);
         },
@@ -398,8 +414,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     continue;
                 }
 
+
                 let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
                 let relationScope = relationDefs['entity'];
+
+                if(!this.getAcl().check(relationScope, 'read')) {
+                    continue;
+                }
 
                 let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
 
@@ -407,6 +428,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        continue;
+                    }
                 }
 
                 let panelData = {
@@ -442,10 +466,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
+                if(!this.getAcl().check(relationDefs['entity'], 'read')) {
+                    return;
+                }
+
                 let relationName = relationDefs['relationName'];
 
                 if (relationName) {
                     relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                    if(!this.getAcl().check(relationName, 'read')) {
+                        return ;
+                    }
                 }
 
                 relationshipsPanels.push({
@@ -477,7 +508,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 scope: this.model.name,
                 id: this.getId(),
                 merging: this.merging,
-                hideButtonPanel: this.hideButtonPanel
+                hideButtonPanel: this.hideButtonPanel,
+                showOverlay: this.showOverlay
             };
         },
 
@@ -706,14 +738,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }
 
             if (this.renderedPanels.length === this.fieldPanels.length + 1) {
-                this.notify(false)
                 this.handleRadioButtonsDisableState(false);
-                $('button[data-name="merge"]').removeClass('disabled');
-                $('button[data-name="merge"]').attr('disabled', false);
-                $('button[data-name="selectionView"]').removeClass('disabled');
-                $('button[data-name="selectionView"]').attr('disabled', false);
-                $('.button-container a').removeClass('disabled');
                 this.trigger('all-panels-rendered');
+                this.notify(false);
+                this.$el.find('.overlay').addClass('hidden');
             }
         },
 
@@ -887,10 +915,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 overviewFilters: overviewFilterList,
                 currentValues: currentValues
             }, view => {
-                view.render()
-                if (view.isRendered()) {
-                    this.notify(false)
-                }
                 this.listenTo(view, 'after:render', () => {
                     this.notify(false)
                 });
@@ -911,6 +935,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     }
                 });
+
+                view.render()
             });
         },
 

@@ -39,7 +39,6 @@
     "textFilterFields": "Champs du filtre de texte",
     "nonDuplicatableFields": "Champs non dupliqués",
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
-    "checkForDuplicates": "Vérifier les doublons",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification"
   },
   "options": {

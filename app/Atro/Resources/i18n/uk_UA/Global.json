@@ -69,7 +69,7 @@
     "IncomingWebhook": "Вхідний веб-хук",
     "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
     "UserProfile": "Профіль користувача",
-    "MatchedRecord": "Відповідний запис",
+    "MatchedRecord": "Співставлений запис",
     "Background": "Фон",
     "Entity": "Сутність",
     "EntityField": "Поле сутності",
@@ -131,7 +131,7 @@
     "AccountGroup": "Групи рахунків",
     "ProductGroup": "Групи товарів",
     "RoleScopeAttributePanel": "Панелі атрибутів",
-    "MatchedRecord": "Відповідні записи",
+    "MatchedRecord": "Співставлені записи",
     "Matching": "Відповідності",
     "ThumbnailType": "Типи мініатюр",
     "ActionLog": "Журнали дій",
@@ -152,7 +152,9 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "matchings": "Відповідності",
     "selectAll": "Вибрати все",
+    "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",
     "jobManager": "Менеджер завдань",
     "customizeLayout": "Налаштувати макет",
@@ -451,6 +453,9 @@
     "goBack": "Назад",
     "goForward": "Вперед",
     "reloadPage": "Перезавантажити",
+    "splitHorizontal": "Розділити екран горизонтально",
+    "splitVertical": "Розділити екран вертикально",
+    "expandWindow": "Розгорнути вікно",
     "Compare": "Порівняйте",
     "Standard": "Стандартний",
     "addItem": "додати товар",
@@ -594,7 +599,8 @@
     "closePanelConfirmation": "Ви дійсно хочете закрити панель?",
     "removeRelatedRecords": "Ви впевнені, що хочете видалити всі записи для вибраної Асоціації з поточного запису? Всі пов'язані записи будуть збережені.",
     "deletePermanentlyRecordConfirmation": "Ви впевнені, що хочете назавжди видалити запис?",
-    "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?"
+    "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?",
+    "minimumRecordForComparison": "Ви не можете мати менше {count} записів"
   },
   "boolFilters": {
     "onlyActive": "Активні",
@@ -638,6 +644,10 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "primaryRecord": "Первинний запис",
+    "derivedRecords": "Похідні записи",
+    "goldenRecord": "Золотий запис",
+    "sourceRecords": "Джерела запису",
     "classifications": "Класифікації",
     "classification": "Класифікація",
     "status": "Статус",

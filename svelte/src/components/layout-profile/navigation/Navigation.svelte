@@ -158,7 +158,7 @@
         }
 
         Object.entries(Metadata.get(['scopes'])).forEach(([key, value]) => {
-            if (value.disabled || value.emHidden || !value.tab) {
+            if (value.disabled || !value.tab) {
                 return;
             }
 

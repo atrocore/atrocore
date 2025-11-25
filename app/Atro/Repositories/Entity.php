@@ -116,12 +116,23 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
+        if ($link === 'derivedEntities') {
+            $selectParams['whereClause'] = [['primaryEntityId=' => $entity->get('id')]];
+            return $this->getEntityManager()->getRepository('Entity')->find($selectParams);
+        }
+
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
         if ($relationName === 'fields') {
+            $params['offset'] = 0;
+            $params['limit'] = \PHP_INT_MAX;
+            return count($this->findRelated($entity, $relationName, $params));
+        }
+
+        if ($relationName === 'derivedEntities') {
             $params['offset'] = 0;
             $params['limit'] = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -153,7 +164,7 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        return array_merge($row, [
+        $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
             'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
@@ -163,8 +174,28 @@ class Entity extends ReferenceData
             'clearDeletedAfterDays' => $this->getMetadata()->get(['scopes', $code, 'clearDeletedAfterDays'], 60),
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
-            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc'
+            'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
         ]);
+
+        if (in_array($row['type'], ['Base', 'Hierarchy'])) {
+            $duplicateMatching = $this
+                ->getEntityManager()
+                ->getRepository('Matching')
+                ->getEntityByCode(Matching::createCodeForDuplicate($code));
+
+            $res['hasDuplicates'] = !empty($duplicateMatching);
+
+            $masterEntityMatching = $this
+                ->getEntityManager()
+                ->getRepository('Matching')
+                ->getEntityByCode(Matching::createCodeForMasterRecord($code));
+
+            if (!empty($masterEntityMatching)) {
+                $res['masterEntity'] = $masterEntityMatching->get('masterEntity');
+            }
+        }
+
+        return $res;
     }
 
     protected function getAllItems(array $params = []): array
@@ -175,6 +206,7 @@ class Entity extends ReferenceData
         $canHasClassifications = false;
         $canHasComponents = false;
         $canHasAssociates = false;
+        $primaryEntityId = null;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -190,6 +222,11 @@ class Entity extends ReferenceData
 
             if (!empty($item['canHasAssociates'])) {
                 $canHasAssociates = true;
+            }
+            if (!empty($item['primaryEntityId='])) {
+                $primaryEntityId = $item['primaryEntityId='];
+            } elseif (!empty($item['primaryEntityId'])) {
+                $primaryEntityId = $item['primaryEntityId'];
             }
         }
 
@@ -212,6 +249,10 @@ class Entity extends ReferenceData
             }
 
             if ($canHasAssociates && empty($row['hasAssociate'])) {
+                continue;
+            }
+
+            if (!empty($primaryEntityId) && (empty($row['primaryEntityId']) || $primaryEntityId !== $row['primaryEntityId'])) {
                 continue;
             }
 
@@ -254,7 +295,15 @@ class Entity extends ReferenceData
 
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
-            $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
+            $entityType = $entity->get('type');
+            if ($entity->get('type') === 'Derivative' && $type === 'clientDefs') {
+                $entityType = $this->getMetadata()->get("scopes.{$entity->get('primaryEntityId')}.type");
+            }
+            $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
+            if (!file_exists($filePath)){
+                continue;
+            }
+            $contents = file_get_contents($filePath);
             if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
                 $contents = str_replace('{entityType}', $entity->get('code'), $contents);
             }
@@ -354,6 +403,51 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
+            } elseif ($field === 'hasDuplicates') {
+                if (empty($entity->get('matchingDisabled'))) {
+                    $code = Matching::createCodeForDuplicate($entity->id);
+                    if (!empty($entity->get($field))) {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                        $matching->set([
+                            'id'           => $code,
+                            'name'         => "Duplicate for {$entity->id}",
+                            'code'         => $code,
+                            'type'         => 'duplicate',
+                            'minimumScore' => 100,
+                            'entity'       => $entity->id,
+                            'isActive'     => false,
+                        ]);
+                        $this->getEntityManager()->saveEntity($matching);
+                    } else {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                        if (!empty($matching)) {
+                            $this->getEntityManager()->removeEntity($matching);
+                        }
+                    }
+                }
+            } elseif ($field === 'masterEntity') {
+                if (empty($entity->get('matchingDisabled'))) {
+                    $code = Matching::createCodeForMasterRecord($entity->id);
+                    if (!empty($masterEntity = $entity->get($field))) {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->get();
+                        $matching->set([
+                            'id'           => $code,
+                            'name'         => "Master Record for {$entity->id}",
+                            'code'         => $code,
+                            'type'         => 'masterRecord',
+                            'minimumScore' => 100,
+                            'sourceEntity' => $entity->id,
+                            'masterEntity' => $masterEntity,
+                            'isActive'     => false,
+                        ]);
+                        $this->getEntityManager()->saveEntity($matching);
+                    } else {
+                        $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+                        if (!empty($matching)) {
+                            $this->getEntityManager()->removeEntity($matching);
+                        }
+                    }
+                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 
@@ -386,6 +480,10 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
+        if (!empty($entity->get('primaryEntityId'))) {
+            $entity->set('type', 'Derivative');
+        }
+
         if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
             if (!is_array($modifiedExtendedRelations)) {
                 $modifiedExtendedRelations = [];

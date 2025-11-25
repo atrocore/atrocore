@@ -1,5 +1,7 @@
-{{#if isNotEmpty}}
+<div>
+    {{#if isNotEmpty}}
     <span class="complex-text">{{complexText value}}</span>
-{{else}}
+    {{else}}
     {{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span class="pre-label"> </span>{{/if}}
-{{/if}}
+    {{/if}}
+</div>

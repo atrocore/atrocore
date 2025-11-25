@@ -220,116 +220,114 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
 
-            if (this.mode != 'list') {
-                this.addActionHandler('selectLink', function () {
-                    self.notify('Loading...');
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+            this.addActionHandler('selectLink', function () {
+                self.notify('Loading...');
+                var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
 
-                    this.createView('dialog', viewName, {
-                        scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode !== 'search',
-                        filters: this.getSelectFilters(),
-                        boolFilterList: this.getSelectBoolFilterList(),
-                        boolFilterData: this.getBoolFilterData(),
-                        primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: this.linkMultiple,
-                        massRelateEnabled: true,
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
-                        mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes,
-                        selectAllByDefault: this.getSelectAllByDefault(),
-                        sortBy: this.sortBy,
-                        sortAsc: this.sortAsc
-                    }, function (dialog) {
-                        dialog.render();
-                        self.notify(false);
+                this.createView('dialog', viewName, {
+                    scope: this.foreignScope,
+                    createButton: !this.createDisabled && this.mode !== 'search',
+                    filters: this.getSelectFilters(),
+                    boolFilterList: this.getSelectBoolFilterList(),
+                    boolFilterData: this.getBoolFilterData(),
+                    primaryFilterName: this.getSelectPrimaryFilterName(),
+                    multiple: this.linkMultiple,
+                    massRelateEnabled: true,
+                    createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                    mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                    forceSelectAllAttributes: this.forceSelectAllAttributes,
+                    selectAllByDefault: this.getSelectAllByDefault(),
+                    sortBy: this.sortBy,
+                    sortAsc: this.sortAsc
+                }, function (dialog) {
+                    dialog.render();
+                    self.notify(false);
 
-                        this.listenTo(dialog, 'select', function (models) {
-                            if (this.foreignScope !== 'File') {
-                                this.clearView('dialog');
+                    this.listenTo(dialog, 'select', function (models) {
+                        if (this.foreignScope !== 'File') {
+                            this.clearView('dialog');
+                        }
+                        if (models.massRelate) {
+                            if (models.where.length === 0) {
+                                // force subquery if primary filter "all" is used in modal
+                                models.where = [{ asc: true }]
                             }
-                            if (models.massRelate) {
-                                if (models.where.length === 0) {
-                                    // force subquery if primary filter "all" is used in modal
-                                    models.where = [{ asc: true }]
-                                }
-                                this.model.set(this.idsName, null);
-                                this.model.set(this.nameHashName, null);
-                                this.ids = [];
-                                this.nameHash = {};
-                                this.addLinkSubQuery(models);
-                                this.trigger('change')
-                                return;
+                            this.model.set(this.idsName, null);
+                            this.model.set(this.nameHashName, null);
+                            this.ids = [];
+                            this.nameHash = {};
+                            this.addLinkSubQuery(models);
+                            this.trigger('change')
+                            return;
+                        }
+                        if (Object.prototype.toString.call(models) !== '[object Array]') {
+                            models = [models];
+                        }
+
+                        let selected = this.model.get(this.nameHashName) || {};
+                        if ('_localeId' in selected) {
+                            delete selected._localeId;
+                        }
+                        models.forEach(function (model) {
+                            if (typeof model.get !== "undefined") {
+                                let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
+                                selected[model.id] = self.getLocalizedFieldValue(model, foreignName);
+                            } else if (model.name) {
+                                selected[model.id] = model.name;
+                            } else {
+                                selected[model.id] = model.id;
                             }
-                            if (Object.prototype.toString.call(models) !== '[object Array]') {
-                                models = [models];
-                            }
-
-                            let selected = this.model.get(this.nameHashName) || {};
-                            if (selected._localeId) {
-                                delete selected._localeId;
-                            }
-                            models.forEach(function (model) {
-                                if (typeof model.get !== "undefined") {
-                                    let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
-                                    selected[model.id] = self.getLocalizedFieldValue(model, foreignName);
-                                } else if (model.name) {
-                                    selected[model.id] = model.name;
-                                } else {
-                                    selected[model.id] = model.id;
-                                }
-                            });
-
-                            this.model.set(this.idsName, Object.keys(selected));
-                            this.model.set(this.nameHashName, selected);
-
-                            this.ids = Object.keys(selected);
-                            this.nameHash = selected;
-                            this.nameHash._localeId = this.getUser().get('localeId');
-
-                            this.trigger('change');
-                            this.deleteLinkSubQuery();
-                            this.reRender();
                         });
 
-                        this.listenTo(dialog, 'unselect', id => {
-                            self.deleteLink(id);
-                        });
+                        this.model.set(this.idsName, Object.keys(selected));
+                        this.model.set(this.nameHashName, selected);
 
-                    }, this);
-                });
+                        this.ids = Object.keys(selected);
+                        this.nameHash = selected;
+                        this.nameHash._localeId = this.getUser().get('localeId');
 
-                this.addActionHandler('uploadLink', function () {
-                    this.uploadLink();
-                });
-
-                this.events['click a[data-action="clearLink"]'] = function (e) {
-                    var id = $(e.currentTarget).attr('data-id');
-                    this.deleteLink(id);
-                };
-                this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
-                    this.deleteLinkSubQuery();
-                };
-
-                this.addActionHandler('createLink', function () {
-                    this.notify('Loading...');
-                    this.createView('quickCreate', 'views/modals/edit', {
-                        scope: this.foreignScope,
-                        fullFormDisabled: true,
-                        attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
-                    }, view => {
-                        view.once('after:render', () => {
-                            this.notify(false);
-                        });
-                        view.render();
-
-                        this.listenToOnce(view, 'after:save', function (model) {
-                            this.clearView('quickCreate');
-                            this.addLink(model.id, model.get('name'));
-                        }.bind(this));
+                        this.trigger('change');
+                        this.deleteLinkSubQuery();
+                        this.reRender();
                     });
+
+                    this.listenTo(dialog, 'unselect', id => {
+                        self.deleteLink(id);
+                    });
+
+                }, this);
+            });
+
+            this.addActionHandler('uploadLink', function () {
+                this.uploadLink();
+            });
+
+            this.events['click a[data-action="clearLink"]'] = function (e) {
+                var id = $(e.currentTarget).attr('data-id');
+                this.deleteLink(id);
+            };
+            this.events['click a[data-action="clearLinkSubQuery"]'] = function (e) {
+                this.deleteLinkSubQuery();
+            };
+
+            this.addActionHandler('createLink', function () {
+                this.notify('Loading...');
+                this.createView('quickCreate', 'views/modals/edit', {
+                    scope: this.foreignScope,
+                    fullFormDisabled: true,
+                    attributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                }, view => {
+                    view.once('after:render', () => {
+                        this.notify(false);
+                    });
+                    view.render();
+
+                    this.listenToOnce(view, 'after:save', function (model) {
+                        this.clearView('quickCreate');
+                        this.addLink(model.id, model.get('name'));
+                    }.bind(this));
                 });
-            }
+            });
         },
 
         uploadLink: function () {
@@ -533,6 +531,12 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     const type = this.$el.find('select.search-type').val();
                     this.handleSearchType(type);
                 }
+            }
+
+            if(!this.model.has(this.idsName)) {
+                this.getCellElement().attr('data-no-load', true);
+            }else{
+                this.getCellElement().removeAttr('data-no-load')
             }
         },
 

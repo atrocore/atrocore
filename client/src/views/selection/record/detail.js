@@ -14,12 +14,13 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
     return Dep.extend({
         setup: function() {
             Dep.prototype.setup.call(this);
-
-            this.additionalButtons.push( {
-                action: 'addItem',
-                name: 'addItem',
-                label: this.translate('addItem')
-            });
+            if( this.getAcl().check('Selection', 'edit')) {
+                this.additionalButtons.push({
+                    action: 'addItem',
+                    name: 'addItem',
+                    label: this.translate('addItem')
+                });
+            }
         }
     });
 });

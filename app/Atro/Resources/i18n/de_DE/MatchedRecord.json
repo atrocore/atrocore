@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Passend dazu",
-    "staging": "Inszenierung",
-    "stagingEntity": "Staging-Entität",
-    "stagingEntityId": "Staging Entity ID",
-    "master": "Meister",
+    "source": "Quelle",
+    "sourceEntity": "Quellentität",
+    "sourceEntityId": "Quelle-Entitäts-ID",
+    "master": "Master",
     "masterEntity": "Master-Entität",
-    "masterEntityId": "Master Entity ID",
-    "score": "Ergebnis",
-    "status": "Status"
+    "masterEntityId": "Master-Entitäts-ID",
+    "score": "Punktzahl",
+    "hash": "Eindeutiger Hash"
   },
   "options": {
-    "status": {
-      "found": "Gefunden",
-      "confirmed": "Bestätigt",
-      "rejected": "Abgelehnt"
+    "type": {
+      "duplicate": "Duplikat",
+      "masterRecord": "Master Record"
     }
   }
 }

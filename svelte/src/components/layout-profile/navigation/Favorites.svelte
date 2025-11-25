@@ -56,7 +56,7 @@
         }
 
         Object.entries(Metadata.get(['scopes'])).forEach(([key, value]) => {
-            if (value.disabled || value.emHidden || !value.tab || !Acl.check(key, 'read')) {
+            if (value.disabled || !value.tab || !Acl.check(key, 'read')) {
                 return;
             }
 

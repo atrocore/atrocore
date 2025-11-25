@@ -284,9 +284,9 @@ class Record extends RecordService
         return is_array($record) ? $record['name'] : $record->get('name');
     }
 
-    public function getTreeItems(string $link, string $scope, array $params): array
+    public function getParamsForTree(string $link, string $scope, array $params): array
     {
-        if ($link !== '_self') {
+        if (!empty($link) && $link !== '_self') {
             $foreignLink = '';
             foreach ($this->getMetadata()->get(['entityDefs', $this->entityName, 'links']) ?? [] as $linkName => $linkData) {
                 if (!empty($linkData['foreign']) && $linkData['foreign'] === $link && $linkData['entity'] === $scope) {
@@ -295,31 +295,40 @@ class Record extends RecordService
                 }
             }
 
-            if (!empty($foreignLink)) {
+            if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
+                $field = $link . 'Id';
+                $foreignRepository = $this->getEntityManager()->getRepository($scope);
+
+                $params['foreignWhere'][] = [
+                    'type'      => 'isNotNull',
+                    'attribute' => $field,
+                ];
+
+                $sp = $this->getSelectManager($scope)->getSelectParams(['where' => $params['foreignWhere']], true, true);
+                $sp['select'] = [$field];
+                $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp);
+
+                $ids = $qb1->distinct()->fetchFirstColumn();
+
                 $params['where'][] = [
+                    'type'      => 'in',
+                    'attribute' => 'id',
+                    'value'     => $ids,
+                ];
+            } else if (!empty($foreignLink)) {
+                $where = [
                     'type'      => 'isLinked',
                     'attribute' => $foreignLink,
                 ];
+                if (!empty($params['foreignWhere'])) {
+                    $where['type'] = 'linkedWith';
+                    $where['subQuery'] = $params['foreignWhere'];
+                }
+                $params['where'][] = $where;
             } else {
                 $field = $link . 'Id';
-                if ($this->getMetadata()->get(['scopes', $this->entityName, 'type']) === 'ReferenceData') {
-                    $column = Util::toUnderScore($field);
-                    $ids = $this->getEntityManager()->getConnection()
-                        ->createQueryBuilder()
-                        ->select($column)
-                        ->from(Util::toUnderScore($scope), 'e')
-                        ->where('deleted = :false')
-                        ->andWhere("$column is not null")
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->distinct()
-                        ->fetchFirstColumn();
-
-                    $params['where'][] = [
-                        'type'      => 'in',
-                        'attribute' => 'id',
-                        'value'     => $ids,
-                    ];
-                } else if ($link === 'teams') {
+                if ($link === 'teams') {
+                    // TODO:  apply main filter
                     $params['queryCallbacks'] = [
                         function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($scope) {
                             $ta = $mapper->getQueryConverter()->getMainTableAlias();
@@ -334,23 +343,42 @@ class Record extends RecordService
                     ];
                     $params['distinct'] = true;
                 } else if (!empty($this->getEntityManager()->getOrmMetadata()->get($scope, 'fields')[$field])) {
-                    $params['queryCallbacks'] = [
-                        function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($field, $scope) {
-                            $ta = $mapper->getQueryConverter()->getMainTableAlias();
-                            $column = $mapper->toDb($field);
+                    if (!empty($params['foreignWhere'])) {
+                        $params['where'][] = [
+                            'type'          => 'in',
+                            'attribute'     => 'id',
+                            'subQuery'      => $params['foreignWhere'],
+                            'foreignEntity' => $scope,
+                            'foreignField'  => $field,
+                        ];
+                    } else {
+                        $params['queryCallbacks'] = [
+                            function (QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper) use ($field, $scope) {
+                                $ta = $mapper->getQueryConverter()->getMainTableAlias();
+                                $column = $mapper->toDb($field);
 
-                            $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
-                                ->andWhere("et.$column is not null")
-                                ->andWhere("et.deleted = :false")
-                                ->setParameter('false', false, ParameterType::BOOLEAN);
-                        }
-                    ];
-                    $params['distinct'] = true;
+                                $qb->leftJoin($ta, $mapper->toDb($scope), 'et', "$ta.id = et.$column")
+                                    ->andWhere("et.$column is not null")
+                                    ->andWhere("et.deleted = :false")
+                                    ->setParameter('false', false, ParameterType::BOOLEAN);
+                            }
+                        ];
+                        $params['distinct'] = true;
+                    }
                 } else {
                     throw new BadRequest("Field $field not found on $scope and Foreign link not found for ($scope: $link) on " . $this->entityName);
                 }
             }
         }
+        unset($params['foreignWhere']);
+
+
+        return $params;
+    }
+
+    public function getTreeItems(string $link, string $scope, array $params): array
+    {
+        $params = $this->getParamsForTree($link, $scope, $params);
 
         $repository = $this->getRepository();
 
@@ -382,7 +410,8 @@ class Record extends RecordService
                 'offset'         => $offset + $key,
                 'total'          => $total,
                 'disabled'       => false,
-                'load_on_demand' => false
+                'load_on_demand' => false,
+                'scope'          => $this->entityName,
             ];
         }
 
@@ -394,13 +423,15 @@ class Record extends RecordService
 
     public function merge($id, array $sourceIdList, \stdClass $attributes, bool $keepSources = false)
     {
-        if (empty($id)) {
-            throw new Error();
-        }
-
         $repository = $this->getRepository();
 
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        if (!empty($id)) {
+            $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        } else {
+            $input = $attributes->input;
+            unset($input->id);
+            $entity = $this->createEntity($input);
+        }
 
         if (!$entity) {
             throw new NotFound();
@@ -472,7 +503,7 @@ class Record extends RecordService
                 foreach ($linkedList as $linked) {
                     try {
                         $repository->relate($entity, $link, $linked);
-                    }catch (UniqueConstraintViolationException $e) {
+                    } catch (UniqueConstraintViolationException $e) {
                     }
                 }
             }
@@ -501,11 +532,13 @@ class Record extends RecordService
 
         $this->getRecordService('MassActions')->upsert($upsertData);
 
-        try {
-            $attributes->input->_skipCheckForConflicts = true;
-            $this->updateEntity($id, $attributes->input);
-        } catch (NotModified $e) {
+        if (!empty($id)) {
+            try {
+                $attributes->input->_skipCheckForConflicts = true;
+                $this->updateEntity($id, $attributes->input);
+            } catch (NotModified $e) {
 
+            }
         }
 
         if (empty($keepSources)) {
@@ -517,7 +550,7 @@ class Record extends RecordService
 
         $this->afterMerge($entity, $sourceList, $attributes);
 
-        return true;
+        return $entity;
     }
 
     public function getMergeLinkList(array $relationshipData): array

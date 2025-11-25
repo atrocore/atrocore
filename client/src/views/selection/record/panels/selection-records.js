@@ -11,15 +11,26 @@
 Espo.define('views/selection/record/panels/selection-records', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
-        actionCreateRelated (data) {
-            let maxComparableItem =  this.getConfig().get('maxComparableItem') || 10;
 
-            if (this.collection.models.length >=  maxComparableItem) {
-                this.notify(this.translate('selectNoMoreThan', 'messages').replace('{count}', maxComparableItem), 'error');
-                return;
+        setup() {
+            Dep.prototype.setup.call(this);
+            if(this.getAcl().check('Selection','edit')) {
+                this.buttonList.push({
+                    title: 'Create',
+                    action: this.defs.createAction || 'createRelated',
+                    link: this.link,
+                    acl: 'create',
+                    aclScope: this.scope,
+                    html: '<i class="ph ph-plus"></i>',
+                    data: {
+                        link: this.link,
+                    }
+                });
             }
+        },
 
-            Dep.prototype.actionCreateRelated.call(this, data);
+        actionCreateRelated (data) {
+            this.getParentView().getParentView().getParentView().actionAddItem();
         }
     });
 });

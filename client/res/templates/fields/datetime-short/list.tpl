@@ -1,1 +1,3 @@
-  {{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span title="{{fullDateValue}}">{{dateValue}}</span>{{/if}}
+<div>
+    {{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<span title="{{fullDateValue}}">{{dateValue}}</span>{{/if}}
+</div>

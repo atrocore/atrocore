@@ -42,7 +42,8 @@
     "defaultStyle": "Default Style",
     "customHeadCode": "Head Code",
     "customStylesheetPath": "СSS File Path",
-    "customStylesheet": "CSS"
+    "customStylesheet": "CSS",
+    "disableToolbarLogo": "Disable header logo"
   },
   "tooltips": {
     "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",

@@ -152,6 +152,7 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "matchings": "Matchings",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
@@ -426,6 +427,7 @@
     "galleryZoom": "Zoom",
     "galleryBackground": "Hintergrund",
     "selectAll": "Alle auswählen",
+    "unselectAll": "Alle abwählen",
     "contentLanguages": "Content-Sprachen",
     "collapseAll": "Alles einklappen",
     "expandAll": "Alle erweitern",
@@ -458,6 +460,9 @@
     "goBack": "Zurückgehen",
     "goForward": "Weitergehen",
     "reloadPage": "Seite neu laden",
+    "splitHorizontal": "Horizontal teilen",
+    "splitVertical": "Vertikal teilen",
+    "expandWindow": "Fenster erweitern",
     "Compare": "Vergleichen",
     "Standard": "Standard",
     "addItem": "Entität hinzufügen",
@@ -594,7 +599,8 @@
     "youHaveErrorsInFilter": "Der Filter hat einige Fehler.",
     "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
     "closePanelConfirmation": "Sind Sie sicher, dass Sie das Panel schließen wollen?",
-    "jobAdded": "Job wurde erfolgreich zum Job Manager hinzugefügt"
+    "jobAdded": "Job wurde erfolgreich zum Job Manager hinzugefügt",
+    "minimumRecordForComparison": "Sie dürfen nicht weniger als {count} Datensätze haben."
   },
   "unit Length": {
     "mm": "mm",
@@ -682,6 +688,10 @@
     "select": "Wählen"
   },
   "fields": {
+    "primaryRecord": "Primärer Datensatz",
+    "derivedRecords": "Abgeleitete Datensätze",
+    "goldenRecord": "Golden Record",
+    "sourceRecords": "Quelldatensätze",
     "width": "Breite",
     "height": "Höhe",
     "action": "Aktion",

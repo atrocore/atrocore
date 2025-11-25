@@ -15,5 +15,7 @@
   "hideFieldTypeFilters": true,
   "disableActionHistory": true,
   "attributesDisabled": true,
-  "matchingDisabled": true
+  "matchingDisabled": true,
+  "mergeDisabled": true,
+  "selectionDisabled": true
 }

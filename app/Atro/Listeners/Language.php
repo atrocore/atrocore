@@ -91,6 +91,17 @@ class Language extends AbstractListener
                         continue;
                     }
 
+                    if (
+                        !empty($entityDefs['links'][$field]['foreign'])
+                        && !empty($entityDefs['links'][$field]['entity'])
+                        && $entityDefs['links'][$field]['foreign'] === 'goldenRecord'
+                    ) {
+                        $fieldLabel = $this->getLabel($data, $locale, 'Global', 'sourceRecords');
+                        $entityLabel = $this->getLabel($data, $locale, 'Global', $entityDefs['links'][$field]['entity'], 'scopeNames');
+
+                        $data[$locale][$entity]['fields'][$field] = "$fieldLabel ($entityLabel)";
+                    }
+
                     if (!empty($fieldDefs['linkToRelationEntity']) && empty($data[$locale][$entity]['fields'][$field])) {
                         $fieldLabel = $this->getLabel($data, $locale, 'Global', $fieldDefs['linkToRelationEntity'], 'scopeNamesPlural');
                         $relationEntity = $this->getMetadata()->get(['entityDefs', $entity, 'links', $field, 'entity']);
@@ -198,6 +209,16 @@ class Language extends AbstractListener
                 $label = $rows['File']['labels']['thumbnailUrl'] ?? "Thumbnail URL (%s)";
 
                 $data[$locale]['File']['fields'][$field] = sprintf($label, $size);
+            }
+        }
+
+        foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Derivative') {
+                foreach ($data as $locale => $rows) {
+                    if (!empty($rows[$scopeDefs['primaryEntityId']])) {
+                        $data[$locale][$scope] = $rows[$scopeDefs['primaryEntityId']];
+                    }
+                }
             }
         }
 

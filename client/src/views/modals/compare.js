@@ -35,7 +35,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         fullHeight: true,
 
-        selectionId: null,
+        selectionModel: null,
 
         setup: function () {
             this.model = this.options.model;
@@ -52,7 +52,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
             this.collection = this.options.collection ?? this.collection;
             this.models = this.options.models || this.models;
-            this.selectionId = this.options.selectionId || this.selectionId;
+            this.selectionModel = this.options.selectionModel || this.selectionModel;
 
             Modal.prototype.setup.call(this)
 
@@ -72,8 +72,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.setupRecord();
             });
 
-            this.buttonList = [
-                {
+            this.buttonList = [];
+
+            if (this.getAcl().check(this.scope, 'create')) {
+                this.buttonList.push({
                     name: 'merge',
                     style: 'primary',
                     label: 'Merge',
@@ -81,26 +83,27 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     onClick: (dialog) => {
                         this.trigger('merge', dialog)
                     }
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: (dialog) => {
-                        this.trigger('cancel', dialog)
-                    }
-                }
-            ];
+                });
+            }
 
-            if (this.selectionId) {
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: (dialog) => {
+                    this.trigger('cancel', dialog)
+                }
+            });
+
+            if (this.getAcl().check('Selection', 'read') && this.selectionModel) {
                 this.buttonList.push({
                     name: "selectionView",
                     label: "Selection View",
                     disabled: true,
                     onClick: (dialog) => {
-                        const link = '#Selection/view/' + this.selectionId + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
+                        const link = '#Selection/view/' + this.selectionModel.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
                         this.getRouter().navigate(link, {trigger: false});
                         let options = {
-                            id: this.selectionId,
+                            id: this.selectionModel.id,
                             selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
                             models: this.getModels()
                         }
@@ -120,7 +123,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 instanceComparison: this.instanceComparison,
                 collection: this.options.collection,
                 models: this.options.models,
-                selectionId: this.options.selectionId,
+                selectionModel: this.options.selectionModel,
                 scope: this.scope,
                 merging: this.options.merging
             };
@@ -236,13 +239,19 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
         createModalView(options) {
             this.createView('modalRecord', this.recordView, options, (view) => {
-                view.render();
+                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
+                    ['merge', 'selectionView'].forEach(action => {
+                        $(`button[data-name="${action}"]`).removeClass('disabled');
+                        $(`button[data-name="${action}"]`).attr('disabled', false);
+                    });
+                    $('.button-container a').removeClass('disabled');
                 });
 
-                this.listenTo(view, 'merge-success', () => this.trigger('merge-success'));
+                view.render();
+
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
                 });

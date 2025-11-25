@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare', ['views/record/compare'], function (Dep) {
+Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'views/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -24,53 +24,67 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
 
         events: _.extend({
             'click div.inline-actions a.swap-entity': function (e) {
-                let id = $(e.currentTarget).data('id');
-                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-                let entityType = $(e.currentTarget).data('entity-type');
-
-                if (!id || !entityType || !selectionRecordId) {
-                    return;
-                }
-
-                const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
-
-                this.createView('select', viewName, {
-                    scope: entityType,
-                    createButton: false,
-                    multiple: false
-                }, (dialog) => {
-                    dialog.render();
-                    dialog.once('select', model => {
-                        this.notify('Loading...');
-                        this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
-                            entityId: model.id
-                        }).then(() => this.getParentView().afterChangedSelectedRecords([selectionRecordId]));
-                    });
-                });
+                this.afterSwapButtonClick(e)
             },
             'click div.inline-actions a.remove-entity': function (e) {
-                let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-                if (!selectionRecordId) {
-                    return;
-                }
-                this.notify('Removing...');
-                $.ajax({
-                    url: `SelectionRecord/${selectionRecordId}`,
-                    type: 'DELETE',
-                    contentType: 'application/json',
-                    success: () => {
-                        this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
-                    }
-                });
+                this.afterRemoveButtonClicked(e);
             }
         }, Dep.prototype.events),
+
+        afterSwapButtonClick(e) {
+            let id = $(e.currentTarget).data('id');
+            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+            let entityType = $(e.currentTarget).data('entity-type');
+
+            if (!id || !entityType || !selectionRecordId) {
+                return;
+            }
+
+            const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+            this.notify('Loading...');
+            this.createView('select', viewName, {
+                scope: entityType,
+                createButton: false,
+                multiple: false
+            }, (dialog) => {
+                dialog.render(() => {
+                    this.notify(false);
+                });
+                dialog.once('select', model => {
+                    if(model.id === id) {
+                        this.notify(this.translate('notModified', 'messages'));
+                        return;
+                    }
+                    this.notify('Loading...');
+                    this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
+                        entityId: model.id
+                    }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
+                });
+            });
+        },
+
+        afterRemoveButtonClicked(e) {
+            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+            if (!selectionRecordId) {
+                return;
+            }
+            this.notify('Removing...');
+            $.ajax({
+                url: `SelectionRecord/${selectionRecordId}`,
+                type: 'DELETE',
+                contentType: 'application/json',
+                success: () => {
+                    this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
+                }
+            });
+        },
 
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;
             this.selectionId = this.selectionModel.id;
             this.hidePanelNavigation = true;
-            if(!this.selectedFilters) {
+            if (!this.selectedFilters) {
                 this.selectedFilters = {}
             }
             this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
@@ -86,8 +100,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
                 this.reRenderFieldsPanels();
             })
 
-            this.listenToOnce(this, 'after:relationship-panels-render', () => {
-
+            this.listenToOnce(this, 'all-panels-rendered', () => {
                 let panelList = this.getRelationshipPanels().map(m => {
                     m.title = m.label;
                     return m;
@@ -128,6 +141,25 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare'], f
 
         getRecordButtons() {
             return this.getParentView().getCompareButtons();
+        },
+
+        canLoadActivities() {
+            return true;
+        },
+
+        getSvelteSideViewProps(parentView) {
+            let thisClone = Espo.utils.clone(this);
+
+            thisClone.scope = 'Selection';
+            thisClone.model = this.selectionModel;
+            thisClone.mode = 'detail';
+
+            let option = Detail.prototype.getSvelteSideViewProps.call(thisClone, parentView);
+
+            option.showSummary = true;
+            option.isCollapsed = false;
+
+            return option;
         }
     });
 

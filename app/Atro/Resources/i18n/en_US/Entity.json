@@ -4,6 +4,8 @@
     "namePlural": "Name plural",
     "disabled": "Disabled",
     "customizable": "Customizable",
+    "hasDuplicates": "Has Duplicates",
+    "masterEntity": "Master Entity",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
@@ -39,15 +41,17 @@
     "textFilterFields": "Text Filter fields",
     "nonDuplicatableFields": "Non-duplicated fields",
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
-    "checkForDuplicates": "Check for duplicates",
-    "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically"
+    "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
+    "primaryEntity": "Primary Entity",
+    "derivedEntities": "Derived Entities"
   },
   "options": {
     "type": {
       "Base": "Base",
       "Hierarchy": "Hierarchy",
       "ReferenceData": "Reference",
-      "Archive": "Archive"
+      "Archive": "Archive",
+      "Derivative": "Derivative"
     },
     "sortDirection": {
       "asc": "Ascending",

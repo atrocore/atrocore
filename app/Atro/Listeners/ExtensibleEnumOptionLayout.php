@@ -34,6 +34,23 @@ class ExtensibleEnumOptionLayout extends AbstractLayoutListener
                 }
             }
 
+            if (!$this->isAdminPage($event) && !str_contains($jsonString, ': "name"')) {
+                array_splice($result[0]['rows'][0], 1, 0, ['name' => 'name']);
+            }
+
+            $event->setArgument('result', $result);
+        }
+    }
+
+    public function list(Event $event): void
+    {
+        if ($this->getRelatedEntity($event) === 'ExtensibleEnum' && !$this->isAdminPage($event)) {
+            $result = $event->getArgument('result');
+
+            if (!in_array('name', array_column($result, 'name'))) {
+                array_splice($result, 2, 0, [['name' => 'name', 'link' => true]]);
+            }
+
             $event->setArgument('result', $result);
         }
     }

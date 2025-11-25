@@ -4,5 +4,8 @@
   },
   {
     "name": "attributes"
+  },
+  {
+    "name": "derivedEntities"
   }
 ]

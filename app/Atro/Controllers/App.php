@@ -12,6 +12,7 @@
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
 use Atro\Core\RealtimeManager;
 
@@ -75,6 +76,35 @@ class App extends \Espo\Controllers\App
 
         return $this->getService('App')->recalculateScriptField($data)->getValueMap();
     }
+
+    public function actionMerge($params, $data, $request)
+    {
+        if (!$request->isPost()) {
+            throw new BadRequest();
+        }
+
+        if (empty($data->scope) || empty($data->sourceIds) || !is_array($data->sourceIds) || !($data->attributes instanceof \StdClass)) {
+            throw new BadRequest();
+        }
+
+        $targetId = null;
+
+        if(!empty($data->targetId)) {
+            $targetId = $data->targetId;
+        }
+
+        $sourceIds = $data->sourceIds;
+        $attributes = $data->attributes;
+
+        if (!$this->getAcl()->check($this->name, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->getService($data->scope)->merge($targetId, $sourceIds, $attributes);
+
+        return $entity->getValueMap();
+    }
+
 
     protected function getRealtimeManager(): RealtimeManager
     {

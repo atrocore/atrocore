@@ -8,8 +8,6 @@
     export let params: ActionParams;
     export let className: string = '';
 
-    const styles: string[] = ['primary', 'secondary', 'success', 'warning', 'danger']
-
     let computedClassNames: string;
     $: {
         const size = params.size ?? 'regular';

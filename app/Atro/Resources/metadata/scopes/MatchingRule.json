@@ -15,5 +15,6 @@
   "hasTeam": false,
   "bookmarkDisabled": true,
   "emHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true
 }

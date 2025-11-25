@@ -1,7 +1,9 @@
-<a href="#{{scope}}/view/{{model.id}}" class="link" data-id="{{model.id}}" title="{{value}}">
-    {{#if value}}
+<div>
+    <a href="#{{scope}}/view/{{model.id}}" class="link" data-id="{{model.id}}" title="{{value}}">
+        {{#if value}}
         {{translateOption value scope=scope field=name translatedOptions=translatedOptions}}
-    {{else}}
+        {{else}}
         {{translate 'None'}}
-    {{/if}}
-</a>
+        {{/if}}
+    </a>
+</div>

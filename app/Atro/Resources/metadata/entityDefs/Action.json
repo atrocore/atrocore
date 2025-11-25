@@ -703,6 +703,57 @@
         }
       }
     },
+    "iconClass": {
+      "type": "varchar",
+      "view": "views/action/fields/icon-class",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "and",
+                  "value": [
+                    {
+                      "type": "in",
+                      "attribute": "usage",
+                      "value": [
+                        "record",
+                        "entity"
+                      ]
+                    },
+                    {
+                      "type": "equals",
+                      "attribute": "display",
+                      "value": "single"
+                    }
+                  ]
+                },
+                {
+                  "type": "equals",
+                  "attribute": "usage",
+                  "value": "field"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "hideTextLabel": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "iconClass"
+            }
+          ]
+        }
+      }
+    },
     "applyToPreselectedRecords": {
       "type": "bool",
       "notStorable": true,

@@ -448,7 +448,7 @@
     }
 
     function openLabelDialog(field: string, rowNumber: number, cellIndex: number) {
-        params.opedEditLabelDialog(params.scope, field, (label) => {
+        params.openEditLabelDialog(params.scope, field, (label) => {
             panels = panels.map(panel => {
                 panel.rows = panel.rows.map((row, rIndex) => {
                     if (row.number === rowNumber) {
@@ -459,6 +459,10 @@
                 return panel;
             })
         });
+    }
+
+    function openPanelLabelDialog(panel: Record<string, string>) {
+        params.openEditLabelDialog(params.scope, panel.label, null, `${params.scope}.labels.${panel.label}`);
     }
 
     function isAdmin() {
@@ -600,15 +604,23 @@
                             <li data-number={panel.number} class="panel-layout">
                                 <header data-name={panel.name}>
                                     <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
-                                    <a href="#" data-action="edit-panel-label" class="edit-panel-label"
-                                       on:click|preventDefault={() => editPanelLabel(panel)}>
-                                        <i class="ph ph-pencil-simple"></i>
-                                    </a>
-                                    <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
-                                       data-number={panel.number}
-                                       on:click|preventDefault={() => removePanel(panel.number)}>
-                                        <i class="ph ph-x"></i>
-                                    </a>
+                                    <div>
+                                        <a href="#" data-action="edit-panel-label" class="edit-panel-label"
+                                           on:click|preventDefault={() => editPanelLabel(panel)}>
+                                            <i class="ph ph-pencil-simple"></i>
+                                        </a>
+                                        {#if isAdmin() && panel.label}
+                                            <a href="#" data-action="change-label" class="edit-panel-label"
+                                               on:click|preventDefault={() => openPanelLabelDialog(panel)}>
+                                                <i class="ph ph-globe-simple"></i>
+                                            </a>
+                                        {/if}
+                                        <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
+                                           data-number={panel.number}
+                                           on:click|preventDefault={() => removePanel(panel.number)}>
+                                            <i class="ph ph-x"></i>
+                                        </a>
+                                    </div>
                                 </header>
                                 <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
                                     {#each panel.rows as row (row.number)}
@@ -846,6 +858,7 @@
 
     ul.panels > li a.edit-panel-label {
         display: none;
+        margin-right: 5px;
     }
 
     ul.panels > li:hover a.edit-panel-label {

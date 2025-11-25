@@ -291,23 +291,25 @@ class OpenApiGenerator
                 $result['paths']["/{$scopeName}/{id}"]['get']['parameters'][] = $languageParam;
             }
 
-            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive') {
-                $result['paths']["/{$scopeName}"]['post'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Create a record of the $scopeName",
-                    "description" => "Create a record of the $scopeName",
-                    "operationId" => "create{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'requestBody' => [
-                        'required' => true,
-                        'content'  => [
-                            'application/json' => [
-                                'schema' => $schema,
+            if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
+                if (!in_array($scopeName, ['Matching'])) {
+                    $result['paths']["/{$scopeName}"]['post'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Create a record of the $scopeName",
+                        "description" => "Create a record of the $scopeName",
+                        "operationId" => "create{$scopeName}Item",
+                        'security'    => [['Authorization-Token' => []]],
+                        'requestBody' => [
+                            'required' => true,
+                            'content'  => [
+                                'application/json' => [
+                                    'schema' => $schema,
+                                ],
                             ],
                         ],
-                    ],
-                    "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
-                ];
+                        "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
+                    ];
+                }
 
                 $putSchema = $schema;
                 unset($putSchema['properties']['id']);
@@ -339,37 +341,39 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
                 ];
 
-                $result['paths']["/{$scopeName}/{id}"]['delete'] = [
-                    'tags'        => [$scopeName],
-                    "summary"     => "Delete a record of the $scopeName",
-                    "description" => "Delete a record of the $scopeName",
-                    "operationId" => "delete{$scopeName}Item",
-                    'security'    => [['Authorization-Token' => []]],
-                    'parameters'  => [
-                        [
-                            "name"     => "id",
-                            "in"       => "path",
-                            "required" => true,
-                            "schema"   => [
-                                "type" => "string",
+                if (!in_array($scopeName, ['Matching'])) {
+                    $result['paths']["/{$scopeName}/{id}"]['delete'] = [
+                        'tags'        => [$scopeName],
+                        "summary"     => "Delete a record of the $scopeName",
+                        "description" => "Delete a record of the $scopeName",
+                        "operationId" => "delete{$scopeName}Item",
+                        'security'    => [['Authorization-Token' => []]],
+                        'parameters'  => [
+                            [
+                                "name"     => "id",
+                                "in"       => "path",
+                                "required" => true,
+                                "schema"   => [
+                                    "type" => "string",
+                                ],
+                            ],
+                            [
+                                "name"        => "permanently",
+                                "in"          => "header",
+                                "required"    => false,
+                                "description" => "Set to TRUE if you want to delete the record permanently",
+                                "schema"      => [
+                                    "type"    => "boolean",
+                                    "example" => false,
+                                ],
                             ],
                         ],
-                        [
-                            "name"        => "permanently",
-                            "in"          => "header",
-                            "required"    => false,
-                            "description" => "Set to TRUE if you want to delete the record permanently",
-                            "schema"      => [
-                                "type"    => "boolean",
-                                "example" => false,
-                            ],
-                        ],
-                    ],
-                    "responses"   => self::prepareResponses(['type' => 'boolean']),
-                ];
+                        "responses"   => self::prepareResponses(['type' => 'boolean']),
+                    ];
+                }
             }
 
-            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive'])) {
+            if (!empty($scopeData['type']) && !in_array($scopeData['type'], ['ReferenceData', 'Archive']) && $scopeName !== 'MatchedRecord') {
                 $result['paths']["/{$scopeName}/{id}/{link}"]['get'] = [
                     'tags'        => [$scopeName],
                     "summary"     => "Returns linked entities for the $scopeName",
@@ -1288,6 +1292,9 @@ class OpenApiGenerator
             case "link":
             case "linkParent":
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"] = ['type' => 'string'];
+                if(!empty($fieldData['protected'])) {
+                    $result['components']['schemas'][$entityName]['properties']["{$fieldName}Id"]['forRead'] = true;
+                }
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Name"] = [
                     'type'    => 'string',
                     'forRead' => true
@@ -1328,6 +1335,11 @@ class OpenApiGenerator
                     'type'  => 'array',
                     'items' => ['type' => 'string']
                 ];
+
+                if(!empty($fieldData['protected'])) {
+                    $result['components']['schemas'][$entityName]['properties']["{$fieldName}Ids"]['forRead'] = true;
+                }
+
                 $result['components']['schemas'][$entityName]['properties']["{$fieldName}Names"] = [
                     'type'    => 'object',
                     'forRead' => true
@@ -1335,6 +1347,10 @@ class OpenApiGenerator
                 break;
             default:
                 $result['components']['schemas'][$entityName]['properties'][$fieldName] = ['type' => 'string'];
+        }
+
+        if(!empty($fieldData['protected']) && !empty($result['components']['schemas'][$entityName]['properties'][$fieldName])) {
+            $result['components']['schemas'][$entityName]['properties'][$fieldName]['forRead'] = true;
         }
     }
 

@@ -51,6 +51,8 @@ class Metadata extends AbstractListener
 
         $data = $this->addActive($data);
 
+        $this->prepareDerivatives($data);
+
         $this->addAttributesToEntity($data);
 
         $data = $this->prepareMultiLang($data);
@@ -258,6 +260,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$relationshipEntity]['acl'] = false;
             $data['scopes'][$relationshipEntity]['streamDisabled'] = true;
             $data['scopes'][$relationshipEntity]['matchingDisabled'] = true;
+            $data['scopes'][$relationshipEntity]['selectionDisabled'] = true;
         }
     }
 
@@ -421,6 +424,16 @@ class Metadata extends AbstractListener
                     'scope'  => $action['target_entity'],
                     'action' => 'delete',
                 ];
+            }
+
+            if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
+                $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
+                if (empty($action['hide_text_label'])) {
+                    $html .= ' ' . $action['name'];
+                }else{
+                    $params['tooltip'] = $action['name'];
+                }
+                $params['html'] = $html;
             }
 
             if ($action['type'] === 'email') {
@@ -2156,10 +2169,119 @@ class Metadata extends AbstractListener
         }
     }
 
+    protected function prepareDerivatives(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+                continue;
+            }
+
+            $primaryEntity = $scopeDefs['primaryEntityId'];
+
+            // clone entity defs
+            foreach ($data['entityDefs'][$primaryEntity]['fields'] ?? [] as $fieldName => $fieldDefs) {
+                if (empty($fieldDefs['type'])) {
+                    continue;
+                }
+
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    continue;
+                }
+
+                // disable unique indexes
+                if (!empty($fieldDefs['unique'])) {
+                    $fieldDefs['unique'] = false;
+                }
+
+                if ($fieldDefs['type'] === 'link') {
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['foreign'])) {
+                        unset($linkDefs['foreign']);
+                    }
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
+
+                $fieldDefs['customizable'] = false;
+
+                $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
+            }
+            if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
+                $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
+            }
+            if (!empty($data['entityDefs'][$primaryEntity]['collection'])) {
+                $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
+            }
+
+            // clone scope defs
+            $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
+                'type'            => 'Derivative',
+                'primaryEntityId' => $primaryEntity,
+                'layouts'         => false
+            ]);
+
+            // add link to the primary entity
+            $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
+                'type'     => 'link',
+                'required' => true
+            ];
+            $data['entityDefs'][$scope]['links']['primaryRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => 'derivedRecords',
+                'entity'  => $primaryEntity
+            ];
+
+            $data['entityDefs'][$primaryEntity]['fields']['derivedRecords'] = [
+                'type'   => 'linkMultiple',
+                'noLoad' => true
+            ];
+            $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
+                'type'    => 'hasMany',
+                'foreign' => 'primaryRecord',
+                'entity'  => $scope
+            ];
+        }
+    }
+
     protected function prepareMetadataViaMatchings(array &$data): void
     {
         if (!$this->getConfig()->get('isInstalled', false)) {
             return;
+        }
+
+        foreach ($this->getConfig()->get('referenceData.Matching') ?? [] as $code => $matching) {
+            if (empty($matching['type'])) {
+                continue;
+            }
+
+            if ($matching['type'] === 'masterRecord') {
+                $sourceRecords = 'sourceRecords'.$matching['sourceEntity'];
+
+                $data['entityDefs'][$matching['sourceEntity']]['fields']['goldenRecord'] = [
+                    'type'         => 'link',
+                    'customizable' => false,
+                ];
+                $data['entityDefs'][$matching['sourceEntity']]['links']['goldenRecord'] = [
+                    'type'    => 'belongsTo',
+                    'foreign' => $sourceRecords,
+                    'entity'  => $matching['masterEntity'],
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['fields'][$sourceRecords] = [
+                    'type'         => 'linkMultiple',
+                    'noLoad'       => true,
+                    'customizable' => false,
+                ];
+
+                $data['entityDefs'][$matching['masterEntity']]['links'][$sourceRecords] = [
+                    'type'    => 'hasMany',
+                    'foreign' => 'goldenRecord',
+                    'entity'  => $matching['sourceEntity'],
+                ];
+            }
         }
 
         // set matching rules types
@@ -2176,7 +2298,7 @@ class Metadata extends AbstractListener
 
         foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
             $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching['code']);
-            $data['entityDefs'][$matching['stagingEntity']]['fields'][$fieldName] = [
+            $data['entityDefs'][$matching['sourceEntity']]['fields'][$fieldName] = [
                 'type'                 => 'bool',
                 "layoutListDisabled"   => true,
                 "layoutDetailDisabled" => true,
@@ -2187,22 +2309,22 @@ class Metadata extends AbstractListener
                 "emHidden"             => true
             ];
 
-            if (empty($matching['isActive'])) {
-                continue;
-            }
+//            if (empty($matching['isActive'])) {
+//                continue;
+//            }
 
-            // add right panel
-            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
-                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
-                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
-                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
-                        'name'     => 'matchedRecords',
-                        'label'    => 'matchedRecords',
-                        'view'     => 'views/record/panels/side/matchings',
-                        'aclScope' => 'MatchedRecord',
-                    ];
-                }
-            }
+//            // add right panel
+//            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
+//                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
+//                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
+//                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
+//                        'name'     => 'matchedRecords',
+//                        'label'    => 'matchedRecords',
+//                        'view'     => 'views/record/panels/side/matchings',
+//                        'aclScope' => 'MatchedRecord',
+//                    ];
+//                }
+//            }
         }
     }
 

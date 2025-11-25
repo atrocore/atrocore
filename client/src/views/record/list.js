@@ -612,9 +612,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.executeDynamicMassActionRequest(data)
         },
 
-        executeDynamicMassActionRequest(data) {
+        executeDynamicMassActionRequest(data, callback) {
             let requestData = {
-                actionId: data.id
+                actionId: data.id,
+                ...(data.requestData || {})
             };
 
             if (this.allResultIsChecked) {
@@ -639,6 +640,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                         this.notify(response.message, 'error');
                     }
                     this.collection.fetch();
+                }
+                if (callback) {
+                    callback()
                 }
             });
         },
@@ -872,7 +876,11 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 scope: this.entityType,
                 entityIds: this.checkedList
             }).then(result => {
-                this.getRouter().navigate('#Selection/view/' + result.id, { trigger: true });
+                this.getModelFactory().create('Selection', (selectionModel) => {
+                    selectionModel.set(result);
+                    this.getRouter().navigate('#Selection/view/' + result.id, { trigger: false });
+                    this.getRouter().dispatch('Selection', 'view', { model: selectionModel })
+                });
             });
         },
 
@@ -956,18 +964,20 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 entityIds: this.checkedList
             }).then(result => {
                 this.loadSelectionRecordModels(result.id).then((models) => {
-                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                    this.createView('dialog', view, {
-                        models: models,
-                        selectionId: result.id,
-                        scope: this.entityType,
-                        merging: merging
-                    }, function (dialog) {
-                        dialog.render();
-                        this.notify(false);
-                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                    })
-                })
+                    this.getModelFactory().create('Selection', (selectionModel) => {
+                        selectionModel.set(result);
+                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                        this.createView('dialog', view, {
+                            models: models,
+                            selectionModel: selectionModel,
+                            scope: this.entityType,
+                            merging: merging
+                        }, function (dialog) {
+                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                            dialog.render();
+                        })
+                    });
+                });
             });
 
             this.notify(this.translate('Loading'))
@@ -977,7 +987,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
         loadSelectionRecordModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=10`)
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`)
                     .then(result => {
                         let entityByScope = {};
                         let order = 0;
@@ -1075,12 +1085,25 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
                 this.removeMassAction('remove');
+            }
+
+            if (!this.getAcl().checkScope(this.entityType, 'create')) {
                 this.removeMassAction('merge');
+            }
+
+            if (!this.getAcl().checkScope('Selection', 'read')) {
+                this.removeMassAction('select');
             }
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
                 this.removeMassAction('massUpdate');
                 this.removeMassAction('merge');
+            }
+
+            if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {
+               this.removeMassAction('select');
+               this.removeMassAction('compare');
+               this.removeMassAction('merge');
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
@@ -2419,6 +2442,9 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 var built = 0;
                 modelList.forEach(function (model) {
                     this.buildRow(i, model, function (view) {
+
+                        this.initListenToInlineMode(view);
+
                         this.listenToOnce(view, 'after:render', () => {
                             if (!view.$el) {
                                 return;
@@ -3041,5 +3067,56 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 model.fetch({ main: true });
             }, this);
         },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
+        },
+
+        initListenToInlineMode(view) {
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+
+            this.listenTo(view.model, 'change', () => {
+                if ( this.inlineEditModeIsOn) {
+                    this.setIsChanged();
+                }
+            });
+
+            this.listenTo(view, 'after:render', () => {
+                let fieldInEditMode = null;
+                for (let field in view.nestedViews) {
+                    let fieldView = view.nestedViews[field];
+
+                    if(typeof fieldView.setReadOnly !== 'function') {
+                        continue;
+                    }
+
+                    if(!fieldView.readOnly && (!this.getAcl().checkModel(view.model, 'edit', true) || readOnlyFieldList.includes(fieldView.name))) {
+                        fieldView.setReadOnly(true);
+                    }
+
+                    this.listenTo(fieldView, 'edit', function (view) {
+                        fieldInEditMode = view;
+                    }, this);
+
+                    this.listenTo(fieldView, 'inline-edit-on', function () {
+                        this.inlineEditModeIsOn = true;
+                    }, this);
+                    this.listenTo(fieldView, 'inline-edit-off', function () {
+                        this.inlineEditModeIsOn = false;
+                        this.setIsNotChanged();
+                    }, this);
+                }
+            })
+        }
     });
 });

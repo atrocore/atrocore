@@ -126,12 +126,19 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 }
             },
             'mouseenter .favorites-items .nav-link': function (e) {
-                $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
-                $(e.currentTarget).find('.label-wrapper .plus-icon').removeClass('hidden');
+                const createIcon = $(e.currentTarget).find('.label-wrapper .plus-icon');
+
+                if (createIcon.length) {
+                    $(e.currentTarget).find('.label-wrapper img').addClass('hidden');
+                    createIcon.removeClass('hidden');
+                }
             },
             'mouseleave .favorites-items .nav-link ': function (e) {
-                $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
-                $(e.currentTarget).find('.label-wrapper .plus-icon').addClass('hidden');
+                const createIcon = $(e.currentTarget).find('.label-wrapper .plus-icon');
+                if (createIcon.length) {
+                    $(e.currentTarget).find('.label-wrapper img').removeClass('hidden');
+                    createIcon.addClass('hidden');
+                }
             },
             'click .favorites-items [data-action="quickFavCreate"]': function(e){
                 e.preventDefault();
@@ -272,7 +279,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
         },
 
         setupTabDefsList: function () {
-            this.tabDefsList = this.tabList.map(tab => this.getTabDefs(tab));
+            this.tabDefsList = this.tabList.map(tab => this.getTabDefs(tab)).filter(item => item != null);
         },
 
         getTabDefs(tab) {
@@ -285,6 +292,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             let link;
             let color;
             let iconClass;
+            let createDisabled;
 
             let colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
@@ -298,9 +306,12 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 group = true;
                 name = tab.name;
                 translateCategory = 'navMenuDelimiters';
-                items = tab.items.map(item => this.getTabDefs(item));
+                items = tab.items.map(item => this.getTabDefs(item)).filter(item => item != null);
                 link = 'javascript:';
             } else {
+                if (!this.getAcl().check(tab, 'read')){
+                    return null;
+                }
                 iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass']);
                 id = tab;
                 group = false;
@@ -308,6 +319,10 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 translateCategory = 'scopeNamesPlural';
                 items = [];
                 link = `#${tab}`;
+
+                if (!this.getAcl().check(tab, 'create')) {
+                    createDisabled = true;
+                }
             }
             let label = this.getLanguage().translate(name, translateCategory);
             result = {
@@ -318,6 +333,7 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
                 name: name,
                 items: items,
                 group: group,
+                createDisabled: createDisabled,
             };
 
             if (iconClass) {
@@ -351,6 +367,12 @@ Espo.define('views/site/navbar', ['view', 'color-converter'], function (Dep, Col
             }
 
             result.colorFilter = filter;
+
+            if (tab === 'Dashboard') {
+                result.link = '#';
+                result.name = 'Home';
+                result.createDisabled = true;
+            }
 
             return result;
         },

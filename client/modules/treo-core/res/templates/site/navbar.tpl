@@ -3,7 +3,9 @@
         <button type="button" class="navbar-toggle">
             <i class="ph ph-list"></i>
         </button>
-        <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
+        {{#if hasLogo }}
+            <a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"><span class="home-icon ph ph-house" title="{{translate 'homepage'}}"></span></a>
+        {{/if}}
         <div class="navbar-header-inner pull-right">
             {{#if globalSearch}}
             <button type="button" class="search-toggle pull-left visible-xs">
@@ -80,9 +82,11 @@
                             </span>
                             <span class="full-label" {{#unless ../../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
                         </a>
-                        <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                            <i class="ph ph-plus"></i>
-                        </button>
+                        {{#unless createDisabled}}
+                            <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                                <i class="ph ph-plus"></i>
+                            </button>
+                        {{/unless}}
                     </li>
                     {{/each}}
                 </ul>
@@ -104,9 +108,11 @@
                         <span class="short-label-text">{{shortLabel}}</span>
                     </span>
                 </a>
+                {{#unless createDisabled}}
                 <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
                     <i class="ph ph-plus"></i>
                 </button>
+                {{/unless}}
             </li>
             {{/if}}
             {{/each}}

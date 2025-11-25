@@ -44,6 +44,10 @@ class Config extends \Espo\Core\Utils\Config
             }
         }
 
+        if (isset($res['clickhouse']['database'])) {
+            unset($res['clickhouse']['database']);
+        }
+
         return $res;
     }
 

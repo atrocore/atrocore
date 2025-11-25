@@ -21,6 +21,7 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "emailBcc": "Email BCC",
+    "hideTextLabel": "Hide text label on the button",
     "applyToPreselectedRecords": "Apply to pre-selected records",
     "updateType": "Update Type",
     "updateFields": "Update Fields",

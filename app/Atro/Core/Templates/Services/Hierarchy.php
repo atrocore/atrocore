@@ -162,11 +162,24 @@ class Hierarchy extends Record
         return ['total' => $total, 'list' => $tree];
     }
 
-    public function getTreeData(array $ids): array
+    public function getTreeData(array $params): array
     {
-        $tree = [];
+        if (!isset($params['ids'])) {
+            $params = $this->getParamsForTree($params['link'], $params['scope'], $params);
+            $repository = $this->getRepository();
+            $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true);
+            $selectParams['distinct'] = true;
+            $selectParams['select'] = ['id'];
+            $collection = $repository->find($selectParams);
 
+            $ids = array_column($collection->toArray(), 'id');
+        }else{
+            $ids = $params['ids'];
+        }
+
+        $tree = [];
         $treeBranches = [];
+
         foreach ($this->getRepository()->where(['id' => $ids])->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
@@ -219,6 +232,7 @@ class Hierarchy extends Record
 
         $tree[$entity->get('id')]['id'] = $entity->get('id');
         $tree[$entity->get('id')]['name'] = $value;
+        $tree[$entity->get('id')]['scope'] = $this->entityName;
         $tree[$entity->get('id')]['disabled'] = !in_array($entity->get('id'), $ids);
         if (!empty($entity->child)) {
             if (empty($tree[$entity->get('id')]['children'])) {
@@ -423,15 +437,18 @@ class Hierarchy extends Record
     public function getChildren(string $parentId, array $params): array
     {
         $result = [];
-        $selectParams = $this->getSelectParams($params);
+        $params = $this->getParamsForTree($params['link'] ?? '', $params['scope'] ?? '', $params);
 
-        $records = $this->getRepository()->getChildrenArray($parentId, true, $params['offset'], $params['maxSize'], $selectParams);
+        $records = $this->getRepository()->getChildrenArray($parentId, true, $params);
         if (empty($records)) {
-            return $result;
+            return [
+                'list'  => [],
+                'total' => 0
+            ];
         }
 
         $offset = $params['offset'];
-        $total = $this->getRepository()->getChildrenCount($parentId, $selectParams);
+        $total = $this->getRepository()->getChildrenCount($parentId, $params);
         $ids = [];
         foreach ($this->getRepository()->where(['id' => array_column($records, 'id')])->find() as $entity) {
             if ($this->getAcl()->check($entity, 'read')) {
@@ -447,7 +464,8 @@ class Hierarchy extends Record
                 'offset'         => $offset + $k,
                 'total'          => $total,
                 'disabled'       => !in_array($record['id'], $ids),
-                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0
+                'load_on_demand' => !empty($record['childrenCount']) && $record['childrenCount'] > 0,
+                'scope'          => $this->entityName,
             ];
         }
 
@@ -461,7 +479,7 @@ class Hierarchy extends Record
     {
         $entity = parent::getEntity($id);
 
-        if($this->isHierarchy()) {
+        if ($this->isHierarchy()) {
             if (!empty($entity)) {
                 $entity->set('inheritedFields', $this->getInheritedFields($entity));
             }
@@ -472,7 +490,7 @@ class Hierarchy extends Record
 
     public function createEntity($attachment)
     {
-        if(!$this->isHierarchy()) {
+        if (!$this->isHierarchy()) {
             return parent::createEntity($attachment);
         }
 
@@ -521,7 +539,7 @@ class Hierarchy extends Record
 
     public function updateEntity($id, $data)
     {
-        if(!$this->isHierarchy()) {
+        if (!$this->isHierarchy()) {
             return parent::updateEntity($id, $data);
         }
 
@@ -572,7 +590,7 @@ class Hierarchy extends Record
 
     public function linkEntity($id, $link, $foreignId)
     {
-        if(!$this->isHierarchy()) {
+        if (!$this->isHierarchy()) {
             return parent:: linkEntity($id, $link, $foreignId);
         }
         /**
@@ -625,7 +643,7 @@ class Hierarchy extends Record
 
     public function unlinkEntity($id, $link, $foreignId)
     {
-        if(!$this->isHierarchy()) {
+        if (!$this->isHierarchy()) {
             return parent::unlinkEntity($id, $link, $foreignId);
         }
 
@@ -675,7 +693,7 @@ class Hierarchy extends Record
 
     public function deleteEntity($id)
     {
-        if(!$this->isHierarchy()) {
+        if (!$this->isHierarchy()) {
             return parent::deleteEntity($id);
         }
 
