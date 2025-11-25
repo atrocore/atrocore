@@ -601,7 +601,9 @@
     "associateEverything": "Přiřadit každý záznam ke každému jinému záznamu",
     "routes": "Trasa (trasy)",
     "goldenRecord": "Zlatý rekord",
-    "sourceRecords": "Zdrojové záznamy"
+    "sourceRecords": "Zdrojové záznamy",
+    "derivedRecords": "Odvozené záznamy",
+    "primaryRecord": "Primární záznam"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
