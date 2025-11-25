@@ -51,6 +51,8 @@ class Metadata extends AbstractListener
 
         $data = $this->addActive($data);
 
+        $this->prepareDerivatives($data);
+
         $this->addAttributesToEntity($data);
 
         $data = $this->prepareMultiLang($data);
@@ -109,8 +111,6 @@ class Metadata extends AbstractListener
         $this->prepareMetadataViaMatchings($data);
 
         $this->addThumbnailFieldsByTypesToFile($data);
-
-        $this->prepareDerivatives($data);
 
         $event->setArgument('data', $data);
     }
