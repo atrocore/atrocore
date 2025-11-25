@@ -124,7 +124,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getInlineActionsContainer: function () {
-            return this.getCellElement().children('.inline-actions');
+            let $cell = this.getCellElement();
+            // if(this.isListView() && this.getCellElement().children('div:not(.inline-actions)').size() !== 0) {
+            //     $cell = this.getCellElement().children('div:not(.inline-actions)')
+            // }
+            return $cell.children('.inline-actions');
         },
 
         setDisabled: function (locked) {
@@ -430,9 +434,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             let $cell = this.getCellElement();
 
-            if(this.isListView() && this.getCellElement().children('div').size() !== 0) {
-               $cell = this.getCellElement().children('div')
-            }
+            // if(this.isListView() && this.getCellElement().children('div:not(.inline-actions)').size() !== 0) {
+            //    $cell = this.getCellElement().children('div:not(.inline-actions)')
+            // }
 
             if ($cell.children('.inline-actions').size() === 0) {
                 $cell.prepend('<div class="pull-right inline-actions"></div>');
@@ -1259,6 +1263,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const $cell = this.getCellElement();
             const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
             const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
+
 
             if (fieldActions.size()) {
                 fieldActions.append($saveLink);

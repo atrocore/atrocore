@@ -18921,6 +18921,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--field-inline-edit-color);
 }
 
+.list-container > .list > table tr td.cell[data-mode=edit] {
+    padding-bottom: 20px;
+}
+
 .list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group)  {
     min-height: 30px;
 }
@@ -18930,9 +18934,6 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .list-container > .list > table tr td.cell div.inline-actions {
-    position: absolute;
-    top: -2px;
-    left: 0;
     z-index: 100;
     padding: 0;
     background-color: transparent;
@@ -18950,6 +18951,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     margin: 4px 0 0;
 }
 
-.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]), .list-container > .list > table tr > td.cell{
+.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]),
+.list-container > .list > table tr > td.cell {
     vertical-align: middle;
 }
