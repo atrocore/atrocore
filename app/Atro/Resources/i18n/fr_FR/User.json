@@ -17,7 +17,7 @@
     "account": "Compte",
     "gender": "Genre",
     "ipAddress": "Adresse IP",
-    "type": "Type",
+    "type": "Typ",
     "newPasswordConfirm": "Confirmer le nouveau mot de passe",
     "avatar": "Avatar",
     "isActive": "Est actif",
