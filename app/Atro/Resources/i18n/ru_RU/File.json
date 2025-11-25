@@ -3,7 +3,7 @@
     "type": "Тип",
     "folder": "Папка",
     "storage": "Хранилище",
-    "mimeType": "MIME Type",
+    "mimeType": "MIME тип",
     "path": "Путь",
     "thumbnailsPath": "Путь к миниатюрам",
     "preview": "Предварительный просмотр",
@@ -34,7 +34,7 @@
     "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса.",
     "urlExpected": "Был указан неверный URL-адрес",
     "fileExtensionCorrectedAutomatically": "Расширение файла было исправлено автоматически.",
-    "downloadJobsCreated": "Создано задание для подготовки Вашего zip-файла"
+    "downloadJobsCreated": "Была создана фоновая задача для подготовки вашего архивного файла."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Расширение файла изменить нельзя.",
