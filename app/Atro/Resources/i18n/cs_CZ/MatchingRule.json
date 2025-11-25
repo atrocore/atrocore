@@ -8,7 +8,7 @@
     "matchingRules": "Pravidla porovnávání",
     "operator": "Operátor",
     "masterField": "Hlavní pole",
-    "sourceEntity": "Zdrojový subjekt"
+    "sourceEntity": "Zdrojová entita"
   },
   "options": {
     "type": {
