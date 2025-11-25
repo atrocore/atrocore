@@ -747,7 +747,9 @@
     "modified": "Zmodyfikowany",
     "sorting": "Sort Order",
     "goldenRecord": "Złota płyta",
-    "sourceRecords": "Zapisy źródłowe"
+    "sourceRecords": "Zapisy źródłowe",
+    "primaryRecord": "Główny rekord",
+    "derivedRecords": "Rekordy pochodne"
   },
   "dashlets": {
     "Stream": "Aktywności",
