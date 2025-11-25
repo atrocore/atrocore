@@ -69,6 +69,10 @@ class LayoutManager
         // prepare name
         $viewType = $this->sanitizeInput($viewType);
 
+        if ($this->getMetadata()->get("scopes.$scope.type") === 'Derivative') {
+            $scope = $this->getMetadata()->get("scopes.$scope.primaryEntityId");
+        }
+
         if (empty($relatedEntity)) {
             $relatedEntity = null;
         }
