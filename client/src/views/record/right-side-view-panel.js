@@ -14,8 +14,6 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
     return Dep.extend({
         template: 'record/right-side-view',
 
-        middleView: 'views/record/right-side-view-middle',
-
         bottomView: null,
 
         layoutName: 'summary',

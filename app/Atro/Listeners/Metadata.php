@@ -51,6 +51,8 @@ class Metadata extends AbstractListener
 
         $data = $this->addActive($data);
 
+        $this->prepareDerivatives($data);
+
         $this->addAttributesToEntity($data);
 
         $data = $this->prepareMultiLang($data);
@@ -2152,6 +2154,83 @@ class Metadata extends AbstractListener
 
                 $data['scopes']["{$scope}Classification"]['classificationForEntity'] = $scope;
             }
+        }
+    }
+
+    protected function prepareDerivatives(array &$data): void
+    {
+        if (!$this->getConfig()->get('isInstalled', false)) {
+            return;
+        }
+
+        foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
+            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+                continue;
+            }
+
+            $primaryEntity = $scopeDefs['primaryEntityId'];
+
+            // clone entity defs
+            foreach ($data['entityDefs'][$primaryEntity]['fields'] ?? [] as $fieldName => $fieldDefs) {
+                if (empty($fieldDefs['type'])) {
+                    continue;
+                }
+
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    continue;
+                }
+
+                // disable unique indexes
+                if (!empty($fieldDefs['unique'])) {
+                    $fieldDefs['unique'] = false;
+                }
+
+                if ($fieldDefs['type'] === 'link') {
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['foreign'])) {
+                        unset($linkDefs['foreign']);
+                    }
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
+
+                $fieldDefs['customizable'] = false;
+
+                $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
+            }
+            if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
+                $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
+            }
+            if (!empty($data['entityDefs'][$primaryEntity]['collection'])) {
+                $data['entityDefs'][$scope]['collection'] = $data['entityDefs'][$primaryEntity]['collection'];
+            }
+
+            // clone scope defs
+            $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
+                'type'            => 'Derivative',
+                'primaryEntityId' => $primaryEntity,
+                'layouts'         => false
+            ]);
+
+            // add link to the primary entity
+            $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
+                'type'     => 'link',
+                'required' => true
+            ];
+            $data['entityDefs'][$scope]['links']['primaryRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => 'derivedRecords',
+                'entity'  => $primaryEntity
+            ];
+
+            $data['entityDefs'][$primaryEntity]['fields']['derivedRecords'] = [
+                'type'   => 'linkMultiple',
+                'noLoad' => true
+            ];
+            $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
+                'type'    => 'hasMany',
+                'foreign' => 'primaryRecord',
+                'entity'  => $scope
+            ];
         }
     }
 

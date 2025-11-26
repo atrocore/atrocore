@@ -291,7 +291,7 @@
         <div class="col-sm-1" style="width: 35px"></div>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate('Available Fields', 'Admin')}</header>
+                <header>{Language.translate(['navigation', 'insights', 'relationships'].includes(params.type) ? 'Available Panels' : 'Available Fields', 'Admin')}</header>
                 <div class="rows-wrapper">
                     {#each availableGroups as group (group.name)}
                         <div class:group={availableGroups.length>1}>

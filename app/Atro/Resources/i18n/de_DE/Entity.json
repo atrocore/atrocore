@@ -41,14 +41,17 @@
     "deleteValuesAfterUnlinkingClassification": "Löschen Sie Attributwerte, nachdem Sie die Verknüpfung von Klassifizierungen aufgehoben haben",
     "linkAttributesWithClassificationAutomatically": "Attribute mit der Klassifikation automatisch verknüpfen",
     "customizable": "Anpassbar",
-    "fields": "Felder"
+    "fields": "Felder",
+    "primaryEntity": "Primäre Entität",
+    "derivedEntities": "Abgeleitete Entitäten"
   },
   "options": {
     "type": {
       "Base": "Basis",
       "Hierarchy": "Hierarchie",
       "ReferenceData": "Referenz",
-      "Archive": "Archiv"
+      "Archive": "Archiv",
+      "Derivative": "Derivat"
     },
     "sortDirection": {
       "asc": "Aufsteigend",

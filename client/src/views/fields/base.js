@@ -110,6 +110,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         getCellElement: function () {
             if (this.isListView()) {
+                if(this.$el.children('div:not(.inline-actions)').size() === 0) {
+                    this.$el.children().wrapAll('<div class=""></div>')
+                }
                 return this.$el;
             }
             return this.$el.parent();
@@ -124,6 +127,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getInlineActionsContainer: function () {
+            if(this.isListView()) {
+                return this.getCellElement().children('div').children('.inline-actions')
+            }
             return this.getCellElement().children('.inline-actions');
         },
 
@@ -428,8 +434,14 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 label.append('<sup class="status-icons"></sup>');
             }
 
-            if (this.getCellElement().children('.inline-actions').size() === 0) {
-                this.getCellElement().prepend('<div class="pull-right inline-actions"></div>');
+            let $cell = this.getCellElement();
+
+            if(this.isListView()) {
+                $cell = this.getCellElement().children('div');
+            }
+
+            if ($cell.children('.inline-actions').size() === 0) {
+                $cell.prepend('<div class="pull-right inline-actions"></div>');
             }
         },
 
@@ -685,8 +697,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initInlineEdit: function () {
-            const $cell = this.getCellElement();
+            let $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
+
+            if(this.isListView()) {
+                $cell = this.getCellElement().children('div');
+            }
 
             $cell.find('.inline-edit').parent().remove();
 
@@ -744,6 +760,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 if (['detail', 'list', 'listLink'].includes(this.mode)) {
+                    if(this.isListView()) {
+                        $editLink.parent().css('top', (($cell.height() / 2) - 8 ) + 'px')
+                    }
                     $editLink.removeClass('hidden');
                 }
             }.bind(this)).on('mouseleave', function (e) {
@@ -922,6 +941,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
+                }
+                if(this.getCellElement().attr('data-mode') === 'edit') {
+                    this.addInlineEditLinks();
                 }
             }
 
@@ -1246,8 +1268,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         addInlineEditLinks: function () {
+            this.removeInlineEditLinks();
             const fieldActions = this.getInlineActionsContainer();
-            const $cell = this.getCellElement();
+            let $cell = this.getCellElement();
+            if(this.isListView()) {
+                $cell = this.getCellElement().children('div');
+            }
             const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
             const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
@@ -1327,7 +1353,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         killAfterOutsideClickListener() {
             const name = this.originalName || this.name;
-            this.$el.parents('.middle').off(`click.anywhere-for-${name}`);
+            this.getElementForOutsideClick().off(`click.anywhere-for-${name}`);
         },
 
         initSaveAfterOutsideClick() {

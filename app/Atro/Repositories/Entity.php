@@ -116,12 +116,23 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
+        if ($link === 'derivedEntities') {
+            $selectParams['whereClause'] = [['primaryEntityId=' => $entity->get('id')]];
+            return $this->getEntityManager()->getRepository('Entity')->find($selectParams);
+        }
+
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
         if ($relationName === 'fields') {
+            $params['offset'] = 0;
+            $params['limit'] = \PHP_INT_MAX;
+            return count($this->findRelated($entity, $relationName, $params));
+        }
+
+        if ($relationName === 'derivedEntities') {
             $params['offset'] = 0;
             $params['limit'] = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -195,6 +206,7 @@ class Entity extends ReferenceData
         $canHasClassifications = false;
         $canHasComponents = false;
         $canHasAssociates = false;
+        $primaryEntityId = null;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -210,6 +222,11 @@ class Entity extends ReferenceData
 
             if (!empty($item['canHasAssociates'])) {
                 $canHasAssociates = true;
+            }
+            if (!empty($item['primaryEntityId='])) {
+                $primaryEntityId = $item['primaryEntityId='];
+            } elseif (!empty($item['primaryEntityId'])) {
+                $primaryEntityId = $item['primaryEntityId'];
             }
         }
 
@@ -232,6 +249,10 @@ class Entity extends ReferenceData
             }
 
             if ($canHasAssociates && empty($row['hasAssociate'])) {
+                continue;
+            }
+
+            if (!empty($primaryEntityId) && (empty($row['primaryEntityId']) || $primaryEntityId !== $row['primaryEntityId'])) {
                 continue;
             }
 
@@ -274,7 +295,15 @@ class Entity extends ReferenceData
 
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
-            $contents = file_get_contents(CORE_PATH . "/Atro/Core/Templates/Metadata/{$entity->get('type')}/$type.json");
+            $entityType = $entity->get('type');
+            if ($entity->get('type') === 'Derivative' && $type === 'clientDefs') {
+                $entityType = $this->getMetadata()->get("scopes.{$entity->get('primaryEntityId')}.type");
+            }
+            $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
+            if (!file_exists($filePath)){
+                continue;
+            }
+            $contents = file_get_contents($filePath);
             if ($entity->get('type') === 'Hierarchy' && $type === 'entityDefs') {
                 $contents = str_replace('{entityType}', $entity->get('code'), $contents);
             }
@@ -451,6 +480,10 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
+        if (!empty($entity->get('primaryEntityId'))) {
+            $entity->set('type', 'Derivative');
+        }
+
         if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
             if (!is_array($modifiedExtendedRelations)) {
                 $modifiedExtendedRelations = [];

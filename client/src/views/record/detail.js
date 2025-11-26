@@ -2862,19 +2862,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                         view.reRender();
                     });
 
-                    if (this.getUser().isAdmin() && this.mode === 'detail') {
-                        parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
-                            scope: this.scope,
-                            viewType: 'insights',
-                            layoutData: view.layoutData,
-                            el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
-                        }, (v) => {
-                            v.on("refresh", () => {
-                                loadInsights()
+                        if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
+                            parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                                scope: this.scope,
+                                viewType: 'insights',
+                                layoutData: view.layoutData,
+                                el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
+                            }, (v) => {
+                                v.on("refresh", () => {
+                                    view.refreshLayout()
+                                })
+                                v.render()
                             })
-                            v.render()
-                        })
-                    }
+                        }
 
                 });
             }

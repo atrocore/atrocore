@@ -693,6 +693,8 @@
     "select": "Wählen"
   },
   "fields": {
+    "primaryRecord": "Primärer Datensatz",
+    "derivedRecords": "Abgeleitete Datensätze",
     "goldenRecord": "Golden Record",
     "sourceRecords": "Quelldatensätze",
     "width": "Breite",

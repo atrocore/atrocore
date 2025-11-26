@@ -46,7 +46,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
 
         recordView: 'views/record/edit',
 
-        rightSideView: 'views/record/right-side-view-edit',
+        rightSideView: 'views/record/right-side-view',
 
         setup: function () {
             this.recordView = this.options.recordView || this.recordView;

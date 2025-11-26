@@ -255,7 +255,11 @@ class Attribute extends Base
             throw new NotFound();
         }
 
-        if ($attribute->get('entityId') !== $entityName) {
+        $checkEntity = $this->getMetadata()->get("scopes.$entityName.type") === 'Derivative'
+            ? $this->getMetadata()->get("scopes.$entityName.primaryEntityId")
+            : $entityName;
+
+        if ($attribute->get('entityId') !== $checkEntity) {
             throw new BadRequest($this->exception('attributeNotBelongToEntity'));
         }
 
