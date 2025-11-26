@@ -269,7 +269,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             setTimeout(function () {
                 this.listenTo(this.model, 'all', function (event) {
                     if (!~['sync', 'after:relate'].indexOf(event)) return;
-                    collection.fetchNew();
+                    this.collection.fetchNew();
                 }, this);
 
                 this.listenTo(this.model, 'destroy', function () {
