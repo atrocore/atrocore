@@ -9,7 +9,7 @@
     "protected": "Chroniony",
     "unique": "Wyjątkowy",
     "index": "Indeks bazy danych",
-    "measure": "Measure",
+    "measure": "Miara",
     "trim": "Proszę usunąć początkowe i końcowe białe znaki",
     "maxLength": "Maksymalna długość",
     "countBytesInsteadOfCharacters": "Zliczanie bajtów zamiast znaków",
