@@ -25,7 +25,7 @@ class Layout extends AbstractListener
      */
     public function afterGetLayoutContent(Event $event)
     {
-        if ($event->getArgument('params')['viewType'] === 'leftSidebar') {
+        if ($event->getArgument('params')['viewType'] === 'navigation') {
             if (empty($event->getArgument('params')['isCustom'])) {
                 $scope = $event->getArgument('params')['scope'];
 
@@ -63,43 +63,6 @@ class Layout extends AbstractListener
             }
         }
 
-        if ($event->getArgument('params')['viewType'] === 'rightSideView') {
-            $result = $event->getArgument('result');
-            if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
-                $scope = $event->getArgument('params')['scope'];
-                $result = [
-                    [
-                        "label" => "accessManagement",
-                        "rows"  => []
-                    ]
-                ];
-
-                $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
-
-                if (!empty($scopeDefs['hasOwner'])) {
-                    $result[0]['rows'][] = [["name" => "ownerUser", "fullWidth" => true]];
-                }
-
-                if (!empty($scopeDefs['hasAssignedUser'])) {
-                    $result[0]['rows'][] = [["name" => "assignedUser", "fullWidth" => true]];
-                }
-
-                if (!empty($scopeDefs['hasTeam'])) {
-                    $result[0]['rows'][] = [["name" => "teams", "fullWidth" => true]];
-                }
-
-
-                $result[0]['rows'][] = [["name" => "created", "fullWidth" => true]];
-                $result[0]['rows'][] = [["name" => "modified", "fullWidth" => true]];
-
-                if (!empty($scopeDefs['stream'])) {
-                    $result[0]['rows'][] = [["name" => "followers", "fullWidth" => true]];
-                }
-
-                $event->setArgument('result', $result);
-            }
-        }
-
         if ($event->getArgument('params')['viewType'] === 'selection') {
             $result = $event->getArgument('result');
             if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
@@ -115,6 +78,23 @@ class Layout extends AbstractListener
                 }
 
                 $event->setArgument('result', $result);
+            }
+        }
+
+        if ($event->getArgument('params')['viewType'] === 'insights') {
+            $result = $event->getArgument('result');
+            $scope = $event->getArgument('params')['scope'];
+
+            if (empty($event->getArgument('params')['isCustom'])) {
+                if (empty($result)){
+                    $result = [['name' => 'summary'], ['name' => 'accessManagement']];
+                    $event->setArgument('result', $result);
+                }
+
+                if (in_array('matchedRecords', array_column($this->getMetadata()->get(['clientDefs', $scope, 'rightSidePanels']) ?? [], 'name'))) {
+                    $result[] = ['name' => 'matchedRecords'];
+                    $event->setArgument('result', $result);
+                }
             }
         }
 

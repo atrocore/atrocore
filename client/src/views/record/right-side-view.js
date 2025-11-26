@@ -9,101 +9,76 @@
  */
 
 
-Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record-helper'], function (Dep, ViewRecordHelper) {
-
+Espo.define('views/record/right-side-view', 'views/record/detail-bottom', function (Dep) {
     return Dep.extend({
-        template: 'record/right-side-view',
-
-        middleView: 'views/record/right-side-view-middle',
-
-        bottomView: 'views/record/right-side-view-bottom',
-
-        layoutName: 'rightSideView',
 
         setup: function () {
-            if (typeof this.model === 'undefined') {
-                throw new Error('Model has not been injected into record view.');
-            }
+            this.wait(true);
 
-            this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
-
-            this.once('remove', function () {
-                if (this.isChanged) {
-                    this.resetModelChanges();
-                }
-                this.setIsNotChanged();
-                $(window).off('scroll.detail-' + this.numId);
-            }, this);
-
-            this.numId = Math.floor((Math.random() * 10000) + 1);
-            this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
-
-            this.events = {};
-
-            if (!this.editModeDisabled) {
-                if ('editModeDisabled' in this.options) {
-                    this.editModeDisabled = this.options.editModeDisabled;
-                } else if (this.getMetadata().get(['scopes', this.model.name, 'disabled'])) {
-                    this.editModeDisabled = true
-                }
-            }
-
-            this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
-
-            // for backward compatibility
-            // TODO remove in 5.6.0
-            if ('buttonsPosition' in this.options && !this.options.buttonsPosition) {
-                this.buttonsDisabled = true;
-            }
-
-            if ('isWide' in this.options) {
-                this.isWide = this.options.isWide;
-            }
-
-            if ('bottomView' in this.options) {
-                this.bottomView = this.options.bottomView;
-            }
-
-            this.sideDisabled = this.options.sideDisabled || this.sideDisabled;
-            this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
-
-            this.readOnlyLocked = this.readOnly;
-            this.readOnly = this.options.readOnly || this.readOnly;
-
-            this.inlineEditDisabled = this.inlineEditDisabled || this.getMetadata().get(['clientDefs', this.scope, 'inlineEditDisabled'])
-                || this.getMetadata().get(['scopes', this.model.name, 'disabled']) || false;
-
-            this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
-
-            this.listenTo(this.model, 'after:change-mode', (mode) => {
-                if (mode === this.mode) {
-                    return;
-                }
-                if (mode === 'edit') {
-                    this.setEditMode();
-                } else {
-                    this.setDetailMode()
-                }
+            this.initPanelList(() => {
+                this.wait(false);
             })
-
-            this.setupBeforeFinal();
         },
 
-        triggerModeChangedOnModel(mode) {
+        initPanelList(callback) {
+            let panelList = [
+                {
+                    name: 'summary',
+                    view: 'views/record/right-side-view-panel',
+                },
+                {
+                    name: 'accessManagement',
+                    view: 'views/record/right-side-view-panel'
+                }
+            ];
 
+            panelList.push(...this.getMetadata().get(['clientDefs', this.scope, 'rightSidePanels']) || []);
+            panelList = panelList.filter(p => {
+                if (p.aclScope) {
+                    return this.getAcl().check(p.aclScope, 'read');
+                }
+                return true;
+            });
+
+            this.panelList = []
+
+            this._helper.layoutManager.get(this.model.name, 'insights', null, data => {
+                this.layoutData = data
+                data.layout.forEach(item => {
+                    const panel = panelList.find(p => p.name === item.name)
+                    if (panel) {
+                        panel.expanded = true;
+                        this.panelList.push(panel)
+                    }
+                })
+
+                this.setupPanelViews();
+                callback()
+            });
         },
 
-        setupBeforeFinal: function () {
-            this.manageAccess();
-
-            this.dependencyDefs = _.extend(this.getMetadata().get('clientDefs.' + this.model.name + '.formDependency') || {}, this.dependencyDefs);
-            this.initDependancy();
-
-            this.setupFieldLevelSecurity();
+        setPanelTitle(panel) {
+            panel.title = this.translate(panel.name, 'insightsPanels', this.scope);
+            return panel;
         },
 
-        afterRender: function () {
-            this.initListenToInlineMode();
+        setEditMode() {
+            this.panelList.forEach(p => {
+                const panelView = this.getView(p.name);
+                if (panelView && typeof panelView.setEditMode === 'function') {
+                    panelView.setEditMode();
+                }
+            });
+        },
+
+        setDetailMode() {
+            this.panelList.forEach(p => {
+                const panelView = this.getView(p.name);
+                if (panelView && typeof panelView.setDetailMode === 'function') {
+                    panelView.setDetailMode();
+                }
+            });
         }
+
     });
 });

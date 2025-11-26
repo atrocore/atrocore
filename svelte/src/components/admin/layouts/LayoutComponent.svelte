@@ -4,6 +4,7 @@
     import Params from "./interfaces/Params"
     import GridLayout from "./GridLayout.svelte";
     import {Metadata} from "../../../utils/Metadata";
+    import InsightsLayout from "./InsightsLayout.svelte";
 
     export let params: Params;
 
@@ -22,7 +23,10 @@
             case 'selection':
                 LayoutComponent = ListLayout;
                 break
-            case 'leftSidebar':
+            case 'insights':
+                LayoutComponent = InsightsLayout;
+                break
+            case 'navigation':
                 LayoutComponent = ListLayout;
                 params.fieldTypes = ['link', 'linkMultiple']
                 break
@@ -51,7 +55,7 @@
             case 'relationships':
                 LayoutComponent = RelationShipsLayout;
                 break;
-            case 'rightSideView':
+            case 'summary':
             case 'detail':
                 LayoutComponent = GridLayout;
                 break;

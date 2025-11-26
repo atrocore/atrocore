@@ -26,6 +26,9 @@
     "zipDownloadNotification": "Sie können die Datei <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">herunterladen</a>",
     "Share": "Teilen"
   },
+  "insightsPanels": {
+    "sharing": "Freigabe"
+  },
   "messages": {
     "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",
     "fileCouldNotBeUploaded": "Die Datei konnte nicht hochgeladen werden.",

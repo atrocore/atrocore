@@ -400,6 +400,7 @@
     "editGroup": "Група редагування",
     "addGroup": "Почати / завершити групу",
     "Summary": "Підсумок",
+    "Insights": "Інсайти",
     "Activities": "Діяльність",
     "enableAutomaticClosing": "Увімкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
@@ -496,6 +497,10 @@
     "unitPart": "(Unit)",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім",
     "script": "Скрипт"
+  },
+  "insightsPanels": {
+    "summary": "Підсумок",
+    "accessManagement": "Керування доступом"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",

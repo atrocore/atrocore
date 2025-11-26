@@ -87,8 +87,8 @@
     "detail": "Опис",
     "massUpdate": "Масове оновлення",
     "relationships": "Відносини",
-    "leftSidebar": "Вид зліва",
-    "rightSideView": "Вид з правого боку",
+    "navigation": "Навігація",
+    "insights": "Інсайти",
     "upload": "Завантажити",
     "selection": "Вибір"
   },

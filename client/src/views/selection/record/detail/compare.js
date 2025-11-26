@@ -156,7 +156,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
             let option = Detail.prototype.getSvelteSideViewProps.call(thisClone, parentView);
 
-            option.showSummary = true;
+            option.showInsights = true;
             option.isCollapsed = false;
 
             return option;

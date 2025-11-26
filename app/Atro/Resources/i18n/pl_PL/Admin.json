@@ -87,8 +87,6 @@
     "detail": "Szczegóły",
     "massUpdate": "Masowa aktualizacja",
     "kanban": "Kanban",
-    "leftSidebar": "Widok z lewej strony",
-    "rightSideView": "Widok z prawej strony",
     "upload": "Prześlij"
   },
   "fieldTypes": {

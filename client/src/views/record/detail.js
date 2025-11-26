@@ -2840,40 +2840,32 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
         },
 
         getSvelteSideViewProps(parentView) {
-            return {
-                scope: this.scope,
-                model: this.model,
-                id: this.model.id,
-                mode: this.mode,
-                hasStream: this.canLoadActivities() && !!this.model.id,
-                showSummary: ['edit', 'detail'].includes(this.mode),
-                createView: parentView.createView.bind(this),
-                isCollapsed: !['edit', 'detail'].includes(this.mode),
-                loadSummary: () => {
-                    parentView.createView('rightSideView', parentView.rightSideView, {
-                        el: parentView.options.el + ' .right-side-view .summary',
-                        scope: this.scope,
-                        mode: this.mode,
-                        model: this.model
-                    }, view => {
-                        this.listenTo(view, 'after:render', () => {
-                            if (this.mode === 'edit') {
-                                view.setEditMode();
-                            } else {
-                                view.setDetailMode()
-                            }
-                        });
+            const loadInsights = () => {
+                parentView.createView('rightSideView', parentView.rightSideView, {
+                    el: parentView.options.el + ' .right-side-view .insights',
+                    scope: this.scope,
+                    mode: this.mode,
+                    model: this.model,
+                    recordHelper: this.recordHelper,
+                }, view => {
+                    this.listenTo(view, 'after:render', () => {
+                        if (this.mode === 'edit') {
+                            view.setEditMode();
+                        } else {
+                            view.setDetailMode()
+                        }
+                    });
 
-                        view.render();
+                    view.render();
 
-                        this.listenTo(this.model, 'sync', () => {
-                            view.reRender();
-                        });
+                    this.listenTo(this.model, 'sync', () => {
+                        view.reRender();
+                    });
 
                         if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
-                            parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                            parentView.createView('insightsLayoutConfigurator', "views/record/layout-configurator", {
                                 scope: this.scope,
-                                viewType: 'rightSideView',
+                                viewType: 'insights',
                                 layoutData: view.layoutData,
                                 el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
                             }, (v) => {
@@ -2884,8 +2876,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                             })
                         }
 
-                    });
-                },
+                });
+            }
+
+            return {
+                scope: this.scope,
+                model: this.model,
+                id: this.model.id,
+                mode: this.mode,
+                hasStream: this.canLoadActivities() && !!this.model.id,
+                showInsights: ['edit', 'detail'].includes(this.mode),
+                createView: parentView.createView.bind(this),
+                isCollapsed: !['edit', 'detail'].includes(this.mode),
+                loadInsights: loadInsights,
                 loadActivities: (callback) => {
                     let el = parentView.options.el + ' .right-side-view .activities'
                     parentView.createView('activities', 'views/record/activities', {

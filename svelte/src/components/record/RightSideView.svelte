@@ -13,7 +13,7 @@
     export let minWidth: number = 300;
     export let maxWidth: number = 600;
     export let currentWidth: number = minWidth;
-    export let loadSummary: Function;
+    export let loadInsights: Function;
     export let loadActivities: Function;
     export let fetchModel: Function;
     export let isCollapsed: boolean = false;
@@ -21,7 +21,7 @@
     export let searchManager;
     export let createView;
     export let showFilter: boolean = false;
-    export let showSummary: boolean = false;
+    export let showInsights: boolean = false;
     export let showDataQualities: boolean = false;
     export let useStorage: boolean = true;
     export let uniqueKey: string | null = 'default';
@@ -54,10 +54,10 @@
     let streamView: Object;
     let items: Item[] = [];
     let activeItem: Item;
-    if (showSummary) {
+    if (showInsights) {
         items.push({
-            name: "summary",
-            label: Language.translate('Summary'),
+            name: "insights",
+            label: Language.translate('Insights'),
         });
 
         activeItem = items[0];
@@ -146,8 +146,8 @@
 
         isPin = getStoredData('right-side-view-pin', scopeKey) !== 'not-pinned';
 
-        if (showSummary) {
-            loadSummary();
+        if (showInsights) {
+            loadInsights();
         }
 
         if (showFilter) {
@@ -217,7 +217,7 @@
 
         <div class="sidebar-header">
             <h5>{activeItem?.label ?? ''}</h5>
-            <div class="layout-editor-container" class:hidden={activeItem?.name !== 'summary'}></div>
+            <div class="layout-editor-container" class:hidden={activeItem?.name !== 'insights'}></div>
         </div>
 
         {#if showFilter}
@@ -227,7 +227,7 @@
             </div>
         {/if}
 
-        <div class="summary" class:hidden={activeItem?.name !== 'summary'}>
+        <div class="insights" class:hidden={activeItem?.name !== 'insights'}>
             <img class="preloader" src="client/img/atro-loader.svg" alt="loader">
         </div>
 
@@ -237,7 +237,8 @@
 
         {#if showDataQualities}
             <div class="data-qualities" class:hidden={activeItem?.name !== 'data-qualities'}>
-                <DataQualityPanel {scope} {id} {fetchModel} on:show={() => setActiveItem(items.find(i => i.name === 'data-qualities'))}
+                <DataQualityPanel {scope} {id} {fetchModel}
+                                  on:show={() => setActiveItem(items.find(i => i.name === 'data-qualities'))}
                 />
             </div>
         {/if}
@@ -303,7 +304,7 @@
     }
 
     .activities :global(.panel-default > .panel-heading),
-    .summary :global(.panel-default > .panel-heading) {
+    .insights :global(.panel-default > .panel-heading) {
         background-color: transparent;
         border-bottom: transparent;
         display: flex;
@@ -313,7 +314,7 @@
     }
 
     .activities :global(.panel-title),
-    .summary :global(.panel-title) {
+    .insights :global(.panel-title) {
         text-transform: none;
         font-size: 12px;
         color: #999;
@@ -324,19 +325,29 @@
     }
 
     .activities :global(.panel-default),
-    .summary :global(.panel-default) {
+    .insights :global(.panel-default) {
         background-color: inherit;
     }
 
+    .insights :global(.panel-summary .panel-default),
+    .insights :global(.panel-accessManagement .panel-default) {
+        margin-bottom: 0;
+    }
+
+    .insights :global(.panel-summary .panel-default:first-child > .panel-heading),
+    .insights :global(.panel-accessManagement .panel-default:first-child > .panel-heading) {
+        display: none;
+    }
+
     .activities :global(.panel-body),
-    .summary :global(.panel-body) {
+    .insights :global(.panel-body) {
         padding-top: 0;
         padding-left: 0;
         padding-right: 0;
     }
 
     .activities :global(.panel-body > div > .list),
-    .summary :global(.panel-body > div > .list) {
+    .insights :global(.panel-body > div > .list) {
         background-color: transparent;
         margin-left: 0;
         margin-right: 0;
@@ -350,7 +361,7 @@
     }
 
     .activities :global(.panel-body > div > .list > .list-group),
-    .summary :global(.panel-body > div > .list > .list-group) {
+    .insights :global(.panel-body > div > .list > .list-group) {
         padding-left: 5px;
         padding-right: 5px;
         background: transparent;
@@ -361,7 +372,7 @@
     }
 
     .activities :global(table.table),
-    .summary :global(table.table) {
+    .insights :global(table.table) {
         background-color: transparent;
     }
 
