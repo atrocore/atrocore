@@ -101,6 +101,27 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     });
                 }
                 this.createCollection(function () {
+                    this.listenToOnce(this.collection, 'sync', function () {
+                        this.createView('list', 'views/stream/record/list', {
+                            el: this.options.el + ' .list-container',
+                            collection: this.collection,
+                            model: this.model,
+                            isUserStream: !this.model
+                        }, function (view) {
+                            if (this.isRendered()) {
+                                view.render();
+                            } else {
+                                this.once('after:render', () => {
+                                    view.render();
+                                });
+                            }
+                        });
+
+                    }, this);
+
+                    if (!this.defs.hidden) {
+                        this.fetchCollection();
+                    }
                     this.wait(false);
                 }, this);
             }, this);
@@ -168,9 +189,9 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             const assignmentPermission = this.getAcl().get('assignmentPermission');
             const buildUserListUrl = function (term) {
-                let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+                let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({ 'primaryFilter': 'active' });
                 if (assignmentPermission === 'team') {
-                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
+                    url += '&' + $.param({ 'boolFilterList': ['onlyMyTeam'] })
                 }
                 return url;
             }.bind(this);
@@ -218,7 +239,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                                 className: "dropdown-menu textcomplete-dropdown",
                                 maxCount: 7,
                                 placement: "auto",
-                                style: {zIndex: 1100},
+                                style: { zIndex: 1100 },
                                 item: {
                                     className: "textcomplete-item",
                                     activeClassName: "textcomplete-item active",
@@ -243,34 +264,21 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 view.render();
             });
 
-            var collection = this.collection;
+            this.stopListening(this.model, 'all');
+            this.stopListening(this.model, 'destroy');
+            setTimeout(function () {
+                this.listenTo(this.model, 'all', function (event) {
+                    if (!~['sync', 'after:relate'].indexOf(event)) return;
+                    collection.fetchNew();
+                }, this);
 
-            this.listenToOnce(collection, 'sync', function () {
-                this.createView('list', 'views/stream/record/list', {
-                    el: this.options.el + ' .list-container',
-                    collection: collection,
-                    model: this.model,
-                    isUserStream: !this.model
-                }, function (view) {
-                    view.render();
-                });
+                this.listenTo(this.model, 'destroy', function () {
+                    this.stopListening(this.model, 'all');
+                }, this);
+            }.bind(this), 500);
 
-                this.stopListening(this.model, 'all');
-                this.stopListening(this.model, 'destroy');
-                setTimeout(function () {
-                    this.listenTo(this.model, 'all', function (event) {
-                        if (!~['sync', 'after:relate'].indexOf(event)) return;
-                        collection.fetchNew();
-                    }, this);
-
-                    this.listenTo(this.model, 'destroy', function () {
-                        this.stopListening(this.model, 'all');
-                    }, this);
-                }.bind(this), 500);
-
-            }, this);
-            if (!this.defs.hidden) {
-                this.fetchCollection();
+            if (!this.getStoredFilter().length) {
+                this.$el.find('.list-container').html('<span >No Data</span>')
             }
 
             this.createView('attachments', 'views/fields/link-multiple', {
@@ -381,11 +389,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             if (this.getStoredFilter().length) {
                 this.collection.reset();
                 this.collection.fetch();
-            } else {
-                this.$el.find('.list-container').html('<span >No Data</span>')
             }
         }
-
     });
 });
 

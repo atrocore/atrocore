@@ -2870,7 +2870,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                                 el: $(`${parentView.options.el} .right-side-view .layout-editor-container`).get(0),
                             }, (v) => {
                                 v.on("refresh", () => {
-                                    view.refreshLayout()
+                                    loadInsights()
                                 })
                                 v.render()
                             })
