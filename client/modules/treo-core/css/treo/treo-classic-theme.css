@@ -10624,7 +10624,7 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
 td.cell :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
-td.cell:not(:first-child):has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+td.cell:not(:first-child) > div:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
 td.cell > div .selectize-control > .selectize-input {
     background-color: var(--field-inline-edit-color);
@@ -18924,12 +18924,21 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     display: inline-block;
 }
 
+.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
+    min-height: 25px;
+    border-top: 1px solid transparent;
+}
+
 .list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list > table tr td.cell:not([data-mode=edit]) >div:not(.inline-actions):not(.btn-group)  {
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
     padding-right: 15px;
+}
+
+.list-container > .list > table tr td.cell[data-mode=edit] > div .selectize-input  {
+    padding-left: 5px;
 }
 
 .list-container > .list > table tr td.cell >div {

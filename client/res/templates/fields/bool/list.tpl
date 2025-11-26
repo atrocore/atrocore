@@ -1,1 +1,1 @@
-<div>{{#if valueIsSet}}{{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<input type="checkbox"{{#if value}} checked{{/if}} disabled>{{/if}}{{else}}...{{/if}}</div>
+{{#if valueIsSet}}{{#if isNull}}<span class="text-gray">{{{translate 'Null'}}}</span>{{else}}<input type="checkbox"{{#if value}} checked{{/if}} disabled>{{/if}}{{else}}...{{/if}}

@@ -111,7 +111,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         getCellElement: function () {
             if (this.isListView()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
-                    this.$el.children().wrapAll('<div class=""></div>')
+                    this.$el.children().wrapAll('<div></div>')
                 }
                 return this.$el;
             }
