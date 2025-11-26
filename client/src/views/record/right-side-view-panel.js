@@ -161,6 +161,38 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
                 if (this.layoutData.layout.find(item => item.label === 'accessManagement')) {
                     this.getParentView().hidePanel('accessManagement')
                 }
+
+                let emptyLayout = true
+                this.layoutData.layout.forEach(panel => {
+                    panel.rows.forEach(row => {
+                        row.forEach(field => {
+                            if (field) {
+                                emptyLayout = false
+                            }
+                        })
+                    })
+                })
+
+                if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
+                    // show configurator
+                    const $container = this.$el.closest('.panel-summary').find('.panel-title')
+                    $container.find('.layout-editor-container').remove()
+
+                    $container.prepend('<span class="layout-editor-container"></span>')
+                    this.createView('summaryLayoutConfigurator', "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'summary',
+                        layoutData: this.layoutData,
+                        el: $container.find('.layout-editor-container').get(0),
+                    }, (v) => {
+                        v.on("refresh", () => {
+                            this.refreshLayout()
+                        })
+                        v.render()
+                    })
+                } else if (emptyLayout) {
+                    this.getParentView().hidePanel('summary')
+                }
             }
         }
     });

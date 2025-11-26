@@ -2863,7 +2863,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                     });
 
                         if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
-                            parentView.createView('rightSideLayoutConfigurator', "views/record/layout-configurator", {
+                            parentView.createView('insightsLayoutConfigurator', "views/record/layout-configurator", {
                                 scope: this.scope,
                                 viewType: 'insights',
                                 layoutData: view.layoutData,

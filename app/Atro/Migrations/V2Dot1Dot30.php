@@ -38,12 +38,4 @@ class V2Dot1Dot30 extends Base
             ->setParameter('oldType', 'rightSideView')
             ->executeStatement();
     }
-
-    protected function exec(string $sql): void
-    {
-        try {
-            $this->getPDO()->exec($sql);
-        } catch (\Throwable $e) {
-        }
-    }
 }

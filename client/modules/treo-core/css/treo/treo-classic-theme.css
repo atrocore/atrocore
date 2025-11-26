@@ -17799,6 +17799,13 @@ span[data-img-src]::after {
     z-index: 1;
 }
 
+.panel-summary .panel-heading .layout-editor-container {
+    position: unset;
+    top: unset;
+    margin-right: 5px;
+    transform: none;
+}
+
 @media screen and (min-width: 768px) {
     .layout-editor-container {
         opacity: 0;
