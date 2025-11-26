@@ -8,8 +8,8 @@
     "type": {
       "text": "Área de texto simple",
       "float": "Número",
-      "bool": "SI / NO",
-      "array": "Lista ordenable"
+      "bool": "Booleano",
+      "array": "Array"
     }
   }
 }
