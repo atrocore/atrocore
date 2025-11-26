@@ -9,7 +9,7 @@
     "protected": "Chráněné stránky",
     "unique": "Unikátní",
     "index": "Databázový index",
-    "measure": "Měrná jednotka",
+    "measure": "Míra",
     "trim": "Odstranění počátečních a koncových bílých znaků",
     "maxLength": "Maximální délka",
     "countBytesInsteadOfCharacters": "Počítání bajtů místo znaků",
