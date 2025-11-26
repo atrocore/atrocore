@@ -31,7 +31,7 @@ class MassUpdate extends AbstractJob implements JobInterface
             $input = json_decode(json_encode($data['input']));
 
             try {
-                $service->setValidateRequiredFields(false)->updateEntity($id, $input);
+                $service->setValidateRequiredOnlyOnInput(true)->updateEntity($id, $input);
             } catch (NotModified $e) {
             } catch (\Throwable $e) {
                 $message = "Update {$data['entityType']} '$id' failed: {$e->getMessage()}";
