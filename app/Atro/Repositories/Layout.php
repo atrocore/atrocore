@@ -30,7 +30,8 @@ class Layout extends Base
 
             switch ($reelType) {
                 case 'list':
-                case 'leftSidebar':
+                case 'navigation':
+                case 'insights':
                 case 'selection':
                 case 'kanban':
                     $repository = $this->getEntityManager()->getRepository('LayoutListItem');
@@ -75,7 +76,7 @@ class Layout extends Base
                         }
                     }
                     break;
-                case 'rightSideView':
+                case 'summary':
                 case 'detail':
                     $repository = $this->getEntityManager()->getRepository('LayoutSection');
                     $rowItemRepository = $this->getEntityManager()->getRepository('LayoutRowItem');

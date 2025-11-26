@@ -27,6 +27,9 @@
     "Share": "Partager",
     "thumbnailUrl": "URL de la vignette (%s)"
   },
+  "insightsPanels": {
+    "sharing": "Partage"
+  },
   "exceptions": {
     "fileCreateFailed": "La création du fichier a échoué.",
     "fileMoveFailed": "Le déplacement du fichier a échoué.",

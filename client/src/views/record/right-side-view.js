@@ -13,6 +13,14 @@ Espo.define('views/record/right-side-view', 'views/record/detail-bottom', functi
     return Dep.extend({
 
         setup: function () {
+            this.wait(true);
+
+            this.initPanelList(() => {
+                this.wait(false);
+            })
+        },
+
+        initPanelList(callback) {
             let panelList = [
                 {
                     name: 'summary',
@@ -34,21 +42,42 @@ Espo.define('views/record/right-side-view', 'views/record/detail-bottom', functi
 
             this.panelList = []
 
-            this.wait(true);
-
-            this._helper.layoutManager.get(this.model.name, 'insights', null, function (data) {
+            this._helper.layoutManager.get(this.model.name, 'insights', null, data => {
                 this.layoutData = data
                 data.layout.forEach(item => {
                     const panel = panelList.find(p => p.name === item.name)
                     if (panel) {
+                        panel.expanded = true;
                         this.panelList.push(panel)
                     }
                 })
 
                 this.setupPanelViews();
-                this.wait(false);
-            }.bind(this));
+                callback()
+            });
+        },
 
+        setPanelTitle(panel) {
+            panel.title = this.translate(panel.name, 'insightsPanels', this.scope);
+            return panel;
+        },
+
+        setEditMode() {
+            this.panelList.forEach(p => {
+                const panelView = this.getView(p.name);
+                if (panelView && typeof panelView.setEditMode === 'function') {
+                    panelView.setEditMode();
+                }
+            });
+        },
+
+        setDetailMode() {
+            this.panelList.forEach(p => {
+                const panelView = this.getView(p.name);
+                if (panelView && typeof panelView.setDetailMode === 'function') {
+                    panelView.setDetailMode();
+                }
+            });
         }
 
     });

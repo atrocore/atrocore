@@ -27,6 +27,9 @@
     "Share": "Share",
     "thumbnailUrl": "Thumbnail URL (%s)"
   },
+  "insightsPanels": {
+    "sharing": "Sharing"
+  },
   "messages": {
     "notAllFilesWereUploaded": "XX of YY files were not uploaded.",
     "fileCouldNotBeUploaded": "File could not be uploaded.",

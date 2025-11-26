@@ -587,7 +587,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                         if (this.getUser().isAdmin()) {
                             this.createView('treeLayoutConfigurator', "views/record/layout-configurator", {
                                 scope: this.scope,
-                                viewType: 'leftSidebar',
+                                viewType: 'navigation',
                                 layoutData: window.treePanelComponent.getLayoutData(),
                                 el: container,
                             }, (view) => {

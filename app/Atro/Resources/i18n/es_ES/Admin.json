@@ -87,8 +87,6 @@
     "massUpdate": "Actualización masiva",
     "relationships": "Relaciones",
     "kanban": "Kanban",
-    "leftSidebar": "Vista lateral izquierda",
-    "rightSideView": "Vista lateral derecha",
     "upload": "Subir"
   },
   "fieldTypes": {

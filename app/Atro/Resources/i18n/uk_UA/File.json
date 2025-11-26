@@ -26,6 +26,9 @@
     "zipDownloadNotification": "Ви можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачати</a> файл",
     "Share": "Поділитися"
   },
+  "insightsPanels": {
+    "sharing": "Шеринг"
+  },
   "messages": {
     "notAllFilesWereUploaded": "XX з YY файли не були завантажені.",
     "fileCouldNotBeUploaded": "Файл не вдалося завантажити.",

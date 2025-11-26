@@ -16,7 +16,7 @@ Espo.define('views/record/right-side-view-edit', ['views/record/edit', 'view-rec
 
         middleView: 'views/record/right-side-view-middle',
 
-        layoutName: 'rightSideView',
+        layoutName: 'summary',
 
         setup: function () {
             if (typeof this.model === 'undefined') {

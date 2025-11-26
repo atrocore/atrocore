@@ -9,7 +9,7 @@
  */
 
 
-Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record-helper'], function (Dep, ViewRecordHelper) {
+Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-record-helper'], function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
         template: 'record/right-side-view',
@@ -75,6 +75,10 @@ Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
 
+            if (this.options.defs?.name === 'accessManagement') {
+                this.detailLayout = this.getAccessManagementLayout()
+            }
+
             this.listenTo(this.model, 'after:change-mode', (mode) => {
                 if (mode === this.mode) {
                     return;
@@ -89,8 +93,57 @@ Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record
             this.setupBeforeFinal();
         },
 
-        triggerModeChangedOnModel(mode) {
+        getAccessManagementLayout() {
+            const rows = []
+            const scopeDefs = this.getMetadata().get(['scopes', this.model.name]);
 
+            if (scopeDefs['hasOwner']) {
+                rows.push([{
+                    "name": "ownerUser",
+                    "fullWidth": true
+                }])
+            }
+
+            if (scopeDefs['hasAssignedUser']) {
+                rows.push([{
+                    "name": "assignedUser",
+                    "fullWidth": true
+                }])
+            }
+
+            if (scopeDefs['hasTeam']) {
+                rows.push([{
+                    "name": "teams",
+                    "fullWidth": true
+                }])
+            }
+
+            rows.push([{
+                "name": "created",
+                "fullWidth": true
+            }])
+
+            rows.push([{
+                "name": "modified",
+                "fullWidth": true
+            }])
+
+            if (this.canLoadActivities()) {
+                rows.push([{
+                    "name": "followers",
+                    "fullWidth": true
+                }])
+            }
+
+            return [
+                {
+                    "rows": rows
+                }
+            ];
+        },
+
+        triggerModeChangedOnModel(mode) {
+            // do nothing
         },
 
         setupBeforeFinal: function () {
@@ -104,6 +157,13 @@ Espo.define('views/record/right-side-view', ['views/record/detail', 'view-record
 
         afterRender: function () {
             this.initListenToInlineMode();
+
+            if (this.options.defs?.name === 'summary') {
+                // hide access management panel if summary contains accessManagement panel
+                if (this.layoutData.layout.find(item => item.label === 'accessManagement')) {
+                    this.getParentView().hidePanel('accessManagement')
+                }
+            }
         }
     });
 });
