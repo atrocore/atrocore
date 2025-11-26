@@ -74,7 +74,7 @@
                         </td>
                         {{/if}}
                     <td class="cell {{#if shouldNotCenter}}no-center{{/if}}"  data-name="{{../field}}">
-                        <div class=" {{class}} field">{{{var key ../../../this}}}</div>
+                        <div class="{{class}} field">{{{var key ../../../this}}}</div>
                     </td>
                     {{/each}}
                 </tr>
