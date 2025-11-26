@@ -1297,7 +1297,9 @@
       "include_me": "include me",
       "exclude_me": "exclude me",
       "is_my_team": "is my team",
-      "is_not_my_team": "is not my team"
+      "is_not_my_team": "is not my team",
+      "future": "future",
+      "past": "past"
     },
     "errors": {
       "no_filter": "No filter selected",
