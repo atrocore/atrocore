@@ -5,7 +5,7 @@
     "isHtml": "HTML"
   },
   "labels": {
-    "send": "Odeslat"
+    "send": "Poslat"
   },
   "exceptions": {
     "systemTemplatesCannotBeDeleted": "Systémové šablony nelze odstranit",
