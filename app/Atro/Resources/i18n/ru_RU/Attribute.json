@@ -81,7 +81,7 @@
   "options": {
     "type": {
       "array": "Массив",
-      "bool": "Булево",
+      "bool": "Логичесное значение",
       "composite": "Композит",
       "datetime": "Дата-время",
       "extensibleMultiEnum": "Многозначный список",
