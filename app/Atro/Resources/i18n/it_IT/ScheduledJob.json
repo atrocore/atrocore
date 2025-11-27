@@ -1,31 +1,31 @@
 {
   "fields": {
-    "name": "",
-    "scheduling": "",
-    "jobs": ""
+    "name": "Nome",
+    "scheduling": "Programmazione",
+    "jobs": "Offerte di lavoro"
   },
   "labels": {
-    "executeNow": ""
+    "executeNow": "Eseguire ora"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": ""
+    "wrongCrontabConfiguration": "Configurazione sbagliata di crontab"
   },
   "messages": {
-    "jobLaunched": "",
-    "jobAlreadyExist": ""
+    "jobLaunched": "Il lavoro è stato creato",
+    "jobAlreadyExist": "Un lavoro è stato creato meno di un minuto fa"
   },
   "options": {
     "type": {
-      "ClearEntities": "",
-      "ComposerAutoUpdate": "",
-      "UpdateCurrencyExchangeViaECB": "",
-      "CheckUpdates": "",
-      "ScanStorage": "",
-      "FindMatches": "",
-      "CalculateScriptFieldsForEntities": ""
+      "ClearEntities": "Cancella i dati cancellati",
+      "ComposerAutoUpdate": "Aggiorna il sistema automaticamente",
+      "UpdateCurrencyExchangeViaECB": "Aggiornare il cambio di valuta tramite la BCE",
+      "CheckUpdates": "Controllare gli aggiornamenti del sistema",
+      "ScanStorage": "Archiviazione a scansione",
+      "FindMatches": "Trova le corrispondenze",
+      "CalculateScriptFieldsForEntities": "Calcola i campi dello script"
     }
   },
   "tooltips": {
-    "scheduling": ""
+    "scheduling": "Notazione Crontab. Definisce la frequenza di esecuzione dei lavori.\n\n*/5 * * * * - ogni 5 minuti\n\n0 */2 * * * - ogni 2 ore\n\n30 1 * * * - alle 01:30 una volta al giorno\n\n0 0 1 * * - il primo giorno del mese"
   }
 }
