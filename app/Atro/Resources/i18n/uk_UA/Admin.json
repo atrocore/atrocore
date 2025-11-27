@@ -90,7 +90,8 @@
     "navigation": "Навігація",
     "insights": "Інсайти",
     "upload": "Завантажити",
-    "selection": "Вибір"
+    "selection": "Вибір",
+    "summary": "Підсумок"
   },
   "fields": {
     "request": "Запит",
