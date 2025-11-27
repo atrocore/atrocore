@@ -10,7 +10,7 @@
     "controllerName": "Nombre del controlador",
     "controllerAction": "Acción del controlador",
     "targetName": "Nombre del objetivo",
-    "targetId": "ID del objetivo",
+    "targetId": "Identificación del objetivo",
     "data": "Datos"
   }
 }
