@@ -61,10 +61,6 @@
     "executeAs": {
       "sameUser": "Той самий користувач",
       "system": "Система"
-    },
-    "updateType": {
-      "basic": "Базовий",
-      "script": "Скрипт"
     }
   },
   "tooltips": {

@@ -46,7 +46,6 @@
       "create": "Créer",
       "update": "Mise à jour",
       "delete": "Supprimer",
-      "upsert": "Upsert",
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
       "email": "Envoyer un e-mail",
@@ -62,10 +61,6 @@
     "executeAs": {
       "sameUser": "Même utilisateur",
       "system": "Système"
-    },
-    "updateType": {
-      "basic": "De base",
-      "script": "Script"
     }
   },
   "tooltips": {
