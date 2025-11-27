@@ -45,6 +45,9 @@
     "fileRenameFailed": "Ha fallado el cambio de nombre del archivo.",
     "fileDeleteFailed": "El borrado de archivos ha fallado.",
     "fileNameNotValidByUserRegex": "El nombre del archivo no es válido. Debe coincidir con la expresión regular '%s'.",
-    "notAllowToFileWithEntity": "No se le permite enlazar un archivo del tipo '%s' con '%s'. Los únicos tipos permitidos son '%s'"
+    "notAllowToFileWithEntity": "No se le permite enlazar un archivo del tipo '%s' con '%s'. Los únicos tipos permitidos son '%s'."
+  },
+  "insightsPanels": {
+    "sharing": "Compartir"
   }
 }
