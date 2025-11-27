@@ -263,17 +263,28 @@
     }
 
     function setupPanels() {
-        lastPanelNumber = -1;
-        lastRowNumber = -1
         panels = panels.map((panel, i) => {
             panel.number = i;
             lastPanelNumber = i;
+            let panelRemovedLayoutDisabled = false;
             panel.rows = panel.rows.map(row => {
+                let rowRemovedLayoutDisabled = false
+                row = row.map(cell => {
+                    if(!cell) {
+                        return cell;
+                    }
+                    cell.layoutRemoveDisabled = !!Metadata.get(['entityDefs', params.scope, 'fields', cell.name, 'layoutRemoveDisabled']);
+                    rowRemovedLayoutDisabled = rowRemovedLayoutDisabled || cell.layoutRemoveDisabled;
+                    return cell;
+                });
+                panelRemovedLayoutDisabled = panelRemovedLayoutDisabled || rowRemovedLayoutDisabled;
                 return {
+                    layoutRemoveDisabled: rowRemovedLayoutDisabled,
                     number: lastRowNumber++,
                     cells: row
                 }
-            })
+            });
+            panel.layoutRemoveDisabled = panelRemovedLayoutDisabled;
             return panel;
         });
     }
@@ -590,7 +601,6 @@
         }
         return true;
     }
-
 </script>
 
 <BaseLayout {params} {validate} {fetch} {loadLayout}>
@@ -615,21 +625,25 @@
                                                 <i class="ph ph-globe-simple"></i>
                                             </a>
                                         {/if}
-                                        <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
-                                           data-number={panel.number}
-                                           on:click|preventDefault={() => removePanel(panel.number)}>
-                                            <i class="ph ph-x"></i>
-                                        </a>
+                                        {#if !panel.layoutRemoveDisabled}
+                                            <a href="#" style="float: right;" data-action="removePanel" class="remove-panel"
+                                               data-number={panel.number}
+                                               on:click|preventDefault={() => removePanel(panel.number)}>
+                                                <i class="ph ph-x"></i>
+                                            </a>
+                                        {/if}
                                     </div>
                                 </header>
                                 <ul class="rows" on:mousedown|stopPropagation={()=>{}}>
                                     {#each panel.rows as row (row.number)}
                                         <li class="row" data-number={row.number}>
                                             <div>
-                                                <a href="#" data-action="removeRow" class="remove-row pull-right"
-                                                   on:click|preventDefault={() => removeRow(panel.number, row.number)}>
-                                                    <i class="ph ph-x"></i>
-                                                </a>
+                                                {#if !row.layoutRemoveDisabled }
+                                                    <a href="#" data-action="removeRow" class="remove-row pull-right"
+                                                       on:click|preventDefault={() => removeRow(panel.number, row.number)}>
+                                                        <i class="ph ph-x"></i>
+                                                    </a>
+                                                {/if}
                                             </div>
                                             <ul class="cells" on:mousedown|stopPropagation={()=>{}}>
                                                 {#each row.cells as cell, cellIndex}
@@ -642,10 +656,12 @@
                                                             data-custom-label={cell.customLabel ? cell.customLabel : undefined}
                                                             data-no-label={cell.noLabel}>
                                                             {cell.label}
-                                                            <a href="#" data-action="removeField" class="remove-field"
-                                                               on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
-                                                                <i class="ph ph-x"></i>
-                                                            </a>
+                                                            {#if !cell.layoutRemoveDisabled}
+                                                                <a href="#" data-action="removeField" class="remove-field"
+                                                                   on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
+                                                                    <i class="ph ph-x"></i>
+                                                                </a>
+                                                            {/if}
                                                             {#if isAdmin() && !cell.attributeId}
                                                                 <a href="#" data-action="change-label" class="change-label"
                                                                    on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
