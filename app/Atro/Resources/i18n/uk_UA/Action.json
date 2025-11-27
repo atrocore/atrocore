@@ -24,7 +24,8 @@
     "hideTextLabel": "Приховати текст на кнопці",
     "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
     "updateType": "Тип оновлення",
-    "updateScript": "Скрипт"
+    "updateScript": "Скрипт",
+    "updateFields": "Оновити поля"
   },
   "labels": {
     "execute": "Виконати",
@@ -61,6 +62,9 @@
     "executeAs": {
       "sameUser": "Той самий користувач",
       "system": "Система"
+    },
+    "mode": {
+      "basic": "Базовий"
     }
   },
   "tooltips": {
