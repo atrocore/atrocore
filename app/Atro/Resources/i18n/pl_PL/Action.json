@@ -21,7 +21,10 @@
     "emailTemplate": "Szablon e-maila",
     "actions": "Akcje",
     "webhookUrl": "URL AtroCore",
-    "hideTextLabel": "Ukryj etykietę tekstową na przycisku"
+    "hideTextLabel": "Ukryj etykietę tekstową na przycisku",
+    "updateType": "Update Type",
+    "updateFields": "Pola aktualizacji",
+    "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów"
   },
   "labels": {
     "execute": "Wykonaj",
@@ -54,6 +57,9 @@
     "executeAs": {
       "sameUser": "Ten sam użytkownik",
       "system": "System"
+    },
+    "mode": {
+      "basic": "Podstawowy"
     }
   },
   "tooltips": {
