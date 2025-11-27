@@ -7,7 +7,7 @@
     "customStylesheet": "CSS",
     "primaryColor": "Color primario",
     "secondaryColor": "Color secundario",
-    "primaryFontColor": "Color de fuente primario",
+    "primaryFontColor": "Color de fuente principal",
     "secondaryFontColor": "Color de fuente secundario",
     "labelColor": "Color de la etiqueta",
     "anchorNavigationBackground": "Anclar fondo de navegación",
