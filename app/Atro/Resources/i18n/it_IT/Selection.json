@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "",
+    "description": "",
+    "selectionRecords": ""
+  },
+  "options": {
+    "type": {
+      "single": "",
+      "multiple": ""
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": ""
+  }
+}
