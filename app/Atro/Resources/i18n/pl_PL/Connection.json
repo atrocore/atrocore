@@ -40,7 +40,7 @@
     "smtpOauthTokenUrl": "Adres URL tokenu Oauth",
     "smtpClientId": "Identyfikator klienta",
     "smtpClientSecret": "Tajemnica klienta",
-    "smtpAuthType": "Typ autoryzacji",
+    "smtpAuthType": "Auth Type",
     "dsn": "Dsn",
     "headers": "Nagłówki",
     "smtpOauthScope": "Zakres OAuth",
