@@ -50,7 +50,7 @@
     "Background": "Фон",
     "EntityField": "Поле сущности",
     "ExtensibleEnumOption": "Вариант списка",
-    "ExtensibleEnumExtensibleEnumOption": "Список (опция \"Список\")",
+    "ExtensibleEnumExtensibleEnumOption": "Список (опция списка)",
     "Association": "Ассоциация",
     "AttributePanel": "Панель атрибутов",
     "MatchedRecord": "Сопоставленная запись",
@@ -60,7 +60,7 @@
     "IncomingWebhook": "Входящий Webhook",
     "RoleScopeAttributePanel": "Панель атрибутов",
     "UserProfile": "Профиль пользователя",
-    "PreviewTemplate": "Шаблон для предварительного просмотра",
+    "PreviewTemplate": "Шаблон предварительного просмотра",
     "NotificationTemplate": "Шаблон уведомления",
     "NotificationProfile": "Профиль уведомлений",
     "NotificationRule": "Правило уведомления",
@@ -68,7 +68,7 @@
     "Bookmark": "Закладка",
     "SystemIcon": "Системный значок",
     "ProductHierarchy": "Иерархия продуктов",
-    "AccountGroup": "Учетная группа",
+    "AccountGroup": "Группа счетов",
     "ProductGroup": "Группа продуктов",
     "Classification": "Классификация",
     "ClassificationAttribute": "Атрибут классификации",
@@ -121,7 +121,7 @@
     "NotificationTemplate": "Шаблоны уведомлений",
     "NotificationProfile": "Профили уведомлений",
     "NotificationRule": "Правила уведомления",
-    "HtmlSanitizer": "Санитайзеры HTML",
+    "HtmlSanitizer": "Дезинфицирующие средства HTML",
     "Bookmark": "Закладки",
     "MatchedRecord": "Сопоставленные записи",
     "Matching": "Соответствия",
@@ -426,7 +426,7 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "associationTooltip": "Определяет, как ассоциирующий предмет связан с ассоциированным предметом",
-    "associatedTitle": "Текущий элемент связан с :name to:",
+    "associatedTitle": "Текущая ссылка на элемент как :name to:",
     "associatingTitle": "Связывается с текущим элементом как :name:",
     "itemsInRow": "Элементы в ряду",
     "sort": "Сортировать",
@@ -498,7 +498,8 @@
     "unselectAll": "Отменить выбор Все",
     "splitHorizontal": "Горизонтальное разделение",
     "splitVertical": "Разделить по вертикали",
-    "expandWindow": "Развернуть окно"
+    "expandWindow": "Развернуть окно",
+    "Insights": "Insights"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -583,7 +584,7 @@
     "fieldShouldAfterOrEqual": "{поле} должно быть после или равно {другому полю}.",
     "fieldShouldBeforeOrEqual": "{поле} должно быть раньше или равно {другому полю}.",
     "restoreRecordConfirmation": "Выбранная запись будет восстановлена. Вы уверены, что хотите восстановить ее?",
-    "deletePermanentlyRecordConfirmation": "Вы уверены, что хотите удалить запись навсегда?",
+    "deletePermanentlyRecordConfirmation": "Вы уверены, что хотите навсегда удалить запись?",
     "deletePermanentlyRecordsConfirmation": "Вы уверены, что хотите навсегда удалить выбранные записи?",
     "restoreSelectedRecordsConfirmation": "Вы уверены, что хотите восстановить выбранные записи?",
     "confirmMassRestore": "Вы уверены, что хотите восстановить выбранные записи?",
@@ -1262,7 +1263,10 @@
       "linked_with": "из указанных",
       "not_linked_with": "не из указанных",
       "is_linked": "не пустая строка",
-      "is_not_linked": "пустая строка"
+      "is_not_linked": "пустая строка",
+      "future": "будущее",
+      "past": "прошлое",
+      "today": "сегодня"
     },
     "errors": {
       "no_filter": "Фильтр не выбран",
@@ -1294,8 +1298,8 @@
   },
   "firstStepsDashlet": {
     "title": {
-      "readDocumentation": "Прочитайте документацию",
-      "customizeDesign": "Индивидуальный дизайн системы",
+      "readDocumentation": "Читайте документацию",
+      "customizeDesign": "Настройте дизайн системы",
       "createUsers": "Создание пользователей",
       "configureDataModel": "Настройте Вашу модель данных",
       "importData": "Импорт данных",
@@ -1327,7 +1331,7 @@
       "get": "Получите значение поля",
       "createEntity": "Создайте новую сущность",
       "createRecord": "Создайте новую запись о сущности",
-      "findEntity": "Найдите единственную сущность",
+      "findEntity": "Найдите единое целое",
       "findRecord": "Найдите запись об одной сущности",
       "convertMeasureUnit": "Преобразуйте значение из одной единицы измерения в другую \n Параметры: float|int value, string measureId, string fromUnitId, string? toUnitId = null \n Если toUnitId пуст, результатом будет массив с преобразованными значениями для всех единиц измерения. \n Пример: {{convertMeasureUnit(10, 'currency', 'usd', 'eur')}}",
       "findEntities": "Поиск нескольких сущностей \n Параметры: string entityName, array where, string orderField = 'id', string orderDirection = 'ASC', int offset = 0, int limit = PHP_INT_MAX, bool withDeleted = false",
@@ -1376,6 +1380,7 @@
     "previewTemplate": "Управляйте шаблонами HTML/CSS для автоматического предварительного просмотра данных"
   },
   "insightsPanels": {
-    "accessManagement": "Управление доступом"
+    "accessManagement": "Управление доступом",
+    "summary": "Резюме"
   }
 }
