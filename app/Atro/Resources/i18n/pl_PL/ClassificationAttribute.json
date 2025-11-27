@@ -20,7 +20,7 @@
     "boolValue": "Wartość domyślna: Boolean",
     "min": "Min",
     "max": "Max",
-    "enableConditionalRequired": "Proszę włączyć wymagane",
+    "enableConditionalRequired": "Wymagane włączenie",
     "enableConditionalVisible": "Włącz widoczne",
     "enableConditionalReadOnly": "Włącz tylko do odczytu",
     "enableConditionalProtected": "Włącz chronione",
