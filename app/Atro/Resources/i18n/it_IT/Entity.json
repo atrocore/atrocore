@@ -1,0 +1,96 @@
+{
+  "fields": {
+    "name": "",
+    "namePlural": "",
+    "disabled": "",
+    "customizable": "",
+    "hasDuplicates": "",
+    "masterEntity": "",
+    "hasArchive": "",
+    "hasActive": "",
+    "hideFieldTypeFilters": "",
+    "streamDisabled": "",
+    "iconClass": "",
+    "sortBy": "",
+    "sortDirection": "",
+    "statusField": "",
+    "kanbanViewMode": "",
+    "kanbanStatusIgnoreList": "",
+    "deleteWithoutConfirmation": "",
+    "autoDeleteAfterDays": "",
+    "clearDeletedAfterDays": "",
+    "modifiedExtendedRelations": "",
+    "duplicatableRelations": "",
+    "hasAssignedUser": "",
+    "hasTeam": "",
+    "hasOwner": "",
+    "multiParents": "",
+    "dragAndDrop": "",
+    "fieldValueInheritance": "",
+    "unInheritedFields": "",
+    "relationInheritance": "",
+    "unInheritedRelations": "",
+    "fields": "",
+    "auditedDisabledFields": "",
+    "auditedEnabledRelations": "",
+    "hasAttribute": "",
+    "hasClassification": "",
+    "singleClassification": "",
+    "disableAttributeLinking": "",
+    "hasAssociate": "",
+    "textFilterFields": "",
+    "nonDuplicatableFields": "",
+    "deleteValuesAfterUnlinkingClassification": "",
+    "linkAttributesWithClassificationAutomatically": "",
+    "primaryEntity": "",
+    "derivedEntities": ""
+  },
+  "options": {
+    "type": {
+      "Base": "",
+      "Hierarchy": "",
+      "ReferenceData": "",
+      "Archive": "",
+      "Derivative": ""
+    },
+    "sortDirection": {
+      "asc": "",
+      "desc": ""
+    }
+  },
+  "labels": {
+    "accessManagement": "",
+    "hierarchyManagement": "",
+    "other": "",
+    "resetToDefault": "",
+    "attributes": ""
+  },
+  "confirmations": {
+    "resetToDefault": ""
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "",
+    "autoDeleteAfterDays": "",
+    "disabled": "",
+    "statusField": "",
+    "deleteWithoutConfirmation": "",
+    "modifiedExtendedRelations": "",
+    "dragAndDrop": "",
+    "unInheritedFields": "",
+    "unInheritedRelations": "",
+    "hasAssignedUser": "",
+    "hasTeam": "",
+    "hasOwner": "",
+    "streamDisabled": "",
+    "disableActionHistory": "",
+    "auditedDisabledFields": "",
+    "auditedEnabledRelations": "",
+    "linkAttributesWithClassificationAutomatically": ""
+  },
+  "exceptions": {
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "",
+    "entityAlreadyHasAttributesInUse": "",
+    "entityHasDirectlyLinkedAttributes": "",
+    "entityTypeIsNotSuitableForAssociates": ""
+  }
+}
