@@ -214,8 +214,11 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     'current_month',
                     'last_month',
                     'next_month',
-                    'current_year',
                     'last_year',
+                    'current_year',
+                    'today',
+                    'past',
+                    'future',
                     'is_null',
                     'is_not_null'
                 ],

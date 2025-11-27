@@ -123,5 +123,8 @@
     "resetToDefault": "Rétablissement des valeurs par défaut",
     "relationManagement": "Gestion des relations",
     "conditionalProperties": "Propriétés conditionnelles"
+  },
+  "exceptions": {
+    "nullValuesExist": "Certains enregistrements ont des valeurs nulles"
   }
 }

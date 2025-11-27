@@ -286,7 +286,21 @@
     "default": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/value-container",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "required"
+            }
+          ]
+        }
+      }
     },
     "defaultValueType": {
       "type": "enum",

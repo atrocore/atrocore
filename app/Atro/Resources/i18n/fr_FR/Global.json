@@ -506,6 +506,7 @@
     "editGroup": "Groupe d'édition",
     "addGroup": "Groupe de début / de fin",
     "Summary": "Résumé",
+    "Insights": "Résumé",
     "enableAutomaticClosing": "Activez l'ouverture et la fermeture automatiques de ce panneau au passage de la souris.",
     "disableAutomaticClosing": "Désactive l'ouverture et la fermeture automatiques de ce panneau au passage de la souris.",
     "actionFollow": "Cliquez pour suivre",
@@ -535,6 +536,10 @@
     "Attributes": "Attributs",
     "unselectAll": "Désélectionner tout",
     "matchings": "Matchs"
+  },
+  "insightsPanels": {
+    "summary": "Résumé",
+    "accessManagement": "Gestion de l'accès"
   },
   "messages": {
     "fieldIsRequired": "{field} est requis",

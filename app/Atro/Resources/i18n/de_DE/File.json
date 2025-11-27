@@ -27,6 +27,9 @@
     "Share": "Teilen",
     "thumbnailUrl": "Vorschaubild-URL (%s)"
   },
+  "insightsPanels": {
+    "sharing": "Freigabe"
+  },
   "messages": {
     "notAllFilesWereUploaded": "XX von YY Dateien wurden nicht hochgeladen.",
     "fileCouldNotBeUploaded": "Die Datei konnte nicht hochgeladen werden.",

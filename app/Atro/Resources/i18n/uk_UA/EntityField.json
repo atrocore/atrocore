@@ -123,5 +123,8 @@
     "resetToDefault": "Скинути до значень за замовчуванням",
     "relationManagement": "Керування зв'язками",
     "conditionalProperties": "Умовні властивості"
+  },
+  "exceptions": {
+    "nullValuesExist": "Деякі записи мають нульові значення"
   }
 }

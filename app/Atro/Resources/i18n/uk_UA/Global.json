@@ -156,6 +156,8 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "addFields": "Додати поля",
+    "addAttributes": "Додати атрибути",
     "matchings": "Відповідності",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",
@@ -404,6 +406,7 @@
     "editGroup": "Група редагування",
     "addGroup": "Почати / завершити групу",
     "Summary": "Підсумок",
+    "Insights": "Інсайти",
     "Activities": "Діяльність",
     "enableAutomaticClosing": "Увімкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
@@ -500,6 +503,10 @@
     "unitPart": "(Unit)",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім",
     "script": "Скрипт"
+  },
+  "insightsPanels": {
+    "summary": "Підсумок",
+    "accessManagement": "Керування доступом"
   },
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
@@ -1288,7 +1295,9 @@
       "exclude_me": "виключають мене",
       "is_my_team": "є моєю командою",
       "is_not_my_team": "не є моєю командою",
-      "not_between": "а не між"
+      "not_between": "а не між",
+      "future": "майбутнє",
+      "past": "минуле"
     },
     "errors": {
       "no_filter": "Фільтр не вибраний",

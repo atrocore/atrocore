@@ -111,7 +111,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         getCellElement: function () {
             if (this.isListView()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
-                    this.$el.children().wrapAll('<div class=""></div>')
+                    this.$el.children().wrapAll('<div></div>')
                 }
                 return this.$el;
             }
@@ -420,8 +420,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         initStatusContainer: function () {
-
-            if (!['detail', 'edit', 'list', 'listLink'].includes(this.mode)) {
+            if (!['detail', 'edit'].includes(this.mode) && !this.isListView()) {
                 return;
             }
 
@@ -716,7 +715,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             const name = this.originalName || this.name;
             $cell.off(`click.on-${name}`);
-            if (['detail', 'list', 'listLink'].includes(this.mode) ) {
+            if (['detail', 'list', 'listLink'].includes(this.mode)) {
                 let lastClickTime = 0;
 
                 $cell.on(`click.on-${name}`, e => {
@@ -759,7 +758,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     return;
                 }
 
-                if (['detail', 'list', 'listLink'].includes(this.mode)) {
+                if (['detail', 'list','listLink'].includes(this.mode)) {
                     if(this.isListView()) {
                         $editLink.parent().css('top', (($cell.height() / 2) - 8 ) + 'px')
                     }
@@ -767,7 +766,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }.bind(this)).on('mouseleave', function (e) {
                 e.stopPropagation();
-                if (['detail', 'list', 'listLink'].includes(this.mode)) {
+                if (['detail', 'list','listLink'].includes(this.mode)) {
                     $editLink.addClass('hidden');
                 }
             }.bind(this));
@@ -949,6 +948,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (['edit', 'detail'].includes(this.mode) && !this.isListView()) {
                 this.toggleVisibility();
+            }
+
+            if(this.isDashletView()) {
+               this.setReadOnly(true);
             }
         },
 
@@ -1274,6 +1277,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if(this.isListView()) {
                 $cell = this.getCellElement().children('div');
             }
+
             const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
             const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
@@ -1778,7 +1782,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         isListView() {
             return ['list', 'listLink'].includes(this.initialMode)
-        }
+        },
 
+        isDashletView() {
+            return (this.options.el || '').includes('.dashlet')
+        }
     });
 });

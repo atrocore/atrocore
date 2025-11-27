@@ -153,6 +153,8 @@
     "SelectionRecord": "Записи о выборе"
   },
   "labels": {
+    "addFields": "Добавить поля",
+    "addAttributes": "Добавить атрибуты",
     "matchings": "Соответствия",
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",

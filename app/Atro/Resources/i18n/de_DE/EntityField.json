@@ -123,5 +123,8 @@
     "resetToDefault": "Auf Standardwerte zurücksetzen",
     "relationManagement": "Beziehungs-Management",
     "conditionalProperties": "Bedingte Eigenschaften"
+  },
+  "exceptions": {
+    "nullValuesExist": "Einige Datensätze haben Nullwerte"
   }
 }

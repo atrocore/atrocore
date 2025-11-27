@@ -156,6 +156,8 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "addFields": "Felder hinzufügen",
+    "addAttributes": "Attribute hinzufügen",
     "matchings": "Matchings",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
@@ -404,6 +406,7 @@
     "language": "Sprache",
     "scopeFilter": "Kanal",
     "Summary": "Zusammenfassung",
+    "Insights": "Einblicke",
     "Activities": "Aktivitäten",
     "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
     "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
@@ -500,6 +503,10 @@
     "unitPart": "(Maßeinheit)",
     "Details": "Details",
     "Filter": "Filter"
+  },
+  "insightsPanels": {
+    "summary": "Zusammenfassung",
+    "accessManagement": "Zugangsverwaltung"
   },
   "messages": {
     "removeRelatedRecords": "Sind Sie sicher, dass Sie alle Datensätze für den ausgewählten Verband aus dem aktuellen Datensatz entfernen möchten? Alle zugehörigen Datensätze werden beibehalten.",
@@ -1292,7 +1299,10 @@
       "include_me": "schließen mich ein",
       "exclude_me": "schließen mich aus",
       "is_my_team": "ist mein Team",
-      "is_not_my_team": "ist nicht mein Team"
+      "is_not_my_team": "ist nicht mein Team",
+      "future": "Zukunft",
+      "past": "Vergangenheit",
+      "today": "heute"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

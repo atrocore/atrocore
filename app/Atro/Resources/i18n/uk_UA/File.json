@@ -27,6 +27,9 @@
     "Share": "Поділитися",
     "thumbnailUrl": "URL-адреса мініатюри (%s)"
   },
+  "insightsPanels": {
+    "sharing": "Шеринг"
+  },
   "messages": {
     "notAllFilesWereUploaded": "XX з YY файли не були завантажені.",
     "fileCouldNotBeUploaded": "Файл не вдалося завантажити.",

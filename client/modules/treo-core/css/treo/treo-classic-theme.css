@@ -10624,7 +10624,7 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
 td.cell :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
-td.cell:not(:first-child):has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+td.cell:not(:first-child) > div:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
 td.cell > div .selectize-control > .selectize-input {
     background-color: var(--field-inline-edit-color);
@@ -10647,7 +10647,7 @@ td.cell > div .selectize-control > .selectize-input {
 .cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
 .cell > .field > .array-control-container .selectize-input.focus,
 .cell > .field > textarea:focus,
-td.cell  .selectize-control > .selectize-input.focus,
+td.cell > div:not(.input-group) > .selectize-control > .selectize-input.focus,
 td.cell .input-group:has(.selectize-input.focus),
 td.cell .input-group:has(> input:focus),
 td.cell > div > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
@@ -17799,6 +17799,13 @@ span[data-img-src]::after {
     z-index: 1;
 }
 
+.panel-summary .panel-heading .layout-editor-container {
+    position: unset;
+    top: unset;
+    margin-right: 5px;
+    transform: none;
+}
+
 @media screen and (min-width: 768px) {
     .layout-editor-container {
         opacity: 0;
@@ -18904,35 +18911,47 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 
 .list-container > .list > table tr td.cell:not([data-mode=edit]) > div,
-.list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]),
-.list-container .form-control, .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
+.list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]), .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
 .list-container .list .record-checkbox-container {
     padding: 3px 5px;
 }
 
-.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
-    position: relative;
-    min-width: 205px;
-    padding-top: 20px;
+.list-container .list .record-checkbox-container {
+    padding: 0 5px;
 }
 
-.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
-    padding-top: 20px;
+.list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
+    position: relative;
+    min-width: 208px;
+}
+
+.list-container > .list > table tr td.cell {
+    padding-top: 23px;
+    padding-bottom: 23px;
 }
 
 .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
     display: inline-block;
 }
 
+.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
+    min-height: 25px;
+    border-top: 1px solid transparent;
+}
+
 .list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list > table tr td.cell:not([data-mode=edit]) >div:not(.inline-actions):not(.btn-group)  {
-    padding-right: 15px;
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
+    padding-right: 18px;
 }
 
-.list-container > .list > table tr td.cell >div {
+.list-container > .list > table tr td.cell[data-mode=edit] > div .selectize-input  {
+    padding-left: 5px;
+}
+
+.list-container > .list > table tr td.cell > div {
     position: relative;
 }
 
@@ -18946,15 +18965,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .list-container > .list > table tr td.cell:not([data-mode=edit]) div.inline-actions {
-    top: 5px
+    top: 5px;
+    right: 3px;
 }
 
 .list-container > .list > table tr td.cell .form-control.selectize-control {
     min-width: 0;
-}
-
-.modal-body > div > .list > table td.cell:first-child .inline-actions {
-    left: 10px;
 }
 
 .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {

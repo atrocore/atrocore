@@ -89,6 +89,12 @@
         {
           "name": "showEmailPreview"
         }
+      ],
+      [
+        {
+          "name": "applyToPreselectedRecords"
+        },
+        false
       ]
     ]
   },
@@ -137,6 +143,24 @@
       [
         {
           "name": "emailScript",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "updateType"
+        },
+        false
+      ],
+      [
+        {
+          "name": "updateFields",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "updateScript",
           "fullWidth": true
         }
       ]
