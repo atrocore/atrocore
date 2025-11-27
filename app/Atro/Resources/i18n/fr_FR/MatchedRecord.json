@@ -11,7 +11,7 @@
   },
   "options": {
     "type": {
-      "masterRecord": "Dossier principal",
+      "masterRecord": "Fiche d'enregistrement",
       "duplicate": "Duplicata"
     }
   }
