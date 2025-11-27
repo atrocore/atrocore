@@ -64,7 +64,8 @@
       "system": "Система"
     },
     "mode": {
-      "basic": "Базовий"
+      "basic": "Базовий",
+      "script": "Скрипт"
     }
   },
   "tooltips": {
