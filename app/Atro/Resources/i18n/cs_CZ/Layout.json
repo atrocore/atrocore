@@ -1,6 +1,6 @@
 {
   "fields": {
-    "entity": "Subjekt",
+    "entity": "Entita",
     "viewType": "Zobrazit typ",
     "relatedEntity": "Související subjekt",
     "layoutProfile": "Profil rozvržení"
