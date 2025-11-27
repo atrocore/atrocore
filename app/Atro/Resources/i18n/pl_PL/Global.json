@@ -1380,6 +1380,7 @@
     "large": "Duży"
   },
   "insightsPanels": {
-    "summary": "Podsumowanie"
+    "summary": "Podsumowanie",
+    "accessManagement": "Zarządzanie dostępem"
   }
 }
