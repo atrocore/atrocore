@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "attributePanel": "Pannello degli attributi",
+    "roleScope": "Ambito di applicazione",
+    "readAction": "Leggi",
+    "editAction": "Modifica"
+  }
+}
