@@ -26,7 +26,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
 
         findMatchingId(matchingRuleSetId) {
             let res = null;
-            $.each((this.getConfig().get('referenceData')?.MatchingRule || {}), (code, item) => {
+            $.each((this.getConfig().get('matchingRules') || {}), (code, item) => {
                 if (item.id === matchingRuleSetId) {
                     if (item.matchingRuleSetId) {
                         res = this.findMatchingId(item.matchingRuleSetId);
@@ -53,7 +53,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
                 matchingId = this.findMatchingId(this.model.get('matchingRuleSetId'));
             }
 
-            $.each((this.getConfig().get('referenceData')?.Matching || {}), (code, item) => {
+            $.each((this.getConfig().get('matchings') || {}), (code, item) => {
                 if (item.id === matchingId) {
                     if (this.name === 'masterField') {
                         entityName = item.masterEntity;
