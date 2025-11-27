@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "number": "",
+    "isActive": "",
+    "image": "",
+    "price": "",
+    "description": "",
+    "longDescription": "",
+    "children": "",
+    "parents": "",
+    "quantity": "",
+    "mpn": "",
+    "customsNumber": "",
+    "countryOfOrigin": "",
+    "defaultSupplier": "",
+    "note": ""
+  },
+  "labels": {
+    "manufacturer": "",
+    "other": ""
+  }
+}
