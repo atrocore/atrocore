@@ -46,5 +46,8 @@
     "fileDeleteFailed": "Odstranění souboru se nezdařilo.",
     "fileNameNotValidByUserRegex": "Název souboru není platný. Měl by odpovídat regexu '%s'.",
     "notAllowToFileWithEntity": "Soubor typu '%s' nelze propojit se souborem '%s'. Jediné povolené typy jsou '%s'"
+  },
+  "insightsPanels": {
+    "sharing": "Sdílení"
   }
 }
