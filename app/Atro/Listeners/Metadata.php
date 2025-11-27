@@ -2252,6 +2252,8 @@ class Metadata extends AbstractListener
             return;
         }
 
+        return;
+
         foreach ($this->getConfig()->get('referenceData.Matching') ?? [] as $code => $matching) {
             if (empty($matching['type'])) {
                 continue;
