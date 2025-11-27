@@ -1,14 +1,14 @@
 {
   "fields": {
-    "code": "",
-    "files": "",
-    "storages": ""
+    "code": "Codice",
+    "files": "File",
+    "storages": "Magazzini"
   },
   "exceptions": {
-    "folderStorageCannotBeChanged": "",
-    "folderCreateFailed": "",
-    "folderRenameFailed": "",
-    "folderMoveFailed": "",
-    "folderDeleteFailed": ""
+    "folderStorageCannotBeChanged": "Non è possibile modificare l'archiviazione delle cartelle.",
+    "folderCreateFailed": "La creazione della cartella non è riuscita.",
+    "folderRenameFailed": "La rinominazione della cartella non è riuscita.",
+    "folderMoveFailed": "Lo spostamento della cartella non è riuscito.",
+    "folderDeleteFailed": "L'eliminazione della cartella non è riuscita."
   }
 }
