@@ -21,7 +21,11 @@
     "emailTo": "Enviar a",
     "emailCc": "Correo electrónico CC",
     "emailBcc": "Correo electrónico CCO",
-    "hideTextLabel": "Ocultar etiqueta de texto en el botón"
+    "hideTextLabel": "Ocultar etiqueta de texto en el botón",
+    "updateScript": "Guión",
+    "updateFields": "Campos de actualización",
+    "applyToPreselectedRecords": "Aplicar a registros preseleccionados",
+    "updateType": "Tipo de actualización"
   },
   "labels": {
     "execute": "Ejecute",
@@ -54,6 +58,10 @@
     "executeAs": {
       "system": "Sistema",
       "sameUser": "Mismo usuario"
+    },
+    "mode": {
+      "basic": "Básico",
+      "script": "Guión"
     }
   },
   "tooltips": {
