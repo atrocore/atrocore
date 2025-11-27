@@ -1378,5 +1378,9 @@
     "s": "s",
     "m": "m",
     "h": "h"
+  },
+  "insightsPanels": {
+    "summary": "Souhrn",
+    "accessManagement": "Správa přístupu"
   }
 }
