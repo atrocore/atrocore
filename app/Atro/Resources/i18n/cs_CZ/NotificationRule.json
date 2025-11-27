@@ -1,7 +1,7 @@
 {
   "fields": {
     "description": "Popis",
-    "entity": "Subjekt",
+    "entity": "Entita",
     "notificationProfile": "Profil oznámení",
     "occurrence": "Událost",
     "isActive": "Aktivní",
