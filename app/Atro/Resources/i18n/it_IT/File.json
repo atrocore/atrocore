@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "type": "",
+    "folder": "",
+    "storage": "",
+    "mimeType": "",
+    "path": "",
+    "thumbnailsPath": "",
+    "preview": "",
+    "hash": "",
+    "fileSize": "",
+    "fileMtime": "",
+    "url": "",
+    "uploadUrl": "",
+    "width": "",
+    "height": "",
+    "size": "",
+    "colorSpace": ""
+  },
+  "labels": {
+    "Preview": "",
+    "Upload": "",
+    "retry": "",
+    "uploaded": "",
+    "putUploadUrl": "",
+    "zipDownloadNotification": "",
+    "Share": "",
+    "thumbnailUrl": ""
+  },
+  "insightsPanels": {
+    "sharing": ""
+  },
+  "messages": {
+    "notAllFilesWereUploaded": "",
+    "fileCouldNotBeUploaded": "",
+    "fileHasDuplicate": "",
+    "cannotDefineFileName": "",
+    "urlExpected": "",
+    "fileExtensionCorrectedAutomatically": "",
+    "downloadJobsCreated": ""
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "",
+    "fileStorageCannotBeChanged": "",
+    "fileFolderCannotBeChanged": "",
+    "fileCreateFailed": "",
+    "fileMoveFailed": "",
+    "fileRenameFailed": "",
+    "fileDeleteFailed": "",
+    "fileNameNotValidByUserRegex": "",
+    "notAllowToFileWithEntity": ""
+  }
+}
