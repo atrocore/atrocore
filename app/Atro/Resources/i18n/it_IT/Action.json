@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "isActive": "",
+    "type": "",
+    "sourceEntity": "",
+    "inBackground": "",
+    "usage": "",
+    "massAction": "",
+    "display": "",
+    "actionsSet": "",
+    "actions": "",
+    "webhookUrl": "",
+    "executeAs": "",
+    "displayField": "",
+    "focusField": "",
+    "targetEntity": "",
+    "mode": "",
+    "emailScript": "",
+    "showEmailPreview": "",
+    "emailTemplate": "",
+    "emailTo": "",
+    "emailCc": "",
+    "emailBcc": "",
+    "hideTextLabel": "",
+    "applyToPreselectedRecords": "",
+    "updateType": "",
+    "updateFields": "",
+    "updateScript": ""
+  },
+  "labels": {
+    "execute": "",
+    "Parameters": "",
+    "fieldsPanel": ""
+  },
+  "massActions": {
+    "execute": ""
+  },
+  "messages": {
+    "executeNow": ""
+  },
+  "options": {
+    "usage": {
+      "entity": "",
+      "record": "",
+      "field": "",
+      "onFieldFocus": "",
+      "onRecordLoad": ""
+    },
+    "display": {
+      "dropdown": "",
+      "single": ""
+    },
+    "type": {
+      "create": "",
+      "update": "",
+      "delete": "",
+      "set": "",
+      "webhook": "",
+      "customCode": "",
+      "email": ""
+    },
+    "executeAs": {
+      "system": "",
+      "sameUser": ""
+    },
+    "mode": {
+      "basic": "",
+      "script": ""
+    }
+  },
+  "tooltips": {
+    "inBackground": "",
+    "usage": "",
+    "executeAs": ""
+  },
+  "exceptions": {
+    "forEditModeOnly": ""
+  }
+}
