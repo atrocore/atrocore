@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "",
+    "roles": "",
+    "assignmentPermission": "",
+    "dataPrivacyPermission": "",
+    "users": "",
+    "teams": "",
+    "styleControlPermission": "",
+    "scopes": ""
+  },
+  "tooltips": {
+    "assignmentPermission": "",
+    "dataPrivacyPermission": ""
+  },
+  "labels": {
+    "Access": "",
+    "Scope Level": "",
+    "Field Level": ""
+  },
+  "options": {
+    "accessList": {
+      "not-set": "",
+      "enabled": "",
+      "disabled": ""
+    },
+    "levelList": {
+      "all": "",
+      "team": "",
+      "account": "",
+      "own": "",
+      "no": "",
+      "yes": "",
+      "not-set": ""
+    }
+  },
+  "actions": {
+    "read": "",
+    "edit": "",
+    "delete": "",
+    "stream": "",
+    "create": ""
+  },
+  "messages": {
+    "changesAfterClearCache": ""
+  }
+}
