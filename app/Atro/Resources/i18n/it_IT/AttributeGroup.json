@@ -1,17 +1,1 @@
-{
-  "fields": {
-    "name": "",
-    "description": "",
-    "code": "",
-    "isActive": "",
-    "attributes": "",
-    "sortOrder": ""
-  },
-  "messages": {
-    "unlinkAttributeGroupConfirmation": ""
-  },
-  "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "",
-    "entityIsUsed": ""
-  }
-}
+{}
