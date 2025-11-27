@@ -1,17 +1,17 @@
 {
   "fields": {
-    "user": "",
-    "ipAddress": "",
-    "lastAccess": "",
-    "createdAt": "",
-    "isActive": "",
-    "lifetime": "",
-    "idleTime": "",
-    "authToken": "",
-    "actionHistoryRecords": ""
+    "user": "Utente",
+    "ipAddress": "Indirizzo IP",
+    "lastAccess": "Data dell'ultimo accesso",
+    "createdAt": "Data di accesso",
+    "isActive": "Attivo",
+    "lifetime": "Tempo di vita",
+    "idleTime": "Tempo di inattività",
+    "authToken": "Token di autorizzazione",
+    "actionHistoryRecords": "Storia dell'azione"
   },
   "tooltips": {
-    "lifetime": "",
-    "idleTime": ""
+    "lifetime": "La durata di vita deve essere impostata in ore. Zero significa che non c'è scadenza.",
+    "idleTime": "Il tempo di inattività deve essere impostato in ore. Zero significa che non c'è scadenza."
   }
 }
