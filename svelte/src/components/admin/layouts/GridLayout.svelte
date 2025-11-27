@@ -263,6 +263,8 @@
     }
 
     function setupPanels() {
+        lastPanelNumber = -1;
+        lastRowNumber = -1
         panels = panels.map((panel, i) => {
             panel.number = i;
             lastPanelNumber = i;
