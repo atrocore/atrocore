@@ -8,7 +8,7 @@
     "ftpSsl": "TLS/SSL",
     "password": "Password",
     "oauthUrl": "URL OAuth",
-    "oauthGrantType": "Tipo de subvención OAuth",
+    "oauthGrantType": "Tipo de concesión OAuth",
     "oauthClientId": "ID de cliente OAuth",
     "oauthClientSecret": "Secreto del cliente OAuth",
     "oauthScope": "Ámbito de aplicación de Oauth",
@@ -41,7 +41,7 @@
     "smtpOauthTokenUrl": "URL del token de Oauth",
     "smtpClientId": "ID de cliente",
     "smtpClientSecret": "Secreto de cliente",
-    "smtpAuthType": "Tipo de autorización",
+    "smtpAuthType": "Auth Type",
     "dsn": "Dsn",
     "server": "Servidor",
     "headers": "Cabeceras"
