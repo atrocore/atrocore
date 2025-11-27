@@ -90,7 +90,8 @@
     "upload": "Nahrát",
     "selection": "Výběr",
     "navigation": "Navigace",
-    "insights": "Insights"
+    "insights": "Insights",
+    "summary": "Souhrn"
   },
   "fieldTypes": {
     "color": "Barva",
@@ -133,7 +134,7 @@
     "jsonObject": "Objekt JSON",
     "language": "Jazyk",
     "multiLanguage": "Jazyky",
-    "measure": "Měrná jednotka",
+    "measure": "Míra",
     "markdown": "Markdown"
   },
   "fields": {
