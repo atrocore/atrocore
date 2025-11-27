@@ -24,7 +24,8 @@
     "hideTextLabel": "Masquer l'étiquette de texte sur le bouton",
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
     "updateType": "Type de mise à jour",
-    "updateScript": "Script"
+    "updateScript": "Script",
+    "updateFields": "Mise à jour des champs"
   },
   "labels": {
     "execute": "Exécuter",
