@@ -109,10 +109,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getCellElement: function () {
-            if (this.isListView() &&  !this.isDashletView()) {
-                if(this.$el.children('div:not(.inline-actions)').size() === 0) {
-                    this.$el.children().wrapAll('<div></div>')
-                }
+            if (this.isListView()) {
                 return this.$el;
             }
             return this.$el.parent();
@@ -936,7 +933,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (this.isListView()) {
+            if (this.isListView() && !this.isDashletView()) {
+                if(this.$el.children('div:not(.inline-actions)').size() === 0) {
+                    this.$el.html(`<div>${this.$el.html()}</div>`)
+                }
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
