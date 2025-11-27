@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "status": "",
+    "settingVersion": "",
+    "currentVersion": "",
+    "latestVersion": "",
+    "availableVersions": ""
+  },
+  "options": {
+    "status": {
+      "install": "",
+      "update": "",
+      "delete": ""
+    }
+  },
+  "exceptions": {
+    "invalidVersion": "",
+    "downgradeProhibited": "",
+    "hasRequireds": "",
+    "hasRequiredsDelete": "",
+    "suchModuleIsAlreadyInstalled": "",
+    "suchModuleVersionAlreadyInstalled": "",
+    "noSuchModuleVersion": "",
+    "versionIsInvalid": ""
+  },
+  "labels": {
+    "purchased": "",
+    "rented": "",
+    "purchasedUntil": "",
+    "rentUntil": "",
+    "available": "",
+    "Installed": "",
+    "Store": "",
+    "removeModule": "",
+    "cancelModule": "",
+    "username": "",
+    "password": "",
+    "anotherActionInProgress": "",
+    "updating": "",
+    "updateStarted": "",
+    "canceling": "",
+    "canceled": "",
+    "dependencies": "",
+    "version": "",
+    "Run Update": "",
+    "updateFailed": "",
+    "settingModuleForRemoving": "",
+    "setModuleForRemoving": "",
+    "settingModuleForInstalling": "",
+    "settingModuleForUpdating": "",
+    "setModuleForInstalling": "",
+    "setModuleForUpdating": "",
+    "cancelingModuleInstall": "",
+    "canceledModuleInstall": "",
+    "Log": "",
+    "confirmRun": "",
+    "daemonDisabled": "",
+    "jobManagerRunning": "",
+    "showReleaseNotes": ""
+  },
+  "notifications": {
+    "Module update": "",
+    "System update": "",
+    "Module install": "",
+    "Module delete": "",
+    "Module downgrade": "",
+    "System downgrade": "",
+    "Composer updated!": ""
+  }
+}
