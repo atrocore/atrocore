@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "accounts": "Conti",
+    "code": "Codice",
+    "discount": "Sconto, %",
+    "discountPercentage": "Sconto, %"
+  }
+}
