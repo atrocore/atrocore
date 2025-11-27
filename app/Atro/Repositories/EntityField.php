@@ -299,6 +299,45 @@ class EntityField extends ReferenceData
             }
         }
 
+        if (!$entity->isNew() && !empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
+            $entityName = $entity->get('entityId');
+            $type = $this->getMetadata()->get("scopes.{$entityName}.type");
+            $fieldType = $entity->get('type');
+
+            if (!empty($type) && $type !== 'ReferenceData' && $fieldType !== 'linkMultiple') {
+                $connection = $this->getEntityManager()->getConnection();
+                $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
+                $fieldName = $entity->get('code');
+
+                if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
+                    $columnFrom = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
+                    $columnTo = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
+                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        ->select('id')
+                        ->from($tableName)
+                        ->where("deleted= :false and $columnFrom is null and $columnTo is null")
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->fetchOne();
+                } else {
+                    if (in_array($fieldType, ['file', 'link'])) {
+                        $fieldName .= 'Id';
+                    }
+                    $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
+                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        ->select('id')
+                        ->from($tableName)
+                        ->where('deleted= :false and ' . $column . ' is null')
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->fetchOne();
+                }
+
+
+                if (!empty($res)) {
+                    throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));
+                }
+            }
+        }
+
         if (!empty($entity->get('default'))) {
             if ($entity->get('type') === 'varchar' && $entity->get('defaultValueType') !== 'script') {
                 $maxLength = $this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.len", 255);
