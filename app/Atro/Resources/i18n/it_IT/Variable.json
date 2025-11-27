@@ -1,15 +1,15 @@
 {
   "fields": {
-    "key": "",
-    "type": "",
-    "value": ""
+    "key": "Chiave",
+    "type": "Tipo",
+    "value": "Valore"
   },
   "options": {
     "type": {
-      "text": "",
-      "float": "",
-      "bool": "",
-      "array": ""
+      "text": "Testo",
+      "float": "Numero",
+      "bool": "Booleano",
+      "array": "Array"
     }
   }
 }
