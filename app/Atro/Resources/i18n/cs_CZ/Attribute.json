@@ -1,6 +1,6 @@
 {
   "fields": {
-    "entity": "Subjekt",
+    "entity": "Entita",
     "compositeAttribute": "Složený atribut",
     "nestedAttributes": "Vnořené atributy",
     "attributeGroup": "Skupina atributů",
@@ -75,7 +75,7 @@
     "removeAttribute(s)": "Všechny hodnoty tohoto(těchto) atributu(ů) jsou rovněž odstraněny. Opravdu chcete tento(tyto) atribut(y) odstranit?"
   },
   "filterLabels": {
-    "All": "Všechny"
+    "All": "Všechno"
   },
   "tooltips": {
     "pattern": "Chcete-li povolit pouze velká písmena s délkou 10 znaků, použijte \"/^[A-Z]{1,10}$/\".",
