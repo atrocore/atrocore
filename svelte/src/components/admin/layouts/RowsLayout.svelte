@@ -206,7 +206,6 @@
                 dataAttributes[`data-${toDom(attr)}`] = prop(item, attr);
             }
         })
-
         return dataAttributes;
     }
 
