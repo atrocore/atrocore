@@ -1,1 +1,6 @@
-{}
+{
+  "exceptions": {
+    "invalidIP": "Indirizzo IP non valido: %s",
+    "invalidCode": "Convalida fallita: il codice deve contenere solo lettere, numeri, trattini o trattini."
+  }
+}
