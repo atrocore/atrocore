@@ -9,22 +9,13 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\SelectManagers;
 
-namespace Atro\Controllers;
+use Atro\Core\SelectManagers\Base;
 
-use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Controllers\Base;
-
-class Matching extends Base
+class MatchingRule extends Base
 {
-    public function actionCreate($params, $data, $request)
+    protected function accessOnlyOwn(&$result)
     {
-        throw new NotFound();
-    }
-
-    public function actionDelete($params, $data, $request)
-    {
-        throw new NotFound();
     }
 }

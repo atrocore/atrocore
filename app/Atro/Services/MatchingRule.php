@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AtroCore Software
  *
@@ -14,8 +13,20 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
-use Atro\Core\Templates\Services\ReferenceData;
+use Atro\Core\Templates\Services\Base;
+use Espo\ORM\Entity;
 
-class MatchingRule extends ReferenceData
+class MatchingRule extends Base
 {
+    protected $mandatorySelectAttributeList = ['matchingId'];
+
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $matching = $entity->get('matching');
+        if (!empty($matching)) {
+            $entity->set('editable', $this->getAcl()->check($matching, 'edit'));
+        }
+    }
 }

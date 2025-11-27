@@ -7,9 +7,7 @@
         {
           "name": "name"
         },
-        {
-          "name": "code"
-        }
+        false
       ],
       [
         {
