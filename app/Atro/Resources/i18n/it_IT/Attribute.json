@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "entity": "",
+    "compositeAttribute": "",
+    "nestedAttributes": "",
+    "attributeGroup": "",
+    "attributePanel": "",
+    "type": "",
+    "code": "",
+    "name": "",
+    "products": "",
+    "isMultilang": "",
+    "fileType": "",
+    "pattern": "",
+    "measure": "",
+    "defaultUnit": "",
+    "defaultDate": "",
+    "isRequired": "",
+    "isReadOnly": "",
+    "isProtected": "",
+    "tooltip": "",
+    "maxLength": "",
+    "countBytesInsteadOfCharacters": "",
+    "useDisabledTextareaInViewMode": "",
+    "amountOfDigitsAfterComma": "",
+    "description": "",
+    "classifications": "",
+    "extensibleEnum": "",
+    "min": "",
+    "max": "",
+    "notNull": "",
+    "trim": "",
+    "classificationAttributes": "",
+    "preparedName": "",
+    "htmlSanitizer": "",
+    "fullWidth": "",
+    "channel": "",
+    "attributeGroupSortOrder": "",
+    "conditionalRequired": "",
+    "conditionalVisible": "",
+    "conditionalReadOnly": "",
+    "conditionalProtected": "",
+    "conditionalDisableOptions": ""
+  },
+  "labels": {
+    "Classification": "",
+    "addNewValue": "",
+    "extensibleEnumOptions": "",
+    "conditionalProperties": ""
+  },
+  "options": {
+    "type": {
+      "array": "",
+      "bool": "",
+      "composite": "",
+      "date": "",
+      "datetime": "",
+      "extensibleEnum": "",
+      "float": "",
+      "int": "",
+      "extensibleMultiEnum": "",
+      "text": "",
+      "markdown": "",
+      "url": "",
+      "varchar": "",
+      "wysiwyg": "",
+      "rangeInt": "",
+      "rangeFloat": "",
+      "file": ""
+    }
+  },
+  "messages": {
+    "sameNumberOptions": "",
+    "productsCountWithAttribute": "",
+    "removeAttribute(s)": ""
+  },
+  "filterLabels": {
+    "All": ""
+  },
+  "tooltips": {
+    "pattern": "",
+    "defaultDate": "",
+    "dropdown": ""
+  },
+  "exceptions": {
+    "wrongAttributeEntity": "",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "",
+    "attributeNotBelongToEntity": "",
+    "entityCannotBeChanged": "",
+    "compositeAttributeNotFound": "",
+    "compositeAttributeCannotBeChild": "",
+    "fileTypeCannotBeDeleted": "",
+    "maxLessThanMin": "",
+    "noAttributeConverterFound": "",
+    "attributeValueIsInUse": "",
+    "youCantChangeFieldOfTypeInAttribute": "",
+    "attributeWithSuchCodeAlreadyExist": "",
+    "attributeIsUsedInProducts": "",
+    "attributeIsUsedInClassifications": "",
+    "invalidType": ""
+  }
+}
