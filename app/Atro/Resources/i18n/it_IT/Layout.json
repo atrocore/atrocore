@@ -1,18 +1,1 @@
-{
-  "fields": {
-    "entity": "",
-    "viewType": "",
-    "relatedEntity": "",
-    "layoutProfile": ""
-  },
-  "groupOptions": {
-    "viewType": {
-      "view": "",
-      "viewGroup": ""
-    }
-  },
-  "tooltips": {
-    "entity": "",
-    "relatedEntity": ""
-  }
-}
+{}
