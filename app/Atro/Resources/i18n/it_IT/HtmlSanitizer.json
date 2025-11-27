@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "configuration": ""
+  },
+  "exceptions": {
+    "notValidYaml": ""
+  }
+}
