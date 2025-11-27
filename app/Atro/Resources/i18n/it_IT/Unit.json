@@ -1,21 +1,21 @@
 {
   "fields": {
-    "name": "",
-    "description": "",
-    "measure": "",
-    "isMain": "",
-    "multiplier": "",
-    "convertTo": "",
-    "symbol": "",
-    "isActive": ""
+    "name": "Nome",
+    "description": "Descrizione",
+    "measure": "Misura",
+    "isMain": "Principale",
+    "multiplier": "Moltiplicatore",
+    "convertTo": "Convertire in",
+    "symbol": "Simbolo",
+    "isActive": "Attivo"
   },
   "labels": {
-    "unitSetDefault": ""
+    "unitSetDefault": "Imposta come predefinito"
   },
   "exceptions": {
-    "defaultIsRequired": "",
-    "unitIsUsed": "",
-    "unitIsUsedOnClassificationAttribute": "",
-    "unitIsUsedOnEntityAttribute": ""
+    "defaultIsRequired": "La misura deve avere un'unità predefinita.",
+    "unitIsUsed": "L'unità '%s' è utilizzata dal campo '%s' nell'Entità '%s' per il Record '%s'.",
+    "unitIsUsedOnClassificationAttribute": "L'unità '%s' è utilizzata dall'attributo '%s' nella classificazione '%s'.",
+    "unitIsUsedOnEntityAttribute": "L'unità '%s' è utilizzata dall'Attributo '%s' nel %s '%s'."
   }
 }
