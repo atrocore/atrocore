@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "post": "",
+    "attachments": "",
+    "type": "",
+    "createdByGender": "",
+    "data": ""
+  },
+  "filters": {
+    "all": "",
+    "posts": "",
+    "updates": "",
+    "notes": "",
+    "emails": ""
+  },
+  "options": {
+    "type": {
+      "Post": ""
+    }
+  },
+  "messages": {
+    "writeMessage": ""
+  }
+}
