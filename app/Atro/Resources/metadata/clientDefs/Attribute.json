@@ -10,7 +10,8 @@
     "notLinkedWithCurrent",
     "onlyForEntity",
     "onlyForAttributePanel",
-    "notForbiddenForEditFields"
+    "notForbiddenForEditFields",
+    "onlyEditableAttributes"
   ],
   "hiddenBoolFilterList": [
     "fromAttributesTab",
@@ -20,7 +21,8 @@
     "notLinkedWithCurrent",
     "onlyForEntity",
     "onlyForAttributePanel",
-    "notForbiddenForEditFields"
+    "notForbiddenForEditFields",
+    "onlyEditableAttributes"
   ],
   "additionalSelectAttributes": [
     "conditionalVisible",

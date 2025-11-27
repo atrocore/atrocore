@@ -37,24 +37,20 @@ class App extends \Espo\Controllers\App
 
     public function postActionPrepareScriptFields($params, $data, $request)
     {
-        if (empty($data->fields)) {
+        if (empty($data->entityName) && (empty($data->fields) || !is_array($data->fields))) {
             throw new BadRequest();
         }
 
-        return [
-            'text' => '"color": null'
-        ];
+        return $this->getService('App')->prepareScriptFields($data->entityName, $data->fields);
     }
 
     public function postActionPrepareScriptAttributes($params, $data, $request)
     {
-        if (empty($data->attributesIds)) {
+        if (empty($data->entityName) && (empty($data->attributesIds) || !is_array($data->attributesIds))) {
             throw new BadRequest();
         }
 
-        return [
-            'text' => '"aabbee": null, "__attributes": ["aabbee"]'
-        ];
+        return $this->getService('App')->prepareScriptAttributes($data->entityName, $data->attributesIds);
     }
 
     public function actionDefaultValueForScriptType($params, $data, $request)

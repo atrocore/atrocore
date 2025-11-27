@@ -552,6 +552,7 @@
                 contextMenuGroupId: "navigation",
                 contextMenuOrder: 1.5,
                 run: function (editor) {
+                    const entityName = editorActions.addFields.entityName || scriptFieldView.model.get(editorActions.addFields.entityNameField);
                     Notifier.notify('Loading...');
                     scriptFieldView.createView('dialog', 'views/modals/select-records', {
                         scope: 'EntityField',
@@ -565,7 +566,7 @@
                         ],
                         boolFilterData: {
                             fieldsFilter: {
-                                entityId: editorActions.addFields.entityName || scriptFieldView.model.get(editorActions.addFields.entityNameField)
+                                entityId: entityName
                             }
                         }
                     }, dialog => {
@@ -576,7 +577,7 @@
                             models.forEach(model => {
                                 fields.push(model.get('code'))
                             });
-                            scriptFieldView.ajaxPostRequest(`App/action/prepareScriptFields`, {fields: fields}).success(res => {
+                            scriptFieldView.ajaxPostRequest(`App/action/prepareScriptFields`, {entityName: entityName, fields: fields}).success(res => {
                                 editor.executeEdits("add-entity-fields", [
                                     {
                                         range: editor.getSelection(),
@@ -606,7 +607,7 @@
                             multiple: true,
                             createButton: false,
                             massRelateEnabled: true,
-                            boolFilterList: ['onlyForEntity'],
+                            boolFilterList: ['onlyForEntity', 'onlyEditableAttributes'],
                             boolFilterData: {
                                 onlyForEntity: entityName
                             },
@@ -620,7 +621,7 @@
                                     attributesIds.push(model.get('id'))
                                 });
 
-                                scriptFieldView.ajaxPostRequest(`App/action/prepareScriptAttributes`, {attributesIds: attributesIds}).success(res => {
+                                scriptFieldView.ajaxPostRequest(`App/action/prepareScriptAttributes`, {entityName: entityName, attributesIds: attributesIds}).success(res => {
                                     editor.executeEdits("add-entity-attributes", [
                                         {
                                             range: editor.getSelection(),
