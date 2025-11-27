@@ -3,5 +3,8 @@
     "name": "Название",
     "entityId": "Запись",
     "entityType": "Сущность"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Выбор отключен для сущности '%s'."
   }
 }

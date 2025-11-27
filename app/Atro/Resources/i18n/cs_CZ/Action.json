@@ -2,7 +2,7 @@
   "fields": {
     "isActive": "Aktivní",
     "type": "Typ",
-    "sourceEntity": "Zdrojový subjekt",
+    "sourceEntity": "Zdrojová entita",
     "inBackground": "Provést na pozadí",
     "usage": "Použití",
     "massAction": "Hromadná akce",
@@ -20,7 +20,8 @@
     "emailTemplate": "Šablona e-mailu",
     "emailTo": "Příjemce emailu",
     "emailCc": "Kopie",
-    "emailBcc": "E-mail BCC"
+    "emailBcc": "E-mail BCC",
+    "hideTextLabel": "Skrytí textového popisku na tlačítku"
   },
   "labels": {
     "execute": "Provést",

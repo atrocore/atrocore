@@ -24,7 +24,8 @@
     "uploaded": "Nahráno",
     "putUploadUrl": "Pokud chcete soubor nahrát prostřednictvím adresy URL, zadejte URL adresu souboru",
     "zipDownloadNotification": "Můžete si stáhnout <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\"></a> soubor zip",
-    "Share": "Sdílet"
+    "Share": "Sdílet",
+    "thumbnailUrl": "Adresa URL miniatury (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "Soubory XX z YY nebyly nahrány.",
@@ -33,7 +34,7 @@
     "cannotDefineFileName": "Systém nemůže rozpoznat název souboru z adresy URL.",
     "urlExpected": "Byla zadána nesprávná adresa URL",
     "fileExtensionCorrectedAutomatically": "Přípona souboru byla automaticky opravena.",
-    "downloadJobsCreated": "Byla vytvořena úloha pro přípravu vašeho souboru zip"
+    "downloadJobsCreated": "Byla vytvořena úloha na pozadí pro přípravu archivačního souboru."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Příponu souboru nelze změnit.",

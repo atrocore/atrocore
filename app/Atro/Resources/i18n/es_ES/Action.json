@@ -1,7 +1,7 @@
 {
   "fields": {
     "isActive": "Activo",
-    "type": "Type",
+    "type": "Tipo",
     "sourceEntity": "Entidad de origen",
     "inBackground": "Ejecutar en segundo plano",
     "usage": "Utilización",
@@ -20,7 +20,8 @@
     "emailTemplate": "Plantilla de correo electrónico",
     "emailTo": "Enviar a",
     "emailCc": "Correo electrónico CC",
-    "emailBcc": "Correo electrónico CCO"
+    "emailBcc": "Correo electrónico CCO",
+    "hideTextLabel": "Ocultar etiqueta de texto en el botón"
   },
   "labels": {
     "execute": "Ejecute",

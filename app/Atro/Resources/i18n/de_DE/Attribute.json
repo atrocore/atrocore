@@ -1,7 +1,7 @@
 {
   "fields": {
     "products": "Produkte",
-    "type": "Typ",
+    "type": "Attributtyp",
     "attributeGroup": "Attributgruppe",
     "attributePanel": "Attribut-Panel",
     "code": "Code",
@@ -30,7 +30,7 @@
     "preparedName": "Name",
     "htmlSanitizer": "HTML Sanitizer",
     "fullWidth": "Volle Breite",
-    "compositeAttribute": "Komposit-Attribut",
+    "compositeAttribute": "Zusammengesetztes Attribut",
     "nestedAttributes": "Verschachtelte Attribute",
     "attributeGroupSortOrder": "Sortierreihenfolge in der Attributgruppe",
     "conditionalVisible": "Sichtbar",
@@ -50,7 +50,7 @@
   },
   "options": {
     "type": {
-      "array": "Anordnung",
+      "array": "Array",
       "bool": "Boolesch",
       "date": "Datum",
       "datetime": "Datum-Uhrzeit",

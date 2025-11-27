@@ -1,9 +1,19 @@
 {
   "fields": {
-    "minimumScore": "Score minimum, en %.",
+    "minimumScore": "Note minimale, %",
     "entity": "Entité",
     "masterEntity": "Entité maîtresse",
     "matchingRules": "Règles de correspondance",
-    "matchedRecords": "Disques appariés"
+    "matchedRecords": "Disques appariés",
+    "sourceEntity": "Entité source"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplicata",
+      "masterRecord": "Dossier principal"
+    }
+  },
+  "labels": {
+    "configureMatching": "Configurer l'appariement"
   }
 }

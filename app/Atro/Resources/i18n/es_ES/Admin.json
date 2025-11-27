@@ -87,7 +87,8 @@
     "massUpdate": "Actualización masiva",
     "relationships": "Relaciones",
     "kanban": "Kanban",
-    "upload": "Subir"
+    "upload": "Subir",
+    "selection": "Selección"
   },
   "fieldTypes": {
     "array": "Lista ordenable",

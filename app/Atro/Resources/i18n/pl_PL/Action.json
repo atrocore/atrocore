@@ -20,7 +20,8 @@
     "emailScript": "Skrypt",
     "emailTemplate": "Szablon e-maila",
     "actions": "Akcje",
-    "webhookUrl": "URL AtroCore"
+    "webhookUrl": "URL AtroCore",
+    "hideTextLabel": "Ukryj etykietę tekstową na przycisku"
   },
   "labels": {
     "execute": "Wykonaj",

@@ -4,6 +4,16 @@
     "entity": "Encja",
     "masterEntity": "Podmiot główny",
     "matchingRules": "Zasady dopasowywania",
-    "matchedRecords": "Dopasowane rekordy"
+    "matchedRecords": "Dopasowane rekordy",
+    "sourceEntity": "Źródłowa Jednostka"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplikat",
+      "masterRecord": "Główny rekord"
+    }
+  },
+  "labels": {
+    "configureMatching": "Konfiguracja dopasowania"
   }
 }

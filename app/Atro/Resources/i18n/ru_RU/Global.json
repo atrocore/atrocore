@@ -79,7 +79,9 @@
     "ExtensibleEnum": "Список",
     "RoleScope": "Область применения",
     "RoleScopeField": "Поле",
-    "RoleScopeAttribute": "Атрибут"
+    "RoleScopeAttribute": "Атрибут",
+    "Selection": "Выбор",
+    "SelectionRecord": "Запись о выборе"
   },
   "scopeNamesPlural": {
     "Attribute": "Атрибуты",
@@ -146,7 +148,9 @@
     "RoleScopeField": "Поля",
     "Entity": "Управление сущностями",
     "Language": "Языки",
-    "Action": "Действия"
+    "Action": "Действия",
+    "Selection": "Подборки",
+    "SelectionRecord": "Записи о выборе"
   },
   "labels": {
     "addFields": "Добавить поля",
@@ -430,7 +434,7 @@
     "color": "Цвет",
     "editLabels": "Редактирование этикеток",
     "Duplicates": "Дубликаты",
-    "matchedRecords": "Matched Records",
+    "matchedRecords": "Сопоставленные записи",
     "noMatches": "Нет совпадений",
     "script": "Скрипт",
     "phpCode": "Код PHP",
@@ -490,7 +494,11 @@
     "Activities": "Действия",
     "accessManagement": "Управление доступом",
     "Start": "Старт",
-    "unitPart": "(Unit)"
+    "unitPart": "(Unit)",
+    "unselectAll": "Отменить выбор Все",
+    "splitHorizontal": "Горизонтальное разделение",
+    "splitVertical": "Разделить по вертикали",
+    "expandWindow": "Развернуть окно"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -594,7 +602,8 @@
     "badTokenInstance": "Плохой маркер авторизации для экземпляра",
     "dontHaveAccessInInstance": "У Вас нет доступа к этой записи на экземпляре",
     "selectNoMoreThan": "Выберите не более {количество} записей",
-    "fillEmptyFieldBeforeMerging": "Некоторые пустые поля обязательны для заполнения, пожалуйста, заполните их перед объединением."
+    "fillEmptyFieldBeforeMerging": "Некоторые пустые поля обязательны для заполнения, пожалуйста, заполните их перед объединением.",
+    "minimumRecordForComparison": "У Вас не может быть меньше {count} записей."
   },
   "boolFilters": {
     "onlyActive": "Активный",
@@ -632,10 +641,10 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Массовое обновление",
+    "update": "Обновить массово",
     "delete": "Удалить",
     "select": "Выбрать",
-    "cancel": "Отмена"
+    "cancel": "Отменить"
   },
   "fields": {
     "primaryRecord": "Первичная запись",
@@ -694,7 +703,7 @@
     "ownerUser": "Собственник",
     "username": "Имя пользователя",
     "password": "Пароль",
-    "measure": "Измерение",
+    "measure": "Мера",
     "units": "Единицы",
     "id": "ID",
     "ids": "IDs",
@@ -715,16 +724,13 @@
     "allowedOptions": "Разрешенные варианты",
     "disableActionHistory": "Отключите ведение журнала действий",
     "downloadUrl": "Загрузить URL",
-    "smallThumbnailUrl": "URL-адрес миниатюры (маленький)",
-    "mediumThumbnailUrl": "URL-адрес миниатюры (средний)",
-    "largeThumbnailUrl": "URL-адрес миниатюры (большой)",
     "extension": "Удлинитель",
     "association": "Ассоциация",
     "reverseAssociation": "Обратная ассоциация",
     "isArchived": "Архивировано",
     "hierarchySortOrder": "Иерархия Порядок сортировки",
     "emailAddressData": "Данные об адресах электронной почты",
-    "dropdown": "Dropdown",
+    "dropdown": "Выпадающий список",
     "groupEnd": "Конец группы",
     "iconClass": "Иконка",
     "isPublic": "Публичный",
@@ -741,7 +747,7 @@
     "isInherited": "Наследуется",
     "code": "Код",
     "extensibleEnum": "Список",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "created": "Создано",
     "modified": "Изменено",
     "end": "Завершение",

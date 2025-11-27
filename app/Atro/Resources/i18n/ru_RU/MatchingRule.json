@@ -1,10 +1,10 @@
 {
   "fields": {
-    "matching": "Подходящий",
+    "matching": "Соответствие",
     "weight": "Вес",
     "sourceField": "Поле источника",
     "masterField": "Поле мастера",
-    "sourceEntity": "Источник",
+    "sourceEntity": "Исходная сущность",
     "masterEntity": "Мастер",
     "matchingRuleSet": "Набор",
     "matchingRules": "Правила подбора",

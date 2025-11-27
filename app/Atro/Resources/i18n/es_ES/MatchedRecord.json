@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "A juego",
-    "staging": "Puesta en escena",
-    "stagingEntity": "Entidad de puesta en escena",
-    "stagingEntityId": "ID de la entidad de puesta en escena",
     "master": "Maestro",
     "masterEntity": "Entidad principal",
     "masterEntityId": "ID de la entidad principal",
     "score": "Puntuación",
-    "status": "Status"
+    "source": "Fuente",
+    "sourceEntity": "Entidad de origen",
+    "sourceEntityId": "ID de la entidad de origen",
+    "hash": "Hash único"
   },
   "options": {
-    "status": {
-      "found": "Encontrado",
-      "confirmed": "Confirmado",
-      "rejected": "Rechazado"
+    "type": {
+      "masterRecord": "Registro maestro",
+      "duplicate": "Duplicar"
     }
   }
 }

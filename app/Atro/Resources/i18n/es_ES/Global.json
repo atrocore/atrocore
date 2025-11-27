@@ -79,7 +79,9 @@
     "Locale": "Localización",
     "Measure": "Measure",
     "File": "Archivo",
-    "Action": "Acción"
+    "Action": "Acción",
+    "Selection": "Selección",
+    "SelectionRecord": "Registro de selección"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -146,7 +148,9 @@
     "Unit": "Units",
     "Translation": "Etiquetas",
     "Action": "Acciones",
-    "ExtensibleEnum": "Listas"
+    "ExtensibleEnum": "Listas",
+    "Selection": "Selecciones",
+    "SelectionRecord": "Registros de selección"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
@@ -487,7 +491,12 @@
     "unitPart": "(Unit)",
     "unlinkAll": "Desenlazar todo",
     "addItem": "Agregar elemento",
-    "accessManagement": "Access Management"
+    "accessManagement": "Access Management",
+    "unselectAll": "Deseleccionar todo",
+    "splitHorizontal": "Dividir horizontalmente",
+    "splitVertical": "Dividir verticalmente",
+    "expandWindow": "Ampliar ventana",
+    "matchings": "Partidos"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -591,7 +600,8 @@
     "removeRelatedRecords": "¿Está seguro de que desea eliminar todos los registros de la Asociación seleccionada del registro actual? Se conservarán todos los registros relacionados.",
     "queryHasErrors": "Hay algunos errores en su consulta",
     "actionExecuted": "La acción \"%s\" se ha ejecutado correctamente",
-    "linked": "Los registros se vincularon con éxito."
+    "linked": "Los registros se vincularon con éxito.",
+    "minimumRecordForComparison": "No puede tener menos de {count} registros."
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
@@ -672,12 +682,12 @@
     "ownerUser": "Owner",
     "username": "Username",
     "password": "Password",
-    "measure": "Measure",
+    "measure": "Medida",
     "units": "Units",
     "emailAddressIsOptedOut": "Email Address is Opted-Out",
     "id": "ID",
     "ids": "IDs",
-    "type": "Type",
+    "type": "Tipo",
     "names": "Names",
     "targetListIsOptedOut": "Is Opted Out (Target List)",
     "users": "Usuarios",
@@ -720,9 +730,6 @@
     "connection": "Conexión",
     "tags": "Etiquetas",
     "downloadUrl": "Descargar URL",
-    "smallThumbnailUrl": "URL en miniatura (pequeña)",
-    "mediumThumbnailUrl": "URL en miniatura (mediana)",
-    "largeThumbnailUrl": "URL en miniatura (grande)",
     "extension": "Extensión",
     "hidden": "Oculto",
     "priority": "Prioridad",
@@ -738,7 +745,11 @@
     "modified": "Modificado",
     "sorting": "ordenar Orden",
     "code": "Código",
-    "team": "Equipo"
+    "team": "Equipo",
+    "goldenRecord": "Disco de oro",
+    "sourceRecords": "Registros de origen",
+    "primaryRecord": "Registro primario",
+    "derivedRecords": "Registros derivados"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",

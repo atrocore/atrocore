@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Tipo",
     "entity": "Entidad",
     "isMultilang": "Multilingual",
     "required": "Required",
@@ -9,7 +9,7 @@
     "protected": "Protegido",
     "unique": "Único",
     "index": "Índice de la base de datos",
-    "measure": "Measure",
+    "measure": "Medida",
     "trim": "Eliminar los espacios en blanco iniciales y finales",
     "maxLength": "Longitud máxima",
     "countBytesInsteadOfCharacters": "Contar bytes en lugar de caracteres",

@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Odpovídající",
-    "staging": "Inscenace",
-    "stagingEntity": "Subjekt etapizace",
-    "stagingEntityId": "ID etapového subjektu",
     "master": "Mistr",
     "masterEntity": "Hlavní subjekt",
     "masterEntityId": "ID hlavního subjektu",
     "score": "Skóre",
-    "status": "Stav"
+    "source": "Zdroj:",
+    "sourceEntity": "Zdrojová entita",
+    "sourceEntityId": "ID zdrojového subjektu",
+    "hash": "Jedinečný kód Hash"
   },
   "options": {
-    "status": {
-      "found": "Nalezeno",
-      "confirmed": "Potvrzeno",
-      "rejected": "Odmítnuté"
+    "type": {
+      "masterRecord": "Hlavní záznam",
+      "duplicate": "Duplikovat"
     }
   }
 }

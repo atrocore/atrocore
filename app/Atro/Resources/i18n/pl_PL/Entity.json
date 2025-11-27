@@ -39,14 +39,19 @@
     "textFilterFields": "Pola filtra tekstu",
     "nonDuplicatableFields": "Pola niepowielone",
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
-    "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją"
+    "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
+    "hasDuplicates": "Ma duplikaty",
+    "masterEntity": "Podmiot główny",
+    "primaryEntity": "Podmiot główny",
+    "derivedEntities": "Podmioty pochodne"
   },
   "options": {
     "type": {
       "Base": "Podstawa",
       "Hierarchy": "Hierarchia",
       "ReferenceData": "Odniesienie",
-      "Archive": "Archiwum"
+      "Archive": "Archiwum",
+      "Derivative": "Instrument pochodny"
     },
     "sortDirection": {
       "asc": "Rosnąco",

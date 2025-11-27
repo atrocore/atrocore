@@ -3,5 +3,14 @@
     "name": "Name",
     "description": "Description",
     "selectionRecords": "Rekordy selekcji"
+  },
+  "options": {
+    "type": {
+      "single": "Pojedynczy podmiot",
+      "multiple": "Wiele podmiotów"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Nie można ustawić opcji \"Pojedynczy podmiot\", ponieważ w rekordach znajduje się wiele podmiotów."
   }
 }

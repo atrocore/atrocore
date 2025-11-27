@@ -79,7 +79,9 @@
     "RoleScope": "Область застосування",
     "RoleScopeAttribute": "Атрибут",
     "RoleScopeAttributePanel": "Панель атрибутів",
-    "RoleScopeField": "польовий"
+    "RoleScopeField": "польовий",
+    "Selection": "Вибір",
+    "SelectionRecord": "Запис про вибір"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -146,7 +148,9 @@
     "LayoutProfile": "Профілі макета",
     "IncomingWebhook": "Вхідні вебхуки",
     "RoleScopeAttribute": "Атрибути",
-    "Entity": "Управління сутностями"
+    "Entity": "Управління сутностями",
+    "Selection": "Вибране",
+    "SelectionRecord": "Записи вибору"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -490,7 +494,7 @@
     "expandAll": "Розгорнути всі",
     "Associated": "Асоційований",
     "Associating": "Асоціювання",
-    "matchedRecords": "Відповідні записи",
+    "matchedRecords": "Співставлені записи",
     "noMatches": "Немає збігів",
     "varcharPart": "(Рядок)",
     "deletePermanently": "Видалити назавжди",
@@ -715,7 +719,7 @@
     "ownerUser": "Власник",
     "username": "Ім'я користувача",
     "password": "Пароль",
-    "measure": "Вимірювання",
+    "measure": "Міра",
     "units": "Одиниці",
     "id": "ID",
     "ids": "IDs",
@@ -734,8 +738,6 @@
     "sorting": "Порядок сортування",
     "associateEverything": "Пов'язати кожен запис з кожним іншим записом",
     "__currentUser": "Поточний користувач",
-    "mediumThumbnailUrl": "URL-адреса мініатюри (середня)",
-    "largeThumbnailUrl": "URL-адреса мініатюри (велика)",
     "extension": "Розширення",
     "hierarchySortOrder": "Ієрархія Порядок сортування",
     "emailAddressData": "Дані адреси електронної пошти",
@@ -746,7 +748,6 @@
     "allowedOptions": "Дозволені опції",
     "disableActionHistory": "Вимкнути реєстрацію дій",
     "downloadUrl": "URL-адреса для завантаження",
-    "smallThumbnailUrl": "URL-адреса мініатюри (маленька)",
     "routes": "Маршрут(и)",
     "conditionalProperties": "Умовні властивості",
     "emailAddress": "Email",

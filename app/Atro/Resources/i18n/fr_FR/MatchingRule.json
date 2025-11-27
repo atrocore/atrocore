@@ -3,12 +3,12 @@
     "matching": "Correspondance",
     "weight": "Poids",
     "sourceField": "Champ de la source",
-    "targetField": "Champ cible",
-    "stagingEntity": "Entité de transit",
     "masterEntity": "Entité maîtresse",
     "matchingRuleSet": "Fixer",
     "matchingRules": "Règles de correspondance",
-    "operator": "Opérateur"
+    "operator": "Opérateur",
+    "masterField": "Domaine principal",
+    "sourceEntity": "Entité source"
   },
   "options": {
     "type": {

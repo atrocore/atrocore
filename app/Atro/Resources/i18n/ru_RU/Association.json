@@ -1,7 +1,7 @@
 {
   "fields": {
     "description": "Описание",
-    "isActive": "Активные",
+    "isActive": "Активный",
     "reverseAssociation": "Обратная ассоциация",
     "code": "Код",
     "default": "По умолчанию"

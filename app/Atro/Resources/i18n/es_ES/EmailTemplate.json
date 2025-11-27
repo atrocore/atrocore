@@ -2,7 +2,7 @@
   "fields": {
     "subject": "Sujeto",
     "body": "Cuerpo",
-    "isHtml": "Área de texto con editor"
+    "isHtml": "HTML"
   },
   "labels": {
     "send": "Enviar"

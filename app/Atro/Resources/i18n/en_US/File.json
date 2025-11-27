@@ -37,7 +37,7 @@
     "cannotDefineFileName": "The system cannot recognize the file name from the URL.",
     "urlExpected": "Incorrect URL was given",
     "fileExtensionCorrectedAutomatically": "File extension was corrected automatically.",
-    "downloadJobsCreated": "Job has been created to prepare your zip file"
+    "downloadJobsCreated": "A background job has been created to prepare your archive file."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "File extension cannot be changed.",

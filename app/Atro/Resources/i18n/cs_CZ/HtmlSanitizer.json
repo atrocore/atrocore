@@ -3,6 +3,6 @@
     "configuration": "Konfigurace"
   },
   "exceptions": {
-    "notValidYaml": "Konfigurace není platná pro Yaml."
+    "notValidYaml": "Konfigurace není platný YAML."
   }
 }

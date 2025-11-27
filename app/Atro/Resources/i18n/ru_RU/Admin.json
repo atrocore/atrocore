@@ -88,8 +88,8 @@
     "massUpdate": "Массовое обновление",
     "relationships": "Отношения",
     "leftSidebar": "Вид с левой стороны",
-    "rightSideView": "Вид с правой стороны",
-    "upload": "Загрузить"
+    "upload": "Загрузить",
+    "selection": "Выбор"
   },
   "fields": {
     "fontSize": "Размер шрифта",

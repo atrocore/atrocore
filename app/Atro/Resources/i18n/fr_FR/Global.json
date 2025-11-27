@@ -8,7 +8,7 @@
     "name": "Nom",
     "emailAddress": "Courriel",
     "description": "Description",
-    "type": "Type",
+    "type": "Typ",
     "isActive": "Actif",
     "username": "Nom d'utilisateur",
     "sortOrder": "Ordre de tri",
@@ -100,7 +100,11 @@
     "classification": "Classification",
     "entity": "Entité",
     "created": "Créé",
-    "url": "URL"
+    "url": "URL",
+    "goldenRecord": "Disque d'or",
+    "sourceRecords": "Elements source",
+    "primaryRecord": "Enregistrement primaire",
+    "derivedRecords": "Enregistrements dérivés"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -182,7 +186,9 @@
     "Entity": "Entité",
     "EntityField": "Champ de l'entité",
     "Language": "Langue",
-    "LayoutProfile": "Profil de la mise en page"
+    "LayoutProfile": "Profil de la mise en page",
+    "Selection": "Sélection",
+    "SelectionRecord": "Dossier de sélection"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -527,7 +533,9 @@
     "scopeFilter": "Canal",
     "Activities": "Activités",
     "accessManagement": "Gestion de l'accès",
-    "Attributes": "Attributs"
+    "Attributes": "Attributs",
+    "unselectAll": "Désélectionner tout",
+    "matchings": "Matchs"
   },
   "insightsPanels": {
     "summary": "Résumé",
@@ -635,7 +643,8 @@
     "fillEmptyFieldBeforeMerging": "Certains champs vides sont obligatoires, veuillez les remplir avant de fusionner.",
     "unableToDuplicateRecord": "Impossible de dupliquer. Un enregistrement avec une valeur du champ unique existe déjà.",
     "youHaveErrorsInFilter": "Le filtre comporte quelques erreurs.",
-    "theSavedFilterMightBeCorrupt": "n'est pas pris en charge, le filtre enregistré peut être corrompu."
+    "theSavedFilterMightBeCorrupt": "n'est pas pris en charge, le filtre enregistré peut être corrompu.",
+    "minimumRecordForComparison": "Vous ne pouvez pas avoir moins de {count} enregistrements."
   },
   "scopeNamesPlural": {
     "Classification": "Classification",
@@ -702,7 +711,9 @@
     "Language": "Langues",
     "LayoutProfile": "Profils de mise en page",
     "RoleScopeAttribute": "Attributs",
-    "RoleScopeField": "Domaines"
+    "RoleScopeField": "Domaines",
+    "Selection": "Sélections",
+    "SelectionRecord": "Dossiers de sélection"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"

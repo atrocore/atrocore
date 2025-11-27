@@ -3,12 +3,12 @@
     "matching": "Odpovídající",
     "weight": "Hmotnost",
     "sourceField": "Zdrojová oblast",
-    "targetField": "Cílové pole",
-    "stagingEntity": "Subjekt etapizace",
     "masterEntity": "Hlavní subjekt",
     "matchingRuleSet": "Sada",
     "matchingRules": "Pravidla porovnávání",
-    "operator": "Operátor"
+    "operator": "Operátor",
+    "masterField": "Hlavní pole",
+    "sourceEntity": "Zdrojová entita"
   },
   "options": {
     "type": {

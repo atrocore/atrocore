@@ -3,6 +3,6 @@
     "configuration": "Configuration"
   },
   "exceptions": {
-    "notValidYaml": "Configuration is not a valid Yaml."
+    "notValidYaml": "La configuration n'est pas un YAML valide."
   }
 }

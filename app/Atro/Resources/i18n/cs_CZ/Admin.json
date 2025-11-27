@@ -87,7 +87,8 @@
     "detail": "Podrobnosti",
     "massUpdate": "Hromadná aktualizace",
     "kanban": "Kanban",
-    "upload": "Nahrát"
+    "upload": "Nahrát",
+    "selection": "Výběr"
   },
   "fieldTypes": {
     "color": "Barva",
@@ -130,7 +131,7 @@
     "jsonObject": "Objekt JSON",
     "language": "Jazyk",
     "multiLanguage": "Jazyky",
-    "measure": "Míra",
+    "measure": "Měrná jednotka",
     "markdown": "Markdown"
   },
   "fields": {

@@ -42,7 +42,8 @@
     "passwordRegexPattern": "Wzorzec Regex hasła",
     "passwordExpireDays": "Okres ważności hasła (w dniach)",
     "sendOutNotifications": "Wysyłanie powiadomień",
-    "sendNotificationInSync": "Wysyłanie powiadomień bez zadania"
+    "sendNotificationInSync": "Wysyłanie powiadomień bez zadania",
+    "disableToolbarLogo": "Wyłącz logo nagłówka"
   },
   "tooltips": {
     "fileNameRegexPattern": "Aby włączyć tylko małe litery o maksymalnej długości 24 znaków, użyj \"/^[a-z]{1,24}$/\".",
