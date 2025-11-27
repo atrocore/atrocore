@@ -1,27 +1,27 @@
 {
   "fields": {
-    "name": "",
-    "emailAddress": "",
-    "phoneNumber": "",
-    "description": "",
-    "type": "",
-    "role": "",
-    "number": "",
-    "language": "",
-    "addresses": "",
-    "contacts": ""
+    "name": "Nome",
+    "emailAddress": "Email",
+    "phoneNumber": "Telefono",
+    "description": "Descrizione",
+    "type": "Tipo",
+    "role": "Ruolo",
+    "number": "Numero",
+    "language": "Lingua",
+    "addresses": "Indirizzi",
+    "contacts": "Contatti"
   },
   "options": {
     "type": {
-      "individual": "",
-      "company": ""
+      "individual": "Individuale",
+      "company": "Azienda"
     },
     "role": {
-      "supplier": "",
-      "customer": ""
+      "supplier": "Fornitore",
+      "customer": "Cliente"
     }
   },
   "exceptions": {
-    "defaultAddressAlreadyExist": ""
+    "defaultAddressAlreadyExist": "L'indirizzo predefinito per l'Account esiste già."
   }
 }
