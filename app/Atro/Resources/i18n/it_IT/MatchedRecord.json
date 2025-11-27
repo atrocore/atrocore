@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "source": "",
+    "sourceEntity": "",
+    "sourceEntityId": "",
+    "master": "",
+    "masterEntity": "",
+    "masterEntityId": "",
+    "score": "",
+    "hash": ""
+  },
+  "options": {
+    "type": {
+      "duplicate": "",
+      "masterRecord": ""
+    }
+  }
+}
