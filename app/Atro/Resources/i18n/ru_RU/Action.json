@@ -25,7 +25,8 @@
   },
   "labels": {
     "execute": "Выполнить",
-    "Parameters": "Параметры"
+    "Parameters": "Параметры",
+    "fieldsPanel": "Обновить"
   },
   "massActions": {
     "execute": "Выполнить"
@@ -49,7 +50,10 @@
       "set": "Набор действий",
       "webhook": "Webhook",
       "customCode": "Пользовательский код",
-      "email": "Отправить электронную почту"
+      "email": "Отправить электронную почту",
+      "create": "Создать",
+      "update": "Обновить",
+      "delete": "Удалить"
     },
     "executeAs": {
       "system": "Система",
