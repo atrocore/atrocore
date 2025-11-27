@@ -16,7 +16,7 @@
     "pattern": "Vzor regexu",
     "defaultUnit": "Výchozí jednotka",
     "default": "Výchozí",
-    "defaultValueType": "Výchozí hodnota Typ",
+    "defaultValueType": "Výchozí hodnota Type",
     "tooltip": "Nápověda k nástrojům",
     "tooltipText": "Text nápovědy k nástroji",
     "tooltipLink": "Odkaz na nápovědu k nástroji",
@@ -37,17 +37,17 @@
     "maxHeight": "Maximální výška (px)",
     "lengthOfCut": "Zobrazovaná částka symbolu",
     "script": "Skript",
-    "outputType": "Typ výstupu",
+    "outputType": "Type výstupu",
     "preview": "Náhled",
     "rowsMax": "Maximální počet řádků textového pole",
     "rowsMin": "Minimální počet řádků textového pole",
-    "useDisabledTextareaInViewMode": "Použití zakázané textové oblasti v režimu zobrazení",
+    "useDisabledTextareaInViewMode": "Použití zakázaného textového pole v režimu zobrazení",
     "strip": "Strip",
     "height": "Výška (px)",
     "useIframe": "Použití iframe v režimu zobrazení",
     "htmlSanitizer": "HTML Sanitizer",
     "foreignCode": "Zahraniční kód",
-    "relationType": "Typ vztahu",
+    "relationType": "Type vztahu",
     "foreignEntity": "Zahraniční subjekt",
     "relationName": "Kód vztahového subjektu",
     "linkMultipleField": "Propojení více polí",
@@ -123,5 +123,8 @@
     "resetToDefault": "Obnovení výchozího nastavení",
     "relationManagement": "Řízení vztahů",
     "conditionalProperties": "Podmíněné vlastnosti"
+  },
+  "exceptions": {
+    "nullValuesExist": "Některé záznamy mají nulové hodnoty"
   }
 }
