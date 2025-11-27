@@ -6,7 +6,7 @@
   "options": {
     "operators": {
       "isNotEmpty": "Не порожньо",
-      "contains": "Містить",
+      "contains": "Contains",
       "notContains": "Не включає в себе",
       "notHas": "Не включає в себе",
       "equals": "Дорівнює",
@@ -16,7 +16,7 @@
       "greaterThanOrEquals": "Більше ніж або дорівнює",
       "lessThanOrEquals": "Менше ніж або дорівнює",
       "isEmpty": "Порожньо",
-      "has": "Містить",
+      "has": "Contains",
       "isLinked": "Пов'язано",
       "isNotLinked": "Не пов'язано",
       "notInTeams": "Не в команді",
