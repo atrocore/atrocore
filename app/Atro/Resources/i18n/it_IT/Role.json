@@ -1,47 +1,47 @@
 {
   "fields": {
-    "name": "",
-    "roles": "",
-    "assignmentPermission": "",
-    "dataPrivacyPermission": "",
-    "users": "",
-    "teams": "",
-    "styleControlPermission": "",
-    "scopes": ""
+    "name": "Nome",
+    "roles": "Ruoli",
+    "assignmentPermission": "Permesso di assegnazione",
+    "dataPrivacyPermission": "Autorizzazione alla privacy dei dati",
+    "users": "Utenti",
+    "teams": "Squadre",
+    "styleControlPermission": "Controllo dello stile",
+    "scopes": "Scopi"
   },
   "tooltips": {
-    "assignmentPermission": "",
-    "dataPrivacyPermission": ""
+    "assignmentPermission": "Permette di limitare la possibilità di assegnare record e di pubblicare messaggi ad altri utenti.\n\ntutti - nessuna restrizione\n\nteam - può assegnare e postare solo ai compagni di squadra\n\nno - può assegnare e postare solo a se stesso",
+    "dataPrivacyPermission": "Permette di visualizzare e cancellare i dati personali."
   },
   "labels": {
-    "Access": "",
-    "Scope Level": "",
-    "Field Level": ""
+    "Access": "Accesso",
+    "Scope Level": "Livello dell'ambito",
+    "Field Level": "Livello del campo"
   },
   "options": {
     "accessList": {
-      "not-set": "",
-      "enabled": "",
-      "disabled": ""
+      "not-set": "non impostato",
+      "enabled": "abilitato",
+      "disabled": "disabilitato"
     },
     "levelList": {
-      "all": "",
-      "team": "",
-      "account": "",
-      "own": "",
-      "no": "",
-      "yes": "",
-      "not-set": ""
+      "all": "tutti",
+      "team": "squadra",
+      "account": "conto",
+      "own": "proprio",
+      "no": "no",
+      "yes": "sì",
+      "not-set": "non impostato"
     }
   },
   "actions": {
-    "read": "",
-    "edit": "",
-    "delete": "",
-    "stream": "",
-    "create": ""
+    "read": "Leggi",
+    "edit": "Modifica",
+    "delete": "Cancellare",
+    "stream": "Attività",
+    "create": "Creare"
   },
   "messages": {
-    "changesAfterClearCache": ""
+    "changesAfterClearCache": "Tutte le modifiche di un controllo di accesso saranno applicate dopo la cancellazione della cache."
   }
 }
