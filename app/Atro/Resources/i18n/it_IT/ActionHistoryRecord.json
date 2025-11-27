@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "user": "",
+    "action": "",
+    "createdAt": "",
+    "controllerName": "",
+    "controllerAction": "",
+    "authToken": "",
+    "ipAddress": "",
+    "authLogRecord": "",
+    "target": "",
+    "targetName": "",
+    "targetId": "",
+    "data": ""
+  }
+}
