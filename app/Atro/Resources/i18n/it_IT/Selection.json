@@ -1,1 +1,16 @@
-{}
+{
+  "fields": {
+    "name": "Nome",
+    "description": "Descrizione",
+    "selectionRecords": "Registri di selezione"
+  },
+  "options": {
+    "type": {
+      "single": "Entità singola",
+      "multiple": "Entità multiple"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Non può impostare 'Entità singola', perché ha molte entità nei suoi record."
+  }
+}
