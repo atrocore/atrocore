@@ -47,7 +47,7 @@
     "useIframe": "Используйте iframe в режиме просмотра",
     "htmlSanitizer": "Дезинфицирующее средство для HTML",
     "foreignCode": "Иностранный код",
-    "relationType": "Тип отношений",
+    "relationType": "Тип отношения",
     "foreignEntity": "Иностранное юридическое лицо",
     "relationName": "Код сущности отношения",
     "linkMultipleField": "Связать несколько полей",
@@ -123,5 +123,8 @@
     "resetToDefault": "Восстановить настройки по умолчанию",
     "relationManagement": "Управление отношениями",
     "conditionalProperties": "Условные свойства"
+  },
+  "exceptions": {
+    "nullValuesExist": "Некоторые записи имеют нулевые значения"
   }
 }
