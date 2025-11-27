@@ -24,7 +24,8 @@
     "hideTextLabel": "Text auf der Schaltfläche ausblenden",
     "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
     "updateType": "Aktualisierungstyp",
-    "updateScript": "Script"
+    "updateScript": "Script",
+    "updateFields": "Felder aktualisieren"
   },
   "labels": {
     "execute": "Ausführen",
