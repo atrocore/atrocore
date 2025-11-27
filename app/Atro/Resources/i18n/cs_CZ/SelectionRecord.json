@@ -2,7 +2,7 @@
   "fields": {
     "name": "Název",
     "entityId": "Záznam",
-    "entityType": "Subjekt"
+    "entityType": "Entita"
   },
   "messages": {
     "selectionDisabledForEntity": "Výběr zakázán pro entitu \"%s\"."
