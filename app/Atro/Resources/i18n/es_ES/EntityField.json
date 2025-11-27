@@ -99,7 +99,7 @@
       "int": "Entero",
       "float": "Decimal",
       "bool": "SI / NO",
-      "date": "Date",
+      "date": "Fecha",
       "datetime": "Date-Time"
     },
     "relationType": {
