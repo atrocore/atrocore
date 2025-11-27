@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "status": "",
+    "executeTime": "",
+    "pid": "",
+    "priority": "",
+    "handler": "",
+    "payload": "",
+    "scheduledJob": "",
+    "message": "",
+    "startedAt": "",
+    "endedAt": ""
+  },
+  "labels": {
+    "cancel": ""
+  },
+  "options": {
+    "status": {
+      "Pending": "",
+      "Success": "",
+      "Running": "",
+      "Failed": "",
+      "Canceled": "",
+      "Awaiting": "",
+      "Closed": ""
+    }
+  },
+  "tooltips": {
+    "priority": ""
+  },
+  "exceptions": {
+    "jobIsRunning": ""
+  }
+}
