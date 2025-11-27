@@ -77,7 +77,7 @@
     "RoleScopeField": "Campo",
     "ExtensibleEnum": "List",
     "Locale": "Localización",
-    "Measure": "Measure",
+    "Measure": "Medida",
     "File": "Archivo",
     "Action": "Acción",
     "Selection": "Selección",
@@ -1372,5 +1372,8 @@
     "medium": "Medio",
     "large": "Grande",
     "small": "Pequeño"
+  },
+  "insightsPanels": {
+    "accessManagement": "Access Management"
   }
 }
