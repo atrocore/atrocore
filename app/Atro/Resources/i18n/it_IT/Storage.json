@@ -1,1 +1,31 @@
-{}
+{
+  "fields": {
+    "type": "Tipo",
+    "path": "Percorso",
+    "files": "File",
+    "folder": "Cartella montata",
+    "folders": "Cartelle",
+    "syncFolders": "Mantenere la struttura dei file e delle cartelle"
+  },
+  "options": {
+    "type": {
+      "local": "Locale (Linux)"
+    }
+  },
+  "tooltips": {
+    "syncFolders": "Se è selezionata, la struttura fisica dei file e delle cartelle nell'archivio sarà la stessa del sistema. Ciò significa che solo un file/cartella con nome simile può essere archiviato nello stesso percorso."
+  },
+  "labels": {
+    "scan": "Scansione",
+    "scanDone": "La scansione del deposito '%s' è stata completata."
+  },
+  "exceptions": {
+    "itemCannotBeMovedToAnotherStorage": "La cartella/file non può essere spostata tra gli archivi.",
+    "folderInUse": "Solo una cartella vuota può essere selezionata come cartella montata.",
+    "storageHasItems": "La cartella montata non può essere modificata se l'archivio non è vuoto.",
+    "storagePathNotUnique": "Il percorso di archiviazione deve essere unico.",
+    "storagePathContainFilesFromAnotherStorage": "L'albero delle cartelle avviato dal percorso di archiviazione selezionato non può contenere cartelle/file associate a un altro archivio.",
+    "storageTypeCannotBeChanged": "Il tipo di archiviazione non può essere modificato.",
+    "storagePathCannotBeChanged": "Il percorso di archiviazione non può essere modificato."
+  }
+}
