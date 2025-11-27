@@ -35,6 +35,24 @@ class App extends \Espo\Controllers\App
         return $this->getRealtimeManager()->startEntityListening($data->entityName, $data->entityId);
     }
 
+    public function postActionPrepareScriptFields($params, $data, $request)
+    {
+        if (empty($data->entityName) && (empty($data->fields) || !is_array($data->fields))) {
+            throw new BadRequest();
+        }
+
+        return $this->getService('App')->prepareScriptFields($data->entityName, $data->fields);
+    }
+
+    public function postActionPrepareScriptAttributes($params, $data, $request)
+    {
+        if (empty($data->entityName) && (empty($data->attributesIds) || !is_array($data->attributesIds))) {
+            throw new BadRequest();
+        }
+
+        return $this->getService('App')->prepareScriptAttributes($data->entityName, $data->attributesIds);
+    }
+
     public function actionDefaultValueForScriptType($params, $data, $request)
     {
         if (!$request->isGet()) {

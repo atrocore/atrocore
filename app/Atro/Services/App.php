@@ -27,6 +27,61 @@ use Espo\ORM\Entity;
 
 class App extends AbstractService
 {
+    public function prepareScriptFields(string $entityName, array $fields): array
+    {
+        $entity = $this->getEntityManager()->getRepository($entityName)->get();
+
+        $res = [];
+
+        foreach ($fields as $item) {
+            foreach ($entity->fields ?? [] as $field => $defs) {
+                if ($field === $item && empty($defs['notStorable'])) {
+                    $res[$field] = null;
+                }
+
+                if (!empty($defs['originalName']) && $defs['originalName'] === $item) {
+                    if ((!empty($defs['isLinkMultipleIdList']) || empty($defs['notStorable'])) && empty($defs['isLinkEntityName'])) {
+                        $res[$field] = null;
+                    }
+                }
+            }
+        }
+
+        return [
+            'text' => !empty($res) ? json_encode($res) : ''
+        ];
+    }
+
+    public function prepareScriptAttributes(string $entityName, array $attributesIds): array
+    {
+        $entity = $this->getEntityManager()->getRepository($entityName)->get();
+
+        $attributes = $this->getEntityManager()->getRepository('Attribute')->getAttributesByIds($attributesIds);
+
+        $attributesDefs = [];
+        foreach ($attributes as $attribute) {
+            $this->getAttributeFieldConverter()->convert($entity, $attribute, $attributesDefs);
+        }
+
+        $res = [];
+        foreach ($entity->fields ?? [] as $field => $defs) {
+            if (!empty($defs['attributeId'])) {
+                $res[$field] = null;
+            }
+        }
+
+        if (!empty($res)) {
+            $res['__attributes'] = $attributesIds;
+            return [
+                'text' => json_encode($res)
+            ];
+        }
+
+        return [
+            'text' => ''
+        ];
+    }
+
     public static function createRebuildNotification(): void
     {
         DataManager::pushPublicData('isNeedToRebuildDatabase', true);

@@ -156,6 +156,8 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "addFields": "Add Fields",
+    "addAttributes": "Add Attributes",
     "matchings": "Matchings",
     "basic": "Basic",
     "script": "Script",

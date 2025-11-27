@@ -20,11 +20,15 @@
     "mode": "Mode",
     "emailScript": "Script",
     "emailTemplate": "Modèle de courrier électronique",
-    "targetEntity": "Entité cible"
+    "targetEntity": "Entité cible",
+    "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
+    "updateType": "Type de mise à jour",
+    "updateScript": "Script"
   },
   "labels": {
     "execute": "Exécuter",
-    "Parameters": "Paramètres"
+    "Parameters": "Paramètres",
+    "fieldsPanel": "Mise à jour"
   },
   "massActions": {
     "execute": "Exécuter"
@@ -38,6 +42,10 @@
       "single": "Unique"
     },
     "type": {
+      "create": "Créer",
+      "update": "Mise à jour",
+      "delete": "Supprimer",
+      "upsert": "Upsert",
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
       "email": "Envoyer un e-mail",
@@ -53,6 +61,10 @@
     "executeAs": {
       "sameUser": "Même utilisateur",
       "system": "Système"
+    },
+    "updateType": {
+      "basic": "De base",
+      "script": "Script"
     }
   },
   "tooltips": {
