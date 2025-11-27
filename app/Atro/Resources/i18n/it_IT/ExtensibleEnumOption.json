@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "name": "",
+    "color": "",
+    "sortOrder": "",
+    "extensibleEnums": ""
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsSystem": "",
+    "extensibleEnumOptionIsUsed": ""
+  }
+}
