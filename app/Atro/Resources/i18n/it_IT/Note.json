@@ -1,24 +1,24 @@
 {
   "fields": {
-    "post": "",
-    "attachments": "",
-    "type": "",
-    "createdByGender": "",
-    "data": ""
+    "post": "Messaggio",
+    "attachments": "Allegati",
+    "type": "Tipo",
+    "createdByGender": "Creato per genere",
+    "data": "Dati"
   },
   "filters": {
-    "all": "",
-    "posts": "",
-    "updates": "",
-    "notes": "",
-    "emails": ""
+    "all": "Tutti",
+    "posts": "Messaggi",
+    "updates": "Aggiornamenti",
+    "notes": "Note",
+    "emails": "Email"
   },
   "options": {
     "type": {
-      "Post": ""
+      "Post": "Messaggio"
     }
   },
   "messages": {
-    "writeMessage": ""
+    "writeMessage": "Scriva qui il suo messaggio"
   }
 }
