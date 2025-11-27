@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "user": "",
+    "ipAddress": "",
+    "lastAccess": "",
+    "createdAt": "",
+    "isActive": "",
+    "lifetime": "",
+    "idleTime": "",
+    "authToken": "",
+    "actionHistoryRecords": ""
+  },
+  "tooltips": {
+    "lifetime": "",
+    "idleTime": ""
+  }
+}
