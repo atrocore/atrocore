@@ -1,1 +1,38 @@
-{}
+{
+  "fields": {
+    "description": "Descrizione",
+    "entity": "Entità",
+    "notificationProfile": "Profilo di notifica",
+    "occurrence": "Evento",
+    "isActive": "Attivo",
+    "ignoreSelfAction": "Ignorare le proprie azioni",
+    "asOwner": "Come proprietario",
+    "asFollower": "Come seguace",
+    "asAssignee": "Come cessionario",
+    "asTeamMember": "Come membro del team",
+    "asNotificationProfile": "Come utente del profilo di notifica",
+    "emailActive": "Notifica via e-mail",
+    "systemActive": "Notifica del sistema",
+    "emailTemplateId": "Modello di e-mail",
+    "systemTemplateId": "Modello di sistema"
+  },
+  "options": {
+    "occurrence": {
+      "creation": "Creare",
+      "updating": "Aggiornamento",
+      "linking": "Link",
+      "unlinking": "Unlink",
+      "deletion": "Cancellare",
+      "note_created": "Creare una nota",
+      "note_updated": "Nota di aggiornamento",
+      "note_deleted": "Cancellare la nota",
+      "ownership_assignment": "Imposta proprietario/utente assegnato",
+      "unlinking_ownership_assignment": "Proprietario non impostato/Utente assegnato",
+      "mentioned": "Menzione"
+    }
+  },
+  "labels": {
+    "Notify User": "Notifica all'utente",
+    "Transport": "Trasporto"
+  }
+}
