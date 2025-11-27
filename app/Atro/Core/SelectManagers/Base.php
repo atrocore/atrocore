@@ -1250,6 +1250,8 @@ class Base
             default:
                 $where['type'] = $type;
         }
+
+        $where['dateTime'] = false;
         $result = $this->getWherePart($where);
 
         return $result;
@@ -1328,6 +1330,14 @@ class Base
 
         if (!is_null($attribute) && !is_string($attribute)) {
             throw new Error('Bad attribute in where statement');
+        }
+
+        if (
+            !isset($item['dateTime'])
+            && !empty($attribute)
+            && $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']) === 'datetime'
+        ) {
+            $item['dateTime'] = true;
         }
 
         if (!empty($item['isAttribute']) && $this->getMetadata()->get(['scopes', $this->entityType, 'hasAttribute'])) {

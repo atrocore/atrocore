@@ -1296,7 +1296,9 @@
       "include_me": "schließen mich ein",
       "exclude_me": "schließen mich aus",
       "is_my_team": "ist mein Team",
-      "is_not_my_team": "ist nicht mein Team"
+      "is_not_my_team": "ist nicht mein Team",
+      "future": "Zukunft",
+      "past": "Vergangenheit"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",
