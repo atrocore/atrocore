@@ -496,7 +496,10 @@
     "splitHorizontal": "Horizontální rozdělení",
     "splitVertical": "Vertikální rozdělení",
     "expandWindow": "Rozbalit okno",
-    "matchings": "Shody"
+    "matchings": "Shody",
+    "addFields": "Přidat pole",
+    "addAttributes": "Přidání atributů",
+    "Insights": "Insights"
   },
   "fields": {
     "width": "Šířka",
@@ -820,7 +823,7 @@
     "was": "byl",
     "become": "stát se",
     "ownSelf": "{uživatel} se nastavil jako vlastník pro {entityType} {entity}",
-    "assign": "{uživatel} přiřazen {entityType} {entita} na {příjemce}",
+    "assign": "{uživatel} přidělil {entityType} {entita} na {příjemce}",
     "assignThis": "{uživatel} přidělil tento {typ entity} {příjemci}",
     "assignThisVoid": "{user} unassigned this {entityType}",
     "updateThis": "{uživatel} aktualizoval tento {entityType}",
@@ -1192,7 +1195,10 @@
       "exclude_me": "mě vyloučit",
       "is_my_team": "je můj tým",
       "is_not_my_team": "není můj tým",
-      "equal": "rovná se"
+      "equal": "rovná se",
+      "future": "budoucnost",
+      "past": "minulost",
+      "today": "dnes"
     },
     "errors": {
       "number_exceed_max": "Musí být nižší než {0}",
