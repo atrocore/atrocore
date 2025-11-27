@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "configuration": "Configurazione"
+  },
+  "exceptions": {
+    "notValidYaml": "La configurazione non è uno YAML valido."
+  }
+}
