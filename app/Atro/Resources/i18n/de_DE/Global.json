@@ -1298,7 +1298,8 @@
       "is_my_team": "ist mein Team",
       "is_not_my_team": "ist nicht mein Team",
       "future": "Zukunft",
-      "past": "Vergangenheit"
+      "past": "Vergangenheit",
+      "today": "heute"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

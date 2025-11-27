@@ -415,6 +415,7 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     'next_month',
                     'last_year',
                     'current_year',
+                    'today',
                     'past',
                     'future',
                     'is_null',

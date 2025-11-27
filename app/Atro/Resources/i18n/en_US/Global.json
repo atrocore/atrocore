@@ -1299,7 +1299,8 @@
       "is_my_team": "is my team",
       "is_not_my_team": "is not my team",
       "future": "future",
-      "past": "past"
+      "past": "past",
+      "today": "today"
     },
     "errors": {
       "no_filter": "No filter selected",

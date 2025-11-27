@@ -203,7 +203,8 @@
                 {type: 'current_year', nb_inputs: 0, apply_to: ['date', 'datetime']},
                 {type: 'last_year', nb_inputs: 0, apply_to: ['date', 'datetime']},
                 {type: 'future', nb_inputs: 0, apply_to: ['date', 'datetime']},
-                {type: 'past', nb_inputs: 0, apply_to: ['date', 'datetime']}
+                {type: 'past', nb_inputs: 0, apply_to: ['date', 'datetime']},
+                {type: 'today', nb_inputs: 0, apply_to: ['date', 'datetime']}
             ],
             rules: rules,
             filters: filters,
