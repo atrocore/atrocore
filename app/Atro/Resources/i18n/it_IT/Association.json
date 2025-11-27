@@ -1,13 +1,1 @@
-{
-  "fields": {
-    "description": "",
-    "isActive": "",
-    "reverseAssociation": "",
-    "code": "",
-    "default": ""
-  },
-  "exceptions": {
-    "associationIsLinkedWithRecords": "",
-    "youCanNotDeactivateAssociationWithActiveRecords": ""
-  }
-}
+{}
