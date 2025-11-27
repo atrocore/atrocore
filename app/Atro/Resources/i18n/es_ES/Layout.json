@@ -1,7 +1,7 @@
 {
   "fields": {
     "entity": "Entidad",
-    "viewType": "Ver tipo",
+    "viewType": "Ver Type",
     "relatedEntity": "Entidad relacionada",
     "layoutProfile": "Perfil del diseño"
   },
