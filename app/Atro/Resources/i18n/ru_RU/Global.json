@@ -641,7 +641,7 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Обновить массово",
+    "update": "Массовое обновление",
     "delete": "Удалить",
     "select": "Выбрать",
     "cancel": "Отменить"
@@ -1374,5 +1374,8 @@
   },
   "descriptions": {
     "previewTemplate": "Управляйте шаблонами HTML/CSS для автоматического предварительного просмотра данных"
+  },
+  "insightsPanels": {
+    "accessManagement": "Управление доступом"
   }
 }
