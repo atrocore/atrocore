@@ -1,1 +1,96 @@
-{}
+{
+  "fields": {
+    "name": "Nome singolare",
+    "namePlural": "Nome plurale",
+    "disabled": "Disabilitato",
+    "customizable": "Personalizzabile",
+    "unInheritedRelations": "Relazioni non ereditate",
+    "primaryEntity": "Entità primaria",
+    "hasDuplicates": "Ha dei duplicati",
+    "masterEntity": "Entità master",
+    "hasArchive": "Archiviabile",
+    "hasActive": "Attivabile",
+    "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",
+    "streamDisabled": "Disattivare le attività",
+    "iconClass": "Icona",
+    "sortBy": "Campo d'ordine predefinito",
+    "sortDirection": "Direzione dell'ordine predefinita",
+    "statusField": "Campo di stato",
+    "kanbanViewMode": "Vista Kanban",
+    "kanbanStatusIgnoreList": "Elenchi ignorati nella Vista Kanban",
+    "deleteWithoutConfirmation": "Cancellare senza conferma",
+    "autoDeleteAfterDays": "Periodo di autocancellazione, in giorni",
+    "clearDeletedAfterDays": "Periodo di cancellazione permanente, giorni",
+    "modifiedExtendedRelations": "Relazioni che effettuano la data/ora di modifica",
+    "duplicatableRelations": "Relazioni duplicabili",
+    "hasAssignedUser": "Abilita l'utente assegnato",
+    "hasTeam": "Abilitare i team",
+    "hasOwner": "Abilita il proprietario",
+    "multiParents": "Genitori multipli",
+    "dragAndDrop": "Trascinamento e rilascio",
+    "fieldValueInheritance": "Eredità del valore del campo",
+    "unInheritedFields": "Campi non ereditati",
+    "relationInheritance": "Eredità delle relazioni",
+    "fields": "Campi",
+    "auditedDisabledFields": "Nessuna registrazione dell'attività per i campi",
+    "auditedEnabledRelations": "Registra l'attività di registrazione delle relazioni",
+    "hasAttribute": "Ha degli attributi",
+    "hasClassification": "Ha delle classificazioni",
+    "singleClassification": "Solo classificazione singola",
+    "disableAttributeLinking": "Disabilita il collegamento diretto degli attributi",
+    "hasAssociate": "Ha degli associati",
+    "textFilterFields": "Campi del filtro di testo",
+    "nonDuplicatableFields": "Campi non duplicati",
+    "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
+    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
+    "derivedEntities": "Entità derivate"
+  },
+  "labels": {
+    "resetToDefault": "Ripristino delle impostazioni predefinite",
+    "attributes": "Attributi",
+    "accessManagement": "Gestione degli accessi",
+    "hierarchyManagement": "Gestione della gerarchia",
+    "other": "Altro"
+  },
+  "options": {
+    "type": {
+      "Base": "Base",
+      "Hierarchy": "Gerarchia",
+      "ReferenceData": "Riferimento",
+      "Archive": "Archivio",
+      "Derivative": "Derivato"
+    },
+    "sortDirection": {
+      "asc": "In salita",
+      "desc": "In discesa"
+    }
+  },
+  "confirmations": {
+    "resetToDefault": "È sicuro di voler ripristinare la configurazione predefinita?"
+  },
+  "tooltips": {
+    "clearDeletedAfterDays": "I record di questa entità vengono cancellati definitivamente XX giorni dopo la data di cancellazione.",
+    "autoDeleteAfterDays": "I record di questa entità vengono cancellati XX giorni dopo la data dell'ultima modifica.",
+    "disabled": "Verifichi se non ha bisogno di questa entità nel suo sistema.",
+    "statusField": "Gli aggiornamenti di questo campo vengono registrati nelle Attività.",
+    "deleteWithoutConfirmation": "Se è selezionata, il singolo record viene eliminato senza la conferma dell'utente. L'eliminazione di più record deve essere confermata.",
+    "modifiedExtendedRelations": "Le modifiche di queste relazioni causeranno l'aggiornamento della data e dell'ora di \"Modified At\".",
+    "dragAndDrop": "Questa opzione attiva l'ordinamento gerarchico. Ciò significa che non è possibile alcun altro ordinamento nella navigazione gerarchica.",
+    "unInheritedFields": "I valori di questi campi non saranno ereditati dall'elemento padre.",
+    "unInheritedRelations": "Le relazioni con queste entità non saranno ereditate dall'elemento genitore.",
+    "hasAssignedUser": "Abilita l'utente assegnato per la gestione degli accessi.",
+    "hasTeam": "Abilita i team per la gestione degli accessi.",
+    "hasOwner": "Abilita il Proprietario per la gestione degli accessi.",
+    "streamDisabled": "Se è selezionata, nella pagina Dettagli record non viene visualizzato il pannello Attività. Non sarà possibile aggiungere note.",
+    "disableActionHistory": "Se è selezionata, non verranno registrate le azioni dell'utente sui record di questa entità.",
+    "auditedDisabledFields": "Le modifiche in questi campi non vengono visualizzate come Attività.",
+    "auditedEnabledRelations": "Le modifiche di queste relazioni vengono visualizzate come Attività.",
+    "linkAttributesWithClassificationAutomatically": "Se un attributo è collegato direttamente a un record e questo record è collegato a una classificazione, l'attributo sarà collegato anche a quella classificazione."
+  },
+  "exceptions": {
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{genitori} e {figli} non dovrebbero essere entrambi nelle Relazioni che effettuano la data/ora di modifica.",
+    "entityAlreadyHasAttributesInUse": "Il parametro Has Attribute non può essere disattivato. Per favore, rimuova prima tutti gli attributi correlati.",
+    "entityHasDirectlyLinkedAttributes": "Ci sono già degli attributi collegati direttamente. La preghiamo di rimuoverli dai record.",
+    "entityTypeIsNotSuitableForAssociates": "Questo tipo di entità non può contenere il parametro \"Ha associati\". Solo \"Base\" e \"Gerarchia\" possono averlo."
+  }
+}
