@@ -39,7 +39,7 @@
     "fileExtensionCannotBeChanged": "L'extension du fichier ne peut pas être modifiée.",
     "fileStorageCannotBeChanged": "Le stockage de fichiers ne peut pas être modifié.",
     "fileFolderCannotBeChanged": "Le dossier de fichiers ne peut pas être modifié.",
-    "notAllowToFileWithEntity": "Vous n'êtes pas autorisé à lier un fichier de type '%s' avec '%s'. Les seuls types autorisés sont '%s'"
+    "notAllowToFileWithEntity": "Vous n'êtes pas autorisé à lier un fichier de Type '%s' avec '%s'. Les seuls types autorisés sont '%s'"
   },
   "messages": {
     "fileHasDuplicate": "Il existe déjà au moins un doublon <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> de ce dossier.",
