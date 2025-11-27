@@ -21,7 +21,11 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "emailBcc": "Email BCC",
-    "hideTextLabel": "Скрыть текстовую метку на кнопке"
+    "hideTextLabel": "Скрыть текстовую метку на кнопке",
+    "applyToPreselectedRecords": "Применить к предварительно выбранным записям",
+    "updateType": "Тип обновления",
+    "updateFields": "Обновление полей",
+    "updateScript": "Скрипт"
   },
   "labels": {
     "execute": "Выполнить",
@@ -58,6 +62,10 @@
     "executeAs": {
       "system": "Система",
       "sameUser": "Тот же пользователь"
+    },
+    "mode": {
+      "basic": "Основные",
+      "script": "Скрипт"
     }
   },
   "tooltips": {
