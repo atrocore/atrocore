@@ -12,7 +12,7 @@
     "role": "Proszę wybrać Główny, jeśli ten język ma być głównym językiem treści. Dodatkowy powinien być używany dla języków, na które ma zostać przetłumaczony."
   },
   "exceptions": {
-    "mainLanguageIsAlreadyExists": "Język główny już istnieje.",
+    "mainLanguageIsAlreadyExists": "Główny język już istnieje.",
     "roleCannotBeChanged": "Rola nie może zostać zmieniona.",
     "codeForAdditionalCannotBeChanged": "Kod dodatkowego języka nie może zostać zmieniony.",
     "mainLanguageCannotBeRemoved": "Języka głównego nie można usunąć."
