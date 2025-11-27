@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Atro\Services;
 
+use Atro\Core\DataManager;
 use Atro\Core\Exceptions\BadRequest;
+use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Metadata;
 use Atro\Services\Composer as ComposerService;
@@ -51,17 +54,45 @@ class Settings extends AbstractService
         return $data;
     }
 
-    public function validate(\stdClass $data): bool
+    public function update(\stdClass $data)
     {
-        if (isset($data->inputLanguageList) && count($data->inputLanguageList) == 0) {
-            $isMultilangActive = $data->isMultilangActive ?? $this->getConfig()->get('isMultilangActive', false);
-
-            if ($isMultilangActive) {
-                throw new BadRequest($this->getLanguage()->translate('languageMustBeSelected', 'messages', 'Settings'));
-            }
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
         }
 
-        return true;
+        if (!empty($data->fileNameRegexPattern) && !preg_match('/^\/((?:(?:[^?+*{}()[\]\\\\|]+|\\\\.|\[(?:\^?\\\\.|\^[^\\\\]|[^\\\\^])(?:[^\]\\\\]+|\\\\.)*\]|\((?:\?[:=!]|\?<[=!]|\?>)?(?1)??\)|\(\?(?:R|[+-]?\d+)\))(?:(?:[?+*]|\{\d+(?:,\d*)?\})[?+]?)?|\|)*)\/[gmixsuAJD]*$/', $data->fileNameRegexPattern)) {
+            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        }
+
+        if (!empty($data->passwordRegexPattern) && preg_match($data->passwordRegexPattern, '') === false) {
+            throw new BadRequest($this->getLanguage()->translate('regexNotValid', 'exceptions', 'FieldManager'));
+        }
+
+        if (property_exists($data, 'onlyStableReleases')) {
+            if ($data->onlyStableReleases !== $this->getConfig()->get('onlyStableReleases')) {
+                Composer::setMinimumStability($data->onlyStableReleases ? 'stable' : 'RC');
+            }
+            unset($data->onlyStableReleases);
+        }
+
+        // clear cache
+        $this->getDataManager()->clearCache();
+
+        if (property_exists($data, 'siteUrl')) {
+            $data->siteUrl = rtrim($data->siteUrl, '/');
+        }
+
+        $this->getConfig()->setData($data, $this->getUser()->isAdmin());
+        $result = $this->getConfig()->save();
+        if ($result === false) {
+            throw new Error('Cannot save settings');
+        }
+
+        if (isset($data->inputLanguageList)) {
+            $this->getDataManager()->rebuild();
+        }
+
+        return $this->getConfigData();
     }
 
     protected function getLanguage(): Language
@@ -74,10 +105,16 @@ class Settings extends AbstractService
         return $this->getInjection('metadata');
     }
 
+    protected function getDataManager(): DataManager
+    {
+        return $this->getInjection('dataManager');
+    }
+
     protected function init()
     {
         parent::init();
 
         $this->addDependency('metadata');
+        $this->addDependency('dataManager');
     }
 }
