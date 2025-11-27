@@ -47,7 +47,7 @@
     "useIframe": "Utiliser l'iframe en mode affichage",
     "htmlSanitizer": "HTML Sanitizer",
     "foreignCode": "Code étranger",
-    "relationType": "Type de relation",
+    "relationType": "Relation Type",
     "foreignEntity": "Entité étrangère",
     "relationName": "Relation Code de l'entité",
     "linkMultipleField": "Lier plusieurs champs",
