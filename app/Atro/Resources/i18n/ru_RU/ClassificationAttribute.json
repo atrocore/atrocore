@@ -23,7 +23,7 @@
     "enableConditionalRequired": "Требуется включение",
     "enableConditionalVisible": "Включить видимость",
     "enableConditionalReadOnly": "Включить Только для чтения",
-    "enableConditionalProtected": "Включить Защищено",
+    "enableConditionalProtected": "Включить защиту",
     "enableConditionalDisableOptions": "Включить Отключенные опции",
     "conditionalRequired": "Обязательно",
     "conditionalVisible": "Видимый",
