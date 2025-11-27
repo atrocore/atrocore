@@ -1,14 +1,1 @@
-{
-  "fields": {
-    "subject": "",
-    "body": "",
-    "isHtml": ""
-  },
-  "labels": {
-    "send": ""
-  },
-  "exceptions": {
-    "systemTemplatesCannotBeDeleted": "",
-    "systemTemplateCodeChanged": ""
-  }
-}
+{}
