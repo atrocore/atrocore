@@ -5,7 +5,7 @@
     "disabled": "Wyłączony",
     "customizable": "Możliwość dostosowania",
     "hasArchive": "Archiwalny",
-    "hasActive": "Możliwość aktywacji",
+    "hasActive": "Aktywowalny",
     "hideFieldTypeFilters": "Ukryj filtry typu pola",
     "streamDisabled": "Wyłączanie działań",
     "iconClass": "Ikona",
@@ -91,6 +91,6 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{rodzice} i {dzieci} nie powinny znajdować się jednocześnie w relacjach skutkujących datą/godziną modyfikacji.",
     "entityAlreadyHasAttributesInUse": "Nie można dezaktywować parametru Has Attribute. Proszę najpierw usunąć wszystkie powiązane atrybuty.",
     "entityHasDirectlyLinkedAttributes": "Istnieją już bezpośrednio powiązane atrybuty. Proszę usunąć je z rekordów.",
-    "entityTypeIsNotSuitableForAssociates": "Ten typ podmiotu nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać."
+    "entityTypeIsNotSuitableForAssociates": "Ten typ encji nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać."
   }
 }
