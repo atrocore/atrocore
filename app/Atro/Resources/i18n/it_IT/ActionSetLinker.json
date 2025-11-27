@@ -1,6 +1,6 @@
 {
   "fields": {
-    "sortOrder": "",
-    "isActive": ""
+    "sortOrder": "Ordinamento",
+    "isActive": "Attivo nel set d'azione"
   }
 }
