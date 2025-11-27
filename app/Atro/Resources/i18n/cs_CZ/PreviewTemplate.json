@@ -1,6 +1,6 @@
 {
   "fields": {
-    "entityType": "Subjekt",
+    "entityType": "Entita",
     "isActive": "Aktivní",
     "template": "Šablona HTML/CSS"
   }
