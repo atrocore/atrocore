@@ -93,7 +93,6 @@
                 onEnd: function (evt) {
                     const toUl = evt.to.closest('.connected')
                     let movedItem = null
-                    console.log('ul disabled', evt)
                     if (toUl.classList.contains('disabled') ) {
                         if (toUl !== ul) {
                             // cancel drop
