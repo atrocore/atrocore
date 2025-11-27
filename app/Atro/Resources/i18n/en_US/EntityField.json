@@ -123,5 +123,8 @@
     "resetToDefault": "Reset to default",
     "relationManagement": "Relation Management",
     "conditionalProperties": "Conditional Properties"
+  },
+  "exceptions": {
+    "nullValuesExist": "Some records have null values"
   }
 }

@@ -42,7 +42,13 @@
         headerButtons = (recordButtons?.headerButtons?.buttons ?? []).filter(button => !button.hidden);
     }
 
-    window.addEventListener('detail:overview-filters-changed', (e: CustomEvent) => {
+    function onFollowersUpdated(event: CustomEvent) {
+        if (recordButtons) {
+            recordButtons.followers = event.detail;
+        }
+    }
+
+    function onOverviewFiltersChanged(e: CustomEvent) {
         const data = e.detail;
 
         if (!data || !recordButtons) {
@@ -50,26 +56,15 @@
         }
 
         recordButtons.isOverviewFilterActive = data.isOverviewFilterActive;
-    });
+    }
 
-    window.addEventListener('record:actions-reload', (e: CustomEvent) => {
-        reloadDynamicActions();
-    });
-
-
-    window.addEventListener('record:buttons-update', (event: CustomEvent) => {
+    function onButtonsUpdate(event: CustomEvent) {
         if (recordButtons) {
             recordButtons = Object.assign(recordButtons, event.detail || {});
         } else {
             recordButtons = event.detail || {} as RecordActionButtons;
         }
-    });
-
-    window.addEventListener('record:followers-updated', (event: CustomEvent) => {
-        if (recordButtons) {
-            recordButtons.followers = event.detail;
-        }
-    })
+    }
 
     async function loadDynamicActions(): Promise<Record<string, any>[]> {
         let userData = UserData.get();
@@ -97,7 +92,7 @@
         }
     }
 
-    function reloadDynamicActions(): void {
+    function reloadDynamicActions(event: CustomEvent): void {
         if (Metadata.get(['scopes', scope, 'actionDisabled'])) {
             return;
         }
@@ -130,7 +125,19 @@
     }
 
     onMount(() => {
+        window.addEventListener('detail:overview-filters-changed', onOverviewFiltersChanged);
+        window.addEventListener('record:actions-reload', reloadDynamicActions);
+        window.addEventListener('record:buttons-update', onButtonsUpdate);
+        window.addEventListener('record:followers-updated', onFollowersUpdated)
+
         reloadDynamicActions();
+
+        return () => {
+            window.removeEventListener('detail:overview-filters-changed', onOverviewFiltersChanged);
+            window.removeEventListener('record:actions-reload', reloadDynamicActions);
+            window.removeEventListener('record:buttons-update', onButtonsUpdate);
+            window.removeEventListener('record:followers-updated', onFollowersUpdated);
+        }
     })
 </script>
 
@@ -149,7 +156,8 @@
                 </button>
             {/if}
             {#if recordButtons?.headerButtons && headerButtons.find(item => item.name === 'filtering') }
-                <ContentFilter scope="{scope}" onExecute={executeAction} style="padding-bottom: 0;margin-left: 20px !important;"/>
+                <ContentFilter scope="{scope}" onExecute={executeAction}
+                               style="padding-bottom: 0;margin-left: 20px !important;"/>
             {/if}
         {:else if mode === 'edit'}
             {#each additionalEditActions as action}
@@ -162,7 +170,7 @@
         <div class="header-buttons-container">
             <div class="header-buttons">
                 <div class="header-items">
-                    <TourButton {scope} {mode} />
+                    <TourButton {scope} {mode}/>
                     {#each headerButtons as button}
                         {#if button.name === 'filtering'}
                             <!--Skip-->

@@ -895,7 +895,7 @@
             treeItems = [activeItem];
             callback()
         } else {
-            LayoutManager.get(scope, 'leftSidebar', null, null, (data) => {
+            LayoutManager.get(scope, 'navigation', null, null, (data) => {
                 layoutData = data
                 treeItems = data.layout.map(item => {
                     const type = Metadata.get(['entityDefs', scope, 'fields', item.name, 'type'])

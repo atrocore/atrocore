@@ -77,7 +77,7 @@
 
     function getAdditionalFields() {
         const fields = []
-        if (params.type === 'leftSidebar') {
+        if (params.type === 'navigation') {
             if (!Metadata.get(['scopes', params.scope, 'bookmarkDisabled'])) {
                 fields.push('_bookmark')
             }

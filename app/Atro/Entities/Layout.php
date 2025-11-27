@@ -30,7 +30,8 @@ class Layout extends Base
         $reelType = $this->getEntityManager()->getEspoMetadata()->get("clientDefs.{$this->get('entity')}.additionalLayouts.{$this->get('viewType')}", $this->get('viewType'));
         switch ($reelType) {
             case 'list';
-            case 'leftSidebar':
+            case 'navigation':
+            case 'insights':
             case 'selection':
             case 'kanban':
                 /* @var $listItems EntityCollection */
@@ -56,7 +57,7 @@ class Layout extends Base
                 }
                 return $data;
 
-            case 'rightSideView':
+            case 'summary':
             case 'detail':
                 $data = [];
                 foreach ($this->get('sections', ['orderBy' => 'sortOrder']) ?? [] as $section) {

@@ -10624,9 +10624,9 @@ main .record > .edit .cell:not([data-readonly]):not([data-mode=edit]) > .field:h
 .cell > .field:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
 .cell > .field > input:not([type=radio]):not([type=checkbox]),
 td.cell :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input, .unit-select select),
-td.cell:not(:first-child):has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
-td.cell  > input:not([type=radio]):not([type=checkbox]),
-td.cell  .selectize-control > .selectize-input{
+td.cell:not(:first-child) > div:has(> input[type=checkbox]:not([disabled]), > input[type=radio]:not([disabled])),
+td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]),
+td.cell > div .selectize-control > .selectize-input {
     background-color: var(--field-inline-edit-color);
     margin-top: -1px;
     border-top: 1px solid transparent;
@@ -10647,14 +10647,14 @@ td.cell  .selectize-control > .selectize-input{
 .cell > .field > input:not([type=radio]):not([type=checkbox]):focus,
 .cell > .field > .array-control-container .selectize-input.focus,
 .cell > .field > textarea:focus,
-td.cell  .selectize-control > .selectize-input.focus,
+td.cell > div:not(.input-group) > .selectize-control > .selectize-input.focus,
 td.cell .input-group:has(.selectize-input.focus),
 td.cell .input-group:has(> input:focus),
-td.cell > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
-td.cell > :where(.range-container, .unit-group) > .unit-select select:focus,
-td.cell > input:not([type=radio]):not([type=checkbox]):focus,
-td.cell > .array-control-container .selectize-input.focus,
-td.cell > textarea:focus {
+td.cell > div > :where(.range-container, .unit-group) > :where(input:not([type=radio]):not([type=checkbox]):focus),
+td.cell > div > :where(.range-container, .unit-group) > .unit-select select:focus,
+td.cell > div:not(.input-group) > input:not([type=radio]):not([type=checkbox]):focus,
+td.cell > div > .array-control-container .selectize-input.focus,
+td.cell > div > textarea:focus {
     border-bottom-color: #06c;
 }
 
@@ -10678,9 +10678,9 @@ td.cell > textarea:focus {
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
 .record > .edit .cell > .field > .field-value-container,
-td.cell[data-mode=edit] > input[type=checkbox]:not([disabled]),
-td.cell[data-mode=edit] > input[type=radio]:not([disabled]),
-td.cell[data-mode=edit] > .field-value-container {
+td.cell[data-mode=edit]  input[type=checkbox]:not([disabled]),
+td.cell[data-mode=edit]  input[type=radio]:not([disabled]),
+td.cell[data-mode=edit]  .field-value-container {
     margin: 0 10px;
     line-height: inherit;
 }
@@ -10695,7 +10695,7 @@ td.cell  .selectize-input{
 }
 
 .cell > .field .input-group > .input-group-btn,
-td.cell > .input-group > .input-group-btn  {
+td.cell  .input-group > .input-group-btn  {
     background-color: var(--field-inline-edit-color);
     gap: 5px;
     margin: 0 0 0 10px;
@@ -10709,7 +10709,7 @@ td.cell .input-group > .input-group-btn button{
 }
 
 .cell > .field > .input-group > .input-group-btn button:hover,
-td.cell > .input-group > .input-group-btn button:hover {
+td.cell  .input-group > .input-group-btn button:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
 
@@ -17799,6 +17799,13 @@ span[data-img-src]::after {
     z-index: 1;
 }
 
+.panel-summary .panel-heading .layout-editor-container {
+    position: unset;
+    top: unset;
+    margin-right: 5px;
+    transform: none;
+}
+
 @media screen and (min-width: 768px) {
     .layout-editor-container {
         opacity: 0;
@@ -18722,10 +18729,11 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: flex-end;
 }
 
-.fields-compare-panel  table tr td, .fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly]) {
+.fields-compare-panel  table tr td,
+.fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
     height: 47px;
     padding-bottom: 3px;
-    padding-top: 3px;
+    padding-top: 15px;
 }
 
 .fields-compare-panel  .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
@@ -18748,10 +18756,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-align: initial;
 }
 
-.compare-records .compare-panel table td.cell .inline-actions {
+.compare-records .compare-panel .list-container > .list > table tr td.cell div.inline-actions {
     position: absolute;
     left: 0;
-    top: -3px;
+    top: 0;
     z-index: 1000;
 }
 
@@ -18902,51 +18910,78 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 
-.list-container > .list > table tr td.cell:not([data-mode=edit]) > div , .list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]){
-    padding: 5px;
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div,
+.list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]), .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
+.list-container .list .record-checkbox-container {
+    padding: 3px 5px;
 }
 
+.list-container .list .record-checkbox-container {
+    padding: 0 5px;
+}
 
 .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
     position: relative;
-    min-width: 200px;
-    padding-top: 13px;
+    min-width: 208px;
+}
+
+.list-container > .list > table tr td.cell {
+    padding-top: 23px;
+    padding-bottom: 23px;
 }
 
 .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
     display: inline-block;
 }
 
-.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
+.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
+    min-height: 25px;
+    border-top: 1px solid transparent;
+}
+
+.list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group)  {
-    min-height: 30px;
+.list-container > .list > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
+    padding-right: 18px;
 }
 
-.list-container > .list > table tr td.cell .inline-actions {
+.list-container > .list > table tr td.cell[data-mode=edit] > div .selectize-input  {
+    padding-left: 5px;
+}
+
+.list-container > .list > table tr td.cell > div {
+    position: relative;
+}
+
+.list-container > .list > table tr td.cell div.inline-actions {
     position: absolute;
-    top: -2px;
-    left: 0;
-    z-index: 100;
+    top: -20px;
+    right: 0;
+    z-index: 9;
     padding: 0;
     background-color: transparent;
+}
+
+.list-container > .list > table tr td.cell:not([data-mode=edit]) div.inline-actions {
+    top: 5px;
+    right: 3px;
 }
 
 .list-container > .list > table tr td.cell .form-control.selectize-control {
     min-width: 0;
 }
 
-.modal-body > div > .list > table td.cell:first-child .inline-actions {
-    left: 10px;
-}
-
 .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
     margin: 4px 0 0;
 }
 
-.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]){
-    text-align: center;
+.list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]),
+.list-container > .list > table tr > td.cell {
     vertical-align: middle;
+}
+
+.list-container > .list > table tr td.cell[data-name=tag] {
+    line-height: initial !important;
 }
