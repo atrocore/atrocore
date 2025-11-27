@@ -1,1 +1,53 @@
-{}
+{
+  "fields": {
+    "classification": "Classificazione",
+    "attribute": "Attributo",
+    "isRequired": "Richiesto",
+    "isReadOnly": "In sola lettura",
+    "isProtected": "Protetto",
+    "maxLength": "Lunghezza massima",
+    "countBytesInsteadOfCharacters": "Conta i byte invece dei caratteri",
+    "value": "Valore predefinito",
+    "valueFrom": "Valore predefinito Da",
+    "valueTo": "Valore predefinito A",
+    "varcharValue": "Valore predefinito: Stringa",
+    "referenceValue": "Valore predefinito: Riferimento",
+    "textValue": "Valore predefinito: Testo",
+    "intValue": "Valore predefinito: Intero",
+    "floatValue": "Valore predefinito: Galleggiante",
+    "dateValue": "Valore predefinito: Data",
+    "datetimeValue": "Valore predefinito: Data e ora",
+    "boolValue": "Valore predefinito: Booleano",
+    "min": "Min",
+    "max": "Max",
+    "enableConditionalRequired": "Abilitazione richiesta",
+    "enableConditionalVisible": "Abilita Visibile",
+    "enableConditionalReadOnly": "Abilita in sola lettura",
+    "enableConditionalProtected": "Abilitazione Protetto",
+    "enableConditionalDisableOptions": "Abilita le opzioni disabilitate",
+    "conditionalRequired": "Richiesto",
+    "conditionalVisible": "Visibile",
+    "conditionalReadOnly": "In sola lettura",
+    "conditionalProtected": "Protetto",
+    "conditionalDisableOptions": "Opzioni disabilitate"
+  },
+  "messages": {
+    "savedForNotAllChannels": "L'attributo '%s' non è stato collegato a tutti i canali scelti.",
+    "unlinkRelatedAttribute": "È sicuro di voler eliminare l'Attributo selezionato dalla Classificazione selezionata? Tutti i record correlati manterranno questo Attributo.",
+    "cascadeUnlinkRelatedAttribute": "È sicuro di voler eliminare l'attributo selezionato dalla Classificazione selezionata e dai record correlati? Verranno rimossi anche tutti i valori degli attributi correlati.",
+    "removeRelatedAttributeGroup": "È sicuro di voler eliminare tutti gli Attributi per il Gruppo di Attributi selezionato dalla Classificazione selezionata? Tutti i record correlati manterranno questi Attributi.",
+    "removeRelatedAttributeGroupCascade": "È sicuro di voler eliminare tutti gli attributi per il Gruppo di attributi selezionato dalla Classificazione selezionata e i relativi record? Verranno rimossi anche tutti i valori degli attributi correlati."
+  },
+  "labels": {
+    "classificationAttribute": "Attributo dalla classificazione",
+    "unlinkRelatedAttribute": "Cancellare e conservare per i registri",
+    "cascadeUnlinkRelatedAttribute": "Cancella e da record",
+    "conditionalProperties": "Proprietà condizionali"
+  },
+  "options": {
+    "scope": {
+      "Global": "Globale",
+      "Channel": "Canale"
+    }
+  }
+}
