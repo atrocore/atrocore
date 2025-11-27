@@ -1,5 +1,7 @@
 <script>
     import * as monaco from 'monaco-editor';
+    import {Notifier} from "../../utils/Notifier";
+    import {Utils} from "../../utils/Utils";
 
     const jsonTwigLanguageConfig = {
         defaultToken: '',
@@ -67,9 +69,11 @@
     export let scope;
     export let params = {};
     export let value = null;
+    export let scriptFieldView = null;
 
     let language = params.language || Metadata.get(['entityDefs', scope, 'fields', name, 'language']) || 'twig';
     let twigVariables = params.twigVariables || Metadata.get(['entityDefs', scope, 'fields', name, 'twigVariables']) || [];
+    let editorActions = params.editorActions || Metadata.get(['entityDefs', scope, 'fields', name, 'editorActions']) || {};
     let editorComponent;
     let containerElement;
     let rootElement;
@@ -540,6 +544,99 @@
                 editorComponent.layout(); // Resize editor content
             }
         });
+
+        if (editorActions.addFields) {
+            editorComponent.addAction({
+                id: "add-entity-fields",
+                label: Language.translate('addFields'),
+                contextMenuGroupId: "navigation",
+                contextMenuOrder: 1.5,
+                run: function (editor) {
+                    Notifier.notify('Loading...');
+                    scriptFieldView.createView('dialog', 'views/modals/select-records', {
+                        scope: 'EntityField',
+                        multiple: true,
+                        createButton: false,
+                        massRelateEnabled: false,
+                        allowSelectAllResult: false,
+                        boolFilterList: [
+                            "fieldsFilter",
+                            "notLingual"
+                        ],
+                        boolFilterData: {
+                            fieldsFilter: {
+                                entityId: editorActions.addFields.entityName || scriptFieldView.model.get(editorActions.addFields.entityNameField)
+                            }
+                        }
+                    }, dialog => {
+                        dialog.render();
+                        Notifier.notify(false);
+                        dialog.once('select', models => {
+                            let fields = [];
+                            models.forEach(model => {
+                                fields.push(model.get('code'))
+                            });
+                            scriptFieldView.ajaxPostRequest(`App/action/prepareScriptFields`, {fields: fields}).success(res => {
+                                editor.executeEdits("add-entity-fields", [
+                                    {
+                                        range: editor.getSelection(),
+                                        text: res.text,
+                                        forceMoveMarkers: true
+                                    }
+                                ]);
+                            });
+                        });
+                    });
+                },
+            });
+        }
+
+        if (editorActions.addAttributes) {
+            const entityName = editorActions.addAttributes.entityName || scriptFieldView.model.get(editorActions.addAttributes.entityNameField);
+            if (Metadata.get(['scopes', entityName, 'hasAttribute'])) {
+                editorComponent.addAction({
+                    id: "add-entity-attributes",
+                    label: Language.translate('addAttributes'),
+                    contextMenuGroupId: "navigation",
+                    contextMenuOrder: 1.6,
+                    run: function (editor) {
+                        Notifier.notify('Loading...');
+                        scriptFieldView.createView('dialog', Metadata.get(['clientDefs', 'Attribute', 'modalViews', 'select']) || 'views/modals/select-records', {
+                            scope: 'Attribute',
+                            multiple: true,
+                            createButton: false,
+                            massRelateEnabled: true,
+                            boolFilterList: ['onlyForEntity'],
+                            boolFilterData: {
+                                onlyForEntity: entityName
+                            },
+                            allowSelectAllResult: false,
+                        }, dialog => {
+                            dialog.render();
+                            Notifier.notify(false);
+                            dialog.once('select', models => {
+                                let attributesIds = [];
+                                models.forEach(model => {
+                                    attributesIds.push(model.get('id'))
+                                });
+
+                                scriptFieldView.ajaxPostRequest(`App/action/prepareScriptAttributes`, {attributesIds: attributesIds}).success(res => {
+                                    editor.executeEdits("add-entity-attributes", [
+                                        {
+                                            range: editor.getSelection(),
+                                            text: res.text,
+                                            forceMoveMarkers: true
+                                        }
+                                    ]);
+                                });
+                            });
+                        });
+                    },
+                });
+            }
+
+
+        }
 
         const handleFullscreen = (evt) => {
             if (!document.fullscreenElement && evt.target === fullScreenContainer) {

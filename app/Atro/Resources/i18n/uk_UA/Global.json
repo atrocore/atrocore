@@ -152,6 +152,8 @@
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "addFields": "Додати поля",
+    "addAttributes": "Додати атрибути",
     "matchings": "Відповідності",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",

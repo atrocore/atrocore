@@ -149,6 +149,8 @@
     "Action": "Действия"
   },
   "labels": {
+    "addFields": "Добавить поля",
+    "addAttributes": "Добавить атрибуты",
     "matchings": "Соответствия",
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",

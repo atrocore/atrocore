@@ -863,6 +863,14 @@
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "targetEntity"
+        },
+        "addAttributes": {
+          "entityNameField": "targetEntity"
+        }
+      },
       "twigVariables": [
         "entity",
         "triggeredEntityType",
