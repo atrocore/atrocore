@@ -46,5 +46,8 @@
     "notAllowToFileWithEntity": "Nie mogą Państwo połączyć pliku typu '%s' z plikiem '%s'. Jedynymi dozwolonymi typami są '%s'",
     "fileFolderCannotBeChanged": "Folder plików nie może zostać zmieniony.",
     "fileMoveFailed": "Przenoszenie pliku nie powiodło się."
+  },
+  "insightsPanels": {
+    "sharing": "Udostępnianie"
   }
 }
