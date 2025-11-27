@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "attribute": "Attributo",
+    "roleScope": "Ambito di applicazione",
+    "readAction": "Leggi",
+    "editAction": "Modifica"
+  }
+}
