@@ -1,7 +1,7 @@
 {
   "fields": {
     "entity": "Encja",
-    "viewType": "Typ widoku",
+    "viewType": "View Type",
     "relatedEntity": "Podmiot powiązany",
     "layoutProfile": "Profil układu"
   },
