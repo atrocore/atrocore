@@ -53,8 +53,6 @@
                         } else {
                             evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
                         }
-                        selectedFields = [...selectedFields];
-                        console.log(selectedFields);
                         return
                     }
 
