@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "image": "Immagine",
+    "library": "Biblioteca"
+  }
+}
