@@ -152,6 +152,8 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "addFields": "Felder hinzufügen",
+    "addAttributes": "Attribute hinzufügen",
     "matchings": "Matchings",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",

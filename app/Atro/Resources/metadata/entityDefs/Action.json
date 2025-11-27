@@ -385,7 +385,23 @@
               "type": "in",
               "attribute": "type",
               "value": [
+                "create",
+                "update",
+                "delete",
                 "email"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "update",
+                "delete"
               ]
             }
           ]
@@ -702,7 +718,10 @@
                     {
                       "type": "in",
                       "attribute": "usage",
-                      "value": ["record", "entity"]
+                      "value": [
+                        "record",
+                        "entity"
+                      ]
                     },
                     {
                       "type": "equals",
@@ -730,6 +749,153 @@
             {
               "type": "isNotEmpty",
               "attribute": "iconClass"
+            }
+          ]
+        }
+      }
+    },
+    "applyToPreselectedRecords": {
+      "type": "bool",
+      "notStorable": true,
+      "virtualField": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "view": "views/action/fields/apply-to-preselected-records",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "update",
+                "delete"
+              ]
+            },
+            {
+              "type": "in",
+              "attribute": "usage",
+              "value": [
+                "",
+                "entity",
+                "record"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "updateType": {
+      "type": "extensibleEnum",
+      "notStorable": true,
+      "virtualField": true,
+      "extensibleEnumId": "update_type",
+      "dropdown": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "update",
+                "suggestValue"
+              ]
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "update",
+                "suggestValue"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "type": "jsonObject",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/action/fields/update-fields",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "update",
+                "suggestValue"
+              ]
+            },
+            {
+              "type": "equals",
+              "attribute": "updateType",
+              "value": "basic"
+            }
+          ]
+        }
+      }
+    },
+    "updateScript": {
+      "type": "text",
+      "notStorable": true,
+      "virtualField": true,
+      "view": "views/fields/script",
+      "language": "json",
+      "default": "{# { \"name\": \"Entity Name: {{ entity.name }}\" } #}",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "importDisabled": true,
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "targetEntity"
+        },
+        "addAttributes": {
+          "entityNameField": "targetEntity"
+        }
+      },
+      "twigVariables": [
+        "entity",
+        "triggeredEntityType",
+        "triggeredEntityId",
+        "triggeredEntity",
+        "uiRecord",
+        "uiRecordFromName",
+        "uiRecordFrom"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "update",
+                "suggestValue"
+              ]
+            },
+            {
+              "type": "equals",
+              "attribute": "updateType",
+              "value": "script"
             }
           ]
         }
