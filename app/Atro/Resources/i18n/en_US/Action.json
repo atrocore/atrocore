@@ -21,11 +21,16 @@
     "emailTo": "Email To",
     "emailCc": "Email CC",
     "emailBcc": "Email BCC",
-    "hideTextLabel": "Hide text label on the button"
+    "hideTextLabel": "Hide text label on the button",
+    "applyToPreselectedRecords": "Apply to pre-selected records",
+    "updateType": "Update Type",
+    "updateFields": "Update Fields",
+    "updateScript": "Script"
   },
   "labels": {
     "execute": "Execute",
-    "Parameters": "Parameters"
+    "Parameters": "Parameters",
+    "fieldsPanel": "Update"
   },
   "massActions": {
     "execute": "Execute"
@@ -46,6 +51,9 @@
       "single": "Single"
     },
     "type": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
       "set": "Action Set",
       "webhook": "Webhook",
       "customCode": "Custom Code",
@@ -54,6 +62,10 @@
     "executeAs": {
       "system": "System",
       "sameUser": "Same User"
+    },
+    "mode": {
+      "basic": "Basic",
+      "script": "Script"
     }
   },
   "tooltips": {

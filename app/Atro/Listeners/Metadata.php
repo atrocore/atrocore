@@ -404,15 +404,27 @@ class Metadata extends AbstractListener
 
         foreach ($actions ?? [] as $action) {
             $params = [
-                'id'            => $action['id'],
-                'name'          => $action['name'],
-                'display'       => $action['display'],
-                'type'          => $action['type'],
-                'acl'           => [
+                'id'      => $action['id'],
+                'name'    => $action['name'],
+                'display' => $action['display'],
+                'type'    => $action['type'],
+                'acl'     => [
                     'scope'  => $action['source_entity'],
                     'action' => 'read',
-                ]
+                ],
             ];
+
+            if (in_array($action['type'], ['update', 'create'])) {
+                $params['acl'] = [
+                    'scope'  => $action['target_entity'],
+                    'action' => 'edit',
+                ];
+            } elseif ($action['type'] == 'delete') {
+                $params['acl'] = [
+                    'scope'  => $action['target_entity'],
+                    'action' => 'delete',
+                ];
+            }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
                 $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';

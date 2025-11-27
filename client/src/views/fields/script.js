@@ -38,6 +38,7 @@ Espo.define('views/fields/script', ['views/fields/base'], Dep => {
                     name: this.name,
                     params: this.params,
                     mode: this.mode,
+                    scriptFieldView: this
                 }
             });
         },

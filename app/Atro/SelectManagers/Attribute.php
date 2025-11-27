@@ -92,6 +92,13 @@ class Attribute extends Base
         }
     }
 
+    protected function boolFilterOnlyEditableAttributes(array &$result): void
+    {
+        $result['whereClause'][] = [
+            'type!=' => ['composite', 'script']
+        ];
+    }
+
     protected function boolFilterNotParentCompositeAttribute(array &$result): void
     {
         $attributeId = (string)$this->getBoolFilterParameter('notParentCompositeAttribute');

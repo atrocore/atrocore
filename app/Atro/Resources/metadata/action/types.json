@@ -1,4 +1,7 @@
 {
   "webhook": "\\Atro\\ActionTypes\\Webhook",
-  "email": "\\Atro\\ActionTypes\\SendEmail"
+  "email": "\\Atro\\ActionTypes\\SendEmail",
+  "create": "\\Atro\\ActionTypes\\Create",
+  "update": "\\Atro\\ActionTypes\\Update",
+  "delete": "\\Atro\\ActionTypes\\Delete"
 }

@@ -21,11 +21,15 @@
     "focusField": "Fokusfeld",
     "displayField": "Anzeigefeld",
     "webhookUrl": "URL",
-    "hideTextLabel": "Text auf der Schaltfläche ausblenden"
+    "hideTextLabel": "Text auf der Schaltfläche ausblenden",
+    "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
+    "updateType": "Aktualisierungstyp",
+    "updateScript": "Script"
   },
   "labels": {
     "execute": "Ausführen",
-    "Parameters": "Parameter"
+    "Parameters": "Parameter",
+    "fieldsPanel": "Aktualisieren"
   },
   "massActions": {
     "execute": "Ausführen"
@@ -39,6 +43,9 @@
       "single": "Einzeln"
     },
     "type": {
+      "create": "Erstellen",
+      "update": "Aktualisierung",
+      "delete": "Löschen",
       "set": "Aktionsset",
       "email": "E-Mail senden",
       "webhook": "Webhook",
@@ -54,6 +61,10 @@
       "record": "Schaltfläche Aktion aufnehmen",
       "field": "Schaltfläche Feldaktion",
       "entity": "Schaltfläche Entitätsaktion"
+    },
+    "mode": {
+      "basic": "Basic",
+      "script": "Skript"
     }
   },
   "tooltips": {

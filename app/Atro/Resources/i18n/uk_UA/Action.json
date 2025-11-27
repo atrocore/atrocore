@@ -21,11 +21,15 @@
     "focusField": "Поле фокусування",
     "webhookUrl": "URL",
     "targetEntity": "Цільова сутність",
-    "hideTextLabel": "Приховати текст на кнопці"
+    "hideTextLabel": "Приховати текст на кнопці",
+    "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
+    "updateType": "Тип оновлення",
+    "updateScript": "Скрипт"
   },
   "labels": {
     "execute": "Виконати",
-    "Parameters": "Параметри"
+    "Parameters": "Параметри",
+    "fieldsPanel": "Оновлення"
   },
   "massActions": {
     "execute": "Виконати"
@@ -39,6 +43,9 @@
       "single": "Поодиноко"
     },
     "type": {
+      "create": "Створити",
+      "update": "Оновлення",
+      "delete": "Видалити",
       "set": "Набір дій",
       "email": "Відправити лист",
       "webhook": "Веб-гачок",
@@ -54,6 +61,10 @@
     "executeAs": {
       "sameUser": "Той самий користувач",
       "system": "Система"
+    },
+    "updateType": {
+      "basic": "Базовий",
+      "script": "Скрипт"
     }
   },
   "tooltips": {
