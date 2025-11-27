@@ -29,7 +29,8 @@
   },
   "labels": {
     "execute": "Ejecute",
-    "Parameters": "Parámetros"
+    "Parameters": "Parámetros",
+    "fieldsPanel": "Guardar"
   },
   "massActions": {
     "execute": "Ejecute"
@@ -53,7 +54,10 @@
       "set": "Conjunto de acciones",
       "webhook": "Gancho web",
       "customCode": "Código personalizado",
-      "email": "Enviar correo electrónico"
+      "email": "Enviar correo electrónico",
+      "update": "Guardar",
+      "create": "Crear",
+      "delete": "Borrar"
     },
     "executeAs": {
       "system": "Sistema",
