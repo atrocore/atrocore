@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "title": "",
+    "dateFrom": "",
+    "dateTo": "",
+    "autorefreshInterval": "",
+    "displayRecords": "",
+    "isDoubleHeight": "",
+    "mode": "",
+    "enabledScopeList": "",
+    "users": "",
+    "entityType": "",
+    "primaryFilter": "",
+    "boolFilterList": "",
+    "sortBy": "",
+    "sortDirection": "",
+    "expandedLayout": "",
+    "dateFilter": "",
+    "savedFilter": "",
+    "entityListType": ""
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "",
+      "basicWeek": "",
+      "month": "",
+      "basicDay": "",
+      "agendaDay": "",
+      "timeline": ""
+    },
+    "entityListType": {
+      "all": "",
+      "navigation": "",
+      "favorites": ""
+    }
+  },
+  "messages": {
+    "selectEntityType": ""
+  }
+}
