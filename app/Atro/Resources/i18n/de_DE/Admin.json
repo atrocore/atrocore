@@ -73,7 +73,7 @@
     "style": "Stile",
     "incomingWebhook": "Eingehende Webhooks",
     "matchings": "Matchings",
-    "ThumbnailTypes": "Thumbnail-Typen",
+    "ThumbnailTypes": "Thumbnail Typen",
     "Teams": "Mannschaften",
     "Auth Tokens": "Authentifizierungs-Tokens",
     "Upgrading...": "Aufrüsten...",
@@ -215,7 +215,7 @@
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
     "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds.",
     "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen",
-    "matchings": "Mit Matchings können Sie anhand von benutzerdefinierten Regeln ähnliche Datensätze in verschiedenen Entitäten identifizieren.",
+    "matchings": "Matchings hilft bei der Identifizierung ähnlicher Datensätze über Entitäten hinweg anhand benutzerdefinierter Regeln.",
     "thumbnailTypes": "Verwalten Sie die Thumbnail-Typen, um die Breite oder Höhe eines Thumbnails zu ändern oder um ein neues zu erstellen.",
     "scheduledJob": "Verwalten Sie geplante Systemaufträge.",
     "jobs": "Verwalten Sie Systemaufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen."
