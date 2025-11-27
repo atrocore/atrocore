@@ -13,6 +13,10 @@
       "type": "datetime",
       "readOnly": true
     },
+    "editable": {
+      "type": "bool",
+      "notStorable": true
+    },
     "matching": {
       "type": "link",
       "conditionalProperties": {
