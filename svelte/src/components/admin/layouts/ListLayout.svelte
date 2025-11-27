@@ -195,13 +195,11 @@
             })
         }
 
-
         for (const group of groups) {
             group.fields = group.fields.filter(item => !selectedFields.find(sf => sf.name === item.name))
         }
 
         availableGroups = groups.reverse()
-
 
         nonRemovableFields = selectedFields.filter(item => {
             return !!Metadata.get(['entityDefs', params.scope, 'fields', item.name, 'layoutRemoveDisabled']);
