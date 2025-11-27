@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "minimumScore": "",
+    "entity": "",
+    "sourceEntity": "",
+    "masterEntity": "",
+    "matchingRules": "",
+    "matchedRecords": ""
+  },
+  "options": {
+    "type": {
+      "duplicate": "",
+      "masterRecord": ""
+    }
+  },
+  "labels": {
+    "configureMatching": ""
+  }
+}
