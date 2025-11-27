@@ -1,7 +1,7 @@
 {
   "fields": {
     "code": "Kod",
-    "itemType": "Typ przedmiotu",
+    "itemType": "Item Type",
     "products": "Produkty"
   }
 }
