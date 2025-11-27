@@ -61,7 +61,7 @@
     "Account": "Gestión de cuentas",
     "incomingWebhook": "Webhooks entrantes",
     "Storage": "Almacenes",
-    "FileTypes": "Tipos de archivos",
+    "FileTypes": "Tipos de archivo",
     "Folders": "Carpetas",
     "Connection": "Conexiones",
     "Measure": "Medidas",
@@ -88,7 +88,10 @@
     "relationships": "Relaciones",
     "kanban": "Kanban",
     "upload": "Subir",
-    "selection": "Selección"
+    "selection": "Selección",
+    "navigation": "Navegación",
+    "insights": "Perspectivas",
+    "summary": "Resumen"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
