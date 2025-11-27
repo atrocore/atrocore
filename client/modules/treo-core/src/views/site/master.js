@@ -105,9 +105,11 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 }
             });
 
-            window.navigation.addEventListener("navigatesuccess", () => {
-                this.updateNavButtons();
-            });
+            if (window.navigation) {
+                window.navigation.addEventListener("navigatesuccess", () => {
+                    this.updateNavButtons();
+                });
+            }
 
             this.listenToOnce(this, 'remove', () => {
                 if (navigator.clearAppBadge) {
