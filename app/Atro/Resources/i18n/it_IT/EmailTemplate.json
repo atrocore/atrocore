@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "subject": "Oggetto",
+    "body": "Corpo",
+    "isHtml": "HTML"
+  },
+  "labels": {
+    "send": "Inviare"
+  },
+  "exceptions": {
+    "systemTemplatesCannotBeDeleted": "I modelli di sistema non possono essere eliminati",
+    "systemTemplateCodeChanged": "Il codice del modello di sistema non può essere modificato"
+  }
+}
