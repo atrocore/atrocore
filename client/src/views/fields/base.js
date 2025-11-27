@@ -109,7 +109,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getCellElement: function () {
-            if (this.isListView()) {
+            if (this.isListView() &&  !this.isDashletView()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
                     this.$el.children().wrapAll('<div></div>')
                 }

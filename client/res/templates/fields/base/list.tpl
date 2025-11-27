@@ -1,1 +1,1 @@
-<div><span class="pre-label">{{value}}</span></div>
+<span class="pre-label">{{value}}</span>
