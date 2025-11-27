@@ -1,7 +1,7 @@
 {
   "fields": {
     "entity": "Сущность",
-    "viewType": "Вид Тип",
+    "viewType": "Вид",
     "relatedEntity": "Сопутствующая организация",
     "layoutProfile": "Профиль раскладки"
   },
