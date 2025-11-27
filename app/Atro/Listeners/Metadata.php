@@ -26,6 +26,7 @@ use Doctrine\DBAL\ParameterType;
 use Atro\Core\DataManager;
 use Espo\Core\Utils\Database\Orm\RelationManager;
 use Atro\Core\Utils\Util;
+use Atro\Repositories\Matching as MatchingRepository;
 
 class Metadata extends AbstractListener
 {
@@ -2252,38 +2253,57 @@ class Metadata extends AbstractListener
             return;
         }
 
-        return;
+        foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
+            $matchingCode = null;
+            if (!empty($defs['hasDuplicates'])) {
+                $matchingCode = MatchingRepository::createCodeForDuplicate($sourceEntity);
+            }
 
-        foreach ($this->getConfig()->get('referenceData.Matching') ?? [] as $code => $matching) {
-            if (empty($matching['type'])) {
+            if (!empty($defs['masterEntity'])) {
+                $matchingCode = MatchingRepository::createCodeForMasterRecord($sourceEntity);
+            }
+
+            if (!empty($matchingCode)) {
+                $fieldName = MatchingRepository::prepareFieldName($matchingCode);
+                $data['entityDefs'][$sourceEntity]['fields'][$fieldName] = [
+                    'type'                 => 'bool',
+                    "layoutListDisabled"   => true,
+                    "layoutDetailDisabled" => true,
+                    "massUpdateDisabled"   => true,
+                    "filterDisabled"       => true,
+                    "importDisabled"       => true,
+                    "exportDisabled"       => true,
+                    "emHidden"             => true
+                ];
+            }
+
+            if (empty($defs['masterEntity'])) {
                 continue;
             }
 
-            if ($matching['type'] === 'masterRecord') {
-                $sourceRecords = 'sourceRecords'.$matching['sourceEntity'];
+            $sourceRecords = 'sourceRecords' . $sourceEntity;
 
-                $data['entityDefs'][$matching['sourceEntity']]['fields']['goldenRecord'] = [
-                    'type'         => 'link',
-                    'customizable' => false,
-                ];
-                $data['entityDefs'][$matching['sourceEntity']]['links']['goldenRecord'] = [
-                    'type'    => 'belongsTo',
-                    'foreign' => $sourceRecords,
-                    'entity'  => $matching['masterEntity'],
-                ];
+            $data['entityDefs'][$sourceEntity]['fields']['goldenRecord'] = [
+                'type'         => 'link',
+                'customizable' => false,
+            ];
+            $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
+                'type'    => 'belongsTo',
+                'foreign' => $sourceRecords,
+                'entity'  => $defs['masterEntity'],
+            ];
 
-                $data['entityDefs'][$matching['masterEntity']]['fields'][$sourceRecords] = [
-                    'type'         => 'linkMultiple',
-                    'noLoad'       => true,
-                    'customizable' => false,
-                ];
+            $data['entityDefs'][$defs['masterEntity']]['fields'][$sourceRecords] = [
+                'type'         => 'linkMultiple',
+                'noLoad'       => true,
+                'customizable' => false,
+            ];
 
-                $data['entityDefs'][$matching['masterEntity']]['links'][$sourceRecords] = [
-                    'type'    => 'hasMany',
-                    'foreign' => 'goldenRecord',
-                    'entity'  => $matching['sourceEntity'],
-                ];
-            }
+            $data['entityDefs'][$defs['masterEntity']]['links'][$sourceRecords] = [
+                'type'    => 'hasMany',
+                'foreign' => 'goldenRecord',
+                'entity'  => $sourceEntity,
+            ];
         }
 
         // set matching rules types
@@ -2296,37 +2316,6 @@ class Metadata extends AbstractListener
             $data['app']['matchingRules'][$type] = [
                 'fieldTypes' => $className::getSupportedFieldTypes(),
             ];
-        }
-
-        foreach ($this->getConfig()->get('referenceData')['Matching'] ?? [] as $matching) {
-            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching['code']);
-            $data['entityDefs'][$matching['sourceEntity']]['fields'][$fieldName] = [
-                'type'                 => 'bool',
-                "layoutListDisabled"   => true,
-                "layoutDetailDisabled" => true,
-                "massUpdateDisabled"   => true,
-                "filterDisabled"       => true,
-                "importDisabled"       => true,
-                "exportDisabled"       => true,
-                "emHidden"             => true
-            ];
-
-//            if (empty($matching['isActive'])) {
-//                continue;
-//            }
-
-//            // add right panel
-//            foreach (['stagingEntity', 'masterEntity'] as $entityType) {
-//                $panels = array_column($data['clientDefs'][$matching[$entityType]]['rightSidePanels'] ?? [], 'name');
-//                if (!empty($matching[$entityType]) && !in_array('matchedRecords', $panels)) {
-//                    $data['clientDefs'][$matching[$entityType]]['rightSidePanels'][] = [
-//                        'name'     => 'matchedRecords',
-//                        'label'    => 'matchedRecords',
-//                        'view'     => 'views/record/panels/side/matchings',
-//                        'aclScope' => 'MatchedRecord',
-//                    ];
-//                }
-//            }
         }
     }
 

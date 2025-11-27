@@ -38,7 +38,12 @@ class Matching extends Base
     {
         $parts = explode('-', $code);
 
-        return Util::toCamelCase("matching_".Util::toUnderScore(lcfirst($parts[0])));
+        return 'Matching' . $parts[0] . ucfirst(strtolower($parts[1]));
+    }
+
+    public function getEntityByCode(string $code): ?Entity
+    {
+        return $this->where(['code' => $code])->findOne();
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void

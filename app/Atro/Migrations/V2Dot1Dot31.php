@@ -79,8 +79,34 @@ class V2Dot1Dot31 extends Base
                         $qb->executeQuery();
                     } catch (\Throwable $e) {
                     }
+
+                    $filePath = "data/metadata/scopes/{$matching['sourceEntity']}.json";
+                    if (file_exists($filePath)) {
+                        $metadata = json_decode(file_get_contents("data/metadata/scopes/{$matching['sourceEntity']}.json"), true);
+                        if (!is_array($metadata)) {
+                            $metadata = [];
+                        }
+                    } else {
+                        $metadata = [];
+                    }
+
+                    if (!empty($matching['type'])) {
+                        if ($matching['type'] === 'duplicate') {
+                            $metadata['hasDuplicates'] = true;
+                        } else {
+                            if (!empty($matching['masterEntity'])) {
+                                $metadata['masterEntity'] = $matching['masterEntity'];
+                            }
+                        }
+                    }
+
+                    if (!empty($metadata)) {
+                        file_put_contents($filePath, json_encode($metadata));
+                    }
                 }
             }
+
+            unlink("data/reference-data/Matching.json");
         }
 
         if (file_exists("data/reference-data/MatchingRule.json")) {
@@ -103,6 +129,7 @@ class V2Dot1Dot31 extends Base
                     }
                 }
             }
+            unlink("data/reference-data/MatchingRule.json");
         }
     }
 
