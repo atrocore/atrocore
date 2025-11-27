@@ -275,15 +275,22 @@
         }
 
         $tree.tree(treeData);
-        $tree.on('tree.load_data', e => {
-            Notifier.notify(false)
-            showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
+        $tree.on('tree.loading_data', e => {
+            if (e.isLoading) {
+                return
+            }
 
-            if (callbacks?.treeLoad) {
-                callbacks.treeLoad(treeScope, treeData);
+            Notifier.notify(false)
+
+            if (!e.node) {
+                if (callbacks?.treeLoad) {
+                    callbacks.treeLoad(treeScope, treeData);
+                }
             }
         })
         $tree.on('tree.refresh', e => {
+            showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
+
             if (activeItem.name === '_admin') {
                 let hashScope = getHashScope();
                 if (Metadata.get(['scopes', hashScope])) {
@@ -532,7 +539,7 @@
             Metadata.get(['scopes', scope, 'type']) === 'Hierarchy' &&
             Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
             && ((canUseDataRequest() && foreignWhere.length) || hasTextFilter)
-        ){
+        ) {
             url = `${scope}/action/TreeData?scope=${scope}&link=_self`
         }
 
@@ -648,7 +655,7 @@
     }
 
     function filterResponse(response, direction = null) {
-        if (response.tree){
+        if (response.tree) {
             return response.tree;
         }
         if (!response.list) {
@@ -1060,6 +1067,7 @@
     function handleFilterToggle(e: MouseEvent): void {
         applyAdvancedFilter = !applyAdvancedFilter;
         Storage.set('treeApplyAdvancedFilter', scope, applyAdvancedFilter ? 'on' : 'off');
+        Notifier.notify('Loading...')
         rebuildTree()
     }
 </script>
