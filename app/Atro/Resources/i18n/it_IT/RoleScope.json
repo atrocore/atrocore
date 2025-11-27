@@ -1,1 +1,25 @@
-{}
+{
+  "fields": {
+    "name": "Ambito di applicazione",
+    "role": "Ruolo",
+    "hasAccess": "Accesso",
+    "createAction": "Creare",
+    "readAction": "Leggi",
+    "editAction": "Modifica",
+    "deleteAction": "Cancellare",
+    "streamAction": "Attività",
+    "fields": "Campi",
+    "accessData": "Dati di accesso",
+    "createAttributeValueAction": "Creare il valore dell'attributo",
+    "deleteAttributeValueAction": "Cancellare il valore dell'attributo",
+    "attributes": "Attributi",
+    "attributePanels": "Pannelli di attributi"
+  },
+  "labels": {
+    "all": "Tutti",
+    "team": "Il team",
+    "own": "Proprio",
+    "no": "No",
+    "yes": "Sì"
+  }
+}
