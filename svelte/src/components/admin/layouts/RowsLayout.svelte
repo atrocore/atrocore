@@ -48,6 +48,7 @@
                 } else {
                     const movedItem = selectedFields[evt.oldIndex]
                     if (nonRemovableFields.includes(movedItem.name)) {
+                        // cancel drop
                         if (evt.oldIndex >= evt.from.children.length) {
                             evt.from.appendChild(evt.item);
                         } else {
