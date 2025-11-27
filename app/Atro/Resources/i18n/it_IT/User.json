@@ -1,0 +1,100 @@
+{
+  "fields": {
+    "department": "",
+    "name": "",
+    "userName": "",
+    "title": "",
+    "isAdmin": "",
+    "defaultTeam": "",
+    "emailAddress": "",
+    "phoneNumber": "",
+    "roles": "",
+    "teamRole": "",
+    "password": "",
+    "currentPassword": "",
+    "passwordConfirm": "",
+    "newPassword": "",
+    "newPasswordConfirm": "",
+    "avatar": "",
+    "isActive": "",
+    "account": "",
+    "sendAccessInfo": "",
+    "gender": "",
+    "position": "",
+    "ipAddress": "",
+    "passwordPreview": "",
+    "lastAccess": "",
+    "type": "",
+    "passwordUpdatedAt": "",
+    "passwordUpdatedBy": "",
+    "teams": "",
+    "notes": "",
+    "tasks": "",
+    "layoutProfile": "",
+    "locale": "",
+    "style": "",
+    "followEntityOnAssignment": "",
+    "followCreatedEntities": "",
+    "followEntityOnStreamPost": "",
+    "receiveNotifications": "",
+    "notificationProfile": ""
+  },
+  "labels": {
+    "Generate": "",
+    "Access": "",
+    "Change Password": "",
+    "Reset Password": "",
+    "Teams and Access Control": "",
+    "Forgot Password?": "",
+    "Password Change Request": "",
+    "Email Address": "",
+    "External Accounts": "",
+    "Email Accounts": "",
+    "Preferences": "",
+    "Notifications": ""
+  },
+  "tooltips": {
+    "defaultTeam": "",
+    "userName": "",
+    "isAdmin": "",
+    "isActive": "",
+    "teams": "",
+    "roles": ""
+  },
+  "messages": {
+    "accountInfoEmailSubject": "",
+    "passwordWillBeSent": "",
+    "accountInfoEmailBody": "",
+    "passwordChangeLinkEmailSubject": "",
+    "passwordChangeLinkEmailBody": "",
+    "passwordResetEmailSubject": "",
+    "passwordResetEmailBody": "",
+    "passwordExpiredForm": "",
+    "passwordChanged": "",
+    "userCantBeEmpty": "",
+    "wrongUsernamePasword": "",
+    "emailAddressCantBeEmpty": "",
+    "userNameEmailAddressNotFound": "",
+    "forbidden": "",
+    "uniqueLinkHasBeenSent": "",
+    "passwordChangedByRequest": "",
+    "setupSmtpBefore": "",
+    "userNameExists": "",
+    "newPasswordInvalid": "",
+    "changePasswordOnResetViaEmailOnly": ""
+  },
+  "options": {
+    "gender": {
+      "": "",
+      "Male": "",
+      "Female": "",
+      "Neutral": ""
+    }
+  },
+  "boolFilters": {
+    "onlyMyTeam": ""
+  },
+  "presetFilters": {
+    "active": ""
+  }
+}
