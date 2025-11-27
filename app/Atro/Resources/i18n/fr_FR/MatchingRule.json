@@ -2,7 +2,7 @@
   "fields": {
     "matching": "Correspondance",
     "weight": "Poids",
-    "sourceField": "Champ de la source",
+    "sourceField": "Champ source",
     "masterEntity": "Entité maîtresse",
     "matchingRuleSet": "Fixer",
     "matchingRules": "Règles de correspondance",
