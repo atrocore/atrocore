@@ -1,1 +1,18 @@
-{}
+{
+  "fields": {
+    "entity": "Entità",
+    "viewType": "Visualizza il tipo",
+    "relatedEntity": "Entità correlata",
+    "layoutProfile": "Profilo del layout"
+  },
+  "groupOptions": {
+    "viewType": {
+      "viewGroup": "Gruppo di vista",
+      "view": "Vista"
+    }
+  },
+  "tooltips": {
+    "entity": "Questa è l'entità per la quale è configurato il layout.",
+    "relatedEntity": "Questa è l'entità principale dalla cui pagina viene visualizzato il layout dell'entità selezionata in precedenza."
+  }
+}
