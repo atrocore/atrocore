@@ -22,7 +22,10 @@
     "emailCc": "Kopie",
     "emailBcc": "E-mail BCC",
     "hideTextLabel": "Skrytí textového popisku na tlačítku",
-    "updateScript": "Skript"
+    "updateScript": "Skript",
+    "updateFields": "Aktualizace polí",
+    "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
+    "updateType": "Typ aktualizace"
   },
   "labels": {
     "execute": "Provést",
