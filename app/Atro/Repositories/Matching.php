@@ -15,15 +15,14 @@ declare(strict_types=1);
 namespace Atro\Repositories;
 
 use Atro\Core\MatchingManager;
-use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 use Espo\ORM\Entity as OrmEntity;
-use Espo\ORM\EntityCollection;
 
-class Matching extends ReferenceData
+class Matching extends Base
 {
     public static function createCodeForDuplicate(string $entityName): string
     {
@@ -80,41 +79,6 @@ class Matching extends ReferenceData
                 $this->getEntityManager()->removeEntity($rule);
             }
         }
-    }
-
-    public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
-    {
-        if ($link === 'matchingRules') {
-            $selectParams['whereClause'] = [['matchingId=' => $entity->get('id')]];
-
-            return $this->getEntityManager()->getRepository('MatchingRule')->find($selectParams);
-        }
-
-        if ($link === 'matchedRecords') {
-            $selectParams['whereClause'] = [['matchingId=' => $entity->get('id')]];
-
-            return $this->getEntityManager()->getRepository('MatchedRecord')->find($selectParams);
-        }
-
-        return parent::findRelated($entity, $link, $selectParams);
-    }
-
-    public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
-    {
-        if ($relationName === 'matchingRules') {
-            $params['offset'] = 0;
-            $params['limit'] = \PHP_INT_MAX;
-
-            return count($this->findRelated($entity, $relationName, $params));
-        }
-
-        if ($relationName === 'matchedRecords') {
-            $selectParams['whereClause'] = [['matchingId=' => $entity->get('id')]];
-
-            return $this->getEntityManager()->getRepository('MatchedRecord')->count($selectParams);
-        }
-
-        return parent::countRelated($entity, $relationName, $params);
     }
 
     public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId): void

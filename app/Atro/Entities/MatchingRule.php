@@ -17,10 +17,10 @@ namespace Atro\Entities;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-use Atro\Core\Templates\Entities\ReferenceData;
+use Atro\Core\Templates\Entities\Base;
 use Atro\Repositories\MatchingRule as MatchingRuleRepository;
 
-class MatchingRule extends ReferenceData
+class MatchingRule extends Base
 {
     protected $entityType = "MatchingRule";
 
