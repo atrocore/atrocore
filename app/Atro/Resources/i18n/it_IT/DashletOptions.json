@@ -1,40 +1,40 @@
 {
   "fields": {
-    "title": "",
-    "dateFrom": "",
-    "dateTo": "",
-    "autorefreshInterval": "",
-    "displayRecords": "",
-    "isDoubleHeight": "",
-    "mode": "",
-    "enabledScopeList": "",
-    "users": "",
-    "entityType": "",
-    "primaryFilter": "",
-    "boolFilterList": "",
-    "sortBy": "",
-    "sortDirection": "",
-    "expandedLayout": "",
-    "dateFilter": "",
-    "savedFilter": "",
-    "entityListType": ""
+    "title": "Titolo",
+    "dateFrom": "Data Da",
+    "dateTo": "Data A",
+    "autorefreshInterval": "Intervallo di aggiornamento automatico",
+    "displayRecords": "Visualizza i record",
+    "isDoubleHeight": "Altezza 2x",
+    "mode": "Modalità",
+    "enabledScopeList": "Cosa esporre",
+    "users": "Utenti",
+    "entityType": "Entità",
+    "primaryFilter": "Filtro primario",
+    "boolFilterList": "Filtri aggiuntivi",
+    "sortBy": "Ordine (campo)",
+    "sortDirection": "Ordine (direzione)",
+    "expandedLayout": "Layout",
+    "dateFilter": "Filtro data",
+    "savedFilter": "Filtro salvato",
+    "entityListType": "Tipo di elenco delle entità"
   },
   "options": {
     "mode": {
-      "agendaWeek": "",
-      "basicWeek": "",
-      "month": "",
-      "basicDay": "",
-      "agendaDay": "",
-      "timeline": ""
+      "agendaWeek": "Settimana (agenda)",
+      "basicWeek": "Settimana",
+      "month": "Mese",
+      "basicDay": "Giorno",
+      "agendaDay": "Giorno (agenda)",
+      "timeline": "Linea temporale"
     },
     "entityListType": {
-      "all": "",
-      "navigation": "",
-      "favorites": ""
+      "all": "Tutti",
+      "navigation": "Voci di navigazione",
+      "favorites": "Preferiti"
     }
   },
   "messages": {
-    "selectEntityType": ""
+    "selectEntityType": "Selezioni il tipo di entità nelle opzioni del dashlet."
   }
 }
