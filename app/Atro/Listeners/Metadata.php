@@ -2254,18 +2254,21 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
-            $matchingCode = null;
             if (!empty($defs['hasDuplicates'])) {
-                $matchingCode = MatchingRepository::createCodeForDuplicate($sourceEntity);
+                $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
+                    'type'                 => 'bool',
+                    "layoutListDisabled"   => true,
+                    "layoutDetailDisabled" => true,
+                    "massUpdateDisabled"   => true,
+                    "filterDisabled"       => true,
+                    "importDisabled"       => true,
+                    "exportDisabled"       => true,
+                    "emHidden"             => true
+                ];
             }
 
             if (!empty($defs['masterEntity'])) {
-                $matchingCode = MatchingRepository::createCodeForMasterRecord($sourceEntity);
-            }
-
-            if (!empty($matchingCode)) {
-                $fieldName = MatchingRepository::prepareFieldName($matchingCode);
-                $data['entityDefs'][$sourceEntity]['fields'][$fieldName] = [
+                $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,
