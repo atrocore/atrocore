@@ -326,7 +326,7 @@ class LayoutManager
                 if(!empty($fieldDef['multilangField'])) {
                     continue;
                 }
-                if (!empty($fieldDef['layoutRemoveDisabled2'])) {
+                if (!empty($fieldDef['layoutRemoveDisabled'])) {
                     if (!in_array($field, $selectedFields)) {
                         throw  new BadRequest(sprintf($this->getLanguage()->translate("cannotRemoveFieldFromLayout", 'messages', 'Layout'), $field));
                     }
