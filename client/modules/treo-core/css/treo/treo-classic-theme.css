@@ -18926,8 +18926,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 :not(.dashlet-body) > .list-container > .list > table tr td.cell {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
 
 :not(.dashlet-body) > .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
