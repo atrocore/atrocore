@@ -132,8 +132,8 @@
     "colorpicker": "Wybór koloru",
     "jsonArray": "Tablica JSON",
     "jsonObject": "Obiekt JSON",
-    "language": "Język",
-    "multiLanguage": "Języki",
+    "language": "Kod języka",
+    "multiLanguage": "Kody językowe",
     "measure": "Miara",
     "markdown": "Markdown"
   },
