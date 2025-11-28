@@ -14,5 +14,8 @@
   "tooltips": {
     "entity": "This is the entity for which the layout is configured.",
     "relatedEntity": "This is the main entity from whose page the layout for the entity selected above is displayed."
+  },
+  "messages": {
+    "cannotRemoveFieldFromLayout": "You cannot remove the field '%s' from the layout."
   }
 }
