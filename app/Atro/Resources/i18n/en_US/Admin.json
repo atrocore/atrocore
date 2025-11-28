@@ -132,8 +132,8 @@
     "colorpicker": "Color picker",
     "jsonArray": "JSON array",
     "jsonObject": "JSON object",
-    "language": "Language",
-    "multiLanguage": "Languages",
+    "language": "Language Code",
+    "multiLanguage": "Language Codes",
     "measure": "Measure",
     "markdown": "Markdown"
   },
