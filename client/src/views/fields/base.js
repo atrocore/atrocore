@@ -1786,7 +1786,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isDashletView() {
-            if(this.$el.size() > 0) {
+            if(this.$el && this.$el.size() > 0) {
                return this.$el.closest('.dashlet').length > 0
             }
             return false;
