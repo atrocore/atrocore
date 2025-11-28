@@ -18578,9 +18578,16 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 @media (display-mode: window-controls-overlay) {
+    body {
+        padding-top: env(titlebar-area-height, 30px);
+    }
+
     #title-bar {
         display: flex;
         gap: 10px;
+        position: fixed;
+        top: env(titlebar-area-y);
+        left: env(titlebar-area-x);
         height: env(titlebar-area-height, 30px);
         width: env(titlebar-area-width, 100%);
         z-index: 10000;
