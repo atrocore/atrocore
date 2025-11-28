@@ -935,8 +935,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             if (this.isListView() && !this.isDashletView()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
-                    this.$el.html(`<div>${this.$el.html()}</div>`)
-                    this.$element = this.$el.find('[name="' + this.name + '"]')
+                    this.$el.html(`<div>${this.$el.html()}</div>`);
+                    this.$element = this.$el.find('[name="' + this.name + '"]');
                 }
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
