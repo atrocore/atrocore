@@ -64,7 +64,18 @@ class Matching extends Base
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
+        if ($entity->isNew()) {
+            $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($entity->get('sourceEntity'));
+            if (empty($mde)) {
+                $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get();
+                $mde->id = $entity->get('sourceEntity');
+                $mde->set([
+                    'ownerUserId'    => $this->getEntityManager()->getUser()->id,
+                    'assignedUserId' => $this->getEntityManager()->getUser()->id,
+                ]);
+                $this->getEntityManager()->saveEntity($mde);
+            }
+
             $this->rebuild();
         }
 
@@ -78,6 +89,11 @@ class Matching extends Base
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($entity->get('sourceEntity'));
+        if (!empty($mde)) {
+            $this->getEntityManager()->removeEntity($mde);
+        }
 
         foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
             if ($rule->get('matchingId') === $entity->get('id')) {

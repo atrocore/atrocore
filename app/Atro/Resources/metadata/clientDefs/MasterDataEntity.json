@@ -1,0 +1,6 @@
+{
+  "controller": "controllers/record",
+  "iconClass": "crown",
+  "acl": "acl/master-data-entity",
+  "createDisabled": true
+}

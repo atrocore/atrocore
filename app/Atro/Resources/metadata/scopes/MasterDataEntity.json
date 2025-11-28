@@ -1,0 +1,15 @@
+{
+  "type": "Base",
+  "object": true,
+  "entity": true,
+  "layouts": true,
+  "tab": true,
+  "customizable": false,
+  "importable": true,
+  "acl": true,
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "hideFieldTypeFilters": true,
+  "selectionDisabled": true
+}
