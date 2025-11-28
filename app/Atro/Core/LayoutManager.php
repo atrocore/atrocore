@@ -306,7 +306,6 @@ class LayoutManager
         }
 
         $selectedFields = [];
-
         if($layoutName === 'detail') {
             foreach ($layoutData as $data) {
                 if(!empty($data['rows'])) {
