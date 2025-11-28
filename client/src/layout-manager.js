@@ -67,7 +67,7 @@ Espo.define('layout-manager', [], function () {
                 + (layoutProfileId ? ('&layoutProfileId=' + layoutProfileId) : '');
         },
 
-        get: function (scope, type, relatedScope, layoutProfileId, callback, cache, isAdminPage) {
+        get: function (scope, type, relatedScope, layoutProfileId, callback, cache, isAdminPage, failedCallback) {
             if (typeof cache == 'undefined') {
                 cache = true;
             }
@@ -114,7 +114,7 @@ Espo.define('layout-manager', [], function () {
             });
         },
 
-        set: function (scope, type, relatedScope, layoutProfileId, layout, callback) {
+        set: function (scope, type, relatedScope, layoutProfileId, layout, callback, errorCallback) {
             var key = this.getKey(scope, type, relatedScope, layoutProfileId);
 
             this.ajax({
@@ -131,7 +131,13 @@ Espo.define('layout-manager', [], function () {
                     if (typeof callback === 'function') {
                         callback();
                     }
-                }.bind(this)
+                }.bind(this),
+                error: function(event, xhr, options) {
+                    debugger
+                    if (typeof errorCallback === 'function') {
+                        errorCallback();
+                    }
+                }
             });
         },
 
