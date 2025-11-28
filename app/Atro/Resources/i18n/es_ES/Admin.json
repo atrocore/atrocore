@@ -129,12 +129,12 @@
     "url": "Url",
     "jsonArray": "Json Array",
     "jsonObject": "Json Object",
-    "language": "Idioma",
+    "language": "Código de idioma",
     "script": "Guión",
     "extensibleMultiEnum": "Lista multivalor",
     "markdown": "Markdown",
     "extensibleEnum": "List",
-    "multiLanguage": "Languages",
+    "multiLanguage": "Códigos lingüísticos",
     "measure": "Medida"
   },
   "fields": {
