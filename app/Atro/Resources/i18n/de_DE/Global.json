@@ -158,7 +158,7 @@
   "labels": {
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
-    "matchings": "Matchings",
+    "masterDataManagement": "Stammdatenmanagement",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",

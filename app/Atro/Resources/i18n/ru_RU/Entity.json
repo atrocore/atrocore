@@ -4,7 +4,7 @@
     "namePlural": "Имя во множественном числе",
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
-    "hasDuplicates": "Имеет дубликаты",
+    "hasDuplicates": "Проверять дубликаты",
     "masterEntity": "Мастер сущность",
     "hasArchive": "Архивируемый",
     "hasActive": "Активируемый",

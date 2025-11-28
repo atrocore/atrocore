@@ -1,5 +1,6 @@
 {
   "controller": "controllers/record",
+  "iconClass": "database",
   "limit": 2000,
   "recordViews": {
     "list": "views/admin/entity-manager/record/list",

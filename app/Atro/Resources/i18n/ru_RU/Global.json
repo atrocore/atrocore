@@ -155,7 +155,7 @@
   "labels": {
     "addFields": "Добавить поля",
     "addAttributes": "Добавить атрибуты",
-    "matchings": "Соответствия",
+    "masterDataManagement": "Управление основными данными",
     "jobManager": "Менеджер задач",
     "Reupload": "Повторная загрузка",
     "attachFiles": "Прикрепить файлы",

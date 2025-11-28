@@ -4,7 +4,7 @@
     "namePlural": "Ім'я множина",
     "disabled": "Відключено",
     "customizable": "Налаштовується",
-    "hasDuplicates": "Має дублікати",
+    "hasDuplicates": "Перевірка на дублікати",
     "masterEntity": "Мастер сутність",
     "hasArchive": "Архівується",
     "hasActive": "Активується",

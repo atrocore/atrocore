@@ -3,7 +3,7 @@
     "name": "Name Singular",
     "namePlural": "Name Plural",
     "disabled": "Deaktiviert",
-    "hasDuplicates": "Enthält Duplikate",
+    "hasDuplicates": "Auf Duplikate prüfen",
     "masterEntity": "Master-Entität",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",

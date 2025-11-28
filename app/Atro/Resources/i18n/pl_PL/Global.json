@@ -496,7 +496,7 @@
     "unselectAll": "Odznacz wszystko",
     "splitHorizontal": "Podział w poziomie",
     "expandWindow": "Proszę rozwinąć okno",
-    "matchings": "Dopasowania"
+    "masterDataManagement": "Zarządzanie danymi podstawowymi"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",

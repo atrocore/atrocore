@@ -158,7 +158,7 @@
   "labels": {
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
-    "matchings": "Відповідності",
+    "masterDataManagement": "Управління основними даними",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",
