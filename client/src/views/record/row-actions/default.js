@@ -121,9 +121,10 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
 
                     dynamicActions = dynamicActions.filter(action => !this.hiddenActionTypes.includes(action.type) && !this.getMetadata().get(['action', 'typesData', action.type, 'forEditModeOnly']));
 
+
                     const template = this._templator.compileTemplate(`
                     {{#each dynamicActions}}
-                        <li class="dynamic-action"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}</a></li>
+                        <li class="dynamic-action"><a {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}} class="action" {{#if action}} data-action={{action}}{{/if}}{{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{translate label scope=../scope}}</a></li>
                     {{/each}}`)
                     const html = this._renderer.render(template, {dynamicActions})
 
