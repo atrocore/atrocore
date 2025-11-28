@@ -215,8 +215,8 @@
     "colorpicker": "Selezionatore di colori",
     "jsonArray": "Array JSON",
     "jsonObject": "Oggetto JSON",
-    "language": "Lingua",
-    "multiLanguage": "Lingue",
+    "language": "Codice lingua",
+    "multiLanguage": "Codici lingua",
     "measure": "Misura",
     "markdown": "Markdown"
   }
