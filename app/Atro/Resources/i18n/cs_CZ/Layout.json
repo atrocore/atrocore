@@ -14,5 +14,8 @@
   "tooltips": {
     "entity": "Jedná se o entitu, pro kterou je rozvržení nakonfigurováno.",
     "relatedEntity": "Jedná se o hlavní entitu, z jejíž stránky se zobrazuje rozložení pro výše vybranou entitu."
+  },
+  "messages": {
+    "cannotRemoveFieldFromLayout": "Pole \"%s\" nelze z rozvržení odstranit."
   }
 }
