@@ -437,6 +437,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 hasPrevious: this.hasPrevious,
                 hasNext: this.hasNext,
                 hasLayoutEditor: hasLayoutEditor,
+                recordId: this.model.get('id') || null,
                 executeAction: (action, data, event) => {
                     this.executeAction(action, data, event);
                 },
