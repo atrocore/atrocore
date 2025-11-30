@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Název",
+    "name": "Jméno",
     "scheduling": "Plánování",
     "jobs": "Úlohy"
   },
