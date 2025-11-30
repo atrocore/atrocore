@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Název",
+    "name": "Jméno",
     "description": "Popis",
     "measure": "Míra",
     "isMain": "Hlavní stránka",
