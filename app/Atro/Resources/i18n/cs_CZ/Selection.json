@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Název",
+    "name": "Jméno",
     "description": "Popis",
     "selectionRecords": "Výběrové záznamy"
   },
