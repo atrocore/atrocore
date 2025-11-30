@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Název",
+    "name": "Jméno",
     "firstName": "Jméno",
     "secondName": "Druhé jméno",
     "gender": "Pohlaví",
