@@ -209,29 +209,33 @@ Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep
 
         compareEntities(groupKey, merging = false) {
             let group = this.groups.find(group => group.key === groupKey);
-            let collection = this.getView('bookmark' + group.key).collection;
+            let entityType = group.key;
+            let entityIds = this.getView('bookmark' + entityType).collection.models.map(v => v.id);
 
-            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                scope: group.key,
-                entityIds: collection.models.map(v => v.id)
-            }).then(result => {
-                List.prototype.loadSelectionRecordModels.call(this, result.id).then(models => {
-                    this.getModelFactory().create('Selection', (selectionModel) => {
-                       selectionModel.set(result);
-                        let view = this.getMetadata().get(['clientDefs', group.key, 'modalViews', 'compare']) || 'views/modals/compare'
-                        this.createView('dialog', view, {
-                            models: models,
-                            selectionId: result.id,
-                            selectionModel: selectionModel,
-                            scope: group.key,
-                            mode: "details",
-                            merging: merging
-                        }, function (dialog) {
-                            dialog.render();
-                        });
+            this.getCollectionFactory().create(entityType, collection => {
+                collection.where = [{
+                    attribute: 'id',
+                    type: 'in',
+                    value: entityIds
+                }];
+
+                collection.maxSize = 10;
+
+                if(this.getMetadata().get(['scopes', entityType, 'hasAttribute'])) {
+                    collection.data.allAttributes = true;
+                    collection.data.completeAttrDefs = true;
+                }
+
+                collection.fetch().then(() => {
+                    let view = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
+                        models: collection.models,
+                        scope: entityType,
+                        merging: merging
+                    }, function (dialog) {
+                        dialog.render();
                     });
-
-                });
+                })
             });
         }
     });

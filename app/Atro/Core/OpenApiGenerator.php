@@ -256,6 +256,17 @@ class OpenApiGenerator
                         "example" => "false"
                     ]
                 ];
+
+                $result['paths']["/{$scopeName}"]['get']['parameters'][] =   [
+                    "name"        => "completeAttrDefs",
+                    "in"          => "query",
+                    "required"    => false,
+                    "description" => "Load the complete attributeDefs for the loaded attributes $scopeName",
+                    "schema"      => [
+                        "type"    => "boolean",
+                        "example" => "false"
+                    ]
+                ];
             }
 
             $result['paths']["/{$scopeName}/{id}"]['get'] = [

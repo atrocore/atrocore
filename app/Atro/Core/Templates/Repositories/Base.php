@@ -62,14 +62,16 @@ class Base extends RDB
             }
         }
 
-        foreach ($collection as $entity) {
-            if (!empty($entity->get('attributesDefs'))) {
-                $attributesDefs = [];
-                foreach ($entity->get('attributesDefs') as $field => $defs) {
-                    $attributesDefs[$field]['attributeId'] = $defs['attributeId'];
-                    $attributesDefs[$field]['type'] = $defs['type'];
+        if(empty($params['completeAttrDefs'])) {
+            foreach ($collection as $entity) {
+                if (!empty($entity->get('attributesDefs'))) {
+                    $attributesDefs = [];
+                    foreach ($entity->get('attributesDefs') as $field => $defs) {
+                        $attributesDefs[$field]['attributeId'] = $defs['attributeId'];
+                        $attributesDefs[$field]['type'] = $defs['type'];
+                    }
+                    $entity->set('attributesDefs', $attributesDefs);
                 }
-                $entity->set('attributesDefs', $attributesDefs);
             }
         }
     }

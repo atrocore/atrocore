@@ -18950,6 +18950,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--field-inline-edit-color);
 }
 
+:not([data-mode="merge"])  .list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
+    background-color: revert;
+}
+
 :not(.dashlet-body) > .list-container > .list > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
     padding-right: 18px;
 }

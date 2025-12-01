@@ -45,8 +45,6 @@ class SelectionRecord extends Base
                 foreach ($records as $key => $record) {
                     if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
-                        $this->getRepository()->remove($record);
-                        $this->getEntityManager()->getRepository('SelectionSelectionRecord')->where(['selectionRecordId' => $record->get('id')])->removeCollection();
                     }
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
@@ -77,8 +75,6 @@ class SelectionRecord extends Base
                 foreach ($records as $key => $record) {
                     if (!in_array($record->get('entityId'), $retrievedIds)) {
                         unset($collection[$key]);
-                        $this->getRepository()->remove($record);
-                        $this->getEntityManager()->getRepository('SelectionSelectionRecord')->where(['selectionRecordId' => $record->get('id')])->removeCollection();
                     }
                     foreach ($entities as $entity) {
                         if ($record->get('entityId') === $entity->get('id')) {
