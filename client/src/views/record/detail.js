@@ -146,6 +146,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
 
         mode: 'detail',
 
+        enableListInlineEditMode: true,
+
         events: {
             'click .button-container .action': function (e) {
                 var $target = $(e.currentTarget);
@@ -2567,6 +2569,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 recordHelper: this.recordHelper,
                 recordViewObject: this,
                 isInSmallView: this.isSmall,
+                enableListInlineEditMode: this.enableListInlineEditMode
             }, view => {
                 this.listenToOnce(view, 'after:render', () => {
                     this.trigger('detailPanelsLoaded', { list: this.getMiddlePanels().concat(view.panelList) });

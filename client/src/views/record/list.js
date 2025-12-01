@@ -91,6 +91,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         uniqueKey: 'default',
 
+        enableListInlineEditMode: false,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -1057,6 +1059,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
+
+            if('enableListInlineEditMode' in this.options)  {
+                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            }
 
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
                 this.rowActionsView = 'views/record/row-actions/view-only';

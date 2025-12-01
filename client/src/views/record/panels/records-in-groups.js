@@ -15,6 +15,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         editableFields: ['value'],
 
+        enableListInlineEditMode: false,
+
         data() {
             return _.extend({
                 groups: this.groups,
@@ -38,6 +40,10 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             }
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
+
+            if('enableListInlineEditMode' in this.options)  {
+                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            }
 
             if (!this.getConfig().get('scopeColorsDisabled')) {
                 var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
@@ -253,6 +259,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             disableSorting: true,
                             disableRefreshLayout: true,
                             disableRefreshOnLanguageChange: true,
+                            enableListInlineEditMode: this.enableListInlineEditMode,
                             ...this.getAdditionalListOptions()
                         };
 

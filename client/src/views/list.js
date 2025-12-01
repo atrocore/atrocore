@@ -68,6 +68,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
         previousWidth: null,
 
+        enableListInlineEditMode: true,
+
         init: function () {
             Dep.prototype.init.call(this);
 
@@ -422,6 +424,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
                 searchManager: this.searchManager,
                 showSearch: !!this.searchPanel,
                 showFilter: this.shouldShowFilter(),
+                enableListInlineEditMode: this.enableListInlineEditMode
             };
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
