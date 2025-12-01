@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "Вы не можете установить значение 'Single Entity', потому что в Ваших записях есть много сущностей."
+  },
+  "labels": {
+    "createSelection": "Создать выбор"
   }
 }
