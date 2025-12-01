@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "No puede establecer 'Entidad única', porque tiene muchas entidades en sus registros."
+  },
+  "labels": {
+    "createSelection": "Crear selección"
   }
 }
