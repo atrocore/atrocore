@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Сущность основных данных",
     "Attribute": "Атрибут",
     "AttributeGroup": "Группа атрибута",
     "Storage": "Хранилище",
@@ -84,6 +85,7 @@
     "SelectionRecord": "Запись о выборе"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Сущности основных данных",
     "Attribute": "Атрибуты",
     "AttributeGroup": "Группы атрибутов",
     "Storage": "Хранилища",

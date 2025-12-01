@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Master Data Entity",
     "MatchedRecord": "Matched Record",
     "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
@@ -84,6 +85,7 @@
     "SelectionRecord": "Selection Record"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Master Data Entities",
     "MatchedRecord": "Matched Records",
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",

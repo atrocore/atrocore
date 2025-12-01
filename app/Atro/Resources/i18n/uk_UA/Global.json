@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Сутність основних даних",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -84,6 +85,7 @@
     "SelectionRecord": "Запис про вибір"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Сутності основних даних",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
