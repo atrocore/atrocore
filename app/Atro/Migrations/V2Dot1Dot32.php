@@ -23,8 +23,12 @@ class V2Dot1Dot32 extends Base
     public function up(): void
     {
         if ($this->isPgSQL()) {
+            // execute sql
         } else {
+            // execute sql
         }
+
+        // create master data entities
     }
 
     protected function exec(string $sql): void
