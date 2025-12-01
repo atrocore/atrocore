@@ -91,6 +91,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         uniqueKey: 'default',
 
+        listInlineEditModeEnabled: false,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -376,7 +378,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled
             };
         },
 
@@ -1021,6 +1024,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
+
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            }
 
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
                 this.rowActionsView = 'views/record/row-actions/view-only';

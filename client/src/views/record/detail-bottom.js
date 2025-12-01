@@ -50,6 +50,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         layoutData: null,
 
+        listInlineEditModeEnabled: false,
+
         data: function () {
             return {
                 panelList: this.panelList,
@@ -209,6 +211,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
             if ('isInSmallView' in this.options) {
                 this.isInSmallView = this.options.isInSmallView;
+            }
+
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
             this.panelList = [];
@@ -486,6 +492,10 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 }
                 p.isInSmallView = this.isInSmallView;
 
+                if(!('listInlineEditModeEnabled' in p))  {
+                    p.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+                }
+
                 this.setPanelTitle(p);
 
                 this.panelList.push(p);
@@ -526,7 +536,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 inlineEditDisabled: this.inlineEditDisabled,
                 readOnly: this.readOnly,
                 disabled: p.hidden || false,
-                recordViewObject: this.recordViewObject
+                recordViewObject: this.recordViewObject,
+                listInlineEditModeEnabled: !!p.listInlineEditModeEnabled
             }, function (view) {
                 if ('getActionList' in view) {
                     p.actionList = this.filterActions(view.getActionList());

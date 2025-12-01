@@ -1,5 +1,5 @@
 {{#unless showNoData}}
-<div class="list">
+<div class="list" {{#if listInlineEditModeEnabled}} data-editable="true"{{/if}}>
     <table class="table full-table">
         {{#if header}}
         <thead>
