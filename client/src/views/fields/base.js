@@ -933,7 +933,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (this.enableListInlineEditMode()) {
+            if (this.isListView() && this.enableListInlineEditMode()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
                     this.$el.html(`<div>${this.$el.html()}</div>`);
                     this.$element = this.$el.find('[name="' + this.name + '"]');
@@ -951,8 +951,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.toggleVisibility();
             }
 
-            if(!this.enableListInlineEditMode()) {
-               this.setReadOnly(true);
+            if(this.isListView() && !this.enableListInlineEditMode()) {
+                this.setReadOnly(true);
             }
         },
 
@@ -1786,7 +1786,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         enableListInlineEditMode() {
-            return this.getRecordView() && this.isListView() && this.getRecordView().enableListInlineEditMode;
+            return this.getRecordView() && this.getRecordView().enableListInlineEditMode;
         }
     });
 });
