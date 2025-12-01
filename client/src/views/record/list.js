@@ -378,7 +378,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled
             };
         },
 
