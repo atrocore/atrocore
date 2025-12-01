@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "Non può impostare 'Entità singola', perché ha molte entità nei suoi record."
+  },
+  "labels": {
+    "createSelection": "Creare la selezione"
   }
 }
