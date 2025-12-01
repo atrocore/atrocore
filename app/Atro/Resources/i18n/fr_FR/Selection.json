@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "Vous ne pouvez pas définir \"Entité unique\", car vous avez plusieurs entités dans vos enregistrements."
+  },
+  "labels": {
+    "createSelection": "Créer une sélection"
   }
 }
