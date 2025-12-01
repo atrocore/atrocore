@@ -5,6 +5,51 @@
       "notStorable": true,
       "protected": true
     },
+    "masterEntity": {
+      "type": "varchar",
+      "notStorable": true,
+      "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
+    "mappingScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "masterEntity"
+        },
+        "addAttributes": {
+          "entityNameField": "masterEntity"
+        }
+      },
+      "twigVariables": [
+        "entity"
+      ],
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
     "description": {
       "type": "text"
     },

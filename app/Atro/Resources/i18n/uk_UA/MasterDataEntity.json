@@ -1,0 +1,6 @@
+{
+  "fields": {
+    "masterEntity": "Мастер",
+    "mappingScript": "Скрипт трансформації"
+  }
+}
