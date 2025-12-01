@@ -54,7 +54,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
         filtersLayoutLoaded: false,
 
-        enableListInlineEditMode: false,
+        listInlineEditModeEnabled: false,
 
         boolFilterData: {
             notParents() {
@@ -120,8 +120,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 this.defs.create = false;
             }
 
-            if('enableListInlineEditMode' in this.options)  {
-                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
             let canSelect = true;
@@ -359,7 +359,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         panelView: this,
                         openInTab: !!this.defs.isInSmallView,
                         canUnlink: canUnlink,
-                        enableListInlineEditMode: this.enableListInlineEditMode
+                        listInlineEditModeEnabled: this.listInlineEditModeEnabled
                     }, (view) => {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {

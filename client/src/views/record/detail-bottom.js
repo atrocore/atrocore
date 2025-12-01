@@ -50,7 +50,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
 
         layoutData: null,
 
-        enableListInlineEditMode: false,
+        listInlineEditModeEnabled: false,
 
         data: function () {
             return {
@@ -213,8 +213,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 this.isInSmallView = this.options.isInSmallView;
             }
 
-            if('enableListInlineEditMode' in this.options)  {
-                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
             this.panelList = [];
@@ -492,8 +492,8 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 }
                 p.isInSmallView = this.isInSmallView;
 
-                if(!('enableListInlineEditMode' in p))  {
-                    p.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+                if(!('listInlineEditModeEnabled' in p))  {
+                    p.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
                 }
 
                 this.setPanelTitle(p);
@@ -537,7 +537,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 readOnly: this.readOnly,
                 disabled: p.hidden || false,
                 recordViewObject: this.recordViewObject,
-                enableListInlineEditMode: !!p.enableListInlineEditMode
+                listInlineEditModeEnabled: !!p.listInlineEditModeEnabled
             }, function (view) {
                 if ('getActionList' in view) {
                     p.actionList = this.filterActions(view.getActionList());

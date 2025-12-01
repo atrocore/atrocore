@@ -77,7 +77,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
         hasRightSideView: true,
 
-        enableListInlineEditMode: true,
+        listInlineEditModeEnabled: true,
 
         data: function () {
             return {
@@ -115,8 +115,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.selectAllByDefault = this.options.selectAllByDefault;
             this.additionalBoolFilterList = this.options.additionalBoolFilterList;
 
-            if('enableListInlineEditMode' in this.options)  {
-                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
             if ('multiple' in this.options) {
@@ -290,7 +290,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
                 skipBuildRows: true,
-                enableListInlineEditMode: this.enableListInlineEditMode
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled
             }
 
             if (typeof this.options.allowSelectAllResult === 'boolean') {

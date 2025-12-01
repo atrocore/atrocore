@@ -15,7 +15,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
 
         editableFields: ['value'],
 
-        enableListInlineEditMode: false,
+        listInlineEditModeEnabled: false,
 
         data() {
             return _.extend({
@@ -41,8 +41,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if('enableListInlineEditMode' in this.options)  {
-                this.enableListInlineEditMode =  this.options.enableListInlineEditMode;
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
             if (!this.getConfig().get('scopeColorsDisabled')) {
@@ -259,7 +259,7 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
                             disableSorting: true,
                             disableRefreshLayout: true,
                             disableRefreshOnLanguageChange: true,
-                            enableListInlineEditMode: this.enableListInlineEditMode,
+                            listInlineEditModeEnabled: this.listInlineEditModeEnabled,
                             ...this.getAdditionalListOptions()
                         };
 
