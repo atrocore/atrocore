@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Typ",
     "folder": "Dossier",
     "storage": "Stockage",
     "mimeType": "Type MIME",
@@ -48,6 +48,6 @@
     "cannotDefineFileName": "Le système ne peut pas reconnaître le nom du fichier à partir de l'URL.",
     "urlExpected": "Une URL incorrecte a été donnée",
     "fileExtensionCorrectedAutomatically": "L'extension du fichier a été corrigée automatiquement.",
-    "downloadJobsCreated": "Une tâche a été créée pour préparer votre fichier zip"
+    "downloadJobsCreated": "Une tâche en arrière-plan a été créée pour préparer votre fichier d'archive."
   }
 }

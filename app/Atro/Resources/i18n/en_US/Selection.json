@@ -10,6 +10,9 @@
       "multiple": "Multiple Entities"
     }
   },
+  "labels": {
+    "createSelection": "Create Selection"
+  },
   "messages": {
     "cannotSetToSingle": "You cannot set 'Single Entity', because you have many entities in your records."
   }

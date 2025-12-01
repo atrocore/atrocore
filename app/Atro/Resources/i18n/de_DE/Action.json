@@ -18,7 +18,7 @@
     "emailTo": "E-Mail an",
     "emailCc": "E-Mail CC",
     "emailBcc": "E-Mail BCC",
-    "focusField": "Fokusfeld",
+    "focusField": "Feld im Fokus",
     "displayField": "Anzeigefeld",
     "webhookUrl": "URL",
     "hideTextLabel": "Text auf der Schaltfläche ausblenden",
@@ -56,11 +56,11 @@
       "sameUser": "Gleicher Benutzer"
     },
     "usage": {
-      "onFieldFocus": "Fokus auf das Feld",
-      "onRecordLoad": "Bei Rekordbelastung",
-      "record": "Schaltfläche Aktion aufnehmen",
-      "field": "Schaltfläche Feldaktion",
-      "entity": "Schaltfläche Entitätsaktion"
+      "onFieldFocus": "Beim Fokus auf das Feld",
+      "onRecordLoad": "Beim Laden des Datensatzes",
+      "record": "Datensatz-Aktionsbutton",
+      "field": "Feld-Aktionsbutton",
+      "entity": "Entitäts-Aktionsbutton"
     },
     "mode": {
       "basic": "Basic",

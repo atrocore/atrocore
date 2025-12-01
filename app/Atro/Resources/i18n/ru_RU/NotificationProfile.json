@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Активные",
+    "isActive": "Активный",
     "description": "Описание",
     "notificationRules": "Правила уведомления"
   }

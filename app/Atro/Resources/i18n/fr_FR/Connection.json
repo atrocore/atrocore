@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Typ",
     "dbName": "Nom de la base de données",
     "host": "Hôte",
     "port": "Port",

@@ -24,7 +24,8 @@
     "uploaded": "hochgeladen",
     "putUploadUrl": "Geben Sie die URL der Datei an, wenn Sie sie per URL hochladen möchten",
     "zipDownloadNotification": "Sie können die Datei <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">herunterladen</a>",
-    "Share": "Teilen"
+    "Share": "Teilen",
+    "thumbnailUrl": "Vorschaubild-URL (%s)"
   },
   "insightsPanels": {
     "sharing": "Freigabe"
@@ -36,14 +37,14 @@
     "cannotDefineFileName": "Das System kann den Dateinamen aus der URL nicht erkennen.",
     "urlExpected": "Falsche URL wurde angegeben",
     "fileExtensionCorrectedAutomatically": "Dateierweiterung wurde automatisch korrigiert.",
-    "downloadJobsCreated": "Auftrag wurde erstellt, um Ihre Zip-Datei vorzubereiten"
+    "downloadJobsCreated": "Ein Hintergrundjob wurde erstellt, um Ihre Archivdatei vorzubereiten."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Die Dateierweiterung kann nicht geändert werden.",
     "fileStorageCannotBeChanged": "Der Speicherplatz kann nicht geändert werden.",
     "fileFolderCannotBeChanged": "Der Dateiordner kann nicht geändert werden.",
     "fileCreateFailed": "Das Erstellen der Datei ist fehlgeschlagen.",
-    "fileRenameFailed": "Dateiumbenennung fehlgeschlagen.",
+    "fileRenameFailed": "Die Dateiumbenennung ist fehlgeschlagen.",
     "fileDeleteFailed": "Das Löschen der Datei ist fehlgeschlagen.",
     "fileNameNotValidByUserRegex": "Der Dateiname ist nicht gültig. Er sollte mit dem Regex '%s' übereinstimmen.",
     "notAllowToFileWithEntity": "Sie dürfen eine Datei vom Typ '%s' nicht mit '%s' verknüpfen. Die einzigen erlaubten Typen sind '%s'",

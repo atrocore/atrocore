@@ -138,7 +138,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
         },
 
         hidePanel: function (name, callback) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+            this.recordHelper?.setPanelStateParam(name, 'hidden', true);
 
             var isFound = false;
             this.panelList.forEach(function (d) {

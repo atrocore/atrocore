@@ -3,12 +3,12 @@
     "matching": "A juego",
     "weight": "Peso",
     "sourceField": "Fuente Campo",
-    "targetField": "Campo de tiro",
-    "stagingEntity": "Entidad de puesta en escena",
     "masterEntity": "Entidad principal",
     "matchingRuleSet": "Fije",
     "matchingRules": "Reglas de concordancia",
-    "operator": "Operador"
+    "operator": "Operador",
+    "masterField": "Campo Maestro",
+    "sourceEntity": "Entidad de origen"
   },
   "options": {
     "type": {

@@ -1,7 +1,7 @@
 {
   "fields": {
     "type": "Typ",
-    "entity": "Subjekt",
+    "entity": "Entita",
     "isMultilang": "Vícejazyčný",
     "required": "Požadované",
     "notNull": "Zakázat nulovou hodnotu",

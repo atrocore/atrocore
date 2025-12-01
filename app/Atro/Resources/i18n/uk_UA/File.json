@@ -3,7 +3,7 @@
     "type": "Тип",
     "folder": "Папка",
     "storage": "Сховище",
-    "mimeType": "MIME Type",
+    "mimeType": "MIME тип",
     "path": "Шлях",
     "thumbnailsPath": "Шлях до ескізів",
     "preview": "Попередній перегляд",
@@ -24,7 +24,8 @@
     "uploaded": "завантажено",
     "putUploadUrl": "Вкажіть URL-адресу файлу, якщо ви хочете завантажити його за допомогою URL-адреси",
     "zipDownloadNotification": "Ви можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачати</a> файл",
-    "Share": "Поділитися"
+    "Share": "Поділитися",
+    "thumbnailUrl": "URL-адреса мініатюри (%s)"
   },
   "insightsPanels": {
     "sharing": "Шеринг"
@@ -36,7 +37,7 @@
     "cannotDefineFileName": "Система не може розпізнати ім'я файлу за URL-адресою.",
     "urlExpected": "сВказано невірну URL-адресу",
     "fileExtensionCorrectedAutomatically": "Розширення файлу було виправлено автоматично.",
-    "downloadJobsCreated": "Створено завдання для підготовки вашого zip-файлу"
+    "downloadJobsCreated": "Для підготовки архівного файлу було створено фонове завдання."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Розширення файлу не може бути змінено.",

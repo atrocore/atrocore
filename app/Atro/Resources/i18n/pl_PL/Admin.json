@@ -87,7 +87,8 @@
     "detail": "Szczegóły",
     "massUpdate": "Masowa aktualizacja",
     "kanban": "Kanban",
-    "upload": "Prześlij"
+    "upload": "Prześlij",
+    "selection": "Wybór"
   },
   "fieldTypes": {
     "color": "Kolor",

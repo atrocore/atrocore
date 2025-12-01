@@ -3,7 +3,7 @@
     "type": "Тип",
     "folder": "Папка",
     "storage": "Хранилище",
-    "mimeType": "MIME Type",
+    "mimeType": "MIME тип",
     "path": "Путь",
     "thumbnailsPath": "Путь к миниатюрам",
     "preview": "Предварительный просмотр",
@@ -24,7 +24,8 @@
     "uploaded": "загружено",
     "putUploadUrl": "Укажите URL-адрес файла, если вы хотите загрузить его по URL-адресу",
     "zipDownloadNotification": "Вы можете <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">скачать</a> zip-файл.",
-    "Share": "Поделиться"
+    "Share": "Поделиться",
+    "thumbnailUrl": "URL миниатюры (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "Файлы XX из YY не были загружены.",
@@ -33,7 +34,7 @@
     "cannotDefineFileName": "Система не может распознать имя файла из URL-адреса.",
     "urlExpected": "Был указан неверный URL-адрес",
     "fileExtensionCorrectedAutomatically": "Расширение файла было исправлено автоматически.",
-    "downloadJobsCreated": "Создано задание для подготовки Вашего zip-файла"
+    "downloadJobsCreated": "Была создана фоновая задача для подготовки вашего архивного файла."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "Расширение файла изменить нельзя.",

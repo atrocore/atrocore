@@ -14,12 +14,9 @@ declare(strict_types=1);
 
 namespace Atro\Entities;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-use Espo\ORM\Entity;
+use Atro\Core\Templates\Entities\Base;
 
-use Atro\Core\Templates\Entities\ReferenceData;
-
-class Matching extends ReferenceData
+class Matching extends Base
 {
     protected $entityType = "Matching";
 }

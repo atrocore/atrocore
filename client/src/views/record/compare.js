@@ -161,9 +161,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             }).done((result) => {
                 this.notify('Merged', 'success');
                 this.trigger('merge-success', result);
-                this.getRouter().navigate(`#${this.scope}/view/${result.id}`,{trigger: true});
                 if (doneCallback) {
-                    doneCallback();
+                    doneCallback(result);
                 }
             });
         },

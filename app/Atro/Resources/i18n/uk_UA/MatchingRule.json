@@ -6,7 +6,7 @@
     "masterField": "Поле мастеру",
     "sourceEntity": "Джерело",
     "masterEntity": "Мастер",
-    "matchingRuleSet": "Набір",
+    "matchingRuleSet": "Set",
     "matchingRules": "Правила збігу",
     "operator": "Оператор"
   },

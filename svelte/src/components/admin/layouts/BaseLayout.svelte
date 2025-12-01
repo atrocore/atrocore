@@ -108,7 +108,7 @@
             if (!params.inModal) {
                 loadData()
             }
-        });
+        }, () => {disabled = false});
     }
 
     function emitUpdate(reset) {

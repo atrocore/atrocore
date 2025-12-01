@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Atro\Controllers;
 
 use Atro\Core\Exceptions\NotFound;
-use Atro\Core\Templates\Controllers\ReferenceData;
+use Atro\Core\Templates\Controllers\Base;
 
-class Matching extends ReferenceData
+class Matching extends Base
 {
     public function actionCreate($params, $data, $request)
     {

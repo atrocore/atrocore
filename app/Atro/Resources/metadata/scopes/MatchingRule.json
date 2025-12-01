@@ -1,20 +1,13 @@
 {
-  "type": "ReferenceData",
+  "type": "Base",
   "object": true,
-  "notificationDisabled": true,
   "entity": true,
   "layouts": true,
   "tab": true,
   "acl": false,
   "customizable": false,
-  "streamDisabled": true,
-  "importable": false,
-  "notifications": false,
-  "hasOwner": false,
-  "hasAssignedUser": false,
-  "hasTeam": false,
-  "bookmarkDisabled": true,
-  "emHidden": true,
+  "importable": true,
+  "notifications": true,
   "hideFieldTypeFilters": true,
   "selectionDisabled": true
 }

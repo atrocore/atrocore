@@ -37,11 +37,11 @@ export const LayoutManager = {
         return res
     },
 
-    set: function (scope: string, type: string, relatedScope: string | null, layoutProfileId: string, layout: any, callback: any): any {
+    set: function (scope: string, type: string, relatedScope: string | null, layoutProfileId: string, layout: any, callback: any, errorCallback: any): any {
         let res = null
         data.subscribe((current: LayoutManagerInterface) => {
             if (current) {
-                res = current.set(scope, type, relatedScope, layoutProfileId, layout, callback);
+                res = current.set(scope, type, relatedScope, layoutProfileId, layout, callback, errorCallback);
             }
         })();
         return res

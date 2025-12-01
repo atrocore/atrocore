@@ -39,14 +39,19 @@
     "textFilterFields": "Champs du filtre de texte",
     "nonDuplicatableFields": "Champs non dupliqués",
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
-    "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification"
+    "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
+    "hasDuplicates": "A des doublons",
+    "masterEntity": "Entité maîtresse",
+    "primaryEntity": "Entité primaire",
+    "derivedEntities": "Entités dérivées"
   },
   "options": {
     "type": {
       "Base": "Base",
       "Hierarchy": "Hiérarchie",
       "ReferenceData": "Référence",
-      "Archive": "Archives"
+      "Archive": "Archives",
+      "Derivative": "Dérivé"
     },
     "sortDirection": {
       "asc": "Ascendante",

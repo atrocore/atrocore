@@ -1,7 +1,7 @@
 {
   "fields": {
     "isActive": "Actif",
-    "type": "Type",
+    "type": "Typ",
     "sourceEntity": "Entité source",
     "inBackground": "Exécuter en arrière-plan",
     "usage": "Utilisation",
@@ -21,6 +21,7 @@
     "emailScript": "Script",
     "emailTemplate": "Modèle de courrier électronique",
     "targetEntity": "Entité cible",
+    "hideTextLabel": "Masquer l'étiquette de texte sur le bouton",
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
     "updateType": "Type de mise à jour",
     "updateScript": "Script"

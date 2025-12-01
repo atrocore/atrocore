@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Type",
+    "type": "Tipo",
     "folder": "Carpeta",
     "storage": "Almacenamiento",
     "mimeType": "Tipo MIME",
@@ -24,7 +24,8 @@
     "uploaded": "cargado",
     "putUploadUrl": "Especifique la URL del archivo si desea cargarlo mediante URL",
     "zipDownloadNotification": "Puede <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">descargar</a> el archivo zip",
-    "Share": "Compartir"
+    "Share": "Compartir",
+    "thumbnailUrl": "URL de la miniatura (%s)"
   },
   "messages": {
     "notAllFilesWereUploaded": "No se han cargado los archivos XX de YY.",
@@ -33,7 +34,7 @@
     "cannotDefineFileName": "El sistema no puede reconocer el nombre del archivo a partir de la URL.",
     "urlExpected": "Se ha dado una URL incorrecta",
     "fileExtensionCorrectedAutomatically": "La extensión del archivo se corrigió automáticamente.",
-    "downloadJobsCreated": "Se ha creado un trabajo para preparar su archivo zip"
+    "downloadJobsCreated": "Se ha creado una tarea en segundo plano para preparar su archivo comprimido."
   },
   "exceptions": {
     "fileExtensionCannotBeChanged": "La extensión del archivo no puede modificarse.",

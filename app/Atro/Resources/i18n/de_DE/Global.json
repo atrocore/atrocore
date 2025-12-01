@@ -79,7 +79,9 @@
     "RoleScopeAttribute": "Attribut",
     "RoleScopeAttributePanel": "Attribut-Panel",
     "RoleScope": "Geltungsbereich",
-    "RoleScopeField": "Feld"
+    "RoleScopeField": "Feld",
+    "Selection": "Auswahl",
+    "SelectionRecord": "Auswahlsatz"
   },
   "scopeNamesPlural": {
     "ActionLog": "Aktionsprotokolle",
@@ -144,9 +146,11 @@
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribut-Panels",
     "RoleScopeField": "Felder",
-    "Account": "Accounts",
+    "Account": "Konto",
     "Job": "Aufträge",
-    "LayoutProfile": "Layoutprofile"
+    "LayoutProfile": "Layoutprofile",
+    "Selection": "Selektionen",
+    "SelectionRecord": "Auswahldatensätze"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -789,9 +793,6 @@
     "__currentUser": "Aktueller Benutzer",
     "routes": "Route(n)",
     "logs": "Protokolle",
-    "smallThumbnailUrl": "Thumbnail URL (klein)",
-    "mediumThumbnailUrl": "Vorschaubild-URL (mittel)",
-    "largeThumbnailUrl": "Thumbnail URL (groß)",
     "extension": "Erweiterung",
     "hierarchySortOrder": "Hierarchie Sortierreihenfolge",
     "emailAddressData": "E-Mail Adresse Daten",
@@ -1300,7 +1301,8 @@
       "is_my_team": "ist mein Team",
       "is_not_my_team": "ist nicht mein Team",
       "future": "Zukunft",
-      "past": "Vergangenheit"
+      "past": "Vergangenheit",
+      "today": "heute"
     },
     "errors": {
       "no_filter": "Kein Filter ausgewählt",

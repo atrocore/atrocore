@@ -2,8 +2,8 @@
   "fields": {
     "name": "Nombre",
     "description": "Descripción",
-    "measure": "Measure",
-    "isMain": "Principal",
+    "measure": "Medida",
+    "isMain": "Mayor",
     "multiplier": "Multiplicador",
     "convertTo": "Convert to",
     "symbol": "Símbolo",

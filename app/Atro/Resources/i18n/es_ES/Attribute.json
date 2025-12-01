@@ -12,7 +12,7 @@
     "isMultilang": "Multilingual",
     "fileType": "Tipo de archivo",
     "pattern": "Patrón Regex",
-    "measure": "Measure",
+    "measure": "Medida",
     "defaultUnit": "Unidad por defecto",
     "defaultDate": "Fecha por defecto",
     "isRequired": "Required",
@@ -50,8 +50,8 @@
   },
   "options": {
     "type": {
-      "array": "Lista ordenable",
-      "bool": "SI / NO",
+      "array": "Array",
+      "bool": "Booleano",
       "composite": "Compuesto",
       "date": "Date",
       "datetime": "Date-Time",

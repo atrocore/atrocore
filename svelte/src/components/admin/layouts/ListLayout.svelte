@@ -48,6 +48,7 @@
     let rowsLayout: RowsLayout;
     let selectedFields: Field[] = [];
     let availableGroups: Group[] = []
+    let nonRemovableFields: string[] = [];
     let editable: boolean = true;
     const ignoreList: string[] = [];
     const ignoreTypeList: string[] = [];
@@ -194,12 +195,15 @@
             })
         }
 
-
         for (const group of groups) {
             group.fields = group.fields.filter(item => !selectedFields.find(sf => sf.name === item.name))
         }
 
         availableGroups = groups.reverse()
+
+        nonRemovableFields = selectedFields.filter(item => {
+            return !!Metadata.get(['entityDefs', params.scope, 'fields', item.name, 'layoutRemoveDisabled']);
+        }).map(item => item.name);
     }
 
     function checkFieldType(type: string): boolean {
@@ -240,6 +244,7 @@
         {params}
         {selectedFields}
         {availableGroups}
+        {nonRemovableFields}
         {editable}
         {loadLayout}
 />

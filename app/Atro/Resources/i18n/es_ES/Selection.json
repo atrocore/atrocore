@@ -3,5 +3,14 @@
     "name": "Nombre",
     "description": "Descripción",
     "selectionRecords": "Registros de selección"
+  },
+  "options": {
+    "type": {
+      "single": "Entidad única",
+      "multiple": "Entidades múltiples"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "No puede establecer 'Entidad única', porque tiene muchas entidades en sus registros."
   }
 }

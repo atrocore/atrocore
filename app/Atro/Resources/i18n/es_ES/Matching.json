@@ -1,9 +1,19 @@
 {
   "fields": {
-    "minimumScore": "Puntuación mínima, %.",
+    "minimumScore": "Puntuación mínima, %",
     "entity": "Entidad",
     "masterEntity": "Entidad principal",
     "matchingRules": "Reglas de concordancia",
-    "matchedRecords": "Registros coincidentes"
+    "matchedRecords": "Registros coincidentes",
+    "sourceEntity": "Entidad de origen"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Registro maestro",
+      "duplicate": "Duplicar"
+    }
+  },
+  "labels": {
+    "configureMatching": "Configurar el emparejamiento"
   }
 }

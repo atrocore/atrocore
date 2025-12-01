@@ -86,6 +86,37 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
+            if (this.getAcl().check('Selection', 'create') && this.getAcl().check('Selection', 'read')) {
+                this.buttonList.push({
+                    name: "createSelection",
+                    label: this.translate('createSelection', 'labels', 'Selection'),
+                    disabled: true,
+                    onClick: (dialog) => {
+                        this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                            scope: this.scope,
+                            entityIds: this.getModels().map(m => m.id)
+                        }).then(result => {
+                            this.getModelFactory().create('Selection', (selectionModel) => {
+                                selectionModel.set(result);
+                                const link = '#Selection/view/' + result.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
+                                this.getRouter().navigate(link, { trigger: false });
+                                this.getRouter().dispatch('Selection', 'view', {
+                                    id: result.id,
+                                    model: selectionModel,
+                                    selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
+                                    models: this.getModels().map(model => {
+                                        model._selectionRecordId = result.id
+                                        return model;
+                                    })
+                                });
+                                dialog.close();
+                                this.clearView('modalRecord');
+                            });
+                        });
+                    }
+                })
+            }
+
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel',
@@ -94,25 +125,6 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 }
             });
 
-            if (this.getAcl().check('Selection', 'read') && this.selectionModel) {
-                this.buttonList.push({
-                    name: "selectionView",
-                    label: "Selection View",
-                    disabled: true,
-                    onClick: (dialog) => {
-                        const link = '#Selection/view/' + this.selectionModel.id + '/selectionViewMode=' + (this.getView('modalRecord').merging ? 'merge' : 'compare');
-                        this.getRouter().navigate(link, {trigger: false});
-                        let options = {
-                            id: this.selectionModel.id,
-                            selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
-                            models: this.getModels()
-                        }
-                        dialog.close();
-                        this.clearView('modalRecord');
-                        this.getRouter().dispatch('Selection', 'view', options);
-                    }
-                })
-            }
         },
 
         setupRecord() {
@@ -243,7 +255,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                 this.listenTo(view, 'all-panels-rendered', () => {
                     this.$el.find('.modal-body.body').css('overflow-y', 'auto');
-                    ['merge', 'selectionView'].forEach(action => {
+                    ['merge', 'createSelection'].forEach(action => {
                         $(`button[data-name="${action}"]`).removeClass('disabled');
                         $(`button[data-name="${action}"]`).attr('disabled', false);
                     });
@@ -254,6 +266,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
+                    this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                        scope: this.scope,
+                        entityIds: this.getModels().map(m => m.id)
+                    });
                 });
 
                 this.listenTo(this, 'cancel', (dialog) => {

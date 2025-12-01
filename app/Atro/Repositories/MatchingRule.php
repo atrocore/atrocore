@@ -16,13 +16,12 @@ namespace Atro\Repositories;
 
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
-use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Templates\Repositories\Base;
 use Atro\Entities\Matching as MatchingEntity;
 use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Espo\ORM\Entity as OrmEntity;
-use Espo\ORM\EntityCollection;
 
-class MatchingRule extends ReferenceData
+class MatchingRule extends Base
 {
     public function getMatching(MatchingRuleEntity $rule): ?MatchingEntity
     {
@@ -43,34 +42,9 @@ class MatchingRule extends ReferenceData
 
     public function validateCode(OrmEntity $entity): void
     {
-        parent::validateCode($entity);
-
         if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
-            throw new BadRequest($this->translate('notValidCode', 'exceptions', 'Matching'));
+            throw new BadRequest($this->getInjection('language')->translate('notValidCode', 'exceptions', 'Matching'));
         }
-    }
-
-    public function findRelated(OrmEntity $entity, string $link, array $selectParams): EntityCollection
-    {
-        if ($link === 'matchingRules') {
-            $selectParams['whereClause'] = [['matchingRuleSetId=' => $entity->get('id')]];
-
-            return $this->getEntityManager()->getRepository('MatchingRule')->find($selectParams);
-        }
-
-        return parent::findRelated($entity, $link, $selectParams);
-    }
-
-    public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
-    {
-        if ($relationName === 'matchingRules') {
-            $params['offset'] = 0;
-            $params['limit'] = \PHP_INT_MAX;
-
-            return count($this->findRelated($entity, $relationName, $params));
-        }
-
-        return parent::countRelated($entity, $relationName, $params);
     }
 
     public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
@@ -83,19 +57,7 @@ class MatchingRule extends ReferenceData
         parent::init();
 
         $this->addDependency('matchingManager');
-    }
-
-    protected function getAllItems(array $params = []): array
-    {
-        $items = parent::getAllItems($params);
-        foreach ($items as &$item) {
-            if (!array_key_exists('matchingRuleSetId', $item)) {
-                $item['matchingRuleSetId'] = null;
-            }
-        }
-        unset($item);
-
-        return $items;
+        $this->addDependency('language');
     }
 
     protected function afterSave(OrmEntity $entity, array $options = []): void

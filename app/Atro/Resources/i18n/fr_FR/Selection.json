@@ -3,5 +3,14 @@
     "name": "Nom",
     "description": "Description",
     "selectionRecords": "Dossiers de sélection"
+  },
+  "options": {
+    "type": {
+      "single": "Entité unique",
+      "multiple": "Entités multiples"
+    }
+  },
+  "messages": {
+    "cannotSetToSingle": "Vous ne pouvez pas définir \"Entité unique\", car vous avez plusieurs entités dans vos enregistrements."
   }
 }

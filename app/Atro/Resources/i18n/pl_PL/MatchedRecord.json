@@ -1,20 +1,18 @@
 {
   "fields": {
-    "matching": "Dopasowanie",
-    "staging": "Inscenizacja",
-    "stagingEntity": "Podmiot etapowy",
-    "stagingEntityId": "Identyfikator podmiotu etapowego",
     "master": "Mistrzu",
     "masterEntity": "Podmiot główny",
     "masterEntityId": "Identyfikator podmiotu głównego",
     "score": "Wynik",
-    "status": "Status"
+    "source": "Źródło",
+    "sourceEntityId": "Identyfikator podmiotu źródłowego",
+    "hash": "Unikalny skrót",
+    "sourceEntity": "Źródłowa Jednostka"
   },
   "options": {
-    "status": {
-      "found": "Znaleziono",
-      "confirmed": "Potwierdzono",
-      "rejected": "Odrzucono"
+    "type": {
+      "masterRecord": "Główny rekord",
+      "duplicate": "Duplikat"
     }
   }
 }

@@ -1,15 +1,15 @@
 {
   "fields": {
     "key": "Clave",
-    "type": "Type",
+    "type": "Tipo",
     "value": "Valor"
   },
   "options": {
     "type": {
       "text": "Área de texto simple",
       "float": "Número",
-      "bool": "SI / NO",
-      "array": "Lista ordenable"
+      "bool": "Booleano",
+      "array": "Array"
     }
   }
 }

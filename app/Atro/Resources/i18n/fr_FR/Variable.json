@@ -1,7 +1,7 @@
 {
   "fields": {
     "key": "Clé",
-    "type": "Type",
+    "type": "Typ",
     "value": "Valeur"
   },
   "options": {
@@ -9,7 +9,7 @@
       "text": "Texte",
       "float": "Nombre",
       "bool": "Booléen",
-      "array": "Tableau"
+      "array": "Array"
     }
   }
 }

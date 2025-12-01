@@ -4,6 +4,16 @@
     "entity": "Subjekt",
     "masterEntity": "Hlavní subjekt",
     "matchingRules": "Pravidla porovnávání",
-    "matchedRecords": "Shodné záznamy"
+    "matchedRecords": "Shodné záznamy",
+    "sourceEntity": "Zdrojová entita"
+  },
+  "options": {
+    "type": {
+      "masterRecord": "Hlavní záznam",
+      "duplicate": "Duplikovat"
+    }
+  },
+  "labels": {
+    "configureMatching": "Konfigurace přiřazování"
   }
 }

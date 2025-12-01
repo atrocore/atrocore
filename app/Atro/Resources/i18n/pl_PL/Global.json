@@ -79,7 +79,9 @@
     "RoleScopeField": "Pole",
     "Entity": "Encja",
     "Language": "Język",
-    "RoleScopeAttribute": "Atrybut"
+    "RoleScopeAttribute": "Atrybut",
+    "Selection": "Wybór",
+    "SelectionRecord": "Rekord wyboru"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -146,7 +148,9 @@
     "RoleScope": "Lunety",
     "Entity": "Encje",
     "Language": "Języki",
-    "RoleScopeField": "Pola"
+    "RoleScopeField": "Pola",
+    "Selection": "Wybór",
+    "SelectionRecord": "Rekordy selekcji"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -487,7 +491,12 @@
     "typeToSearch": "Wpisz i naciśnij Enter...",
     "addItem": "Dodaj element",
     "language": "Język",
-    "Activities": "Aktywności"
+    "Activities": "Aktywności",
+    "splitVertical": "Podział pionowy",
+    "unselectAll": "Odznacz wszystko",
+    "splitHorizontal": "Podział w poziomie",
+    "expandWindow": "Proszę rozwinąć okno",
+    "matchings": "Dopasowania"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -591,7 +600,8 @@
     "unableToDuplicateRecord": "Nie można powielić. Rekord z wartością unikalnego pola już istnieje.",
     "youHaveErrorsInFilter": "Filtr zawiera pewne błędy.",
     "theSavedFilterMightBeCorrupt": "Format nie jest obsługiwany, zapisany filtr może być uszkodzony.",
-    "deletePermanentlyRecordConfirmation": "Czy na pewno chce Pan/Pani trwale usunąć rekord?"
+    "deletePermanentlyRecordConfirmation": "Czy na pewno chce Pan/Pani trwale usunąć rekord?",
+    "minimumRecordForComparison": "Nie można mieć mniej niż {count} rekordów."
   },
   "boolFilters": {
     "onlyActive": "Aktywne",
@@ -668,7 +678,7 @@
     "ownerUser": "Owner",
     "username": "Username",
     "password": "Password",
-    "measure": "Measure",
+    "measure": "Miara",
     "units": "Units",
     "shippingAddressCity": "City (Shipping)",
     "shippingAddressStreet": "Street (Shipping)",
@@ -697,7 +707,7 @@
     "children": "Child Record(s)",
     "id": "ID",
     "ids": "IDs",
-    "type": "Type",
+    "type": "Typ",
     "names": "Names",
     "targetListIsOptedOut": "Is Opted Out (Target List)",
     "dropdown": "Dropdown",
@@ -719,9 +729,6 @@
     "allowedOptions": "Dozwolone opcje",
     "disableActionHistory": "Wyłączanie rejestrowania akcji",
     "folderPath": "Ścieżka folderu",
-    "smallThumbnailUrl": "URL miniatury (mały)",
-    "mediumThumbnailUrl": "URL miniatury (średni)",
-    "largeThumbnailUrl": "Miniaturka URL (duża)",
     "groupEnd": "Koniec grupy",
     "iconClass": "Ikona",
     "isPublic": "Publiczny",
@@ -738,7 +745,11 @@
     "entity": "Encja",
     "created": "Utworzony",
     "modified": "Zmodyfikowany",
-    "sorting": "Sort Order"
+    "sorting": "Sort Order",
+    "goldenRecord": "Złota płyta",
+    "sourceRecords": "Zapisy źródłowe",
+    "primaryRecord": "Główny rekord",
+    "derivedRecords": "Rekordy pochodne"
   },
   "dashlets": {
     "Stream": "Aktywności",

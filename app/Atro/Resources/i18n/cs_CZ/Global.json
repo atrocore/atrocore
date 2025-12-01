@@ -79,7 +79,9 @@
     "AuthLogRecord": "Záznam protokolu ověření",
     "KnowledgeBaseCategory": "Kategorie znalostní báze",
     "Dashboard": "Dashboard",
-    "NotificationTemplate": "Šablona oznámení"
+    "NotificationTemplate": "Šablona oznámení",
+    "Selection": "Výběr",
+    "SelectionRecord": "Záznam o výběru"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -146,7 +148,9 @@
     "OutboundEmail": "Odchozí e-maily",
     "RoleScopeAttributePanel": "Panely atributů",
     "EmailTemplate": "Šablony e-mailů",
-    "Folder": "Složky"
+    "Folder": "Složky",
+    "Selection": "Výběry",
+    "SelectionRecord": "Výběrové záznamy"
   },
   "labels": {
     "basic": "Základní",
@@ -487,7 +491,12 @@
     "varcharPart": "(řetězec)",
     "Help Center": "Centrum nápovědy",
     "Compare": "Porovnat",
-    "addItem": "Přidat položku"
+    "addItem": "Přidat položku",
+    "unselectAll": "Zrušit výběr všech",
+    "splitHorizontal": "Horizontální rozdělení",
+    "splitVertical": "Vertikální rozdělení",
+    "expandWindow": "Rozbalit okno",
+    "matchings": "Shody"
   },
   "fields": {
     "width": "Šířka",
@@ -520,9 +529,6 @@
     "connection": "Připojení",
     "tags": "Štítky",
     "downloadUrl": "URL ke stažení",
-    "smallThumbnailUrl": "URL miniatury (malá)",
-    "mediumThumbnailUrl": "URL miniatury (střední)",
-    "largeThumbnailUrl": "URL miniatury (velká)",
     "extension": "Přípona",
     "hidden": "Skryté",
     "priority": "Priorita",
@@ -549,7 +555,7 @@
     "ownerUser": "Majitel",
     "username": "Uživatelské jméno",
     "password": "Heslo",
-    "measure": "Měrná jednotka",
+    "measure": "Míra",
     "units": "Jednotky",
     "shippingAddressCountry": "Země (doručení)",
     "shippingAddressStreet": "Ulice (doručení)",
@@ -593,7 +599,11 @@
     "conditionalProperties": "Podmíněné vlastnosti",
     "sorting": "Pořadí řazení",
     "associateEverything": "Přiřadit každý záznam ke každému jinému záznamu",
-    "routes": "Trasa (trasy)"
+    "routes": "Trasa (trasy)",
+    "goldenRecord": "Zlatý rekord",
+    "sourceRecords": "Zdrojové záznamy",
+    "derivedRecords": "Odvozené záznamy",
+    "primaryRecord": "Primární záznam"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -700,7 +710,8 @@
     "writeYourCommentHere": "Napište svůj komentář zde",
     "checkForNewNotifications": "Kontrola nových oznámení",
     "massFollowResultSingle": "Nyní je sledován {count} záznam",
-    "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota."
+    "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota.",
+    "minimumRecordForComparison": "Nemůžete mít méně než {počet} záznamů."
   },
   "boolFilters": {
     "onlyActive": "Aktivní",

@@ -1,6 +1,7 @@
 {
   "iconClass": "rows-plus-bottom",
   "controller": "controllers/record",
+  "acl": "acl/matching-rule",
   "relationshipPanels": {
     "matchingRules": {
       "select": false,

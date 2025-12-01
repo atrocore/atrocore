@@ -3,7 +3,7 @@
     "name": "Name",
     "description": "Beschreibung",
     "measure": "Maß",
-    "isMain": "Primär",
+    "isMain": "Hauptelement",
     "multiplier": "Multiplikator",
     "convertTo": "Konvertieren zu",
     "symbol": "Symbol",
