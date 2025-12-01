@@ -1786,7 +1786,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         isDashletView() {
-            return (this.options.el || '').includes('.dashlet')
+            if(this.$el && this.$el.size() > 0) {
+               return this.$el.closest('.dashlet').length > 0
+            }
+            return false;
         }
     });
 });
