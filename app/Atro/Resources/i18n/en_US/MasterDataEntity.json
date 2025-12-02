@@ -2,5 +2,8 @@
   "fields": {
     "masterEntity": "Master Entity",
     "mappingScript": "Mapping Script"
+  },
+  "tooltips": {
+    "mappingScript": "Configure how source data is transformed, unified, and mapped to the master record."
   }
 }

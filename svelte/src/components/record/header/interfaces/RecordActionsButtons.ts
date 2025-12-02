@@ -18,7 +18,7 @@ export default interface RecordActionButtons {
     additionalButtons: ActionParams[];
     additionalEditButtons: ActionParams[];
     headerButtons: Record<string, ActionParams[]>;
-    recordId: string;
+    model: any;
     hasPrevious: boolean;
     hasNext: boolean;
     hasLayoutEditor: boolean;

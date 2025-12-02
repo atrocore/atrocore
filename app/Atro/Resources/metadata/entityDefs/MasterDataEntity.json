@@ -26,6 +26,7 @@
       "type": "text",
       "view": "views/fields/script",
       "language": "json",
+      "default": "{# { \"name\": \"{{ sourceEntity.name }}\" } #}",
       "editorActions": {
         "addFields": {
           "entityNameField": "masterEntity"
@@ -35,10 +36,11 @@
         }
       },
       "twigVariables": [
-        "entity"
+        "sourceEntity"
       ],
       "customizable": false,
       "layoutRemoveDisabled": true,
+      "tooltip": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

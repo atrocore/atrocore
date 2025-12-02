@@ -34,6 +34,7 @@
     let headerButtons: ActionParams[] = [];
     let loadingActions: boolean = false;
     let bookmarkId: string | null = null;
+    let navigationIconScope: string | null = null;
 
     $: {
         recordActions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
@@ -41,20 +42,13 @@
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
         additionalEditActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...dynamicEditActions] : []);
         headerButtons = (recordButtons?.headerButtons?.buttons ?? []).filter(button => !button.hidden);
-    }
 
-    let navigationIconScope: string | null = null;
-    if (scope === 'Entity') {
-        if (Metadata.get(['scopes', recordButtons.recordId, 'hasDuplicates']) || Metadata.get(['scopes', recordButtons.recordId, 'masterEntity'])) {
-            navigationIconScope = 'MasterDataEntity';
-        }
-    } else if (scope === 'MasterDataEntity') {
-        navigationIconScope = 'Entity';
+        prepareNavigationIconScope();
     }
 
     function navigateToEntity() {
         if (navigationIconScope) {
-            window.location.hash = navigationIconScope + "/view/" + recordButtons.recordId;
+            window.location.hash = navigationIconScope + "/view/" + recordButtons.model.id;
         }
     }
 
@@ -108,7 +102,20 @@
         }
     }
 
+    function prepareNavigationIconScope() {
+        if (scope === 'Entity') {
+            navigationIconScope = recordButtons.model.get('hasDuplicates') || recordButtons.model.get('masterEntity') ? 'MasterDataEntity' : null;
+        } else if (scope === 'MasterDataEntity') {
+            navigationIconScope = 'Entity';
+        } else {
+            navigationIconScope = null;
+        }
+    }
+
     function reloadDynamicActions(event: CustomEvent): void {
+
+        prepareNavigationIconScope();
+
         if (Metadata.get(['scopes', scope, 'actionDisabled'])) {
             return;
         }
