@@ -577,6 +577,8 @@ class Metadata extends AbstractListener
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
+                    "readOnly"    => !empty($fieldDefs['readOnly']),
+                    "protected"   => !empty($fieldDefs['protected']),
                     "notStorable" => $notStorable,
                     "emHidden"    => true
                 ];
