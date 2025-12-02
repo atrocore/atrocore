@@ -89,7 +89,7 @@ class Matching extends Base
             $this->rebuild();
         }
 
-        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive')) {
+        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive') || $entity->isAttributeChanged('matchedRecordsMax')) {
             if (!empty($entity->get('isActive'))) {
                 $this->unmarkAllMatchingSearched($entity);
             }
