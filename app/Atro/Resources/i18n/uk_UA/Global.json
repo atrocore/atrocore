@@ -80,8 +80,8 @@
     "RoleScopeAttribute": "Атрибут",
     "RoleScopeAttributePanel": "Панель атрибутів",
     "RoleScopeField": "польовий",
-    "Selection": "Вибір",
-    "SelectionRecord": "Запис про вибір"
+    "Selection": "Вибірка",
+    "SelectionRecord": "Запис вибірки"
   },
   "scopeNamesPlural": {
     "Classification": "Класифікації",
@@ -149,8 +149,8 @@
     "IncomingWebhook": "Вхідні вебхуки",
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
-    "Selection": "Вибране",
-    "SelectionRecord": "Записи вибору"
+    "Selection": "Вибірки",
+    "SelectionRecord": "Записи вибірки"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
