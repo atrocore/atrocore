@@ -1,0 +1,101 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "notStorable": true,
+      "protected": true
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "notStorable": true,
+      "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
+    "mappingScript": {
+      "type": "text",
+      "view": "views/fields/script",
+      "language": "json",
+      "default": "{# { \"name\": \"{{ sourceEntity.name }}\" } #}",
+      "editorActions": {
+        "addFields": {
+          "entityNameField": "masterEntity"
+        },
+        "addAttributes": {
+          "entityNameField": "masterEntity"
+        }
+      },
+      "twigVariables": [
+        "sourceEntity"
+      ],
+      "customizable": false,
+      "layoutRemoveDisabled": true,
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "masterEntity"
+            }
+          ]
+        }
+      }
+    },
+    "description": {
+      "type": "text"
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "indexes": {
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}

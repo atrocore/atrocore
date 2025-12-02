@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Master Data Entity",
     "MatchedRecord": "Matched Record",
     "Matching": "Matching",
     "ThumbnailType": "Thumbnail Type",
@@ -84,6 +85,7 @@
     "SelectionRecord": "Selection Record"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Master Data Entities",
     "MatchedRecord": "Matched Records",
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Types",
@@ -156,9 +158,10 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "matchings": "Matchings",
     "addFields": "Add Fields",
     "addAttributes": "Add Attributes",
-    "matchings": "Matchings",
+    "masterDataManagement": "Master Data Management",
     "basic": "Basic",
     "script": "Script",
     "phpCode": "PHP Code",

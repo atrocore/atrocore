@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Stammdaten-Entität",
     "ActionLog": "Aktionsprotokoll",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
@@ -84,6 +85,7 @@
     "SelectionRecord": "Auswahlsatz"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Stammdaten-Entitäten",
     "ActionLog": "Aktionsprotokolle",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
@@ -156,9 +158,10 @@
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
   },
   "labels": {
+    "matchings": "Matchings",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
-    "matchings": "Matchings",
+    "masterDataManagement": "Stammdatenmanagement",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
