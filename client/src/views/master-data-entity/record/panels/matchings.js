@@ -8,8 +8,8 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/master-data-entity/record/panels/matchings', 'views/record/panels/relationship',
-    Dep => Dep.extend({
+Espo.define('views/master-data-entity/record/panels/matchings', ['views/record/panels/relationship', 'search-manager'],
+    (Dep, SearchManager) => Dep.extend({
 
         rowActionsView: 'views/record/row-actions/relationship-view-and-edit',
 
@@ -35,13 +35,32 @@ Espo.define('views/master-data-entity/record/panels/matchings', 'views/record/pa
         },
 
         actionShowFullList(data) {
-            let params = {
+            this.getStorage().set('listQueryBuilder', this.scope, this.getWhereDataForFilter());
+            window.open(`#${this.scope}`, '_blank');
+        },
+
+        setFilter(filter) {
+            let searchManager = new SearchManager(this.collection, 'matchings', null, this.getDateTime());
+            searchManager.update({...this.getWhereDataForFilter()});
+
+            this.collection.where = searchManager.getWhere();
+        },
+
+        getWhereDataForFilter() {
+            return {
                 queryBuilder: {
-                    condition: 'AND',
+                    condition: 'OR',
                     rules: [
                         {
                             id: 'sourceEntity',
                             field: 'sourceEntity',
+                            value: [this.model.id],
+                            type: 'string',
+                            operator: 'in'
+                        },
+                        {
+                            id: 'masterEntity',
+                            field: 'masterEntity',
                             value: [this.model.id],
                             type: 'string',
                             operator: 'in'
@@ -51,17 +70,6 @@ Espo.define('views/master-data-entity/record/panels/matchings', 'views/record/pa
                 },
                 queryBuilderApplied: true
             };
-
-            this.getStorage().set('listQueryBuilder', this.scope, params);
-            window.open(`#${this.scope}`, '_blank');
-        },
-
-        setFilter(filter) {
-            this.collection.where = [{
-                type: "equals",
-                attribute: "sourceEntity",
-                value: this.model.id
-            }];
         },
 
     })
