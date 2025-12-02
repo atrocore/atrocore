@@ -34,6 +34,10 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
             return;
         }
 
+        if (empty($matching->get('isActive'))) {
+            return;
+        }
+
         $entity = $this->getEntityManager()->getEntity($entityName, $entityId);
         if (!$entity) {
             return;

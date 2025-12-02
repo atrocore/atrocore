@@ -54,7 +54,6 @@
     },
     "matching": {
       "type": "link",
-      "entity": "Matching",
       "protected": true
     },
     "createdAt": {
@@ -77,6 +76,11 @@
     }
   },
   "links": {
+    "matching": {
+      "type": "belongsTo",
+      "foreign": "matchedRecords",
+      "entity": "Matching"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

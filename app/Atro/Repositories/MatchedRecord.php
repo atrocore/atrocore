@@ -12,9 +12,7 @@
 
 namespace Atro\Repositories;
 
-use Atro\Core\Exceptions\NotFound;
 use Atro\Core\Templates\Repositories\Base;
-use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
@@ -44,119 +42,6 @@ class MatchedRecord extends Base
         }
     }
 
-//    public function getMatchedRecords(MatchingEntity $matching, Entity $entity, array $statuses): array
-//    {
-//        $conn = $this->getEntityManager()->getConnection();
-//
-//        $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
-//        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('masterEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
-//            $select[] = 't.'.Util::toUnderScore($fieldName);
-//        }
-//
-//        $result = [
-//            'entityName' => $matching->get('masterEntity'),
-//            'matches'    => [],
-//        ];
-//
-//        foreach ($this->getMetadata()->get("entityDefs.MatchedRecord.fields.status.options") ?? [] as $status) {
-//            if (!in_array($status, $statuses)) {
-//                continue;
-//            }
-//
-//            $qb = $conn->createQueryBuilder()
-//                ->select(implode(',', $select))
-//                ->from('matched_record', 'mr')
-//                ->leftJoin(
-//                    'mr',
-//                    $conn->quoteIdentifier(Util::toUnderScore($matching->get('masterEntity'))),
-//                    't',
-//                    'mr.master_entity_id = t.id AND t.deleted = :false'
-//                )
-//                ->where('mr.matching_id = :matchingId')
-//                ->andWhere('mr.staging_entity = :stagingEntity')
-//                ->andWhere('mr.staging_entity_id = :stagingEntityId')
-//                ->andWhere('t.id IS NOT NULL')
-//                ->andWhere('mr.status = :status')
-//                ->andWhere('mr.deleted = :false')
-//                ->setParameter('matchingId', $matching->get('id'))
-//                ->setParameter('stagingEntity', $entity->getEntityName())
-//                ->setParameter('stagingEntityId', $entity->id)
-//                ->setParameter('status', $status)
-//                ->setParameter('false', false, ParameterType::BOOLEAN)
-//                ->orderBy('mr.score', 'DESC');
-//
-//            $this->getSelectManager()->putInnerQueryForAclCheck($qb);
-//
-//            if ($status === 'new') {
-//                $qb->setFirstResult(0);
-//                $qb->setMaxResults(5);
-//            }
-//
-//            $result['matches'][] = [
-//                'status' => $status,
-//                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative()),
-//            ];
-//        }
-//
-//        return $result;
-//    }
-
-//    public function getForeignMatchedRecords(MatchingEntity $matching, Entity $entity, array $statuses): array
-//    {
-//        $conn = $this->getEntityManager()->getConnection();
-//
-//        $select = ['mr.status', 'mr.score', 't.id', 't.name', 'mr.id as mr_id'];
-//        foreach ($this->getMetadata()->get("entityDefs.{$matching->get('stagingEntity')}.fields.name.lingualFields") ?? [] as $fieldName) {
-//            $select[] = 't.'.Util::toUnderScore($fieldName);
-//        }
-//
-//        $result = [
-//            'entityName' => $matching->get('stagingEntity'),
-//            'matches'    => [],
-//        ];
-//
-//        foreach ($this->getMetadata()->get("entityDefs.MatchedRecord.fields.status.options") ?? [] as $status) {
-//            if (!in_array($status, $statuses)) {
-//                continue;
-//            }
-//
-//            $qb = $conn->createQueryBuilder()
-//                ->select(implode(',', $select))
-//                ->from('matched_record', 'mr')
-//                ->leftJoin(
-//                    'mr',
-//                    $conn->quoteIdentifier(Util::toUnderScore($matching->get('stagingEntity'))),
-//                    't',
-//                    'mr.staging_entity_id = t.id AND t.deleted = :false'
-//                )
-//                ->where('mr.matching_id = :matchingId')
-//                ->andWhere('mr.master_entity = :masterEntity')
-//                ->andWhere('mr.master_entity_id = :masterEntityId')
-//                ->andWhere('t.id IS NOT NULL')
-//                ->andWhere('mr.status = :status')
-//                ->setParameter('matchingId', $matching->get('id'))
-//                ->setParameter('masterEntity', $entity->getEntityName())
-//                ->setParameter('masterEntityId', $entity->id)
-//                ->setParameter('status', $status)
-//                ->setParameter('false', false, ParameterType::BOOLEAN)
-//                ->orderBy('mr.score', 'DESC');
-//
-//            $this->getSelectManager()->putInnerQueryForAclCheck($qb);
-//
-//            if ($status === 'new') {
-//                $qb->setFirstResult(0);
-//                $qb->setMaxResults(5);
-//            }
-//
-//            $result['matches'][] = [
-//                'status' => $status,
-//                'list'   => Util::arrayKeysToCamelCase($qb->fetchAllAssociative()),
-//            ];
-//        }
-//
-//        return $result;
-//    }
-
     public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
     {
         $this
@@ -178,6 +63,20 @@ class MatchedRecord extends Base
         }
     }
 
+    public function getCountOfMatchingMatchedRecords(string $matchingId): int
+    {
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('COUNT(id) as total')
+            ->from('matched_record')
+            ->where('deleted=:false')
+            ->andWhere('matching_id=:matchingId')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('matchingId', $matchingId)
+            ->fetchAssociative();
+
+        return (int)$res['total'] ?? 0;
+    }
+
     public function createMatchedRecord(
         MatchingEntity $matching,
         string $sourceId,
@@ -185,6 +84,12 @@ class MatchedRecord extends Base
         int $score,
         bool $skipBidirectional = false
     ): void {
+        if (!empty($matching->get('matchedRecordsMax')) && $this->getCountOfMatchingMatchedRecords($matching->id) > $matching->get('matchedRecordsMax')) {
+            $matching->set('isActive', false);
+            $this->getEntityManager()->saveEntity($matching);
+            return;
+        }
+
         // create new record
         $matchedRecord = $this->get();
         $matchedRecord->set([

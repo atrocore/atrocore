@@ -142,6 +142,7 @@
     },
     "matchedRecords": {
       "type": "hasMany",
+      "foreign": "matching",
       "entity": "MatchedRecord"
     },
     "createdBy": {
