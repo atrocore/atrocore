@@ -23,6 +23,8 @@ class V2Dot1Dot32 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE matched_record ADD matching_id VARCHAR(36) DEFAULT NULL");
+
         if ($this->isPgSQL()) {
             $this->exec("CREATE TABLE master_data_entity (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', mapping_script TEXT DEFAULT NULL, description TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_CREATED_BY_ID ON master_data_entity (created_by_id, deleted)");
