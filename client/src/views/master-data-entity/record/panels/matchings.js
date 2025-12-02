@@ -17,6 +17,11 @@ Espo.define('views/master-data-entity/record/panels/matchings', 'views/record/pa
             this.scope = 'Matching';
             this.url = 'Matching';
 
+            this.model.defs.links.matchings = {
+                entity: this.scope,
+                type: "hasMany"
+            }
+
             this.defs.create = false;
             this.defs.select = false;
             this.defs.unlinkAll = false;

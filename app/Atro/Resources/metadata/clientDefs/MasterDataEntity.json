@@ -9,7 +9,7 @@
         "name": "matchings",
         "label": "matchings",
         "view": "views/master-data-entity/record/panels/matchings",
-        "canClose": false,
+        "canClose": true,
         "collapseByDefault": false
       }
     ]
