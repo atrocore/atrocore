@@ -155,6 +155,7 @@
     "SelectionRecord": "Записи о выборе"
   },
   "labels": {
+    "matchings": "Соответствия",
     "addFields": "Добавить поля",
     "addAttributes": "Добавить атрибуты",
     "masterDataManagement": "Управление основными данными",

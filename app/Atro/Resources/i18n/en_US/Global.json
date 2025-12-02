@@ -158,6 +158,7 @@
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
   },
   "labels": {
+    "matchings": "Matchings",
     "addFields": "Add Fields",
     "addAttributes": "Add Attributes",
     "masterDataManagement": "Master Data Management",

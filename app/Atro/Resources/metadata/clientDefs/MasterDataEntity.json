@@ -2,5 +2,16 @@
   "controller": "controllers/record",
   "iconClass": "crown",
   "acl": "acl/master-data-entity",
-  "createDisabled": true
+  "createDisabled": true,
+  "bottomPanels": {
+    "detail": [
+      {
+        "name": "matchings",
+        "label": "matchings",
+        "view": "views/master-data-entity/record/panels/matchings",
+        "canClose": false,
+        "collapseByDefault": false
+      }
+    ]
+  }
 }
