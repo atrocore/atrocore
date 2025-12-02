@@ -19,6 +19,7 @@
 
     export let params: Params;
     export let selectedFields: Field[] = [];
+    export let nonRemovableFields: string[] = [];
     export let availableGroups: Group[] = [];
     export let loadLayout: Function;
 
@@ -46,6 +47,16 @@
                     selectedFields.splice(evt.newIndex, 0, movedItem);
                 } else {
                     const movedItem = selectedFields[evt.oldIndex]
+                    if (nonRemovableFields.includes(movedItem.name)) {
+                        // cancel drop
+                        if (evt.oldIndex >= evt.from.children.length) {
+                            evt.from.appendChild(evt.item);
+                        } else {
+                            evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
+                        }
+                        return
+                    }
+
                     selectedFields.splice(evt.oldIndex, 1)
 
                     let itemGroup = availableGroups.find(group => !group.prefix)
@@ -82,7 +93,7 @@
                 onEnd: function (evt) {
                     const toUl = evt.to.closest('.connected')
                     let movedItem = null
-                    if (toUl.classList.contains('disabled')) {
+                    if (toUl.classList.contains('disabled') ) {
                         if (toUl !== ul) {
                             // cancel drop
                             if (evt.oldIndex >= evt.from.children.length) {
@@ -276,10 +287,12 @@
                                            on:click={()=>editField(item)}>
                                             <i class="ph ph-pencil-simple"></i>
                                         </a>
-                                        <a href="javascript:" class="remove-field"
-                                           on:click={()=>removeField(item)}>
-                                            <i class="ph ph-x"></i>
-                                        </a>
+                                        {#if !nonRemovableFields.includes(item.name)}
+                                            <a href="javascript:" class="remove-field"
+                                               on:click={()=>removeField(item)}>
+                                                <i class="ph ph-x"></i>
+                                            </a>
+                                        {/if}
                                     </div>
                                 {/if}
                             </li>

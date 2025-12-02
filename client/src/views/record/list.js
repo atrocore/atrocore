@@ -91,6 +91,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
         uniqueKey: 'default',
 
+        listInlineEditModeEnabled: false,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -376,7 +378,8 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 displayTotalCount: this.displayTotalCount && (this.collection.total == null || this.collection.total >= 0),
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
-                showNoData: !this.collection.length && !fixedHeaderRow
+                showNoData: !this.collection.length && !fixedHeaderRow,
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled
             };
         },
 
@@ -959,69 +962,33 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 return;
             }
 
-            this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                scope: this.entityType,
-                entityIds: this.checkedList
-            }).then(result => {
-                this.loadSelectionRecordModels(result.id).then((models) => {
-                    this.getModelFactory().create('Selection', (selectionModel) => {
-                        selectionModel.set(result);
-                        let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
-                        this.createView('dialog', view, {
-                            models: models,
-                            selectionModel: selectionModel,
-                            scope: this.entityType,
-                            merging: merging
-                        }, function (dialog) {
-                            this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
-                            dialog.render();
-                        })
-                    });
-                });
-            });
+            this.notify(this.translate('Loading'));
 
-            this.notify(this.translate('Loading'))
+            this.getCollectionFactory().create(this.entityType, collection => {
+                collection.where = [{
+                    attribute: 'id',
+                    type: 'in',
+                    value: this.checkedList
+                }];
 
-        },
+                collection.maxSize = 10;
 
-        loadSelectionRecordModels(selectionId) {
-            let models = [];
-            return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`)
-                    .then(result => {
-                        let entityByScope = {};
-                        let order = 0;
-                        for (const entityData of result.list) {
-                            if (!entityByScope[entityData.entityType]) {
-                                entityByScope[entityData.entityType] = [];
-                            }
-                            entityData.entity._order = order;
-                            entityData.entity._selectionRecordId = entityData.id;
+                if(this.getMetadata().get(['scopes', this.entityType, 'hasAttribute'])) {
+                    collection.data.allAttributes = true;
+                    collection.data.completeAttrDefs = true;
+                }
 
-                            entityByScope[entityData.entityType].push(entityData.entity);
-                            order++
-                        }
-                        let promises = [];
-                        for (const scope in entityByScope) {
-                            promises.push(new Promise((resolve) => {
-                                this.getModelFactory().create(scope, model => {
-                                    for (const data of entityByScope[scope]) {
-                                        let currentModel = Espo.utils.cloneDeep(model);
-                                        currentModel.set(data);
-                                        currentModel._order = data._order;
-                                        models.push(currentModel);
-                                    }
-                                    resolve();
-                                })
-                            }));
-                        }
-
-                        Promise.all(promises)
-                            .then(() => {
-                                models.sort((a, b) => a._order - b._order);
-                                initialResolve(models);
-                            });
-                    });
+                collection.fetch().then(() => {
+                    let view = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'compare']) || 'views/modals/compare'
+                    this.createView('dialog', view, {
+                        models: collection.models,
+                        scope: this.entityType,
+                        merging: merging
+                    }, function (dialog) {
+                        this.listenTo(dialog, 'merge-success', () => this.collection.fetch());
+                        dialog.render();
+                    })
+                })
             });
         },
 
@@ -1057,6 +1024,10 @@ Espo.define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
             this.relationScope = this.getRelationScope()
+
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            }
 
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
                 this.rowActionsView = 'views/record/row-actions/view-only';

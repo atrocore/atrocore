@@ -207,7 +207,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         reloadModels(callback) {
-            List.prototype.loadSelectionRecordModels.call(this, this.model.id).then(models => {
+            this.loadSelectionRecordModels(this.model.id).then(models => {
                 this.selectionRecordModels = models;
                 //we clean to remove dead id
                 this.selectedIds = this.selectedIds.filter(id => models.map(m => m.id).includes(id));
@@ -229,6 +229,47 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 if (callback) {
                     callback();
                 }
+            });
+        },
+
+        loadSelectionRecordModels(selectionId) {
+            let models = [];
+            return new Promise((initialResolve, reject) => {
+                this.ajaxGetRequest(`selection/${selectionId}/selectionRecords?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`)
+                    .then(result => {
+                        let entityByScope = {};
+                        let order = 0;
+                        for (const entityData of result.list) {
+                            if (!entityByScope[entityData.entityType]) {
+                                entityByScope[entityData.entityType] = [];
+                            }
+                            entityData.entity._order = order;
+                            entityData.entity._selectionRecordId = entityData.id;
+
+                            entityByScope[entityData.entityType].push(entityData.entity);
+                            order++
+                        }
+                        let promises = [];
+                        for (const scope in entityByScope) {
+                            promises.push(new Promise((resolve) => {
+                                this.getModelFactory().create(scope, model => {
+                                    for (const data of entityByScope[scope]) {
+                                        let currentModel = Espo.utils.cloneDeep(model);
+                                        currentModel.set(data);
+                                        currentModel._order = data._order;
+                                        models.push(currentModel);
+                                    }
+                                    resolve();
+                                })
+                            }));
+                        }
+
+                        Promise.all(promises)
+                            .then(() => {
+                                models.sort((a, b) => a._order - b._order);
+                                initialResolve(models);
+                            });
+                    });
             });
         },
 
@@ -660,7 +701,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return;
             }
 
-            this.getMainRecord()?.applyMerge();
+            this.getMainRecord()?.applyMerge((result) => {
+                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`,{trigger: true});
+            });
         },
 
         canLoadActivities: function () {

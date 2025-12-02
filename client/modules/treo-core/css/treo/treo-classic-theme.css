@@ -18917,52 +18917,52 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([data-mode=edit]) > div,
-:not(.dashlet-body) > .list-container > .list > table tr td.cell > div:has(> input[type="checkbox"]), .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
-:not(.dashlet-body) > .list-container .list .record-checkbox-container {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) > div,
+.list-container > .list[data-editable=true] > table tr td.cell > div:has(> input[type="checkbox"]), .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
+.list-container .list .record-checkbox-container {
     padding: 3px 5px;
 }
 
-:not(.dashlet-body) > .list-container .list .record-checkbox-container {
+.list-container .list .record-checkbox-container {
     padding: 0 5px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
+.list-container > .list[data-editable=true] > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
     position: relative;
     min-width: 208px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell {
-    padding-top: 16px;
-    padding-bottom: 16px;
+.list-container > .list[data-editable=true] > table tr td.cell {
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
+.list-container > .list[data-editable=true] > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
     display: inline-block;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
+.list-container > .list[data-editable=true] > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
     min-height: 25px;
     border-top: 1px solid transparent;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
     padding-right: 18px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell[data-mode=edit] > div .selectize-input  {
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div .selectize-input  {
     padding-left: 5px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell > div {
+.list-container > .list[data-editable=true] > table tr td.cell > div {
     position: relative;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell div.inline-actions {
+.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions {
     position: absolute;
     top: -20px;
     right: 0;
@@ -18971,28 +18971,24 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: transparent;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not([data-mode=edit]) div.inline-actions {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) div.inline-actions {
     top: 5px;
     right: 3px;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell .form-control.selectize-control {
+.list-container > .list[data-editable=true] > table tr td.cell .form-control.selectize-control {
     min-width: 0;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
+.list-container > .list[data-editable=true] > table tr td.cell:not(:first-child) input[type="checkbox"] {
     margin: 4px 0 0;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell:first-child:has(input[type="checkbox"]),
-:not(.dashlet-body) > .list-container > .list > table tr > td.cell {
+.list-container > .list[data-editable=true] > table tr td.cell:first-child:has(input[type="checkbox"]),
+.list-container > .list[data-editable=true] > table tr > td.cell {
     vertical-align: middle;
 }
 
-:not(.dashlet-body) > .list-container > .list > table tr td.cell[data-name=tag] {
+.list-container > .list[data-editable=true] > table tr td.cell[data-name=tag] {
     line-height: initial !important;
-}
-
-.dashlet-body > .list-container > .list > table tr td.cell > div{
-    display: inline-block;
 }

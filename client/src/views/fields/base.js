@@ -933,9 +933,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (this.isListView() && !this.isDashletView()) {
+            if (this.isListView() && this.listInlineEditModeEnabled()) {
                 if(this.$el.children('div:not(.inline-actions)').size() === 0) {
-                    this.$el.html(`<div>${this.$el.html()}</div>`)
+                    this.$el.html(`<div>${this.$el.html()}</div>`);
+                    this.$element = this.$el.find('[name="' + this.name + '"]');
                 }
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
@@ -950,8 +951,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.toggleVisibility();
             }
 
-            if(this.isDashletView()) {
-               this.setReadOnly(true);
+            if(this.isListView() && !this.listInlineEditModeEnabled()) {
+                this.setReadOnly(true);
             }
         },
 
@@ -1784,8 +1785,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             return ['list', 'listLink'].includes(this.initialMode)
         },
 
-        isDashletView() {
-            return (this.options.el || '').includes('.dashlet')
+        listInlineEditModeEnabled() {
+            return this.getRecordView() && this.getRecordView().listInlineEditModeEnabled;
         }
     });
 });

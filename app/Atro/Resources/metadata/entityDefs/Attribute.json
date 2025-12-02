@@ -4,7 +4,8 @@
       "type": "varchar",
       "required": true,
       "trim": true,
-      "isMultilang": true
+      "isMultilang": true,
+      "layoutRemoveDisabled": true
     },
     "createdAt": {
       "type": "datetime",
@@ -29,16 +30,19 @@
       "view": "views/attribute/fields/attribute-group",
       "required": false,
       "readOnly": false,
-      "tooltip": false
+      "tooltip": false,
+      "layoutRemoveDisabled": true
     },
     "attributePanel": {
       "type": "link",
       "entity": "AttributePanel",
       "view": "views/attribute/fields/attribute-panel",
-      "required": true
+      "required": true,
+      "layoutRemoveDisabled": true
     },
     "extensibleEnum": {
       "type": "link",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -72,13 +76,15 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "layoutRemoveDisabled": true
     },
     "entity": {
       "type": "link",
       "entity": "Entity",
       "required": true,
       "view": "views/attribute/fields/entity",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "protected": {
           "conditionGroup": [
@@ -101,7 +107,8 @@
       "isSorted": false,
       "readOnly": false,
       "tooltip": false,
-      "view": "views/attribute/fields/type"
+      "view": "views/attribute/fields/type",
+      "layoutRemoveDisabled": true
     },
     "compositeAttribute": {
       "type": "link",
@@ -114,6 +121,7 @@
       "type": "link",
       "required": false,
       "default": null,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -129,7 +137,8 @@
     "isMultilang": {
       "type": "bool",
       "hideMultilang": true,
-      "layoutDetailDisabled": true
+      "layoutDetailDisabled": true,
+      "layoutRemoveDisabled": true
     },
     "classificationAttributes": {
       "type": "linkMultiple",
@@ -146,6 +155,7 @@
       "layoutListSmallDisabled": true,
       "filterDisabled": true,
       "tooltip": true,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -163,6 +173,7 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
+      "layoutRemoveDisabled": true,
       "emHidden": true,
       "conditionalProperties": {
         "visible": {
@@ -184,6 +195,7 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
+      "layoutRemoveDisabled": true,
       "emHidden": true,
       "conditionalProperties": {
         "visible": {
@@ -205,6 +217,7 @@
       "notStorable": true,
       "virtualField": true,
       "filterDisabled": true,
+      "layoutRemoveDisabled": true,
       "emHidden": true,
       "conditionalProperties": {
         "visible": {
@@ -229,6 +242,7 @@
       "virtualField": true,
       "filterDisabled": true,
       "default": false,
+      "layoutRemoveDisabled": true,
       "emHidden": true,
       "conditionalProperties": {
         "visible": {
@@ -259,6 +273,7 @@
     },
     "measure": {
       "type": "link",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -286,7 +301,8 @@
       "view": "views/admin/field-manager/fields/default-unit",
       "massUpdateDisabled": true,
       "filterDisabled": true,
-      "importDisabled": true
+      "importDisabled": true,
+      "layoutRemoveDisabled": true
     },
     "defaultDate": {
       "type": "varchar",
@@ -295,6 +311,7 @@
       "importDisabled": true,
       "exportDisabled": true,
       "tooltip": true,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -313,11 +330,13 @@
     "isRequired": {
       "type": "bool",
       "default": false,
+      "layoutRemoveDisabled": true,
       "view": "views/attribute/fields/required"
     },
     "isReadOnly": {
       "type": "bool",
       "default": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -331,7 +350,8 @@
     },
     "isProtected": {
       "type": "bool",
-      "default": false
+      "default": false,
+      "layoutRemoveDisabled": true
     },
     "sortOrder": {
       "type": "int",
@@ -359,6 +379,7 @@
     "amountOfDigitsAfterComma": {
       "type": "int",
       "min": 0,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -377,6 +398,7 @@
     "useDisabledTextareaInViewMode": {
       "type": "bool",
       "default": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -401,6 +423,7 @@
       "default": false,
       "emHidden": true,
       "tooltip": true,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -419,6 +442,7 @@
     "notNull": {
       "type": "bool",
       "default": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -441,6 +465,7 @@
     "trim": {
       "type": "bool",
       "default": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -472,6 +497,7 @@
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "importDisabled": true,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -494,6 +520,7 @@
       "massUpdateDisabled": true,
       "layoutListDisabled": true,
       "default": false,
+      "layoutRemoveDisabled": true,
       "emHidden": true,
       "view": "views/attribute/fields/full-width",
       "conditionalProperties": {
@@ -513,6 +540,7 @@
     "conditionalRequired": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -527,6 +555,7 @@
     "conditionalReadOnly": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -545,6 +574,7 @@
     "conditionalProtected": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -559,6 +589,7 @@
     "conditionalVisible": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -573,6 +604,7 @@
     "conditionalDisableOptions": {
       "type": "jsonArray",
       "view": "views/entity-field/fields/conditional-disable-options",
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

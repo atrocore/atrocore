@@ -18,6 +18,7 @@ use Atro\Core\Exceptions\NotFound;
 use Atro\Core\ORM\Repositories\RDB;
 use Atro\Core\Utils\Config;
 use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\Language;
 use Atro\Core\Utils\Util;
 use Atro\Core\EventManager\Event;
 use Atro\Entities\User;
@@ -302,6 +303,35 @@ class LayoutManager
 
             $where['relatedEntity'] = empty($relatedEntity) ? null : $relatedEntity;
             $where['relatedLink'] = empty($relatedLink) ? null : $relatedLink;
+        }
+
+        $selectedFields = [];
+        if($layoutName === 'detail') {
+            foreach ($layoutData as $data) {
+                if(!empty($data['rows'])) {
+                    foreach ($data['rows'] as $row) {
+                        if(!empty($row)) {
+                            foreach ($row as $cell) {
+                                if(empty($cell['name'])) {
+                                    continue;
+                                }
+                                $selectedFields[] = $cell['name'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $fieldDef) {
+                if(!empty($fieldDef['multilangField'])) {
+                    continue;
+                }
+                if (!empty($fieldDef['layoutRemoveDisabled'])) {
+                    if (!in_array($field, $selectedFields)) {
+                        throw  new BadRequest(sprintf($this->getLanguage()->translate("cannotRemoveFieldFromLayout", 'messages', 'Layout'), $field));
+                    }
+                }
+            }
         }
 
         $layoutEntity = $layoutRepo->where($where)->findOne();
@@ -869,5 +899,10 @@ class LayoutManager
     protected function getEventManager(): Manager
     {
         return $this->container->get('eventManager');
+    }
+
+    protected function getLanguage(): Language
+    {
+        return $this->container->get('language');
     }
 }

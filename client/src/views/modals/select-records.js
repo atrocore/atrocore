@@ -77,6 +77,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
 
         hasRightSideView: true,
 
+        listInlineEditModeEnabled: true,
+
         data: function () {
             return {
                 hasTree: this.isHierarchical(),
@@ -112,6 +114,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             this.showFilter = this.searchPanel && this.getMetadata().get(['scopes', this.scope, 'type']) !== 'ReferenceData';
             this.selectAllByDefault = this.options.selectAllByDefault;
             this.additionalBoolFilterList = this.options.additionalBoolFilterList;
+
+            if('listInlineEditModeEnabled' in this.options)  {
+                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            }
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
@@ -283,7 +289,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 layoutName: this.layoutName,
                 searchManager: this.searchManager,
                 buttonsDisabled: true,
-                skipBuildRows: true
+                skipBuildRows: true,
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled
             }
 
             if (typeof this.options.allowSelectAllResult === 'boolean') {
