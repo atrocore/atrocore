@@ -13981,7 +13981,6 @@ button.category:focus {
 #main > .content-wrapper > main {
     flex: 1;
     overflow-y: auto;
-    overflow-x: clip;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
