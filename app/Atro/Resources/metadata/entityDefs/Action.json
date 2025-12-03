@@ -777,8 +777,6 @@
               "type": "in",
               "attribute": "usage",
               "value": [
-                "",
-                "entity",
                 "record"
               ]
             }
