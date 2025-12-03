@@ -83,7 +83,7 @@ Espo.define('ui', [], function () {
                              '</header>';
         }
 
-        var body = '<div class="modal-body body">' + this.body + '</div>';
+        var body = '<div class="modal-body-wrapper"><div class="modal-body body">' + this.body + '</div></div>';
 
         var footer = '';
 
