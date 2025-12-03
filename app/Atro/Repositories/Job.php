@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\JobManager;
 use Atro\Core\Templates\Repositories\Base;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class Job extends Base
@@ -108,6 +109,23 @@ class Job extends Base
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    public function cancelMatchingJobs(string $matchingId): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update($this->getConnection()->quoteIdentifier('job'))
+            ->set('status', ':canceled')
+            ->where('payload LIKE :payload')
+            ->andWhere('status = :pending')
+            ->andWhere('deleted = :false')
+            ->andWhere('type = :type')
+            ->setParameter('payload', '%"id":"' . $matchingId . '"%')
+            ->setParameter('canceled', 'Canceled')
+            ->setParameter('pending', 'Pending')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('type', 'FindMatchesForRecord')
+            ->executeQuery();
     }
 
     protected function init()

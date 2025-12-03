@@ -39,8 +39,16 @@
       "customizable": false,
       "layoutRemoveDisabled": true
     },
+    "matchedRecordsMax": {
+      "type": "int",
+      "min": 0,
+      "tooltip": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true
+    },
     "entity": {
       "type": "varchar",
+      "notStorable": true,
       "view": "views/matching/fields/matching-entity-type",
       "protected": true,
       "customizable": false,
@@ -134,6 +142,7 @@
     },
     "matchedRecords": {
       "type": "hasMany",
+      "foreign": "matching",
       "entity": "MatchedRecord"
     },
     "createdBy": {

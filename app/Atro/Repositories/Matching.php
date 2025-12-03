@@ -46,6 +46,38 @@ class Matching extends Base
         return $this->where(['code' => $code])->findOne();
     }
 
+    public function activate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    {
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', true);
+            $this->getEntityManager()->saveEntity($matching);
+        }
+
+        $matchings = $this->getConfig()->get('matchings', []);
+        $matchings[$code] = true;
+
+        $this->getConfig()->set('matchings', $matchings);
+        $this->getConfig()->save();
+    }
+
+    public function deactivate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    {
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', false);
+            $this->getEntityManager()->saveEntity($matching);
+        }
+
+        $matchings = $this->getConfig()->get('matchings', []);
+        $matchings[$code] = false;
+
+        $this->getConfig()->set('matchings', $matchings);
+        $this->getConfig()->save();
+
+        $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($id);
+    }
+
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
@@ -74,6 +106,12 @@ class Matching extends Base
         }
     }
 
+    /**
+     * @param MatchingEntity $entity
+     * @param array     $options
+     *
+     * @return void
+     */
     protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
@@ -89,14 +127,22 @@ class Matching extends Base
             $this->rebuild();
         }
 
-        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive')) {
+        if ($entity->isAttributeChanged('isActive')) {
+            if (!empty($entity->get('isActive'))) {
+                $this->activate($entity->id, $entity->get('code'), true);
+            } else {
+                $this->deactivate($entity->id, $entity->get('code'), true);
+            }
+        }
+
+        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive') || $entity->isAttributeChanged('matchedRecordsMax')) {
             if (!empty($entity->get('isActive'))) {
                 $this->unmarkAllMatchingSearched($entity);
             }
         }
     }
 
-    protected function deleteMasterDataEntity(OrmEntity $matching, string $entityName): void
+    protected function deleteMasterDataEntity(MatchingEntity $matching, string $entityName): void
     {
         $exists = $this->where(['sourceEntity' => $entityName, 'id!=' => $matching->id])->findOne();
         if (!empty($exists)) {
@@ -114,6 +160,12 @@ class Matching extends Base
         }
     }
 
+    /**
+     * @param MatchingEntity $entity
+     * @param array     $options
+     *
+     * @return void
+     */
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

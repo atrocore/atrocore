@@ -21,16 +21,15 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
 {
     public function run(Job $job): void
     {
-        $matchingId = $job->getPayload()['matchingId'] ?? null;
+        $matchingData = $job->getPayload()['matching'] ?? [];
         $entityName = $job->getPayload()['entityName'] ?? null;
         $entityId = $job->getPayload()['entityId'] ?? null;
 
-        if (empty($entityName) || empty($entityId)) {
+        if (empty($entityName) || empty($entityId) || empty($matchingData['code'])) {
             return;
         }
 
-        $matching = $this->getEntityManager()->getEntity('Matching', $matchingId);
-        if (!$matching) {
+        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
             return;
         }
 
@@ -39,9 +38,20 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
             return;
         }
 
-        if (!empty($entity->get(Matching::prepareFieldName($matching->get('code'))))) {
+        if (!empty($entity->get(Matching::prepareFieldName($matchingData['code'])))) {
             return;
         }
+
+        $matchingRules = $this->getEntityManager()->createCollection('MatchingRule', []);
+        foreach ($matchingData['rules'] ?? [] as $ruleData) {
+            $matchingRule = $this->getEntityManager()->getEntity('MatchingRule');
+            $matchingRule->set($ruleData);
+            $matchingRules->append($matchingRule);
+        }
+
+        $matching = $this->getEntityManager()->getEntity('Matching');
+        $matching->set($matchingData);
+        $matching->set('matchingRules', $matchingRules);
 
         $this->getContainer()->get('matchingManager')->findMatches($matching, $entity);
     }
