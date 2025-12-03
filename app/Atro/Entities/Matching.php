@@ -64,11 +64,11 @@ class Matching extends Base
 
     public function activate(): void
     {
-        $this->getEntityManager()->getRepository($this->entityType)->activate($this);
+        $this->getEntityManager()->getRepository($this->entityType)->activate($this->id, $this->get('code'));
     }
 
     public function deactivate(): void
     {
-        $this->getEntityManager()->getRepository($this->entityType)->deactivate($this);
+        $this->getEntityManager()->getRepository($this->entityType)->deactivate($this->id, $this->get('code'));
     }
 }

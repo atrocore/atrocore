@@ -42,6 +42,8 @@ class FindMatches extends AbstractJob implements JobInterface
             $offset = 0;
             $limit = 5000;
 
+            $checkJobInterval = ($this->getConfig()->get('maxConcurrentWorkers') ?? 6) * 2;
+
             while (true) {
                 $collection = $this->getEntityManager()->getRepository($matching->get('sourceEntity'))
                     ->where([$fieldName => false])
@@ -51,7 +53,7 @@ class FindMatches extends AbstractJob implements JobInterface
                     break;
                 }
 
-                foreach ($collection as $entity) {
+                foreach ($collection as $k => $entity) {
                     $jobEntity = $this->getEntityManager()->getEntity('Job');
                     $jobEntity->set([
                         'name'     => "Find matches for {$entity->getEntityName()}: {$entity->get('name')}",
@@ -65,6 +67,21 @@ class FindMatches extends AbstractJob implements JobInterface
                         ]
                     ]);
                     $this->getEntityManager()->saveEntity($jobEntity);
+
+                    if (!empty($matching->get('matchedRecordsMax')) && $k % $checkJobInterval === 0) {
+                        $jobEntity = $this->getEntityManager()->getEntity('Job');
+                        $jobEntity->set([
+                            'name'     => "Check whether the searching of the matches for '{$entity->getEntityName()}' needs to stop",
+                            'type'     => 'StopFindingMatches',
+                            'status'   => 'Pending',
+                            'priority' => 20,
+                            'payload'  => [
+                                'matching'   => $matching->toPayload(),
+                                'entityName' => $entity->getEntityName()
+                            ]
+                        ]);
+                        $this->getEntityManager()->saveEntity($jobEntity);
+                    }
                 }
 
                 $offset += $limit;

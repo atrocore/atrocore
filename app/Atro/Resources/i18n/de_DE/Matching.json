@@ -18,6 +18,6 @@
     "configureMatching": "Matching konfigurieren"
   },
   "tooltips": {
-    "matchedRecordsMax": "Leer lassen für unbegrenzte Anzahl von übereinstimmenden Datensätzen. Wenn die Anzahl der übereinstimmenden Datensätze größer als dieser Wert ist, deaktiviert sich das Matching selbst."
+    "matchedRecordsMax": "Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen. Wenn die Anzahl der übereinstimmenden Datensätze diesen Wert überschreitet, wird die Übereinstimmung deaktiviert."
   }
 }

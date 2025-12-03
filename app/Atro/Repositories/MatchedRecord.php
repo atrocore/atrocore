@@ -15,7 +15,6 @@ namespace Atro\Repositories;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Entities\Matching as MatchingEntity;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
@@ -40,6 +39,35 @@ class MatchedRecord extends Base
         if ($entity->isNew()) {
             $entity->set('hash', $this->createUniqHash($entity));
         }
+    }
+
+    public function checkMatchedRecordsMax(string $matchingId, int $matchedRecordsMax): bool
+    {
+        $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY master_entity_id HAVING COUNT(DISTINCT source_entity_id) >= :max) AS exists";
+
+        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':matchingId', $matchingId);
+        $stmt->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $stmt->bindValue(':max', $matchedRecordsMax, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        if ($stmt->fetchColumn()){
+            return true;
+        }
+
+        $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY source_entity_id HAVING COUNT(DISTINCT master_entity_id) >= :max) AS exists";
+
+        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':matchingId', $matchingId);
+        $stmt->bindValue(':false', false, \PDO::PARAM_BOOL);
+        $stmt->bindValue(':max', $matchedRecordsMax, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
     }
 
     public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void

@@ -18,6 +18,6 @@
     "configureMatching": "Configure Matching"
   },
   "tooltips": {
-    "matchedRecordsMax": "Leave empty for unlimited number of matched records. If the number of matched records more than this value, Matching will deactivate itself."
+    "matchedRecordsMax": "Leave this field empty to allow an unlimited number of matched records. If the number of matched records exceeds this value, matching will be deactivated."
   }
 }
