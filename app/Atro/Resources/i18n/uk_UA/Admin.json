@@ -184,7 +184,7 @@
     "unit": "Одиниця",
     "password": "Пароль",
     "bool": "Логічне значення",
-    "date": "фініковий",
+    "date": "Дата",
     "datetime": "Дата і час",
     "email": "Email",
     "extensibleEnum": "Список",
