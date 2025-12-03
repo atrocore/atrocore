@@ -18801,37 +18801,57 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-records .overlay, .compare-entities .overlay {
-    position: absolute;
-    top: 0;
-    right: -20px;
-    left: -20px;
-    bottom: -50px;
-    z-index: 100;
-}
-
-.shimmer-container::before {
-    content: "";
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
-    background-image: linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.05) 0%,
-            rgba(255, 255, 255, 0.1) 20%,
-            rgba(255, 255, 255, 0.1) 35%,
-            rgba(0, 0, 0, 0.05) 50%
-    );
-
-    background-size: 200% 100%;
-    background-position: -100% 0;
-    animation: shimmer 1.5s infinite linear;
+    z-index: 101;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@keyframes shimmer {
-    to {
-        background-position: 200% 0;
+.overlay > .overlay-logo {
+    position: relative;
+    z-index: 102;
+    width: 128px;
+    height: 128px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay > .overlay-logo:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 9px solid rgb(180 180 180);
+    border-bottom-color: #fff;
+    animation: overlay-logo-spinner 2s linear infinite;
+    background: rgba(180, 180, 180, 0.7);
+}
+
+.overlay > .overlay-logo > img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+    position: relative;
+    opacity: 0.6;
+}
+
+@keyframes overlay-logo-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 
