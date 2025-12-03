@@ -59,7 +59,7 @@ class FindMatches extends AbstractJob implements JobInterface
                         'status'   => 'Pending',
                         'priority' => 20,
                         'payload'  => [
-                            'matchingId' => $matching->id,
+                            'matching'   => $matching->toPayload(),
                             'entityName' => $entity->getEntityName(),
                             'entityId'   => $entity->id
                         ]

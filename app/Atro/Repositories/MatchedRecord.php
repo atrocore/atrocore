@@ -63,20 +63,6 @@ class MatchedRecord extends Base
         }
     }
 
-    public function getCountOfMatchingMatchedRecords(string $matchingId): int
-    {
-        $res = $this->getConnection()->createQueryBuilder()
-            ->select('COUNT(id) as total')
-            ->from('matched_record')
-            ->where('deleted=:false')
-            ->andWhere('matching_id=:matchingId')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('matchingId', $matchingId)
-            ->fetchAssociative();
-
-        return (int)$res['total'] ?? 0;
-    }
-
     public function createMatchedRecord(
         MatchingEntity $matching,
         string $sourceId,
@@ -84,12 +70,6 @@ class MatchedRecord extends Base
         int $score,
         bool $skipBidirectional = false
     ): void {
-        if (!empty($matching->get('matchedRecordsMax')) && $this->getCountOfMatchingMatchedRecords($matching->id) > $matching->get('matchedRecordsMax')) {
-            $matching->set('isActive', false);
-            $this->getEntityManager()->saveEntity($matching);
-            return;
-        }
-
         // create new record
         $matchedRecord = $this->get();
         $matchedRecord->set([

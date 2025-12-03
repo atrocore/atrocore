@@ -19,4 +19,56 @@ use Atro\Core\Templates\Entities\Base;
 class Matching extends Base
 {
     protected $entityType = "Matching";
+
+    public function toPayload(): array
+    {
+        $res = $this->toArray();
+
+        $toRemoveKeys = [
+            'name',
+            'description',
+            'isActive',
+            'deleted',
+            'createdAt',
+            'modifiedAt',
+            'createdById',
+            'createdByName',
+            'modifiedById',
+            'modifiedByName',
+            'ownerUserId',
+            'ownerUserName',
+            'assignedUserId',
+            'assignedUserName',
+            'matchingRuleSetName',
+            'matchingName'
+        ];
+
+        foreach ($toRemoveKeys as $key) {
+            if (array_key_exists($key, $res)) {
+                unset($res[$key]);
+            }
+        }
+        $res['rules'] = [];
+
+        foreach ($this->get('matchingRules')->toArray() as $item) {
+            foreach ($toRemoveKeys as $key) {
+                if (array_key_exists($key, $item)) {
+                    unset($item[$key]);
+                }
+            }
+            $res['rules'][] = $item;
+        }
+
+        return $res;
+    }
+
+    public function activate(): void
+    {
+        $this->getEntityManager()->getRepository($this->entityType)->activate($this);
+    }
+
+    public function deactivate(): void
+    {
+        $this->getEntityManager()->getRepository($this->entityType)->deactivate($this);
+    }
 }

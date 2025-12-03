@@ -13,6 +13,7 @@
 namespace Atro\Core;
 
 use Atro\Core\MatchingRuleType\AbstractMatchingRule;
+use Atro\Core\Utils\Config;
 use Atro\Core\Utils\Metadata;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
@@ -34,7 +35,7 @@ class MatchingManager
 
     public function createMatchingType(MatchingRule $rule): AbstractMatchingRule
     {
-        $className = "\\Atro\\Core\\MatchingRuleType\\".ucfirst($rule->get('type'));
+        $className = "\\Atro\\Core\\MatchingRuleType\\" . ucfirst($rule->get('type'));
         if (!class_exists($className)) {
             throw new \Exception("Class $className not found");
         }
@@ -125,7 +126,7 @@ class MatchingManager
 
     public function findMatches(MatchingEntity $matching, Entity $entity): void
     {
-        if (empty($matching->get('isActive'))) {
+        if (empty($this->getConfig()->get("matchings.{$matching->get('code')}"))) {
             return;
         }
 
@@ -149,20 +150,30 @@ class MatchingManager
                 $matchingScore += $rule->match($entity, Util::arrayKeysToCamelCase($row));
             }
 
-            $percentageScore = $maxMatchingScore > 0 ? $matchingScore / $maxMatchingScore * 100 : 0;
+            $row['percentageScore'] = $maxMatchingScore > 0 ? $matchingScore / $maxMatchingScore * 100 : 0;
 
-            if ($percentageScore >= $matching->get('minimumScore')) {
-                $this
-                    ->getMatchedRecordRepository()
-                    ->createMatchedRecord($matching, $entity->id, $row['id'], $percentageScore);
+            if ($row['percentageScore'] >= $matching->get('minimumScore')) {
+                $matchedRecordsRows[] = $row;
             }
+        }
 
+        if (!empty($matchedRecordsRows[$matching->get('matchedRecordsMax')])) {
+            $matching->deactivate();
+            return;
+        }
+
+        foreach ($matchedRecordsRows as $row) {
+            $this
+                ->getMatchedRecordRepository()
+                ->createMatchedRecord($matching, $entity->id, $row['id'], $row['percentageScore']);
+        }
+
+        $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id);
+        foreach ($possibleMatches as $row) {
             if ($matching->get('type') === 'duplicate') {
                 $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id']);
             }
         }
-
-        $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id);
     }
 
     protected function getEntityManager(): EntityManager
@@ -173,6 +184,11 @@ class MatchingManager
     protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->container->get('config');
     }
 
     protected function getMatchingRepository(): Matching
