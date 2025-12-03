@@ -15,12 +15,22 @@ Espo.define('views/fields/conditions-container', 'views/fields/base',
         detailTemplate: 'fields/field-value-container',
         editTemplate: 'fields/field-value-container',
 
+        className: 'conditions-container',
+
         inlineEditDisabled: true,
         entityTypeField: 'entityType',
 
         twigVariables: [
             "entity"
         ],
+
+        data: function () {
+            const data = Dep.prototype.data.call(this) || {};
+
+            data.className = this.className;
+
+            return data;
+        },
 
         setup() {
             Dep.prototype.setup.call(this);

@@ -6456,12 +6456,16 @@ button.close {
     line-height: 24px
 }
 
+.modal-body-wrapper {
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    overflow: hidden;
+}
+
 .modal-body {
     position: relative;
     padding-top: 30px;
     padding-bottom: 20px;
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
 }
 
 .modal-body > div:not(.record-container):not(.edit-container) {
@@ -9657,25 +9661,6 @@ li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover 
     }
 }
 
-body > #header ul.tabs > li > a > span.full-label {
-    position: absolute;
-    margin-left: 28px
-}
-
-body > #header ul.tabs > li.more > ul > li > a > span.full-label {
-    padding-left: 28px;
-    position: static
-}
-
-body > #header ul.tabs > li.more > ul > li > a > span.short-label {
-    position: absolute
-}
-
-body > #header ul.tabs > li > a > span.short-label > .short-label-text {
-    font-weight: bold;
-    visibility: hidden
-}
-
 body > #header ul.tabs > li span.short-label > span {
     display: inline-block;
     width: 16px;
@@ -9683,7 +9668,7 @@ body > #header ul.tabs > li span.short-label > span {
 }
 
 body > #header ul.tabs > li > a > span.full-label {
-    display: inline-flex;
+    display: inline;
     text-overflow: ellipsis;
     max-width: calc(100% - 50px);
     overflow: hidden;
@@ -9717,7 +9702,10 @@ body > #header .navbar-brand span.home-icon {
 #header .navbar li.tab > a {
     border-left-width: 0;
     border-left-style: solid;
-    border-color: transparent
+    border-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .default-icon, .icon {
@@ -10674,13 +10662,13 @@ td.cell > div > textarea:focus {
 
 .cell[data-mode=edit] > .field > input[type=checkbox]:not([disabled]),
 .cell[data-mode=edit] > .field > input[type=radio]:not([disabled]),
-.cell[data-mode=edit] > .field > .field-value-container,
+.cell[data-mode=edit] > .field > .conditions-container,
 .record > .edit .cell > .field > input[type=checkbox]:not([disabled]),
 .record > .edit .cell > .field > input[type=radio]:not([disabled]),
-.record > .edit .cell > .field > .field-value-container,
+.record > .edit .cell > .field > .conditions-container,
 td.cell[data-mode=edit]  input[type=checkbox]:not([disabled]),
 td.cell[data-mode=edit]  input[type=radio]:not([disabled]),
-td.cell[data-mode=edit]  .field-value-container {
+td.cell[data-mode=edit]  .conditions-container {
     margin: 0 10px;
     line-height: inherit;
 }
@@ -13756,10 +13744,13 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .page-header.detail-page-header {
-    margin: 0 -20px;
+    margin: 0;
+    width: calc(100% + 40px);
+    transform: translateX(-20px);
     position: sticky;
     top: 0;
     left: 0;
+    right: 0;
     z-index: 101;
     background-color: #fff;
     padding: 10px 20px 0;
@@ -13990,6 +13981,10 @@ button.category:focus {
 #main > .content-wrapper > main {
     flex: 1;
     overflow-y: auto;
+}
+
+#main > .content-wrapper > main[data-mode=detail] {
+    overflow-x: clip;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
@@ -14370,7 +14365,8 @@ button.category:focus {
     }
 
     #main main > .page-header {
-        margin: 0 -10px;
+        width: calc(100% + 20px);
+        transform: translateX(-10px);
         padding: 10px 10px 0;
     }
 
@@ -17648,13 +17644,13 @@ span[data-img-src]::after {
     margin-top: 0;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label {
-    position: static;
-    margin-left: 6px;
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label + i {
+    flex-shrink: 0;
+    margin-inline-end: 3px;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.full-label i {
-    margin-left: 8px;
+#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group.open > a > span.full-label + i.ph-caret-down {
+    transform: rotate(180deg);
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul {
@@ -17691,32 +17687,24 @@ span[data-img-src]::after {
     background-color: transparent;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.full-label {
-    padding-left: 0;
-    margin-left: 8px;
-}
-
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.short-label {
     position: static;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > a > span.short-label span.short-label-text,
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs .more-group > ul > li > a > span.short-label span.short-label-text {
-    display: none;
-}
-
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create {
-    position: absolute;
-    right: 20px;
     border-radius: 3px;
     width: 25px;
     height: 25px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    display: none;
+    cursor: pointer;
     background-color: rgba(0, 0, 0, 0.1);
     color: var(--nav-font-color);
     border-color: rgba(0, 0, 0, 0.1);
     line-height: 1;
+    flex-shrink: 0;
+    opacity: 0;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create:hover {
@@ -17724,24 +17712,15 @@ span[data-img-src]::after {
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more):hover .quick-create {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
+    opacity: 1;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) .quick-create .ph {
     font-size: 12px;
 }
 
-#header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) {
-    display: flex;
-    align-items: center;
-}
-
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more) > a.nav-link {
     width: 100%;
-    display: flex;
-    align-items: center;
 }
 
 #header > #navbar > .navbar[data-orientation="vertical"] ul.tabs li:not(.more):not(.active):hover > a.nav-link {
@@ -17752,9 +17731,7 @@ span[data-img-src]::after {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    display: block;
-    margin-left: 32px;
-    position: absolute;
+    flex: 1;
 }
 
 /* Vertical Mobile*/
@@ -18190,11 +18167,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .modal-dialog .main-content {
     display: flex;
+    border-radius: inherit;
 }
 
 .modal-dialog .main-content .middle-content {
     flex: 1;
     min-width: 0;
+    border-bottom-left-radius: inherit;
 }
 
 .modal-dialog .main-content .middle-content .list > table {
@@ -18216,6 +18195,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .modal-dialog .right-content {
     position: relative;
     min-width: 25px;
+    border-bottom-right-radius: inherit;
+    overflow: hidden;
 }
 
 .cell label .label-text a {
