@@ -34,12 +34,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         collection: null,
 
+        layoutData: {},
+
         init: function () {
             Dep.prototype.init.call(this);
             if (this.options.params.selectionViewMode && this.availableModes.includes(this.options.params.selectionViewMode)) {
                 this.selectionViewMode = this.options.params.selectionViewMode;
                 this.selectionRecordModels = this.options.params.models;
-                if ( this.selectionRecordModels) {
+                if (this.selectionRecordModels) {
                     this.selectedIds = [];
                     for (const model of this.selectionRecordModels) {
                         if (this.selectedIds.length >= this.maxForComparison) {
@@ -338,7 +340,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 selectionId: this.model.id,
                 el: '#main main > .record',
                 rootUrl: this.options.params.rootUrl,
-                hasNext: this.hasNext
+                hasNext: this.hasNext,
+                entityTypes: this.getEntityTypes()
             };
 
             if (this.selectionRecordModels) {
@@ -351,7 +354,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.notify(this.translate('Loading...'));
 
-            this.createView('record', this.getRecordViewName(), o, view => {
+          let createView = () =>  this.createView('record', this.getRecordViewName(), o, view => {
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     if (!this.panelsList) {
                         this.standardPanelList = data.list;
@@ -406,6 +409,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                 }
             });
+
+          if(this.comparisonAcrossEntities()) {
+              this.loadLayoutData(() => {
+                  o.layoutData = this.layoutData;
+                  createView();
+              })
+          }
         },
 
         enableButtons() {
@@ -702,7 +712,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.getMainRecord()?.applyMerge((result) => {
-                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`,{trigger: true});
+                this.getRouter().navigate(`#${this.getEntityTypes()[0]}/view/${result.id}`, {trigger: true});
             });
         },
 
@@ -714,6 +724,98 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return true;
         },
 
+        loadLayoutData(callback) {
+            let count = 0;
+            for (const entityType of this.getEntityTypes()) {
+                if (this.layoutData[entityType]) {
+                    count++;
+                    if(count === this.getEntityTypes().length) {
+                        callback();
+                    }
+                    continue;
+                }
+                let attributesIdsForDefsLoad = [];
+                this.getHelper().layoutManager.get(entityType, 'selection', null, null, data => {
+                    let layout = [
+                        {
+                            label: "",
+                            style: "",
+                            rows: []
+                        }
+                    ];
+
+                    for (const fieldData of data.layout) {
+                        layout[0].rows.push([{
+                            name: fieldData.name,
+                            fullWidth: true
+                        }]);
+
+                        if (fieldData.attributeId) {
+                            if (!attributesIdsForDefsLoad.includes(fieldData.attributeId)) {
+                                attributesIdsForDefsLoad.push(fieldData.attributeId);
+                            }
+                            this.selectionRecordModels.forEach(model => {
+                                if (model.name !== entityType) {
+                                    return;
+                                }
+
+                                $.each(model.get('attributesDefs'), (name, defs) => {
+                                    if (defs.attributeId !== fieldData.attributeId) {
+                                        return;
+                                    }
+                                    layout[0].rows[layout[0].rows.length - 1][0].customLabel = defs['label'];
+                                    //no need to load after
+                                    attributesIdsForDefsLoad = attributesIdsForDefsLoad.filter(id => id !== fieldData.attributeId);
+                                    this.selectionRecordModels.forEach(model => {
+                                        if (model.name !== entityType) {
+                                            return;
+                                        }
+                                        if (!model.defs['fields'][name]) {
+                                            model.defs['fields'][name] = defs;
+                                        }
+                                    });
+                                });
+                            });
+                        }
+                    }
+
+                    if(attributesIdsForDefsLoad.length) {
+                        this.ajaxGetRequest('Attribute/action/attributesDefs', {
+                            entityName: entityType,
+                            attributesIds: attributesIdsForDefsLoad
+                        }).then(attributesDefs => {
+                            $.each(attributesDefs, (name, defs) => {
+                                layout[0].rows.forEach((row, index) => {
+                                    if(row[0].name !== name) {
+                                        return;
+                                    }
+                                    layout[0].rows[index][0].customLabel = defs['label'];
+                                });
+                                this.selectionRecordModels.forEach(model => {
+                                    if (model.name !== entityType) {
+                                        return;
+                                    }
+                                    if (!model.defs['fields'][name]) {
+                                        model.defs['fields'][name] = defs;
+                                    }
+                                });
+                            });
+                            this.layoutData[entityType] = layout;
+                            count++;
+                            if(count === this.getEntityTypes().length) {
+                                callback();
+                            }
+                        })
+                    }else{
+                        this.layoutData[entityType] = layout;
+                        count++;
+                        if(count === this.getEntityTypes().length) {
+                            callback();
+                        }
+                    }
+                });
+            }
+        }
     });
 });
 

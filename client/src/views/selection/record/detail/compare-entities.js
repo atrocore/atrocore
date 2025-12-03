@@ -36,6 +36,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             this.models = this.options.models || this.models;
             this.model = this.models.length ? this.models[0] : null;
             this.scope = this.options.scope || this.selectionModel?.name;
+            this.layoutData = this.options.layoutData;
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
                 this.models.forEach(model => {
@@ -55,6 +56,23 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                     }.bind(this));
                 });
             });
+
+            this.models.forEach(model => {
+                this.listenTo(model, 'before:save', (attrs) => {
+                    $.each(attrs, (name, value) => {
+                        if(!model.defs['fields'][name]) {
+                            return;
+                        }
+                        if(model.defs['fields'][name].attributeId) {
+                            if(!attrs['__attributes']) {
+                                attrs['__attributes'] = [model.defs['fields'][name].attributeId];
+                            }else{
+                                attrs['__attributes'].push([model.defs['fields'][name].attributeId]);
+                            }
+                        }
+                    })
+                })
+            })
         },
 
         data() {
@@ -115,7 +133,8 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                     el: this.options.el + ` .record-content[data-id="${m.id}"]`,
                     scope: m.name,
                     mode: 'detail',
-                    model: m
+                    model: m,
+                    detailLayout: this.layoutData[m.name]
                 }, view => {
                     view.render(() => {
                         count++;
