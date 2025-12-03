@@ -64,7 +64,8 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                 columns: columns,
                 columnLength: columns.length,
                 size: 100 / columns.length,
-                showOverlay: this.showOverlay
+                showOverlay: this.showOverlay,
+                overlayLogo: this.getFavicon()
             };
         },
 

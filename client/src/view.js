@@ -474,7 +474,16 @@ Espo.define('view', [], function () {
 
         isPWAMode: function () {
             return ~['window-controls-overlay', 'standalone'].indexOf(this.getAppDisplayMode());
-        }
+        },
+
+        getFavicon: function () {
+            const faviconId = this.getConfig().get('faviconId');
+            if (faviconId) {
+                return `/?entryPoint=LogoImage&id=${faviconId}`;
+            }
+
+            return 'client/modules/treo-core/img/favicon.svg';
+        },
     });
 
 });
