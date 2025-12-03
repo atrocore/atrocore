@@ -15,6 +15,7 @@ namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Base;
 use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ExtensibleEnumOption extends Base
@@ -33,21 +34,8 @@ class ExtensibleEnumOption extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId'))  && $entity->get('listMultilingual') === null) {
-           $hasMultilingual = $this->getEntityManager()
-                ->getConnection()
-                ->createQueryBuilder()
-                ->from('extensible_enum','ee')
-                ->join('ee','extensible_enum_extensible_enum_option','eeeeo', 'ee.id=eeeeo.extensible_enum_id')
-                ->select('ee.id')
-                ->where('eeeeo.extensible_enum_option_id=:id')
-                ->where('ee.multilingual=:true')
-                ->setParameter('id', $entity->get('id'), Mapper::getParameterType($entity->get('id')))
-                ->setParameter('true',true, Mapper::getParameterType(true))
-                ->fetchOne();
-
-               $entity->set('listMultilingual', !empty($hasMultilingual));
-
+        if (empty($this->getMemoryStorage()->get('exportJobId')) && empty($this->getMemoryStorage()->get('importJobId')) && $entity->get('listMultilingual') === null) {
+            $entity->set('listMultilingual', $this->getRepository()->isMultilingual($entity->get('id')));
         }
     }
 }
