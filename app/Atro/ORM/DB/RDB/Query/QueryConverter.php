@@ -874,7 +874,7 @@ class QueryConverter
                         && $attributeType == IEntity::BOOL
                     ) {
                         if ($value) {
-                        if ($operator === '=') {
+                            if ($operator === '=') {
                                 $operatorModified = '= TRUE';
                             } else {
                                 $operatorModified = '= FALSE';
