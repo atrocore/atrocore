@@ -354,7 +354,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.notify(this.translate('Loading...'));
 
-          let createView = () =>  this.createView('record', this.getRecordViewName(), o, view => {
+            let createView = () => this.createView('record', this.getRecordViewName(), o, view => {
                 this.listenTo(view, 'detailPanelsLoaded', data => {
                     if (!this.panelsList) {
                         this.standardPanelList = data.list;
@@ -410,14 +410,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             });
 
-          if(this.comparisonAcrossEntities()) {
-              this.loadLayoutData(() => {
-                  o.layoutData = this.layoutData;
-                  createView();
-              })
-          }else{
-              createView();
-          }
+            if (this.comparisonAcrossEntities()) {
+                this.loadLayoutData(() => {
+                    o.layoutData = this.layoutData;
+                    createView();
+                })
+            } else {
+                createView();
+            }
         },
 
         enableButtons() {
@@ -731,7 +731,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             for (const entityType of this.getEntityTypes()) {
                 if (this.layoutData[entityType]) {
                     count++;
-                    if(count === this.getEntityTypes().length) {
+                    if (count === this.getEntityTypes().length) {
                         callback();
                     }
                     continue;
@@ -781,14 +781,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
 
-                    if(attributesIdsForDefsLoad.length) {
+                    if (attributesIdsForDefsLoad.length) {
                         this.ajaxGetRequest('Attribute/action/attributesDefs', {
                             entityName: entityType,
                             attributesIds: attributesIdsForDefsLoad
                         }).then(attributesDefs => {
                             $.each(attributesDefs, (name, defs) => {
                                 layout[0].rows.forEach((row, index) => {
-                                    if(row[0].name !== name) {
+                                    if (row[0].name !== name) {
                                         return;
                                     }
                                     layout[0].rows[index][0].customLabel = defs['label'];
@@ -804,14 +804,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             });
                             this.layoutData[entityType] = layout;
                             count++;
-                            if(count === this.getEntityTypes().length) {
+                            if (count === this.getEntityTypes().length) {
                                 callback();
                             }
                         })
-                    }else{
+                    } else {
                         this.layoutData[entityType] = layout;
                         count++;
-                        if(count === this.getEntityTypes().length) {
+                        if (count === this.getEntityTypes().length) {
                             callback();
                         }
                     }
