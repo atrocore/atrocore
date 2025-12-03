@@ -46,15 +46,13 @@ class Matching extends Base
         return $this->where(['code' => $code])->findOne();
     }
 
-    public function activate(string $id, string $code): void
+    public function activate(string $id, string $code, bool $skipMatchingUpdate = false): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->update('matching')
-            ->set('is_active', ':true')
-            ->where('id=:id')
-            ->setParameter('true', true, ParameterType::BOOLEAN)
-            ->setParameter('id', $id)
-            ->executeQuery();
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', true);
+            $this->getEntityManager()->saveEntity($matching);
+        }
 
         $matchings = $this->getConfig()->get('matchings', []);
         $matchings[$code] = true;
@@ -63,15 +61,13 @@ class Matching extends Base
         $this->getConfig()->save();
     }
 
-    public function deactivate(string $id, string $code): void
+    public function deactivate(string $id, string $code, bool $skipMatchingUpdate = false): void
     {
-        $this->getConnection()->createQueryBuilder()
-            ->update('matching')
-            ->set('is_active', ':false')
-            ->where('id=:id')
-            ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('id', $id)
-            ->executeQuery();
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', false);
+            $this->getEntityManager()->saveEntity($matching);
+        }
 
         $matchings = $this->getConfig()->get('matchings', []);
         $matchings[$code] = false;
@@ -133,9 +129,9 @@ class Matching extends Base
 
         if ($entity->isAttributeChanged('isActive')) {
             if (!empty($entity->get('isActive'))) {
-                $this->activate($entity);
+                $this->activate($entity->id, $entity->get('code'), true);
             } else {
-                $this->deactivate($entity);
+                $this->deactivate($entity->id, $entity->get('code'), true);
             }
         }
 

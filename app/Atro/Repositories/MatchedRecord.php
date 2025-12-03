@@ -53,20 +53,6 @@ class MatchedRecord extends Base
 
         $stmt->execute();
 
-        if ($stmt->fetchColumn()){
-            return true;
-        }
-
-        $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY source_entity_id HAVING COUNT(DISTINCT master_entity_id) >= :max) AS exists";
-
-        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
-
-        $stmt->bindValue(':matchingId', $matchingId);
-        $stmt->bindValue(':false', false, \PDO::PARAM_BOOL);
-        $stmt->bindValue(':max', $matchedRecordsMax, \PDO::PARAM_INT);
-
-        $stmt->execute();
-
         return $stmt->fetchColumn();
     }
 
