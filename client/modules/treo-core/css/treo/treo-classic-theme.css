@@ -13983,6 +13983,10 @@ button.category:focus {
     overflow-y: auto;
 }
 
+#main > .content-wrapper > main[data-mode=detail] {
+    overflow-x: clip;
+}
+
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .search-container {
         margin-bottom: 9px;
