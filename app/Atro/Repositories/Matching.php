@@ -60,11 +60,32 @@ class Matching extends Base
         parent::beforeSave($entity, $options);
     }
 
+    protected function createMasterDataEntity(string $id): void
+    {
+        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($id);
+        if (empty($mde)) {
+            $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get();
+            $mde->id = $id;
+            $mde->set([
+                'ownerUserId'    => $this->getEntityManager()->getUser()->id,
+                'assignedUserId' => $this->getEntityManager()->getUser()->id,
+            ]);
+            $this->getEntityManager()->saveEntity($mde);
+        }
+    }
+
     protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
+        if ($entity->isNew()) {
+            if ($entity->get('type') === 'duplicate') {
+                $this->createMasterDataEntity($entity->get('sourceEntity'));
+            } elseif ($entity->get('type') === 'masterRecord') {
+                $this->createMasterDataEntity($entity->get('sourceEntity'));
+                $this->createMasterDataEntity($entity->get('masterEntity'));
+            }
+
             $this->rebuild();
         }
 
@@ -75,9 +96,34 @@ class Matching extends Base
         }
     }
 
+    protected function deleteMasterDataEntity(OrmEntity $matching, string $entityName): void
+    {
+        $exists = $this->where(['sourceEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        if (!empty($exists)) {
+            return;
+        }
+
+        $exists = $this->where(['masterEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        if (!empty($exists)) {
+            return;
+        }
+
+        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($entityName);
+        if (!empty($mde)) {
+            $this->getEntityManager()->removeEntity($mde);
+        }
+    }
+
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        if ($entity->get('type') === 'duplicate') {
+            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+        } elseif ($entity->get('type') === 'masterRecord') {
+            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+            $this->deleteMasterDataEntity($entity, $entity->get('masterEntity'));
+        }
 
         foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
             if ($rule->get('matchingId') === $entity->get('id')) {

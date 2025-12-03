@@ -15,6 +15,7 @@
     import NavigationButtons from "./buttons/NavigationButtons.svelte";
     import ContentFilter from "../ContentFilter.svelte";
     import TourButton from "./buttons/TourButton.svelte";
+    import {Language} from "../../../utils/Language";
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -33,6 +34,7 @@
     let headerButtons: ActionParams[] = [];
     let loadingActions: boolean = false;
     let bookmarkId: string | null = null;
+    let navigationIconScope: string | null = null;
 
     $: {
         recordActions = (mode === 'edit' ? recordButtons?.editButtons : recordButtons?.buttons) ?? [];
@@ -40,6 +42,14 @@
         dropdownActions = (mode === 'edit' ? recordButtons?.dropdownEditButtons : recordButtons?.dropdownButtons) ?? [];
         additionalEditActions = (mode === 'edit' ? [...(recordButtons?.additionalEditButtons ?? []), ...dynamicEditActions] : []);
         headerButtons = (recordButtons?.headerButtons?.buttons ?? []).filter(button => !button.hidden);
+
+        prepareNavigationIconScope();
+    }
+
+    function navigateToEntity() {
+        if (navigationIconScope) {
+            window.location.hash = navigationIconScope + "/view/" + recordButtons.model.id;
+        }
     }
 
     function onFollowersUpdated(event: CustomEvent) {
@@ -92,7 +102,20 @@
         }
     }
 
+    function prepareNavigationIconScope() {
+        if (scope === 'Entity') {
+            navigationIconScope = recordButtons.model.get('hasDuplicates') || recordButtons.model.get('masterEntity') ? 'MasterDataEntity' : null;
+        } else if (scope === 'MasterDataEntity') {
+            navigationIconScope = 'Entity';
+        } else {
+            navigationIconScope = null;
+        }
+    }
+
     function reloadDynamicActions(event: CustomEvent): void {
+
+        prepareNavigationIconScope();
+
         if (Metadata.get(['scopes', scope, 'actionDisabled'])) {
             return;
         }
@@ -155,6 +178,11 @@
                     <Preloader heightPx={12}/>
                 </button>
             {/if}
+            {#if navigationIconScope}
+                <div class="icon-navigation">
+                    <button title="{Language.translate(navigationIconScope, 'scopeName', 'Global')}"  on:click={navigateToEntity}><i class="ph-{Metadata.get(['clientDefs', navigationIconScope, 'iconClass'])} ph"></i></button>
+                </div>
+            {/if}
             {#if recordButtons?.headerButtons && headerButtons.find(item => item.name === 'filtering') }
                 <ContentFilter scope="{scope}" onExecute={executeAction}
                                style="padding-bottom: 0;margin-left: 20px !important;"/>
@@ -197,6 +225,11 @@
 </div>
 
 <style>
+    .icon-navigation {
+        padding-bottom: 0;
+        margin-left: 10px !important;
+    }
+
     .button-row {
         display: flex;
         align-items: center;

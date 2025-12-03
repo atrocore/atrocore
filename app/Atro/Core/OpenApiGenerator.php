@@ -303,7 +303,7 @@ class OpenApiGenerator
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
-                if (!in_array($scopeName, ['Matching'])) {
+                if (!in_array($scopeName, ['Matching', 'MasterDataEntity'])) {
                     $result['paths']["/{$scopeName}"]['post'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Create a record of the $scopeName",
@@ -352,7 +352,7 @@ class OpenApiGenerator
                     "responses"   => self::prepareResponses(['$ref' => "#/components/schemas/$scopeName"]),
                 ];
 
-                if (!in_array($scopeName, ['Matching'])) {
+                if (!in_array($scopeName, ['Matching', 'MasterDataEntity'])) {
                     $result['paths']["/{$scopeName}/{id}"]['delete'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Delete a record of the $scopeName",

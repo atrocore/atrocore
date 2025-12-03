@@ -55,6 +55,14 @@ Espo.define('views/entity/fields/master-entity', 'views/fields/entity-type',
 
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get(this.name) !== null && ['list', 'detail'].includes(this.mode)) {
+                this.$el.html(`<a href="/#MasterDataEntity/view/${this.model.get(this.name)}">${this.$el.html()}</a>`);
+            }
+        },
+
     })
 );
 
