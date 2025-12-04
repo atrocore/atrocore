@@ -499,7 +499,8 @@
     "masterDataManagement": "Správa hlavních dat",
     "addFields": "Přidat pole",
     "addAttributes": "Přidání atributů",
-    "Insights": "Insights"
+    "Insights": "Insights",
+    "matchings": "Shody"
   },
   "fields": {
     "width": "Šířka",
