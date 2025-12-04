@@ -81,7 +81,8 @@
     "File": "Archivo",
     "Action": "Acción",
     "Selection": "Selección",
-    "SelectionRecord": "Registro de selección"
+    "SelectionRecord": "Registro de selección",
+    "MasterDataEntity": "Entidad de datos maestros"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -150,7 +151,8 @@
     "Action": "Acciones",
     "ExtensibleEnum": "Listas",
     "Selection": "Selecciones",
-    "SelectionRecord": "Registros de selección"
+    "SelectionRecord": "Registros de selección",
+    "MasterDataEntity": "Entidades de datos maestros"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
@@ -499,7 +501,8 @@
     "masterDataManagement": "Gestión de datos maestros",
     "addFields": "Añadir campos",
     "addAttributes": "Añadir atributos",
-    "Insights": "Perspectivas"
+    "Insights": "Perspectivas",
+    "matchings": "Partidos"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
