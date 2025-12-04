@@ -7,7 +7,7 @@
     "users": "Utilisateurs",
     "teams": "Les équipes",
     "styleControlPermission": "Contrôle du style",
-    "scopes": "Scopes"
+    "scopes": "Entités"
   },
   "tooltips": {
     "assignmentPermission": "Permet de restreindre la possibilité d'attribuer des enregistrements et de publier des messages à d'autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peut assigner et poster des messages uniquement aux coéquipiers\n\nno - peut assigner et poster uniquement à soi-même",
