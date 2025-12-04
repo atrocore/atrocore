@@ -43,6 +43,7 @@
     let treeScope: string;
     let layoutData: any;
     let selectNodeId: string | null = null;
+    let disabledNodeId: string | null = null;
     let isHidden: boolean = false;
     let sortAsc: boolean = true;
     let sortBy: string | null = null;
@@ -192,7 +193,7 @@
             closedIcon: window.$('<i class="ph ph-folder"></i>'),
             openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
             onCreateLi: function (node, $li, is_selected) {
-                if (node.disabled) {
+                if (node.disabled || node.id === disabledNodeId) {
                     $li.addClass('disabled');
                 } else {
                     $li.removeClass('disabled');
@@ -228,6 +229,7 @@
                 if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
+                    appendUnsetButton($li)
                 }
 
                 if (callbacks?.shouldBeSelected && callbacks.shouldBeSelected(activeItem.name, node.id)) {
@@ -404,7 +406,10 @@
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callAddNodeToFilter();
+                    disabledNodeId = selectNodeId
                     selectNodeId = null;
+                    Storage.clear('selectedNodeId', scope);
+                    Storage.clear('selectedNodeRoute', scope);
                 });
                 $el.append(button);
             }
@@ -536,9 +541,7 @@
         const foreignWhere = getForeignWhereData()
         let url = scope + `/action/Tree?isTreePanel=1&scope=${scope}&link=_self`;
         if (
-            Metadata.get(['scopes', scope, 'type']) === 'Hierarchy' &&
-            Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
-            && ((canUseDataRequest() && foreignWhere.length) || hasTextFilter)
+            Metadata.get(['scopes', scope, 'type']) === 'Hierarchy' && canUseDataRequest()
         ) {
             url = `${scope}/action/TreeData?scope=${scope}&link=_self`
         }
@@ -622,10 +625,18 @@
                 name = node.name;
             }
 
+            let field = activeItem.name
+            let operator = 'linked_with'
+
+            if (Metadata.get(['entityDefs', scope, 'fields', field, 'type']) === 'link') {
+                field = field + 'Id';
+                operator = 'in'
+            }
+
             callbacks.addNodeToFilter({
-                operator: 'linked_with',
-                id: activeItem.name,
-                field: activeItem.name,
+                operator: operator,
+                id: field,
+                field: field,
                 value: [selectNodeId],
                 data: {
                     nameHash: {
