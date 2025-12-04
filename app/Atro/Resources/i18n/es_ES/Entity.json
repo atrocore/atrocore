@@ -81,7 +81,7 @@
     "hasAssignedUser": "Habilitar usuario asignado para la gestión de acceso.",
     "hasTeam": "Habilite los equipos para la gestión del acceso.",
     "hasOwner": "Habilitar propietario para la gestión de acceso.",
-    "streamDisabled": "Si está marcada, no aparecerá ningún panel de Actividades en la página de Detalles del registro. No podrá añadir notas.",
+    "streamDisabled": "Si está marcada, no aparecerá ningún panel de Actividades en la página Detalles del registro. No podrá añadir notas.",
     "disableActionHistory": "Si está marcada, no se registrará ninguna acción del usuario en los registros de esta entidad.",
     "auditedDisabledFields": "Los cambios en estos campos no se muestran como Actividad.",
     "auditedEnabledRelations": "Los cambios en estas relaciones se muestran como Actividad.",

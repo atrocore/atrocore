@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "entity": "Entità",
+    "description": "Descrizione",
+    "release": "Rilascio",
+    "synonyms": "Sinonimi",
+    "code": "Codice",
+    "isActive": "Attivo",
+    "classifications": "Classificazioni",
+    "classificationAttributes": "Attributi della classificazione",
+    "type": "Tipo"
+  },
+  "options": {
+    "type": {
+      "general": "Generale"
+    }
+  },
+  "labels": {
+    "selectAttributeGroup": "Selezionare il gruppo di attributi"
+  },
+  "exceptions": {
+    "entityCannotBeChanged": "L'entità non può essere modificata.",
+    "classificationForToAnotherEntity": "La classificazione non può essere collegata a questo record, perché è utilizzata per un'altra Entità.",
+    "classificationHasRecords": "Le classificazioni con i record correlati non possono essere eliminate."
+  }
+}

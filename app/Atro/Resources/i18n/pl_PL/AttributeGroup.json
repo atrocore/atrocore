@@ -3,7 +3,7 @@
     "name": "Nazwa grupy",
     "description": "Description",
     "code": "Kod",
-    "isActive": "Aktywny",
+    "isActive": "Active",
     "attributes": "Atrybuty",
     "sortOrder": "Sort Order"
   },

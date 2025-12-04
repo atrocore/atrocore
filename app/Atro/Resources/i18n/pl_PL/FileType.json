@@ -7,7 +7,7 @@
     "minWidth": "Minimalna szerokość, px",
     "minHeight": "Minimalna wysokość, px",
     "extensions": "Rozszerzenia",
-    "mimeTypes": "Typy Mime"
+    "mimeTypes": "Mime Types"
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w polu \"%s\" podmiotu \"%s\".",

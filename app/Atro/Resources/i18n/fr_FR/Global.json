@@ -535,7 +535,9 @@
     "accessManagement": "Gestion de l'accès",
     "Attributes": "Attributs",
     "unselectAll": "Désélectionner tout",
-    "masterDataManagement": "Gestion des données de référence"
+    "masterDataManagement": "Gestion des données de référence",
+    "addFields": "Ajouter des champs",
+    "addAttributes": "Ajouter des attributs"
   },
   "insightsPanels": {
     "summary": "Résumé",
@@ -604,7 +606,7 @@
     "massUnfollowResult": "Les enregistrements {count} ne sont pas suivis",
     "massFollowResultSingle": "L'enregistrement de {count} est maintenant suivi",
     "relationsDidNotRemovedPlural": "Les relations %s n'ont PAS été supprimées en raison des erreurs suivantes :",
-    "streamPostInfo": "Tapez <strong>@username</strong> pour mentionner les utilisateurs dans le message.",
+    "streamPostInfo": "Type <strong>@username</strong> pour mentionner les utilisateurs dans le message.",
     "confirmMassUnfollow": "Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés ?",
     "relationsDidNotAddedPlural": "Les relations %s n'ont PAS été ajoutées en raison des erreurs suivantes :",
     "fieldShouldBeFloat": "{field} doit être un flottant valide",
@@ -1202,7 +1204,10 @@
       "include_me": "m'inclure",
       "exclude_me": "m'exclure",
       "is_my_team": "est mon équipe",
-      "is_not_my_team": "n'est pas mon équipe"
+      "is_not_my_team": "n'est pas mon équipe",
+      "future": "futur",
+      "past": "passé",
+      "today": "aujourd'hui"
     },
     "errors": {
       "number_exceed_min": "Doit être supérieur à {0}",

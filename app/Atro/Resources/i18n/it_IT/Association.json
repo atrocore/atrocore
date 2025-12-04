@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "description": "Descrizione",
+    "isActive": "Attivo",
+    "reverseAssociation": "Associazione inversa",
+    "code": "Codice",
+    "default": "Predefinito"
+  },
+  "exceptions": {
+    "associationIsLinkedWithRecords": "L'associazione è collegata a uno o più record. La preghiamo di scollegare prima il/i record",
+    "youCanNotDeactivateAssociationWithActiveRecords": "Non è possibile disattivare l'associazione con i record attivi."
+  }
+}

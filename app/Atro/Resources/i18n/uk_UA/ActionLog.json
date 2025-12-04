@@ -2,7 +2,7 @@
   "fields": {
     "incomingWebhook": "Вхідний веб-хук",
     "scheduledJob": "Розклад роботи",
-    "workflow": "Робочі процес",
+    "workflow": "Воркфлоу",
     "statusMessage": "Повідомлення про стан"
   },
   "options": {
@@ -10,7 +10,7 @@
       "manual": "Посібник",
       "incomingWebhook": "Вхідний веб-хук",
       "scheduledJob": "Розклад роботи",
-      "workflow": "Робочі процес"
+      "workflow": "Воркфлоу"
     },
     "status": {
       "executed": "Виконано.",

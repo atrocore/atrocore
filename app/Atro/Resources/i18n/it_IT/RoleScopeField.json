@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "name": "Campo",
+    "roleScope": "Ambito di applicazione",
+    "readAction": "Leggi",
+    "editAction": "Modifica"
+  }
+}

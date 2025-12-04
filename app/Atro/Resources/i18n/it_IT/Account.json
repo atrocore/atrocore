@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "name": "Nome",
+    "emailAddress": "Email",
+    "phoneNumber": "Telefono",
+    "description": "Descrizione",
+    "type": "Tipo",
+    "role": "Ruolo",
+    "number": "Numero",
+    "language": "Lingua",
+    "addresses": "Indirizzi",
+    "contacts": "Contatti"
+  },
+  "options": {
+    "type": {
+      "individual": "Individuale",
+      "company": "Azienda"
+    },
+    "role": {
+      "supplier": "Fornitore",
+      "customer": "Cliente"
+    }
+  },
+  "exceptions": {
+    "defaultAddressAlreadyExist": "L'indirizzo predefinito per l'Account esiste già."
+  }
+}

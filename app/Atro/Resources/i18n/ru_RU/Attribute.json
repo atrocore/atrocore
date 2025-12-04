@@ -39,7 +39,7 @@
     "extensibleEnum": "Список",
     "preparedName": "Название",
     "channel": "Канал",
-    "conditionalRequired": "Обязательный",
+    "conditionalRequired": "Обязательно",
     "entity": "Сущность"
   },
   "labels": {

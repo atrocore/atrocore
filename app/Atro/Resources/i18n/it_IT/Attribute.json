@@ -1,0 +1,102 @@
+{
+  "fields": {
+    "entity": "Entità",
+    "compositeAttribute": "Attributo composito",
+    "nestedAttributes": "Attributi annidati",
+    "attributeGroup": "Gruppo di attributi",
+    "attributePanel": "Pannello degli attributi",
+    "type": "Tipo di attributo",
+    "code": "Codice",
+    "name": "Nome dell'attributo",
+    "min": "Min",
+    "products": "Prodotti",
+    "isMultilang": "Multilingue",
+    "fileType": "Tipo di file",
+    "pattern": "Modello Regex",
+    "measure": "Misura",
+    "defaultUnit": "Unità predefinita",
+    "defaultDate": "Data predefinita",
+    "isRequired": "Richiesto",
+    "isReadOnly": "In sola lettura",
+    "isProtected": "Protetto",
+    "tooltip": "Tooltip",
+    "maxLength": "Lunghezza massima",
+    "countBytesInsteadOfCharacters": "Conta i byte invece dei caratteri",
+    "useDisabledTextareaInViewMode": "Utilizza l'area di testo disabilitata in modalità di visualizzazione",
+    "amountOfDigitsAfterComma": "Quantità di cifre dopo la virgola",
+    "description": "Descrizione",
+    "classifications": "Classificazioni",
+    "extensibleEnum": "Elenco",
+    "max": "Max",
+    "notNull": "Disabilita il valore nullo",
+    "trim": "Rimuova gli spazi bianchi iniziali e finali",
+    "classificationAttributes": "Attributi della classificazione",
+    "preparedName": "Nome",
+    "htmlSanitizer": "Sanificatore HTML",
+    "fullWidth": "A tutta larghezza",
+    "channel": "Canale",
+    "attributeGroupSortOrder": "Ordine di ordinamento nel gruppo di attributi",
+    "conditionalRequired": "Richiesto",
+    "conditionalVisible": "Visibile",
+    "conditionalReadOnly": "In sola lettura",
+    "conditionalProtected": "Protetto",
+    "conditionalDisableOptions": "Opzioni disabilitate"
+  },
+  "exceptions": {
+    "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",
+    "attributeIsUsedInClassifications": "L'attributo è utilizzato nelle classificazioni. Per favore, aggiorni prima le classificazioni.",
+    "invalidType": "Il tipo di attributo '{type}' non è valido.",
+    "wrongAttributeEntity": "È stata scelta un'Entità non consentita. L'entità deve essere la stessa del Pannello attributi e del Gruppo attributi.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "L'Entità dell'attributo deve essere la stessa dell'Attributo composito.",
+    "attributeNotBelongToEntity": "L'attributo non appartiene a questa Entità.",
+    "entityCannotBeChanged": "L'entità non può essere modificata.",
+    "compositeAttributeNotFound": "Attributo composito non trovato.",
+    "compositeAttributeCannotBeChild": "L'attributo composito non può essere figlio.",
+    "fileTypeCannotBeDeleted": "Il record non può essere cancellato perché è utilizzato nell'attributo '%s'.",
+    "maxLessThanMin": "Min dovrebbe essere inferiore a Max.",
+    "noAttributeConverterFound": "La conversione dell'attributo dal tipo '%s' a '%s' è impossibile.",
+    "attributeValueIsInUse": "Il valore dell'attributo è in uso e non può essere cancellato.",
+    "youCantChangeFieldOfTypeInAttribute": "Non può cambiare il tipo di attributo.",
+    "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già."
+  },
+  "labels": {
+    "Classification": "Classificazione",
+    "addNewValue": "Aggiungere un nuovo valore",
+    "extensibleEnumOptions": "Opzioni dell'elenco",
+    "conditionalProperties": "Proprietà condizionali"
+  },
+  "options": {
+    "type": {
+      "array": "Array",
+      "bool": "Booleano",
+      "composite": "Composito",
+      "date": "Data",
+      "datetime": "Data e ora",
+      "extensibleEnum": "Elenco",
+      "float": "Galleggiante",
+      "int": "Integro",
+      "extensibleMultiEnum": "Elenco a più valori",
+      "text": "Testo",
+      "markdown": "Markdown",
+      "url": "Url",
+      "varchar": "Stringa",
+      "wysiwyg": "HTML",
+      "rangeInt": "Intervallo di numeri interi",
+      "rangeFloat": "Intervallo del galleggiante",
+      "file": "File"
+    }
+  },
+  "messages": {
+    "sameNumberOptions": "Deve impostare lo stesso numero di opzioni",
+    "productsCountWithAttribute": "Conteggio dei prodotti in cui questo attributo è impostato: <strong>{count}</strong>",
+    "removeAttribute(s)": "Vengono eliminati anche tutti i valori di questo/i attributo/i. Vuole davvero eliminare questo/i attributo/i?"
+  },
+  "filterLabels": {
+    "All": "Tutti"
+  },
+  "tooltips": {
+    "pattern": "Per abilitare solo le lettere maiuscole con lunghezza di 10 simboli, usi \"/^[A-Z]{1,10}$/\".",
+    "defaultDate": "Modificatore del valore dell'attributo (ad esempio +5 giorni, -3 mesi)",
+    "dropdown": "Non utilizzi il menu a tendina se l'elenco contiene più di 300 opzioni."
+  }
+}

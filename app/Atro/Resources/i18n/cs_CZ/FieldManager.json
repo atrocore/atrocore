@@ -9,7 +9,7 @@
     "dateTimeDefault": {
       "": "Žádný",
       "javascript: return this.dateTime.getNow(1);": "Nyní",
-      "javascript: return this.dateTime.getNow(5);": "Nyní (5m)",
+      "javascript: return this.dateTime.getNow(5);": "Nyní (5 m)",
       "javascript: return this.dateTime.getNow(15);": "Nyní (15 m)",
       "javascript: return this.dateTime.getNow(30);": "Nyní (30m)",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 hodina",

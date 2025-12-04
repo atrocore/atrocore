@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "isActive": "Attivo",
+    "type": "Tipo",
+    "sourceEntity": "Entità sorgente",
+    "inBackground": "Eseguire in background",
+    "usage": "Utilizzo",
+    "massAction": "Azione di massa",
+    "display": "Display",
+    "actionsSet": "Set di azioni",
+    "actions": "Azioni",
+    "webhookUrl": "URL",
+    "executeAs": "Esegui come",
+    "displayField": "Campo di visualizzazione",
+    "focusField": "Campo di messa a fuoco",
+    "targetEntity": "Entità target",
+    "mode": "Modalità",
+    "emailScript": "Scrittura",
+    "showEmailPreview": "Anteprima prima dell'invio",
+    "emailTemplate": "Modello di e-mail",
+    "emailTo": "Invia un'e-mail a",
+    "emailCc": "Email CC",
+    "emailBcc": "Email BCC",
+    "hideTextLabel": "Nasconda l'etichetta di testo sul pulsante",
+    "applyToPreselectedRecords": "Applica ai record preselezionati",
+    "updateType": "Tipo di aggiornamento",
+    "updateFields": "Campi di aggiornamento",
+    "updateScript": "Scrittura"
+  },
+  "labels": {
+    "execute": "Eseguire",
+    "Parameters": "Parametri",
+    "fieldsPanel": "Aggiornamento"
+  },
+  "massActions": {
+    "execute": "Eseguire"
+  },
+  "messages": {
+    "executeNow": "È sicuro di voler eseguire l'azione selezionata?"
+  },
+  "options": {
+    "usage": {
+      "entity": "Pulsante d'azione dell'entità",
+      "record": "Pulsante di registrazione dell'azione",
+      "field": "Pulsante di azione del campo",
+      "onFieldFocus": "Focus sul campo",
+      "onRecordLoad": "Sul carico record"
+    },
+    "display": {
+      "dropdown": "A discesa",
+      "single": "Singolo"
+    },
+    "type": {
+      "create": "Creare",
+      "update": "Aggiornamento",
+      "delete": "Cancellare",
+      "set": "Set d'azione",
+      "webhook": "Webhook",
+      "customCode": "Codice personalizzato",
+      "email": "Invii l'e-mail"
+    },
+    "executeAs": {
+      "system": "Sistema",
+      "sameUser": "Stesso utente"
+    },
+    "mode": {
+      "basic": "Di base",
+      "script": "Scrittura"
+    }
+  },
+  "tooltips": {
+    "inBackground": "L'azione verrà eseguita in background senza alcun messaggio diretto di successo/errore. Lo utilizzi se l'esecuzione dell'azione richiederà più di 30 secondi.",
+    "usage": "L'uso prescrive la collocazione dell'azione. Un'Azione Record richiede che i record interessati siano preselezionati.",
+    "executeAs": "Specifica l'utente che il sistema utilizzerà per eseguire l'azione."
+  },
+  "exceptions": {
+    "forEditModeOnly": "L'azione '%s' è disponibile solo in modalità di modifica e non può essere utilizzata qui."
+  }
+}

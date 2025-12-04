@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "role": "Ruolo"
+  },
+  "options": {
+    "role": {
+      "main": "Principale",
+      "additional": "Ulteriori"
+    }
+  },
+  "tooltips": {
+    "role": "Selezioni Principale se desidera che questa lingua sia la principale per i suoi contenuti. Ulteriori deve essere utilizzata per le lingue in cui deve essere tradotto."
+  },
+  "exceptions": {
+    "mainLanguageIsAlreadyExists": "La lingua principale esiste già.",
+    "roleCannotBeChanged": "Il ruolo non può essere modificato.",
+    "codeForAdditionalCannotBeChanged": "Il codice della lingua aggiuntiva non può essere modificato.",
+    "mainLanguageCannotBeRemoved": "La lingua principale non può essere rimossa."
+  }
+}

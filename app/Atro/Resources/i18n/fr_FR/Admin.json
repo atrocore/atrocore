@@ -120,8 +120,8 @@
     "date": "Date",
     "jsonArray": "Tableau JSON",
     "jsonObject": "Objet JSON",
-    "language": "Langue",
-    "multiLanguage": "Langues",
+    "language": "Code langue",
+    "multiLanguage": "Codes des langues",
     "measure": "Mesure",
     "markdown": "Markdown"
   },
@@ -216,6 +216,8 @@
     "kanban": "Kanban",
     "navigation": "Navigation",
     "insights": "Resumé",
-    "upload": "Télécharger"
+    "upload": "Télécharger",
+    "summary": "Résumé",
+    "selection": "Sélection"
   }
 }

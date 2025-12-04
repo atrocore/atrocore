@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "name": "Valore dell'opzione",
+    "color": "Colore",
+    "sortOrder": "Ordinamento",
+    "extensibleEnums": "Elenchi"
+  },
+  "exceptions": {
+    "extensibleEnumOptionIsSystem": "L'opzione di lista '%s' è richiesta dal sistema.",
+    "extensibleEnumOptionIsUsed": "L'opzione elenco '%s' è utilizzata dal campo '%s' nell'entità '%s' per il record '%s'."
+  }
+}

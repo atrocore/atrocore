@@ -16,7 +16,7 @@
     "pattern": "Wzorzec Regex",
     "defaultUnit": "Jednostka domyślna",
     "default": "Domyślny",
-    "defaultValueType": "Wartość domyślna Typ",
+    "defaultValueType": "Wartość domyślna Type",
     "tooltip": "Tooltip",
     "tooltipText": "Tekst podpowiedzi",
     "tooltipLink": "Łącze podpowiedzi",
@@ -37,17 +37,17 @@
     "maxHeight": "Maksymalna wysokość (px)",
     "lengthOfCut": "Kwota symbolu do wyświetlenia",
     "script": "Skrypt",
-    "outputType": "Typ wyjścia",
+    "outputType": "Output Type",
     "preview": "Podgląd",
     "rowsMax": "Maksymalna liczba wierszy obszaru tekstowego",
     "rowsMin": "Minimalna liczba wierszy obszaru tekstowego",
-    "useDisabledTextareaInViewMode": "Proszę używać wyłączonego obszaru tekstowego w trybie widoku",
+    "useDisabledTextareaInViewMode": "Używanie wyłączonego obszaru tekstowego w trybie widoku",
     "strip": "Pasek",
     "height": "Wysokość (px)",
     "useIframe": "Używanie ramki iframe w trybie widoku",
     "htmlSanitizer": "HTML Sanitizer",
     "foreignCode": "Kod zagraniczny",
-    "relationType": "Typ relacji",
+    "relationType": "Relation Type",
     "foreignEntity": "Podmiot zagraniczny",
     "relationName": "Kod podmiotu powiązania",
     "linkMultipleField": "Łączenie wielu pól",
@@ -71,7 +71,7 @@
   "tooltips": {
     "foreignCode": "Ta nazwa kodowa jest używana dla pola utworzonego w powiązanej jednostce dla relacji wstecznej.",
     "foreignEntity": "Jest to powiązany podmiot, do którego rekordów odwołuje się bieżące pole.",
-    "relationName": "Ten kod służy do ustawienia nazwy systemowej dla automatycznie tworzonej encji typu \"Relation\".",
+    "relationName": "Ten kod służy do ustawiania nazwy systemowej dla automatycznie tworzonej encji typu \"Relation\".",
     "isMultilang": "Automatyczne tworzenie pól poprzez klonowanie bieżącego pola tyle razy, ile lokalizacji zostało aktywowanych w ustawieniach wielojęzycznych.",
     "required": "Pole będzie obowiązkowe. Nie może pozostać puste.",
     "readOnly": "Wartość pola nie może być określona przez użytkownika. Nadal można ją zmienić za pośrednictwem interfejsu API.",
@@ -90,7 +90,7 @@
     "modifiedExtendedEnabled": "Zmiany w tej relacji spowodują aktualizację daty i godziny \"Modified At\".",
     "isUninheritableField": "Wartości dla tego pola nie będą dziedziczone z elementu nadrzędnego.",
     "isUninheritableRelation": "Relacje z tym podmiotem nie będą dziedziczone z elementu nadrzędnego.",
-    "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Modified At\".",
+    "modifiedExtendedDisabled": "Jeśli ustawione, zmiany w tym polu nie będą aktualizować znacznika czasu \"Zmodyfikowano w\".",
     "auditableDisabled": "Zmiany w tym polu nie są wyświetlane jako Aktywność."
   },
   "options": {
@@ -123,5 +123,8 @@
     "resetToDefault": "Resetuj do domyślnego",
     "relationManagement": "Zarządzanie relacjami",
     "conditionalProperties": "Właściwości warunkowe"
+  },
+  "exceptions": {
+    "nullValuesExist": "Niektóre rekordy mają wartości null"
   }
 }

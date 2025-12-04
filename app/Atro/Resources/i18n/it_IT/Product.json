@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "number": "Numero",
+    "isActive": "Attivo",
+    "image": "Immagine",
+    "price": "Prezzo",
+    "description": "Descrizione breve",
+    "longDescription": "Descrizione lunga",
+    "children": "Prodotti per bambini",
+    "parents": "Prodotti dei genitori",
+    "quantity": "Quantità",
+    "mpn": "Numero del produttore (MPN)",
+    "customsNumber": "Numero della dogana",
+    "countryOfOrigin": "Paese di origine",
+    "defaultSupplier": "Fornitore predefinito",
+    "note": "Nota"
+  },
+  "labels": {
+    "manufacturer": "Produttore",
+    "other": "Altro"
+  }
+}

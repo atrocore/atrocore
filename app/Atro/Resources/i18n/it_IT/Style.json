@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "navigationManuBackgroundColor": "Sfondo del menu di navigazione",
+    "navigationMenuFontColor": "Colore del carattere di navigazione",
+    "linkFontColor": "Colore del link",
+    "headerTitleColor": "Colore del titolo dell'intestazione",
+    "customStylesheetPath": "Percorso del file СSS",
+    "customStylesheet": "CSS",
+    "primaryColor": "Colore primario",
+    "secondaryColor": "Colore secondario",
+    "primaryFontColor": "Colore del carattere primario",
+    "secondaryFontColor": "Colore del carattere secondario",
+    "labelColor": "Colore dell'etichetta",
+    "anchorNavigationBackground": "Sfondo di navigazione di ancoraggio",
+    "iconColor": "Colore dell'icona",
+    "primaryBorderColor": "Colore del bordo primario",
+    "secondaryBorderColor": "Colore del bordo secondario",
+    "panelTitleColor": "Colore del titolo del pannello",
+    "success": "Il successo",
+    "notice": "Avviso",
+    "information": "Informazioni",
+    "error": "Errore",
+    "actionIconColor": "Colore dell'icona Azione",
+    "navigationIconColor": "Colore dell'icona di navigazione",
+    "statusIconColor": "Colore dell'icona di stato",
+    "customHeadCode": "Codice della testa",
+    "highlightingColorForRequired": "Colore di evidenziazione per i dati richiesti",
+    "toolbarBackgroundColor": "Colore di sfondo della barra degli strumenti",
+    "toolbarFontColor": "Colore del carattere della barra degli strumenti"
+  },
+  "tooltips": {
+    "customStylesheetPath": "Gli stili CSS personalizzati saranno scritti in questo file. Può anche apportare modifiche direttamente in esso.",
+    "customHeadCode": "Aggiunga il codice alla fine del tag <head>. Atrocore non convalida il codice personalizzato per lei, quindi si assicuri di controllare il codice prima di pubblicarlo."
+  },
+  "exceptions": {
+    "styleIsUsed": "Lo stile in uso non può essere rimosso.",
+    "codeShouldBeString": "Il codice deve essere una stringa valida senza caratteri speciali e spazi."
+  }
+}

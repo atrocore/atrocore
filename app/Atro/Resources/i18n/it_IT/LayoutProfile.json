@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "isActive": "Attivo",
+    "isDefault": "Predefinito",
+    "description": "Descrizione",
+    "hideShowFullList": "Nascondere l'opzione \"Mostra elenco completo\" nei pannelli delle relazioni.",
+    "layouts": "Layout",
+    "parent": "Profilo del layout del genitore",
+    "navigation": "Menu di navigazione",
+    "favoritesList": "Preferiti",
+    "dashboardLayout": "Layout del cruscotto"
+  },
+  "labels": {
+    "addGroup": "Aggiungi gruppo",
+    "Menu": "Menu",
+    "Dashboards": "Cruscotti",
+    "Favorites": "Preferiti"
+  },
+  "exceptions": {
+    "defaultIsRequired": "Nel sistema deve esistere un profilo di layout predefinito"
+  },
+  "messages": {
+    "profileWillBeNewDefault": "Questo profilo sarà il nuovo predefinito, ne è sicuro?",
+    "navigationUpdate": "Il menu di navigazione è stato regolato dal sistema."
+  },
+  "boolFilters": {
+    "withLayouts": "Con layout memorizzato"
+  }
+}

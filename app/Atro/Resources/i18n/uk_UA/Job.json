@@ -12,12 +12,12 @@
     "endedAt": "Закінчується на"
   },
   "labels": {
-    "cancel": "Скасування"
+    "cancel": "Скасувати"
   },
   "options": {
     "status": {
-      "Pending": "В очікуванні",
-      "Success": "Успіх",
+      "Pending": "На розгляді",
+      "Success": "Успішно",
       "Running": "Виконується",
       "Failed": "Не виконано",
       "Canceled": "Скасовано",

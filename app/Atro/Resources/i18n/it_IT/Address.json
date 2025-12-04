@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "buyer": "Acquirente",
+    "email": "Email",
+    "phone": "Telefono",
+    "street": "Via",
+    "zip": "ZIP",
+    "box": "Scatola",
+    "city": "Città",
+    "country": "Paese",
+    "type": "Tipo",
+    "account": "Conto",
+    "contactName": "Nome del contatto",
+    "name": "Nome dell'azienda",
+    "prospect": "Prospettive",
+    "accounts": "Conti",
+    "contacts": "Contatti"
+  },
+  "options": {
+    "type": {
+      "billing": "Fatturazione",
+      "delivery": "Consegna"
+    }
+  }
+}

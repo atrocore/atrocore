@@ -1,0 +1,52 @@
+{
+  "fields": {
+    "host": "Nome dell'host",
+    "dbname": "Nome del database",
+    "user": "Nome utente del database",
+    "username": "Nome utente",
+    "password": "Password",
+    "confirmPassword": "Confermare la password"
+  },
+  "labels": {
+    "licenseAgreement": "Contratto di licenza",
+    "databaseConfiguration": "Configurazione del database",
+    "databaseName": "Nome del database",
+    "databaseUserName": "Nome utente del database",
+    "databaseUserPassword": "Password utente del database",
+    "port": "Porto",
+    "testConnection": "Collegamento di prova",
+    "reCheck": "Ricontrollo",
+    "userName": "Nome utente",
+    "password": "Password",
+    "confirmYourPassword": "Confermare la password",
+    "back": "Indietro",
+    "next": "Avanti",
+    "finish": "Finitura",
+    "required": "Richiesto",
+    "currentVersion": "Versione attuale",
+    "status": "Stato",
+    "administratorSetup": "Impostazione dell'amministratore",
+    "requiredSettings": "Impostazioni richieste",
+    "chooseYourLanguage": "Scelga la sua lingua",
+    "acceptTheAgreement": "Accetto l'accordo",
+    "reportingEnabled": "Invii segnalazioni anonime di errori per una più rapida identificazione e risoluzione dei problemi.",
+    "dbSystem": "Sistema di database",
+    "hostName": "Nome dell'host"
+  },
+  "errors": {
+    "alreadyInstalled": "AtroCore già installato",
+    "differentPass": "Password diverse",
+    "notCorrectDatabaseConfig": "Impostazioni del database non valide",
+    "filePermissionsError": "Le autorizzazioni dei file sono insufficienti. Configuri i permessi secondo le istruzioni."
+  },
+  "messages": {
+    "youMustAgreeToTheLicenseAgreement": "Deve accettare il contratto di licenza",
+    "fieldIsRequired": "{campo} è richiesto",
+    "connectionSuccessful": "Connessione riuscita!",
+    "pleaseConfigureYourSystemToStart": "Configuri il suo sistema per avviare"
+  },
+  "requirements": {
+    "phpVersion": "Versione PHP",
+    "mysqlVersion": "Versione di MySQL"
+  }
+}

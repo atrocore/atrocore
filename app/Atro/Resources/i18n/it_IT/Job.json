@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "status": "Stato",
+    "executeTime": "Eseguire a",
+    "pid": "PID",
+    "priority": "Priorità",
+    "handler": "Handler",
+    "payload": "Carico utile",
+    "scheduledJob": "Lavoro programmato",
+    "message": "Messaggio",
+    "startedAt": "Iniziato a",
+    "endedAt": "Finito a"
+  },
+  "labels": {
+    "cancel": "Annullamento"
+  },
+  "options": {
+    "status": {
+      "Pending": "In attesa",
+      "Success": "Il successo",
+      "Running": "In esecuzione",
+      "Failed": "Fallito",
+      "Canceled": "Annullato",
+      "Awaiting": "In attesa",
+      "Closed": "Chiuso"
+    }
+  },
+  "tooltips": {
+    "priority": "Un numero più alto significa una priorità maggiore"
+  },
+  "exceptions": {
+    "jobIsRunning": "Un lavoro in corso non può essere rimosso."
+  }
+}

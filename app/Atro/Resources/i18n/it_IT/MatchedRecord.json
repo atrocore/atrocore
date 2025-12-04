@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "source": "Fonte",
+    "sourceEntity": "Entità sorgente",
+    "sourceEntityId": "ID dell'entità sorgente",
+    "master": "Maestro",
+    "masterEntity": "Entità master",
+    "masterEntityId": "ID dell'entità master",
+    "score": "Punteggio",
+    "hash": "Hash unico"
+  },
+  "options": {
+    "type": {
+      "duplicate": "Duplicato",
+      "masterRecord": "Record principale"
+    }
+  }
+}

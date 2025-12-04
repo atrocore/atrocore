@@ -39,7 +39,7 @@
     "disableAttributeLinking": "Отключите прямое связывание атрибутов",
     "hasAssociate": "Has Associates",
     "textFilterFields": "Поля текстового фильтра",
-    "nonDuplicatableFields": "Не дублирующиеся поля",
+    "nonDuplicatableFields": "Недублирующиеся поля",
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
@@ -62,7 +62,7 @@
     "accessManagement": "Управление доступом",
     "hierarchyManagement": "Управление иерархией",
     "other": "Другие",
-    "resetToDefault": "Восстановить по умолчанию",
+    "resetToDefault": "Восстановить настройки по умолчанию",
     "attributes": "Атрибуты"
   },
   "confirmations": {
@@ -70,7 +70,7 @@
   },
   "tooltips": {
     "clearDeletedAfterDays": "Записи для этой организации удаляются навсегда через XX дней после даты удаления.",
-    "autoDeleteAfterDays": "Записи об этой организации удаляются через XX дней после даты последнего изменения.",
+    "autoDeleteAfterDays": "Записи для этой организации удаляются через XX дней после даты последнего изменения.",
     "disabled": "Проверьте, не нужна ли Вам эта сущность в Вашей системе.",
     "statusField": "Обновления этого поля регистрируются в разделе \"Деятельность\".",
     "deleteWithoutConfirmation": "Если флажок установлен, отдельная запись удаляется без подтверждения пользователя. Удаление нескольких записей еще нужно подтвердить.",

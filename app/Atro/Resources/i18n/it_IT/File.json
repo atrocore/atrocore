@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "type": "Tipo",
+    "folder": "Cartella",
+    "storage": "Conservazione",
+    "mimeType": "Tipo MIME",
+    "path": "Percorso",
+    "thumbnailsPath": "Percorso delle miniature",
+    "preview": "Anteprima",
+    "hash": "Hash",
+    "fileSize": "Dimensione del file (byte)",
+    "fileMtime": "Data di modifica del file",
+    "url": "URL",
+    "uploadUrl": "URL",
+    "width": "Larghezza",
+    "height": "Altezza",
+    "size": "Dimensioni",
+    "colorSpace": "Spazio colore"
+  },
+  "labels": {
+    "Preview": "Anteprima",
+    "Upload": "Caricare",
+    "retry": "Riprovare?",
+    "uploaded": "caricato",
+    "putUploadUrl": "Specifichi l'URL del file se desidera caricarlo tramite URL.",
+    "zipDownloadNotification": "Può <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\">scaricare</a> il file zip",
+    "Share": "Condividi",
+    "thumbnailUrl": "URL miniatura (%s)"
+  },
+  "insightsPanels": {
+    "sharing": "Condivisione"
+  },
+  "messages": {
+    "notAllFilesWereUploaded": "I file XX di YY non sono stati caricati.",
+    "fileCouldNotBeUploaded": "Non è stato possibile caricare il file.",
+    "fileHasDuplicate": "Esiste già almeno un duplicato <a target=\"_blank\" href=\"/#File/view/{{id}}\"></a> di questo file.",
+    "cannotDefineFileName": "Il sistema non è in grado di riconoscere il nome del file dall'URL.",
+    "urlExpected": "È stato fornito un URL errato",
+    "fileExtensionCorrectedAutomatically": "L'estensione del file è stata corretta automaticamente.",
+    "downloadJobsCreated": "È stato creato un lavoro in background per preparare il file di archivio."
+  },
+  "exceptions": {
+    "fileExtensionCannotBeChanged": "L'estensione del file non può essere modificata.",
+    "fileStorageCannotBeChanged": "La memorizzazione dei file non può essere modificata.",
+    "fileFolderCannotBeChanged": "La cartella dei file non può essere modificata.",
+    "fileCreateFailed": "La creazione del file non è riuscita.",
+    "fileMoveFailed": "Lo spostamento dei file non è riuscito.",
+    "fileRenameFailed": "La rinominazione dei file non è riuscita.",
+    "fileDeleteFailed": "L'eliminazione del file non è riuscita.",
+    "fileNameNotValidByUserRegex": "Il nome del file non è valido. Dovrebbe corrispondere alla regex '%s'.",
+    "notAllowToFileWithEntity": "Non è consentito collegare un file di tipo '%s' con '%s'. Gli unici tipi consentiti sono '%s'"
+  }
+}

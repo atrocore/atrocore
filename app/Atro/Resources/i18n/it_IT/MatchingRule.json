@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "matching": "Abbinamento",
+    "weight": "Peso",
+    "sourceField": "Fonte Campo",
+    "masterField": "Campo Master",
+    "sourceEntity": "Entità sorgente",
+    "masterEntity": "Entità master",
+    "matchingRuleSet": "Set",
+    "matchingRules": "Regole di abbinamento",
+    "operator": "Operatore"
+  },
+  "options": {
+    "type": {
+      "equal": "Uguale",
+      "like": "Come",
+      "contains": "Contiene",
+      "set": "Set"
+    },
+    "operator": {
+      "and": "E",
+      "or": "O"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "width": "Larghezza (%)",
+    "widthPx": "Larghezza (px)",
+    "link": "Link",
+    "notSortable": "Non ordinabile",
+    "align": "Allineare",
+    "panelName": "Nome del pannello",
+    "style": "Stile",
+    "sticked": "Appiccicato",
+    "isLarge": "Dimensione del carattere grande",
+    "cssStyle": "Stili CSS",
+    "hiddenPerDefault": "Nascosto per impostazione predefinita"
+  },
+  "options": {
+    "align": {
+      "left": "A sinistra",
+      "right": "Giusto",
+      "center": "Centro"
+    },
+    "style": {
+      "default": "Predefinito",
+      "success": "Il successo",
+      "danger": "Pericolo",
+      "info": "Info",
+      "warning": "Avvertimento",
+      "primary": "Primario"
+    }
+  },
+  "labels": {
+    "New panel": "Nuovo pannello",
+    "Layout": "Layout",
+    "Current Layout": "Layout attuale",
+    "reset": "Layout di reset",
+    "fullEdit": "Modifica completa",
+    "resetToSystem": "Ripristina il layout del sistema",
+    "layoutManagement": "Gestione del layout",
+    "layoutSelection": "Selezione del layout",
+    "layoutCustomization": "Personalizzazione del layout",
+    "configure": "Configurare"
+  }
+}

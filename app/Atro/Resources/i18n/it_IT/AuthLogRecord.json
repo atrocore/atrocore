@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "username": "Nome utente",
+    "ipAddress": "Indirizzo IP",
+    "requestTime": "Tempo di richiesta",
+    "createdAt": "Richiesto a",
+    "isDenied": "È negato",
+    "denialReason": "Motivo del rifiuto",
+    "user": "Utente",
+    "authToken": "Token di autorizzazione creato",
+    "requestUrl": "URL di richiesta",
+    "requestMethod": "Metodo di richiesta",
+    "authTokenIsActive": "Il token di autorizzazione è attivo",
+    "actionHistoryRecords": "Storia dell'azione"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Credenziali non valide",
+      "INACTIVE_USER": "Utente inattivo"
+    }
+  }
+}

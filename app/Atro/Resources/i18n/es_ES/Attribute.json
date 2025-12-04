@@ -53,7 +53,7 @@
       "array": "Array",
       "bool": "Booleano",
       "composite": "Compuesto",
-      "date": "Date",
+      "date": "Fecha",
       "datetime": "Date-Time",
       "extensibleEnum": "List",
       "float": "Decimal",

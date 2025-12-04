@@ -1,7 +1,7 @@
 {
   "fields": {
     "entity": "Encja",
-    "viewType": "Typ widoku",
+    "viewType": "View Type",
     "relatedEntity": "Podmiot powiązany",
     "layoutProfile": "Profil układu"
   },
@@ -14,5 +14,8 @@
   "tooltips": {
     "entity": "Jest to podmiot, dla którego konfigurowany jest układ.",
     "relatedEntity": "Jest to główna jednostka, z której strony wyświetlany jest układ dla jednostki wybranej powyżej."
+  },
+  "messages": {
+    "cannotRemoveFieldFromLayout": "Nie można usunąć pola \"%s\" z układu."
   }
 }

@@ -1,0 +1,33 @@
+{
+  "labels": {
+    "Field": "Campo",
+    "currentUser": "Utente attuale"
+  },
+  "options": {
+    "operators": {
+      "equals": "Uguale",
+      "notEquals": "Non uguale",
+      "greaterThan": "Più grande di",
+      "lessThan": "Meno di",
+      "greaterThanOrEquals": "Maggiore o uguale",
+      "lessThanOrEquals": "Meno di o uguale",
+      "in": "In",
+      "notIn": "Non in",
+      "inPast": "Nel passato",
+      "inFuture": "È il futuro",
+      "isToday": "È oggi",
+      "isTrue": "È vero",
+      "isFalse": "È falso",
+      "isEmpty": "È vuoto",
+      "isNotEmpty": "Non è vuoto",
+      "contains": "Contiene",
+      "notContains": "Non contiene",
+      "has": "Contiene",
+      "notHas": "Non contiene",
+      "isLinked": "È collegato",
+      "isNotLinked": "Non è collegato",
+      "inTeams": "In squadre",
+      "notInTeams": "Non in squadre"
+    }
+  }
+}

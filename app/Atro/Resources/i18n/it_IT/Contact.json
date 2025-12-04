@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Nome",
+    "firstName": "Nome",
+    "secondName": "Secondo nome",
+    "gender": "Genere",
+    "title": "Titolo",
+    "jobPosition": "Posizione lavorativa",
+    "email": "Email",
+    "phone": "Telefono",
+    "mobile": "Mobile",
+    "street": "Via",
+    "zip": "ZIP",
+    "box": "Scatola",
+    "city": "Città",
+    "accounts": "Conti"
+  }
+}

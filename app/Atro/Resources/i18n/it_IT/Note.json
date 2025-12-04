@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "post": "Messaggio",
+    "attachments": "Allegati",
+    "type": "Tipo",
+    "createdByGender": "Creato per genere",
+    "data": "Dati"
+  },
+  "filters": {
+    "all": "Tutti",
+    "posts": "Messaggi",
+    "updates": "Aggiornamenti",
+    "notes": "Note",
+    "emails": "Email"
+  },
+  "options": {
+    "type": {
+      "Post": "Messaggio"
+    }
+  },
+  "messages": {
+    "writeMessage": "Scriva qui il suo messaggio"
+  }
+}

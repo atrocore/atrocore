@@ -21,11 +21,16 @@
     "emailTo": "Příjemce emailu",
     "emailCc": "Kopie",
     "emailBcc": "E-mail BCC",
-    "hideTextLabel": "Skrytí textového popisku na tlačítku"
+    "hideTextLabel": "Skrytí textového popisku na tlačítku",
+    "updateScript": "Skript",
+    "updateFields": "Aktualizace polí",
+    "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
+    "updateType": "Typ aktualizace"
   },
   "labels": {
     "execute": "Provést",
-    "Parameters": "Parametry"
+    "Parameters": "Parametry",
+    "fieldsPanel": "Aktualizace"
   },
   "massActions": {
     "execute": "Provést"
@@ -49,11 +54,18 @@
       "set": "Akční sada",
       "webhook": "Webhook",
       "customCode": "Vlastní kód",
-      "email": "Odeslat e-mail"
+      "email": "Odeslat e-mail",
+      "update": "Aktualizace",
+      "create": "Vytvořit",
+      "delete": "Odstranit"
     },
     "executeAs": {
       "system": "Systém",
       "sameUser": "Stejný uživatel"
+    },
+    "mode": {
+      "basic": "Základní",
+      "script": "Skript"
     }
   },
   "tooltips": {

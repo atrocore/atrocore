@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "files": "File",
+    "aspectRatio": "Rapporto d'aspetto",
+    "minSize": "Dimensione minima, Kb",
+    "maxSize": "Dimensione massima, Kb",
+    "minWidth": "Larghezza minima, px",
+    "minHeight": "Altezza minima, px",
+    "extensions": "Estensioni",
+    "mimeTypes": "Tipi di Mime"
+  },
+  "exceptions": {
+    "fileTypeCannotBeDeleted": "Il record non può essere cancellato perché è utilizzato nel campo '%s' dell'entità '%s'.",
+    "aspectRatioMustBeInFormat": "Formato di rapporto d'aspetto non valido. Utilizzi il formato larghezza:altezza, come ad esempio 16:9."
+  },
+  "labels": {
+    "General Settings": "Impostazioni generali",
+    "Image Settings": "Impostazioni immagine"
+  }
+}

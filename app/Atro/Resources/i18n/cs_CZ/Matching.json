@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Minimální skóre, %",
-    "entity": "Subjekt",
+    "entity": "Entita",
     "masterEntity": "Hlavní subjekt",
     "matchingRules": "Pravidla porovnávání",
     "matchedRecords": "Shodné záznamy",

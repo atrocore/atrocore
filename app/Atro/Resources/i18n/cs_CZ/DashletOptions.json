@@ -17,7 +17,7 @@
     "expandedLayout": "Rozložení",
     "dateFilter": "Filtr data",
     "savedFilter": "Uložený filtr",
-    "entityListType": "Typ seznamu subjektů"
+    "entityListType": "Type seznamu subjektů"
   },
   "options": {
     "mode": {
@@ -31,7 +31,7 @@
     "entityListType": {
       "favorites": "Oblíbené položky",
       "navigation": "Navigační položky",
-      "all": "Všechny"
+      "all": "Všechno"
     }
   },
   "messages": {

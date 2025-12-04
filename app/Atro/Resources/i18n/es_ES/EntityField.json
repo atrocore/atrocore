@@ -16,7 +16,7 @@
     "pattern": "Patrón Regex",
     "defaultUnit": "Unidad por defecto",
     "default": "Por defecto",
-    "defaultValueType": "Valor por defecto Tipo",
+    "defaultValueType": "Valor por defecto Type",
     "tooltip": "Información sobre herramientas",
     "tooltipText": "Texto de información sobre herramientas",
     "tooltipLink": "Enlace Tooltip",
@@ -31,7 +31,7 @@
     "amountOfDigitsAfterComma": "Cantidad de dígitos después de la coma",
     "disableFormatting": "Desactivar el formateo",
     "foreignName": "Campo extranjero",
-    "fileTypes": "Tipos de archivos",
+    "fileTypes": "Tipos de archivo",
     "seeMoreDisabled": "Desactivar el acortamiento del texto mostrado",
     "minHeight": "Altura mínima (px)",
     "maxHeight": "Altura máxima (px)",
@@ -71,7 +71,7 @@
   "tooltips": {
     "foreignCode": "Este nombre en clave se utiliza para el campo creado en la entidad relacionada para la relación hacia atrás.",
     "foreignEntity": "Se trata de la entidad relacionada a cuyos registros se hace referencia en el campo actual.",
-    "relationName": "Este código se utiliza para establecer el nombre del sistema para la entidad de tipo \"Relación\" que se crea automáticamente.",
+    "relationName": "Este código se utiliza para fijar el nombre del sistema para la entidad de tipo \"Relación\" que se crea automáticamente.",
     "isMultilang": "Creación automática de campos mediante la clonación del actual tantas veces como locales tenga activados en la configuración multilingüe.",
     "required": "El campo será obligatorio. No puede dejarse vacío.",
     "readOnly": "El valor del campo no puede ser especificado por el usuario. Aún así, es posible cambiarlo a través de la API.",
@@ -99,7 +99,7 @@
       "int": "Entero",
       "float": "Decimal",
       "bool": "SI / NO",
-      "date": "Date",
+      "date": "Fecha",
       "datetime": "Date-Time"
     },
     "relationType": {
@@ -123,5 +123,8 @@
     "resetToDefault": "Restablecer a (por defecto)",
     "relationManagement": "Gestión de relaciones",
     "conditionalProperties": "Propiedades condicionales"
+  },
+  "exceptions": {
+    "nullValuesExist": "Algunos registros tienen valores nulos"
   }
 }

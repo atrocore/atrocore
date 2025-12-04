@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "code": "Codice",
+    "itemType": "Tipo di articolo",
+    "products": "Prodotti"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "attributes": "Attributi",
+    "default": "Predefinito"
+  },
+  "exceptions": {
+    "entityIsUsed": "L'Attributo Panel non può essere eliminato perché viene utilizzato in diversi Attributi."
+  }
+}

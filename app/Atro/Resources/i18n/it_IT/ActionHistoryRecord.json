@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "user": "Utente",
+    "action": "Azione",
+    "createdAt": "Data",
+    "controllerName": "Nome del controllore",
+    "controllerAction": "Azione del controllore",
+    "authToken": "Token di autorizzazione",
+    "ipAddress": "Indirizzo IP",
+    "authLogRecord": "Record del registro di autorizzazione",
+    "target": "Obiettivo",
+    "targetName": "Nome dell'obiettivo",
+    "targetId": "ID obiettivo",
+    "data": "Dati"
+  }
+}

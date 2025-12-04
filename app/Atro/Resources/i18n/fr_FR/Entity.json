@@ -11,7 +11,7 @@
     "iconClass": "Icône",
     "sortBy": "Champ de commande par défaut",
     "sortDirection": "Sens de l'ordre par défaut",
-    "statusField": "Champ d'état",
+    "statusField": "Champ de statut",
     "kanbanViewMode": "Vue Kanban",
     "kanbanStatusIgnoreList": "Listes ignorées dans la vue Kanban",
     "deleteWithoutConfirmation": "Supprimer sans confirmation",
@@ -91,6 +91,6 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {enfants} ne doivent pas figurer tous les deux dans les relations avec date/heure de modification.",
     "entityAlreadyHasAttributesInUse": "Has Attribute param ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
-    "entityTypeIsNotSuitableForAssociates": "Ce type d'entité ne peut pas contenir le paramètre \"Has Associates\". Seuls les types \"Base\" et \"Hiérarchie\" peuvent le contenir."
+    "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer."
   }
 }

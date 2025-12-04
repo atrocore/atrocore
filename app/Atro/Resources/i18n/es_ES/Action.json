@@ -21,11 +21,16 @@
     "emailTo": "Enviar a",
     "emailCc": "Correo electrónico CC",
     "emailBcc": "Correo electrónico CCO",
-    "hideTextLabel": "Ocultar etiqueta de texto en el botón"
+    "hideTextLabel": "Ocultar etiqueta de texto en el botón",
+    "updateScript": "Guión",
+    "updateFields": "Campos de actualización",
+    "applyToPreselectedRecords": "Aplicar a registros preseleccionados",
+    "updateType": "Tipo de actualización"
   },
   "labels": {
     "execute": "Ejecute",
-    "Parameters": "Parámetros"
+    "Parameters": "Parámetros",
+    "fieldsPanel": "Guardar"
   },
   "massActions": {
     "execute": "Ejecute"
@@ -49,11 +54,18 @@
       "set": "Conjunto de acciones",
       "webhook": "Gancho web",
       "customCode": "Código personalizado",
-      "email": "Enviar correo electrónico"
+      "email": "Enviar correo electrónico",
+      "update": "Guardar",
+      "create": "Crear",
+      "delete": "Borrar"
     },
     "executeAs": {
       "system": "Sistema",
       "sameUser": "Mismo usuario"
+    },
+    "mode": {
+      "basic": "Básico",
+      "script": "Guión"
     }
   },
   "tooltips": {

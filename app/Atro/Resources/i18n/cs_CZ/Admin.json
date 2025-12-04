@@ -88,7 +88,10 @@
     "massUpdate": "Hromadná aktualizace",
     "kanban": "Kanban",
     "upload": "Nahrát",
-    "selection": "Výběr"
+    "selection": "Výběr",
+    "navigation": "Navigace",
+    "insights": "Insights",
+    "summary": "Souhrn"
   },
   "fieldTypes": {
     "color": "Barva",
@@ -126,12 +129,12 @@
     "rangeFloat": "Rozsah plováku",
     "wysiwyg": "HTML",
     "map": "Mapa",
-    "colorpicker": "Výběr barev",
+    "colorpicker": "Vybírač barev",
     "jsonArray": "Pole JSON",
     "jsonObject": "Objekt JSON",
-    "language": "Jazyk",
-    "multiLanguage": "Jazyky",
-    "measure": "Měrná jednotka",
+    "language": "Kód jazyka",
+    "multiLanguage": "Jazykové kódy",
+    "measure": "Míra",
     "markdown": "Markdown"
   },
   "fields": {
@@ -148,7 +151,7 @@
     "defaultType": "Výchozí typ",
     "entityList": "Seznam subjektů",
     "provider": "Poskytovatel",
-    "typeList": "Seznam typů",
+    "typeList": "Seznam Type",
     "sourceList": "Seznam zdrojů",
     "prefix": "Předpona",
     "padLength": "Délka podložky",
@@ -207,7 +210,7 @@
     "lists": "Spravujte své seznamy a jejich možnosti pro jednoduché nebo vícehodnotové seznamy.",
     "emailTemplates": "Správa e-mailových šablon pro ruční nebo automatické doručování e-mailů (ne pro standardní oznámení).",
     "notificationTemplates": "Správa šablony pro standardní oznámení systému.",
-    "notificationProfiles": "Konfigurací profilů a pravidel pro oznámení můžete efektivně zefektivnit proces správy upozornění tak, aby byl včasný a relevantní.",
+    "notificationProfiles": "Konfigurací profilů a pravidel pro upozornění můžete efektivně zefektivnit proces správy upozornění tak, aby byl včasný a relevantní.",
     "layoutProfiles": "Správa a přizpůsobení různých konfigurací rozvržení uživatelského rozhraní systému.",
     "apiRequest": "Pomocí této funkce můžete rychle vytvářet složité datové struktury, například konfigurované importní nebo exportní kanály.",
     "style": "Vytváření, aktualizace a přizpůsobení nových stylů pro úpravy standardního CSS"

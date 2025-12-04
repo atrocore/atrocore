@@ -1,7 +1,7 @@
 {
   "fields": {
     "entity": "Entidad",
-    "viewType": "Ver tipo",
+    "viewType": "Ver Type",
     "relatedEntity": "Entidad relacionada",
     "layoutProfile": "Perfil del diseño"
   },
@@ -14,5 +14,8 @@
   "tooltips": {
     "entity": "Es la entidad para la que está configurada la maqueta.",
     "relatedEntity": "Se trata de la entidad principal desde cuya página se muestra el diseño de la entidad seleccionada anteriormente."
+  },
+  "messages": {
+    "cannotRemoveFieldFromLayout": "No puede eliminar el campo '%s' de la presentación."
   }
 }

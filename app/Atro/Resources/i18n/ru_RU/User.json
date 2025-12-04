@@ -37,7 +37,7 @@
     "receiveNotifications": "Получение уведомлений",
     "notificationProfile": "Профиль уведомлений",
     "layoutProfile": "Профиль раскладки",
-    "locale": "Локаль"
+    "locale": "Язык"
   },
   "labels": {
     "Generate": "Сгенерировать",

@@ -5,7 +5,7 @@
     "nestedAttributes": "Atrybuty zagnieżdżone",
     "attributeGroup": "Grupa atrybutów",
     "attributePanel": "Panel atrybutów",
-    "type": "Typ atrybutu",
+    "type": "Attribute Type",
     "code": "Kod",
     "name": "Nazwa atrybutu",
     "products": "Produkty",
@@ -97,6 +97,6 @@
     "attributeWithSuchCodeAlreadyExist": "Atrybut z takim kodem już istnieje.",
     "attributeIsUsedInProducts": "Atrybut jest używany w produktach. Proszę najpierw zaktualizować produkty.",
     "attributeIsUsedInClassifications": "Atrybut jest używany w klasyfikacjach. Proszę najpierw zaktualizować klasyfikacje.",
-    "invalidType": "Atrybut typu \"{type}\" jest nieprawidłowy"
+    "invalidType": "Atrybut type '{type}' jest nieprawidłowy"
   }
 }

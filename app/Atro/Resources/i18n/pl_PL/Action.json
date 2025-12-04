@@ -21,11 +21,16 @@
     "emailTemplate": "Szablon e-maila",
     "actions": "Akcje",
     "webhookUrl": "URL AtroCore",
-    "hideTextLabel": "Ukryj etykietę tekstową na przycisku"
+    "hideTextLabel": "Ukryj etykietę tekstową na przycisku",
+    "updateType": "Update Type",
+    "updateFields": "Pola aktualizacji",
+    "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów",
+    "updateScript": "Skrypt"
   },
   "labels": {
     "execute": "Wykonaj",
-    "Parameters": "Parametry"
+    "Parameters": "Parametry",
+    "fieldsPanel": "Aktualizuj"
   },
   "massActions": {
     "execute": "Wykonaj"
@@ -49,11 +54,18 @@
       "webhook": "Webhook",
       "email": "Proszę wysłać e-mail",
       "set": "Zestaw akcji",
-      "customCode": "Kod niestandardowy"
+      "customCode": "Kod niestandardowy",
+      "update": "Aktualizuj",
+      "create": "Utwórz",
+      "delete": "Usuń"
     },
     "executeAs": {
       "sameUser": "Ten sam użytkownik",
       "system": "System"
+    },
+    "mode": {
+      "basic": "Podstawowy",
+      "script": "Skrypt"
     }
   },
   "tooltips": {

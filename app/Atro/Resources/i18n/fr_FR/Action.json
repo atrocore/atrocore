@@ -24,7 +24,8 @@
     "hideTextLabel": "Masquer l'étiquette de texte sur le bouton",
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
     "updateType": "Type de mise à jour",
-    "updateScript": "Script"
+    "updateScript": "Script",
+    "updateFields": "Mise à jour des champs"
   },
   "labels": {
     "execute": "Exécuter",
@@ -46,7 +47,6 @@
       "create": "Créer",
       "update": "Mise à jour",
       "delete": "Supprimer",
-      "upsert": "Upsert",
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
       "email": "Envoyer un e-mail",
@@ -63,8 +63,8 @@
       "sameUser": "Même utilisateur",
       "system": "Système"
     },
-    "updateType": {
-      "basic": "De base",
+    "mode": {
+      "basic": "Basique",
       "script": "Script"
     }
   },

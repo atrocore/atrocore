@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "Nie można ustawić opcji \"Pojedynczy podmiot\", ponieważ w rekordach znajduje się wiele podmiotów."
+  },
+  "labels": {
+    "createSelection": "Utwórz wybór"
   }
 }

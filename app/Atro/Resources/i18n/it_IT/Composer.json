@@ -1,0 +1,70 @@
+{
+  "fields": {
+    "status": "Stato",
+    "settingVersion": "Impostazione della versione",
+    "currentVersion": "Versione attuale",
+    "latestVersion": "Ultima versione",
+    "availableVersions": "Versioni disponibili"
+  },
+  "options": {
+    "status": {
+      "install": "Installare",
+      "update": "Aggiornamento",
+      "delete": "Rimuovere"
+    }
+  },
+  "exceptions": {
+    "invalidVersion": "La versione del modulo non è valida.",
+    "downgradeProhibited": "La versione del modulo non è valida. Il downgrade è vietato.",
+    "hasRequireds": "Il modulo non ha soddisfatto i requisiti",
+    "hasRequiredsDelete": "Non può eliminare il modulo richiesto",
+    "suchModuleIsAlreadyInstalled": "Tale modulo è già installato",
+    "suchModuleVersionAlreadyInstalled": "Tale versione del modulo è già installata",
+    "noSuchModuleVersion": "Nessuna versione del modulo",
+    "versionIsInvalid": "La versione non è valida"
+  },
+  "labels": {
+    "purchased": "Acquistato",
+    "rented": "In affitto",
+    "purchasedUntil": "Acquistato, aggiornamenti fino al",
+    "rentUntil": "Affittato, aggiornamenti fino a",
+    "available": "disponibile",
+    "Installed": "Installato",
+    "Store": "Negozio",
+    "removeModule": "Rimuovere",
+    "cancelModule": "Annullamento",
+    "username": "Nome utente",
+    "password": "Password",
+    "anotherActionInProgress": "È in corso un'altra azione. Attenda che venga terminata",
+    "updating": "Aggiornamento...",
+    "updateStarted": "L'aggiornamento è stato avviato",
+    "canceling": "Annullamento...",
+    "canceled": "Annullato",
+    "dependencies": "Dipendenze",
+    "version": "Versione",
+    "Run Update": "Aggiornamento",
+    "updateFailed": "Aggiornamento fallito. Non è possibile creare una connessione al server dei moduli. Per favore, riprovi",
+    "settingModuleForRemoving": "Modulo di impostazione per la rimozione...",
+    "setModuleForRemoving": "Il modulo è stato impostato per la rimozione. Clicchi sul pulsante \"Aggiorna\" per applicare l'installazione o la rimozione del modulo.",
+    "settingModuleForInstalling": "Modulo di impostazione per l'installazione...",
+    "settingModuleForUpdating": "Modulo di impostazione per l'aggiornamento...",
+    "setModuleForInstalling": "Il modulo è stato impostato per l'installazione. Clicchi sul pulsante \"Aggiorna\" per applicare l'installazione o la rimozione del modulo.",
+    "setModuleForUpdating": "Il modulo è stato impostato per l'aggiornamento. Clicchi sul pulsante \"Aggiorna\" per applicare l'installazione o la rimozione del modulo.",
+    "cancelingModuleInstall": "Annullare l'installazione del modulo...",
+    "canceledModuleInstall": "L'installazione del modulo è stata annullata",
+    "Log": "Diario",
+    "confirmRun": "Dopo l'azione di aggiornamento, tutti gli utenti si disconnettono dal sistema. È sicuro di voler aggiornare il sistema?",
+    "daemonDisabled": "<b>Il demone Composer non è in esecuzione!</b><br>Probabilmente il demone si sta ricaricando ora e deve aspettare un minuto, oppure il crontab non è configurato. Le istruzioni su come configurare il crontab si trovano <a href=\"https://help.atrocore.com/installation-and-maintenance/installation#6-configure-the-crontab\" class=\"alert-link\" target=\"_blank\">qui</a>.",
+    "jobManagerRunning": "La possibilità di aggiornare i moduli è bloccata. Provi più tardi.",
+    "showReleaseNotes": "Note di rilascio"
+  },
+  "notifications": {
+    "Module update": "Il modulo {modulo} è stato aggiornato. Dalla versione {from} a {to}",
+    "System update": "Il sistema è stato aggiornato. Dalla versione {da} a {a}",
+    "Module install": "Il modulo {modulo} v.{versione} è stato installato.",
+    "Module delete": "Il modulo {modulo} è stato rimosso",
+    "Module downgrade": "Il modulo {modulo} è stato declassato. Dalla versione {da} a {da}",
+    "System downgrade": "Il sistema è stato declassato. Dalla versione {da} a {a}",
+    "Composer updated!": "Le dipendenze del gestore di moduli sono state aggiornate! <a href=\"/#Composer/list\">Vedere i dettagli</a>"
+  }
+}

@@ -77,7 +77,7 @@
     "RoleScopeField": "Campo",
     "ExtensibleEnum": "List",
     "Locale": "Localización",
-    "Measure": "Measure",
+    "Measure": "Medida",
     "File": "Archivo",
     "Action": "Acción",
     "Selection": "Selección",
@@ -119,7 +119,7 @@
     "Folder": "Carpetas",
     "File": "Archivos",
     "Association": "Asociaciones",
-    "FileType": "Tipos de archivos",
+    "FileType": "Tipos de archivo",
     "ExtensibleEnumOption": "Opciones de la lista",
     "Sharing": "Compartir",
     "Locale": "Locales",
@@ -392,7 +392,7 @@
     "customDownload": "Descarga personalizada",
     "useDragAndDrop": "Utilice arrastrar y soltar para reordenar",
     "Shown": "Se muestra",
-    "typeAndPressEnter": "Escriba y pulse intro para buscar...",
+    "typeAndPressEnter": "Type and press enter to search...",
     "allLanguages": "Todas las lenguas",
     "mainLanguage": "Lengua principal",
     "inheritAll": "Heredar todo",
@@ -469,7 +469,7 @@
     "associationTooltip": "Define cómo se vincula el elemento asociado al elemento asociado",
     "associatedTitle": "El elemento actual enlaza como :name to:",
     "associatingTitle": "Vinculado al elemento actual como :nombre:",
-    "itemsInRow": "Artículos en la fila",
+    "itemsInRow": "Elementos de la fila",
     "sort": "Clasificar",
     "noMatches": "No hay coincidencias",
     "notInheritedFromParent": "No se hereda del padre",
@@ -496,7 +496,10 @@
     "splitHorizontal": "Dividir horizontalmente",
     "splitVertical": "Dividir verticalmente",
     "expandWindow": "Ampliar ventana",
-    "masterDataManagement": "Gestión de datos maestros"
+    "masterDataManagement": "Gestión de datos maestros",
+    "addFields": "Añadir campos",
+    "addAttributes": "Añadir atributos",
+    "Insights": "Perspectivas"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -576,7 +579,7 @@
     "emptyMultilangOptions": "Options list cannot be empty while multi-language option is activated.",
     "closePanelConfirmation": "¿Seguro que quieres cerrar el panel?",
     "jobAdded": "El trabajo se ha añadido correctamente al gestor de trabajos",
-    "confirmInheritAllForChildren": "¿Está seguro de que desea que todos los artículos hijos hereden los valores de los campos (y atributos) así como las relaciones de este artículo padre? Los valores existentes no serán reemplazados.",
+    "confirmInheritAllForChildren": "¿Está seguro de que desea que todos los elementos hijos hereden los valores de los campos (y atributos), así como las relaciones, de este elemento padre? Los valores existentes no serán reemplazados.",
     "confirmInheritAllFromParent": "¿Está seguro de que desea que todos los artículos hereden los valores de los campos (y atributos), así como las relaciones, de los artículos del registro padre? Los valores existentes no serán sustituidos.",
     "optionValueCannotBeEmpty": "El valor de la opción no puede estar vacío",
     "minimumOneOptionsRequired": "Se requiere como mínimo un valor de opción.",
@@ -707,7 +710,7 @@
     "url": "URL",
     "classification": "Clasificación",
     "classifications": "Clasificaciones",
-    "conditionsType": "Condiciones Tipo",
+    "conditionsType": "Condiciones Type",
     "conditions": "Condiciones",
     "entity": "Entidad",
     "allowedOptions": "Opciones permitidas",
@@ -817,7 +820,7 @@
     "ownYou": "{usuario} le establece como propietario para {entityType} {entidad}",
     "ownThisVoid": "{usuario} desestablecer el propietario para este {entidadTipo}",
     "ownVoid": "{usuario} desestablecer el propietario para {entidadTipo} {entidad}",
-    "ownThisSelf": "{usuario} se estableció como propietario para esta {entidadTipo}",
+    "ownThisSelf": "{usuario} se estableció como propietario para este {entidadTipo}",
     "ownSelf": "{usuario} se estableció como propietario para {entityType} {entidad}",
     "unrelate": "{user} unlinked {relatedEntityType} {entidad relacionada} con {entityType} {entidad}",
     "unrelateThis": "{usuario} desvinculado {TipoDeEntidadRelacionada} {entidad relacionada} de este {tipo de entidad}",
@@ -825,9 +828,9 @@
     "updateOneInThis": "{user} en este {entityType} actualizado en {relatedEntityType} {entidad relacionada}",
     "updateFromToInThis": "{user} en este {entityType} actualizado en {relatedEntityType} {entidad relacionada}",
     "updateOne": "{usuario} en {entidadTipo} {entidad} actualizada",
-    "updateOneIn": "{usuario} en {entidadTipo} {entidad} actualizada en {TipoEntidadRelacionada} {entidad relacionada}",
+    "updateOneIn": "{usuario} en {entidadTipo} {entidad} actualizada en {tipo de entidad relacionada} {entidad relacionada}",
     "updateFromTo": "{usuario} en {entidadTipo} {entidad} actualizada",
-    "updateFromToIn": "{usuario} en {entidadTipo} {entidad} actualizada en {TipoEntidadRelacionada} {entidad relacionada}",
+    "updateFromToIn": "{usuario} en {entidadTipo} {entidad} actualizada en {tipo de entidad relacionada} {entidad relacionada}",
     "changed": "se cambió",
     "from": "de",
     "to": "a",
@@ -1260,7 +1263,10 @@
       "not_linked_with": "no en",
       "is_linked": "no está vacío",
       "is_not_linked": "está vacío",
-      "array_any_of": "en"
+      "array_any_of": "en",
+      "future": "futuro",
+      "past": "pasado",
+      "today": "hoy"
     },
     "errors": {
       "no_filter": "No se ha seleccionado ningún filtro",
@@ -1372,5 +1378,9 @@
     "medium": "Medio",
     "large": "Grande",
     "small": "Pequeño"
+  },
+  "insightsPanels": {
+    "accessManagement": "Access Management",
+    "summary": "Resumen"
   }
 }

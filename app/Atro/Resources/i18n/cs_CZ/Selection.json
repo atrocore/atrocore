@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Název",
+    "name": "Jméno",
     "description": "Popis",
     "selectionRecords": "Výběrové záznamy"
   },
@@ -12,5 +12,8 @@
   },
   "messages": {
     "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit."
+  },
+  "labels": {
+    "createSelection": "Vytvořit výběr"
   }
 }

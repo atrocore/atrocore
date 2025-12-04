@@ -90,7 +90,8 @@
     "navigation": "Навігація",
     "insights": "Інсайти",
     "upload": "Завантажити",
-    "selection": "Вибір"
+    "selection": "Вибір",
+    "summary": "Підсумок"
   },
   "fields": {
     "request": "Запит",
@@ -206,7 +207,7 @@
     "datetimeOptional": "Дата/час",
     "enum": "Статичний список",
     "enumInt": "Список інтергерів",
-    "enumFloat": "Плаваючий список",
+    "enumFloat": "Список з плаваючим елементом",
     "linkMultiple": "Кілька посилань",
     "linkParent": "Батьківське посилання",
     "multiEnum": "Статичний багатозначний список",

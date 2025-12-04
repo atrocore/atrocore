@@ -7,7 +7,7 @@
     "customStylesheet": "CSS",
     "primaryColor": "Základní barva",
     "secondaryColor": "Sekundární barva",
-    "primaryFontColor": "Základní barva písma",
+    "primaryFontColor": "Primární barva písma",
     "secondaryFontColor": "Sekundární barva písma",
     "labelColor": "Barva štítku",
     "anchorNavigationBackground": "Pozadí kotvy navigace",
