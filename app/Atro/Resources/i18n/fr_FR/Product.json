@@ -10,7 +10,7 @@
     "quantity": "Quantité",
     "description": "Brève description",
     "mpn": "Numéro du fabricant (MPN)",
-    "customsNumber": "Numéro de douane",
+    "customsNumber": "Numéro personnalisé",
     "countryOfOrigin": "Pays d'origine",
     "defaultSupplier": "Fournisseur par défaut",
     "note": "Note"
