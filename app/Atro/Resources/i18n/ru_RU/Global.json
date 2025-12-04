@@ -491,7 +491,7 @@
     "Fields": "Поля",
     "Reset to Default": "Восстановить",
     "code": "Код",
-    "label": "Отображаемое имя",
+    "label": "Надпись",
     "language": "Язык",
     "scopeFilter": "Канал",
     "Activities": "Действия",
@@ -645,7 +645,7 @@
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Массовое обновление",
+    "update": "Обновить массово",
     "delete": "Удалить",
     "select": "Выбрать",
     "cancel": "Отменить"
