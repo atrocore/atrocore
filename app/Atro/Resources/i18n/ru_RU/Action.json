@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "executeAs": "Выполнить как",
     "displayField": "Поле отображения",
-    "focusField": "Поле фокусировки",
+    "focusField": "Поле",
+    "changeFields": "Поля",
     "targetEntity": "Целевая организация",
     "mode": "Режим",
     "emailScript": "Скрипт",
@@ -44,6 +45,7 @@
       "record": "Кнопка на уровне записи сущности",
       "field": "Кнопка в поле",
       "onFieldFocus": "Фокус на поле",
+      "onFieldChange": "Изменение поля",
       "onRecordLoad": "Создание / обновление записей"
     },
     "display": {

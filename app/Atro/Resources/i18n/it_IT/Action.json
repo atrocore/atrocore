@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "executeAs": "Esegui come",
     "displayField": "Campo di visualizzazione",
-    "focusField": "Campo di messa a fuoco",
+    "focusField": "Campo",
+    "changeFields": "Campi",
     "targetEntity": "Entità target",
     "mode": "Modalità",
     "emailScript": "Scrittura",
@@ -44,6 +45,7 @@
       "record": "Pulsante di registrazione dell'azione",
       "field": "Pulsante di azione del campo",
       "onFieldFocus": "Focus sul campo",
+      "onFieldChange": "Cambio campo",
       "onRecordLoad": "Creazione/aggiornamento del record"
     },
     "display": {

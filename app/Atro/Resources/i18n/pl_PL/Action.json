@@ -13,7 +13,8 @@
     "emailTo": "Email do",
     "emailCc": "Email CC",
     "actionsSet": "Zestaw działań",
-    "focusField": "Pole ostrości",
+    "focusField": "Pole",
+    "changeFields": "Pola",
     "emailBcc": "Email BCC",
     "executeAs": "Wykonać jako",
     "mode": "Tryb",
@@ -48,6 +49,7 @@
       "record": "Przycisk nagrywania akcji",
       "field": "Przycisk akcji w polu",
       "onFieldFocus": "Koncentracja na terenie",
+      "onFieldChange": "Zmiana pola",
       "onRecordLoad": "Tworzenie/aktualizacja rekordów"
     },
     "type": {
