@@ -72,8 +72,6 @@ class Metadata extends AbstractListener
 
         $this->prepareModifiedIntermediateEntities($data);
 
-        $this->pushDynamicActions($data);
-
         $this->prepareExtensibleEnum($data);
 
         $this->prepareAclActionLevelListMap($data);
@@ -108,6 +106,8 @@ class Metadata extends AbstractListener
         $data = $this->prepareClassificationAttributeMetadata($data);
 
         $this->addClassificationToEntity($data);
+
+        $this->pushDynamicActions($data);
 
         $this->prepareMetadataViaMatchings($data);
 
@@ -465,6 +465,27 @@ class Metadata extends AbstractListener
             if ($action['usage'] === 'onFieldFocus') {
                 $data['clientDefs'][$action['source_entity']]['dynamicOnFieldFocusActions'][] = array_merge($params, [
                     'focusField' => $action['focus_field'],
+                ]);
+            }
+
+            if ($action['usage'] === 'onFieldChange') {
+                $actionData = @json_decode($action['data'], true);
+                $changeFields = [];
+                foreach ($actionData['field']['changeFields'] ?? [] as $item) {
+                    $fieldType = $data['entityDefs'][$action['source_entity']]['fields'][$item]['type'] ?? null;
+                    switch ($fieldType) {
+                        case 'link':
+                            $changeFields[] = $item . 'Id';
+                            break;
+                        case 'linkMultiple':
+                            $changeFields[] = $item . 'Ids';
+                            break;
+                        default:
+                            $changeFields[] = $item;
+                    }
+                }
+                $data['clientDefs'][$action['source_entity']]['dynamicOnFieldChangeActions'][] = array_merge($params, [
+                    'changeFields' => $changeFields,
                 ]);
             }
 

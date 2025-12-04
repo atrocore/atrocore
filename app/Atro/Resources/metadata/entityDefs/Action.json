@@ -316,8 +316,8 @@
       }
     },
     "changeFields": {
-      "type": "enum",
-      "view": "views/fields/entity-field",
+      "type": "multiEnum",
+      "view": "views/fields/entity-fields",
       "notStorable": true,
       "virtualField": true,
       "entityField": "sourceEntity",
