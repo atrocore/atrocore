@@ -1,9 +1,9 @@
 {
   "fields": {
-    "masterEntity": "",
-    "mappingScript": ""
+    "masterEntity": "Entità master",
+    "mappingScript": "Script di mappatura"
   },
   "tooltips": {
-    "mappingScript": ""
+    "mappingScript": "Configura il modo in cui i dati di origine vengono trasformati, unificati e mappati nel record master."
   }
 }
