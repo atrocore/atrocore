@@ -1,7 +1,7 @@
 {
   "fields": {
     "isActive": "Actif",
-    "type": "Typ",
+    "type": "Type",
     "sourceEntity": "Entité source",
     "inBackground": "Exécuter en arrière-plan",
     "usage": "Utilisation",
