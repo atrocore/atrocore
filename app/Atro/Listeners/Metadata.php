@@ -627,6 +627,17 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['required'] = $requireLogic;
                 }
 
+                if ($protected = $this->getMetadata()->get([
+                    'entityDefs',
+                    $entityType,
+                    'fields',
+                    $field,
+                    'conditionalProperties',
+                    'protected'
+                ])) {
+                    $data['entityDefs'][$entityType]['fields'][$unitFieldName]['conditionalProperties']['protected'] = $protected;
+                }
+
                 if (in_array($fieldDefs['type'], ['int', 'float', 'varchar'])) {
                     $virtualFieldName = 'unit' . ucfirst($field);
                     $data['entityDefs'][$entityType]['fields'][$field]['labelField'] = $virtualFieldName;
@@ -767,6 +778,8 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$entity]['fields'][$fieldTo]['required'] = !empty($fieldDefs['required']);
                 $data['entityDefs'][$entity]['fields'][$fieldFrom]['readOnly'] = !empty($fieldDefs['readOnly']);
                 $data['entityDefs'][$entity]['fields'][$fieldTo]['readOnly'] = !empty($fieldDefs['readOnly']);
+                $data['entityDefs'][$entity]['fields'][$fieldFrom]['protected'] = !empty($fieldDefs['protected']);
+                $data['entityDefs'][$entity]['fields'][$fieldTo]['protected'] = !empty($fieldDefs['protected']);
                 if (isset($fieldDefs['defaultFrom'])) {
                     $data['entityDefs'][$entity]['fields'][$fieldFrom]['default'] = $fieldDefs['defaultFrom'];
                 }
