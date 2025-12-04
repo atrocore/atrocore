@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "entity": "Entité",
     "isMultilang": "Multilingue",
     "required": "Exigée",
