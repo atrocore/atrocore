@@ -709,6 +709,8 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
         addNodeToFilter(data) {
             this.collection.whereAdditional = []
+            this.getStorage().clear('selectedNodeId', this.scope);
+            this.getStorage().clear('selectedNodeRoute', this.scope);
             window.dispatchEvent(new CustomEvent('add-item-to-query-builder', { detail: data }));
         },
 

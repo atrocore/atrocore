@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "masterEntity": "Master-Entität",
+    "mappingScript": "Mapping-Skript"
+  },
+  "tooltips": {
+    "mappingScript": "Konfigurieren Sie, wie Quelldaten transformiert, vereinheitlicht und dem Stammsatz zugeordnet werden."
+  }
+}

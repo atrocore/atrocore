@@ -4,7 +4,7 @@
     "namePlural": "Name plural",
     "disabled": "Disabled",
     "customizable": "Customizable",
-    "hasDuplicates": "Has Duplicates",
+    "hasDuplicates": "Check for duplicates",
     "masterEntity": "Master Entity",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",

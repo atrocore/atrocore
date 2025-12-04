@@ -508,7 +508,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 id: this.getId(),
                 merging: this.merging,
                 hideButtonPanel: this.hideButtonPanel,
-                showOverlay: this.showOverlay
+                showOverlay: this.showOverlay,
+                overlayLogo: this.getFavicon()
             };
         },
 

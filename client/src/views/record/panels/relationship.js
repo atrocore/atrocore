@@ -160,9 +160,14 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             if (this.model.urlRoot === 'File') {
                 let foreign = this.getMetadata().get(['entityDefs', 'File', 'links', this.link, 'foreign']);
                 let fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', foreign]);
-                if (fieldDefs['type'] === 'linkMultiple' && !(fieldDefs['fileTypes'] ?? []).includes(this.model.get('typeId'))) {
-                    canSelect = false;
-                    this.defs.create = false;
+                if (fieldDefs['type'] === 'linkMultiple') {
+                    let fileTypes = fieldDefs['fileTypes'] ?? [],
+                        typeId = this.model.get('typeId');
+
+                    if ((typeId || fileTypes.length) && !fileTypes.includes(typeId)) {
+                        canSelect = false;
+                        this.defs.create = false;
+                    }
                 }
             }
 

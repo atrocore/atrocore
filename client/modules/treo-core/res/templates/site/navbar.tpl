@@ -49,8 +49,8 @@
             {{#each tabDefsList}}
             {{#if group}}
             <li class="dropdown more more-group tab">
-                <a id="nav-more-tabs-dropdown-{{id}}" class="dropdown-toggle more-group-name" data-toggle="dropdown" href="#" {{#if color}} style="border-color: {{color}}"{{/if}}>
-                    <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
+                <a id="nav-more-tabs-dropdown-{{id}}" class="dropdown-toggle more-group-name" data-toggle="dropdown" href="#" title="{{label}}" {{#if color}} style="border-color: {{color}}"{{/if}}>
+                    <span class="short-label" {{#if color}} style="color: {{color}}"{{/if}}>
                        {{#if ../showIcon }}
                             {{#if iconSrc}}
                                 <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
@@ -60,59 +60,57 @@
                                 {{/if}}
                             {{/if}}
                         {{/if}}
-                        <span class="short-label-text">{{shortLabel}}</span>
                     </span>
-                    <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}} <i class="ph ph-caret-down"></i></span>
+                    <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
+                    <i class="ph ph-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown-{{id}}">
                     {{#each items}}
                     <li data-name="{{name}}" class="in-more tab">
-                        <a href="{{link}}" class="nav-link" style="{{#if color}} border-color: {{color}} ; {{/if}}   {{#unless ../../showIcon }} height: 35px; {{/unless}}">
-                            <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
+                        <a href="{{link}}" class="nav-link" style="{{#if color}} border-color: {{color}} ; {{/if}}   {{#unless ../../showIcon }} height: 35px; {{/unless}}" title="{{label}}">
+                            <span class="short-label" {{#if color}} style="color: {{color}}"{{/if}}>
                                  {{#if ../../showIcon }}
                                     {{#if iconSrc}}
-                                        <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
+                                        <img src="{{iconSrc}}" alt="" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                     {{else}}
                                         {{#if defaultIconSrc}}
-                                            <img src="{{defaultIconSrc}}" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
+                                            <img src="{{defaultIconSrc}}" alt="" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                         {{/if}}
                                     {{/if}}
                                 {{/if}}
-                                <span class="short-label-text">{{shortLabel}}</span>
                             </span>
                             <span class="full-label" {{#unless ../../showIcon }} style="margin-left: auto !important;" {{/unless}}>{{label}}</span>
+                            {{#unless createDisabled}}
+                                <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                                    <i class="ph ph-plus"></i>
+                                </button>
+                            {{/unless}}
                         </a>
-                        {{#unless createDisabled}}
-                            <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                                <i class="ph ph-plus"></i>
-                            </button>
-                        {{/unless}}
                     </li>
                     {{/each}}
                 </ul>
             </li>
             {{else}}
             <li data-name="{{name}}" class="not-in-more tab">
-                <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}}>
-                    <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}} >{{label}}</span>
-                    <span class="short-label" title="{{label}}"{{#if color}} style="color: {{color}}"{{/if}}>
+                <a href="{{link}}" class="nav-link"{{#if color}} style="border-color: {{color}}"{{/if}} title="{{label}}">
+                    <span class="short-label" {{#if color}} style="color: {{color}}"{{/if}}>
                         {{#if ../showIcon }}
                             {{#if iconSrc}}
-                                <img src="{{iconSrc}}" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
+                                <img src="{{iconSrc}}" alt="" class="icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                             {{else}}
                                 {{#if defaultIconSrc}}
-                                    <img src="{{defaultIconSrc}}" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
+                                    <img src="{{defaultIconSrc}}" alt="" class="default-icon" {{#if colorFilter}} style="{{{colorFilter}}}"{{/if}}>
                                 {{/if}}
                             {{/if}}
                         {{/if}}
-                        <span class="short-label-text">{{shortLabel}}</span>
                     </span>
+                    <span class="full-label" {{#unless ../showIcon }} style="margin-left: auto !important;" {{/unless}} >{{label}}</span>
+                    {{#unless createDisabled}}
+                        <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
+                            <i class="ph ph-plus"></i>
+                        </button>
+                    {{/unless}}
                 </a>
-                {{#unless createDisabled}}
-                <button data-action="quickCreate" title="{{translate "quickCreate"}}" data-name="{{name}}" class="quick-create btn btn-default btn-icon">
-                    <i class="ph ph-plus"></i>
-                </button>
-                {{/unless}}
             </li>
             {{/if}}
             {{/each}}

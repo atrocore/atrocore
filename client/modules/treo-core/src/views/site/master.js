@@ -148,15 +148,6 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
             goForwardBtn.attr('disabled', !window.navigation.canGoForward);
         },
 
-        getFavicon: function () {
-            const faviconId = this.getConfig().get('faviconId');
-            if (faviconId) {
-                return `/?entryPoint=LogoImage&id=${faviconId}`;
-            }
-
-            return 'client/modules/treo-core/img/favicon.svg';
-        },
-
         initStyleVariables(style) {
             if ($(":root").length > 0) {
                 if (style) {

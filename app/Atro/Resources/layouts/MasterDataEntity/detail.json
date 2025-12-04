@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "masterEntity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "mappingScript",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

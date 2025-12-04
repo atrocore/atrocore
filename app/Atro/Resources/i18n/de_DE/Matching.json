@@ -5,7 +5,8 @@
     "masterEntity": "Master-Entität",
     "matchingRules": "Übereinstimmungsregeln",
     "entity": "Entität",
-    "matchedRecords": "Übereinstimmende Datensätze"
+    "matchedRecords": "Übereinstimmende Datensätze",
+    "matchedRecordsMax": "Maximale Anzahl übereinstimmender Datensätze"
   },
   "options": {
     "type": {
@@ -15,5 +16,8 @@
   },
   "labels": {
     "configureMatching": "Matching konfigurieren"
+  },
+  "tooltips": {
+    "matchedRecordsMax": "Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen. Wenn die Anzahl der übereinstimmenden Datensätze diesen Wert überschreitet, wird die Übereinstimmung deaktiviert."
   }
 }

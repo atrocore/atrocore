@@ -13,7 +13,7 @@ Espo.define('acl/matching', 'acl', Dep => {
     return Dep.extend({
 
         checkScope(data, action, precise, entityAccessData) {
-            if (!['read', 'edit'].includes(action)) {
+            if (['create', 'delete'].includes(action)) {
                 return false;
             }
 
@@ -21,7 +21,7 @@ Espo.define('acl/matching', 'acl', Dep => {
         },
 
         checkModel(model, data, action, precise) {
-            if (!['read', 'edit'].includes(action)) {
+            if (['create', 'delete'].includes(action)) {
                 return false;
             }
 

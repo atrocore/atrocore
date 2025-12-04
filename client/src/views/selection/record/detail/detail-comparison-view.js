@@ -29,25 +29,6 @@ Espo.define('views/selection/record/detail/detail-comparison-view', 'views/recor
             }
         },
 
-        prepareLayoutData(data) {
-            let layout = [
-                {
-                    label: "",
-                    style: "",
-                    rows: []
-                }
-            ];
-
-            for (const fieldData of data.layout) {
-                layout[0].rows.push([{
-                    name: fieldData.name,
-                    fullWidth: true
-                }])
-            }
-
-            data.layout = layout;
-        },
-
         applyOverviewFilters() {
             let thisClone = Espo.utils.clone(this);
             thisClone.scope = 'Selection';

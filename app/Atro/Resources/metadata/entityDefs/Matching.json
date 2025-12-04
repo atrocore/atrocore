@@ -3,7 +3,9 @@
     "name": {
       "type": "varchar",
       "required": true,
-      "trim": true
+      "trim": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true
     },
     "code": {
       "type": "varchar",
@@ -11,6 +13,7 @@
       "trim": true,
       "unique": true,
       "customizable": false,
+      "layoutRemoveDisabled": true,
       "protected": true
     },
     "type": {
@@ -20,7 +23,9 @@
         "duplicate",
         "masterRecord"
       ],
-      "protected": true
+      "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true
     },
     "description": {
       "type": "text"
@@ -30,12 +35,24 @@
       "required": true,
       "min": 0,
       "max": 100,
-      "default": 100
+      "default": 100,
+      "customizable": false,
+      "layoutRemoveDisabled": true
+    },
+    "matchedRecordsMax": {
+      "type": "int",
+      "min": 0,
+      "tooltip": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true
     },
     "entity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "notStorable": true,
+      "view": "views/matching/fields/matching-entity-type",
       "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -50,8 +67,10 @@
     },
     "sourceEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/matching/fields/matching-entity-type",
       "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -66,8 +85,10 @@
     },
     "masterEntity": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/matching/fields/matching-entity-type",
       "protected": true,
+      "customizable": false,
+      "layoutRemoveDisabled": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -84,13 +105,15 @@
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "customizable": false
     },
     "matchedRecords": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
-      "noLoad": true
+      "noLoad": true,
+      "customizable": false
     },
     "createdAt": {
       "type": "datetime",
@@ -119,6 +142,7 @@
     },
     "matchedRecords": {
       "type": "hasMany",
+      "foreign": "matching",
       "entity": "MatchedRecord"
     },
     "createdBy": {

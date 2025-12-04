@@ -1,5 +1,6 @@
 {
   "scopeNames": {
+    "MasterDataEntity": "Сутність основних даних",
     "Classification": "Класифікація",
     "ClassificationAttribute": "Атрибут класифікації",
     "Attribute": "Атрибут",
@@ -80,10 +81,11 @@
     "RoleScopeAttribute": "Атрибут",
     "RoleScopeAttributePanel": "Панель атрибутів",
     "RoleScopeField": "польовий",
-    "Selection": "Вибір",
-    "SelectionRecord": "Запис про вибір"
+    "Selection": "Вибірка",
+    "SelectionRecord": "Запис вибірки"
   },
   "scopeNamesPlural": {
+    "MasterDataEntity": "Сутності основних даних",
     "Classification": "Класифікації",
     "ClassificationAttribute": "Атрибути класифікації",
     "Attribute": "Атрибути",
@@ -149,16 +151,17 @@
     "IncomingWebhook": "Вхідні вебхуки",
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
-    "Selection": "Вибране",
-    "SelectionRecord": "Записи вибору"
+    "Selection": "Вибірки",
+    "SelectionRecord": "Записи вибірки"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
   },
   "labels": {
+    "matchings": "Відповідності",
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
-    "matchings": "Відповідності",
+    "masterDataManagement": "Управління основними даними",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",

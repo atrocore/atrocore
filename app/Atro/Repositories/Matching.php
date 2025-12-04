@@ -46,6 +46,38 @@ class Matching extends Base
         return $this->where(['code' => $code])->findOne();
     }
 
+    public function activate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    {
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', true);
+            $this->getEntityManager()->saveEntity($matching);
+        }
+
+        $matchings = $this->getConfig()->get('matchings', []);
+        $matchings[$code] = true;
+
+        $this->getConfig()->set('matchings', $matchings);
+        $this->getConfig()->save();
+    }
+
+    public function deactivate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    {
+        if (!$skipMatchingUpdate) {
+            $matching = $this->get($id);
+            $matching->set('isActive', false);
+            $this->getEntityManager()->saveEntity($matching);
+        }
+
+        $matchings = $this->getConfig()->get('matchings', []);
+        $matchings[$code] = false;
+
+        $this->getConfig()->set('matchings', $matchings);
+        $this->getConfig()->save();
+
+        $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($id);
+    }
+
     protected function beforeSave(OrmEntity $entity, array $options = []): void
     {
         if ($entity->isAttributeChanged('entity') && $entity->get('type') === 'duplicate') {
@@ -60,24 +92,90 @@ class Matching extends Base
         parent::beforeSave($entity, $options);
     }
 
+    protected function createMasterDataEntity(string $id): void
+    {
+        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($id);
+        if (empty($mde)) {
+            $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get();
+            $mde->id = $id;
+            $mde->set([
+                'ownerUserId'    => $this->getEntityManager()->getUser()->id,
+                'assignedUserId' => $this->getEntityManager()->getUser()->id,
+            ]);
+            $this->getEntityManager()->saveEntity($mde);
+        }
+    }
+
+    /**
+     * @param MatchingEntity $entity
+     * @param array     $options
+     *
+     * @return void
+     */
     protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
 
-        if ($entity->isNew() && $entity->get('type') === 'masterRecord') {
+        if ($entity->isNew()) {
+            if ($entity->get('type') === 'duplicate') {
+                $this->createMasterDataEntity($entity->get('sourceEntity'));
+            } elseif ($entity->get('type') === 'masterRecord') {
+                $this->createMasterDataEntity($entity->get('sourceEntity'));
+                $this->createMasterDataEntity($entity->get('masterEntity'));
+            }
+
             $this->rebuild();
         }
 
-        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive')) {
+        if ($entity->isAttributeChanged('isActive')) {
+            if (!empty($entity->get('isActive'))) {
+                $this->activate($entity->id, $entity->get('code'), true);
+            } else {
+                $this->deactivate($entity->id, $entity->get('code'), true);
+            }
+        }
+
+        if ($entity->isAttributeChanged('minimumScore') || $entity->isAttributeChanged('isActive') || $entity->isAttributeChanged('matchedRecordsMax')) {
             if (!empty($entity->get('isActive'))) {
                 $this->unmarkAllMatchingSearched($entity);
             }
         }
     }
 
+    protected function deleteMasterDataEntity(MatchingEntity $matching, string $entityName): void
+    {
+        $exists = $this->where(['sourceEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        if (!empty($exists)) {
+            return;
+        }
+
+        $exists = $this->where(['masterEntity' => $entityName, 'id!=' => $matching->id])->findOne();
+        if (!empty($exists)) {
+            return;
+        }
+
+        $mde = $this->getEntityManager()->getRepository('MasterDataEntity')->get($entityName);
+        if (!empty($mde)) {
+            $this->getEntityManager()->removeEntity($mde);
+        }
+    }
+
+    /**
+     * @param MatchingEntity $entity
+     * @param array     $options
+     *
+     * @return void
+     */
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
+
+        if ($entity->get('type') === 'duplicate') {
+            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+        } elseif ($entity->get('type') === 'masterRecord') {
+            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+            $this->deleteMasterDataEntity($entity, $entity->get('masterEntity'));
+        }
 
         foreach ($this->getEntityManager()->getRepository('MatchingRule')->find() as $rule) {
             if ($rule->get('matchingId') === $entity->get('id')) {

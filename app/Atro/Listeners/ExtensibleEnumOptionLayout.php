@@ -34,7 +34,7 @@ class ExtensibleEnumOptionLayout extends AbstractLayoutListener
                 }
             }
 
-            if (!$this->isAdminPage($event) && !str_contains($jsonString, ': "name"')) {
+            if (!$this->isAdminPage($event) && !str_contains($jsonString, ':"name"')) {
                 array_splice($result[0]['rows'][0], 1, 0, [['name' => 'name']]);
             }
 

@@ -240,7 +240,7 @@
 
     .panel-navigation > .layout-editor-container {
         position: sticky;
-        right: 0;
+        left: 0;
         margin-left: 14px;
     }
 
