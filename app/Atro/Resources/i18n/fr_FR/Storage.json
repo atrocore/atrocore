@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "path": "Chemin d'accès",
     "files": "Fichiers",
     "folder": "Dossier monté",
