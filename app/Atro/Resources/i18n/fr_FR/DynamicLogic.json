@@ -1,7 +1,7 @@
 {
   "labels": {
     "Field": "Champ",
-    "currentUser": "Utilisateur actuel"
+    "currentUser": "Utilisateur courant"
   },
   "options": {
     "operators": {
