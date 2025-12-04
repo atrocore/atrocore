@@ -6,7 +6,7 @@
     "priority": "Priorité",
     "handler": "Gestionnaire",
     "payload": "Payload",
-    "scheduledJob": "Travail programmé",
+    "scheduledJob": "Tâche programmée",
     "message": "Message",
     "startedAt": "Commencé à",
     "endedAt": "Terminé le"
