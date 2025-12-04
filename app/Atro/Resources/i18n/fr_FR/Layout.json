@@ -3,19 +3,19 @@
     "entity": "Entité",
     "viewType": "Voir le type",
     "layoutProfile": "Profil de la mise en page",
-    "relatedEntity": "Entité apparentée"
+    "relatedEntity": "Entité associée"
   },
   "groupOptions": {
     "viewType": {
       "viewGroup": "Voir le groupe",
-      "view": "Voir"
+      "view": "Vu"
     }
   },
   "tooltips": {
-    "entity": "Il s'agit de l'entité pour laquelle la mise en page est configurée.",
-    "relatedEntity": "Il s'agit de l'entité principale à partir de laquelle la mise en page de l'entité sélectionnée ci-dessus est affichée."
+    "entity": "Il s'agit de l'entité pour laquelle la disposition est configurée.",
+    "relatedEntity": "Il s'agit de l'entité principale à partir de laquelle la disposition de l'entité sélectionnée ci-dessus est affichée."
   },
   "messages": {
-    "cannotRemoveFieldFromLayout": "Vous ne pouvez pas supprimer la rubrique \"%s\" de la mise en page."
+    "cannotRemoveFieldFromLayout": "Vous ne pouvez pas supprimer la rubrique \"%s\" de la disposition."
   }
 }
