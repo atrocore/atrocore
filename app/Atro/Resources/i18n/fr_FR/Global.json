@@ -188,7 +188,8 @@
     "Language": "Langue",
     "LayoutProfile": "Profil de la mise en page",
     "Selection": "Sélection",
-    "SelectionRecord": "Dossier de sélection"
+    "SelectionRecord": "Dossier de sélection",
+    "MasterDataEntity": "Entité des données de base"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -537,7 +538,8 @@
     "unselectAll": "Désélectionner tout",
     "masterDataManagement": "Gestion des données de référence",
     "addFields": "Ajouter des champs",
-    "addAttributes": "Ajouter des attributs"
+    "addAttributes": "Ajouter des attributs",
+    "matchings": "Matchs"
   },
   "insightsPanels": {
     "summary": "Résumé",
@@ -715,7 +717,8 @@
     "RoleScopeAttribute": "Attributs",
     "RoleScopeField": "Domaines",
     "Selection": "Sélections",
-    "SelectionRecord": "Dossiers de sélection"
+    "SelectionRecord": "Dossiers de sélection",
+    "MasterDataEntity": "Entités des données de base"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
