@@ -41,6 +41,12 @@
       ],
       [
         {
+          "name": "changeFields"
+        },
+        false
+      ],
+      [
+        {
           "name": "displayField"
         },
         false

@@ -18,7 +18,8 @@
     "emailBcc": "Електронна пошта BCC",
     "executeAs": "Виконати як",
     "displayField": "Поле відображення",
-    "focusField": "Поле фокусування",
+    "focusField": "Поле",
+    "changeFields": "Поля",
     "webhookUrl": "URL",
     "targetEntity": "Цільова сутність",
     "hideTextLabel": "Приховати текст на кнопці",
@@ -57,7 +58,8 @@
       "record": "Кнопка на рівні запису сутності",
       "field": "Кнопка в полі",
       "onFieldFocus": "Фокус на полі",
-      "onRecordLoad": "При завантаженні запису"
+      "onFieldChange": "Зміна поля",
+      "onRecordLoad": "Створення / оновлення запису"
     },
     "executeAs": {
       "sameUser": "Той самий користувач",

@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "executeAs": "Provést jako",
     "displayField": "Zobrazovací pole",
-    "focusField": "Zaostřovací pole",
+    "focusField": "Pole",
+    "changeFields": "Pole",
     "targetEntity": "Cílový subjekt",
     "mode": "Režim",
     "emailScript": "Skript",
@@ -44,7 +45,8 @@
       "record": "Tlačítko akce Záznam",
       "field": "Akční tlačítko pole",
       "onFieldFocus": "Zaměření v terénu",
-      "onRecordLoad": "O rekordním zatížení"
+      "onFieldChange": "Změna pole",
+      "onRecordLoad": "Při vytváření / aktualizaci záznamu"
     },
     "display": {
       "dropdown": "Rozbalovací nabídka",

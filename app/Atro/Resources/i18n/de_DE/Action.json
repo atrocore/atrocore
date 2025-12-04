@@ -18,7 +18,8 @@
     "emailTo": "E-Mail an",
     "emailCc": "E-Mail CC",
     "emailBcc": "E-Mail BCC",
-    "focusField": "Feld im Fokus",
+    "focusField": "Feld",
+    "changeField": "Felder",
     "displayField": "Anzeigefeld",
     "webhookUrl": "URL",
     "hideTextLabel": "Text auf der Schaltfläche ausblenden",
@@ -58,7 +59,8 @@
     },
     "usage": {
       "onFieldFocus": "Beim Fokus auf das Feld",
-      "onRecordLoad": "Beim Laden des Datensatzes",
+      "onFieldChange": "Auf dem Feld ändern",
+      "onRecordLoad": "Bei Datensatzerstellung/-aktualisierung",
       "record": "Datensatz-Aktionsbutton",
       "field": "Feld-Aktionsbutton",
       "entity": "Entitäts-Aktionsbutton"

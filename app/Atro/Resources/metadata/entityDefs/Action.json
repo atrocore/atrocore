@@ -82,6 +82,7 @@
                 "record",
                 "field",
                 "onFieldFocus",
+                "onFieldChange",
                 "onRecordLoad"
               ]
             }
@@ -97,6 +98,7 @@
                 "record",
                 "field",
                 "onFieldFocus",
+                "onFieldChange",
                 "onRecordLoad"
               ]
             }
@@ -239,6 +241,7 @@
         "record",
         "field",
         "onFieldFocus",
+        "onFieldChange",
         "onRecordLoad"
       ],
       "tooltip": true,
@@ -271,6 +274,7 @@
           {
             "options": [
               "onFieldFocus",
+              "onFieldChange",
               "onRecordLoad"
             ],
             "conditionGroup": [
@@ -306,6 +310,33 @@
               "type": "equals",
               "attribute": "usage",
               "value": "onFieldFocus"
+            }
+          ]
+        }
+      }
+    },
+    "changeFields": {
+      "type": "multiEnum",
+      "view": "views/fields/entity-fields",
+      "notStorable": true,
+      "virtualField": true,
+      "entityField": "sourceEntity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "onFieldChange"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "equals",
+              "attribute": "usage",
+              "value": "onFieldChange"
             }
           ]
         }

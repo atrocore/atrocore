@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "executeAs": "Execute As",
     "displayField": "Display Field",
-    "focusField": "Focus Field",
+    "focusField": "Field",
+    "changeFields": "Fields",
     "targetEntity": "Target Entity",
     "mode": "Mode",
     "emailScript": "Script",
@@ -44,7 +45,8 @@
       "record": "Record action button",
       "field": "Field action button",
       "onFieldFocus": "On field focus",
-      "onRecordLoad": "On record load"
+      "onFieldChange": "On field change",
+      "onRecordLoad": "On record create / update"
     },
     "display": {
       "dropdown": "Dropdown",

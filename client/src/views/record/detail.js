@@ -1337,6 +1337,19 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 })
             });
 
+            const dynamicOnFieldChangeActions = this.getMetadata().get(`clientDefs.${this.model.name}.dynamicOnFieldChangeActions`) || [];
+            if (dynamicOnFieldChangeActions.length > 0) {
+                this.listenTo(this.model, 'change', () => {
+                    $.each(this.model.changed || {}, (field, value) => {
+                        dynamicOnFieldChangeActions.forEach(item => {
+                            if ((item.changeFields || []).includes(field)) {
+                                this.executeDynamicAction(item);
+                            }
+                        })
+                    });
+                });
+            }
+
             const dynamicOnRecordLoadActions = this.getMetadata().get(`clientDefs.${this.model.name}.dynamicOnRecordLoadActions`) || [];
             this.listenTo(this, 'after:render after:change-mode', () => {
                 if (this.mode === 'edit') {

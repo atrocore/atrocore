@@ -12,7 +12,8 @@
     "webhookUrl": "URL",
     "showEmailPreview": "Prévisualisation avant envoi",
     "emailTo": "Email à",
-    "focusField": "Champ de vision",
+    "focusField": "Champ",
+    "changeFields": "Champs",
     "emailCc": "Email CC",
     "emailBcc": "Email BCC",
     "executeAs": "Exécuter en tant que",
@@ -57,7 +58,8 @@
       "record": "Bouton d'enregistrement d'une action",
       "field": "Bouton d'action de champ",
       "onFieldFocus": "Mise au point sur le terrain",
-      "onRecordLoad": "Chargement record"
+      "onFieldChange": "Changement sur le terrain",
+      "onRecordLoad": "Création/mise à jour des registres"
     },
     "executeAs": {
       "sameUser": "Même utilisateur",
