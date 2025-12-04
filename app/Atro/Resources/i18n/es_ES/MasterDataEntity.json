@@ -1,9 +1,9 @@
 {
   "fields": {
-    "masterEntity": "",
-    "mappingScript": ""
+    "masterEntity": "Entidad principal",
+    "mappingScript": "Guión cartográfico"
   },
   "tooltips": {
-    "mappingScript": ""
+    "mappingScript": "Configure cómo se transforman, unifican y asignan los datos de origen al registro maestro."
   }
 }
