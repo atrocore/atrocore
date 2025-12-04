@@ -62,7 +62,7 @@
     "accessManagement": "Управление доступом",
     "hierarchyManagement": "Управление иерархией",
     "other": "Другие",
-    "resetToDefault": "Восстановить настройки по умолчанию",
+    "resetToDefault": "Восстановить по умолчанию",
     "attributes": "Атрибуты"
   },
   "confirmations": {
