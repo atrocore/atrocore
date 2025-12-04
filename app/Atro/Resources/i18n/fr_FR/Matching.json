@@ -2,16 +2,16 @@
   "fields": {
     "minimumScore": "Note minimale, %",
     "entity": "Entité",
-    "masterEntity": "Entité maîtresse",
-    "matchingRules": "Règles de correspondance",
-    "matchedRecords": "Disques appariés",
+    "masterEntity": "Entité de référence",
+    "matchingRules": "Règles d'appariements",
+    "matchedRecords": "Enregistrements appariés",
     "sourceEntity": "Entité source",
     "matchedRecordsMax": "Nombre maximal d'enregistrements appariés"
   },
   "options": {
     "type": {
-      "duplicate": "Duplicata",
-      "masterRecord": "Fiche d'enregistrement"
+      "duplicate": "Dupliquer",
+      "masterRecord": "Enregistrement de référence"
     }
   },
   "labels": {
