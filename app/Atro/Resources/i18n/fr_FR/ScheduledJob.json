@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nom",
     "scheduling": "Programmation",
-    "jobs": "Emplois"
+    "jobs": "Tâches"
   },
   "labels": {
     "executeNow": "Exécuter maintenant"
