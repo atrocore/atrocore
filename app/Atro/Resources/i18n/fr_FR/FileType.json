@@ -1,13 +1,13 @@
 {
   "fields": {
     "files": "Fichiers",
-    "aspectRatio": "Rapport d'aspect",
+    "aspectRatio": "Proportion",
     "minSize": "Taille minimale, Kb",
     "maxSize": "Taille maximale, Kb",
     "minWidth": "Largeur minimale, px",
     "minHeight": "Hauteur minimale, px",
     "extensions": "Extensions",
-    "mimeTypes": "Types de Mime"
+    "mimeTypes": "Types Mime"
   },
   "exceptions": {
     "fileTypeCannotBeDeleted": "L'enregistrement ne peut pas être supprimé car il est utilisé dans le champ \"%s\" de l'entité \"%s\".",
