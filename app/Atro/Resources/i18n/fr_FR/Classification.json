@@ -5,10 +5,10 @@
     "synonyms": "Synonymes",
     "code": "Code",
     "isActive": "Actif",
-    "classifications": "Classification",
+    "classifications": "Classifications",
     "classificationAttributes": "Attributs de la classification",
     "entity": "Entité",
-    "type": "Typ"
+    "type": "Type"
   },
   "labels": {
     "selectAttributeGroup": "Sélectionnez le groupe d'attributs"
