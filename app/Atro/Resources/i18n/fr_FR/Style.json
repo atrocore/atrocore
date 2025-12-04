@@ -1,7 +1,7 @@
 {
   "fields": {
     "navigationManuBackgroundColor": "Arrière-plan du menu de navigation",
-    "navigationMenuFontColor": "Couleur de la police de navigation",
+    "navigationMenuFontColor": "Couleur de la police du menu de navigation",
     "linkFontColor": "Couleur du lien",
     "customStylesheetPath": "Chemin d'accès au fichier СSS",
     "customStylesheet": "CSS",
@@ -9,7 +9,7 @@
     "secondaryColor": "Couleur secondaire",
     "primaryFontColor": "Couleur de police primaire",
     "secondaryFontColor": "Couleur de police secondaire",
-    "labelColor": "Couleur de l'étiquette",
+    "labelColor": "Couleur de libellé",
     "anchorNavigationBackground": "Arrière-plan de la navigation d'ancrage",
     "iconColor": "Couleur de l'icône",
     "primaryBorderColor": "Couleur de la bordure primaire",
