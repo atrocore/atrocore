@@ -41,6 +41,28 @@ class MatchedRecord extends Base
         }
     }
 
+    public function afterRemoveRecord(string $entityName, string $entityId): void
+    {
+        $toRemove = $this->getMetadata()->get("scopes.$entityName.hasDuplicates") || $this->getMetadata()->get("scopes.$entityName.masterEntity");
+        if (!$toRemove) {
+            foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
+                if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {
+                    $toRemove = true;
+                    break;
+                }
+            }
+        }
+
+        if ($toRemove) {
+            $this->getConnection()->createQueryBuilder()
+                ->delete('matched_record')
+                ->where('(source_entity=:entityName AND source_entity_id=:entityId) OR (master_entity=:entityName AND master_entity_id=:entityId)')
+                ->setParameter('entityName', $entityName)
+                ->setParameter('entityId', $entityId)
+                ->executeQuery();
+        }
+    }
+
     public function checkMatchedRecordsMax(string $matchingId, int $matchedRecordsMax): bool
     {
         $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY master_entity_id HAVING COUNT(DISTINCT source_entity_id) >= :max) AS exists";

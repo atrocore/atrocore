@@ -95,6 +95,8 @@ class Base extends RDB
                 }
             }
         }
+
+        $this->getEntityManager()->getRepository('MatchedRecord')->afterRemoveRecord($entity->getEntityName(), $entity->get('id'));
     }
 
     public function hasDeletedRecordsToClear(): bool
