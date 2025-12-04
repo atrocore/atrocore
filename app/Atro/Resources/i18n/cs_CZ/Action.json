@@ -44,7 +44,7 @@
       "record": "Tlačítko akce Záznam",
       "field": "Akční tlačítko pole",
       "onFieldFocus": "Zaměření v terénu",
-      "onRecordLoad": "O rekordním zatížení"
+      "onRecordLoad": "Při vytváření / aktualizaci záznamu"
     },
     "display": {
       "dropdown": "Rozbalovací nabídka",

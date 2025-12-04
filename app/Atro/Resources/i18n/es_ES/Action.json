@@ -44,7 +44,7 @@
       "record": "Botón de acción de grabación",
       "field": "Botón de acción de campo",
       "onFieldFocus": "Enfoque sobre el terreno",
-      "onRecordLoad": "En carga récord"
+      "onRecordLoad": "Creación/actualización de registros"
     },
     "display": {
       "dropdown": "Desplegable",

@@ -48,7 +48,7 @@
       "record": "Przycisk nagrywania akcji",
       "field": "Przycisk akcji w polu",
       "onFieldFocus": "Koncentracja na terenie",
-      "onRecordLoad": "Przy rekordowym obciążeniu"
+      "onRecordLoad": "Tworzenie/aktualizacja rekordów"
     },
     "type": {
       "webhook": "Webhook",

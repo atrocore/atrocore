@@ -44,7 +44,7 @@
       "record": "Record action button",
       "field": "Field action button",
       "onFieldFocus": "On field focus",
-      "onRecordLoad": "On record load"
+      "onRecordLoad": "On record create / update"
     },
     "display": {
       "dropdown": "Dropdown",

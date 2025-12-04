@@ -44,7 +44,7 @@
       "record": "Pulsante di registrazione dell'azione",
       "field": "Pulsante di azione del campo",
       "onFieldFocus": "Focus sul campo",
-      "onRecordLoad": "Sul carico record"
+      "onRecordLoad": "Creazione/aggiornamento del record"
     },
     "display": {
       "dropdown": "A discesa",
