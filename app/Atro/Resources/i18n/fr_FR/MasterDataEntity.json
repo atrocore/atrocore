@@ -1,6 +1,6 @@
 {
   "fields": {
-    "masterEntity": "Entité maîtresse",
+    "masterEntity": "Entité de référence",
     "mappingScript": "Script de cartographie"
   },
   "tooltips": {
