@@ -1,9 +1,9 @@
 {
   "fields": {
-    "masterEntity": "",
-    "mappingScript": ""
+    "masterEntity": "Hlavní subjekt",
+    "mappingScript": "Mapovací skript"
   },
   "tooltips": {
-    "mappingScript": ""
+    "mappingScript": "Konfigurace způsobu transformace, sjednocení a mapování zdrojových dat do hlavního záznamu."
   }
 }
