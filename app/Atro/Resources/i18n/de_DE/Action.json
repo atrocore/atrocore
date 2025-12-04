@@ -25,7 +25,8 @@
     "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
     "updateType": "Aktualisierungstyp",
     "updateScript": "Script",
-    "updateFields": "Felder aktualisieren"
+    "updateFields": "Felder aktualisieren",
+    "changeFields": "Felder"
   },
   "labels": {
     "execute": "Ausführen",
