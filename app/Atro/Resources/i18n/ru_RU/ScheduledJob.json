@@ -5,7 +5,8 @@
     "jobs": "Задания"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Неправильная конфигурация crontab"
+    "wrongCrontabConfiguration": "Неправильная конфигурация crontab",
+    "onlyOneJobTypeAllowed": "Разрешено только одно задание '%s'"
   },
   "options": {
     "type": {
