@@ -8,7 +8,8 @@
     "executeNow": "Wykonaj teraz"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Błędna konfiguracja crontab"
+    "wrongCrontabConfiguration": "Błędna konfiguracja crontab",
+    "onlyOneJobTypeAllowed": "Dozwolone jest tylko jedno zadanie \"%s"
   },
   "messages": {
     "jobLaunched": "Zadanie zostało utworzone",
