@@ -2,7 +2,7 @@
   "fields": {
     "description": "Description",
     "isActive": "Actif",
-    "reverseAssociation": "Association des arriérés",
+    "reverseAssociation": "Association inversée",
     "code": "Code",
     "default": "Défaut"
   },

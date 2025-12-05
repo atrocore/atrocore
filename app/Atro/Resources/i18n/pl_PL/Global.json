@@ -81,7 +81,8 @@
     "Language": "Język",
     "RoleScopeAttribute": "Atrybut",
     "Selection": "Wybór",
-    "SelectionRecord": "Rekord wyboru"
+    "SelectionRecord": "Rekord wyboru",
+    "MasterDataEntity": "Podmiot danych podstawowych"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -150,7 +151,8 @@
     "Language": "Języki",
     "RoleScopeField": "Pola",
     "Selection": "Wybór",
-    "SelectionRecord": "Rekordy selekcji"
+    "SelectionRecord": "Rekordy selekcji",
+    "MasterDataEntity": "Podmioty danych podstawowych"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -499,7 +501,8 @@
     "masterDataManagement": "Zarządzanie danymi podstawowymi",
     "addFields": "Dodaj pola",
     "addAttributes": "Proszę dodać atrybuty",
-    "Insights": "Spostrzeżenia"
+    "Insights": "Spostrzeżenia",
+    "matchings": "Dopasowania"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",

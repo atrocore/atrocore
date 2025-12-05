@@ -1,9 +1,9 @@
 {
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "entity": "Entité",
     "isMultilang": "Multilingue",
-    "required": "Exigée",
+    "required": "Requis",
     "notNull": "Désactiver la valeur nulle",
     "readOnly": "Lecture seule",
     "protected": "Protegé",

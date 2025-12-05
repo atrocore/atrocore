@@ -4,11 +4,11 @@
     "description": "Description",
     "layouts": "Mise en page",
     "isDefault": "Défaut",
-    "hideShowFullList": "Masquer \"Show Full List\" sur les panneaux de relation",
-    "parent": "Profil de présentation des parents",
+    "hideShowFullList": "Masquer \"Show List\" sur les panneaux de relation",
+    "parent": "Profil de disposition parent",
     "navigation": "Menu de navigation",
     "favoritesList": "Favoris",
-    "dashboardLayout": "Présentation du tableau de bord"
+    "dashboardLayout": "Disposition du tableau de bord"
   },
   "labels": {
     "addGroup": "Ajouter un groupe",

@@ -5,7 +5,8 @@
     "masterEntity": "Podmiot główny",
     "matchingRules": "Zasady dopasowywania",
     "matchedRecords": "Dopasowane rekordy",
-    "sourceEntity": "Źródłowa Jednostka"
+    "sourceEntity": "Źródłowa Jednostka",
+    "matchedRecordsMax": "Maksymalna liczba dopasowanych rekordów"
   },
   "options": {
     "type": {
@@ -15,5 +16,8 @@
   },
   "labels": {
     "configureMatching": "Konfiguracja dopasowania"
+  },
+  "tooltips": {
+    "matchedRecordsMax": "Proszę pozostawić to pole puste, aby zezwolić na nieograniczoną liczbę dopasowanych rekordów. Jeśli liczba dopasowanych rekordów przekroczy tę wartość, dopasowywanie zostanie wyłączone."
   }
 }

@@ -1,13 +1,13 @@
 {
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "folder": "Dossier",
     "storage": "Stockage",
     "mimeType": "Type MIME",
     "path": "Chemin d'accès",
     "thumbnailsPath": "Chemin d'accès aux vignettes",
     "preview": "Aperçu",
-    "hash": "Hachures",
+    "hash": "Hash",
     "fileSize": "Taille du fichier (octets)",
     "fileMtime": "Date de modification du dossier",
     "url": "URL",

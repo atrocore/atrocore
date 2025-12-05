@@ -81,7 +81,8 @@
     "AccountGroup": "Gruppo Account",
     "ProductGroup": "Gruppo di prodotti",
     "Selection": "Selezione",
-    "SelectionRecord": "Record di selezione"
+    "SelectionRecord": "Record di selezione",
+    "MasterDataEntity": "Entità di dati master"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -430,7 +431,8 @@
     "expandWindow": "Espandi la finestra",
     "Compare": "Confronta",
     "Standard": "Standard",
-    "addItem": "Aggiungi articolo"
+    "addItem": "Aggiungi articolo",
+    "masterDataManagement": "Gestione dei dati master"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -906,7 +908,8 @@
     "AccountGroup": "Gruppi di account",
     "ProductGroup": "Gruppi di prodotti",
     "Selection": "Selezioni",
-    "SelectionRecord": "Registri di selezione"
+    "SelectionRecord": "Registri di selezione",
+    "MasterDataEntity": "Entità di dati master"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."

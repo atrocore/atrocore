@@ -2,18 +2,22 @@
   "fields": {
     "minimumScore": "Note minimale, %",
     "entity": "Entité",
-    "masterEntity": "Entité maîtresse",
-    "matchingRules": "Règles de correspondance",
-    "matchedRecords": "Disques appariés",
-    "sourceEntity": "Entité source"
+    "masterEntity": "Entité de référence",
+    "matchingRules": "Règles d'appariements",
+    "matchedRecords": "Enregistrements appariés",
+    "sourceEntity": "Entité source",
+    "matchedRecordsMax": "Nombre maximal d'enregistrements appariés"
   },
   "options": {
     "type": {
-      "duplicate": "Duplicata",
-      "masterRecord": "Fiche d'enregistrement"
+      "duplicate": "Dupliquer",
+      "masterRecord": "Enregistrement de référence"
     }
   },
   "labels": {
     "configureMatching": "Configurer l'appariement"
+  },
+  "tooltips": {
+    "matchedRecordsMax": "Laissez ce champ vide pour autoriser un nombre illimité d'enregistrements correspondants. Si le nombre d'enregistrements correspondants dépasse cette valeur, l'appariement sera désactivé."
   }
 }

@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Nom",
-    "entityId": "Enregistrer",
+    "entityId": "Enregistrement",
     "entityType": "Entité"
   },
   "messages": {

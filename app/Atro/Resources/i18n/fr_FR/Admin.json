@@ -70,7 +70,7 @@
     "apiRequest": "Demande d'API",
     "style": "Styles",
     "incomingWebhook": "Webhooks entrants",
-    "matchings": "Matchs",
+    "matchings": "Appariements",
     "ThumbnailTypes": "Types de vignettes",
     "rebuildDbWarning": "La structure de la base de données a été modifiée. Une reconstruction est nécessaire pour assurer le bon fonctionnement de la base de données.",
     "updatesAvailable": "De nouvelles mises à jour sont disponibles !",
@@ -126,7 +126,7 @@
     "markdown": "Markdown"
   },
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "name": "Code",
     "link": "Lien",
     "translation": "Traduction",

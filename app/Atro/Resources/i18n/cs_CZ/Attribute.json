@@ -31,7 +31,7 @@
     "notNull": "Zakázat nulovou hodnotu",
     "trim": "Odstranění počátečních a koncových bílých znaků",
     "classificationAttributes": "Atributy klasifikace",
-    "preparedName": "Název",
+    "preparedName": "Jméno",
     "htmlSanitizer": "HTML Sanitizer",
     "fullWidth": "Na celou šířku",
     "channel": "Kanál",

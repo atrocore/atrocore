@@ -19,14 +19,14 @@
     "emailCc": "E-Mail CC",
     "emailBcc": "E-Mail BCC",
     "focusField": "Feld",
-    "changeField": "Felder",
     "displayField": "Anzeigefeld",
     "webhookUrl": "URL",
     "hideTextLabel": "Text auf der Schaltfläche ausblenden",
     "applyToPreselectedRecords": "Auf vorausgewählte Datensätze anwenden",
     "updateType": "Aktualisierungstyp",
     "updateScript": "Script",
-    "updateFields": "Felder aktualisieren"
+    "updateFields": "Felder aktualisieren",
+    "changeFields": "Felder"
   },
   "labels": {
     "execute": "Ausführen",

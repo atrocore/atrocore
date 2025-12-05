@@ -1,18 +1,18 @@
 {
   "fields": {
-    "matching": "Correspondance",
+    "matching": "Appariement",
     "weight": "Poids",
-    "sourceField": "Champ source",
-    "masterEntity": "Entité maîtresse",
-    "matchingRuleSet": "Fixer",
-    "matchingRules": "Règles de correspondance",
+    "sourceField": "Champ de la source",
+    "masterEntity": "Entité de référence",
+    "matchingRuleSet": "Ensemble",
+    "matchingRules": "Règles d'appariements",
     "operator": "Opérateur",
-    "masterField": "Domaine principal",
+    "masterField": "Champ de reférence",
     "sourceEntity": "Entité source"
   },
   "options": {
     "type": {
-      "equal": "Égalité",
+      "equal": "Égal à",
       "like": "Comme",
       "contains": "Contient",
       "set": "Fixer"

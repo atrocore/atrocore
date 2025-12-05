@@ -1,10 +1,10 @@
 {
   "fields": {
     "name": "Nom",
-    "emailAddress": "Courriel",
+    "emailAddress": "Mail",
     "phoneNumber": "Téléphone",
     "description": "Description",
-    "type": "Typ",
+    "type": "Type",
     "role": "Rôle",
     "number": "Nombre",
     "language": "Langue",

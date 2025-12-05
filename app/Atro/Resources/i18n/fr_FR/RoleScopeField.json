@@ -2,7 +2,7 @@
   "fields": {
     "name": "Champ",
     "roleScope": "Champ d'application",
-    "readAction": "Lire",
+    "readAction": "Lecture",
     "editAction": "Éditer"
   }
 }

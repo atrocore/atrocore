@@ -148,7 +148,7 @@
     "RoleScopeAttribute": "Attribute",
     "RoleScopeAttributePanel": "Attribut-Panels",
     "RoleScopeField": "Felder",
-    "Account": "Konto",
+    "Account": "Accounts",
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
     "Selection": "Selektionen",
@@ -502,7 +502,7 @@
     "Person": "Person",
     "Original": "Original",
     "basic": "Basic",
-    "script": "Skript",
+    "script": "Script",
     "unitPart": "(Maßeinheit)",
     "Details": "Details",
     "Filter": "Filter"

@@ -6,7 +6,7 @@
     "customizable": "Personalizzabile",
     "unInheritedRelations": "Relazioni non ereditate",
     "primaryEntity": "Entità primaria",
-    "hasDuplicates": "Ha dei duplicati",
+    "hasDuplicates": "Controlla i duplicati",
     "masterEntity": "Entità master",
     "hasArchive": "Archiviabile",
     "hasActive": "Attivabile",

@@ -5,8 +5,8 @@
     "pid": "PID",
     "priority": "Priorité",
     "handler": "Gestionnaire",
-    "payload": "Charge utile",
-    "scheduledJob": "Travail programmé",
+    "payload": "Payload",
+    "scheduledJob": "Tâche programmée",
     "message": "Message",
     "startedAt": "Commencé à",
     "endedAt": "Terminé le"

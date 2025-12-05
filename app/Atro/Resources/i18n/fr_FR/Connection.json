@@ -1,6 +1,6 @@
 {
   "fields": {
-    "type": "Typ",
+    "type": "Type",
     "dbName": "Nom de la base de données",
     "host": "Hôte",
     "port": "Port",
@@ -30,7 +30,7 @@
     "callbackUrl": "Url de rappel",
     "linkUrl": "Lien Url",
     "apiTestUrl": "Test de l'url de l'api",
-    "payload": "Charge utile",
+    "payload": "Payload",
     "loginUrl": "URL de connexion",
     "atrocoreUrl": "URL",
     "smtpSecurity": "Sécurité",

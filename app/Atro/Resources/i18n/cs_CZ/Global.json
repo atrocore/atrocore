@@ -81,7 +81,8 @@
     "Dashboard": "Dashboard",
     "NotificationTemplate": "Šablona oznámení",
     "Selection": "Výběr",
-    "SelectionRecord": "Záznam o výběru"
+    "SelectionRecord": "Záznam o výběru",
+    "MasterDataEntity": "Subjekt kmenových dat"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -150,7 +151,8 @@
     "EmailTemplate": "Šablony e-mailů",
     "Folder": "Složky",
     "Selection": "Výběry",
-    "SelectionRecord": "Výběrové záznamy"
+    "SelectionRecord": "Výběrové záznamy",
+    "MasterDataEntity": "Subjekty kmenových dat"
   },
   "labels": {
     "basic": "Základní",
@@ -499,7 +501,8 @@
     "masterDataManagement": "Správa hlavních dat",
     "addFields": "Přidat pole",
     "addAttributes": "Přidání atributů",
-    "Insights": "Insights"
+    "Insights": "Insights",
+    "matchings": "Shody"
   },
   "fields": {
     "width": "Šířka",

@@ -5,7 +5,8 @@
     "masterEntity": "Hlavní subjekt",
     "matchingRules": "Pravidla porovnávání",
     "matchedRecords": "Shodné záznamy",
-    "sourceEntity": "Zdrojová entita"
+    "sourceEntity": "Zdrojová entita",
+    "matchedRecordsMax": "Maximální počet odpovídajících záznamů"
   },
   "options": {
     "type": {
@@ -15,5 +16,8 @@
   },
   "labels": {
     "configureMatching": "Konfigurace přiřazování"
+  },
+  "tooltips": {
+    "matchedRecordsMax": "Nechte toto pole prázdné, abyste mohli zadat neomezený počet odpovídajících záznamů. Pokud počet porovnávaných záznamů překročí tuto hodnotu, porovnávání bude deaktivováno."
   }
 }
