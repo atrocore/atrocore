@@ -15,7 +15,8 @@
       "CheckUpdates": "Проверьте обновления системы",
       "ScanStorage": "Сканирование хранилища",
       "CalculateScriptFieldsForEntities": "Вычислите поля сценария",
-      "FindMatches": "Найдите соответствия"
+      "FindMatches": "Найдите соответствия",
+      "SendReports": "Отправлять анонимные отчеты об ошибках"
     }
   },
   "tooltips": {

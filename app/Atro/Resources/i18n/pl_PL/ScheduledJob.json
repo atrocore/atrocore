@@ -22,7 +22,8 @@
       "CheckUpdates": "Proszę sprawdzić aktualizacje systemu",
       "ScanStorage": "Przechowywanie skanów",
       "FindMatches": "Proszę znaleźć dopasowania",
-      "CalculateScriptFieldsForEntities": "Obliczanie pól skryptu"
+      "CalculateScriptFieldsForEntities": "Obliczanie pól skryptu",
+      "SendReports": "Wysyłanie anonimowych raportów o błędach"
     }
   },
   "tooltips": {

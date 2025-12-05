@@ -19,7 +19,8 @@
       "CheckUpdates": "System-Updates prüfen",
       "ScanStorage": "Speicher scannen",
       "FindMatches": "Treffer finden",
-      "CalculateScriptFieldsForEntities": "Skriptfelder berechnen"
+      "CalculateScriptFieldsForEntities": "Skriptfelder berechnen",
+      "SendReports": "Anonyme Fehlerberichte senden"
     }
   },
   "tooltips": {

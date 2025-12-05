@@ -22,7 +22,8 @@
       "ScanStorage": "Stockage par balayage",
       "ClearEntities": "Effacer les données supprimées",
       "FindMatches": "Trouver des correspondances",
-      "CalculateScriptFieldsForEntities": "Calculer les champs du script"
+      "CalculateScriptFieldsForEntities": "Calculer les champs du script",
+      "SendReports": "Envoyer des rapports d'erreur anonymes"
     }
   },
   "tooltips": {

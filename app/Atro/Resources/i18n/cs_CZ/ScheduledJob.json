@@ -22,7 +22,8 @@
       "CheckUpdates": "Kontrola aktualizací systému",
       "ScanStorage": "Skenování úložiště",
       "FindMatches": "Vyhledávání shod",
-      "CalculateScriptFieldsForEntities": "Výpočet polí skriptu"
+      "CalculateScriptFieldsForEntities": "Výpočet polí skriptu",
+      "SendReports": "Odesílání anonymních chybových hlášení"
     }
   },
   "tooltips": {

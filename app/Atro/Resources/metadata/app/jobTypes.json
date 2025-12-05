@@ -82,5 +82,9 @@
   "CalculateScriptFieldsForEntity": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntity"
+  },
+  "SendReports": {
+    "scheduledJob": true,
+    "handler": "\\Atro\\Jobs\\SendReports"
   }
 }

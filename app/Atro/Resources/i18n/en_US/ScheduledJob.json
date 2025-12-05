@@ -22,7 +22,8 @@
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage",
       "FindMatches": "Find matches",
-      "CalculateScriptFieldsForEntities": "Calculate script fields"
+      "CalculateScriptFieldsForEntities": "Calculate script fields",
+      "SendReports": "Send anonymous error reports"
     }
   },
   "tooltips": {

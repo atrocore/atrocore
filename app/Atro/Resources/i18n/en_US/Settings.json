@@ -1,7 +1,6 @@
 {
   "fields": {
     "maxConcurrentWorkers": "Maximum number of concurrent workers",
-    "reportingEnabled": "Send anonymous error reports",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
     "locale": "Default Locale",
@@ -47,7 +46,6 @@
   },
   "tooltips": {
     "maxConcurrentWorkers": "Upper limit on the number of tasks or processes that can run simultaneously in the background of a server.",
-    "reportingEnabled": "Anonymous error reports will be send to AtroCore for faster problem identification and resolution.",
     "fileNameRegexPattern": "To enable only small letters with max. 24-symbol length use \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Number of records initially displayed in list views.",
     "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",

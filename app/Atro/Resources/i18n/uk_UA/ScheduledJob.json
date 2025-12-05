@@ -18,7 +18,8 @@
       "CheckUpdates": "Перевірте оновлення системи",
       "ScanStorage": "Сканувати сховище",
       "FindMatches": "Знайти збіги",
-      "CalculateScriptFieldsForEntities": "Обчислення полів скрипта"
+      "CalculateScriptFieldsForEntities": "Обчислення полів скрипта",
+      "SendReports": "Надсилати анонімні повідомлення про помилки"
     }
   },
   "tooltips": {
