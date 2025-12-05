@@ -8,7 +8,8 @@
     "executeNow": "Ejecutar ahora"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Configuración incorrecta de crontab"
+    "wrongCrontabConfiguration": "Configuración incorrecta de crontab",
+    "onlyOneJobTypeAllowed": "Sólo se permite un trabajo '%s"
   },
   "messages": {
     "jobLaunched": "Se ha creado el puesto de trabajo",
