@@ -5,6 +5,7 @@
   },
   "ClearEntities": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\ClearEntities"
   },
   "ClearEntity": {
@@ -13,18 +14,22 @@
   },
   "CheckUpdates": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\CheckUpdates"
   },
   "ComposerAutoUpdate": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\ComposerAutoUpdate"
   },
   "ScanStorage": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\ScanStorage"
   },
   "UpdateCurrencyExchangeViaECB": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\UpdateCurrencyExchangeViaECB"
   },
   "SendEmail": {
@@ -65,6 +70,7 @@
   },
   "FindMatches": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\FindMatches"
   },
   "FindMatchesForRecord": {
@@ -77,6 +83,7 @@
   },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\CalculateScriptFieldsForEntities"
   },
   "CalculateScriptFieldsForEntity": {
@@ -85,6 +92,7 @@
   },
   "SendReports": {
     "scheduledJob": true,
+    "unique": true,
     "handler": "\\Atro\\Jobs\\SendReports"
   }
 }

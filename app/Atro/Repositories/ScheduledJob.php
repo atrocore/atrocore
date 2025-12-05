@@ -31,10 +31,13 @@ class ScheduledJob extends Base
             }
         }
 
-        if ($entity->isNew() && $entity->get('type') === 'SendReports') {
-            $exists = $this->where(['type' => 'SendReports'])->findOne();
+        if ($entity->isNew() && $this->getMetadata()->get("app.jobTypes.{$entity->get('type')}.unique")) {
+            $exists = $this->where(['type' => $entity->get('type')])->findOne();
             if (!empty($exists)) {
-                throw new BadRequest($this->getInjection('language')->translate('onlyOneSendReportsJobAllowed', 'exceptions', 'ScheduledJob'));
+                $message = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
+                $typeLabel = $this->getInjection('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
+
+                throw new BadRequest(sprintf($message, $typeLabel));
             }
         }
 

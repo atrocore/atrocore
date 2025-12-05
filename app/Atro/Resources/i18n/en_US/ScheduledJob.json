@@ -9,7 +9,7 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Wrong crontab configuration",
-    "onlyOneSendReportsJobAllowed": "Only one 'Send anonymous error reports' job is allowed"
+    "onlyOneJobTypeAllowed": "Only one '%s' job is allowed"
   },
   "messages": {
     "jobLaunched": "The job has been created",
