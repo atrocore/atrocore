@@ -466,7 +466,7 @@
     "matchedRecords": "Enregistrements appariés",
     "noMatches": "Aucune correspondance",
     "phpCode": "Code PHP",
-    "_addAttribute": "[Ajouter un attribut]",
+    "_addAttribute": "Ajouter un attribut",
     "fieldValueFilters": "Filtres de valeurs de champs",
     "confirmRemoveAttributeValue": "Êtes-vous sûr de vouloir supprimer l'attribut ?",
     "UserFollowed": "Utilisateur suivi",
