@@ -201,8 +201,35 @@ class Installer extends HasContainer
 
             // set installed
             $this->getConfig()->set('isInstalled', true);
+
+            // set reportingEnabled
             $this->getConfig()->set('reportingEnabled', !empty($params['reportingEnabled']));
             $this->getConfig()->save();
+
+            // create anonymous error reports job
+            $data = [
+                'id'             => 'SendReports',
+                'name'           => 'Send anonymous error reports to AtroCore',
+                'type'           => 'SendReports',
+                'is_active'      => !empty($params['reportingEnabled']),
+                'scheduling'     => '*/15 * * * *',
+                'created_at'     => date('Y-m-d H:i:s'),
+                'modified_at'    => date('Y-m-d H:i:s'),
+                'created_by_id'  => 'system',
+                'modified_by_id' => 'system',
+            ];
+
+            $conn = $this->getEntityManager()->getConnection();
+            $qb = $conn->createQueryBuilder();
+            $qb->insert('scheduled_job');
+            foreach ($data as $columnName => $value) {
+                $qb->setValue($columnName, ":$columnName");
+                $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
+            }
+            try {
+                $qb->executeQuery();
+            } catch (\Throwable $e) {
+            }
         } catch (\Exception $e) {
             $GLOBALS['log']->error('Installer Error: ' . $e->getMessage() . ' | ' . $e->getTraceAsString());
             return ['status' => false, 'message' => $e->getMessage()];

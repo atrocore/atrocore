@@ -8,7 +8,8 @@
     "executeNow": "Execute Now"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Wrong crontab configuration"
+    "wrongCrontabConfiguration": "Wrong crontab configuration",
+    "onlyOneSendReportsJobAllowed": "Only one 'Send anonymous error reports' job is allowed"
   },
   "messages": {
     "jobLaunched": "The job has been created",

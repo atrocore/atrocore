@@ -23,37 +23,29 @@ class V2Dot1Dot34 extends Base
 
     public function up(): void
     {
-        if ($this->getConfig()->get('reportingEnabled')) {
-            $row = [
-                'tableName' => 'scheduled_job',
-                'data'      => [
-                    'id'             => 'SendReports',
-                    'name'           => 'Send anonymous error reports to AtroCore',
-                    'type'           => 'SendReports',
-                    'is_active'      => true,
-                    'scheduling'     => '*/15 * * * *',
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'modified_at'    => date('Y-m-d H:i:s'),
-                    'created_by_id'  => 'system',
-                    'modified_by_id' => 'system',
-                ],
-            ];
+        $data = [
+            'id'             => 'SendReports',
+            'name'           => 'Send anonymous error reports to AtroCore',
+            'type'           => 'SendReports',
+            'is_active'      => $this->getConfig()->get('reportingEnabled', false),
+            'scheduling'     => '*/15 * * * *',
+            'created_at'     => date('Y-m-d H:i:s'),
+            'modified_at'    => date('Y-m-d H:i:s'),
+            'created_by_id'  => 'system',
+            'modified_by_id' => 'system',
+        ];
 
-            $qb = $this->getConnection()->createQueryBuilder();
-            $qb->insert($this->getConnection()->quoteIdentifier($row['tableName']));
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb->insert('scheduled_job');
 
-            foreach ($row['data'] as $columnName => $value) {
-                $qb->setValue($columnName, ":$columnName");
-                $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
-            }
+        foreach ($data as $columnName => $value) {
+            $qb->setValue($columnName, ":$columnName");
+            $qb->setParameter($columnName, $value, Mapper::getParameterType($value));
+        }
 
-            try {
-                $qb->executeQuery();
-            } catch (\Throwable $e) {
-            }
-
-            $this->getConfig()->remove('reportingEnabled');
-            $this->getConfig()->save();
+        try {
+            $qb->executeQuery();
+        } catch (\Throwable $e) {
         }
     }
 }
