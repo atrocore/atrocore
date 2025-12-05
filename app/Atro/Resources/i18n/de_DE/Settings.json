@@ -40,7 +40,6 @@
     "customHeadCode": "Head Code",
     "customStylesheetPath": "CSS-Dateipfad",
     "customStylesheet": "CSS",
-    "reportingEnabled": "Anonyme Fehlerberichte senden",
     "currencyRates": "Werte bewerten",
     "disableEmailDelivery": "E-Mail-Zustellung deaktivieren",
     "disableToolbarLogo": "Header-Logo deaktivieren"
@@ -64,8 +63,7 @@
     "customHeadCode": "Fügen Sie den Code am Ende des <head>-Tags ein. Atrocore validiert benutzerdefinierten Code nicht für Sie, also überprüfen Sie Ihren Code vor der Veröffentlichung.",
     "customStylesheetPath": "Ihre benutzerdefinierten CSS-Stile werden in diese Datei geschrieben. Dort können Sie die Änderungen auch direkt vornehmen.",
     "companyLogo": "Verfügbare Dateitypen: image/jpeg, image/png, image/gif, image/svg+xml",
-    "favicon": "Verfügbarer Dateityp: image/svg+xml",
-    "reportingEnabled": "Anonyme Fehlerberichte werden an AtroCore gesendet, damit Probleme schneller erkannt und gelöst werden können."
+    "favicon": "Verfügbarer Dateityp: image/svg+xml"
   },
   "labels": {
     "confirmLocaleChanges": "Wenn die Sprache entfernt wird, werden alle Daten, die Sie zuvor in die mehrsprachigen Felder für dieses Locale eingegeben haben, automatisch über den <a href=\"/#ScheduledJob\" target=\"_blank\">Cron-Job</a> entfernt.",

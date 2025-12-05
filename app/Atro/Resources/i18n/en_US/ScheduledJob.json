@@ -8,7 +8,8 @@
     "executeNow": "Execute Now"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Wrong crontab configuration"
+    "wrongCrontabConfiguration": "Wrong crontab configuration",
+    "onlyOneJobTypeAllowed": "Only one '%s' job is allowed"
   },
   "messages": {
     "jobLaunched": "The job has been created",
@@ -22,7 +23,8 @@
       "CheckUpdates": "Check system updates",
       "ScanStorage": "Scan Storage",
       "FindMatches": "Find matches",
-      "CalculateScriptFieldsForEntities": "Calculate script fields"
+      "CalculateScriptFieldsForEntities": "Calculate script fields",
+      "SendReports": "Send anonymous error reports"
     }
   },
   "tooltips": {

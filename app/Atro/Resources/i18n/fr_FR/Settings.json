@@ -1,6 +1,5 @@
 {
   "fields": {
-    "reportingEnabled": "Envoyer des rapports d'erreur anonymes",
     "fileNameRegexPattern": "Filename Regex Pattern",
     "variables": "Variables",
     "locale": "Locale par défaut",
@@ -57,7 +56,6 @@
     "emailAddressIsOptedOutByDefault": "Lors de la création d'un nouvel enregistrement, l'adresse électronique sera marquée comme opt-out.",
     "customStylesheetPath": "Vos styles CSS personnalisés seront écrits dans ce fichier. Vous pouvez également y apporter des modifications directement.",
     "customHeadCode": "Ajoutez le code à la fin de la balise <head>. Atrocore ne valide pas le code personnalisé pour vous, alors assurez-vous de vérifier votre code avant de le publier.",
-    "reportingEnabled": "Les rapports d'erreur anonymes seront envoyés à AtroCore pour une identification et une résolution plus rapides des problèmes.",
     "fileNameRegexPattern": "Pour activer uniquement les lettres minuscules d'une longueur maximale de 24 symboles, utilisez \"/^[a-z]{1,24}$/\". 24 symboles, utilisez \"/^[a-z]{1,24}$/\".",
     "passwordRegexPattern": "Définissez des règles de complexité pour les mots de passe à l'aide d'expressions régulières. \nConseil : utilisez des groupes comme (?=.*\\d) pour définir les symboles requis. \n\nSuivez ce lien <a href=\"{message_link}\" target=\"_blank\"></a> pour mettre à jour un message d'erreur de validation.",
     "passwordExpireDays": "Définissez la période (en jours) après laquelle les utilisateurs doivent mettre à jour leur mot de passe.",

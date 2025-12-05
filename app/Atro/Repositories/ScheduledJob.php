@@ -31,6 +31,36 @@ class ScheduledJob extends Base
             }
         }
 
+        if ($entity->isNew() && $this->getMetadata()->get("app.jobTypes.{$entity->get('type')}.unique")) {
+            $exists = $this->where(['type' => $entity->get('type')])->findOne();
+            if (!empty($exists)) {
+                $message = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
+                $typeLabel = $this->getInjection('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
+
+                throw new BadRequest(sprintf($message, $typeLabel));
+            }
+        }
+
         parent::beforeSave($entity, $options);
+    }
+
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
+
+        if ($entity->isAttributeChanged('isActive') && $entity->get('type') === 'SendReports') {
+            $this->getConfig()->set('reportingEnabled', $entity->get('isActive'));
+            $this->getConfig()->save();
+        }
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        if ($entity->get('type') === 'SendReports') {
+            $this->getConfig()->remove('reportingEnabled');
+            $this->getConfig()->save();
+        }
     }
 }

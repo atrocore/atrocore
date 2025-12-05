@@ -1,7 +1,6 @@
 {
   "fields": {
     "maxConcurrentWorkers": "Numero massimo di lavoratori contemporanei",
-    "reportingEnabled": "Inviare segnalazioni di errore anonime",
     "fileNameRegexPattern": "Pattern Regex del nome del file",
     "variables": "Variabili",
     "locale": "Locale predefinito",
@@ -47,7 +46,6 @@
   },
   "tooltips": {
     "maxConcurrentWorkers": "Limite superiore del numero di attività o processi che possono essere eseguiti simultaneamente in background su un server.",
-    "reportingEnabled": "Le segnalazioni anonime di errore saranno inviate ad AtroCore per una più rapida identificazione e risoluzione del problema.",
     "fileNameRegexPattern": "Per abilitare solo le lettere minuscole con una lunghezza massima di 24 simboli, utilizzi \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Numero di record inizialmente visualizzati nelle viste elenco.",
     "recordsPerPageSmall": "Numero di record inizialmente visualizzati nei pannelli delle relazioni.",

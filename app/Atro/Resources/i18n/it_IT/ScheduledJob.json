@@ -22,7 +22,8 @@
       "CheckUpdates": "Controllare gli aggiornamenti del sistema",
       "ScanStorage": "Archiviazione a scansione",
       "FindMatches": "Trova le corrispondenze",
-      "CalculateScriptFieldsForEntities": "Calcola i campi dello script"
+      "CalculateScriptFieldsForEntities": "Calcola i campi dello script",
+      "SendReports": "Inviare segnalazioni di errore anonime"
     }
   },
   "tooltips": {

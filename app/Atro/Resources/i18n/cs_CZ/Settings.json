@@ -1,7 +1,6 @@
 {
   "fields": {
     "maxConcurrentWorkers": "Maximální počet souběžně pracujících pracovníků",
-    "reportingEnabled": "Odesílání anonymních chybových hlášení",
     "fileNameRegexPattern": "Regex vzor názvu souboru",
     "variables": "Proměnné",
     "locale": "Výchozí lokalizace",
@@ -47,7 +46,6 @@
   },
   "tooltips": {
     "maxConcurrentWorkers": "Horní limit počtu úloh nebo procesů, které mohou být spuštěny současně na pozadí serveru.",
-    "reportingEnabled": "Anonymní chybová hlášení budou odesílána do AtroCore pro rychlejší identifikaci a řešení problémů.",
     "fileNameRegexPattern": "Povolení pouze malých písmen s max. 24 znaků použijte \"/^[a-z]{1,24}$/\".",
     "recordsPerPage": "Počet záznamů původně zobrazených v zobrazeních seznamu.",
     "recordsPerPageSmall": "Počet záznamů původně zobrazených v panelech vztahů.",

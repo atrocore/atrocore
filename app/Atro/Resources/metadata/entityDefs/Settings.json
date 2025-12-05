@@ -19,11 +19,6 @@
     "onlyStableReleases": {
       "type": "bool"
     },
-    "reportingEnabled": {
-      "type": "bool",
-      "default": true,
-      "tooltip": true
-    },
     "maxConcurrentWorkers": {
       "type": "int",
       "min": 4,
