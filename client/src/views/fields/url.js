@@ -49,7 +49,8 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
 
         data: function () {
             return _.extend({
-                url: this.getUrl()
+                url: this.getUrl(),
+                label: this.getLabel(),
             }, Dep.prototype.data.call(this));
         },
 
@@ -87,6 +88,28 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
                 return url;
             }
             return url;
+        },
+
+        getLabel: function () {
+            let label = '',
+                display = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'urlLabel']) || 'noLabel';
+
+            switch (display) {
+                case 'noLabel':
+                    let value = this.model.get(this.name);
+                    if (value && value !== '') {
+                        label = value.replace(/^[a-zA-Z]+:\/\//, '').split('?')[0];
+                    }
+                    break
+                case 'openLink':
+                    label = this.getLanguage().translate('openLink', 'labels');
+                    break
+                case 'view':
+                    label = this.getLanguage().translate('view', 'labels');
+                    break
+            }
+
+            return label;
         },
 
         fetch: function () {

@@ -66,7 +66,8 @@
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
-    "conditionalDisableOptions": "Disabled Options"
+    "conditionalDisableOptions": "Disabled Options",
+    "urlLabel": "URL Label"
   },
   "tooltips": {
     "foreignCode": "This code name is used for the field created in the related entity for the backward relationship.",

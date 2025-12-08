@@ -50,6 +50,16 @@
     {
       "name": "duplicateIgnore",
       "type": "bool"
+    },
+    {
+      "name": "urlLabel",
+      "type": "enum",
+      "default": "noLabel",
+      "options": [
+        "noLabel",
+        "openLink",
+        "view"
+      ]
     }
   ],
   "filter": true,

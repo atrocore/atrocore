@@ -505,7 +505,10 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "Details": "Details",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "noLabel": "Kein Etikett",
+    "openLink": "Link öffnen",
+    "view": "Ansehen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
