@@ -56,8 +56,6 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
             data.date = data.time = '';
             var value = this.mode === 'edit' ? this.getDateTime().toDisplayFull(this.model.get(this.name)) : this.getDateTime().toDisplay(this.model.get(this.name));
-            // value = this.getDateTime().toDisplay(this.model.get(this.name));
-
             if (value) {
                 data.date = value.substr(0, value.indexOf(' '));
                 data.time = value.substr(value.indexOf(' ') + 1);
