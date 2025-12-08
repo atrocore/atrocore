@@ -97,23 +97,16 @@ class Hierarchy extends AbstractRecordController
         if (!empty($request->get('ids'))) {
             $ids = (array)$request->get('ids');
             $params['ids'] = $ids;
-        } elseif (!empty($request->get('where')) || !empty($request->get('foreignWhere'))) {
+        } else {
             $params = [
-                'where'        => $this->prepareWhereQuery($request->get('where')),
-                'foreignWhere' => $this->prepareWhereQuery($request->get('foreignWhere')),
+                'where'        => $this->prepareWhereQuery($request->get('where') ?? []),
+                'foreignWhere' => $this->prepareWhereQuery($request->get('foreignWhere') ?? []),
                 'link'         => (string)$request->get('link'),
                 'scope'        => (string)$request->get('scope'),
                 'offset'       => 0,
                 'maxSize'      => 5000,
                 'asc'          => true,
                 'sortBy'       => 'id'
-            ];
-        }
-
-        if (empty($params)) {
-            return [
-                'total' => 0,
-                'tree'  => []
             ];
         }
 
