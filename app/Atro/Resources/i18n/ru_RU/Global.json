@@ -607,7 +607,8 @@
     "dontHaveAccessInInstance": "У Вас нет доступа к этой записи на экземпляре",
     "selectNoMoreThan": "Выберите не более {количество} записей",
     "fillEmptyFieldBeforeMerging": "Некоторые пустые поля обязательны для заполнения, пожалуйста, заполните их перед объединением.",
-    "minimumRecordForComparison": "У Вас не может быть меньше {count} записей."
+    "minimumRecordForComparison": "У Вас не может быть меньше {count} записей.",
+    "notPossibleToOpenDetailView": "Невозможно открыть детальный вид."
   },
   "boolFilters": {
     "onlyActive": "Активный",
