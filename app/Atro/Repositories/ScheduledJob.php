@@ -31,8 +31,34 @@ class ScheduledJob extends Base
             }
         }
 
-        if ($entity->isNew() && $this->getMetadata()->get("app.jobTypes.{$entity->get('type')}.unique")) {
-            $exists = $this->where(['type' => $entity->get('type')])->findOne();
+        $this->validateByType($entity);
+
+        parent::beforeSave($entity, $options);
+    }
+
+    protected function beforeRestore($id)
+    {
+        parent::beforeRestore($id);
+
+        $entity = $this
+            ->where(['id' => $id])
+            ->findOne(['withDeleted' => true]);
+
+        if (!empty($entity)) {
+            $this->validateByType($entity);
+        }
+    }
+
+    protected function validateByType(Entity $entity): void
+    {
+        // validation for unique job types
+        if ($this->getMetadata()->get("app.jobTypes.{$entity->get('type')}.unique")) {
+            $where = ['type' => $entity->get('type')];
+            if (!$entity->isNew()) {
+                $where['id!='] = $entity->id;
+            }
+
+            $exists = $this->where($where)->findOne();
             if (!empty($exists)) {
                 $message = $this->getInjection('language')->translate('onlyOneJobTypeAllowed', 'exceptions', 'ScheduledJob');
                 $typeLabel = $this->getInjection('language')->translateOption($entity->get('type'), 'type', 'ScheduledJob');
@@ -40,8 +66,6 @@ class ScheduledJob extends Base
                 throw new BadRequest(sprintf($message, $typeLabel));
             }
         }
-
-        parent::beforeSave($entity, $options);
     }
 
     protected function afterSave(Entity $entity, array $options = [])
