@@ -44,15 +44,18 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         timeFormatMap: {
             'HH:mm': 'H:i',
+            'HH:mm:ss': 'H:i:s',
             'hh:mm A': 'h:i A',
             'hh:mm a': 'h:i a',
+            'HH:mm:ss a': 'H:i:s a',
+            'HH:mm:ss A': 'H:i:s A',
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
 
             data.date = data.time = '';
-            var value = this.getDateTime().toDisplay(this.model.get(this.name));
+            var value = this.mode === 'edit' ? this.getDateTime().toDisplayFull(this.model.get(this.name)) : this.getDateTime().toDisplay(this.model.get(this.name));
             if (value) {
                 data.date = value.substr(0, value.indexOf(' '));
                 data.time = value.substr(value.indexOf(' ') + 1);
@@ -104,7 +107,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             $time.timepicker({
                 step: 30,
                 scrollDefaultNow: true,
-                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
+                timeFormat: this.mode === 'edit' ? 'H:i:s' : this.timeFormatMap[this.getDateTime().timeFormat]
             });
             $time.parent().find('button.time-picker-btn').on('click', function () {
                 $time.timepicker('show');
@@ -112,7 +115,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
         },
 
         setDefaultTime: function () {
-            var d = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+            var d = moment('2014-01-01 00:00:00').format(this.getDateTime().getDateTimeFormatFull()) || '';
             var index = d.indexOf(' ');
             if (~index) {
                 this.$time.val(d.substr(index + 1));
@@ -171,6 +174,7 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             var time = this.$el.find('[name="' + this.name + '-time"]').val();
 
             var value = null;
+
             if (date != '' && time != '') {
                 value = this.parse(date + ' ' + time);
             }

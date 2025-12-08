@@ -1740,6 +1740,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }, 50);
                 this.listenTo(this.model, 'afterInitQueryBuilder', () => {
                     if (rule.operator.type === 'between' && Array.isArray(rule.value) && rule.value.length === 2) {
+                        rule.leftValue = rule.value[0];
+                        rule.rightValue = rule.value[1];
                         model.set('value', inputName.endsWith('value_1') ? rule.value[1] : rule.value[0]);
                     } else {
                         model.set('value', rule.value);
