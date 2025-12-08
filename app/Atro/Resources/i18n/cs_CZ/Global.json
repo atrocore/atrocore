@@ -808,7 +808,7 @@
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
+    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
     "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}",
     "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}",
     "ownThisSelf": "{uživatel} se nastavil jako vlastník pro tento {entityType}",
@@ -1241,7 +1241,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
@@ -1280,7 +1280,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {
