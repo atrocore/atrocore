@@ -159,12 +159,6 @@
           "name": "autoDeleteAfterDays"
         },
         false
-      ],
-      [
-        {
-          "name": "primaryEntity"
-        },
-        false
       ]
     ]
   },
@@ -176,7 +170,7 @@
           "name": "hasDuplicates"
         },
         {
-          "name": "masterEntity"
+          "name": "primaryEntity"
         }
       ]
     ]

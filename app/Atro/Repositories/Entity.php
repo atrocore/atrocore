@@ -597,29 +597,6 @@ class Entity extends ReferenceData
             }
         }
 
-        if ($entity->isAttributeChanged('masterEntity')) {
-            $code = Matching::createCodeForMasterRecord($entity->id);
-            if (empty($entity->get('masterEntity'))) {
-                $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
-                if (!empty($matching)) {
-                    $this->getEntityManager()->removeEntity($matching);
-                }
-            } else {
-                $matching = $this->getEntityManager()->getRepository('Matching')->get();
-                $matching->set([
-                    'id'           => $code,
-                    'name'         => "Master Record for {$entity->id}",
-                    'code'         => $code,
-                    'type'         => 'masterRecord',
-                    'minimumScore' => 100,
-                    'sourceEntity' => $entity->id,
-                    'masterEntity' => $entity->get('masterEntity'),
-                    'isActive'     => false,
-                ]);
-                $this->getEntityManager()->saveEntity($matching);
-            }
-        }
-
         parent::afterSave($entity, $options);
     }
 

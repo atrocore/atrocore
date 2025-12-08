@@ -33,6 +33,7 @@ Espo.define('views/entity/fields/link-attributes-with-classification-automatical
                 && !this.model.get('disableAttributeLinking')
                 && this.model.id !== 'Listing'
                 && this.model.get('hasClassification')
+                && this.model.get('type') !== 'Derivative'
                 && this.model.get('hasAttribute');
         },
 

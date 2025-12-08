@@ -7,7 +7,6 @@
     "unInheritedRelations": "Relazioni non ereditate",
     "primaryEntity": "Entità primaria",
     "hasDuplicates": "Controlla i duplicati",
-    "masterEntity": "Entità master",
     "hasArchive": "Archiviabile",
     "hasActive": "Attivabile",
     "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",

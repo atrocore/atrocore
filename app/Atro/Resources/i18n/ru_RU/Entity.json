@@ -5,7 +5,6 @@
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
     "hasDuplicates": "Проверять дубликаты",
-    "masterEntity": "Мастер сущность",
     "hasArchive": "Архивируемый",
     "hasActive": "Активируемый",
     "hideFieldTypeFilters": "Скрыть фильтры типов полей",

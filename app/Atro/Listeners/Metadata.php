@@ -2257,6 +2257,17 @@ class Metadata extends AbstractListener
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'type'            => 'Derivative',
                 'primaryEntityId' => $primaryEntity,
+                'name'            => $scopeDefs['name'] ?? null,
+                'namePlural'      => $scopeDefs['namePlural'] ?? null,
+                'description'     => $scopeDefs['description'] ?? null,
+                'sortBy'          => $scopeDefs['sortBy'] ?? null,
+                'sortDirection'   => $scopeDefs['sortDirection'] ?? null,
+                'hasDuplicates'   => $scopeDefs['hasDuplicates'] ?? false,
+                'iconClass'       => $scopeDefs['iconClass'] ?? null,
+                'createdAt'       => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'      => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'     => $scopeDefs['createdById'] ?? null,
+                'modifiedById'    => $scopeDefs['modifiedById'] ?? null,
                 'layouts'         => false
             ]);
 

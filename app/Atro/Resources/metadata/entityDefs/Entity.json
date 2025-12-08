@@ -492,7 +492,8 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy"
+                "Hierarchy",
+                "Derivative"
               ]
             },
             {
@@ -544,28 +545,6 @@
                 "Base",
                 "Hierarchy"
               ]
-            }
-          ]
-        }
-      }
-    },
-    "masterEntity": {
-      "type": "varchar",
-      "view": "views/entity/fields/master-entity",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "isFalse",
-              "attribute": "matchingDisabled"
             }
           ]
         }

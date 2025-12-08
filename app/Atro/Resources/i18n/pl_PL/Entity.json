@@ -41,7 +41,6 @@
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
     "hasDuplicates": "Sprawdź duplikaty",
-    "masterEntity": "Podmiot główny",
     "primaryEntity": "Podmiot główny",
     "derivedEntities": "Podmioty pochodne"
   },

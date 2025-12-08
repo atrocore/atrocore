@@ -41,7 +41,6 @@
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
     "hasDuplicates": "Vérifier les doublons",
-    "masterEntity": "Entité de référence",
     "primaryEntity": "Entité primaire",
     "derivedEntities": "Entités dérivées"
   },
