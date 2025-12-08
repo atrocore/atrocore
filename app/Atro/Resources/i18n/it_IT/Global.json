@@ -431,8 +431,7 @@
     "expandWindow": "Espandi la finestra",
     "Compare": "Confronta",
     "Standard": "Standard",
-    "addItem": "Aggiungi articolo",
-    "masterDataManagement": "Gestione dei dati master"
+    "addItem": "Aggiungi articolo"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",

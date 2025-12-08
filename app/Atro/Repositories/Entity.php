@@ -575,10 +575,10 @@ class Entity extends ReferenceData
             }
         }
 
-        if ($entity->isAttributeChanged('hasDuplicates')) {
+        if ($entity->isAttributeChanged('matchDuplicates')) {
             $code = Matching::createCodeForDuplicate($entity->id);
-            if (empty($entity->get('hasDuplicates'))) {
-                $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+            if (empty($entity->get('matchDuplicates'))) {
+                $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
                 if (!empty($matching)) {
                     $this->getEntityManager()->removeEntity($matching);
                 }
@@ -586,8 +586,6 @@ class Entity extends ReferenceData
                 $matching = $this->getEntityManager()->getRepository('Matching')->get();
                 $matching->set([
                     'id'           => $code,
-                    'name'         => "Duplicate for {$entity->id}",
-                    'code'         => $code,
                     'type'         => 'duplicate',
                     'minimumScore' => 100,
                     'entity'       => $entity->id,
@@ -597,10 +595,10 @@ class Entity extends ReferenceData
             }
         }
 
-        if ($entity->isAttributeChanged('primaryEntityId')) {
+        if ($entity->isAttributeChanged('matchMasterRecords')) {
             $code = Matching::createCodeForMasterRecord($entity->id);
-            if (empty($entity->get('primaryEntityId'))) {
-                $matching = $this->getEntityManager()->getRepository('Matching')->getEntityByCode($code);
+            if (empty($entity->get('matchMasterRecords'))) {
+                $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
                 if (!empty($matching)) {
                     $this->getEntityManager()->removeEntity($matching);
                 }
@@ -608,8 +606,6 @@ class Entity extends ReferenceData
                 $matching = $this->getEntityManager()->getRepository('Matching')->get();
                 $matching->set([
                     'id'           => $code,
-                    'name'         => "Master Record for {$entity->id}",
-                    'code'         => $code,
                     'type'         => 'masterRecord',
                     'minimumScore' => 100,
                     'sourceEntity' => $entity->id,

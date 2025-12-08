@@ -46,7 +46,7 @@ class Matching extends Base
         return $this->where(['code' => $code])->findOne();
     }
 
-    public function activate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    public function activate(string $id, bool $skipMatchingUpdate = false): void
     {
         if (!$skipMatchingUpdate) {
             $matching = $this->get($id);
@@ -55,13 +55,13 @@ class Matching extends Base
         }
 
         $matchings = $this->getConfig()->get('matchings', []);
-        $matchings[$code] = true;
+        $matchings[$id] = true;
 
         $this->getConfig()->set('matchings', $matchings);
         $this->getConfig()->save();
     }
 
-    public function deactivate(string $id, string $code, bool $skipMatchingUpdate = false): void
+    public function deactivate(string $id, bool $skipMatchingUpdate = false): void
     {
         if (!$skipMatchingUpdate) {
             $matching = $this->get($id);
@@ -70,7 +70,7 @@ class Matching extends Base
         }
 
         $matchings = $this->getConfig()->get('matchings', []);
-        $matchings[$code] = false;
+        $matchings[$id] = false;
 
         $this->getConfig()->set('matchings', $matchings);
         $this->getConfig()->save();
@@ -127,11 +127,11 @@ class Matching extends Base
             $this->rebuild();
         }
 
-        if ($entity->isAttributeChanged('isActive')) {
+        if ($entity->isAttributeChanged('isActive') && !$entity->isNew()) {
             if (!empty($entity->get('isActive'))) {
-                $this->activate($entity->id, $entity->get('code'), true);
+                $this->activate($entity->id, true);
             } else {
-                $this->deactivate($entity->id, $entity->get('code'), true);
+                $this->deactivate($entity->id, true);
             }
         }
 

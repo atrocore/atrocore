@@ -1,12 +1,5 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "customizable": false,
-      "layoutRemoveDisabled": true
-    },
     "type": {
       "type": "enum",
       "required": true,

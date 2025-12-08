@@ -3,7 +3,6 @@
     "name": "Name Singular",
     "namePlural": "Name Plural",
     "disabled": "Deaktiviert",
-    "hasDuplicates": "Auf Duplikate prüfen",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",

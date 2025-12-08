@@ -159,18 +159,24 @@
           "name": "autoDeleteAfterDays"
         },
         false
+      ],
+      [
+        {
+          "name": "primaryEntity"
+        },
+        false
       ]
     ]
   },
   {
-    "label": "masterDataManagement",
+    "label": "matchings",
     "rows": [
       [
         {
-          "name": "hasDuplicates"
+          "name": "matchDuplicates"
         },
         {
-          "name": "primaryEntity"
+          "name": "matchMasterRecords"
         }
       ]
     ]

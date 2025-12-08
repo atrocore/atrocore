@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/entity/fields/has-duplicates', 'views/fields/bool',
+Espo.define('views/entity/fields/match-duplicates', 'views/fields/bool',
     Dep => Dep.extend({
 
         initInlineEdit() {
@@ -20,7 +20,7 @@ Espo.define('views/entity/fields/has-duplicates', 'views/fields/bool',
             $cell.find('.configure-matching').parent().remove();
 
             if (this.model.get(this.name)) {
-                const $link = $(`<a href="/#Matching/view/${this.model.id}-D2D" class="hidden" title="${this.translate('configureMatching', 'labels', 'Matching')}"><i class="ph ph-gear-six configure-matching"></i></a>`);
+                const $link = $(`<a href="${this.getLinkUrl()}" class="hidden" title="${this.translate('configureMatching', 'labels', 'Matching')}"><i class="ph ph-gear-six configure-matching"></i></a>`);
                 if (inlineActions.size()) {
                     inlineActions.prepend($link);
                 } else {
@@ -43,6 +43,10 @@ Espo.define('views/entity/fields/has-duplicates', 'views/fields/bool',
                 });
             }
 
+        },
+
+        getLinkUrl() {
+            return `/#Matching/view/${this.model.id}-D2D`;
         },
 
     })

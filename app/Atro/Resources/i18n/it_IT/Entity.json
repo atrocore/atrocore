@@ -6,7 +6,6 @@
     "customizable": "Personalizzabile",
     "unInheritedRelations": "Relazioni non ereditate",
     "primaryEntity": "Entità primaria",
-    "hasDuplicates": "Controlla i duplicati",
     "hasArchive": "Archiviabile",
     "hasActive": "Attivabile",
     "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",

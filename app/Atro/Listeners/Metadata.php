@@ -2255,20 +2255,21 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'type'            => 'Derivative',
-                'primaryEntityId' => $primaryEntity,
-                'name'            => $scopeDefs['name'] ?? null,
-                'namePlural'      => $scopeDefs['namePlural'] ?? null,
-                'description'     => $scopeDefs['description'] ?? null,
-                'sortBy'          => $scopeDefs['sortBy'] ?? null,
-                'sortDirection'   => $scopeDefs['sortDirection'] ?? null,
-                'hasDuplicates'   => $scopeDefs['hasDuplicates'] ?? false,
-                'iconClass'       => $scopeDefs['iconClass'] ?? null,
-                'createdAt'       => $scopeDefs['createdAt'] ?? null,
-                'modifiedAt'      => $scopeDefs['modifiedAt'] ?? null,
-                'createdById'     => $scopeDefs['createdById'] ?? null,
-                'modifiedById'    => $scopeDefs['modifiedById'] ?? null,
-                'layouts'         => false
+                'type'               => 'Derivative',
+                'primaryEntityId'    => $primaryEntity,
+                'name'               => $scopeDefs['name'] ?? null,
+                'namePlural'         => $scopeDefs['namePlural'] ?? null,
+                'description'        => $scopeDefs['description'] ?? null,
+                'sortBy'             => $scopeDefs['sortBy'] ?? null,
+                'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
+                'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
+                'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
+                'iconClass'          => $scopeDefs['iconClass'] ?? null,
+                'createdAt'          => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'        => $scopeDefs['createdById'] ?? null,
+                'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
+                'layouts'            => false
             ]);
 
             // add link to the primary entity
@@ -2301,7 +2302,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
-            if (!empty($defs['hasDuplicates'])) {
+            if (!empty($defs['matchDuplicates'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2314,7 +2315,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (!empty($defs['masterEntity'])) {
+            if (!empty($defs['matchMasterRecords'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2327,7 +2328,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (empty($defs['masterEntity'])) {
+            if (empty($defs['matchMasterRecords'])) {
                 continue;
             }
 
@@ -2340,16 +2341,16 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $sourceRecords,
-                'entity'  => $defs['masterEntity'],
+                'entity'  => $defs['primaryEntityId'],
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['fields'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['fields'][$sourceRecords] = [
                 'type'         => 'linkMultiple',
                 'noLoad'       => true,
                 'customizable' => false,
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['links'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['links'][$sourceRecords] = [
                 'type'    => 'hasMany',
                 'foreign' => 'goldenRecord',
                 'entity'  => $sourceEntity,

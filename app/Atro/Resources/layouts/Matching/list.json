@@ -1,10 +1,7 @@
 [
   {
-    "name": "name",
+    "name": "id",
     "link": true
-  },
-  {
-    "name": "code"
   },
   {
     "name": "type"

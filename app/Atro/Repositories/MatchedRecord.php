@@ -43,7 +43,7 @@ class MatchedRecord extends Base
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
-        $toRemove = $this->getMetadata()->get("scopes.$entityName.hasDuplicates") || $this->getMetadata()->get("scopes.$entityName.masterEntity");
+        $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
         if (!$toRemove) {
             foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
                 if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {

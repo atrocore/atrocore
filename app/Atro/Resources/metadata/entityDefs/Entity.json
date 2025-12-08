@@ -481,9 +481,34 @@
       "type": "bool",
       "protected": true
     },
-    "hasDuplicates": {
+    "matchMasterRecords": {
       "type": "bool",
-      "view": "views/entity/fields/has-duplicates",
+      "view": "views/entity/fields/match-master-records",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Derivative"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
+            }
+          ]
+        }
+      }
+    },
+    "matchDuplicates": {
+      "type": "bool",
+      "view": "views/entity/fields/match-duplicates",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [

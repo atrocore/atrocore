@@ -40,7 +40,6 @@
     "nonDuplicatableFields": "Pola niepowielone",
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
-    "hasDuplicates": "Sprawdź duplikaty",
     "primaryEntity": "Podmiot główny",
     "derivedEntities": "Podmioty pochodne"
   },
