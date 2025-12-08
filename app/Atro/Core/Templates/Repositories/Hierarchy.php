@@ -211,7 +211,7 @@ class Hierarchy extends Base
 
         if (!empty($parentId)) {
             $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
-        }else{
+        } else {
             $sth->bindValue(':emptyRoutes', '[]', \PDO::PARAM_STR);
         }
 
@@ -529,24 +529,20 @@ class Hierarchy extends Base
 
             $countSql = str_replace([$mtAlias, 'mt_alias'], [$mtAlias . '_count', 'main'], $selectCountQuery->getSQL());
 
+            $mainQb = $qb;
             // use subquery to optimize performance with offset
-            $query = "SELECT main.*, ($countSql)  AS children_count FROM ({$qb->getSQL()}) AS main";
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select("main.*")
+                ->from('(' . $mainQb->getSQL() . ')', 'main');
 
-            $sth = $this->getEntityManager()->getPDO()->prepare($query);
+            $qb->addSelect("($countSql) AS children_count");
 
             foreach ($selectCountQuery->getParameters() as $pName => $pValue) {
                 $qb->setParameter($pName, $pValue, $mapper::getParameterType($pValue));
             }
-
-            foreach ($qb->getParameters() as $pName => $pValue) {
-                if (str_contains($query, ":$pName")) {
-                    $sth->bindValue(':' . $pName, $pValue, $mapper::getParameterType($pValue));
-                }
+            foreach ($mainQb->getParameters() as $pName => $pValue) {
+                $qb->setParameter($pName, $pValue, $mapper->getParameterType($pValue));
             }
-
-            $sth->execute();
-
-            return Util::arrayKeysToCamelCase($sth->fetchAll(\PDO::FETCH_ASSOC));
         }
 
 
