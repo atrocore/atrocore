@@ -537,7 +537,8 @@
     "youHaveErrorsInFilter": "Il filtro presenta alcuni errori.",
     "theSavedFilterMightBeCorrupt": "Formato non supportato, il Filtro salvato potrebbe essere corrotto.",
     "closePanelConfirmation": "È sicuro di voler chiudere il pannello?",
-    "minimumRecordForComparison": "Non può avere meno di {count} record."
+    "minimumRecordForComparison": "Non può avere meno di {count} record.",
+    "notPossibleToOpenDetailView": "Non è possibile aprire la vista dei dettagli."
   },
   "monthNamesShort": {
     "Apr": "Apr",
