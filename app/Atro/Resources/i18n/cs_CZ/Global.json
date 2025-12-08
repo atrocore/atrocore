@@ -717,7 +717,8 @@
     "checkForNewNotifications": "Kontrola nových oznámení",
     "massFollowResultSingle": "Nyní je sledován {count} záznam",
     "defaultEnumValueCannotBeEmpty": "Pokud je prázdná hodnota zakázána, měla by být vybrána výchozí hodnota.",
-    "minimumRecordForComparison": "Nemůžete mít méně než {počet} záznamů."
+    "minimumRecordForComparison": "Nemůžete mít méně než {počet} záznamů.",
+    "notPossibleToOpenDetailView": "Zobrazení detailů není možné otevřít."
   },
   "boolFilters": {
     "onlyActive": "Aktivní",
