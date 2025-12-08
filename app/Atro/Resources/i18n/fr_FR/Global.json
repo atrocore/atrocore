@@ -648,7 +648,8 @@
     "unableToDuplicateRecord": "Impossible de dupliquer. Un enregistrement avec une valeur pour un champ à valeur unique existe déjà.",
     "youHaveErrorsInFilter": "Le filtre comporte quelques erreurs.",
     "theSavedFilterMightBeCorrupt": "n'est pas pris en charge, le filtre enregistré peut être corrompu.",
-    "minimumRecordForComparison": "Vous ne pouvez pas avoir moins de {count} enregistrements."
+    "minimumRecordForComparison": "Vous ne pouvez pas avoir moins de {count} enregistrements.",
+    "notPossibleToOpenDetailView": "Il n'est pas possible d'ouvrir la vue détaillée."
   },
   "scopeNamesPlural": {
     "Classification": "Classifications",
