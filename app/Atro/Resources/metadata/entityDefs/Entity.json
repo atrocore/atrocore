@@ -488,6 +488,10 @@
         "visible": {
           "conditionGroup": [
             {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
               "type": "in",
               "attribute": "type",
               "value": [

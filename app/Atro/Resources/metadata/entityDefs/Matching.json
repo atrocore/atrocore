@@ -7,15 +7,6 @@
       "customizable": false,
       "layoutRemoveDisabled": true
     },
-    "code": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "unique": true,
-      "customizable": false,
-      "layoutRemoveDisabled": true,
-      "protected": true
-    },
     "type": {
       "type": "enum",
       "required": true,
