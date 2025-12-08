@@ -78,6 +78,16 @@ class ScheduledJob extends Base
         }
     }
 
+    protected function afterRestore($entity)
+    {
+        parent::afterRestore($entity);
+
+        if ($entity->get('type') === 'SendReports') {
+            $this->getConfig()->set('reportingEnabled', $entity->get('isActive'));
+            $this->getConfig()->save();
+        }
+    }
+
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
