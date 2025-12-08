@@ -122,6 +122,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.notify('Loading...');
 
             let attributes = {};
+            let relationshipData = {}
 
 
             for (const panel of this.fieldPanels) {
@@ -138,11 +139,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             let buttons = this.getParentView().$el.find('.modal-footer button');
 
-            let relationshipData = relationshipsPanels.fetch();
+            if(relationshipsPanels) {
+                relationshipData = relationshipsPanels.fetch();
 
-            if (relationshipsPanels.validate()) {
-                this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
-                return;
+                if (relationshipsPanels.validate()) {
+                    this.notify(this.translate('fillEmptyFieldBeforeMerging', 'messages'), 'error');
+                    return;
+                }
             }
 
             let id = $('input[type="radio"][name="check-all"]:checked').val();
