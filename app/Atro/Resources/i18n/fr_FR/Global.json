@@ -718,7 +718,8 @@
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
     "SelectionRecord": "Elements de sélection",
-    "MasterDataEntity": "Entités de reference"
+    "MasterDataEntity": "Entités de reference",
+    "notPossibleToOpenDetailView": "Il est impossible d’ouvrir la vue détaillée."
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
