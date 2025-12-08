@@ -78,6 +78,10 @@ Espo.define('date-time', [], function () {
             return this.dateFormat + ' ' + this.timeFormat;
         },
 
+        getDateTimeFormatFull: function () {
+            return this.dateFormat + ' HH:mm:ss';
+        },
+
         getReadableDateFormat: function () {
             return this.readableDateFormatMap[this.getDateFormat()] || 'MMM DD';
         },
@@ -128,15 +132,15 @@ Espo.define('date-time', [], function () {
             }
             var m;
             if (this.timeZone) {
-                m = moment.tz(string, this.getDateTimeFormat(), this.timeZone).utc();
+                m = moment.tz(string, this.getDateTimeFormatFull(), this.timeZone).utc();
             } else {
-                m = moment.utc(string, this.getDateTimeFormat());
+                m = moment.utc(string, this.getDateTimeFormatFull());
             }
 
             if (!m.isValid()) {
                 return -1;
             }
-            return m.format(this.internalDateTimeFormat) + ':00';
+            return m.format(this.internalDateTimeFullFormat);
         },
 
         fromDisplayDateTime: function (string) {
@@ -154,6 +158,13 @@ Espo.define('date-time', [], function () {
             return this.toMoment(string).format(this.getDateTimeFormat());
         },
 
+        toDisplayFull: function (string) {
+            if (!string) {
+                return '';
+            }
+            return this.toMoment(string).format(this.getDateTimeFormatFull());
+        },
+
         getNowMoment: function () {
             return moment().tz(this.getTimeZone())
         },
@@ -164,7 +175,7 @@ Espo.define('date-time', [], function () {
         },
 
         toMoment: function (string) {
-            var m = moment.utc(string, this.internalDateTimeFormat);
+            var m = moment.utc(string, this.internalDateTimeFullFormat);
             if (this.timeZone) {
                 m = m.tz(this.timeZone);
             }

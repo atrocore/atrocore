@@ -190,7 +190,10 @@
         "hh:mma",
         "hh:mmA",
         "hh:mm A",
-        "hh:mm a"
+        "hh:mm a",
+        "HH:mm:ss",
+        "HH:mm:ss a",
+        "HH:mm:ss A"
       ],
       "default": "HH:mm"
     },
