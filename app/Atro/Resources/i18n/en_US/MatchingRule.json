@@ -2,10 +2,6 @@
   "fields": {
     "matching": "Matching",
     "weight": "Weight",
-    "sourceField": "Source Field",
-    "masterField": "Master Field",
-    "sourceEntity": "Source Entity",
-    "masterEntity": "Master Entity",
     "matchingRuleSet": "Set",
     "matchingRules": "Matching Rules",
     "operator": "Operator"

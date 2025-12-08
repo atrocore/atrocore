@@ -5,7 +5,6 @@
     "masterEntity": "Entité de référence",
     "matchingRules": "Règles d'appariements",
     "matchedRecords": "Enregistrements appariés",
-    "sourceEntity": "Entité source",
     "matchedRecordsMax": "Nombre maximal d'enregistrements appariés"
   },
   "options": {

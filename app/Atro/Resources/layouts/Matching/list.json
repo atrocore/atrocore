@@ -7,6 +7,12 @@
     "name": "type"
   },
   {
+    "name": "entity"
+  },
+  {
+    "name": "masterEntity"
+  },
+  {
     "name": "minimumScore"
   },
   {

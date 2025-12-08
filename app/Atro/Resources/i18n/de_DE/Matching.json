@@ -1,7 +1,6 @@
 {
   "fields": {
     "minimumScore": "Mindestpunktzahl, %",
-    "sourceEntity": "Quellentität",
     "masterEntity": "Master-Entität",
     "matchingRules": "Übereinstimmungsregeln",
     "entity": "Entität",

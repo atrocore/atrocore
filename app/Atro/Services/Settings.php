@@ -44,7 +44,7 @@ class Settings extends AbstractService
         $data['coreVersion'] = ComposerService::getCoreVersion();
 
         $data['matchings'] = $this->getEntityManager()->getRepository('Matching')
-            ->select(['id', 'type', 'sourceEntity', 'masterEntity'])
+            ->select(['id', 'type', 'entity', 'masterEntity'])
             ->find()->toArray();
 
         $data['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')

@@ -23,9 +23,18 @@ class V2Dot1Dot35 extends Base
 
     public function up(): void
     {
-        $this->exec("truncate matched_record");
-        $this->exec("truncate matching");
-        $this->exec("truncate matching_rule");
+//        $this->exec("truncate matched_record");
+//        $this->exec("truncate matching");
+//        $this->exec("truncate matching_rule");
+
+        // ALTER TABLE matching RENAME COLUMN source_entity TO entity
+
+        // DROP INDEX IDX_MATCHED_RECORD_STAGING_ENTITY;
+        //ALTER TABLE matched_record ADD staging_entity VARCHAR(255) DEFAULT NULL;
+        //ALTER TABLE matched_record ADD staging_entity_id VARCHAR(255) DEFAULT NULL;
+        //ALTER TABLE matched_record DROP source_entity;
+        //ALTER TABLE matched_record DROP source_entity_id;
+        //CREATE INDEX IDX_MATCHED_RECORD_STAGING_ENTITY ON matched_record (type, staging_entity, staging_entity_id)
     }
 
     protected function exec(string $sql): void

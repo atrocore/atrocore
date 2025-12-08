@@ -27,22 +27,8 @@
         {
           "name": "weight"
         },
-        false
-      ],
-      [
         {
-          "name": "sourceEntity"
-        },
-        {
-          "name": "masterEntity"
-        }
-      ],
-      [
-        {
-          "name": "sourceField"
-        },
-        {
-          "name": "masterField"
+          "name": "field"
         }
       ]
     ]

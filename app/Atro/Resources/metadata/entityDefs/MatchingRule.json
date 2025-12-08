@@ -46,18 +46,6 @@
         }
       }
     },
-    "sourceEntity": {
-      "type": "varchar",
-      "notStorable": true,
-      "view": "views/matching-rule/fields/source-entity",
-      "readOnly": true
-    },
-    "masterEntity": {
-      "type": "varchar",
-      "notStorable": true,
-      "view": "views/matching-rule/fields/master-entity",
-      "readOnly": true
-    },
     "weight": {
       "type": "int",
       "view": "views/matching-rule/fields/weight",
@@ -107,39 +95,7 @@
         }
       }
     },
-    "masterField": {
-      "type": "enum",
-      "view": "views/matching-rule/fields/entity-field",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "equal",
-                "like",
-                "contains"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "equal",
-                "like",
-                "contains"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "sourceField": {
+    "field": {
       "type": "enum",
       "view": "views/matching-rule/fields/entity-field",
       "conditionalProperties": {
