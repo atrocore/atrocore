@@ -43,7 +43,6 @@
     let treeScope: string;
     let layoutData: any;
     let selectNodeId: string | null = null;
-    let disabledNodeId: string | null = null;
     let isHidden: boolean = false;
     let sortAsc: boolean = true;
     let sortBy: string | null = null;
@@ -162,7 +161,7 @@
 
         if (
             data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
-            && ((canUseDataRequest() && foreignWhereData.length) || hasTextFilter)
+            && (canUseDataRequest() || hasTextFilter)
         ) {
             treeLoading = true;
             if (searchValue) {
@@ -176,7 +175,7 @@
                 "sortBy": sortBy,
                 "asc": !!sortAsc
             }).then(response => {
-                buildTree(response.tree);
+                buildTree(filterResponse(response));
             });
 
             return;
@@ -193,7 +192,7 @@
             closedIcon: window.$('<i class="ph ph-folder"></i>'),
             openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
             onCreateLi: function (node, $li, is_selected) {
-                if (node.disabled || node.id === disabledNodeId) {
+                if (node.disabled) {
                     $li.addClass('disabled');
                 } else {
                     $li.removeClass('disabled');
@@ -253,9 +252,6 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (node.load_on_demand) {
-                        node.has_children = true;
-                    }
                     if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.has_children) {
                         const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
                         $li.find('.jqtree-element').append($el);
@@ -406,7 +402,6 @@
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callAddNodeToFilter();
-                    disabledNodeId = selectNodeId
                     selectNodeId = null;
                     Storage.clear('selectedNodeId', scope);
                     Storage.clear('selectedNodeRoute', scope);
@@ -540,9 +535,7 @@
     function generateSubTreeUrl(node) {
         const foreignWhere = getForeignWhereData()
         let url = scope + `/action/Tree?isTreePanel=1&scope=${scope}&link=_self`;
-        if (
-            Metadata.get(['scopes', scope, 'type']) === 'Hierarchy' && canUseDataRequest()
-        ) {
+        if (Metadata.get(['scopes', scope, 'type']) === 'Hierarchy') {
             url = `${scope}/action/TreeData?scope=${scope}&link=_self`
         }
 
@@ -647,6 +640,29 @@
         }
     }
 
+    function getDisabledNodesFromFilter() {
+        const res = []
+
+        let field = activeItem.name
+        let operator = 'linked_with'
+
+        if (Metadata.get(['entityDefs', scope, 'fields', field, 'type']) === 'link') {
+            field = field + 'Id';
+            operator = 'in'
+        }
+
+        getForeignWhereData().forEach(item => {
+            if (item.rules) {
+                item.rules.forEach(rule => {
+                    if (rule.operator === operator && rule.id === field && rule.value.length === 1) {
+                        res.push(rule.value[0])
+                    }
+                })
+            }
+        })
+        return res
+    }
+
     export function unSelectTreeNode(id) {
         const $tree = getTreeEl();
         const node = $tree.tree('getNodeById', id);
@@ -666,16 +682,38 @@
     }
 
     function filterResponse(response, direction = null) {
+        let res;
         if (response.tree) {
-            return response.tree;
-        }
-        if (!response.list) {
-            return response;
+            res = response.tree;
+        } else if (!response.list) {
+            res = response;
+        } else {
+            res = response.list;
+            pushShowMore(response.list, direction);
         }
 
-        pushShowMore(response.list, direction);
+        getDisabledNodesFromFilter().forEach(id => {
+            const node = res.find(item => item.id === id)
+            if (node) {
+                node.disabled = true;
+            }
+        })
 
-        return response.list;
+        addHasChildren(res)
+
+        return res;
+    }
+
+    function addHasChildren(list) {
+        list.forEach(item => {
+            if (item.load_on_demand) {
+                item.has_children = true;
+            }
+            if (item.children && item.children.length > 0) {
+                item.has_children = true;
+                addHasChildren(item.children);
+            }
+        });
     }
 
     function pushShowMore(list, direction) {
@@ -1293,11 +1331,6 @@
         top: 0;
         right: 25px;
         cursor: pointer;
-    }
-
-    :global(ul.jqtree-tree .jqtree_common.disabled > div > span) {
-        color: #000;
-        font-weight: bold;
     }
 
     .category-panel .icons-wrapper .toggle {
