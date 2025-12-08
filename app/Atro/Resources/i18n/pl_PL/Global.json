@@ -607,7 +607,8 @@
     "youHaveErrorsInFilter": "Filtr zawiera pewne błędy.",
     "theSavedFilterMightBeCorrupt": "Format nie jest obsługiwany, zapisany filtr może być uszkodzony.",
     "deletePermanentlyRecordConfirmation": "Czy na pewno chce Pan/Pani trwale usunąć rekord?",
-    "minimumRecordForComparison": "Nie można mieć mniej niż {count} rekordów."
+    "minimumRecordForComparison": "Nie można mieć mniej niż {count} rekordów.",
+    "notPossibleToOpenDetailView": "Nie można otworzyć widoku szczegółowego."
   },
   "boolFilters": {
     "onlyActive": "Aktywne",
