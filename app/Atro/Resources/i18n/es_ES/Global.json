@@ -607,7 +607,8 @@
     "queryHasErrors": "Hay algunos errores en su consulta",
     "actionExecuted": "La acción \"%s\" se ha ejecutado correctamente",
     "linked": "Los registros se vincularon con éxito.",
-    "minimumRecordForComparison": "No puede tener menos de {count} registros."
+    "minimumRecordForComparison": "No puede tener menos de {count} registros.",
+    "notPossibleToOpenDetailView": "No es posible abrir la vista detallada."
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
