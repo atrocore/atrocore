@@ -272,14 +272,18 @@
             showEmptyPlaceholder = data.length === 0
         }
 
+        let dataLoaded = false;
+
         $tree.on('tree.load_data', e => {
             Notifier.notify(false)
-
-            if (!e.node) {
-                if (callbacks?.treeLoad) {
-                    callbacks.treeLoad(treeScope, treeData);
-                }
+            if (dataLoaded) {
+                return
             }
+
+            if (callbacks?.treeLoad) {
+                callbacks.treeLoad(treeScope, treeData);
+            }
+            dataLoaded = true;
         })
         $tree.on('tree.refresh', e => {
             showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
