@@ -2226,9 +2226,11 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                if ($fieldDefs['type'] === 'linkMultiple') {
-                    continue;
+                // disable require
+                if (!empty($fieldDefs['required'])) {
+                    $fieldDefs['required'] = false;
                 }
+                //@todo disable require via conditional properties
 
                 // disable unique indexes
                 if (!empty($fieldDefs['unique'])) {
@@ -2238,8 +2240,57 @@ class Metadata extends AbstractListener
                 if ($fieldDefs['type'] === 'link') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
                     if (!empty($linkDefs['foreign'])) {
-                        unset($linkDefs['foreign']);
+                        $foreign = lcfirst($scope) . 'sDerivatives';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+
+                        $linkDefs['foreign'] = $foreign;
                     }
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
+
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+
+                    // for oneToMany relation
+                    if (empty($linkDefs['relationName'])) {
+                        $foreign = lcfirst($scope) . 'Derivative';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+
+                        $linkDefs['foreign'] = $foreign;
+                    }
+
+                    // for manyToMany relation
+                    if (!empty($linkDefs['relationName'])) {
+                        // for manyToMany relation
+                        $relationName = $scope . $linkDefs['entity'];
+
+                        switch ($fieldName) {
+                            case 'followers':
+                                $relationName = $linkDefs['entity'] . 'Followed' . $scope;
+                                break;
+                            case 'teams':
+                                $relationName = $linkDefs['relationName'];
+                                break;
+                        }
+
+                        if (!empty($linkDefs['foreign'])) {
+                            $foreign = lcfirst($scope) . 'sDerivatives';
+                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName'] = $relationName;
+                            $linkDefs['foreign'] = $foreign;
+                        }
+
+                        $linkDefs['relationName'] = $relationName;
+                    }
+
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
@@ -2247,6 +2298,7 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
+
             if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
                 $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
             }
