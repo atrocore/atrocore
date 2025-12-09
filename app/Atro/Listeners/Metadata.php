@@ -2275,7 +2275,7 @@ class Metadata extends AbstractListener
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
                 'type'     => 'link',
-                'required' => true
+                'required' => false
             ];
             $data['entityDefs'][$scope]['links']['primaryRecord'] = [
                 'type'    => 'belongsTo',
