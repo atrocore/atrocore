@@ -613,7 +613,8 @@
     "youHaveErrorsInFilter": "The filter have some errors.",
     "theSavedFilterMightBeCorrupt": "Format not supported, the Saved Filter might be corrupt.",
     "closePanelConfirmation": "Are you sure you want to close the panel?",
-    "minimumRecordForComparison": "You cannot have less than {count} records."
+    "minimumRecordForComparison": "You cannot have less than {count} records.",
+    "notPossibleToOpenDetailView": "It is not possible to open the detail view."
   },
   "boolFilters": {
     "onlyActive": "Active",

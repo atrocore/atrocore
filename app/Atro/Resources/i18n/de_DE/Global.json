@@ -613,7 +613,8 @@
     "theSavedFilterMightBeCorrupt": "Format nicht unterstützt, der gespeicherte Filter könnte beschädigt sein.",
     "closePanelConfirmation": "Sind Sie sicher, dass Sie das Panel schließen wollen?",
     "jobAdded": "Job wurde erfolgreich zum Job Manager hinzugefügt",
-    "minimumRecordForComparison": "Sie dürfen nicht weniger als {count} Datensätze haben."
+    "minimumRecordForComparison": "Sie dürfen nicht weniger als {count} Datensätze haben.",
+    "notPossibleToOpenDetailView": "Die Detailansicht kann nicht geöffnet werden."
   },
   "unit Length": {
     "mm": "mm",

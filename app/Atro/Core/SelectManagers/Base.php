@@ -1243,67 +1243,18 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $dt->modify('-1 second');
                     $to = $dt->format($format);
-
                     $where['value'] = [$from, $to];
                 }
                 break;
-            case 'equals':
-                $where['type'] = 'between';
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $from = $dt->format($format);
-                $dt->modify('+ 59 second');
-                $to = $dt->format($format);
-                $where['value'] = [$from, $to];
-                break;
-            case'notEquals':
-                $where['type'] = 'between';
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $from = $dt->format($format);
-                $dt->modify('+ 59 second');
-                $to = $dt->format($format);
-                $where = [
-                    'type' => 'or',
-                    'value' => [
-                        [
-                            'attribute' => $attribute,
-                            'type' => 'lessThan',
-                            'value' => $from,
-                            'dateTime' => false
-                        ],
-                        [
-                            'attribute' => $attribute,
-                            'type' => 'greaterThan',
-                            'value' => $to,
-                            'dateTime' => false
-                        ],
-                        [
-                            'attribute' => $attribute,
-                            'type' => 'isNull',
-                            'dateTime' => false
-                        ]
-                    ]
-                ];
-                break;
-            case 'lessThanOrEquals':
-                $dt = new \DateTime($value, new \DateTimeZone($timeZone));
-                $dt->setTimezone(new \DateTimeZone('UTC'));
-                $dt->modify('+ 59 second');
-                $where = [
-                    'attribute' => $attribute,
-                    'type'      => 'lessThan',
-                    'value'     => $dt->format($format)
-                ];
-                break;
             default:
                 $where['type'] = $type;
-                if(!empty($value)) {
+                if (!empty($value) && is_string($value)) {
                     $dt = new \DateTime($value, new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     $where['value'] = $dt->format($format);
+                } else {
+                    $where['value'] = $value;
                 }
 
         }

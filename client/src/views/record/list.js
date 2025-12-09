@@ -1068,7 +1068,6 @@ Espo.define('views/record/list', 'view', function (Dep) {
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
                 this.removeMassAction('massUpdate');
-                this.removeMassAction('merge');
             }
 
             if (this.getMetadata().get(['scopes', this.entityType, 'selectionDisabled'])) {

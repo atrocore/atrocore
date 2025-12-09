@@ -436,9 +436,6 @@ class Record extends RecordService
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
-        }
 
         $relationshipData = json_decode(json_encode($attributes->relationshipData), true);
 
@@ -451,9 +448,6 @@ class Record extends RecordService
             }
             $source = $this->getEntity($sourceId);
             $sourceList[] = $source;
-            if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
-                throw new Forbidden();
-            }
         }
 
         $this->beforeMerge($entity, $sourceList, $attributes);

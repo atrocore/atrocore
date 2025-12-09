@@ -496,6 +496,10 @@ class Hierarchy extends Record
 
         $this->prepareChildInputData($attachment);
 
+        if (property_exists($attachment, 'routesNames')) {
+            unset($attachment->routesNames);
+        }
+
         $entity = parent::createEntity($attachment);
 
         // run inherit all for child relations
@@ -771,7 +775,7 @@ class Hierarchy extends Record
                 foreach ($ids as $id) {
                     $routesNames[$k][] = [
                         'id'   => $id,
-                        'name' => $routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name'),
+                        'name' => !empty($routeEntities[$id]) ? ($routeEntities[$id]->get($name) ?? $routeEntities[$id]->get('name')) : $id,
                     ];
                 }
             }

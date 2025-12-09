@@ -167,8 +167,7 @@ class Hierarchy extends Base
                 $query = "SELECT x.position
                       FROM (SELECT t.id, row_number() over(ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) AS position
                             FROM $quotedTableName t
-                            LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
-                            WHERE t.deleted=:deleted AND h.entity_id IS NULL) x
+                            WHERE t.deleted=:deleted AND t.routes= :emptyRoutes) x
                       WHERE x.id= :id";
             } else {
                 $primarySortBy = $primarySortBy === 'sort_order' ? 'h.hierarchy_sort_order' : 't.' . $primarySortBy;
@@ -186,9 +185,7 @@ class Hierarchy extends Base
                       FROM (SELECT t.id, @rownum:=@rownum + 1 AS position
                             FROM $quotedTableName t
                                 JOIN (SELECT @rownum:=0) r
-                                LEFT JOIN $quotedHierarchyTableName h ON t.id=h.entity_id AND h.deleted=:deleted
-                            WHERE t.deleted=:deleted
-                              AND h.entity_id IS NULL
+                            WHERE t.deleted=:deleted and t.routes= :emptyRoutes
                             ORDER BY t.$primarySortBy $sortOrder, t.$secondarySortBy $sortOrder, t.id ASC) x
                       JOIN (select id from product where id=:id) y ON x.id = y.id";
             } else {
@@ -211,9 +208,13 @@ class Hierarchy extends Base
         $sth = $this->getEntityManager()->getPDO()->prepare($query);
         $sth->bindValue(':id', $entity->get('id'), \PDO::PARAM_STR);
         $sth->bindValue(':deleted', false, \PDO::PARAM_BOOL);
+
         if (!empty($parentId)) {
             $sth->bindValue(':parentId', $parentId, \PDO::PARAM_STR);
+        } else {
+            $sth->bindValue(':emptyRoutes', '[]', \PDO::PARAM_STR);
         }
+
         $sth->execute();
 
         $position = $sth->fetch(\PDO::FETCH_COLUMN);
@@ -526,11 +527,21 @@ class Hierarchy extends Base
             $selectCountQuery->andWhere("{$mtAlias}.routes LIKE CONCAT('%|', mt_alias.id, '|\"%')");
             $selectCountQuery->select("COUNT({$mtAlias}.id)");
 
-            $innerSql = str_replace([$mtAlias, 'mt_alias'], [$mtAlias . '_count', $mtAlias], $selectCountQuery->getSQL());
-            $qb->addSelect("({$innerSql})  AS children_count");
+            $countSql = str_replace([$mtAlias, 'mt_alias'], [$mtAlias . '_count', 'main'], $selectCountQuery->getSQL());
+
+            $mainQb = $qb;
+            // use subquery to optimize performance with offset
+            $qb = $this->getConnection()->createQueryBuilder()
+                ->select("main.*")
+                ->from('(' . $mainQb->getSQL() . ')', 'main');
+
+            $qb->addSelect("($countSql) AS children_count");
 
             foreach ($selectCountQuery->getParameters() as $pName => $pValue) {
                 $qb->setParameter($pName, $pValue, $mapper::getParameterType($pValue));
+            }
+            foreach ($mainQb->getParameters() as $pName => $pValue) {
+                $qb->setParameter($pName, $pValue, $mapper->getParameterType($pValue));
             }
         }
 

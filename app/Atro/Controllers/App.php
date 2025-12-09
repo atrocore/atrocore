@@ -114,7 +114,7 @@ class App extends \Espo\Controllers\App
         $sourceIds = $data->sourceIds;
         $attributes = $data->attributes;
 
-        if (!$this->getAcl()->check($this->name, 'edit')) {
+        if (!$this->getAcl()->check($data->scope, 'create')) {
             throw new Forbidden();
         }
 

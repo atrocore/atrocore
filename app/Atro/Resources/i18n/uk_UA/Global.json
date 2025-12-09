@@ -613,7 +613,8 @@
     "removeRelatedRecords": "Ви впевнені, що хочете видалити всі записи для вибраної Асоціації з поточного запису? Всі пов'язані записи будуть збережені.",
     "deletePermanentlyRecordConfirmation": "Ви впевнені, що хочете назавжди видалити запис?",
     "deletePermanentlyRecordsConfirmation": "Ви впевнені, що хочете назавжди видалити вибрані записи?",
-    "minimumRecordForComparison": "Ви не можете мати менше {count} записів"
+    "minimumRecordForComparison": "Ви не можете мати менше {count} записів",
+    "notPossibleToOpenDetailView": "Неможливо відкрити детальний перегляд."
   },
   "boolFilters": {
     "onlyActive": "Активні",

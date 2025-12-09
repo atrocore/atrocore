@@ -428,10 +428,10 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
+                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
-                }else{
+                } else {
                     $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
@@ -595,6 +595,7 @@ class Metadata extends AbstractListener
                     "type"        => "link",
                     "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
+                    "default"     => $fieldDefs['defaultUnit'] ?? null,
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
@@ -2381,13 +2382,13 @@ class Metadata extends AbstractListener
 
             if (empty($data['entityDefs']['File']['fields'][$field])) {
                 $data['entityDefs']['File']['fields'][$field] = [
-                    'type' => 'varchar',
-                    'notStorable' => true,
-                    'readOnly' => true,
+                    'type'                     => 'varchar',
+                    'notStorable'              => true,
+                    'readOnly'                 => true,
                     'layoutMassUpdateDisabled' => true,
-                    'filterDisabled' => true,
-                    'importDisabled' => true,
-                    'openApiEnabled' => true
+                    'filterDisabled'           => true,
+                    'importDisabled'           => true,
+                    'openApiEnabled'           => true
                 ];
             }
         }
