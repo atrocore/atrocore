@@ -95,7 +95,7 @@
     "asc": false
   },
   "indexes": {
-    "stagingEntity": {
+    "sourceEntity": {
       "columns": [
         "type",
         "sourceEntity",

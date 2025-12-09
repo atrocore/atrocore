@@ -37,6 +37,7 @@ Espo.define('views/entity/fields/delete-values-after-unlinking-classification', 
                && !this.model.get('disableAttributeLinking')
                && this.model.id !== 'Listing'
                && this.model.get('hasClassification')
+               && this.model.get('type') !== 'Derivative'
            ){
                 this.show();
             }

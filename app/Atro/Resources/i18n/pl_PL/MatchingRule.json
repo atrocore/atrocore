@@ -2,13 +2,9 @@
   "fields": {
     "matching": "Dopasowanie",
     "weight": "Waga",
-    "sourceField": "Pole źródłowe",
-    "masterEntity": "Podmiot główny",
     "matchingRuleSet": "Zestaw",
     "matchingRules": "Zasady dopasowywania",
-    "operator": "Operator",
-    "masterField": "Pole główne",
-    "sourceEntity": "Źródłowa Jednostka"
+    "operator": "Operator"
   },
   "options": {
     "type": {

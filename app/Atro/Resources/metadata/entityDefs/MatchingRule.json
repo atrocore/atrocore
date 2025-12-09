@@ -1,9 +1,12 @@
 {
   "fields": {
-    "name": {
+    "code": {
       "type": "varchar",
+      "unique": true,
       "required": true,
-      "trim": true
+      "trim": true,
+      "defaultValueType": "script",
+      "default": "{% set number=recordsCount('MatchingRule') %}{% if number is empty%}{% set number = 1 %}{% else %}{% set number=number+1 %}{% endif %}rule-{{ number }}"
     },
     "createdAt": {
       "type": "datetime",
@@ -45,18 +48,6 @@
           ]
         }
       }
-    },
-    "sourceEntity": {
-      "type": "varchar",
-      "notStorable": true,
-      "view": "views/matching-rule/fields/source-entity",
-      "readOnly": true
-    },
-    "masterEntity": {
-      "type": "varchar",
-      "notStorable": true,
-      "view": "views/matching-rule/fields/master-entity",
-      "readOnly": true
     },
     "weight": {
       "type": "int",
@@ -107,39 +98,7 @@
         }
       }
     },
-    "masterField": {
-      "type": "enum",
-      "view": "views/matching-rule/fields/entity-field",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "equal",
-                "like",
-                "contains"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "equal",
-                "like",
-                "contains"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "sourceField": {
+    "field": {
       "type": "enum",
       "view": "views/matching-rule/fields/entity-field",
       "conditionalProperties": {

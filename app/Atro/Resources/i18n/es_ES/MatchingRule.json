@@ -2,13 +2,9 @@
   "fields": {
     "matching": "A juego",
     "weight": "Peso",
-    "sourceField": "Fuente Campo",
-    "masterEntity": "Entidad principal",
     "matchingRuleSet": "Fije",
     "matchingRules": "Reglas de concordancia",
-    "operator": "Operador",
-    "masterField": "Campo Maestro",
-    "sourceEntity": "Entidad de origen"
+    "operator": "Operador"
   },
   "options": {
     "type": {

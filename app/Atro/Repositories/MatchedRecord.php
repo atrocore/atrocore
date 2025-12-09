@@ -43,7 +43,7 @@ class MatchedRecord extends Base
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
-        $toRemove = $this->getMetadata()->get("scopes.$entityName.hasDuplicates") || $this->getMetadata()->get("scopes.$entityName.masterEntity");
+        $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
         if (!$toRemove) {
             foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
                 if (!empty($scopeDefs['masterEntity']) && $scopeDefs['masterEntity'] === $entityName) {
@@ -110,7 +110,7 @@ class MatchedRecord extends Base
         $matchedRecord = $this->get();
         $matchedRecord->set([
             'type'           => $matching->get('type'),
-            'sourceEntity'   => $matching->get('sourceEntity'),
+            'sourceEntity'   => $matching->get('entity'),
             'sourceEntityId' => $sourceId,
             'masterEntity'   => $matching->get('masterEntity'),
             'masterEntityId' => $masterId,
@@ -132,20 +132,5 @@ class MatchedRecord extends Base
         if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
             $this->createMatchedRecord($matching, $masterId, $sourceId, $score, true);
         }
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('selectManagerFactory');
-    }
-
-    protected function getSelectManager(): \Atro\SelectManagers\MatchedRecord
-    {
-        $selectManager = $this->getInjection('selectManagerFactory')->create('MatchedRecord');
-        $selectManager->isSubQuery = true;
-
-        return $selectManager;
     }
 }

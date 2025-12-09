@@ -2,13 +2,9 @@
   "fields": {
     "matching": "Odpovídající",
     "weight": "Hmotnost",
-    "sourceField": "Zdrojová oblast",
-    "masterEntity": "Hlavní subjekt",
     "matchingRuleSet": "Sada",
     "matchingRules": "Pravidla porovnávání",
-    "operator": "Operátor",
-    "masterField": "Hlavní pole",
-    "sourceEntity": "Zdrojová entita"
+    "operator": "Operátor"
   },
   "options": {
     "type": {

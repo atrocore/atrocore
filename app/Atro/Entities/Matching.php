@@ -25,7 +25,6 @@ class Matching extends Base
         $res = $this->toArray();
 
         $toRemoveKeys = [
-            'name',
             'description',
             'isActive',
             'deleted',
@@ -64,11 +63,11 @@ class Matching extends Base
 
     public function activate(): void
     {
-        $this->getEntityManager()->getRepository($this->entityType)->activate($this->id, $this->get('code'));
+        $this->getEntityManager()->getRepository($this->entityType)->activate($this->id);
     }
 
     public function deactivate(): void
     {
-        $this->getEntityManager()->getRepository($this->entityType)->deactivate($this->id, $this->get('code'));
+        $this->getEntityManager()->getRepository($this->entityType)->deactivate($this->id);
     }
 }

@@ -23,6 +23,20 @@ use Espo\ORM\Entity as OrmEntity;
 
 class MatchingRule extends Base
 {
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array              $options
+     *
+     * @return void
+     * @throws BadRequest
+     */
+    protected function beforeSave(OrmEntity $entity, array $options = [])
+    {
+        $this->validateCode($entity);
+
+        parent::beforeSave($entity, $options);
+    }
+
     public function getMatching(MatchingRuleEntity $rule): ?MatchingEntity
     {
         while (true) {
@@ -40,10 +54,10 @@ class MatchingRule extends Base
         return $this->getEntityManager()->getRepository('Matching')->get($rule->get('matchingId'));
     }
 
-    public function validateCode(OrmEntity $entity): void
+    public function validateCode(MatchingRuleEntity $entity): void
     {
-        if (!preg_match('/^[A-Za-z0-9_]*$/', $entity->get('code'))) {
-            throw new BadRequest($this->getInjection('language')->translate('notValidCode', 'exceptions', 'Matching'));
+        if (!preg_match('/^[A-Za-z0-9_-]*$/', $entity->get('code'))) {
+            throw new BadRequest($this->getInjection('language')->translate('notValidCode', 'exceptions', 'MatchingRule'));
         }
     }
 
@@ -85,7 +99,7 @@ class MatchingRule extends Base
 
     /**
      * @param MatchingRuleEntity $entity
-     * @param array $options
+     * @param array              $options
      *
      * @return void
      */

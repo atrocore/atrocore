@@ -35,6 +35,7 @@ Espo.define('views/entity/fields/disable-attribute-linking', 'views/fields/bool'
                 && this.initialAttributes['hasAttribute']
                 && this.initialAttributes['hasClassification']
                 && this.model.id !== 'Listing'
+                && this.model.get('type') !== 'Derivative'
                 && this.model.get('hasClassification')
             ){
                 this.show();

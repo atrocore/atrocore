@@ -104,7 +104,7 @@
 
     function prepareNavigationIconScope() {
         if (scope === 'Entity' && recordButtons.model && recordButtons.model.id) {
-            navigationIconScope = recordButtons.model.get('hasDuplicates') || recordButtons.model.get('masterEntity') ? 'MasterDataEntity' : null;
+            navigationIconScope = recordButtons.model.get('matchDuplicates') || recordButtons.model.get('matchMasterRecords') ? 'MasterDataEntity' : null;
         } else if (scope === 'MasterDataEntity') {
             navigationIconScope = 'Entity';
         } else {

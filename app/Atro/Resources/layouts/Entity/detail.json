@@ -169,14 +169,14 @@
     ]
   },
   {
-    "label": "masterDataManagement",
+    "label": "matchings",
     "rows": [
       [
         {
-          "name": "hasDuplicates"
+          "name": "matchDuplicates"
         },
         {
-          "name": "masterEntity"
+          "name": "matchMasterRecords"
         }
       ]
     ]

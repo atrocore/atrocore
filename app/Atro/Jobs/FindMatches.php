@@ -37,7 +37,7 @@ class FindMatches extends AbstractJob implements JobInterface
                 continue;
             }
 
-            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching->get('code'));
+            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching->id);
 
             $offset = 0;
             $limit = 5000;
@@ -45,7 +45,7 @@ class FindMatches extends AbstractJob implements JobInterface
             $checkJobInterval = ($this->getConfig()->get('maxConcurrentWorkers') ?? 6) * 2;
 
             while (true) {
-                $collection = $this->getEntityManager()->getRepository($matching->get('sourceEntity'))
+                $collection = $this->getEntityManager()->getRepository($matching->get('entity'))
                     ->where([$fieldName => false])
                     ->limit($offset, $limit)
                     ->find();

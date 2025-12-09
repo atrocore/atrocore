@@ -40,7 +40,7 @@ class StopFindingMatches extends AbstractJob implements JobInterface
             $this
                 ->getEntityManager()
                 ->getRepository('Matching')
-                ->deactivate($matchingData['id'], $matchingData['code']);
+                ->deactivate($matchingData['id']);
         }
     }
 }

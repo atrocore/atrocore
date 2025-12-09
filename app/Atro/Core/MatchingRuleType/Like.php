@@ -34,19 +34,19 @@ class Like extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('masterField'));
+        $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
-        $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField'))))));
+        $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('field'))))));
 
         return $sqlPart;
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('sourceField')))));
-        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('masterField')])));
+        $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('field')))));
+        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('field')])));
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;

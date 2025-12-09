@@ -25,11 +25,11 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
         $entityName = $job->getPayload()['entityName'] ?? null;
         $entityId = $job->getPayload()['entityId'] ?? null;
 
-        if (empty($entityName) || empty($entityId) || empty($matchingData['code'])) {
+        if (empty($entityName) || empty($entityId) || empty($matchingData['id'])) {
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
+        if (empty($this->getConfig()->get("matchings.{$matchingData['id']}"))) {
             return;
         }
 
@@ -38,7 +38,7 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
             return;
         }
 
-        if (!empty($entity->get(Matching::prepareFieldName($matchingData['code'])))) {
+        if (!empty($entity->get(Matching::prepareFieldName($matchingData['id'])))) {
             return;
         }
 

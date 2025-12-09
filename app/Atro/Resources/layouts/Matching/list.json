@@ -1,13 +1,16 @@
 [
   {
-    "name": "name",
+    "name": "id",
     "link": true
   },
   {
-    "name": "code"
+    "name": "type"
   },
   {
-    "name": "type"
+    "name": "entity"
+  },
+  {
+    "name": "masterEntity"
   },
   {
     "name": "minimumScore"
