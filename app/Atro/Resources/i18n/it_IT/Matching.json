@@ -2,7 +2,6 @@
   "fields": {
     "entity": "Entità",
     "minimumScore": "Punteggio minimo, in %.",
-    "sourceEntity": "Entità sorgente",
     "masterEntity": "Entità master",
     "matchingRules": "Regole di abbinamento",
     "matchedRecords": "Record abbinati",

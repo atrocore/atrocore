@@ -161,7 +161,6 @@
     "matchings": "Matchings",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
-    "masterDataManagement": "Stammdatenmanagement",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
@@ -706,6 +705,7 @@
     "select": "Wählen"
   },
   "fields": {
+    "field": "Feld",
     "primaryRecord": "Primärer Datensatz",
     "derivedRecords": "Abgeleitete Datensätze",
     "goldenRecord": "Golden Record",

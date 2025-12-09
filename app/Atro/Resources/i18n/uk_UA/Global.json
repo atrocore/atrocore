@@ -161,7 +161,6 @@
     "matchings": "Відповідності",
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
-    "masterDataManagement": "Управління основними даними",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",
@@ -662,6 +661,7 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "field": "Поле",
     "primaryRecord": "Первинний запис",
     "derivedRecords": "Похідні записи",
     "goldenRecord": "Золотий запис",

@@ -3,16 +3,16 @@
     "source": "Quelle",
     "sourceEntity": "Quellentität",
     "sourceEntityId": "Quelle-Entitäts-ID",
-    "master": "Master",
-    "masterEntity": "Master-Entität",
-    "masterEntityId": "Master-Entitäts-ID",
+    "master": "Stammdaten-Entität",
+    "masterEntity": "Stammdaten-Entität",
+    "masterEntityId": "Stammdaten-Entitäts-ID",
     "score": "Punktzahl",
     "hash": "Eindeutiger Hash"
   },
   "options": {
     "type": {
       "duplicate": "Duplikat",
-      "masterRecord": "Master Record"
+      "masterRecord": "Stammdatensatz"
     }
   }
 }

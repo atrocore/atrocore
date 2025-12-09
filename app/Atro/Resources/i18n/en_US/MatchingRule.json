@@ -2,10 +2,6 @@
   "fields": {
     "matching": "Matching",
     "weight": "Weight",
-    "sourceField": "Source Field",
-    "masterField": "Master Field",
-    "sourceEntity": "Source Entity",
-    "masterEntity": "Master Entity",
     "matchingRuleSet": "Set",
     "matchingRules": "Matching Rules",
     "operator": "Operator"
@@ -21,5 +17,8 @@
       "and": "AND",
       "or": "OR"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Code must contain only letters, numbers, underscores and dashes."
   }
 }

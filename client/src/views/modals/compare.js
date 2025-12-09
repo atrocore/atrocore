@@ -86,7 +86,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
-            if (this.getAcl().check('Selection', 'create') && this.getAcl().check('Selection', 'read')) {
+            if (!this.versionComparison && this.getAcl().check('Selection', 'create') && this.getAcl().check('Selection', 'read')) {
                 this.buttonList.push({
                     name: "createSelection",
                     label: this.translate('createSelection', 'labels', 'Selection'),
@@ -266,10 +266,12 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
-                    this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
-                        scope: this.scope,
-                        entityIds: this.getModels().map(m => m.id)
-                    });
+                    if (!this.versionComparison){
+                        this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
+                            scope: this.scope,
+                            entityIds: this.getModels().map(m => m.id)
+                        });
+                    }
                 });
 
                 this.listenTo(this, 'cancel', (dialog) => {

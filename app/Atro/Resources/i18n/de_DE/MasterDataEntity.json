@@ -1,6 +1,6 @@
 {
   "fields": {
-    "masterEntity": "Master-Entität",
+    "masterEntity": "Stammdaten-Entität",
     "mappingScript": "Mapping-Skript"
   },
   "tooltips": {

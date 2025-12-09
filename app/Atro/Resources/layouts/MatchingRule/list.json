@@ -1,6 +1,6 @@
 [
   {
-    "name": "name",
+    "name": "code",
     "link": true
   },
   {
@@ -8,6 +8,9 @@
   },
   {
     "name": "type"
+  },
+  {
+    "name": "field"
   },
   {
     "name": "weight"

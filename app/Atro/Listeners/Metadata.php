@@ -428,10 +428,10 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
+                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
-                }else{
+                } else {
                     $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
@@ -595,6 +595,7 @@ class Metadata extends AbstractListener
                     "type"        => "link",
                     "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
+                    "default"     => $fieldDefs['defaultUnit'] ?? null,
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
@@ -2255,15 +2256,27 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'type'            => 'Derivative',
-                'primaryEntityId' => $primaryEntity,
-                'layouts'         => false
+                'type'               => 'Derivative',
+                'primaryEntityId'    => $primaryEntity,
+                'name'               => $scopeDefs['name'] ?? null,
+                'namePlural'         => $scopeDefs['namePlural'] ?? null,
+                'description'        => $scopeDefs['description'] ?? null,
+                'sortBy'             => $scopeDefs['sortBy'] ?? null,
+                'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
+                'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
+                'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
+                'iconClass'          => $scopeDefs['iconClass'] ?? null,
+                'createdAt'          => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'        => $scopeDefs['createdById'] ?? null,
+                'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
+                'layouts'            => false
             ]);
 
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
                 'type'     => 'link',
-                'required' => true
+                'required' => false
             ];
             $data['entityDefs'][$scope]['links']['primaryRecord'] = [
                 'type'    => 'belongsTo',
@@ -2290,7 +2303,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
-            if (!empty($defs['hasDuplicates'])) {
+            if (!empty($defs['matchDuplicates'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2303,7 +2316,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (!empty($defs['masterEntity'])) {
+            if (!empty($defs['matchMasterRecords'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2316,7 +2329,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (empty($defs['masterEntity'])) {
+            if (empty($defs['matchMasterRecords'])) {
                 continue;
             }
 
@@ -2329,16 +2342,16 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $sourceRecords,
-                'entity'  => $defs['masterEntity'],
+                'entity'  => $defs['primaryEntityId'],
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['fields'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['fields'][$sourceRecords] = [
                 'type'         => 'linkMultiple',
                 'noLoad'       => true,
                 'customizable' => false,
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['links'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['links'][$sourceRecords] = [
                 'type'    => 'hasMany',
                 'foreign' => 'goldenRecord',
                 'entity'  => $sourceEntity,
@@ -2369,13 +2382,13 @@ class Metadata extends AbstractListener
 
             if (empty($data['entityDefs']['File']['fields'][$field])) {
                 $data['entityDefs']['File']['fields'][$field] = [
-                    'type' => 'varchar',
-                    'notStorable' => true,
-                    'readOnly' => true,
+                    'type'                     => 'varchar',
+                    'notStorable'              => true,
+                    'readOnly'                 => true,
                     'layoutMassUpdateDisabled' => true,
-                    'filterDisabled' => true,
-                    'importDisabled' => true,
-                    'openApiEnabled' => true
+                    'filterDisabled'           => true,
+                    'importDisabled'           => true,
+                    'openApiEnabled'           => true
                 ];
             }
         }

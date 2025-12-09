@@ -309,27 +309,29 @@ class EntityField extends ReferenceData
                 $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $fieldName = $entity->get('code');
 
+                $columns = [];
+
                 if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
-                    $columnFrom = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
-                    $columnTo = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where("deleted= :false and $columnFrom is null and $columnTo is null")
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->fetchOne();
+                    $columns[] = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
+                    $columns[] = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
                 } else {
                     if (in_array($fieldType, ['file', 'link'])) {
                         $fieldName .= 'Id';
                     }
-                    $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where('deleted= :false and ' . $column . ' is null')
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->fetchOne();
+                    $columns[] = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
                 }
+
+                if (!empty($entity->get('measureId')) && in_array($fieldType, ['int', 'float', 'varchar', 'rangeInt', 'rangeFloat'])) {
+                    $columns[] = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
+                }
+
+                $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('id')
+                    ->from($tableName)
+                    ->where('deleted= :false')
+                    ->andWhere(implode(' is null or ', $columns) . ' is null')
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->fetchOne();
 
 
                 if (!empty($res)) {

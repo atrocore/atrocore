@@ -5,7 +5,6 @@
     "masterEntity": "Entidad principal",
     "matchingRules": "Reglas de concordancia",
     "matchedRecords": "Registros coincidentes",
-    "sourceEntity": "Entidad de origen",
     "matchedRecordsMax": "Número máximo de registros coincidentes"
   },
   "options": {

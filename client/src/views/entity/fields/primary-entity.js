@@ -23,6 +23,14 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
             }
         },
 
+        afterRender() {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.model.get(this.idName) !== null && ['list', 'detail'].includes(this.mode)) {
+                this.$el.html(`<a href="/#MasterDataEntity/view/${this.model.get(this.idName)}">${this.model.get(this.nameName)}</a>`);
+            }
+        },
+
     })
 );
 

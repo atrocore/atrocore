@@ -2,13 +2,9 @@
   "fields": {
     "matching": "Appariement",
     "weight": "Poids",
-    "sourceField": "Champ de la source",
-    "masterEntity": "Entité de référence",
     "matchingRuleSet": "Ensemble",
     "matchingRules": "Règles d'appariements",
-    "operator": "Opérateur",
-    "masterField": "Champ de reférence",
-    "sourceEntity": "Entité source"
+    "operator": "Opérateur"
   },
   "options": {
     "type": {

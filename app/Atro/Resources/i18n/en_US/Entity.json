@@ -4,8 +4,6 @@
     "namePlural": "Name plural",
     "disabled": "Disabled",
     "customizable": "Customizable",
-    "hasDuplicates": "Check for duplicates",
-    "masterEntity": "Master Entity",
     "hasArchive": "Archivable",
     "hasActive": "Activatable",
     "hideFieldTypeFilters": "Hide field type filters",
@@ -43,7 +41,9 @@
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
-    "derivedEntities": "Derived Entities"
+    "derivedEntities": "Derived Entities",
+    "matchDuplicates": "Match Duplicates",
+    "matchMasterRecords": "Match Master Records"
   },
   "options": {
     "type": {
