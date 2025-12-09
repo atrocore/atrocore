@@ -133,19 +133,4 @@ class MatchedRecord extends Base
             $this->createMatchedRecord($matching, $masterId, $sourceId, $score, true);
         }
     }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->addDependency('selectManagerFactory');
-    }
-
-    protected function getSelectManager(): \Atro\SelectManagers\MatchedRecord
-    {
-        $selectManager = $this->getInjection('selectManagerFactory')->create('MatchedRecord');
-        $selectManager->isSubQuery = true;
-
-        return $selectManager;
-    }
 }
