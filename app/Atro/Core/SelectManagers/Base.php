@@ -1017,6 +1017,10 @@ class Base
             $result['callbacks'] = $params['queryCallbacks'];
         }
 
+        if (isset($params['subQueryCallbacks'])) {
+            $result['subQueryCallbacks'] = $params['subQueryCallbacks'];
+        }
+
         return $this
             ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('result');
