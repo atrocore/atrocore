@@ -1,7 +1,7 @@
 {
   "fields": {
     "minimumScore": "Mindestpunktzahl, %",
-    "masterEntity": "Master-Entität",
+    "masterEntity": "Stammdaten-Entität",
     "matchingRules": "Übereinstimmungsregeln",
     "entity": "Entität",
     "matchedRecords": "Übereinstimmende Datensätze",
@@ -10,7 +10,7 @@
   "options": {
     "type": {
       "duplicate": "Duplikat",
-      "masterRecord": "Master Record"
+      "masterRecord": "Stammdatensatz"
     }
   },
   "labels": {

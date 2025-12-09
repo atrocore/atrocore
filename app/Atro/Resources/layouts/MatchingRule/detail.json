@@ -5,16 +5,10 @@
     "rows": [
       [
         {
-          "name": "name"
-        },
-        false
-      ],
-      [
-        {
           "name": "type"
         },
         {
-          "name": "matching"
+          "name": "field"
         }
       ],
       [
@@ -28,8 +22,14 @@
           "name": "weight"
         },
         {
-          "name": "field"
+          "name": "matching"
         }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        false
       ]
     ]
   }

@@ -190,7 +190,7 @@ class Matching extends Base
 
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
-            ->set(Util::toUnderScore(self::prepareFieldName($matching->get('code'))), ':true')
+            ->set(Util::toUnderScore(self::prepareFieldName($matching->id)), ':true')
             ->where('id = :id')
             ->setParameter('id', $entityId)
             ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -205,7 +205,7 @@ class Matching extends Base
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")
-            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
+            ->from($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->where('id=:id')
             ->setParameter('id', $entity->id)
             ->fetchAssociative();
@@ -217,9 +217,9 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
         $conn->createQueryBuilder()
-            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('sourceEntity')))))
+            ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->set($column, ':false')
             ->where("$column = :true")
             ->setParameter('true', true, ParameterType::BOOLEAN)
@@ -234,7 +234,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
             ->set($column, ':false')
@@ -274,7 +274,7 @@ class Matching extends Base
             ->where("{$alias}.deleted=:false")
             ->setParameter('false', false, ParameterType::BOOLEAN);
 
-        if ($matching->get('masterEntity') === $matching->get('sourceEntity')) {
+        if ($matching->get('masterEntity') === $matching->get('entity')) {
             $qb
                 ->andWhere("{$alias}.id != :id")
                 ->setParameter('id', $entity->get('id'));
