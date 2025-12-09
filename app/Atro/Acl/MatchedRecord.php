@@ -25,8 +25,8 @@ class MatchedRecord extends Base
 
         $stagingEntity = $this
             ->getEntityManager()
-            ->getRepository($entity->get('stagingEntity'))
-            ->get($entity->get('stagingEntityId'));
+            ->getRepository($entity->get('sourceEntity'))
+            ->get($entity->get('sourceEntityId'));
 
         if (empty($stagingEntity)) {
             return false;
