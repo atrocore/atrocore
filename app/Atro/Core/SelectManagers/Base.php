@@ -1249,11 +1249,11 @@ class Base
                 break;
             default:
                 $where['type'] = $type;
-                if(!empty($value) && is_string($value)) {
+                if (!empty($value) && is_string($value)) {
                     $dt = new \DateTime($value, new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     $where['value'] = $dt->format($format);
-                }else{
+                } else {
                     $where['value'] = $value;
                 }
 
