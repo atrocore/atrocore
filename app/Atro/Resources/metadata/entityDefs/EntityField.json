@@ -221,7 +221,18 @@
     },
     "required": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": ["linkMultiple"]
+            }
+          ]
+        }
+      }
     },
     "notNull": {
       "type": "bool"
@@ -792,6 +803,11 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": ["linkMultiple"]
             }
           ]
         }
