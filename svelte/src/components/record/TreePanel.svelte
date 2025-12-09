@@ -272,12 +272,7 @@
             showEmptyPlaceholder = data.length === 0
         }
 
-        $tree.tree(treeData);
-        $tree.on('tree.loading_data', e => {
-            if (e.isLoading) {
-                return
-            }
-
+        $tree.on('tree.load_data', e => {
             Notifier.notify(false)
 
             if (!e.node) {
@@ -382,6 +377,8 @@
                 }
             }
         });
+
+        $tree.tree(treeData);
     }
 
     function appendUnsetButton($el): void {
@@ -1199,7 +1196,7 @@
                     {/if}
                 </div>
 
-                <div class="panel-group category-tree" bind:this={treeElement}>
+                <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
                 </div>
                 {#if showEmptyPlaceholder}
                     <p>{Language.translate('No Data')}</p>
@@ -1331,6 +1328,11 @@
         top: 0;
         right: 25px;
         cursor: pointer;
+    }
+
+    :global(.tree-_admin ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 
     .category-panel .icons-wrapper .toggle {
