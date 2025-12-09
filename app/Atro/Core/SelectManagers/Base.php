@@ -1243,18 +1243,18 @@ class Base
 
                     $dt = new \DateTime($value[1], new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
-                    $dt->modify('-1 second');
                     $to = $dt->format($format);
-
                     $where['value'] = [$from, $to];
                 }
                 break;
             default:
                 $where['type'] = $type;
-                if(!empty($value)) {
+                if (!empty($value) && is_string($value)) {
                     $dt = new \DateTime($value, new \DateTimeZone($timeZone));
                     $dt->setTimezone(new \DateTimeZone('UTC'));
                     $where['value'] = $dt->format($format);
+                } else {
+                    $where['value'] = $value;
                 }
 
         }
