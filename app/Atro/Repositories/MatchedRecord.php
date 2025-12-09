@@ -110,7 +110,7 @@ class MatchedRecord extends Base
         $matchedRecord = $this->get();
         $matchedRecord->set([
             'type'           => $matching->get('type'),
-            'sourceEntity'   => $matching->get('sourceEntity'),
+            'sourceEntity'   => $matching->get('entity'),
             'sourceEntityId' => $sourceId,
             'masterEntity'   => $matching->get('masterEntity'),
             'masterEntityId' => $masterId,

@@ -25,7 +25,6 @@ class Matching extends Base
         $res = $this->toArray();
 
         $toRemoveKeys = [
-            'name',
             'description',
             'isActive',
             'deleted',

@@ -41,11 +41,6 @@ class Matching extends Base
         return 'Matching' . $parts[0] . ucfirst(strtolower($parts[1]));
     }
 
-    public function getEntityByCode(string $code): ?Entity
-    {
-        return $this->where(['code' => $code])->findOne();
-    }
-
     public function activate(string $id, bool $skipMatchingUpdate = false): void
     {
         if (!$skipMatchingUpdate) {
@@ -201,7 +196,7 @@ class Matching extends Base
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $column = Util::toUnderScore(self::prepareFieldName($matching->get('code')));
+        $column = Util::toUnderScore(self::prepareFieldName($matching->id));
 
         $res = $conn->createQueryBuilder()
             ->select("id, $column as val")

@@ -48,10 +48,10 @@ class Equal extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('masterField'));
+        $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
-        $value = $stageEntity->get($this->rule->get('sourceField'));
+        $value = $stageEntity->get($this->rule->get('field'));
 
         $sqlPart = "{$alias}.{$escapedColumnName} = :{$this->rule->get('id')}";
         $qb->setParameter($this->rule->get('id'), $value, Mapper::getParameterType($value));
@@ -61,8 +61,8 @@ class Equal extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = $stageEntity->get($this->rule->get('sourceField'));
-        $masterValue = $masterEntityData[$this->rule->get('masterField')];
+        $stageValue = $stageEntity->get($this->rule->get('field'));
+        $masterValue = $masterEntityData[$this->rule->get('field')];
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;

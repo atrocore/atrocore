@@ -34,19 +34,19 @@ class Contains extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('masterField'));
+        $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
-        $qb->setParameter($this->rule->get('id'), "%" . $stageEntity->get($this->rule->get('sourceField')) . "%");
+        $qb->setParameter($this->rule->get('id'), "%" . $stageEntity->get($this->rule->get('field')) . "%");
 
         return $sqlPart;
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = $stageEntity->get($this->rule->get('sourceField'));
-        $masterValue = $masterEntityData[$this->rule->get('masterField')];
+        $stageValue = $stageEntity->get($this->rule->get('field'));
+        $masterValue = $masterEntityData[$this->rule->get('field')];
 
         if (!empty($stageValue) && !empty($masterValue) && strpos($masterValue, $stageValue) !== false) {
             return $this->rule->get('weight') ?? 0;
