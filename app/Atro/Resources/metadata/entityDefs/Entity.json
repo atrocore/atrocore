@@ -558,6 +558,14 @@
               ]
             }
           ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
         }
       }
     },

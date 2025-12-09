@@ -166,9 +166,9 @@ class Matching extends Base
         parent::afterRemove($entity, $options);
 
         if ($entity->get('type') === 'duplicate') {
-            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+            $this->deleteMasterDataEntity($entity, $entity->get('entity'));
         } elseif ($entity->get('type') === 'masterRecord') {
-            $this->deleteMasterDataEntity($entity, $entity->get('sourceEntity'));
+            $this->deleteMasterDataEntity($entity, $entity->get('entity'));
             $this->deleteMasterDataEntity($entity, $entity->get('masterEntity'));
         }
 
