@@ -31,6 +31,8 @@ use Atro\Core\Templates\Entities\Hierarchy as HierarchyEntity;
 class Hierarchy extends Record
 {
     protected $mandatorySelectAttributeList = ['routes'];
+    private array $parentsCache = [];
+
 
     public function getSelectAttributeList($params)
     {
@@ -173,14 +175,14 @@ class Hierarchy extends Record
             $collection = $repository->find($selectParams);
 
             $ids = array_column($collection->toArray(), 'id');
-        }else{
+        } else {
             $ids = $params['ids'];
         }
 
         $tree = [];
         $treeBranches = [];
 
-        foreach ($this->getRepository()->where(['id' => $ids])->find() as $entity) {
+        foreach ($this->getRepository()->where(['id' => $ids])->select($this->getSelectForTree())->find() as $entity) {
             $this->createTreeBranches($entity, $treeBranches);
         }
 
@@ -214,7 +216,24 @@ class Hierarchy extends Record
         if (empty($parentsIds)) {
             $treeBranches[] = $entity;
         } else {
-            $parents = $this->getRepository()->where(['id' => $parentsIds])->find();
+            $parents = [];
+            $parentIdsToLoad = [];
+            foreach ($parentsIds as $parentId) {
+                if (!empty($this->parentsCache[$parentId])) {
+                    $parents[] = clone $this->parentsCache[$parentId];
+                    continue;
+                }
+                $parentIdsToLoad[] = $parentId;
+            }
+
+            if (!empty($parentIdsToLoad)) {
+                $records = $this->getRepository()->where(['id' => $parentIdsToLoad])->select($this->getSelectForTree())->find();
+                foreach ($records as $record) {
+                    $parents[] = $record;
+                    $this->parentsCache[$record->get('id')] = $record;
+                }
+            }
+
             if (empty($parents[0])) {
                 $treeBranches[] = $entity;
             } else {
@@ -1146,6 +1165,18 @@ class Hierarchy extends Record
     public function isHierarchy(): bool
     {
         return $this->getMetadata()->get(['scopes', $this->entityType, 'type']) === 'Hierarchy';
+    }
+
+
+    public function getSelectForTree(): array
+    {
+        $res = ['id', 'name', 'routes'];
+        $field = $this->getLocalizedNameField($this->entityType);
+        if (!empty($field)) {
+            $res[] = $field;
+        }
+
+        return $res;
     }
 
     protected function init()

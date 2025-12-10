@@ -626,7 +626,7 @@ Espo.define('views/list', ['views/main', 'search-manager', 'lib!JsTree', 'lib!In
 
         modifyCollectionForSelectedNode() {
             const id = this.getStorage().get('selectedNodeId', this.scope);
-            if (!id || ['_self', '_bookmark'].includes(this.getStorage().get('treeItem', this.scope))) {
+            if (!id || ['_self', '_bookmark', '_admin'].includes(this.getStorage().get('treeItem', this.scope))) {
                 this.collection.whereAdditional = []
                 return
             }

@@ -110,10 +110,10 @@
     }
 
     function canUseDataRequest() {
-        if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
+        if (!['_self', '_bookmark'].includes(activeItem.name) || applyAdvancedFilter) {
             return true
         }
-        return Storage.get('useDataRequest', scope) === 'yes'
+        return false
     }
 
     function getHashScope() {
@@ -225,7 +225,7 @@
                     $li.addClass('jqtree-selected');
                 }
 
-                if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
+                if (!['_self', '_bookmark', '_admin'].includes(activeItem.name) && selectNodeId === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                     appendUnsetButton($li)
@@ -291,10 +291,7 @@
             if (activeItem.name === '_admin') {
                 let hashScope = getHashScope();
                 if (Metadata.get(['scopes', hashScope])) {
-                    selectTreeNode(hashScope, [])
-                    if (callbacks?.selectNode) {
-                        callbacks.selectNode({id: hashScope}, true);
-                    }
+                    selectTreeNode('#' + hashScope, [])
                 }
                 return;
             }
@@ -386,6 +383,10 @@
     }
 
     function appendUnsetButton($el): void {
+        if (['_admin', '_self', '_bookmark'].includes(activeItem.name)) {
+            return
+        }
+
         if ($el && $el.length) {
             removeUnsetButton($el);
 
