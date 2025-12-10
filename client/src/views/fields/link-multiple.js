@@ -485,7 +485,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     },
                     render: {
                         item: (data, escape) => {
-                            return `<div class="item"><span>${escape(data.name)}</span></div>`;
+                            return `<div class="item" title="${escape(data.name)}"><span>${escape(data.name)}</span></div>`;
                         },
                     }
                 };
