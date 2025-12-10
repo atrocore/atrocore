@@ -91,7 +91,6 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
         },
 
         getLabel: function () {
-            debugger
             let label = '',
                 display = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'urlLabel']) || '';
 
