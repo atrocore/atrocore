@@ -17,23 +17,34 @@ Espo.define('views/action/fields/update-fields', 'views/fields/base',
 
         inlineEditDisabled: true,
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.onModelReady(() => {
+                let options = {
+                    el: `${this.options.el} > .field[data-name="valueField"]`,
+                    name: this.name,
+                    model: this.model,
+                    params: {
+                        required: false
+                    },
+                    inlineEditDisabled: true,
+                    mode: this.mode
+                };
+
+                this.createView('valueField', 'views/action/record/panels/fields', options, view => {
+                    view.render();
+                });
+            });
+        },
+
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            let options = {
-                el: `${this.options.el} > .field[data-name="valueField"]`,
-                name: this.name,
-                model: this.model,
-                params: {
-                    required: false
-                },
-                inlineEditDisabled: true,
-                mode: this.mode
-            };
-
-            this.createView('valueField', 'views/action/record/panels/fields', options, view => {
-                view.render();
-            });
+            let view = this.getView('valueField');
+            if (view) {
+                view.reRender();
+            }
         },
 
         fetch() {
