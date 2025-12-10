@@ -820,6 +820,7 @@ class LayoutManager
                     }
                     break;
                 case 'list':
+                case 'selection':
                     $attributesIds = array_column($data, 'attributeId');
                     if (!empty($attributesIds)) {
                         $attributesDefs = $this
