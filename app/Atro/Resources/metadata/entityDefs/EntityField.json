@@ -794,6 +794,24 @@
       "type": "bool",
       "view": "views/admin/field-manager/fields/record-related-changes-in-stream"
     },
+    "urlLabel": {
+      "type": "enum",
+      "options": [
+        "openLink",
+        "view"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "url"
+            }
+          ]
+        }
+      }
+    },
     "conditionalRequired": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",

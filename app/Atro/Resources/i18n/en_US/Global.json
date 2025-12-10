@@ -504,7 +504,9 @@
     "expandWindow": "Expand Window",
     "Compare": "Compare",
     "Standard": "Standard",
-    "addItem": "Add Item"
+    "addItem": "Add Item",
+    "openLink": "Open link",
+    "view": "View"
   },
   "insightsPanels": {
     "summary": "Summary",
