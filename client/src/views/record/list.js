@@ -166,7 +166,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                 }
             },
             'click tr': function (e) {
-                if (e.target.tagName === 'TD' && !this.allResultIsChecked) {
+                if ((e.target.tagName === 'TD' && e.target.dataset.name === 'r-checkbox') && !this.allResultIsChecked) {
                     const row = $(e.currentTarget);
                     const id = row.data('id');
                     const $target = row.find('.record-checkbox');
