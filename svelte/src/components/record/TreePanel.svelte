@@ -272,19 +272,18 @@
             showEmptyPlaceholder = data.length === 0
         }
 
-        $tree.tree(treeData);
-        $tree.on('tree.loading_data', e => {
-            if (e.isLoading) {
+        let dataLoaded = false;
+
+        $tree.on('tree.load_data', e => {
+            Notifier.notify(false)
+            if (dataLoaded) {
                 return
             }
 
-            Notifier.notify(false)
-
-            if (!e.node) {
-                if (callbacks?.treeLoad) {
-                    callbacks.treeLoad(treeScope, treeData);
-                }
+            if (callbacks?.treeLoad) {
+                callbacks.treeLoad(treeScope, treeData);
             }
+            dataLoaded = true;
         })
         $tree.on('tree.refresh', e => {
             showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
@@ -382,6 +381,8 @@
                 }
             }
         });
+
+        $tree.tree(treeData);
     }
 
     function appendUnsetButton($el): void {
@@ -1199,7 +1200,7 @@
                     {/if}
                 </div>
 
-                <div class="panel-group category-tree" bind:this={treeElement}>
+                <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
                 </div>
                 {#if showEmptyPlaceholder}
                     <p>{Language.translate('No Data')}</p>
@@ -1331,6 +1332,11 @@
         top: 0;
         right: 25px;
         cursor: pointer;
+    }
+
+    :global(.tree-_admin ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 
     .category-panel .icons-wrapper .toggle {
