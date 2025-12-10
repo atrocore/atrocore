@@ -66,7 +66,8 @@
     "conditionalDisableOptions": "Вимкнені опції",
     "readOnly": "Тільки для читання",
     "defaultValueType": "Тип значення за замовчуванням",
-    "protected": "Захищено"
+    "protected": "Захищено",
+    "urlLabel": "URL Label"
   },
   "tooltips": {
     "foreignCode": "Це ім'я коду використовується для поля, створеного у пов'язаній сутності для зворотного зв'язку.",

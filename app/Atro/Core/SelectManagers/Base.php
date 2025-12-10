@@ -1192,7 +1192,7 @@ class Base
 
                 $number = strval(intval($item['value']));
                 $dtTo->modify('+' . $number . ' day');
-                $dtTo->setTime(24, 59, 59);
+                $dtTo->setTime(23, 59, 59);
                 $dtTo->setTimezone(new \DateTimeZone('UTC'));
 
                 $to = $dtTo->format($format);
@@ -1520,7 +1520,7 @@ class Base
                     break;
 
                 case 'future':
-                    $part[$attribute . '>='] = date('Y-m-d');
+                    $part[$attribute . '>'] = date('Y-m-d');
                     break;
 
                 case 'lastSevenDays':
