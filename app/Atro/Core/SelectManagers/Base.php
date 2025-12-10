@@ -941,12 +941,15 @@ class Base
         $result = array();
         $this->prepareResult($result);
 
-        if (!empty($params['sortBy'])) {
-            if (!array_key_exists('asc', $params)) {
-                $params['asc'] = true;
-            }
-            $this->order($params['sortBy'], !$params['asc'], $result);
+        if (empty($params['sortBy'])) {
+            $params['sortBy'] = 'id';
         }
+
+        if (!array_key_exists('asc', $params)) {
+            $params['asc'] = true;
+        }
+
+        $this->order($params['sortBy'], !$params['asc'], $result);
 
         if (!isset($params['offset'])) {
             $params['offset'] = null;
