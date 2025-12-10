@@ -22,6 +22,8 @@
     export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
+    export let showItems: boolean = true;
+
     export let renderLayoutEditor: Function = () => {
     };
 
@@ -31,8 +33,18 @@
 
     export let showApplySortOrder: boolean = true
 
+    export  function setShowItems(value: string[]) {
+        showItems = value;
+        if(value){
+            setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
+        }else if(!value && activeItem.name === '_items') {
+            setActiveItem(treeItems[0]);
+        }
+    }
+
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
+    let selectionItemElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
     let treeItems: [] = [];
@@ -816,27 +828,35 @@
         if (activeItem && activeItem.name === treeItem.name) {
             return
         }
-        searchValue = ''
-        searchInputElement.value = ''
-        Storage.clear('treeSearchValue', treeScope)
-        Storage.clear('treeSearchValue', '_admin')
-
-        if (mode === 'list') {
-            if (selectNodeId) {
-                if (callbacks?.selectNode) {
-                    callbacks.selectNode({id: selectNodeId});
-                }
-                selectNodeId = null
-            }
-        } else {
-            selectNodeId = null
-        }
 
         activeItem = treeItem
-        initSorting(false)
         Storage.set('treeItem', scope, treeItem.name)
-        Notifier.notify('Loading...')
+
+
         tick().then(() => {
+            if(scope === 'Selection' && treeItem.name === '_items') {
+                if(callbacks?.onActiveItems) {
+                    callbacks?.onActiveItems(selectionItemElement);
+                }
+                return;
+            }
+            Notifier.notify('Loading...')
+            searchValue = ''
+            searchInputElement.value = ''
+            Storage.clear('treeSearchValue', treeScope)
+            Storage.clear('treeSearchValue', '_admin')
+
+            if (mode === 'list') {
+                if (selectNodeId) {
+                    if (callbacks?.selectNode) {
+                        callbacks.selectNode({id: selectNodeId});
+                    }
+                    selectNodeId = null
+                }
+            } else {
+                selectNodeId = null
+            }
+            initSorting(false)
             rebuildTree()
         })
     }
@@ -964,6 +984,8 @@
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
+                    }else if (item.name === '_items') {
+                        label = Language.get('Global', 'labels', 'Items')
                     } else {
                         if (type == 'link') {
                             const itemScope = getLinkScope(item.name)
@@ -1067,6 +1089,7 @@
         }
 
         loadLayout(() => {
+
             if (treeItems.length === 0) {
                 isCollapsed = true
                 if (!UserData.get()?.user?.isAdmin) {
@@ -1075,6 +1098,7 @@
                 }
             }
             tick().then(() => {
+
                 if (activeItem?.name === '_admin') {
                     searchValue = Storage.get('treeSearchValue', '_admin') || null;
                 } else {
@@ -1084,7 +1108,9 @@
                     searchInputElement.value = searchValue;
                 }
 
-                if (!isCollapsed) {
+                if(scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
+                    callbacks?.onActiveItems(selectionItemElement);
+                }else if (!isCollapsed) {
                     buildTree();
                 }
 
@@ -1093,6 +1119,10 @@
                 }
             })
         });
+
+        if(callbacks?.afterMounted) {
+            callbacks.afterMounted();
+        }
     });
 
     function onSidebarResize(e: CustomEvent): void {
@@ -1136,7 +1166,7 @@
                 <div class="btn-group">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                           class="btn btn-link tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
@@ -1148,63 +1178,68 @@
                     <h5>{activeItem.label}</h5>
                 </div>
 
-                <div class="panel-group category-search" style="margin-bottom: 20px">
-                    <div class="field" data-name="category-search">
-                        <input type="text" bind:this={searchInputElement}
-                               on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
-                               class="form-control category-search" class:search-enabled={!!searchValue}
-                               placeholder={Language.translate('typeToSearch')}>
+                {#if scope === 'Selection' && activeItem.name === '_items'}
+                    <div class="selection-items" bind:this={selectionItemElement}></div>
+                {:else}
+                    <div class="panel-group category-search" style="margin-bottom: 20px">
+                        <div class="field" data-name="category-search">
+                            <input type="text" bind:this={searchInputElement}
+                                   on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
+                                   class="form-control category-search" class:search-enabled={!!searchValue}
+                                   placeholder={Language.translate('typeToSearch')}>
 
-                        <div class="button-container">
-                            {#if searchValue}
-                                <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
-                            {/if}
-                            <button on:click={applySearch} class="search-in-tree-button">
-                                <i class="ph ph-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </div>
-                    {#if showApplyQuery }
-                        <div style="margin-top:  20px;">
-                                 <span class="icons-wrapper">
-                                    <span class="toggle" class:active={applyAdvancedFilter}
-                                          on:click|stopPropagation|preventDefault={handleFilterToggle}
-                                    >
-                                        {#if applyAdvancedFilter}
-                                            <i class="ph-fill ph-toggle-right"></i>
-                                        {:else}
-                                            <i class="ph-fill ph-toggle-left"></i>
-                                        {/if}
-                                    </span>
-                                     {Language.translate('applyMainSearchAndFilter')}
-                                </span>
-                        </div>
-                    {/if}
-                    {#if showApplySortOrder && activeItem.name !== '_admin' }
-                        <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
-                            <div class="button-group" style="display:flex; align-items: stretch;">
-                                <button type="button" class="sort-btn" data-tippy="true"
-                                        title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
-                                        on:click={onSortAscChange}>
-                                    <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
+                            <div class="button-container">
+                                {#if searchValue}
+                                    <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
+                                {/if}
+                                <button on:click={applySearch} class="search-in-tree-button">
+                                    <i class="ph ph-magnifying-glass"></i>
                                 </button>
-                                <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
-                                        on:change={onSortByChange}>
-                                    {#each sortFields as field }
-                                        <option value="{field.name}">
-                                            {field.label}
-                                        </option>
-                                    {/each}
-                                </select>
                             </div>
                         </div>
-                    {/if}
-                </div>
+                        {#if showApplyQuery }
+                            <div style="margin-top:  20px;">
+                                     <span class="icons-wrapper">
+                                        <span class="toggle" class:active={applyAdvancedFilter}
+                                              on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                        >
+                                            {#if applyAdvancedFilter}
+                                                <i class="ph-fill ph-toggle-right"></i>
+                                            {:else}
+                                                <i class="ph-fill ph-toggle-left"></i>
+                                            {/if}
+                                        </span>
+                                         {Language.translate('applyMainSearchAndFilter')}
+                                    </span>
+                            </div>
+                        {/if}
+                        {#if showApplySortOrder && activeItem.name !== '_admin' }
+                            <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
+                                <div class="button-group" style="display:flex; align-items: stretch;">
+                                    <button type="button" class="sort-btn" data-tippy="true"
+                                            title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                            on:click={onSortAscChange}>
+                                        <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
+                                    </button>
+                                    <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
+                                            on:change={onSortByChange}>
+                                        {#each sortFields as field }
+                                            <option value="{field.name}">
+                                                {field.label}
+                                            </option>
+                                        {/each}
+                                    </select>
+                                </div>
+                            </div>
+                        {/if}
+                    </div>
 
-                <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
-                </div>
-                {#if showEmptyPlaceholder}
-                    <p>{Language.translate('No Data')}</p>
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
+                    </div>
+
+                    {#if showEmptyPlaceholder}
+                        <p>{Language.translate('No Data')}</p>
+                    {/if}
                 {/if}
             {/if}
         {/if}

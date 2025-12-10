@@ -12,7 +12,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
     return Dep.extend({
 
-        selectionViewMode: 'standard',
+        selectionViewMode: 'compare',
 
         availableModes: ['standard', 'compare', 'merge'],
 
@@ -55,9 +55,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setup: function () {
-            if (!this.selectionRecordModels && ['merge', 'compare'].includes(this.selectionViewMode)) {
+            if (!this.selectionRecordModels?.length && ['merge', 'compare'].includes(this.selectionViewMode)) {
                 this.wait(true)
                 this.reloadModels(() => {
+                    if (this.selectionRecordModels.length === 0) {
+                        this.selectionViewMode = 'standard';
+                    }
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
                     this.wait(false)
@@ -200,6 +203,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.selectionViewMode = data.name;
+
+            if(window.treePanelComponent) {
+                window.treePanelComponent.setShowItems(['compare', 'merge'].includes(data.name));
+            }
+
             if (['compare', 'merge'].includes(this.selectionViewMode)) {
                 this.notify(this.translate('Loading...'));
                 this.reloadModels(() => this.refreshContent());
@@ -450,7 +458,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         comparisonAcrossEntities: function () {
-            return this.getEntityTypes().length !== 1;
+            return this.getEntityTypes().length > 1;
         },
 
         getRecordViewName: function () {
@@ -541,66 +549,95 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.renderLeftPanel();
         },
 
-        renderLeftPanel() {
-            if (window.leftSidePanel) {
-                try {
-                    window.leftSidePanel.$destroy();
-                } catch (e) {
-                }
+        initSelectLeftPanel() {
+            if(['compare', 'merge'].includes(this.selectionViewMode)  && !this.getStorage().get('treeItem', 'Selection')) {
+                this.getStorage().set('treeItem', 'Selection', '_items');
+            }else if(this.selectionViewMode === 'standard' && this.getStorage().get('treeItem', 'Selection') === '_items') {
+                this.getStorage().clear('treeItem', 'Selection');
             }
+        },
 
-            window.leftSidePanel = new Svelte.SelectionLeftSidePanel({
+        renderLeftPanel() {
+           this.initSelectLeftPanel();
+            window.treePanelComponent = new Svelte.TreePanel({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
                 anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
                 props: {
-                    records: this.getRecordForPanels(),
-                    selectedIds: this.selectedIds,
-                    selectionViewMode: this.selectionViewMode,
-                    onItemClicked: (e, itemId) => {
-                        if (this.selectionViewMode === 'standard') {
-                            return;
-                        }
-                        e.preventDefault();
-
-                        if (this.toggleSelected(itemId)) {
-                            window.leftSidePanel.setSelectedIds(this.selectedIds);
-                            this.setupRecord();
-                        }
-                    },
-                    onSelectAll: (entityType) => {
-                        let shouldReload = false;
-                        this.selectionRecordModels.forEach(model => {
-                            if (model.name === entityType && !this.selectedIds.includes(model.id)) {
-                                if (this.toggleSelected(model.id)) {
-                                    shouldReload = true;
+                    scope: this.scope,
+                    model: this.model,
+                    mode: 'detail',
+                    showItems: ['compare', 'merge'].includes(this.selectionViewMode),
+                    callbacks: {
+                        selectNode: data => {
+                            window.location.href = `/#${this.scope}/view/${data.id}`;
+                        },
+                        afterMounted: () => {
+                            if(this.selectionViewMode === 'standard') {
+                                $('a[data-name="_items"]').addClass('hidden');
+                            }
+                        },
+                        onActiveItems:(element) => {
+                            if (window.leftSidePanel) {
+                                try {
+                                    window.leftSidePanel.$destroy();
+                                } catch (e) {
                                 }
                             }
-                        });
 
-                        if (shouldReload) {
-                            window.leftSidePanel.setSelectedIds(this.selectedIds);
-                            this.setupRecord();
-                        }
-                    },
-                    onUnSelectAll: (entityType) => {
-                        let shouldReload = false;
-                        this.selectionRecordModels.reverse().forEach(model => {
-                            if (model.name === entityType && this.selectedIds.includes(model.id)) {
-                                if (this.toggleSelected(model.id)) {
-                                    shouldReload = true;
+                            window.leftSidePanel = new Svelte.SelectionLeftSidePanel({
+                                target:element,
+                                props: {
+                                    records: this.getRecordForPanels(),
+                                    selectedIds: this.selectedIds,
+                                    selectionViewMode: this.selectionViewMode,
+                                    onItemClicked: (e, itemId) => {
+                                        if (this.selectionViewMode === 'standard') {
+                                            return;
+                                        }
+                                        e.preventDefault();
+
+                                        if (this.toggleSelected(itemId)) {
+                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            this.setupRecord();
+                                        }
+                                    },
+                                    onSelectAll: (entityType) => {
+                                        let shouldReload = false;
+                                        this.selectionRecordModels.forEach(model => {
+                                            if (model.name === entityType && !this.selectedIds.includes(model.id)) {
+                                                if (this.toggleSelected(model.id)) {
+                                                    shouldReload = true;
+                                                }
+                                            }
+                                        });
+
+                                        if (shouldReload) {
+                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            this.setupRecord();
+                                        }
+                                    },
+                                    onUnSelectAll: (entityType) => {
+                                        let shouldReload = false;
+                                        this.selectionRecordModels.reverse().forEach(model => {
+                                            if (model.name === entityType && this.selectedIds.includes(model.id)) {
+                                                if (this.toggleSelected(model.id)) {
+                                                    shouldReload = true;
+                                                }
+                                            }
+                                        });
+
+                                        if (shouldReload) {
+                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            this.setupRecord();
+                                        }
+                                    }
                                 }
-                            }
-                        });
-
-                        if (shouldReload) {
-                            window.leftSidePanel.setSelectedIds(this.selectedIds);
-                            this.setupRecord();
+                            })
                         }
                     }
                 }
-            })
+            });
         },
-
 
         afterRemoveSelectedRecords(selectedRecordIds) {
             if (this.selectionViewMode !== 'standard') {

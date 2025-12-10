@@ -60,6 +60,12 @@ class Layout extends AbstractListener
                     $result[] = ['name' => '_bookmark'];
                     $event->setArgument('result', $result);
                 }
+
+                if($scope === 'Selection') {
+                    $result = $event->getArgument('result');
+                    $result[] = ['name' => '_items'];
+                    $event->setArgument('result', $result);
+                }
             }
         }
 

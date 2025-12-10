@@ -102,7 +102,7 @@
     "created": "Créé",
     "url": "URL",
     "goldenRecord": "Enregistrement d'or",
-    "sourceRecords": "Elements source",
+    "sourceRecords": "Éléments source",
     "primaryRecord": "Enregistrement pincipal",
     "derivedRecords": "Enregistrements dérivés"
   },
@@ -452,9 +452,9 @@
     "Associated": "Associés",
     "Associating": "A Associer",
     "associatingItem": "Elément à associer",
-    "associatingItems": "Elements à associer",
-    "associatedItem": "Element associé",
-    "associatedItems": "Elements associés",
+    "associatingItems": "Éléments à associer",
+    "associatedItem": "Éléments associé",
+    "associatedItems": "Éléments associés",
     "emailTo": "Email à",
     "emailCc": "Email CC",
     "associationTooltip": "Définit la manière dont l'élément à associer est lié à l'élément associé.",
@@ -538,7 +538,9 @@
     "unselectAll": "Désélectionner tout",
     "addFields": "Ajouter des champs",
     "addAttributes": "Ajouter des attributs",
-    "matchings": "Appariements"
+    "matchings": "Appariements",
+    "Items": "Éléments",
+    "hideAll": "Cacher tout"
   },
   "insightsPanels": {
     "summary": "Sommaire",
@@ -716,7 +718,7 @@
     "RoleScopeAttribute": "Attributs",
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
-    "SelectionRecord": "Elements de sélection",
+    "SelectionRecord": "Éléments de sélection",
     "MasterDataEntity": "Entités de reference",
     "notPossibleToOpenDetailView": "Il est impossible d’ouvrir la vue détaillée."
   },
