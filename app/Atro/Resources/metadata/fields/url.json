@@ -56,7 +56,6 @@
       "type": "enum",
       "default": "noLabel",
       "options": [
-        "noLabel",
         "openLink",
         "view"
       ]

@@ -91,11 +91,12 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
         },
 
         getLabel: function () {
+            debugger
             let label = '',
-                display = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'urlLabel']) || 'noLabel';
+                display = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'urlLabel']) || '';
 
             switch (display) {
-                case 'noLabel':
+                case '':
                     let value = this.model.get(this.name);
                     if (value && value !== '') {
                         label = value.replace(/^[a-zA-Z]+:\/\//, '').split('?')[0];

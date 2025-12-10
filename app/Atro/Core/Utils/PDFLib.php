@@ -58,7 +58,7 @@ class PDFLib
         $this->initSystem();
         $gs_version = $this->getGSVersion();
         if ($gs_version == -1) {
-            throw new \Exception("Unable to find GhostScript instalation", 404);
+//            throw new \Exception("Unable to find GhostScript instalation", 404);
         } else {
             if ($gs_version < 9.16) {
                 throw new \Exception("Your version of GhostScript $gs_version is not compatible with  the library", 403);
