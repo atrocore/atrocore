@@ -21,7 +21,7 @@
     "min": "Min",
     "max": "Max",
     "conditionalProtected": "Protegé",
-    "conditionalRequired": "Exigée",
+    "conditionalRequired": "Requis",
     "conditionalReadOnly": "Lecture seule",
     "conditionalDisableOptions": "Options désactivées",
     "enableConditionalRequired": "Activation requise",
