@@ -1265,7 +1265,6 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 }
 
                 if (e.key === "Escape") {
-                    $('.inline-cancel-link').click();
                     $('button[data-name="cancelEdit"]').click();
                 }
             });

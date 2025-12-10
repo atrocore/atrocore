@@ -124,9 +124,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getInlineActionsContainer: function () {
-            if(this.isListView()) {
-                return this.getCellElement().children('div').children('.inline-actions')
-            }
             return this.getCellElement().children('.inline-actions');
         },
 
@@ -431,11 +428,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             let $cell = this.getCellElement();
-
-            if(this.isListView()) {
-                $cell = this.getCellElement().children('div');
-            }
-
             if ($cell.children('.inline-actions').size() === 0) {
                 $cell.prepend('<div class="pull-right inline-actions"></div>');
             }
@@ -615,7 +607,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.getInlineActionsContainer().append(`<a class="action lock-link hidden" href="javascript:" data-name="${this.name}" data-action="setAsInherited" title="${this.translate('setAsInherited')}"><i class="ph ph-link-simple-horizontal"></i></a>`);
             }
 
-            $cell.on('mouseenter', function (e) {
+            $cell.on('mouseover', function (e) {
                 e.stopPropagation();
                 if (this.disabled || this.readOnly) {
                     return;
@@ -695,11 +687,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         initInlineEdit: function () {
             let $cell = this.getCellElement();
             const inlineActions = this.getInlineActionsContainer();
-
-            if(this.isListView()) {
-                $cell = this.getCellElement().children('div');
-            }
-
             $cell.find('.inline-edit').parent().remove();
 
             const $editLink = $(`<a href="javascript:" class="inline-edit-link hidden" title="${this.translate('Edit')}"><i class="ph ph-pencil-simple-line inline-edit"></i></a>`);
@@ -737,7 +724,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                             }
                         }, 200);
                     }
-
                 });
             }
 
@@ -756,9 +742,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
 
                 if (['detail', 'list','listLink'].includes(this.mode)) {
-                    if(this.isListView()) {
-                        $editLink.parent().css('top', (($cell.height() / 2) - 8 ) + 'px')
-                    }
                     $editLink.removeClass('hidden');
                 }
             }.bind(this)).on('mouseleave', function (e) {
@@ -1277,12 +1260,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         addInlineEditLinks: function () {
             this.removeInlineEditLinks();
-            const fieldActions = this.getInlineActionsContainer();
-            let $cell = this.getCellElement();
-            if(this.isListView()) {
-                $cell = this.getCellElement().children('div');
+            if (this.isListView()) {
+                return;
             }
 
+            const fieldActions = this.getInlineActionsContainer();
+            const $cell = this.getCellElement();
             const $saveLink = $(`<a href="javascript:" class="inline-save-link" title="${this.translate('Update')}"><i class="ph ph-check"></i></a>`);
             const $cancelLink = $(`<a href="javascript:" class="inline-cancel-link" title="${this.translate('Cancel')}"><i class="ph ph-x"></i></a>`);
 
@@ -1310,6 +1293,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             if (this.mode != 'edit') {
                 return;
             }
+
+            this.getCellElement().css('width', '');
+            this.getCellElement().css('min-width', '');
+            this.getCellElement().css('max-width', '');
+            $(window).off('keydown.escape' + this.cid);
 
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
@@ -1342,17 +1330,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.initialAttributes = this.model.getClonedAttributes();
 
-            if(this.isListView()) {
-                let width = this.getCellElement().get(0).getBoundingClientRect().width;
-
-                this.getCellElement().css('width', width+'px')
-                this.getCellElement().css('min-width', width+'px')
-                this.getCellElement().css('max-width', width+'px')
+            if (this.isListView()) {
+                const width = this.getCellElement().get(0).getBoundingClientRect().width;
+                this.getCellElement().css('width', width + 'px');
+                this.getCellElement().css('min-width', width + 'px');
+                this.getCellElement().css('max-width', width + 'px');
             }
             this.once('after:render', function () {
                 this.inlineEditFocusing();
                 this.addInlineEditLinks();
                 this.initSaveAfterOutsideClick();
+
+                $(window).on('keydown.escape' + this.cid, e => {
+                    if (e.key === "Escape") {
+                        this.inlineEditClose();
+                    }
+                });
             }, this);
 
             this.inlineEditModeIsOn = true;
@@ -1368,16 +1361,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         initSaveAfterOutsideClick() {
             this.killAfterOutsideClickListener();
             const name = this.originalName || this.name;
-             this.getElementForOutsideClick().on(`click.anywhere-for-${name}`, e => {
+            this.getElementForOutsideClick().on(`click.anywhere-for-${name}`, e => {
                 if (this.mode === 'edit') {
                     let selector = '';
-                    if(this.isListView()) {
+                    if (this.isListView()) {
                         selector = `[data-id=${this.model.id}] .cell[data-name=${this.name}]`;
 
                         if (this.originalName) {
                             selector += `, [data-id=${this.model.id}] .cell[data-name="${this.originalName}"]`;
                         }
-                    }else{
+                    } else {
                         selector = `.cell[data-name=${this.name}]`;
 
                         if (this.originalName) {
@@ -1402,9 +1395,9 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         },
 
         getElementForOutsideClick() {
-            if(this.getRecordView().type === 'detail') {
-                return   this.$el.parents('.middle');
-            }else{
+            if (this.getRecordView().type === 'detail') {
+                return this.$el.parents('.middle');
+            } else {
                 return this.getRecordView().$el;
             }
         },
