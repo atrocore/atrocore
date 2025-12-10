@@ -133,7 +133,7 @@ class Attribute extends Base
     {
         $entityName = (string)$this->getBoolFilterParameter('onlyForEntity');
         if (!empty($entityName)) {
-            if ($this->getMetadata()->get("scopes.$entityName.type") === 'Derivative') {
+            if ($this->getMetadata()->get("scopes.$entityName.primaryEntityId")) {
                 $entityName = $this->getMetadata()->get("scopes.$entityName.primaryEntityId");
             }
             $result['whereClause'][] = [

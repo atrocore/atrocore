@@ -55,8 +55,7 @@
       "Base": "Base",
       "Hierarchy": "Gerarchia",
       "ReferenceData": "Riferimento",
-      "Archive": "Archivio",
-      "Derivative": "Derivato"
+      "Archive": "Archivio"
     },
     "sortDirection": {
       "asc": "In salita",

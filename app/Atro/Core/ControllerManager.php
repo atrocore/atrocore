@@ -55,10 +55,6 @@ class ControllerManager
 
         if (!class_exists($controllerClassName)) {
             $type = $metadata->get("scopes.$controllerName.type");
-            if ($type === 'Derivative') {
-                $type = $metadata->get("scopes.{$metadata->get("scopes.$controllerName.primaryEntityId")}.type");
-            }
-
             $controllerClassName = "\\Atro\\Core\\Templates\\Controllers\\$type";
         }
 

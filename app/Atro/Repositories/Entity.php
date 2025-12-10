@@ -276,9 +276,6 @@ class Entity extends ReferenceData
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $entityType = $entity->get('type');
-            if ($entity->get('type') === 'Derivative' && $type === 'clientDefs') {
-                $entityType = $this->getMetadata()->get("scopes.{$entity->get('primaryEntityId')}.type");
-            }
             $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
             if (!file_exists($filePath)){
                 continue;
@@ -415,10 +412,6 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
-        if (!empty($entity->get('primaryEntityId'))) {
-            $entity->set('type', 'Derivative');
-        }
-
         if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
             if (!is_array($modifiedExtendedRelations)) {
                 $modifiedExtendedRelations = [];

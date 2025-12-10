@@ -50,8 +50,7 @@
       "Base": "Basis",
       "Hierarchy": "Hierarchie",
       "ReferenceData": "Referenz",
-      "Archive": "Archiv",
-      "Derivative": "Derivat"
+      "Archive": "Archiv"
     },
     "sortDirection": {
       "asc": "Aufsteigend",

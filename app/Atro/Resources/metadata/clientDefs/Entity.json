@@ -18,7 +18,6 @@
     "derivedEntities": {
       "select": false,
       "limit": 2000,
-      "view": "views/entity/record/panels/fields",
       "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink",
       "hideShowFullList": true
     }

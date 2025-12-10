@@ -2213,6 +2213,8 @@ class Metadata extends AbstractListener
             return;
         }
 
+        return;
+
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
             if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
                 continue;
@@ -2249,6 +2251,7 @@ class Metadata extends AbstractListener
                         $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
                         $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
                         $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
 
                         $linkDefs['foreign'] = $foreign;
                     }
@@ -2257,6 +2260,9 @@ class Metadata extends AbstractListener
 
                 if ($fieldDefs['type'] === 'linkMultiple') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['derivativePrepared'])) {
+                        continue;
+                    }
 
                     // for oneToMany relation
                     if (empty($linkDefs['relationName'])) {
@@ -2272,28 +2278,34 @@ class Metadata extends AbstractListener
                     // for manyToMany relation
                     if (!empty($linkDefs['relationName'])) {
                         // for manyToMany relation
-                        $relationName = $scope . $linkDefs['entity'];
+                        $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
 
-                        switch ($fieldName) {
-                            case 'followers':
-                                $relationName = $linkDefs['entity'] . 'Followed' . $scope;
-                                break;
-                            case 'teams':
-                                $relationName = $linkDefs['relationName'];
-                                break;
+                        if ($fieldName === 'followers') {
+                            $relationName = $linkDefs['entity'] . 'Followed' . $scope;
+                        } elseif ($fieldName === 'teams') {
+                            $relationName = $linkDefs['relationName'];
                         }
 
-                        if (!empty($linkDefs['foreign'])) {
-                            $foreign = lcfirst($scope) . 'sDerivatives';
-                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName'] = $relationName;
-                            $linkDefs['foreign'] = $foreign;
+                        if ($linkDefs['relationName'] === "{$linkDefs['entity']}Hierarchy") {
+                            $relationName = "{$scope}Hierarchy";
+                            $linkDefs['entity'] = $scope;
+                        } else {
+                            if (!empty($linkDefs['foreign'])) {
+                                $foreign = lcfirst($scope) . 'sDerivatives';
+                                $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName'] = $relationName;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                                $linkDefs['foreign'] = $foreign;
+                            }
                         }
 
                         $linkDefs['relationName'] = $relationName;
                     }
+
+                    $linkDefs['derivativePrepared'] = true;
 
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }

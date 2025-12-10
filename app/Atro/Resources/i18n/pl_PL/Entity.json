@@ -48,8 +48,7 @@
       "Base": "Podstawa",
       "Hierarchy": "Hierarchia",
       "ReferenceData": "Odniesienie",
-      "Archive": "Archiwum",
-      "Derivative": "Instrument pochodny"
+      "Archive": "Archiwum"
     },
     "sortDirection": {
       "asc": "Rosnąco",

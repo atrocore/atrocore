@@ -30,13 +30,11 @@
     },
     "type": {
       "type": "enum",
-      "view": "views/entity/fields/type",
       "required": true,
       "options": [
         "Base",
         "Hierarchy",
-        "ReferenceData",
-        "Derivative"
+        "ReferenceData"
       ],
       "conditionalProperties": {
         "protected": {
@@ -151,6 +149,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -169,6 +171,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -247,13 +253,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -270,13 +279,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -293,13 +305,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -315,13 +330,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -336,6 +354,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -351,6 +373,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -365,6 +391,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -385,6 +415,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -405,6 +439,10 @@
             {
               "type": "isTrue",
               "attribute": "relationInheritance"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -492,11 +530,8 @@
               "attribute": "id"
             },
             {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Derivative"
-              ]
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
             },
             {
               "type": "isFalse",
@@ -521,8 +556,7 @@
               "attribute": "type",
               "value": [
                 "Base",
-                "Hierarchy",
-                "Derivative"
+                "Hierarchy"
               ]
             },
             {
@@ -543,18 +577,21 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "Derivative"
+                "Base",
+                "Hierarchy"
               ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
+            },
             {
-              "type": "in",
-              "attribute": "type",
+              "type": "or",
               "value": [
-                "Derivative"
+                {
+                  "type": "isEmpty",
+                  "attribute": "id"
+                },
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "primaryEntityId"
+                }
               ]
             }
           ]
@@ -599,6 +636,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -667,6 +708,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -684,13 +729,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -708,13 +756,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -735,9 +786,12 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -788,11 +842,8 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Derivative"
-              ]
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }

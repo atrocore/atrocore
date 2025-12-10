@@ -531,9 +531,6 @@ class Metadata
 
         if (!class_exists($path)) {
             $type = $this->get("scopes.$entityName.type");
-            if ($type === 'Derivative') {
-                $type = $this->get("scopes.{$this->get("scopes.$entityName.primaryEntityId")}.type");
-            }
             $path = "\\Atro\\Core\\Templates\\Entities\\$type";
         }
 
@@ -556,10 +553,6 @@ class Metadata
 
         if (!class_exists($path)) {
             $type = $this->get("scopes.$entityName.type");
-            if ($type === 'Derivative') {
-                $type = $this->get("scopes.{$this->get("scopes.$entityName.primaryEntityId")}.type");
-            }
-
             $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
         }
 
