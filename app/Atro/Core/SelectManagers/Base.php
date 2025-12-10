@@ -1520,7 +1520,7 @@ class Base
                     break;
 
                 case 'future':
-                    $part[$attribute . '>='] = date('Y-m-d');
+                    $part[$attribute . '>'] = date('Y-m-d');
                     break;
 
                 case 'lastSevenDays':
