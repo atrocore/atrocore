@@ -2230,7 +2230,11 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['required'])) {
                     $fieldDefs['required'] = false;
                 }
-                //@todo disable require via conditional properties
+
+                // disable require via conditional properties
+                if (!empty($fieldDefs['conditionalProperties']['required'])) {
+                    unset($fieldDefs['conditionalProperties']['required']);
+                }
 
                 // disable unique indexes
                 if (!empty($fieldDefs['unique'])) {
