@@ -1311,6 +1311,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+            this.getCellElement().css('width', '');
+            this.getCellElement().css('min-width', '');
+            this.getCellElement().css('max-width', '');
+            $(window).off('keydown.escape' + this.cid);
+
             this.inlineEditModeIsOn = false;
             this.setMode(this.initialMode);
             this.once('after:render', function () {
@@ -1342,17 +1347,22 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             this.initialAttributes = this.model.getClonedAttributes();
 
-            if(this.isListView()) {
-                let width = this.getCellElement().get(0).getBoundingClientRect().width;
-
-                this.getCellElement().css('width', width+'px')
-                this.getCellElement().css('min-width', width+'px')
-                this.getCellElement().css('max-width', width+'px')
+            if (this.isListView()) {
+                const width = this.getCellElement().get(0).getBoundingClientRect().width;
+                this.getCellElement().css('width', width + 'px');
+                this.getCellElement().css('min-width', width + 'px');
+                this.getCellElement().css('max-width', width + 'px');
             }
             this.once('after:render', function () {
                 this.inlineEditFocusing();
                 this.addInlineEditLinks();
                 this.initSaveAfterOutsideClick();
+
+                $(window).on('keydown.escape' + this.cid, e => {
+                    if (e.key === "Escape") {
+                        this.inlineEditClose();
+                    }
+                });
             }, this);
 
             this.inlineEditModeIsOn = true;
