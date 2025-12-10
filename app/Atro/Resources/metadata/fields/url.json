@@ -53,12 +53,7 @@
     },
     {
       "name": "urlLabel",
-      "type": "enum",
-      "default": "noLabel",
-      "options": [
-        "openLink",
-        "view"
-      ]
+      "type": "enum"
     }
   ],
   "filter": true,
