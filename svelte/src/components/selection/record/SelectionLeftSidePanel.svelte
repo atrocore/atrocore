@@ -106,8 +106,8 @@
     }
 
     div .title {
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 16px;
+        font-weight: 500;
     }
 
     div ul {
