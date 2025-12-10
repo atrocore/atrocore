@@ -975,7 +975,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
             this.mode = 'detail';
             this.trigger('after:set-detail-mode');
-            this.triggerModeChangedOnModel('detail')
+            this.triggerModeChangedOnModel('detail');
         },
 
         triggerModeChangedOnModel(mode) {

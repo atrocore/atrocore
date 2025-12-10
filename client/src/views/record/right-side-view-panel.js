@@ -194,6 +194,10 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
                     this.getParentView().hidePanel('summary')
                 }
             }
-        }
+        },
+
+        enableButtons: function () {},
+
+        disableButtons: function () {},
     });
 });
