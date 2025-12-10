@@ -504,7 +504,9 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "Details": "Details",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "Items": "Artikel",
+    "hideAll": "Alles ausblenden"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",

@@ -18781,6 +18781,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     max-width: 100%;
 }
 
+
+.compare-records table tr th,
+.compare-entities table tr th,
+.compare-records table tr th a,
+.compare-entities table tr th a {
+    color: black;
+    font-weight: 500;
+}
+
 .compare-records .overlay, .compare-entities .overlay {
     position: fixed;
     top: 0;

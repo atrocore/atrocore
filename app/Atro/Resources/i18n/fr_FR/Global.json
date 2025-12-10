@@ -538,7 +538,9 @@
     "unselectAll": "Désélectionner tout",
     "addFields": "Ajouter des champs",
     "addAttributes": "Ajouter des attributs",
-    "matchings": "Appariements"
+    "matchings": "Appariements",
+    "Items": "Eléments",
+    "hideAll": "Cacher tout"
   },
   "insightsPanels": {
     "summary": "Sommaire",
