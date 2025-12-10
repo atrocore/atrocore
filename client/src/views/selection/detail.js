@@ -203,6 +203,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             this.selectionViewMode = data.name;
+
+            if(window.treePanelComponent) {
+                window.treePanelComponent.setShowItems(['compare', 'merge'].includes(data.name));
+                this.initSelectLeftPanel();
+            }
+
             if (['compare', 'merge'].includes(this.selectionViewMode)) {
                 this.notify(this.translate('Loading...'));
                 this.reloadModels(() => this.refreshContent());
@@ -544,11 +550,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.renderLeftPanel();
         },
 
-        renderLeftPanel() {
+        initSelectLeftPanel() {
             if(['compare', 'merge'].includes(this.selectionViewMode)  && !this.getStorage().get('treeItem', 'Selection')) {
-                this.getStorage.set('treeItem', 'Selection', '_items');
+                this.getStorage().set('treeItem', 'Selection', '_items');
+            }else if(this.selectionViewMode === 'standard' && this.getStorage().get('treeItem', 'Selection') === '_items') {
+                this.getStorage().clear('treeItem', 'Selection');
             }
+        },
 
+        renderLeftPanel() {
+           this.initSelectLeftPanel();
             window.treePanelComponent = new Svelte.TreePanel({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
                 anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
@@ -556,10 +567,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     scope: this.scope,
                     model: this.model,
                     mode: 'detail',
-                    showItem: ['compare', 'merge'].includes(this.selectionViewMode),
+                    showItems: ['compare', 'merge'].includes(this.selectionViewMode),
                     callbacks: {
                         selectNode: data => {
                             window.location.href = `/#${this.scope}/view/${data.id}`;
+                        },
+                        afterMounted: () => {
+                            if(this.selectionViewMode === 'standard') {
+                                $('a[data-name="_items"]').addClass('hidden');
+                            }
                         },
                         onActiveItems:(element) => {
                             if (window.leftSidePanel) {

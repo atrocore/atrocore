@@ -22,6 +22,8 @@
     export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
+    export let showItems: boolean = true;
+
     export let renderLayoutEditor: Function = () => {
     };
 
@@ -30,6 +32,15 @@
     export let showApplyQuery: boolean = true;
 
     export let showApplySortOrder: boolean = true
+
+    export  function setShowItems(value: string[]) {
+        showItems = value;
+        if(!value && activeItem.name === '_items') {
+            setActiveItem(treeItems[0]);
+        }else{
+            setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
+        }
+    }
 
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
@@ -1107,6 +1118,10 @@
                 }
             })
         });
+
+        if(callbacks?.afterMounted) {
+            callbacks.afterMounted();
+        }
     });
 
     function onSidebarResize(e: CustomEvent): void {
@@ -1150,7 +1165,7 @@
                 <div class="btn-group">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                           class="btn btn-link tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
