@@ -35,10 +35,10 @@
 
     export  function setShowItems(value: string[]) {
         showItems = value;
-        if(!value && activeItem.name === '_items') {
-            setActiveItem(treeItems[0]);
-        }else{
+        if(value){
             setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
+        }else if(!value && activeItem.name === '_items') {
+            setActiveItem(treeItems[0]);
         }
     }
 

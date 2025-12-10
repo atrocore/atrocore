@@ -206,7 +206,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             if(window.treePanelComponent) {
                 window.treePanelComponent.setShowItems(['compare', 'merge'].includes(data.name));
-                this.initSelectLeftPanel();
             }
 
             if (['compare', 'merge'].includes(this.selectionViewMode)) {
