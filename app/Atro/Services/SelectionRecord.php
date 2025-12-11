@@ -89,7 +89,7 @@ class SelectionRecord extends Base
         }
     }
 
-    protected function getService(string $name)
+    protected function getService(string $name): Record
     {
         if(!empty($this->services[$name])) {
             return $this->services[$name];
