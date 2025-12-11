@@ -773,14 +773,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         loadLayoutData(callback) {
             let count = 0;
+            this.layoutData = [];
             for (const entityType of this.getEntityTypes()) {
-                if (this.layoutData[entityType]) {
-                    count++;
-                    if (count === this.getEntityTypes().length) {
-                        callback();
-                    }
-                    continue;
-                }
                 this.getHelper().layoutManager.get(entityType, 'selection', null, null, data => {
                     let layout = [
                         {

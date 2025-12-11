@@ -49,6 +49,7 @@ class SelectionRecord extends Base
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+                            $this->getServiceFactory()->create($entityType)->prepareEntityForOutput($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {
@@ -84,5 +85,10 @@ class SelectionRecord extends Base
                 }
             }
         }
+    }
+
+    protected function getService(string $name)
+    {
+        return $this->getServiceFactory()->create($name);
     }
 }
