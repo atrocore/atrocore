@@ -64,22 +64,25 @@ Espo.define('views/layout/fields/related-entity', 'views/fields/enum', function 
             return options;
         },
 
-        setupOptions: function () {
-           const options = this.getAvailableOptions()
+        setupOptionsList: function () {
+            const options = this.getAvailableOptions()
 
             this.params.options = options.map(option => option.name);
             this.params.translatedOptions = options.reduce((prev, curr) => {
                 prev[curr.name] = curr.label;
                 return prev;
             }, {})
+            this.originalOptionList = Espo.Utils.clone(this.params.options)
         },
 
         setup: function () {
-            this.setupOptions();
+            this.setupOptionsList();
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:entity change:viewType', () => {
-                this.setupOptions()
+                this.setupOptionsList()
+                this.translatedOptions = this.params.translatedOptions
+
                 if (this.model.get('relatedEntity') && !this.params.options.includes(this.model.get('relatedEntity'))) {
                     this.model.set('relatedEntity', '')
                 }
