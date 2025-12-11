@@ -733,11 +733,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $cell.on('mouseenter', function (e) {
                 e.stopPropagation();
-                if (this.disabled || this.readOnly) {
-                    return;
-                }
 
-                if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
+                if (this.disabled || this.readOnly) {
                     return;
                 }
 
@@ -1319,10 +1316,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEdit: function () {
             if (this.readOnly) {
                 return false;
-            }
-
-            if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
-                return;
             }
 
             this.trigger('edit', this);
