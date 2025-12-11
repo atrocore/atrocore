@@ -2213,10 +2213,8 @@ class Metadata extends AbstractListener
             return;
         }
 
-        return;
-
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+            if (empty($scopeDefs['primaryEntityId'])) {
                 continue;
             }
 
@@ -2278,18 +2276,19 @@ class Metadata extends AbstractListener
                     // for manyToMany relation
                     if (!empty($linkDefs['relationName'])) {
                         // for manyToMany relation
-                        $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
-
-                        if ($fieldName === 'followers') {
-                            $relationName = $linkDefs['entity'] . 'Followed' . $scope;
-                        } elseif ($fieldName === 'teams') {
-                            $relationName = $linkDefs['relationName'];
-                        }
-
                         if ($linkDefs['relationName'] === "{$linkDefs['entity']}Hierarchy") {
                             $relationName = "{$scope}Hierarchy";
                             $linkDefs['entity'] = $scope;
                         } else {
+                            $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
+                            if ($fieldName === 'followers') {
+                                $relationName = $linkDefs['entity'] . 'Followed' . $scope;
+                            } elseif ($fieldName === 'teams') {
+                                $relationName = $linkDefs['relationName'];
+                            } elseif (str_starts_with($linkDefs['relationName'], lcfirst($primaryEntity))) {
+                                $relationName = str_replace(lcfirst($primaryEntity), lcfirst($scope), $linkDefs['relationName']);
+                            }
+
                             if (!empty($linkDefs['foreign'])) {
                                 $foreign = lcfirst($scope) . 'sDerivatives';
                                 $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
@@ -2324,21 +2323,26 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'type'               => 'Derivative',
                 'primaryEntityId'    => $primaryEntity,
-                'name'               => $scopeDefs['name'] ?? null,
-                'namePlural'         => $scopeDefs['namePlural'] ?? null,
+                'isCustom'           => true,
                 'description'        => $scopeDefs['description'] ?? null,
                 'sortBy'             => $scopeDefs['sortBy'] ?? null,
                 'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
                 'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
                 'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
-                'iconClass'          => $scopeDefs['iconClass'] ?? null,
                 'createdAt'          => $scopeDefs['createdAt'] ?? null,
                 'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
                 'createdById'        => $scopeDefs['createdById'] ?? null,
                 'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
                 'layouts'            => false
+            ]);
+            if (array_key_exists('module', $data['scopes'][$scope])) {
+                unset($data['scopes'][$scope]['module']);
+            }
+
+            // clone client defs
+            $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
+                'iconClass' => $data['clientDefs'][$primaryEntity]['iconClass'] ?? null
             ]);
 
             // add link to the primary entity
