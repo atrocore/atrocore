@@ -491,7 +491,6 @@
     }
 
     function generateUrl(node) {
-
         if (isNodeInSubTree(node)) {
             return generateSubTreeUrl(node)
         }
