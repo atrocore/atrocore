@@ -491,10 +491,12 @@
     }
 
     function generateUrl(node) {
+
         if (isNodeInSubTree(node)) {
             return generateSubTreeUrl(node)
         }
 
+        let treeScope = activeItem ? getLinkScope(activeItem.name) : null
         let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
         if (sortBy) {
             url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
