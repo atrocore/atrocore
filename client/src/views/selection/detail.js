@@ -486,9 +486,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     createButton: false,
                 }, view => {
                     view.render();
-                   this.listenTo(view, 'after:render', () => {
-                       this.notify(false);
-                   });
+                    this.listenTo(view, 'after:render', () => {
+                        this.notify(false);
+                    });
                     this.listenToOnce(view, 'select', function (model) {
                         this.clearView('selectRecords');
                         this.ajaxPostRequest('SelectionRecord', {
