@@ -113,9 +113,9 @@ class Matching extends Base
 
         if ($entity->isNew()) {
             if ($entity->get('type') === 'duplicate') {
-                $this->createMasterDataEntity($entity->get('sourceEntity'));
+                $this->createMasterDataEntity($entity->get('entity'));
             } elseif ($entity->get('type') === 'masterRecord') {
-                $this->createMasterDataEntity($entity->get('sourceEntity'));
+                $this->createMasterDataEntity($entity->get('entity'));
                 $this->createMasterDataEntity($entity->get('masterEntity'));
             }
 

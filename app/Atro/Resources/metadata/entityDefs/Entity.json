@@ -515,6 +515,10 @@
         }
       }
     },
+    "hasMasterDataEntity": {
+      "type": "bool",
+      "protected": true
+    },
     "matchingDisabled": {
       "type": "bool",
       "protected": true

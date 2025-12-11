@@ -175,6 +175,7 @@ class Entity extends ReferenceData
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
             'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
+            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords'])
         ]);
     }
 
