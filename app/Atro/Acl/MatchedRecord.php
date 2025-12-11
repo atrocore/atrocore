@@ -17,6 +17,11 @@ use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
+    public function checkScope(\Espo\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    {
+        return $this->getAclManager()->checkScope($user, 'Matching', $action);
+    }
+
     public function checkEntityRead(User $user, Entity $entity, $data)
     {
         if ($user->isAdmin()) {

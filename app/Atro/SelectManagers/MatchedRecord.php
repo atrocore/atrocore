@@ -40,12 +40,16 @@ class MatchedRecord extends Base
                 $sp['select'] = ['id'];
 
                 $subQb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
-                $subQb->setParameter("{$column}_{$matching->id}", $matching->get($field));
-                $innerSql = str_replace($a, "t_".$matching->id, $subQb->getSql());
+
+                $param = Util::generateId();
+
+                $subQb->setParameter($param, $matching->get($field));
+
+                $innerSql = str_replace($a, "t_".$param, $subQb->getSql());
 
                 $where[] = [
                     'innerSql' => [
-                        "sql"        => "$a.$column = :{$column}_{$matching->id} AND $a.{$column}_id IN ({$innerSql})",
+                        "sql"        => "$a.$column = :{$param} AND $a.{$column}_id IN ({$innerSql})",
                         "parameters" => $subQb->getParameters(),
                     ],
                 ];
