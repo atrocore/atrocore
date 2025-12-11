@@ -238,7 +238,7 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'Derivative') {
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")) {
             throw new Forbidden();
         }
 
@@ -250,8 +250,8 @@ class EntityField extends ReferenceData
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
             }
 
-            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'Derivative') {
-                throw new BadRequest("It is not possible to create a relationship with an entity of type 'Derivative'.");
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
+                throw new BadRequest("It is not possible to create a relationship with a Derivative Entity.");
             }
         }
 

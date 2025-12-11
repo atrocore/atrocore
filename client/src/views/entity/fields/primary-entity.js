@@ -13,20 +13,31 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
 
         createDisabled: true,
 
-        selectBoolFilterList: ['fieldsFilter'],
+        selectBoolFilterList: ['fieldsFilter', 'onlyForDerivativeEnabled'],
 
         boolFilterData: {
             fieldsFilter() {
                 return {
-                    type: ["Base", "Hierarchy"]
+                    type: [this.model.get('type')]
                 };
+            }
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.isNew()) {
+                this.listenTo(this.model, 'change:type', () => {
+                    this.model.set(this.idName, null);
+                    this.model.set(this.nameName, null);
+                });
             }
         },
 
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get(this.idName) !== null && ['list', 'detail'].includes(this.mode)) {
+            if (this.model.get(this.idName) && ['list', 'detail'].includes(this.mode)) {
                 this.$el.html(`<a href="/#MasterDataEntity/view/${this.model.get(this.idName)}">${this.model.get(this.nameName)}</a>`);
             }
         },

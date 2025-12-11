@@ -48,8 +48,7 @@
       "Base": "Základna",
       "Hierarchy": "Hierarchie",
       "ReferenceData": "Odkaz",
-      "Archive": "Archiv",
-      "Derivative": "Derivát"
+      "Archive": "Archiv"
     },
     "sortDirection": {
       "asc": "Vzestupně",

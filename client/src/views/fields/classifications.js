@@ -11,13 +11,11 @@
 Espo.define('views/fields/classifications', 'views/fields/link-multiple',
     Dep => Dep.extend({
 
-        selectBoolFilterList: ['fieldsFilter'],
+        selectBoolFilterList: ['onlyForEntity'],
 
         boolFilterData: {
-            fieldsFilter() {
-                return {
-                    "entityId": this.model.name
-                }
+            onlyForEntity() {
+                return this.model.name
             }
         },
 

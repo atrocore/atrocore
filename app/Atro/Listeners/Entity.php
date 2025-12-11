@@ -141,7 +141,9 @@ class Entity extends AbstractListener
             throw new NotFound();
         }
 
-        if ($classification->get('entityId') !== $entityName) {
+        $checkEntity = $this->getMetadata()->get("scopes.$entityName.primaryEntityId") ?? $entityName;
+
+        if ($classification->get('entityId') !== $checkEntity) {
             throw new BadRequest($this->getLanguage()->translate('classificationForToAnotherEntity', 'exceptions', 'Classification'));
         }
 

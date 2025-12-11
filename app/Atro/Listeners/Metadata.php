@@ -2214,7 +2214,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+            if (empty($scopeDefs['primaryEntityId'])) {
                 continue;
             }
 
@@ -2226,8 +2226,14 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                if ($fieldDefs['type'] === 'linkMultiple') {
-                    continue;
+                // disable require
+                if (!empty($fieldDefs['required'])) {
+                    $fieldDefs['required'] = false;
+                }
+
+                // disable require via conditional properties
+                if (!empty($fieldDefs['conditionalProperties']['required'])) {
+                    unset($fieldDefs['conditionalProperties']['required']);
                 }
 
                 // disable unique indexes
@@ -2238,8 +2244,68 @@ class Metadata extends AbstractListener
                 if ($fieldDefs['type'] === 'link') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
                     if (!empty($linkDefs['foreign'])) {
-                        unset($linkDefs['foreign']);
+                        $foreign = lcfirst($scope) . 'sDerivatives';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                        $linkDefs['foreign'] = $foreign;
                     }
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
+
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['derivativePrepared'])) {
+                        continue;
+                    }
+
+                    // for oneToMany relation
+                    if (empty($linkDefs['relationName'])) {
+                        $foreign = lcfirst($scope) . 'Derivative';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+
+                        $linkDefs['foreign'] = $foreign;
+                    }
+
+                    // for manyToMany relation
+                    if (!empty($linkDefs['relationName'])) {
+                        // for manyToMany relation
+                        if ($linkDefs['relationName'] === "{$linkDefs['entity']}Hierarchy") {
+                            $relationName = "{$scope}Hierarchy";
+                            $linkDefs['entity'] = $scope;
+                        } else {
+                            $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
+                            if ($fieldName === 'followers') {
+                                $relationName = $linkDefs['entity'] . 'Followed' . $scope;
+                            } elseif ($fieldName === 'teams') {
+                                $relationName = $linkDefs['relationName'];
+                            } elseif (str_starts_with($linkDefs['relationName'], lcfirst($primaryEntity))) {
+                                $relationName = str_replace(lcfirst($primaryEntity), lcfirst($scope), $linkDefs['relationName']);
+                            }
+
+                            if (!empty($linkDefs['foreign'])) {
+                                $foreign = lcfirst($scope) . 'sDerivatives';
+                                $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName'] = $relationName;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                                $linkDefs['foreign'] = $foreign;
+                            }
+                        }
+
+                        $linkDefs['relationName'] = $relationName;
+                    }
+
+                    $linkDefs['derivativePrepared'] = true;
+
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
@@ -2247,6 +2313,7 @@ class Metadata extends AbstractListener
 
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
+
             if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
                 $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
             }
@@ -2256,21 +2323,26 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'type'               => 'Derivative',
                 'primaryEntityId'    => $primaryEntity,
-                'name'               => $scopeDefs['name'] ?? null,
-                'namePlural'         => $scopeDefs['namePlural'] ?? null,
+                'isCustom'           => true,
                 'description'        => $scopeDefs['description'] ?? null,
                 'sortBy'             => $scopeDefs['sortBy'] ?? null,
                 'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
                 'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
                 'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
-                'iconClass'          => $scopeDefs['iconClass'] ?? null,
                 'createdAt'          => $scopeDefs['createdAt'] ?? null,
                 'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
                 'createdById'        => $scopeDefs['createdById'] ?? null,
                 'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
                 'layouts'            => false
+            ]);
+            if (array_key_exists('module', $data['scopes'][$scope])) {
+                unset($data['scopes'][$scope]['module']);
+            }
+
+            // clone client defs
+            $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
+                'iconClass' => $data['clientDefs'][$primaryEntity]['iconClass'] ?? null
             ]);
 
             // add link to the primary entity

@@ -24,6 +24,9 @@ Espo.define('views/entity/fields/delete-values-after-unlinking-classification', 
                 }
                 this.reRender();
             });
+            this.listenTo(this.model, 'change:primaryEntityId', () => {
+                this.reRender();
+            });
         },
 
         afterRender(){
@@ -37,7 +40,7 @@ Espo.define('views/entity/fields/delete-values-after-unlinking-classification', 
                && !this.model.get('disableAttributeLinking')
                && this.model.id !== 'Listing'
                && this.model.get('hasClassification')
-               && this.model.get('type') !== 'Derivative'
+               && !this.model.get('primaryEntityId')
            ){
                 this.show();
             }

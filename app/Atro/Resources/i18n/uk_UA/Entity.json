@@ -50,8 +50,7 @@
       "Base": "Базова",
       "Hierarchy": "Ієрархія",
       "ReferenceData": "Довідник",
-      "Archive": "Архів",
-      "Derivative": "Похідна"
+      "Archive": "Архів"
     },
     "sortDirection": {
       "asc": "За зростанням",

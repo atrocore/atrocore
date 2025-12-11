@@ -8,18 +8,19 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/entity/fields/type', 'views/fields/enum',
+Espo.define('views/entity/record/panels/derived-entities', 'views/record/panels/relationship',
     Dep => Dep.extend({
 
         setup() {
             Dep.prototype.setup.call(this);
 
-            if (this.model.get('primaryEntityId')) {
-                this.model.set(this.name, 'Derivative');
-            }
-
+            this.listenTo(this.model, 'prepareAttributesForCreateRelated', (attributes, link, callback) => {
+                if (link === 'derivedEntities') {
+                    attributes['type'] = this.model.get('type');
+                }
+                callback(attributes);
+            });
         },
 
     })
 );
-

@@ -187,6 +187,7 @@ class Entity extends ReferenceData
         $canHasComponents = false;
         $canHasAssociates = false;
         $primaryEntityId = null;
+        $onlyForDerivativeEnabled = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -203,6 +204,11 @@ class Entity extends ReferenceData
             if (!empty($item['canHasAssociates'])) {
                 $canHasAssociates = true;
             }
+
+            if (!empty($item['onlyForDerivativeEnabled'])) {
+                $onlyForDerivativeEnabled = true;
+            }
+
             if (!empty($item['primaryEntityId='])) {
                 $primaryEntityId = $item['primaryEntityId='];
             } elseif (!empty($item['primaryEntityId'])) {
@@ -216,11 +222,11 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if ($canHasAttributes && empty($row['hasAttribute'])) {
+            if ($canHasAttributes && (empty($row['hasAttribute']) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
-            if ($canHasClassifications && empty($row['hasClassification'])) {
+            if ($canHasClassifications && (empty($row['hasClassification']) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
@@ -233,6 +239,10 @@ class Entity extends ReferenceData
             }
 
             if (!empty($primaryEntityId) && (empty($row['primaryEntityId']) || $primaryEntityId !== $row['primaryEntityId'])) {
+                continue;
+            }
+
+            if ($onlyForDerivativeEnabled && ((empty($row['isCustom']) && empty($row['derivativeEnabled'])) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
@@ -258,6 +268,35 @@ class Entity extends ReferenceData
             throw new Conflict("Entity name '{$entity->get('code')}' is not allowed.");
         }
 
+        // create derived entity
+        if (!empty($entity->get('primaryEntityId'))) {
+            $data = [
+                'primaryEntityId' => $entity->get('primaryEntityId'),
+                'isCustom'        => true
+            ];
+
+            if (!empty($entity->get('description'))) {
+                $data['description'] = $entity->get('description');
+            }
+
+            file_put_contents("data/metadata/scopes/{$entity->get('code')}.json", json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            if (!empty($entity->get('iconClass'))) {
+                $this->getMetadata()->set('clientDefs', $entity->get('code'), ['iconClass' => $entity->get('iconClass')]);
+                $this->getMetadata()->save();
+                $this->getDataManager()->rebuild();
+            }
+
+            $this->getLanguage()->set('Global', 'scopeNames', $entity->get('code'), $entity->get('name'));
+            $this->getLanguage()->set('Global', 'scopeNamesPlural', $entity->get('code'), $entity->get('namePlural'));
+            $this->getLanguage()->save();
+            if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+                $this->getBaseLanguage()->save();
+            }
+
+            return true;
+        }
+
         // copy default layouts
         $layoutsPath = CORE_PATH . "/Atro/Core/Templates/Layouts/{$entity->get('type')}";
         if (is_dir($layoutsPath)) {
@@ -276,9 +315,6 @@ class Entity extends ReferenceData
         // copy default metadata
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $entityType = $entity->get('type');
-            if ($entity->get('type') === 'Derivative' && $type === 'clientDefs') {
-                $entityType = $this->getMetadata()->get("scopes.{$entity->get('primaryEntityId')}.type");
-            }
             $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
             if (!file_exists($filePath)){
                 continue;
@@ -329,7 +365,7 @@ class Entity extends ReferenceData
         return true;
     }
 
-    protected function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
+    protected function  updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
         $saveMetadata = $isCustom;
         $saveLanguage = $isCustom;
@@ -415,10 +451,6 @@ class Entity extends ReferenceData
 
     public function beforeSave(OrmEntity $entity, array $options = [])
     {
-        if (!empty($entity->get('primaryEntityId'))) {
-            $entity->set('type', 'Derivative');
-        }
-
         if ($entity->get('type') === 'Hierarchy' && !empty($modifiedExtendedRelations = $entity->get('modifiedExtendedRelations'))) {
             if (!is_array($modifiedExtendedRelations)) {
                 $modifiedExtendedRelations = [];
@@ -456,6 +488,13 @@ class Entity extends ReferenceData
 
         if ($entity->isAttributeChanged('hasAssociate') && !empty($entity->get('hasAssociate')) && !in_array($entity->get('type'), ['Base', 'Hierarchy'])) {
             throw new BadRequest($this->getLanguage()->translate('entityTypeIsNotSuitableForAssociates', 'exceptions', 'Entity'));
+        }
+
+        if (!empty($entity->get('primaryEntityId'))) {
+            $primaryEntity = $this->get($entity->get('primaryEntityId'));
+            if (!empty($primaryEntity) && !empty($primaryEntity->get('primaryEntityId'))) {
+                throw new BadRequest($this->getLanguage()->translate('derivativeFromDerivativeNotSupporting', 'exceptions', 'Entity'));
+            }
         }
 
         parent::beforeSave($entity, $options);

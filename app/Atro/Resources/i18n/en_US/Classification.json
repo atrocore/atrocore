@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Entity cannot be changed.",
     "classificationForToAnotherEntity": "Classification cannot be linked with this record, because it is used for another Entity.",
-    "classificationHasRecords": "Classification with related records cannot be deleted."
+    "classificationHasRecords": "Classification with related records cannot be deleted.",
+    "entityNotAllowToChoose": "Entity is not allowed to choose"
   }
 }
