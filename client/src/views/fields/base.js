@@ -733,7 +733,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             $cell.on('mouseenter', function (e) {
                 e.stopPropagation();
-
                 if (this.disabled || this.readOnly) {
                     return;
                 }
