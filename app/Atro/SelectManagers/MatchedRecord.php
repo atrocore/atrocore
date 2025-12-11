@@ -33,8 +33,8 @@ class MatchedRecord extends Base
         $whereGroups = [];
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
             $where = [];
-            foreach (['sourceEntity', 'masterEntity'] as $field) {
-                $column = Util::toUnderScore($field);
+            foreach (['entity', 'masterEntity'] as $field) {
+                $column = $field === 'entity' ? 'source_entity' : Util::toUnderScore($field);
                 $repository = $this->getEntityManager()->getRepository($matching->get($field));
                 $sp = $this->createSelectManager($matching->get($field))->getSelectParams([], true, true);
                 $sp['select'] = ['id'];

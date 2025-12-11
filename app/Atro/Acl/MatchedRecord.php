@@ -23,12 +23,12 @@ class MatchedRecord extends Base
             return true;
         }
 
-        $stagingEntity = $this
+        $sourceEntity = $this
             ->getEntityManager()
             ->getRepository($entity->get('sourceEntity'))
             ->get($entity->get('sourceEntityId'));
 
-        if (empty($stagingEntity)) {
+        if (empty($sourceEntity)) {
             return false;
         }
 
@@ -43,7 +43,7 @@ class MatchedRecord extends Base
 
         return
             $this->checkEntity($user, $entity, $data, 'read')
-            && $this->getAclManager()->checkEntity($user, $stagingEntity, 'read')
+            && $this->getAclManager()->checkEntity($user, $sourceEntity, 'read')
             && $this->getAclManager()->checkEntity($user, $masterEntity, 'read');
     }
 
