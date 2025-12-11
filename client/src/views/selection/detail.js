@@ -795,10 +795,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 if (model.name !== entityType) {
                                     return;
                                 }
-
                                 model.defs.fields[fieldData.name] = fieldData.attributeDefs;
                                 model.defs.fields[fieldData.name].disableAttributeRemove = true;
-                                // model.get('attributesDefs')[fieldData.name]?.disableAttributeRemove = true;
                             });
                         }
                     }
