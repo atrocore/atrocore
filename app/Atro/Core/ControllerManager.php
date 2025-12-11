@@ -36,6 +36,11 @@ class ControllerManager
 
     public static function getControllerClassName(string $controllerName, Metadata $metadata): string
     {
+        // for derivative entities
+        if (!empty($primaryEntityId = $metadata->get("scopes.$controllerName.primaryEntityId"))) {
+            $controllerName = $primaryEntityId;
+        }
+
         $className = Util::normilizeClassName($controllerName);
 
         $controllerClassName = "\\Atro\\Controllers\\$className";

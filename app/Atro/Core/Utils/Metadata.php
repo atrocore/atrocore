@@ -517,6 +517,11 @@ class Metadata
 
     public function getEntityPath(string $entityName, string $delim = '\\'): string
     {
+        // for derivative entities
+        if (!empty($primaryEntityId = $this->get("scopes.$entityName.primaryEntityId"))) {
+            $entityName = $primaryEntityId;
+        }
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
@@ -539,6 +544,11 @@ class Metadata
 
     public function getRepositoryPath(string $entityName, string $delim = '\\'): string
     {
+        // for derivative entities
+        if (!empty($primaryEntityId = $this->get("scopes.$entityName.primaryEntityId"))) {
+            $entityName = $primaryEntityId;
+        }
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
