@@ -222,11 +222,11 @@ class Entity extends ReferenceData
                 continue;
             }
 
-            if ($canHasAttributes && empty($row['hasAttribute'])) {
+            if ($canHasAttributes && (empty($row['hasAttribute']) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
-            if ($canHasClassifications && empty($row['hasClassification'])) {
+            if ($canHasClassifications && (empty($row['hasClassification']) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 

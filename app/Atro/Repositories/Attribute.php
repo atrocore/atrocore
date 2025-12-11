@@ -532,6 +532,15 @@ class Attribute extends Base
             throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
 
+        if ($entity->isAttributeChanged('entityId')) {
+            if (
+                !$this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")
+                || $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")
+            ) {
+                throw new BadRequest($this->exception('entityNotAllowToChoose'));
+            }
+        }
+
         $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $entity->get('attributePanelId'));
         if (empty($attributePanel)) {
             throw new BadRequest("Attribute panel '{$entity->get('attributePanelId')}' does not exist.");
