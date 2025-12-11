@@ -20,8 +20,6 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
         showOverlay: true,
 
-        id: '',
-
         events: {
             'click a.swap-entity': function (e) {
                 Compare.prototype.afterSwapButtonClick.call(this, e)
@@ -39,7 +37,6 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             this.model = this.models.length ? this.models[0] : null;
             this.scope = this.options.scope || this.selectionModel?.name;
             this.layoutData = this.options.layoutData;
-            this.id = 'selection_' + Math.floor((Math.random() * 10000) + 1);
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
                 this.models.forEach(model => {
