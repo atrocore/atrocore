@@ -619,6 +619,19 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "or",
+              "value": [
+                {
+                  "type": "isTrue",
+                  "attribute": "isCustom"
+                },
+                {
+                  "type": "isTrue",
+                  "attribute": "derivativeEnabled"
+                }
+              ]
             }
           ]
         }
@@ -668,6 +681,10 @@
       }
     },
     "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "derivativeEnabled": {
       "type": "bool",
       "readOnly": true
     },

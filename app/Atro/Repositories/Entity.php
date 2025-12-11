@@ -187,6 +187,7 @@ class Entity extends ReferenceData
         $canHasComponents = false;
         $canHasAssociates = false;
         $primaryEntityId = null;
+        $onlyForDerivativeEnabled = false;
         foreach ($params['whereClause'] ?? [] as $item) {
             if (!empty($item['canHasAttributes'])) {
                 $canHasAttributes = true;
@@ -203,6 +204,11 @@ class Entity extends ReferenceData
             if (!empty($item['canHasAssociates'])) {
                 $canHasAssociates = true;
             }
+
+            if (!empty($item['onlyForDerivativeEnabled'])) {
+                $onlyForDerivativeEnabled = true;
+            }
+
             if (!empty($item['primaryEntityId='])) {
                 $primaryEntityId = $item['primaryEntityId='];
             } elseif (!empty($item['primaryEntityId'])) {
@@ -233,6 +239,10 @@ class Entity extends ReferenceData
             }
 
             if (!empty($primaryEntityId) && (empty($row['primaryEntityId']) || $primaryEntityId !== $row['primaryEntityId'])) {
+                continue;
+            }
+
+            if ($onlyForDerivativeEnabled && ((empty($row['isCustom']) && empty($row['derivativeEnabled'])) || !empty($row['primaryEntityId']))) {
                 continue;
             }
 
@@ -478,6 +488,13 @@ class Entity extends ReferenceData
 
         if ($entity->isAttributeChanged('hasAssociate') && !empty($entity->get('hasAssociate')) && !in_array($entity->get('type'), ['Base', 'Hierarchy'])) {
             throw new BadRequest($this->getLanguage()->translate('entityTypeIsNotSuitableForAssociates', 'exceptions', 'Entity'));
+        }
+
+        if (!empty($entity->get('primaryEntityId'))) {
+            $primaryEntity = $this->get($entity->get('primaryEntityId'));
+            if (!empty($primaryEntity) && !empty($primaryEntity->get('primaryEntityId'))) {
+                throw new BadRequest($this->getLanguage()->translate('derivativeFromDerivativeNotSupporting', 'exceptions', 'Entity'));
+            }
         }
 
         parent::beforeSave($entity, $options);

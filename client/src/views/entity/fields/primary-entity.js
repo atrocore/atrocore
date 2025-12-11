@@ -13,7 +13,7 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
 
         createDisabled: true,
 
-        selectBoolFilterList: ['fieldsFilter'],
+        selectBoolFilterList: ['fieldsFilter', 'onlyForDerivativeEnabled'],
 
         boolFilterData: {
             fieldsFilter() {
