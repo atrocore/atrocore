@@ -55,6 +55,10 @@
             case 'relationships':
                 LayoutComponent = RelationShipsLayout;
                 break;
+            case 'selectionRelations':
+                params.onlyManyToMany = true;
+                LayoutComponent = RelationShipsLayout;
+                break;
             case 'summary':
             case 'detail':
                 LayoutComponent = GridLayout;

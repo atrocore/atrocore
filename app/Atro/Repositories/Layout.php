@@ -153,6 +153,7 @@ class Layout extends Base
                     }
                     break;
                 case 'relationships':
+                case 'selectionRelations':
                     $repository = $this->getEntityManager()->getRepository('LayoutRelationshipItem');
                     $relationshipItems = $repository->where(['layoutId' => $entity->get('id')])->find() ?? [];
                     $processedRelationships = [];
