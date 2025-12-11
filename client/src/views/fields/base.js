@@ -829,6 +829,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+
+            if(this.model.defs.fields[this.name].disableAttributeRemove) {
+                return;
+            }
+
             if (this.options?.params?.disableAttributeRemove) {
                 return;
             }
