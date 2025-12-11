@@ -794,7 +794,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             fullWidth: true
                         }]);
 
-
                         if (fieldData.attributeId) {
                             this.selectionRecordModels.forEach(model => {
                                 if (model.name !== entityType) {
