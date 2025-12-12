@@ -22,6 +22,8 @@ class SelectionRecord extends Base
 {
     protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityType'];
 
+    protected  array $services = [];
+
     public function prepareCollectionForOutput(EntityCollection $collection, array $selectParams = []): void
     {
         parent::prepareCollectionForOutput($collection, $selectParams);
@@ -49,6 +51,7 @@ class SelectionRecord extends Base
                     foreach ($entities as $entity) {
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
+                            $this->getService($entityType)->prepareEntityForOutput($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {
@@ -84,5 +87,13 @@ class SelectionRecord extends Base
                 }
             }
         }
+    }
+
+    protected function getService(string $name): Record
+    {
+        if(!empty($this->services[$name])) {
+            return $this->services[$name];
+        }
+        return $this->services[$name] = $this->getServiceFactory()->create($name);
     }
 }

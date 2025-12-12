@@ -135,7 +135,8 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                     scope: m.name,
                     mode: 'detail',
                     model: m,
-                    detailLayout: this.layoutData[m.name]
+                    detailLayout: this.layoutData[m.name],
+                    setViewBeforeCallback: true
                 }, view => {
                     view.render(() => {
                         count++;

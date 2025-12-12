@@ -737,10 +737,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     return;
                 }
 
-                if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
-                    return;
-                }
-
                 if (['detail', 'list','listLink'].includes(this.mode)) {
                     $editLink.removeClass('hidden');
                 }
@@ -829,6 +825,11 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
             let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
             if (!attributeId) {
+                return;
+            }
+
+
+            if(this.model.defs.fields[this.name].disableAttributeRemove) {
                 return;
             }
 
@@ -1319,10 +1320,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEdit: function () {
             if (this.readOnly) {
                 return false;
-            }
-
-            if(this.type === 'linkMultiple' && !this.model.has(this.idsName)) {
-                return;
             }
 
             this.trigger('edit', this);
