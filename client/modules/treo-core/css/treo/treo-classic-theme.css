@@ -7521,7 +7521,7 @@ button.close {
     flex-shrink: 0;
 }
 
-.selectize-input:not(.multi) > .item:first-of-type:last-of-type {
+.selectize-input:not(.multi):not(.items) > .item:first-of-type:last-of-type {
     flex: 1;
     flex-shrink: 1;
     min-width: 0;
