@@ -1095,7 +1095,7 @@
                 treeItems = [...treeItems, {
                     name: '_items',
                     label: Language.get('Global', 'labels', 'Items')
-                }]
+                }];
             }
 
             if (treeItems.length === 0) {
