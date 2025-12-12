@@ -1,5 +1,6 @@
 {
   "fields": {
+    "searchEntity": "Search Entity",
     "isActive": "Active",
     "type": "Type",
     "sourceEntity": "Source Entity",

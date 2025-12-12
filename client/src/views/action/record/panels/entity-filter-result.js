@@ -19,8 +19,8 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
             this.wait(true);
 
             this.onModelReady(() => {
-                this.scope = this.model.get('targetEntity');
-                this.url = this.model.get('targetEntity');
+                this.scope = this.model.get('searchEntity');
+                this.url = this.model.get('searchEntity');
                 this.model.defs.links.entityFilterResult = {
                     entity: this.scope,
                     type: "hasMany"
@@ -51,9 +51,10 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                     html: this.getFilterButtonHtml()
                 });
 
-                this.listenTo(this.model, 'change:targetEntity', () => {
+                this.listenTo(this.model, 'change:searchEntity', () => {
                     this.reRender();
                 });
+
                 this.wait(false)
             })
 
@@ -69,8 +70,8 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         },
 
         actionOpenSearchFilter() {
-            if(!this.model.get('targetEntity') || !this.getMetadata().get(['scopes', this.model.get('targetEntity')])) {
-                this.notify(this.translate('The target entity is not valid'), 'error');
+            if(!this.model.get('searchEntity') || !this.getMetadata().get(['scopes', this.model.get('searchEntity')])) {
+                this.notify(this.translate('The search entity is not valid'), 'error');
                 return;
             }
 
@@ -86,11 +87,11 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                 whereData = this.model.get('data')?.whereData;
             }
 
-            SearchFilterOpener.prototype.open.call(this, this.model.get('targetEntity'), whereData,  ({where, whereData}) => {
+            SearchFilterOpener.prototype.open.call(this, this.model.get('searchEntity'), whereData,  ({where, whereData}) => {
                 this.model.set('data', _.extend({}, this.model.get('data'), {
                     where,
                     whereData,
-                    whereScope: this.model.get('targetEntity')
+                    whereScope: this.model.get('searchEntity')
                 }));
                 this.notify(this.translate('saving', 'messages'));
                 this.model.save({_prev: null}).then(() =>  {
@@ -124,14 +125,8 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
         },
 
         panelVisible() {
-            return this.model.get('targetEntity')
-                && this.getAllowedActionTypes().includes(this.model.get('type'))
-                && !this.model.get('applyToPreselectedRecords');
+            return !!(this.model.get('searchEntity'));
         },
-
-        getAllowedActionTypes() {
-            return ['update', 'delete', 'email'];
-        }
 
     })
 );
