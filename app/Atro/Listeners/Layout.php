@@ -61,12 +61,6 @@ class Layout extends AbstractListener
                     $result[] = ['name' => '_bookmark'];
                     $event->setArgument('result', $result);
                 }
-
-                if ($scope === 'Selection') {
-                    $result = $event->getArgument('result');
-                    $result[] = ['name' => '_items'];
-                    $event->setArgument('result', $result);
-                }
             }
         }
 
@@ -80,13 +74,13 @@ class Layout extends AbstractListener
                     null, null, $params['layoutProfileId'] ?? null,
                     $params['isAdminPage']);
 
-                if(!empty($data['layout'])) {
+                if (!empty($data['layout'])) {
                     foreach ($data['layout'] as $panel) {
-                        if(!empty($panel['rows'])) {
+                        if (!empty($panel['rows'])) {
                             foreach ($panel['rows'] as $rows) {
-                                if(!empty($rows)) {
+                                if (!empty($rows)) {
                                     foreach ($rows as $row) {
-                                        if(!empty($row['name'])) {
+                                        if (!empty($row['name'])) {
                                             $result[] = [
                                                 'name' => $row['name'],
                                             ];

@@ -8,5 +8,5 @@
 	{{/each}}
 </div>
 {{else}}
-<div>No Data</div>
+<div class="list-container">{{translate 'No Data'}}</div>
 {{/if}}

@@ -565,6 +565,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     model: this.model,
                     mode: 'detail',
                     showItems: ['compare', 'merge'].includes(this.selectionViewMode),
+                    hasItems: true,
                     callbacks: {
                         selectNode: data => {
                             window.location.href = `/#${this.scope}/view/${data.id}`;
