@@ -54,7 +54,7 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
                     collection.data.select = selectAttributeList.join(',');
                     this.putAttributesToSelect();
                     collection.fetch({async: false}).then(() => {
-                        if(collection.models.length === 0) {
+                        if (collection.models.length === 0) {
                             this.wait(false);
                             return;
                         }
@@ -77,10 +77,15 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
                             })
                         });
                     })
-
                 });
 
             }, this);
+
+            this.listenTo(this.model, 'overview-filters-changed', () => {
+                this.collection.models.forEach(model => {
+                    model.trigger('overview-filters-changed')
+                });
+            });
         },
 
         getRelationModel(model, callback) {
