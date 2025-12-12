@@ -97,7 +97,6 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
 
         data() {
             return {
-                collection: this.collection,
                 rowList: this.collection.models.map(m => m.id)
             }
         },

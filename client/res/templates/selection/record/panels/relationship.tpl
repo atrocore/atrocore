@@ -1,5 +1,5 @@
 
-{{#if collection.models.length }}
+{{#if rowList.length }}
 <div class="records">
 	{{#each rowList}}
 		<div class="row {{#unless @first }} not-first {{/unless}}" data-id="{{./this}}">
