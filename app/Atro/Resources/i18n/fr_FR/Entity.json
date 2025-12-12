@@ -55,10 +55,10 @@
     }
   },
   "labels": {
-    "accessManagement": "Gestion de l'accès",
+    "accessManagement": "Gestion des accès",
     "hierarchyManagement": "Gestion de la hiérarchie",
     "other": "Autre",
-    "resetToDefault": "Rétablissement des valeurs par défaut",
+    "resetToDefault": "Réinitialiser par défaut",
     "attributes": "Attributs"
   },
   "confirmations": {
