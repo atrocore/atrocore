@@ -55,6 +55,7 @@
     "type": {
       "create": "Create",
       "update": "Update",
+      "createOrUpdate": "Create or Update",
       "delete": "Delete",
       "set": "Action Set",
       "webhook": "Webhook",

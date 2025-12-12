@@ -12,12 +12,13 @@
 namespace Atro\ActionTypes;
 
 use Atro\Core\Exceptions\Error;
-use Atro\Core\Exceptions\NotModified;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
 
 class Create extends AbstractAction
 {
+    protected array $services = [];
+
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         $entity = null;
@@ -75,23 +76,30 @@ class Create extends AbstractAction
 
         $inputData->_workflowAction = true;
 
-        /** @var Record $service */
-        $service = $this->getServiceFactory()->create($action->get('targetEntity'));
-
         if (property_exists($inputData, 'id')) {
             $existed = $this->getEntityManager()->getEntity($action->get('targetEntity'), $inputData->id);
             if (!empty($existed)) {
-                try {
-                    $service->updateEntity($existed->id, $inputData);
-                } catch (NotModified $e) {
-                }
-
+                $this->updateTargetEntity($existed->id, $inputData, $action);
                 return true;
             }
         }
 
-        $service->createEntity($inputData);
+        $this->getService($action->get('targetEntity'))->createEntity($inputData);
 
         return true;
+    }
+
+    protected function updateTargetEntity(string $id, \stdClass $input, Entity $action): void
+    {
+        // avoid update because it's only create
+    }
+
+    protected function getService(string $name): Record
+    {
+        if (!isset($this->services[$name])) {
+            $this->services[$name] = $this->getServiceFactory()->create($name);
+        }
+
+        return $this->services[$name];
     }
 }

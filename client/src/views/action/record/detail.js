@@ -23,27 +23,6 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/action/
                 this.handleButtonsDisability();
             });
 
-            let filterButton = {
-                tooltip: this.translate('openSearchFilter'),
-                action: 'openSearchFilter',
-                name: 'filterButton',
-                html: EntityFilter.prototype.getFilterButtonHtml.call(this)
-            }
-
-            if(this.buttonVisible()) {
-                this.additionalButtons.push(filterButton);
-            }
-
-            this.listenTo(this.model, 'sync after:save', () => {
-                filterButton.html = EntityFilter.prototype.getFilterButtonHtml.call(this);
-                this.additionalButtons = this.additionalButtons.filter(b => b.name !== filterButton.name);
-                if(this.buttonVisible()) {
-                    this.additionalButtons.push(filterButton);
-                }
-
-                this.reRender();
-            });
-
             this.listenTo(this.model, 'change:targetEntity', () => {
                 let scope = this.model.get('targetEntity');
 
