@@ -1271,7 +1271,7 @@
                         {/if}
                     </div>
 
-                    <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
                     </div>
 
                     {#if showEmptyPlaceholder}

@@ -14887,7 +14887,7 @@ ul.jqtree-tree {
 
 ul.jqtree-tree ul.jqtree_common {
     list-style: none outside;
-    margin-left: 22px;
+    margin-left: 16px;
     margin-right: 0;
     margin-bottom: 0;
     padding: 0;
@@ -14965,10 +14965,10 @@ ul.jqtree-tree .jqtree-folder:after {
     position: absolute;
     display: block;
     width: 1px;
-    border-left: 1px dotted #aaa;
+    border-left: 1px dotted #ccc;
     top: 25px;
     left: 12px;
-    bottom: 13px;
+    bottom: 10px;
 }
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
@@ -14979,9 +14979,9 @@ ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-fold
     display: block;
     height: 1px;
     width: 30px;
-    border-bottom: 1px dotted #aaa;
+    border-bottom: 1px dotted #ccc;
     top: 14px;
-    left: -10px;
+    left: -2px;
 }
 
 ul.jqtree-tree .jqtree-folder > .jqtree_common:has(> .load-items):before,
@@ -14991,7 +14991,7 @@ ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-fold
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
     left: 12px;
-    width: 4px;
+    width: 6px;
     top: auto;
     bottom: 10px;
 }
@@ -15064,7 +15064,6 @@ ul.jqtree-tree span.jqtree-border {
 }
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
     color: #2895ea !important;
     background-color: transparent;
