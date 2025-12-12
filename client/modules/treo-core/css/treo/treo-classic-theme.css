@@ -19040,6 +19040,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     .list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):first-child {
         padding-left: 20px;
     }
+
+    .modal-body .list-container > .list[data-editable=true] > table tr th:first-child {
+        padding-left: 20px;
+    }
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div .selectize-input {
