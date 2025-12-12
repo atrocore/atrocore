@@ -130,13 +130,22 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         afterRender() {
             let count = 0;
             this.models.forEach(m => {
+                this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                    scope: m.name,
+                    viewType: 'selection',
+                    layoutData: this.layoutData[m.name].layoutData,
+                    el: this.options.el +  `th[data-id="${m.id}"] .layout-editor-container`,
+                }, (view) => {
+                    view.render()
+                    view.on("refresh", () => this.getParentView().refreshContent());
+                });
                 this.createView(m.id, this.detailComparisonView, {
                     el: this.options.el + ` .record-content[data-id="${m.id}"]`,
                     scope: m.name,
                     mode: 'detail',
                     model: m,
-                    detailLayout: this.layoutData[m.name],
-                    setViewBeforeCallback: true
+                    detailLayout: this.layoutData[m.name].detailLayout,
+                    bottomView:  'views/selection/record/detail-bottom-comparison'
                 }, view => {
                     view.render(() => {
                         count++;

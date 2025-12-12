@@ -19073,3 +19073,43 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div > input[type="checkbox"]:first-child {
     margin-left: 5px;
 }
+
+.compare-entities .detail > .overview {
+    min-height: 0;
+}
+
+.compare-entities .bottom .panel-body {
+    padding: 0 20px;
+}
+
+.compare-entities .bottom .panel {
+    margin-bottom: 15px;
+}
+
+.compare-entities .bottom .panel-heading {
+    border-top: 0;
+    border-bottom: 3px solid var(--primary-border-color);
+}
+
+.compare-entities .bottom .panel-heading .panel-title {
+    font-weight: 500;
+}
+
+.record .compare-entities .bottom .middle {
+    margin-bottom: 0;
+}
+
+.compare-entities .bottom .records > .row {
+    margin: 0 -8px;
+    padding-top: 20px;
+}
+
+.compare-entities .bottom .records > .row.not-first {
+    border-top: 2px solid var(--primary-border-color);
+}
+
+.compare-entities .list-row >.record-content > div.detail {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}

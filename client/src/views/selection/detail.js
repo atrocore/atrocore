@@ -105,7 +105,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.collection = collection;
                 this.listenTo(collection, 'sync', () => {
                     if (this.selectionViewMode === 'standard' && window.leftSidePanel) {
-                        window.leftSidePanel.setRecords(this.getRecordForPanels());
+                        window.leftSidePanel?.setRecords(this.getRecordForPanels());
                     }
 
                     if (collection.models.length > 1) {
@@ -182,7 +182,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.updateUrl(data.name);
 
             if (window.leftSidePanel) {
-                window.leftSidePanel.setSelectionViewMode(data.name);
+                window.leftSidePanel?.setSelectionViewMode(data.name);
             }
 
             // if we change from compare to merge or vis-versa
@@ -232,8 +232,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (window.leftSidePanel) {
-                    window.leftSidePanel.setRecords(this.getRecordForPanels());
-                    window.leftSidePanel.setSelectedIds(this.selectedIds);
+                    window.leftSidePanel?.setRecords(this.getRecordForPanels());
+                    window.leftSidePanel?.setSelectedIds(this.selectedIds);
                 }
 
                 if (callback) {
@@ -284,16 +284,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getRecordForPanels() {
-            if (this.selectionViewMode === 'standard' && this.collection) {
-                return this.collection.models.map(model => {
-                    return {
-                        id: model.get('entityId'),
-                        name: model.get('name'),
-                        entityType: model.get('entityType')
-                    }
-                });
-            }
-
             if (!this.selectionRecordModels) {
                 return [];
             }
@@ -334,7 +324,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     || !(this.getEntityTypes().map(e => this.getAcl().check(e, 'read')).reduce((prev, current) => prev && current, true)))
             ) {
                 if (this.selectionRecordModels.length < 2) {
-                    this.notify('You need at least two item for comparison', 'error');
+                    this.notify(this.translate('youNeedAtLeastTwoItem', 'messages', 'Selection'), 'error');
                 }
 
                 this.selectionViewMode = 'standard';
@@ -605,7 +595,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         e.preventDefault();
 
                                         if (this.toggleSelected(itemId)) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     },
@@ -620,7 +610,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     },
@@ -635,7 +625,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     }
@@ -648,22 +638,22 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         afterRemoveSelectedRecords(selectedRecordIds) {
-            if (this.selectionViewMode !== 'standard') {
-                this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
+            this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
+
+            if(this.selectionRecordModels.length === 0) {
+                this.actionShowSelectionView({name: 'standard'});
+                return;
             }
 
-            if (this.selectionViewMode === 'standard' && this.collection) {
-                let records = this.collection.models.map(model => {
-                    return {
-                        id: model.get('entityId'),
-                        name: model.get('name'),
-                        entityType: model.get('entityType')
-                    }
-                });
+            window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
-                window.leftSidePanel.setRecords(records);
-                window.leftSidePanel.setSelectedIds(this.selectedIds = []);
+            if(this.selectionRecordModels.length === 2) {
+                this.selectedIds = this.selectionRecordModels.map(m => m.id);
+            }else{
+                this.selectedIds = this.selectedIds.filter(id =>  this.selectionRecordModels.find(v => v.id===id ))
             }
+
+            window.leftSidePanel?.setSelectedIds(this.selectedIds);
 
             this.model.trigger('after:unrelate')
         },
@@ -801,7 +791,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         }
                     }
 
-                    this.layoutData[entityType] = layout;
+                    this.layoutData[entityType] = {detailLayout: layout, layoutData: data.layout};
+
                     count++;
                     if (count === this.getEntityTypes().length) {
                         callback();

@@ -14,6 +14,7 @@
     "createSelection": "Create Selection"
   },
   "messages": {
-    "cannotSetToSingle": "You cannot set 'Single Entity', because you have many entities in your records."
+    "cannotSetToSingle": "You cannot set 'Single Entity', because you have many entities in your records.",
+    "youNeedAtLeastTwoItem": "You need at least two items for comparison."
   }
 }
