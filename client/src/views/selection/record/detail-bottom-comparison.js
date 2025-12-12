@@ -22,7 +22,7 @@ Espo.define('views/selection/record/detail-bottom-comparison', 'view', function 
             this.wait(true);
             this.loadRelationshipsLayout(() => {
                 this.setupPanelViews();
-              this.wait(false);
+                this.wait(false);
             });
 
         },
@@ -38,53 +38,53 @@ Espo.define('views/selection/record/detail-bottom-comparison', 'view', function 
             var layoutName = 'selectionRelations';
             this._helper.layoutManager.get(this.model.name, layoutName, null, function (data) {
                 this.layoutData = data;
-               data.layout.forEach((item) => {
-                   let p = Espo.Utils.clone(item);
-                   if(!p.name) {
-                       return;
-                   }
+                data.layout.forEach((item) => {
+                    let p = Espo.Utils.clone(item);
+                    if (!p.name) {
+                        return;
+                    }
 
-                   let relationName = this.getMetadata().get(['entityDefs', this.scope, 'links', p.name, 'relationName']);
+                    let relationName = this.getMetadata().get(['entityDefs', this.scope, 'links', p.name, 'relationName']);
 
-                   if(!relationName) {
-                       return;
-                   }
+                    if (!relationName) {
+                        return;
+                    }
 
-                   if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
-                       return;
-                   }
+                    if ((this.getAcl().getScopeForbiddenFieldList(this.model.name, 'read') || []).includes(p.name)) {
+                        return;
+                    }
 
-                   let links = (this.model.defs || {}).links || {};
+                    let links = (this.model.defs || {}).links || {};
 
-                   let foreignScope = (links[p.name] || {}).entity;
+                    let foreignScope = (links[p.name] || {}).entity;
 
-                   p.scope = foreignScope;
+                    p.scope = foreignScope;
 
-                   if (foreignScope && !this.getAcl().check(foreignScope, 'read')) {
-                       return;
-                   }
+                    if (foreignScope && !this.getAcl().check(foreignScope, 'read')) {
+                        return;
+                    }
 
-                   if (this.getMetadata().get(['scopes', foreignScope], {}).disabled) {
-                       return;
-                   }
+                    if (this.getMetadata().get(['scopes', foreignScope], {}).disabled) {
+                        return;
+                    }
 
-                   let defs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', name]) || {};
-                   for (let i in defs) {
-                       if (i in p) continue;
-                       p[i] = defs[i];
-                   }
+                    let defs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', name]) || {};
+                    for (let i in defs) {
+                        if (i in p) continue;
+                        p[i] = defs[i];
+                    }
 
-                   if (!p.view) {
-                       p.view = 'views/selection/record/panels/relationship';
-                   }
+                    if (!p.view) {
+                        p.view = 'views/selection/record/panels/relationship';
+                    }
 
-                   p.label = this.translate(p.name, 'fields', this.scope)
+                    p.label = this.translate(p.name, 'fields', this.scope)
 
-                   p.layoutConfigurator = p.name+'LayoutConfigurator'
-                   this.panelList.push(p);
+                    p.layoutConfigurator = p.name + 'LayoutConfigurator'
+                    this.panelList.push(p);
 
-               });
-               callback.call(this);
+                });
+                callback.call(this);
             }.bind(this));
         },
 
