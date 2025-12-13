@@ -19104,6 +19104,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     padding-top: 20px;
 }
 
+.compare-entities .bottom .panel-heading .layout-editor-container {
+    right: 0;
+}
+
 .compare-entities .bottom .records > .row.not-first {
     border-top: 2px solid var(--primary-border-color);
 }

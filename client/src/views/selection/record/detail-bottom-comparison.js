@@ -90,20 +90,23 @@ Espo.define('views/selection/record/detail-bottom-comparison', 'view', function 
 
         setupPanelViews() {
             this.panelList.forEach(p => {
-                this.createView(p.layoutConfigurator, "views/record/layout-configurator", {
-                    scope: this.scope,
-                    viewType: 'selectionRelations',
-                    layoutData: this.layoutData,
-                    el: this.options.el + ' .panel[data-name="' + p.name + '"]' + ' .panel-heading .layout-editor-container',
-                    alignRight: true
-                }, (view) => {
-                    view.on("refresh", () => {
-                        this.getParentView()
-                            .getParentView()
-                            .getParentView()
-                            .refreshContent()
+                if (this.getUser().isAdmin()) {
+                    this.createView(p.layoutConfigurator, "views/record/layout-configurator", {
+                        scope: this.scope,
+                        viewType: 'selectionRelations',
+                        layoutData: this.layoutData,
+                        el: this.options.el + ' .panel[data-name="' + p.name + '"]' + ' .panel-heading .layout-editor-container',
+                        alignRight: true
+                    }, (view) => {
+                        view.on("refresh", () => {
+                            this.getParentView()
+                                .getParentView()
+                                .getParentView()
+                                .refreshContent()
+                        });
                     });
-                });
+                }
+
                 this.createView(p.name, p.view, {
                     scope: p.scope,
                     model: this.model,

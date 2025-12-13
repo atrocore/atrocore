@@ -35,12 +35,14 @@
     "entityTypes": {
       "type": "jsonArray",
       "readOnly": true,
-      "notStorable": true
+      "notStorable": true,
+      "filterDisabled": true
     },
     "entityTypesCount": {
       "type": "int",
       "readOnly": true,
-      "notStorable": true
+      "notStorable": true,
+      "filterDisabled": true
     },
     "createdAt": {
       "type": "datetime",
