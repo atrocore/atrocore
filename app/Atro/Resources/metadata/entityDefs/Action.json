@@ -122,6 +122,37 @@
         }
       }
     },
+    "searchEntity": {
+      "type": "varchar",
+      "view": "views/action/fields/search-entity",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate",
+                "update"
+              ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate"
+              ]
+            }
+          ]
+        }
+      }
+    },
     "conditionsType": {
       "type": "varchar",
       "view": "views/action/fields/conditions-type",
@@ -417,6 +448,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "delete",
                 "email"
@@ -431,6 +463,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "delete"
               ]
@@ -832,6 +865,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
@@ -845,9 +879,26 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
+            }
+          ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate"
+              ]
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "searchEntity"
             }
           ]
         }
@@ -869,6 +920,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
@@ -917,6 +969,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]

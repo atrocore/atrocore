@@ -15,16 +15,79 @@
         {
           "name": "type"
         },
+        false
+      ],
+      [
+        {
+          "name": "iconClass"
+        },
+        {
+          "name": "hideTextLabel"
+        }
+      ],
+      [
+        {
+          "name": "targetEntity"
+        },
+        false
+      ],
+      [
+        {
+          "name": "executeAs"
+        },
         {
           "name": "inBackground"
         }
       ],
       [
         {
-          "name": "description"
+          "name": "customAction"
         },
         false
       ],
+      [
+        {
+          "name": "showEmailPreview"
+        },
+        false
+      ],
+      [
+        {
+          "name": "applyToPreselectedRecords"
+        },
+        false
+      ],
+      [
+        {
+          "name": "description",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Conditions",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "conditionsType",
+          "inlineEditDisabled": true
+        },
+        false
+      ],
+      [
+        {
+          "name": "conditions",
+          "fullWidth": true
+        }
+      ]
+    ]
+  },
+  {
+    "label": "Usage",
+    "style": "default",
+    "rows": [
       [
         {
           "name": "usage"
@@ -58,49 +121,6 @@
         {
           "name": "display"
         }
-      ],
-      [
-        {
-          "name": "iconClass"
-        },
-        {
-          "name": "hideTextLabel"
-        }
-      ],
-      [
-        {
-          "name": "conditionsType",
-          "inlineEditDisabled": true
-        },
-        {
-          "name": "executeAs"
-        }
-      ],
-      [
-        {
-          "name": "conditions",
-          "fullWidth": true
-        }
-      ],
-      [
-        {
-          "name": "customAction"
-        },
-        false
-      ],
-      [
-        {
-          "name": "targetEntity"
-        },
-        {
-          "name": "showEmailPreview"
-        }
-      ],
-      [
-        {
-          "name": "applyToPreselectedRecords"
-        },
-        false
       ]
     ]
   },
@@ -154,9 +174,11 @@
       ],
       [
         {
-          "name": "updateType"
+          "name": "searchEntity"
         },
-        false
+        {
+          "name": "updateType"
+        }
       ],
       [
         {

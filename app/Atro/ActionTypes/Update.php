@@ -38,9 +38,9 @@ class Update extends AbstractAction
             $where = @json_decode($whereJson, true);
 
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
-            $selectManager = $this->container->get('selectManagerFactory')->create($action->get('targetEntity'));
+            $selectManager = $this->container->get('selectManagerFactory')->create($action->get('searchEntity'));
             /** @var \Atro\Core\Templates\Repositories\Base $repository */
-            $repository = $this->getEntityManager()->getRepository($action->get('targetEntity'));
+            $repository = $this->getEntityManager()->getRepository($action->get('searchEntity'));
 
             if (property_exists($input, 'queueData') && isset($input->queueData['targetIds'])) {
                 $targetIds = $input->queueData['targetIds'];
