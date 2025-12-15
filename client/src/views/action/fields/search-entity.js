@@ -21,6 +21,12 @@ Espo.define('views/action/fields/search-entity', 'views/fields/entity-type',
                         this.model.set(this.name, this.model.get('targetEntity'));
                     }
                 });
+
+                this.listenTo(this.model, 'change:searchEntity', () => {
+                    if (['create', 'createOrUpdate'].includes(this.model.get('type'))) {
+                        this.model.set('updateType', 'script');
+                    }
+                });
             },
 
         });

@@ -885,6 +885,22 @@
               ]
             }
           ]
+        },
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "create",
+                "createOrUpdate"
+              ]
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "searchEntity"
+            }
+          ]
         }
       }
     },
