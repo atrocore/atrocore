@@ -824,12 +824,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             let attributeId = this.model.get('attributesDefs')[fieldName]['attributeId'] || null;
+
             if (!attributeId) {
                 return;
             }
 
-
-            if(this.model.defs.fields[this.name].disableAttributeRemove) {
+            if(this.model.defs.fields[this.name] && this.model.defs.fields[this.name].disableAttributeRemove) {
                 return;
             }
 
