@@ -30,7 +30,7 @@
  * and "AtroCore" word.
  */
 
-Espo.define('views/record/list', 'view', function (Dep) {
+Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, ConditionsChecker) {
 
     return Dep.extend({
 
@@ -1943,6 +1943,15 @@ Espo.define('views/record/list', 'view', function (Dep) {
         putAttributesToSelect() {
             let attributesIds = [];
             (this.listLayout || []).forEach(item => {
+                let conditionFieldItems = this.getConditionGroupFields(item);
+                if (conditionFieldItems.length ) {
+                    for (const conditionFieldItem of conditionFieldItems) {
+                        if (conditionFieldItem.attributeId && !attributesIds.includes(conditionFieldItem.attributeId)) {
+                            attributesIds.push(conditionFieldItem.attributeId);
+                        }
+                    }
+                }
+
                 if (item.attributeId && !attributesIds.includes(item.attributeId)) {
                     attributesIds.push(item.attributeId);
                 }
@@ -1969,6 +1978,7 @@ Espo.define('views/record/list', 'view', function (Dep) {
                     this.listLayout = listLayout;
                     var attributeList = this.fetchAttributeListFromLayout();
                     this.putAttributesToSelect();
+
                     callback(attributeList);
                 }.bind(this));
                 return;
@@ -1979,24 +1989,53 @@ Espo.define('views/record/list', 'view', function (Dep) {
             let list = [];
             this.listLayout.forEach(function (item) {
                 if (!item.name) return;
-                const field = item.name;
-                const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-                if (!fieldType) return;
-                this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
-                    if (fieldType === 'link' || fieldType === 'linkMultiple') {
-                        const foreignEntity = this.getMetadata().get(['entityDefs', this.scope, 'links', field, 'entity']);
-                        let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
-                        if (foreignEntity && this.getMetadata().get(['entityDefs', foreignEntity, 'fields', 'name'])) {
-                            foreignName = 'name';
-                        }
+                const fields = [item.name];
+                let conditionFieldItems = this.getConditionGroupFields(item);
 
-                        if (!foreignName && (attribute.endsWith('Name') || attribute.endsWith('Names'))) {
-                            return;
+                if (conditionFieldItems.length) {
+                    for (const conditionFieldItem of conditionFieldItems) {
+                        if (conditionFieldItem.attributeId) {
+                            continue;
+                        }
+                        if (!fields.includes(conditionFieldItem.name)) {
+                            if (this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionFieldItem.name, 'type'])) {
+                                fields.push(conditionFieldItem.name);
+                            } else if (conditionFieldItem.name.endsWith('Id') && this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionFieldItem.name.replace(/Id$/, ""), 'type'])) {
+                                fields.push(conditionFieldItem.name.replace(/Id$/, ""));
+                            } else if (conditionFieldItem.name.endsWith('Name') && this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionFieldItem.name.replace(/Name$/, ""), 'type'])) {
+                                fields.push(conditionFieldItem.name.replace(/Name$/, ""));
+                            } else if (conditionFieldItem.name.endsWith('Ids') && this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionFieldItem.name.replace(/Ids$/, ""), 'type'])) {
+                                fields.push(conditionFieldItem.name.replace(/Ids$/, ""));
+                            } else if (conditionFieldItem.name.endsWith('Names') && this.getMetadata().get(['entityDefs', this.scope, 'fields', conditionFieldItem.name.replace(/Ids$/, ""), 'type'])) {
+                                fields.push(conditionFieldItem.name.replace(/Names$/, ""));
+                            }
                         }
                     }
+                }
 
-                    list.push(attribute);
-                }, this);
+                fields.forEach(field => {
+                    const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                    if (!fieldType) return;
+                    this.getFieldManager().getAttributeList(fieldType, field).forEach(function (attribute) {
+                        if(list.includes(attribute)) {
+                            return;
+                        }
+                        if (fieldType === 'link' || fieldType === 'linkMultiple') {
+                            const foreignEntity = this.getMetadata().get(['entityDefs', this.scope, 'links', field, 'entity']);
+                            let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'foreignName']);
+                            if (foreignEntity && this.getMetadata().get(['entityDefs', foreignEntity, 'fields', 'name'])) {
+                                foreignName = 'name';
+                            }
+
+                            if (!foreignName && (attribute.endsWith('Name') || attribute.endsWith('Names'))) {
+                                return;
+                            }
+                        }
+                        list.push(attribute);
+                    }, this);
+                })
+
+
             }, this);
 
             let selectList = [];
@@ -2006,6 +2045,27 @@ Espo.define('views/record/list', 'view', function (Dep) {
             }
 
             return selectList;
+        },
+
+        getConditionGroupFields(item) {
+            let list = [];
+            let conditionChecker = new ConditionsChecker(this);
+            ['required', 'visible', 'protected', 'readOnly'].forEach((type) => {
+                let defs = item.attributeDefs ?? this.getMetadata().get(['entityDefs', this.scope, 'fields', item.name])
+                let conditions =  defs?.['conditionalProperties']?.[type]?.['conditionGroup'];
+                if(!conditions) {
+                    return;
+                }
+
+                for (let field of conditionChecker.getConditionGroupFields(conditions)){
+                    if(!list.includes(field)) {
+                        list.push(field);
+                    }
+                }
+            });
+
+            return list;
+
         },
 
         modifyAttributeList(attributeList) {

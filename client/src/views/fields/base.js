@@ -728,12 +728,17 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             $editLink.on('click', function () {
+
                 this.inlineEdit();
             }.bind(this));
 
             $cell.on('mouseenter', function (e) {
                 e.stopPropagation();
                 if (this.disabled || this.readOnly) {
+                    return;
+                }
+
+                if(this.isListView() && !this.isVisibleViaConditions()) {
                     return;
                 }
 
@@ -928,7 +933,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (['edit', 'detail'].includes(this.mode) && !this.isListView()) {
+            if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
                 this.toggleVisibility();
             }
 
@@ -939,7 +944,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
 
         buildElementForInlineEditView() {
             if(this.$el.children('div:not(.inline-actions):not(.text-length-counter)').size() === 0) {
-                this.$el.html(`<div>${this.$el.html()}</div>`);
+                this.$el.html(`<div class="inline-container">${this.$el.html()}</div>`);
                 this.$element = this.$el.find('[name="' + this.name + '"]');
             }
         },
@@ -952,11 +957,30 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             const conditions = this.getConditions('visible');
             if (conditions) {
                 if (this.checkConditionGroup(conditions)) {
-                    this.getCellElement().show();
+                    if (this.isListView()) {
+                        this.getCellElement().find('.inline-container').show();
+                        this.getCellElement()?.removeAttr('data-visible');
+                    } else {
+                        this.getCellElement().show();
+                    }
                 } else {
-                    this.getCellElement().hide();
+                    if(this.isListView()){
+                        this.getCellElement().find('.inline-container').hide();
+                        this.getCellElement()?.attr('data-visible', false);
+                    }else{
+                        this.getCellElement().hide();
+                    }
                 }
             }
+        },
+
+        isVisibleViaConditions() {
+            const conditions = this.getConditions('visible');
+            if (conditions) {
+                return this.checkConditionGroup(conditions);
+            }
+
+            return true;
         },
 
         toggleRequiredMarker() {
@@ -1003,6 +1027,8 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     } else {
                         this.setMode('edit');
                     }
+                }else if (this.mode === 'edit' && readOnly) {
+                    this.inlineEditClose()
                 }
 
                 if (readOnly !== this.readOnly) {
@@ -1079,7 +1105,7 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             });
 
             this.listenTo(this.model, 'change', () => {
-                if (['edit', 'detail'].includes(this.mode)) {
+                if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
                     this.reRenderByConditionalProperties();
                 }
             });
@@ -1320,6 +1346,10 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
         inlineEdit: function () {
             if (this.readOnly) {
                 return false;
+            }
+
+            if(this.isListView() && !this.isVisibleViaConditions()) {
+                return;
             }
 
             this.trigger('edit', this);
