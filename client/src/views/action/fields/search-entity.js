@@ -17,7 +17,7 @@ Espo.define('views/action/fields/search-entity', 'views/fields/entity-type',
                 Dep.prototype.setup.call(this);
 
                 this.listenTo(this.model, 'change:targetEntity', () => {
-                    if (this.model.get('type') === 'update') {
+                    if (['update', 'email', 'delete'].includes(this.model.get('type'))) {
                         this.model.set(this.name, this.model.get('targetEntity'));
                     }
                 });

@@ -11,7 +11,7 @@
 
 namespace Atro\ActionTypes;
 
-use Atro\Core\Exceptions\Error;
+use Atro\Core\Exceptions\NotUnique;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
 
@@ -36,11 +36,65 @@ class Create extends AbstractAction
             }
         }
 
-        return $this->createEntity($entity, $action, $input);
+        if (!empty($searchEntityName = $action->get('searchEntity'))) {
+            /** @var \Espo\Core\SelectManagers\Base $selectManager */
+            $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);
+
+            /** @var \Atro\Core\Templates\Repositories\Base $repository */
+            $repository = $this->getEntityManager()->getRepository($searchEntityName);
+
+            $where = json_decode(json_encode($this->getWhere($action) ?? []), true);
+
+            $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
+            $repository->handleSelectParams($selectParams);
+            $count = $repository->count($selectParams);
+
+            if ($count === 0) {
+                return true;
+            }
+
+            $offset = 0;
+            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 3000);
+
+            if ($count >= $limit) {
+                while (true) {
+                    $collection = $repository
+                        ->select(['id'])
+                        ->limit($offset, $limit)
+                        ->order('id', 'ASC')
+                        ->find($selectParams);
+
+                    if (empty($collection[0])) {
+                        break;
+                    }
+
+                    $jobEntity = $this->getEntityManager()->getEntity('Job');
+                    $jobEntity->set([
+                        'name'    => "Mass create of '{$entity->getEntityName()}'",
+                        'type'    => 'MassCreate',
+                        'status'  => 'Pending',
+                        'payload' => [
+                            'ids'        => array_column($collection->toArray(), 'id'),
+                            'entityName' => $searchEntityName,
+                            'actionId'   => $action->get('id'),
+                            'input'      => $input,
+                        ]
+                    ]);
+                    $this->getEntityManager()->saveEntity($jobEntity);
+                }
+            } else {
+                foreach ($repository->find($selectParams) as $entity) {
+                    $this->createEntity($entity, $action, $input);
+                }
+            }
+        }
+
+        return true;
     }
 
-    protected function createEntity(?Entity $entity, Entity $action, \stdClass $input): bool
+    public function createEntity(?Entity $entity, Entity $action, \stdClass $input): bool
     {
+        $targetEntityName = $action->get('targetEntity');
         $actionData = $action->get('data');
 
         if (empty($actionData->field) || empty($actionData->field->updateType)) {
@@ -63,7 +117,8 @@ class Create extends AbstractAction
                         ->renderTemplate($actionData->field->updateScript, $templateData);
                     $input = @json_decode((string)$outputJson);
                     if ($input === null) {
-                        throw new Error("Action '{$action->get('name')}' failed. Script generated invalid JSON: $outputJson");
+                        $GLOBALS['log']->error("Action '{$action->get('name')}' failed. Script generated invalid JSON: $outputJson");
+                        return false;
                     }
                     $inputData = $input;
                 }
@@ -77,14 +132,19 @@ class Create extends AbstractAction
         $inputData->_workflowAction = true;
 
         if (property_exists($inputData, 'id')) {
-            $existed = $this->getEntityManager()->getEntity($action->get('targetEntity'), $inputData->id);
+            $existed = $this->getEntityManager()->getEntity($targetEntityName, $inputData->id);
             if (!empty($existed)) {
                 $this->updateTargetEntity($existed->id, $inputData, $action);
                 return true;
             }
         }
 
-        $this->getService($action->get('targetEntity'))->createEntity($inputData);
+        try {
+            $this->getService($targetEntityName)->createEntity($inputData);
+        } catch (NotUnique $e) {
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error("Create Action for '$targetEntityName' failed: {$e->getMessage()}");
+        }
 
         return true;
     }

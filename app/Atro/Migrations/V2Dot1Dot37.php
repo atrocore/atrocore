@@ -12,6 +12,7 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
 class V2Dot1Dot37 extends Base
@@ -29,11 +30,11 @@ class V2Dot1Dot37 extends Base
             $res = $this->getConnection()->createQueryBuilder()
                 ->select('*')
                 ->from($this->getConnection()->quoteIdentifier('action'))
-                ->where('type=:updateType')
+                ->where('type in (:types)')
                 ->andWhere('deleted=:false')
-                ->andWhere('source_entity IS NOT NULL')
+                ->andWhere('target_entity IS NOT NULL')
                 ->andWhere('search_entity IS NULL')
-                ->setParameter('updateType', 'update')
+                ->setParameter('types', ['update', 'email', 'delete'], Connection::PARAM_STR_ARRAY)
                 ->setParameter('false', false, ParameterType::BOOLEAN)
                 ->fetchAllAssociative();
         } catch (\Throwable $e) {
@@ -47,7 +48,7 @@ class V2Dot1Dot37 extends Base
                 ->where('id=:id')
                 ->andWhere('source_entity IS NOT NULL')
                 ->setParameter('id', $row['id'])
-                ->setParameter('searchEntity', $row['source_entity'])
+                ->setParameter('searchEntity', $row['target_entity'])
                 ->executeQuery();
         }
     }

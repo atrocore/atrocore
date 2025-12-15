@@ -23,7 +23,7 @@ class Action extends Base
     {
         parent::beforeSave($entity, $options);
 
-        if ($entity->isAttributeChanged('targetEntity') && $entity->get('type') === 'update') {
+        if ($entity->isAttributeChanged('targetEntity') && in_array($entity->get('type'), ['update', 'email', 'delete'])) {
             $entity->set('searchEntity', $entity->get('targetEntity'));
         }
     }

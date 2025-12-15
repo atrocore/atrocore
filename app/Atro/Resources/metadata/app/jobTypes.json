@@ -40,6 +40,10 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassActionCreator"
   },
+  "MassCreate": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\MassCreate"
+  },
   "MassUpdate": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\MassUpdate"
