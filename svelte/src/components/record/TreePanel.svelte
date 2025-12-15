@@ -139,7 +139,7 @@
             return;
         }
 
-        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-caret-right')
+        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-plus-square');
 
         if (isClosed && !node.getData().length) {
             Notifier.notify('Loading...')
@@ -150,11 +150,11 @@
 
         if (isClosed) {
             $tree.tree('openNode', node, true, () => {
-                window.$(node.element).find('.load-items').removeClass('ph-caret-right').addClass('ph-caret-down');
+                window.$(node.element).find('.load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
             });
         } else {
             $tree.tree('closeNode', node, true)
-            window.$(node.element).find('.load-items').removeClass('ph-caret-down').addClass('ph-caret-right');
+            window.$(node.element).find('.load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
         }
 
     }
@@ -202,8 +202,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="ph ph-folder"></i>'),
-            openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
+            closedIcon: window.$('<i class="ph ph-caret-right"></i>'),
+            openedIcon: window.$('<i class="ph ph-caret-down"></i>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -265,12 +265,22 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.has_children) {
-                        const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
-                        $li.find('.jqtree-element').append($el);
+                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope) {
+                        const $el = window.$(`<span class="load-items ${((isNodeInSubTree(node) && node.has_children) || node.scope === scope) ? '' : 'ph ph-plus-square'}"></span>`)
+                        $li.find('.jqtree-element').prepend($el);
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
                     }
+                }
+
+                if ($li.hasClass('jqtree-folder')) {
+                    return;
+                }
+
+                const $element = $li.find('> .jqtree-element');
+
+                if ($element.children('.jqtree-toggler').length === 0) {
+                    $element.prepend('<i class="jqtree-toggler jqtree_common jqtree-toggler-left" role="presentation"></i>')
                 }
             }.bind(this),
             onCanMove: function (node) {
@@ -392,6 +402,32 @@
             }
         });
 
+        $tree.on('tree.open', e => {
+            if (!e.node?.element) {
+                return;
+            }
+
+            const $element = window.$(e.node.element);
+            const $el = $element.find('> .jqtree-element .load-items');
+            if ($el.length > 0) {
+                $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+            }
+
+            console.log(e);
+        });
+
+        $tree.on('tree.close', e => {
+            if (!e.node?.element) {
+                return;
+            }
+
+            const $element = window.$(e.node.element);
+            const $el = $element.find('> .jqtree-element .load-items');
+            if ($el.length > 0) {
+                $el.removeClass('ph-minus-square').addClass('ph-plus-square');
+            }
+        });
+
         $tree.tree(treeData);
     }
 
@@ -405,7 +441,7 @@
 
             if (selectNodeId && isSelectionEnabled) {
                 let button = document.createElement('span');
-                button.classList.add('reset-button', 'ph', 'ph-x', 'pull-right');
+                button.classList.add('reset-button', 'tree-button', 'ph', 'ph-x', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callUnselectNode();
@@ -413,7 +449,7 @@
                 $el.append(button);
 
                 button = document.createElement('span');
-                button.classList.add('add-to-filter-button', 'ph', 'ph-plus-circle', 'pull-right');
+                button.classList.add('add-to-filter-button', 'tree-button', 'ph', 'ph-funnel', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callAddNodeToFilter();
@@ -466,7 +502,7 @@
                     // Fix caret loader
                     const $el = window.$(parentNode.element).find('.load-items');
                     if ($el.length > 0) {
-                        $el.removeClass('ph-caret-right').addClass('ph-caret-down');
+                        $el.removeClass('ph-plus-square').addClass('ph-minus-square');
                     }
                 }
             }
@@ -1242,7 +1278,7 @@
                         {/if}
                     </div>
 
-                    <div class={"panel-group category-tree tree-"+ activeItem?.name} bind:this={treeElement}>
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
                     </div>
 
                     {#if showEmptyPlaceholder}
@@ -1349,17 +1385,43 @@
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
-        display: -webkit-box;
-        line-clamp: 1;
-        -webkit-line-clamp: 1;
+        line-height: 1.36;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .load-items) {
+        display: inline-block;
+        width: 16px;
+        margin-right: .5em;
+        order: 2;
+        color: var(--primary-font-color);
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
+        order: 1;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-title) {
+        order: 3;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
         text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        overflow-y: clip;
-        line-height: normal;
     }
 
     :global(ul.jqtree-tree li.jqtree_common) {
         position: relative;
+    }
+
+    :global(ul.jqtree-tree li.jqtree_common .tree-button) {
+        background-color: rgba(255, 255, 255, .9);
+        border-radius: 5px;
+        padding: 3px 4px;
+        font-size: 16px;
+        border: 1px solid var(--primary-border-color);
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
@@ -1374,7 +1436,7 @@
         margin-top: 6px;
         position: absolute;
         top: 0;
-        right: 25px;
+        right: 30px;
         cursor: pointer;
     }
 

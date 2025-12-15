@@ -7521,7 +7521,7 @@ button.close {
     flex-shrink: 0;
 }
 
-.selectize-input:not(.multi) > .item:first-of-type:last-of-type {
+.selectize-input:not(.multi):not(.items) > .item:first-of-type:last-of-type {
     flex: 1;
     flex-shrink: 1;
     min-width: 0;
@@ -14887,7 +14887,7 @@ ul.jqtree-tree {
 
 ul.jqtree-tree ul.jqtree_common {
     list-style: none outside;
-    margin-left: 22px;
+    margin-left: 16px;
     margin-right: 0;
     margin-bottom: 0;
     padding: 0;
@@ -14910,14 +14910,7 @@ ul.jqtree-tree li.jqtree_common {
 ul.jqtree-tree .load-items.ph {
     font-size: 16px;
     cursor: pointer;
-}
-
-li.sub-tree-container > div.jqtree_common .jqtree-toggler{
-    display: none;
-}
-
-li.sub-tree-container > ul.jqtree_common {
-    margin-left: 5px;
+    background-color: var(--sidebar-color);
 }
 
 ul.jqtree-tree .jqtree-toggler {
@@ -14925,6 +14918,11 @@ ul.jqtree-tree .jqtree-toggler {
     color: #333;
     text-decoration: none;
     vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    width: 16px;
+    background-color: var(--sidebar-color);
 }
 
 ul.jqtree-tree .jqtree-toggler:hover {
@@ -14947,6 +14945,7 @@ ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
 ul.jqtree-tree .jqtree-element:not(.btn) {
     position: relative;
     padding: 5px 15px 0 5px;
+    height: 25px;
 }
 
 ul.jqtree-tree .jqtree-toggler, ul.jqtree-tree .jqtree-title {
@@ -14959,6 +14958,46 @@ ul.jqtree-tree .jqtree-title {
 
 ul.jqtree-tree li.jqtree-folder {
     margin-bottom: 4px;
+}
+
+ul.jqtree-tree .jqtree-folder:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 1px;
+    border-left: 1px dotted #ccc;
+    top: 25px;
+    left: 12px;
+    bottom: 10px;
+}
+
+ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common:before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:before {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 1px;
+    width: 30px;
+    border-bottom: 1px dotted #ccc;
+    top: 14px;
+    left: -2px;
+}
+
+ul.jqtree-tree .jqtree-folder > .jqtree_common:has(> .load-items):before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:has(> .jqtree-element > .load-items):before {
+    width: 58px;
+}
+
+ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    left: 12px;
+    width: 6px;
+    top: auto;
+    bottom: 10px;
+}
+
+ul.jqtree-tree > .jqtree-folder > .jqtree_common:before {
+    content: none;
 }
 
 ul.jqtree-tree li.jqtree-folder.jqtree-closed {
@@ -15025,10 +15064,7 @@ ul.jqtree-tree span.jqtree-border {
 }
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover,
-ul.jqtree-tree li.jqtree-selected > .reset-button,
-ul.jqtree-tree li.jqtree-selected > .add-to-filter-button{
+ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
     color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
@@ -19001,6 +19037,10 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 @media screen and (min-width: 768px) {
     .list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):first-child {
+        padding-left: 20px;
+    }
+
+    .modal-body .list-container > .list[data-editable=true] > table tr th:first-child {
         padding-left: 20px;
     }
 }
