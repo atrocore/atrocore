@@ -23,6 +23,7 @@
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
     export let showItems: boolean = true;
+    export let hasItems: boolean = false;
 
     export let renderLayoutEditor: Function = () => {
     };
@@ -33,7 +34,7 @@
 
     export let showApplySortOrder: boolean = true
 
-    export  function setShowItems(value: string[]) {
+    export function setShowItems(value: string[]) {
         showItems = value;
         if(value){
             setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
@@ -1126,6 +1127,12 @@
         }
 
         loadLayout(() => {
+            if(hasItems) {
+                treeItems = [...treeItems, {
+                    name: '_items',
+                    label: Language.get('Global', 'labels', 'Items')
+                }];
+            }
 
             if (treeItems.length === 0) {
                 isCollapsed = true

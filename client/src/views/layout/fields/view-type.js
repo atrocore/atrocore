@@ -49,7 +49,8 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
                 "relationships",
                 "navigation",
                 "insights",
-                "selection"
+                "selection",
+                "selectionRelations"
             ]
             if (this.getMetadata().get(['clientDefs', this.model.get('entity'), 'kanbanViewMode'])) {
                 optionList.push("kanban")

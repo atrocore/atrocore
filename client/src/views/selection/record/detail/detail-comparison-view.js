@@ -12,7 +12,8 @@
 Espo.define('views/selection/record/detail/detail-comparison-view', 'views/record/right-side-view-panel', function (Dep) {
 
     return Dep.extend({
-        bottomView: false,
+
+        template: 'record/detail',
 
         layoutName: 'selection',
 

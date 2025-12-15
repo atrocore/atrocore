@@ -9,5 +9,6 @@ export default interface Params {
     dataAttributesDefs: any,
     allowSwitch: boolean,
     fieldTypes: string[],
-    openEditLabelDialog: Function
+    openEditLabelDialog: Function,
+    onlyManyToMany: boolean
 }
