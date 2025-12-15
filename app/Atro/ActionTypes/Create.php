@@ -11,6 +11,7 @@
 
 namespace Atro\ActionTypes;
 
+use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
@@ -21,21 +22,6 @@ class Create extends AbstractAction
 
     public function executeNow(Entity $action, \stdClass $input): bool
     {
-        $entity = null;
-        if (property_exists($input, 'triggeredEntity')) {
-            $entity = $input->triggeredEntity;
-        } elseif (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
-            $entity = $this->getEntityManager()->getRepository($input->triggeredEntityType)->get($input->triggeredEntityId);
-            if (empty($entity)) {
-                return false;
-            }
-        } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
-            $entity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
-            if (empty($entity)) {
-                return false;
-            }
-        }
-
         if (!empty($searchEntityName = $action->get('searchEntity'))) {
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);
@@ -54,7 +40,7 @@ class Create extends AbstractAction
             }
 
             $offset = 0;
-            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 2);
+            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 3000);
 
             if ($count >= $limit) {
                 while (true) {
@@ -76,9 +62,9 @@ class Create extends AbstractAction
                         'type'    => 'MassCreate',
                         'status'  => 'Pending',
                         'payload' => [
-                            'ids'        => array_column($collection->toArray(), 'id'),
-                            'actionId'   => $action->get('id'),
-                            'input'      => $input,
+                            'ids'      => array_column($collection->toArray(), 'id'),
+                            'actionId' => $action->get('id'),
+                            'input'    => $input,
                         ]
                     ]);
                     $this->getEntityManager()->saveEntity($jobEntity);
@@ -88,6 +74,23 @@ class Create extends AbstractAction
                     $this->createEntity($entity, $action, $input);
                 }
             }
+        } else {
+            $entity = null;
+            if (property_exists($input, 'triggeredEntity')) {
+                $entity = $input->triggeredEntity;
+            } elseif (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
+                $entity = $this->getEntityManager()->getRepository($input->triggeredEntityType)->get($input->triggeredEntityId);
+                if (empty($entity)) {
+                    return false;
+                }
+            } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
+                $entity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
+                if (empty($entity)) {
+                    return false;
+                }
+            }
+
+            $this->createEntity($entity, $action, $input);
         }
 
         return true;
@@ -135,7 +138,14 @@ class Create extends AbstractAction
         if (property_exists($inputData, 'id')) {
             $existed = $this->getEntityManager()->getEntity($targetEntityName, $inputData->id);
             if (!empty($existed)) {
-                $this->updateTargetEntity($existed->id, $inputData, $action);
+                if ($action->get('type') === 'createOrUpdate') {
+                    try {
+                        $this->getService($targetEntityName)->updateEntity($existed->id, $inputData);
+                    } catch (NotModified $e) {
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error("Update of '{$targetEntityName}: $existed->id' failed: {$e->getMessage()}");
+                    }
+                }
                 return true;
             }
         }
@@ -144,15 +154,10 @@ class Create extends AbstractAction
             $this->getService($targetEntityName)->createEntity($inputData);
         } catch (NotUnique $e) {
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("Create Action for '$targetEntityName' failed: {$e->getMessage()}");
+            $GLOBALS['log']->error("Create of '$targetEntityName' failed: {$e->getMessage()}");
         }
 
         return true;
-    }
-
-    protected function updateTargetEntity(string $id, \stdClass $input, Entity $action): void
-    {
-        // avoid update because it's only create
     }
 
     protected function getService(string $name): Record

@@ -3,6 +3,6 @@
   "email": "\\Atro\\ActionTypes\\SendEmail",
   "create": "\\Atro\\ActionTypes\\Create",
   "update": "\\Atro\\ActionTypes\\Update",
-  "createOrUpdate": "\\Atro\\ActionTypes\\CreateOrUpdate",
+  "createOrUpdate": "\\Atro\\ActionTypes\\Create",
   "delete": "\\Atro\\ActionTypes\\Delete"
 }

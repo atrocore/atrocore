@@ -448,6 +448,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "delete",
                 "email"
@@ -462,6 +463,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "delete"
               ]
@@ -863,6 +865,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
@@ -876,6 +879,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
@@ -900,6 +904,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
@@ -948,6 +953,7 @@
               "attribute": "type",
               "value": [
                 "create",
+                "createOrUpdate",
                 "update",
                 "suggestValue"
               ]
