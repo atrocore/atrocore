@@ -1978,7 +1978,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.listLayout = listLayout;
                     var attributeList = this.fetchAttributeListFromLayout();
                     this.putAttributesToSelect();
-
                     callback(attributeList);
                 }.bind(this));
                 return;

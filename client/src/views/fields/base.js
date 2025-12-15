@@ -728,7 +728,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
             }
 
             $editLink.on('click', function () {
-
                 this.inlineEdit();
             }.bind(this));
 
