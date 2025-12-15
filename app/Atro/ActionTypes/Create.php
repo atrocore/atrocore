@@ -54,7 +54,7 @@ class Create extends AbstractAction
             }
 
             $offset = 0;
-            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 3000);
+            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 2);
 
             if ($count >= $limit) {
                 while (true) {
@@ -68,14 +68,15 @@ class Create extends AbstractAction
                         break;
                     }
 
+                    $offset = $offset + $limit;
+
                     $jobEntity = $this->getEntityManager()->getEntity('Job');
                     $jobEntity->set([
-                        'name'    => "Mass create of '{$entity->getEntityName()}'",
+                        'name'    => "Mass create of '{$action->get('targetEntity')}'",
                         'type'    => 'MassCreate',
                         'status'  => 'Pending',
                         'payload' => [
                             'ids'        => array_column($collection->toArray(), 'id'),
-                            'entityName' => $searchEntityName,
                             'actionId'   => $action->get('id'),
                             'input'      => $input,
                         ]

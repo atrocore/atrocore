@@ -24,7 +24,7 @@ class MassCreate extends AbstractJob implements JobInterface
     public function run(Job $job): void
     {
         $data = $job->getPayload();
-        if (empty($data['entityType']) || empty($data['ids']) || empty($data['actionId'])) {
+        if (empty($data['ids']) || empty($data['actionId'])) {
             return;
         }
 
@@ -35,12 +35,14 @@ class MassCreate extends AbstractJob implements JobInterface
 
         $collection = $this
             ->getEntityManager()
-            ->getRepository($data['entityType'])
+            ->getRepository($action->get('searchEntity'))
             ->where(['id' => $data['ids']])
             ->find();
 
+        $input = !empty($data['input']) ? json_decode(json_encode($data['input'])) : new \stdClass();
+
         foreach ($collection as $entity) {
-            $this->getCreateAction()->createEntity($entity, $action, json_decode(json_encode($data['input'])));
+            $this->getCreateAction()->createEntity($entity, $action, $input);
         }
     }
 

@@ -55,6 +55,23 @@ Espo.define('views/action/record/panels/entity-filter-result', ['views/record/pa
                     this.reRender();
                 });
 
+                this.listenTo(this.model, 'change:searchEntity', () => {
+                    let scope = this.model.get('searchEntity');
+
+                    let data = {};
+                    if (this.model.get('data')) {
+                        data = this.model.get('data');
+                    }
+                    if (typeof data.whereScope === 'undefined' || data.whereScope !== scope) {
+                        data = _.extend(data, {
+                            where: null,
+                            whereData: null,
+                            whereScope: scope,
+                        });
+                        this.model.set('data', data);
+                    }
+                });
+
                 this.wait(false)
             })
 
