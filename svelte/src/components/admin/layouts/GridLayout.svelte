@@ -656,29 +656,33 @@
                                                             data-name={cell.name}
                                                             data-full-width={cell.fullWidth ? 'true' : undefined}
                                                             data-custom-label={cell.customLabel ? cell.customLabel : undefined}
-                                                            data-no-label={cell.noLabel}>
-                                                            {cell.label}
-                                                            {#if !cell.layoutRemoveDisabled}
-                                                                <a href="#" data-action="removeField" class="remove-field"
-                                                                   on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
-                                                                    <i class="ph ph-x"></i>
-                                                                </a>
-                                                            {/if}
-                                                            {#if isAdmin() && !cell.attributeId}
-                                                                <a href="#" data-action="change-label" class="change-label"
-                                                                   on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
-                                                                    <i class="ph ph-globe-simple"></i>
-                                                                </a>
-                                                            {/if}
+                                                            data-no-label={cell.noLabel} title="{cell.label}">
+                                                            <span class="left">{cell.label}</span>
+                                                            <span class="right">
+                                                                {#if !cell.layoutRemoveDisabled}
+                                                                    <a href="#" data-action="removeField" class="remove-field"
+                                                                       on:click|preventDefault={() => removeField(panel.number, row.number, cellIndex)}>
+                                                                        <i class="ph ph-x"></i>
+                                                                    </a>
+                                                                {/if}
+                                                                {#if isAdmin() && !cell.attributeId}
+                                                                    <a href="#" data-action="change-label" class="change-label"
+                                                                       on:click|preventDefault={() => openLabelDialog(cell.name, row.number, cellIndex)}>
+                                                                        <i class="ph ph-globe-simple"></i>
+                                                                    </a>
+                                                                {/if}
+                                                            </span>
                                                         </li>
                                                     {:else}
                                                         <li class="empty cell"
                                                             on:dragover|preventDefault={event => event.dataTransfer.dropEffect = 'move'}
                                                             on:drop={e => handleDrop(e,panel.number,row.number,cellIndex)}>
-                                                            <a href="#" data-action="minusCell" class="remove-field"
-                                                               on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
-                                                                <i class="ph ph-minus"></i>
-                                                            </a>
+                                                            <span class="right">
+                                                                <a href="#" data-action="minusCell" class="remove-field"
+                                                                   on:click|preventDefault={() => minusCell(panel.number, row.number, cellIndex)}>
+                                                                    <i class="ph ph-minus"></i>
+                                                                </a>
+                                                            </span>
                                                         </li>
                                                     {/if}
                                                 {/each}
@@ -709,9 +713,9 @@
                             {/if}
                             <ul class="disabled cells clearfix" data-name="{group.name}">
                                 {#each group.fields.sort((a, b) => a.label.localeCompare(b.label)) as field (field.name)}
-                                    <li class="cell" data-name={field.name}
+                                    <li class="cell" data-name={field.name} title="{field.label}"
                                         on:dragstart={event => {event.dataTransfer.setData('name', field.name)}}>
-                                        {field.label}
+                                        <span class="left">{field.label}</span>
                                     </li>
                                 {/each}
                             </ul>
@@ -797,7 +801,7 @@
 
     #layout ul.cells > li a {
         float: right;
-        margin-left: 5px;
+        margin-inline-start: 5px;
     }
 
     #layout ul.disabled {
@@ -881,6 +885,24 @@
 
     ul.panels > li:hover a.edit-panel-label {
         display: inline-block;
+    }
+
+    ul.cells > li {
+        display: flex;
+    }
+
+    ul.cells > li .left {
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    ul.cells > li .right {
+        flex-shrink: 0;
+        margin-left: auto;
+        margin-right: 0;
     }
 
     .col-md-8 {
