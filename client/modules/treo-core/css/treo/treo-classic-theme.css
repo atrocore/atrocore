@@ -14894,6 +14894,10 @@ ul.jqtree-tree ul.jqtree_common {
     display: block;
 }
 
+ul.jqtree-tree .sub-tree-container > ul.jqtree_common {
+    margin-left: 37px;
+}
+
 ul.jqtree-tree span.jqtree_common:focus {
     outline: none;
 }
@@ -14925,6 +14929,11 @@ ul.jqtree-tree .jqtree-toggler {
     background-color: var(--sidebar-color);
 }
 
+ul.jqtree-tree .sub-tree-container > .jqtree-element .jqtree-toggler {
+    opacity: 0;
+    pointer-events: none;
+}
+
 ul.jqtree-tree .jqtree-toggler:hover {
     color: #000;
     text-decoration: none;
@@ -14948,6 +14957,18 @@ ul.jqtree-tree .jqtree-element:not(.btn) {
     height: 25px;
 }
 
+ul.jqtree-tree .sub-tree-container .jqtree-element:not(.btn) {
+    color: #00166d;
+}
+
+ul.jqtree-tree .sub-tree-container .jqtree-element.jqtree-selected:not(.btn) {
+    color: #06c;
+}
+
+ul.jqtree-tree .sub-tree-container > .jqtree-element:not(.btn) {
+    color: var(--primary-font-color);
+}
+
 ul.jqtree-tree .jqtree-toggler, ul.jqtree-tree .jqtree-title {
     cursor: pointer;
 }
@@ -14967,8 +14988,15 @@ ul.jqtree-tree .jqtree-folder:after {
     width: 1px;
     border-left: 1px dotted #ccc;
     top: 25px;
-    left: 12px;
     bottom: 10px;
+}
+
+ul.jqtree-tree .jqtree-folder:not(.sub-tree-container):after {
+    left: 12px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:after {
+    left: 35px;
 }
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
@@ -14986,7 +15014,11 @@ ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-fold
 
 ul.jqtree-tree .jqtree-folder > .jqtree_common:has(> .load-items):before,
 ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:has(> .jqtree-element > .load-items):before {
-    width: 58px;
+    width: 52px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    left: 37px
 }
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
