@@ -13,7 +13,6 @@
       "workflow": "Flux de travail"
     },
     "status": {
-      "executed": "Exécuté",
       "failed": "Échec"
     }
   }
