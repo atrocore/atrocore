@@ -13,6 +13,7 @@ namespace Atro\ActionTypes;
 
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
+use Atro\Entities\ActionExecution;
 use Espo\ORM\Entity;
 use Atro\Services\Record;
 
@@ -20,8 +21,10 @@ class Create extends AbstractAction
 {
     protected array $services = [];
 
-    public function executeNow(Entity $action, \stdClass $input): bool
+    public function execute(ActionExecution $execution, \stdClass $input): bool
     {
+        $action = $execution->get('action');
+
         if (!empty($searchEntityName = $action->get('searchEntity'))) {
             /** @var \Espo\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityName);
@@ -40,7 +43,7 @@ class Create extends AbstractAction
             }
 
             $offset = 0;
-            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 3000);
+            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 1);
 
             if ($count >= $limit) {
                 while (true) {
@@ -62,13 +65,14 @@ class Create extends AbstractAction
                         'type'    => 'MassCreate',
                         'status'  => 'Pending',
                         'payload' => [
-                            'ids'      => array_column($collection->toArray(), 'id'),
-                            'actionId' => $action->get('id'),
-                            'input'    => $input,
+                            'ids'               => array_column($collection->toArray(), 'id'),
+                            'actionExecutionId' => $execution->get('id'),
+                            'input'             => $input,
                         ]
                     ]);
                     $this->getEntityManager()->saveEntity($jobEntity);
                 }
+                return true;
             } else {
                 foreach ($repository->find($selectParams) as $entity) {
                     $this->createEntity($entity, $action, $input);
@@ -81,17 +85,26 @@ class Create extends AbstractAction
             } elseif (property_exists($input, 'triggeredEntityType') && property_exists($input, 'triggeredEntityId')) {
                 $entity = $this->getEntityManager()->getRepository($input->triggeredEntityType)->get($input->triggeredEntityId);
                 if (empty($entity)) {
+                    $execution->set('status', 'done');
+                    $this->getEntityManager()->saveEntity($execution);
+
                     return false;
                 }
             } elseif (!empty($action->get('sourceEntity')) && property_exists($input, 'entityId')) {
                 $entity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get($input->entityId);
                 if (empty($entity)) {
+                    $execution->set('status', 'done');
+                    $this->getEntityManager()->saveEntity($execution);
+
                     return false;
                 }
             }
 
             $this->createEntity($entity, $action, $input);
         }
+
+        $execution->set('status', 'done');
+        $this->getEntityManager()->saveEntity($execution);
 
         return true;
     }
