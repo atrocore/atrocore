@@ -1109,6 +1109,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 $contents = $this->getInjection('container')->get('twig')
                     ->renderTemplate($fieldDefs['script'], ['entity' => $entity], $fieldDefs['outputType']);
 
+                if($entity->get($field) === $contents) {
+                    continue;
+                }
+
                 $entity->set($field, $contents);
                 $updated = true;
             }
