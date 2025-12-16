@@ -285,7 +285,6 @@ class Entity extends ReferenceData
             if (!empty($entity->get('iconClass'))) {
                 $this->getMetadata()->set('clientDefs', $entity->get('code'), ['iconClass' => $entity->get('iconClass')]);
                 $this->getMetadata()->save();
-                $this->getDataManager()->rebuild();
             }
 
             $this->getLanguage()->set('Global', 'scopeNames', $entity->get('code'), $entity->get('name'));
@@ -294,6 +293,8 @@ class Entity extends ReferenceData
             if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
                 $this->getBaseLanguage()->save();
             }
+
+            $this->getDataManager()->rebuild();
 
             return true;
         }
