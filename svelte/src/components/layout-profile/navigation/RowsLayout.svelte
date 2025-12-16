@@ -345,10 +345,6 @@
         font-weight: bold;
     }
 
-    .group.end {
-        padding-right: 50px;
-    }
-
     .group.end div.left {
         border-top: 1px solid #ccc;
         margin: 10px 5px;
