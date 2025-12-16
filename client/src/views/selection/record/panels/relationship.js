@@ -88,6 +88,10 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
             });
         },
 
+        getConditionGroupFields(_) {
+            return [];
+        },
+
         getRelationModel(model, callback) {
             if (model.get('__relationEntity')) {
                 this.getModelFactory().create(this.relationScope, relModel => {
