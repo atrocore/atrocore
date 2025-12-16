@@ -100,43 +100,43 @@ class ActionManager
             $userChanged = $this->auth($userId);
         }
 
-        $log = $this->getEntityManager()->getRepository('ActionLog')->get();
-        $log->set('actionId', $action->get('id'));
+        $execution = $this->getEntityManager()->getRepository('ActionExecution')->get();
+        $execution->set('actionId', $action->get('id'));
 
         if (!empty($input->executedViaWorkflow)) {
-            $log->set('type', 'workflow');
+            $execution->set('type', 'workflow');
             $workflow = $this->getEntityManager()->getRepository('Workflow')->get($input->workflowData['workflow_id']);
             if (!empty($workflow)) {
-                $log->set('name', $workflow->get('name'));
-                $log->set('workflowId', $workflow->get('id'));
+                $execution->set('name', $workflow->get('name'));
+                $execution->set('workflowId', $workflow->get('id'));
             }
         } elseif (!empty($input->executedViaWebhook)) {
-            $log->set('type', 'incomingWebhook');
+            $execution->set('type', 'incomingWebhook');
             if (!empty($input->webhook)) {
-                $log->set('name', $input->webhook->get('name'));
-                $log->set('incomingWebhookId', $input->webhook->get('id'));
+                $execution->set('name', $input->webhook->get('name'));
+                $execution->set('incomingWebhookId', $input->webhook->get('id'));
             }
         } elseif (!empty($input->executedViaScheduledJob)) {
-            $log->set('type', 'scheduledJob');
+            $execution->set('type', 'scheduledJob');
             $scheduledJob = $this->getEntityManager()->getRepository('ScheduledJob')->get($input->job->get('scheduledJobId'));
             if (!empty($scheduledJob)) {
-                $log->set('name', $scheduledJob->get('name'));
-                $log->set('scheduledJobId', $scheduledJob->get('id'));
+                $execution->set('name', $scheduledJob->get('name'));
+                $execution->set('scheduledJobId', $scheduledJob->get('id'));
             }
         } else {
-            $log->set('name', $action->get('name'));
-            $log->set('type', 'manual');
+            $execution->set('name', $action->get('name'));
+            $execution->set('type', 'manual');
         }
 
         try {
             $res = $actionType->executeNow($action, $input);
-            $log->set('status', 'executed');
+            $execution->set('status', 'done');
         } catch (\Throwable $e) {
-            $log->set('status', 'failed');
-            $log->set('statusMessage', $e->getMessage());
+            $execution->set('status', 'failed');
+            $execution->set('statusMessage', $e->getMessage());
 
             if ($e instanceof BadRequest && $action->get('type') === 'error') {
-                $log->set('status', 'executed');
+                $execution->set('status', 'executed');
             }
         }
 
@@ -145,8 +145,8 @@ class ActionManager
             $this->auth($currentUserId);
         }
 
-        $log->set('payload', $this->preparePayload(clone $input));
-        $this->getEntityManager()->saveEntity($log);
+        $execution->set('payload', $this->preparePayload(clone $input));
+        $this->getEntityManager()->saveEntity($execution);
 
         if (!empty($e)) {
             throw $e;

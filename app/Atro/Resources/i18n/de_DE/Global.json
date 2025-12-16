@@ -1,7 +1,6 @@
 {
   "scopeNames": {
     "MasterDataEntity": "Stammdaten-Entität",
-    "ActionLog": "Aktionsprotokoll",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -86,7 +85,6 @@
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
-    "ActionLog": "Aktionsprotokolle",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",

@@ -1013,7 +1013,7 @@
       "massUpdateDisabled": true,
       "noLoad": true
     },
-    "logs": {
+    "executions": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,
       "massUpdateDisabled": true,
@@ -1053,10 +1053,10 @@
       "type": "belongsTo",
       "entity": "Connection"
     },
-    "logs": {
+    "executions": {
       "type": "hasMany",
       "foreign": "action",
-      "entity": "ActionLog"
+      "entity": "ActionExecution"
     }
   },
   "collection": {

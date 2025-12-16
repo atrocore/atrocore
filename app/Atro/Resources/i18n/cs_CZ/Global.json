@@ -1,7 +1,6 @@
 {
   "scopeNames": {
     "Matching": "Odpovídající",
-    "ActionLog": "Log akcí",
     "IncomingWebhook": "Příchozí Webhook",
     "RoleScopeAttribute": "Atribut",
     "RoleScopeAttributePanel": "Panel atributů",
@@ -87,7 +86,6 @@
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
     "Matching": "Shody",
-    "ActionLog": "Protokoly akcí",
     "IncomingWebhook": "Příchozí Webhooks",
     "LayoutProfile": "Profily rozvržení",
     "PasswordChangeRequest": "Žádosti o změnu hesla",

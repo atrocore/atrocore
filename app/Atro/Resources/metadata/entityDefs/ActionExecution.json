@@ -5,24 +5,6 @@
       "required": true,
       "trim": true
     },
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
     "action": {
       "type": "link",
       "readOnly": true
@@ -58,11 +40,11 @@
     },
     "status": {
       "type": "enum",
-      "view": "views/action-log/fields/status",
+      "view": "views/action-execution/fields/status",
       "required": true,
       "readOnly": true,
       "options": [
-        "executed",
+        "done",
         "failed"
       ],
       "optionColors": [
@@ -88,6 +70,24 @@
         "scheduledJob",
         "workflow"
       ]
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
     }
   },
   "links": {
@@ -101,7 +101,7 @@
     },
     "action": {
       "type": "belongsTo",
-      "foreign": "logs",
+      "foreign": "executions",
       "entity": "Action"
     },
     "scheduledJob": {
