@@ -3,7 +3,9 @@
     "incomingWebhook": "Incoming Webhook",
     "scheduledJob": "Scheduled Job",
     "workflow": "Workflow",
-    "statusMessage": "Status Message"
+    "statusMessage": "Status Message",
+    "startedAt": "Started At",
+    "finishedAt": "Finished At"
   },
   "options": {
     "type": {

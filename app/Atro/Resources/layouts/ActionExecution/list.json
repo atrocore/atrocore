@@ -4,18 +4,18 @@
     "link": true
   },
   {
+    "name": "action"
+  },
+  {
     "name": "type"
   },
   {
     "name": "status"
   },
   {
-    "name": "action"
+    "name": "startedAt"
   },
   {
-    "name": "createdAt"
-  },
-  {
-    "name": "createdBy"
+    "name": "finishedAt"
   }
 ]
