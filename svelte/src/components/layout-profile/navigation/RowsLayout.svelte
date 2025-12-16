@@ -300,19 +300,22 @@
         margin: 5px 0;
         padding: 5px;
         height: 32px;
+        display: flex;
     }
 
     ul > li .left {
-        float: left;
-        width: 100%;
+        flex: 1;
+        min-width: 0;
+    }
+
+    ul > li .right {
+        flex-shrink: 0;
+        margin-left: auto;
+        margin-right: 0;
     }
 
     ul > li {
         background-color: #FFF;
-    }
-
-    ul.enabled > li .right {
-        float: right;
     }
 
     ul.disabled > li .right {
@@ -343,23 +346,13 @@
     }
 
     .group.end {
-        padding: 15px 50px 0 10px;
+        padding-right: 50px;
     }
 
     .group.end div.left {
         border-top: 1px solid #ccc;
+        margin: 10px 5px;
     }
-
-    .group .right {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-    }
-
-    .group .right a {
-        position: relative;
-    }
-
     .well {
         height: 100%;
         border: 1px solid #ededed;
