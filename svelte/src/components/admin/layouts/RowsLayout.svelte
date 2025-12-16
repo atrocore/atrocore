@@ -271,7 +271,7 @@
                 <div class="rows-wrapper">
                     <ul class="enabled connected">
                         {#each selectedFields.sort((a, b) => a.sortOrder - b.sortOrder) as item (item.name)}
-                            <li {...getDataAttributeProps(item)}>
+                            <li {...getDataAttributeProps(item)} title={item.label}>
                                 <div class="left">
                                     <label style={item.attributeId ? 'font-style: italic' : ''}>{item.label}</label>
                                 </div>
@@ -313,7 +313,7 @@
                             {/if}
                             <ul class="disabled connected" data-name="{group.name}">
                                 {#each group.fields.sort((a, b) => a.label.localeCompare(b.label)) as field (field.name)}
-                                    <li {...getDataAttributeProps(field)}>
+                                    <li {...getDataAttributeProps(field)} title={field.label}>
                                         <div class="left">
                                             <label style={field.attributeId ? 'font-style: italic' : ''}>{field.label}</label>
                                         </div>
@@ -342,24 +342,30 @@
     }
 
     ul li {
-        list-style: none;
+        display: flex;
         border: 1px solid #CCC;
         margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
 
-
     ul > li .left {
-        float: left;
+        flex: 1;
+        min-width: 0;
+    }
+
+    ul > li .left > label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    ul > li .right {
+        flex-shrink: 0;
     }
 
     ul > li {
         background-color: #FFF;
-    }
-
-    ul.enabled > li .right {
-        float: right;
     }
 
     ul.disabled > li .right {
@@ -380,6 +386,10 @@
     .enabled li:hover a.remove-field,
     .enabled li:hover a.change-label {
         display: inline;
+    }
+
+    .enabled li:hover .left {
+        margin-inline-end: .25em;
     }
 
     .well {
