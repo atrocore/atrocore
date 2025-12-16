@@ -265,9 +265,14 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope) {
-                        const $el = window.$(`<span class="load-items ${((isNodeInSubTree(node) && node.has_children) || node.scope === scope) ? '' : 'ph ph-plus-square'}"></span>`)
+
+                    if (activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node)) {
+                        const $el = window.$(`<span class="load-items"></span>`)
                         $li.find('.jqtree-element').prepend($el);
+                    }
+                    if (!node.disabled && !node.has_children && node.scope !== scope) {
+                        const $el = $li.find('.jqtree-element .load-items');
+                        $el.addClass('ph').addClass('ph-plus-square');
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
                     }
@@ -412,8 +417,6 @@
             if ($el.length > 0) {
                 $el.removeClass('ph-plus-square').addClass('ph-minus-square');
             }
-
-            console.log(e);
         });
 
         $tree.on('tree.close', e => {
@@ -1398,6 +1401,7 @@
         margin-right: .5em;
         order: 2;
         color: var(--primary-font-color);
+        position: relative;
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
@@ -1425,7 +1429,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
         right: 0;
@@ -1433,7 +1437,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .add-to-filter-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
         right: 30px;

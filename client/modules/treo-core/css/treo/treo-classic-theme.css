@@ -14894,6 +14894,10 @@ ul.jqtree-tree ul.jqtree_common {
     display: block;
 }
 
+ul.jqtree-tree .sub-tree-container > ul.jqtree_common {
+    margin-left: 37px;
+}
+
 ul.jqtree-tree span.jqtree_common:focus {
     outline: none;
 }
@@ -14913,6 +14917,10 @@ ul.jqtree-tree .load-items.ph {
     background-color: var(--sidebar-color);
 }
 
+ul.jqtree-tree .jqtree-element:not(.btn) .load-items.ph.ph-minus-square {
+    color: #06c;
+}
+
 ul.jqtree-tree .jqtree-toggler {
     border-bottom: none;
     color: #333;
@@ -14923,6 +14931,11 @@ ul.jqtree-tree .jqtree-toggler {
     display: inline-block;
     width: 16px;
     background-color: var(--sidebar-color);
+}
+
+ul.jqtree-tree .sub-tree-container > .jqtree-element .jqtree-toggler {
+    opacity: 0;
+    pointer-events: none;
 }
 
 ul.jqtree-tree .jqtree-toggler:hover {
@@ -14967,8 +14980,15 @@ ul.jqtree-tree .jqtree-folder:after {
     width: 1px;
     border-left: 1px dotted #ccc;
     top: 25px;
-    left: 12px;
     bottom: 10px;
+}
+
+ul.jqtree-tree .jqtree-folder:not(.sub-tree-container):after {
+    left: 12px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:after {
+    left: 35px;
 }
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
@@ -14986,7 +15006,20 @@ ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-fold
 
 ul.jqtree-tree .jqtree-folder > .jqtree_common:has(> .load-items):before,
 ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:has(> .jqtree-element > .load-items):before {
-    width: 58px;
+    width: 52px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:after,
+ul.jqtree-tree .sub-tree-container .jqtree-folder > .jqtree_common:before,
+ul.jqtree-tree .sub-tree-container .jqtree-folder:after,
+ul.jqtree-tree .sub-tree-container .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:before,
+ul.jqtree-tree .sub-tree-container .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
+ul.jqtree-tree .jqtree-folder.sub-tree-container:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    border-color: #06c;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    left: 37px
 }
 
 ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
