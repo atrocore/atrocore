@@ -13,6 +13,7 @@
       "workflow": "Workflow"
     },
     "status": {
+      "running": "Running",
       "done": "Done",
       "failed": "Failed"
     }

@@ -44,10 +44,12 @@
       "required": true,
       "readOnly": true,
       "options": [
+        "running",
         "done",
         "failed"
       ],
       "optionColors": [
+        "fff078",
         "8fff87",
         "ff6262"
       ]

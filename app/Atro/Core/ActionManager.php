@@ -102,6 +102,8 @@ class ActionManager
 
         $execution = $this->getEntityManager()->getRepository('ActionExecution')->get();
         $execution->set('actionId', $action->get('id'));
+        $execution->set('actionName', $action->get('name'));
+        $execution->set('action', $action);
 
         if (!empty($input->executedViaWorkflow)) {
             $execution->set('type', 'workflow');
@@ -128,25 +130,23 @@ class ActionManager
             $execution->set('type', 'manual');
         }
 
+        $execution->set('status', 'running');
+        $execution->set('payload', $this->preparePayload(clone $input));
+        $this->getEntityManager()->saveEntity($execution);
+
         try {
-            $res = $actionType->executeNow($action, $input);
-            $execution->set('status', 'done');
+            $res = $actionType->execute($execution, $input);
         } catch (\Throwable $e) {
+            $res = false;
             $execution->set('status', 'failed');
             $execution->set('statusMessage', $e->getMessage());
-
-            if ($e instanceof BadRequest && $action->get('type') === 'error') {
-                $execution->set('status', 'executed');
-            }
+            $this->getEntityManager()->saveEntity($execution);
         }
 
         if ($userChanged) {
             // auth as current user again
             $this->auth($currentUserId);
         }
-
-        $execution->set('payload', $this->preparePayload(clone $input));
-        $this->getEntityManager()->saveEntity($execution);
 
         if (!empty($e)) {
             throw $e;
