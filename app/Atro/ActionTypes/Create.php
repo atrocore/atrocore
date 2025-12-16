@@ -43,7 +43,7 @@ class Create extends AbstractAction
             }
 
             $offset = 0;
-            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 1);
+            $limit = $this->getConfig()->get('massCreateMaxChunkSize', 3000);
 
             if ($count >= $limit) {
                 while (true) {
