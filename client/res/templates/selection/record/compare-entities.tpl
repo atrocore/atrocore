@@ -24,15 +24,17 @@
                                     <thead>
                                     <tr>
                                         {{#each columns}}
-                                        <th class="text-center" style="position: relative; padding-right: 40px; padding-left: 35px">
+                                        <th class="text-center" style="position: relative; padding-right: 65px; padding-left: 35px" data-id="{{id}}">
                                             {{{name}}}
-                                            <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
-                                                <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
+                                            <div class="pull-right inline-actions hidden " style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
+                                                <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 8px">
                                                     <i class="ph ph-swap"></i>
                                                 </a>
-                                                <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
+                                                <a href="javascript:" class="pull-right remove-entity" style="padding-right: 8px" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
                                                     <i class="ph ph-trash-simple"></i>
                                                 </a>
+                                                <div class="layout-editor-container pull-right">
+                                                </div>
                                             </div>
                                         </th>
                                         {{/each}}

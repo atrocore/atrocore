@@ -105,7 +105,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.collection = collection;
                 this.listenTo(collection, 'sync', () => {
                     if (this.selectionViewMode === 'standard' && window.leftSidePanel) {
-                        window.leftSidePanel.setRecords(this.getRecordForPanels());
+                        window.leftSidePanel?.setRecords(this.getRecordForPanels());
                     }
 
                     if (collection.models.length > 1) {
@@ -182,7 +182,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.updateUrl(data.name);
 
             if (window.leftSidePanel) {
-                window.leftSidePanel.setSelectionViewMode(data.name);
+                window.leftSidePanel?.setSelectionViewMode(data.name);
             }
 
             // if we change from compare to merge or vis-versa
@@ -204,7 +204,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
             this.selectionViewMode = data.name;
 
-            if(window.treePanelComponent) {
+            if (window.treePanelComponent) {
                 window.treePanelComponent.setShowItems(['compare', 'merge'].includes(data.name));
             }
 
@@ -232,8 +232,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
 
                 if (window.leftSidePanel) {
-                    window.leftSidePanel.setRecords(this.getRecordForPanels());
-                    window.leftSidePanel.setSelectedIds(this.selectedIds);
+                    window.leftSidePanel?.setRecords(this.getRecordForPanels());
+                    window.leftSidePanel?.setSelectedIds(this.selectedIds);
                 }
 
                 if (callback) {
@@ -284,16 +284,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getRecordForPanels() {
-            if (this.selectionViewMode === 'standard' && this.collection) {
-                return this.collection.models.map(model => {
-                    return {
-                        id: model.get('entityId'),
-                        name: model.get('name'),
-                        entityType: model.get('entityType')
-                    }
-                });
-            }
-
             if (!this.selectionRecordModels) {
                 return [];
             }
@@ -334,7 +324,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     || !(this.getEntityTypes().map(e => this.getAcl().check(e, 'read')).reduce((prev, current) => prev && current, true)))
             ) {
                 if (this.selectionRecordModels.length < 2) {
-                    this.notify('You need at least two item for comparison', 'error');
+                    this.notify(this.translate('youNeedAtLeastTwoItem', 'messages', 'Selection'), 'error');
                 }
 
                 this.selectionViewMode = 'standard';
@@ -486,7 +476,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     createButton: false,
                 }, view => {
                     view.render();
-                    this.notify(false);
+                    this.listenTo(view, 'after:render', () => {
+                        this.notify(false);
+                    });
                     this.listenToOnce(view, 'select', function (model) {
                         this.clearView('selectRecords');
                         this.ajaxPostRequest('SelectionRecord', {
@@ -550,15 +542,21 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         initSelectLeftPanel() {
-            if(['compare', 'merge'].includes(this.selectionViewMode)  && !this.getStorage().get('treeItem', 'Selection')) {
+            if (['compare', 'merge'].includes(this.selectionViewMode) && !this.getStorage().get('treeItem', 'Selection')) {
                 this.getStorage().set('treeItem', 'Selection', '_items');
-            }else if(this.selectionViewMode === 'standard' && this.getStorage().get('treeItem', 'Selection') === '_items') {
+            } else if (this.selectionViewMode === 'standard' && this.getStorage().get('treeItem', 'Selection') === '_items') {
                 this.getStorage().clear('treeItem', 'Selection');
             }
         },
 
         renderLeftPanel() {
-           this.initSelectLeftPanel();
+            this.initSelectLeftPanel();
+            if (window.treePanelComponent) {
+                try {
+                    window.treePanelComponent.$destroy();
+                } catch (e) {
+                }
+            }
             window.treePanelComponent = new Svelte.TreePanel({
                 target: $(`${this.options.el} .content-wrapper`).get(0),
                 anchor: $(`${this.options.el} .content-wrapper .tree-panel-anchor`).get(0),
@@ -567,16 +565,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     model: this.model,
                     mode: 'detail',
                     showItems: ['compare', 'merge'].includes(this.selectionViewMode),
+                    hasItems: true,
                     callbacks: {
                         selectNode: data => {
                             window.location.href = `/#${this.scope}/view/${data.id}`;
                         },
                         afterMounted: () => {
-                            if(this.selectionViewMode === 'standard') {
+                            if (this.selectionViewMode === 'standard') {
                                 $('a[data-name="_items"]').addClass('hidden');
                             }
                         },
-                        onActiveItems:(element) => {
+                        onActiveItems: (element) => {
                             if (window.leftSidePanel) {
                                 try {
                                     window.leftSidePanel.$destroy();
@@ -585,7 +584,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             }
 
                             window.leftSidePanel = new Svelte.SelectionLeftSidePanel({
-                                target:element,
+                                target: element,
                                 props: {
                                     records: this.getRecordForPanels(),
                                     selectedIds: this.selectedIds,
@@ -597,7 +596,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         e.preventDefault();
 
                                         if (this.toggleSelected(itemId)) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     },
@@ -612,7 +611,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     },
@@ -627,7 +626,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         });
 
                                         if (shouldReload) {
-                                            window.leftSidePanel.setSelectedIds(this.selectedIds);
+                                            window.leftSidePanel?.setSelectedIds(this.selectedIds);
                                             this.setupRecord();
                                         }
                                     }
@@ -640,22 +639,22 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         afterRemoveSelectedRecords(selectedRecordIds) {
-            if (this.selectionViewMode !== 'standard') {
-                this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
+            this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
+
+            if(this.selectionRecordModels.length === 0) {
+                this.actionShowSelectionView({name: 'standard'});
+                return;
             }
 
-            if (this.selectionViewMode === 'standard' && this.collection) {
-                let records = this.collection.models.map(model => {
-                    return {
-                        id: model.get('entityId'),
-                        name: model.get('name'),
-                        entityType: model.get('entityType')
-                    }
-                });
+            window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
-                window.leftSidePanel.setRecords(records);
-                window.leftSidePanel.setSelectedIds(this.selectedIds = []);
+            if(this.selectionRecordModels.length === 2) {
+                this.selectedIds = this.selectionRecordModels.map(m => m.id);
+            }else{
+                this.selectedIds = this.selectedIds.filter(id =>  this.selectionRecordModels.find(v => v.id===id ))
             }
+
+            window.leftSidePanel?.setSelectedIds(this.selectedIds);
 
             this.model.trigger('after:unrelate')
         },
@@ -765,15 +764,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         loadLayoutData(callback) {
             let count = 0;
+            this.layoutData = [];
             for (const entityType of this.getEntityTypes()) {
-                if (this.layoutData[entityType]) {
-                    count++;
-                    if (count === this.getEntityTypes().length) {
-                        callback();
-                    }
-                    continue;
-                }
-                let attributesIdsForDefsLoad = [];
                 this.getHelper().layoutManager.get(entityType, 'selection', null, null, data => {
                     let layout = [
                         {
@@ -785,72 +777,26 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
                     for (const fieldData of data.layout) {
                         layout[0].rows.push([{
-                            name: fieldData.name,
+                            ...fieldData,
                             fullWidth: true
                         }]);
 
                         if (fieldData.attributeId) {
-                            if (!attributesIdsForDefsLoad.includes(fieldData.attributeId)) {
-                                attributesIdsForDefsLoad.push(fieldData.attributeId);
-                            }
                             this.selectionRecordModels.forEach(model => {
                                 if (model.name !== entityType) {
                                     return;
                                 }
-
-                                $.each(model.get('attributesDefs'), (name, defs) => {
-                                    if (defs.attributeId !== fieldData.attributeId) {
-                                        return;
-                                    }
-                                    layout[0].rows[layout[0].rows.length - 1][0].customLabel = defs['label'];
-                                    //no need to load after
-                                    attributesIdsForDefsLoad = attributesIdsForDefsLoad.filter(id => id !== fieldData.attributeId);
-                                    this.selectionRecordModels.forEach(model => {
-                                        if (model.name !== entityType) {
-                                            return;
-                                        }
-                                        if (!model.defs['fields'][name]) {
-                                            model.defs['fields'][name] = defs;
-                                        }
-                                    });
-                                });
+                                model.defs.fields[fieldData.name] = fieldData.attributeDefs;
+                                model.defs.fields[fieldData.name].disableAttributeRemove = true;
                             });
                         }
                     }
 
-                    if (attributesIdsForDefsLoad.length) {
-                        this.ajaxGetRequest('Attribute/action/attributesDefs', {
-                            entityName: entityType,
-                            attributesIds: attributesIdsForDefsLoad
-                        }).then(attributesDefs => {
-                            $.each(attributesDefs, (name, defs) => {
-                                layout[0].rows.forEach((row, index) => {
-                                    if (row[0].name !== name) {
-                                        return;
-                                    }
-                                    layout[0].rows[index][0].customLabel = defs['label'];
-                                });
-                                this.selectionRecordModels.forEach(model => {
-                                    if (model.name !== entityType) {
-                                        return;
-                                    }
-                                    if (!model.defs['fields'][name]) {
-                                        model.defs['fields'][name] = defs;
-                                    }
-                                });
-                            });
-                            this.layoutData[entityType] = layout;
-                            count++;
-                            if (count === this.getEntityTypes().length) {
-                                callback();
-                            }
-                        })
-                    } else {
-                        this.layoutData[entityType] = layout;
-                        count++;
-                        if (count === this.getEntityTypes().length) {
-                            callback();
-                        }
+                    this.layoutData[entityType] = {detailLayout: layout, layoutData: data.layout};
+
+                    count++;
+                    if (count === this.getEntityTypes().length) {
+                        callback();
                     }
                 });
             }

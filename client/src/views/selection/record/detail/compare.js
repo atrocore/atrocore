@@ -68,7 +68,14 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             if (!selectionRecordId) {
                 return;
             }
-            this.notify('Removing...');
+
+            if(this.getModels().length <= 2) {
+                this.notify(this.translate('youNeedAtLeastTwoItem', 'messages', 'Selection'), 'error');
+                return;
+            }
+
+            this.notify(this.translate('Removing...'));
+
             $.ajax({
                 url: `SelectionRecord/${selectionRecordId}`,
                 type: 'DELETE',

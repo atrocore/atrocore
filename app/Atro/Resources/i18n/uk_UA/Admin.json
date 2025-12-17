@@ -91,7 +91,8 @@
     "insights": "Інсайти",
     "upload": "Завантажити",
     "selection": "Вибір",
-    "summary": "Підсумок"
+    "summary": "Підсумок",
+    "selectionRelations": "Відносини відбору"
   },
   "fields": {
     "request": "Запит",

@@ -96,7 +96,8 @@
     "summary": "Zusammenfassung",
     "kanban": "Kanban",
     "upload": "Hochladen",
-    "selection": "Auswahl"
+    "selection": "Auswahl",
+    "selectionRelations": "Auswahlbeziehungen"
   },
   "fieldTypes": {
     "color": "Farbe",
