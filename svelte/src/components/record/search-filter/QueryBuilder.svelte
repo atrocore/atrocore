@@ -334,7 +334,7 @@
 
         $queryBuilder.on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
             model.trigger('afterUpdateRuleOperator', rule);
-            if (rule?.filter?.realType === 'extensibleMultiEnum') {
+            if (  ['extensibleMultiEnum', 'array'].includes(rule?.filter?.realType)) {
                 let operator = rule.operator?.type;
                 if (!rule.data) {
                     rule.data = {};
