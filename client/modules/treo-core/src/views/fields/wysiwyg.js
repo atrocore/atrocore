@@ -53,9 +53,7 @@ Espo.define('treo-core:views/fields/wysiwyg', 'class-replace!treo-core:views/fie
 
         data() {
             let data = Dep.prototype.data.call(this);
-            if(this.mode === 'list') {
-                data.value = data.value.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + this.translate('See more')) + '</a>';
-            }
+            data.value = data.value.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + this.translate('See more')) + '</a>';
             data.valueWithoutTags = data.value;
             return data;
         },
