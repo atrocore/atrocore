@@ -1108,6 +1108,21 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.reRenderByConditionalProperties();
                 }
             });
+
+            if(this.model && this.model.getFieldParam(this.name, 'mainField')) {
+                let name = this.name;
+                if(this.model.getFieldParam(this.name, 'unitIdField')) {
+                    name +='Id';
+                }
+                this.listenTo(this.model, 'change:'+name, () => {
+                  this.reRender();
+                });
+                this.listenTo(this, 'change', () => {
+                    this.model.trigger('partFieldChange:'+this.model.getFieldParam(this.name, 'mainField'));
+                });
+            }
+
+
         },
 
         reRenderByConditionalProperties() {
