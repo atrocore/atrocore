@@ -1121,8 +1121,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     this.model.trigger('partFieldChange:'+this.model.getFieldParam(this.name, 'mainField'));
                 });
             }
-
-
         },
 
         reRenderByConditionalProperties() {
