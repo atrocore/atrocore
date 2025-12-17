@@ -70,9 +70,8 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
-    "asc": false,
-    "fullTextSearch": false
+    "sortBy": "id",
+    "asc": false
   },
   "indexes": {
     "type": {

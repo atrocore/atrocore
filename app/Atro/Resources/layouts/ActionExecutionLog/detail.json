@@ -1,0 +1,36 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "actionExecution"
+        }
+      ],
+      [
+        {
+          "name": "entityName"
+        },
+        {
+          "name": "entityId"
+        }
+      ],
+      [
+        {
+          "name": "message",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]
