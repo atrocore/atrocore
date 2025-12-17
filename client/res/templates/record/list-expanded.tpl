@@ -39,7 +39,7 @@
     </ul>
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a type="button" href="javascript:" class="btn btn-default btn-block"  data-action="showMore" {{#if showCount}}title="{{translate 'Total'}}: {{collection.total}}"{{/if}}>
             <span class="more-label">{{countLabel}}</span>
         </a>

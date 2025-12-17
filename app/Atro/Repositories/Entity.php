@@ -317,7 +317,7 @@ class Entity extends ReferenceData
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $entityType = $entity->get('type');
             $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
-            if (!file_exists($filePath)){
+            if (!file_exists($filePath)) {
                 continue;
             }
             $contents = file_get_contents($filePath);
@@ -366,7 +366,7 @@ class Entity extends ReferenceData
         return true;
     }
 
-    protected function  updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
+    protected function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
         $saveMetadata = $isCustom;
         $saveLanguage = $isCustom;
@@ -495,6 +495,14 @@ class Entity extends ReferenceData
             $primaryEntity = $this->get($entity->get('primaryEntityId'));
             if (!empty($primaryEntity) && !empty($primaryEntity->get('primaryEntityId'))) {
                 throw new BadRequest($this->getLanguage()->translate('derivativeFromDerivativeNotSupporting', 'exceptions', 'Entity'));
+            }
+        }
+
+        if ($entity->isNew() && !empty($entity->get('primaryEntityId'))) {
+            foreach ($this->getMetadata()->get(['scopeDefs']) ?? [] as $scope => $scopeData) {
+                if (!empty($scopeData['primaryEntityId']) && $scopeData['primaryEntityId'] === $entity->get('primaryEntityId')) {
+                    throw new BadRequest($this->getLanguage()->translate('derivativePrimaryEntityUnique', 'exceptions', 'Entity'));
+                }
             }
         }
 

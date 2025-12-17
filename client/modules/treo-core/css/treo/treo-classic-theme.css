@@ -13342,6 +13342,13 @@ input#sn-checkbox-open-in-new-window {
     border-bottom: 1px solid var(--secondary-border-color);
 }
 
+.right-side-view .insights .panel-changeRequests .list-group-item{
+    background-color: transparent;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
 #main main[data-mode=detail] .detail .panel-body div:not(.filter) > .form-group div.field:has(> .composite-container) {
     border-bottom: 0;
 }

@@ -166,6 +166,7 @@ class LayoutManager
             'target' => $scope . 'Layout',
             'params' => [
                 'scope'           => $scope,
+                'derivativeScope' => $derivativeScope,
                 'viewType'        => $viewType,
                 'relatedEntity'   => $relatedEntity,
                 'relatedLink'     => $relatedLink,
@@ -306,13 +307,13 @@ class LayoutManager
         }
 
         $selectedFields = [];
-        if($layoutName === 'detail') {
+        if ($layoutName === 'detail') {
             foreach ($layoutData as $data) {
-                if(!empty($data['rows'])) {
+                if (!empty($data['rows'])) {
                     foreach ($data['rows'] as $row) {
-                        if(!empty($row)) {
+                        if (!empty($row)) {
                             foreach ($row as $cell) {
-                                if(empty($cell['name'])) {
+                                if (empty($cell['name'])) {
                                     continue;
                                 }
                                 $selectedFields[] = $cell['name'];
@@ -323,7 +324,7 @@ class LayoutManager
             }
 
             foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $fieldDef) {
-                if(!empty($fieldDef['multilangField'])) {
+                if (!empty($fieldDef['multilangField'])) {
                     continue;
                 }
                 if (!empty($fieldDef['layoutRemoveDisabled'])) {
