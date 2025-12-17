@@ -12,8 +12,31 @@
 namespace Atro\Services;
 
 use Atro\Core\Templates\Services\Base;
+use Atro\Entities\ActionExecution as ActionExecutionEntity;
+use Espo\ORM\Entity;
 
 class ActionExecution extends Base
 {
-    protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
+    protected $mandatorySelectAttributeList = ['actionId', 'status', 'statusMessage', 'createdCount', 'updatedCount', 'failedCount'];
+
+    /**
+     * @param ActionExecutionEntity $entity
+     */
+    public function prepareEntityForOutput(Entity $entity)
+    {
+        parent::prepareEntityForOutput($entity);
+
+        $action = $this->getEntityManager()->getRepository('Action')->get($entity->get('actionId'));
+        if (!empty($action)) {
+            // put object into entity
+            $entity->set('action', $action);
+            $entity->set('actionName', $action->get('name'));
+
+            if (in_array($action->get('type'), ['create', 'update', 'createOrUpdate'])) {
+                $this->getRepository()->prepareCount($entity, 'createdCount');
+                $this->getRepository()->prepareCount($entity, 'updatedCount');
+                $this->getRepository()->prepareCount($entity, 'failedCount');
+            }
+        }
+    }
 }

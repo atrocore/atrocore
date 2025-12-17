@@ -10,7 +10,6 @@
       "options": [
         "create",
         "update",
-        "delete",
         "error"
       ],
       "protected": true

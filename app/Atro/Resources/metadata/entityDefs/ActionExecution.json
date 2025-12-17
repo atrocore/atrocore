@@ -83,21 +83,18 @@
     },
     "createdCount": {
       "type": "int",
-      "notStorable": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
     "updatedCount": {
       "type": "int",
-      "notStorable": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
     "failedCount": {
       "type": "int",
-      "notStorable": true,
       "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
