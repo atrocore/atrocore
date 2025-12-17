@@ -186,7 +186,8 @@
         });
 
         const dropdown = new Dropdown(dropdownButton, dropdownMenu, {
-            placement: 'bottom-end',
+            placement: 'bottom-start',
+            disableAutoHide: true,
         })
 
         return () => {

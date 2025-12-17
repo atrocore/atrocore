@@ -58,6 +58,7 @@
         items.push({
             name: "insights",
             label: Language.translate('Insights'),
+            iconClass: 'ph ph-lightbulb'
         });
 
         activeItem = items[0];
@@ -155,7 +156,8 @@
                 ...items,
                 {
                     name: "filter",
-                    label: Language.translate('filter')
+                    label: Language.translate('filter'),
+                    iconClass: 'ph ph-funnel'
                 }
             ];
         }
@@ -165,7 +167,8 @@
                 ...items,
                 {
                     "name": "activities",
-                    "label": Language.translate('Activities')
+                    "label": Language.translate('Activities'),
+                    iconClass: 'ph ph-pulse'
                 }
             ];
         }
@@ -175,7 +178,8 @@
                 ...items,
                 {
                     "name": "data-qualities",
-                    "label": Language.translate('QualityCheck', 'scopeNames')
+                    "label": Language.translate('QualityCheck', 'scopeNames'),
+                    iconClass: 'ph ph-shield-check'
                 }
             ];
         }
@@ -204,10 +208,10 @@
              bind:width={currentWidth} {minWidth} {maxWidth} on:sidebar-resize={onSidebarResize}
              on:sidebar-collapse={onSidebarCollapse} on:sidebar-pin={onSidebarPin}>
     <div class="content">
-        <div class="btn-group">
+        <div class="sidebar-items-container">
             {#each items as item}
                 <a href="javascript:" on:click={()=>setActiveItem(item)}
-                   class="btn btn-link item"
+                   class="sidebar-item item"
                    class:active={item.name===activeItem.name}
                 >
                     {item.label}
@@ -216,7 +220,7 @@
         </div>
 
         <div class="sidebar-header">
-            <h5>{activeItem?.label ?? ''}</h5>
+            <h5>{#if activeItem?.iconClass}<i class={activeItem?.iconClass} style="margin-inline-end: 10px; font-size: 20px;"></i>{/if}{activeItem?.label ?? ''}</h5>
             <div class="layout-editor-container" class:hidden={activeItem?.name !== 'insights'}></div>
         </div>
 
@@ -246,27 +250,38 @@
 </BaseSidebar>
 
 <style>
+    .sidebar-items-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-left: -5px;
+        padding-bottom: 10px;
+    }
+
+    .sidebar-item {
+        padding: 4px 8px;
+        color: #333;
+        border-radius: 16px;
+        text-decoration: none;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid transparent;
+    }
+
+    .sidebar-item.active {
+        color: #06c;
+    }
+
+    .sidebar-item.active,
+    .sidebar-item:hover:not(.active) {
+        border-color: #06c;
+    }
+
     .preloader {
         height: 12px;
         margin-top: 5px;
-    }
-
-    .content .btn-group {
-        display: flex;
-    }
-
-    .btn-group .item {
-        padding: 4px 20px 4px 0;
-        color: #333;
-        text-decoration: underline;
-    }
-
-    .btn-group .item.active {
-        color: #2895ea;
-    }
-
-    .btn-group .item:hover:not(.active) {
-        color: #2895ea85;
     }
 
     :global(.right-side-view .panel-heading .panel-title .collapser) {
@@ -327,6 +342,10 @@
     .activities :global(.panel-default),
     .insights :global(.panel-default) {
         background-color: inherit;
+    }
+
+    .insights :global(.panel-default) {
+        margin-bottom: 10px;
     }
 
     .insights :global(.panel-summary .panel-default),
