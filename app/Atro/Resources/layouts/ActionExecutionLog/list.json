@@ -10,10 +10,7 @@
     "name": "type"
   },
   {
-    "name": "entityName"
-  },
-  {
-    "name": "entityId"
+    "name": "entityRecord"
   },
   {
     "name": "message"

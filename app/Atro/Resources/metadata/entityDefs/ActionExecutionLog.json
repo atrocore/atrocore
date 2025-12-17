@@ -15,6 +15,14 @@
       ],
       "protected": true
     },
+    "entityRecord": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/action-execution-log/fields/entity-record",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
     "entityName": {
       "type": "varchar",
       "len": 100,

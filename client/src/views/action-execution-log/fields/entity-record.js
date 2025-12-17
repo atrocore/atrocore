@@ -1,4 +1,3 @@
-<?php
 /**
  * AtroCore Software
  *
@@ -9,11 +8,16 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-namespace Atro\Services;
+Espo.define('views/action-execution-log/fields/entity-record', 'views/fields/link', Dep => {
 
-use Atro\Core\Templates\Services\Archive;
+    return Dep.extend({
 
-class ActionLog extends Archive
-{
-    protected $mandatorySelectAttributeList = ['status', 'statusMessage'];
-}
+        setup() {
+            this.options.foreignScope = this.model.get('entityName');
+            this.name = 'entity';
+
+            Dep.prototype.setup.call(this);
+        },
+
+    });
+});

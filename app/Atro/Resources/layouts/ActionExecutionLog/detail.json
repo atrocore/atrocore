@@ -13,11 +13,9 @@
       ],
       [
         {
-          "name": "entityName"
+          "name": "entityRecord"
         },
-        {
-          "name": "entityId"
-        }
+        false
       ],
       [
         {

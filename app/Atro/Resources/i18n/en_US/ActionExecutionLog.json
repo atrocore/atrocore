@@ -2,6 +2,7 @@
   "fields": {
     "actionExecution": "Action Execution",
     "type": "Type",
+    "entityRecord": "Entity Record",
     "entityName": "Entity Name",
     "entityId": "Entity ID",
     "message": "Message",
