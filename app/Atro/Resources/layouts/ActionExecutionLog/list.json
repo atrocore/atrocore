@@ -14,5 +14,8 @@
   },
   {
     "name": "message"
+  },
+  {
+    "name": "createdAt"
   }
 ]
