@@ -81,6 +81,13 @@
       "type": "datetime",
       "protected": true
     },
+    "logs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -101,6 +108,11 @@
     }
   },
   "links": {
+    "logs": {
+      "type": "hasMany",
+      "foreign": "actionExecution",
+      "entity": "ActionExecutionLog"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"

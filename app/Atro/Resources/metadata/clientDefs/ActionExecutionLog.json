@@ -1,0 +1,5 @@
+{
+  "createDisabled": true,
+  "controller": "controllers/record",
+  "iconClass": "code-block"
+}
