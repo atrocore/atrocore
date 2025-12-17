@@ -321,7 +321,7 @@ class EntityField extends ReferenceData
                         $fieldName .= 'Id';
                     }
                     $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
-                    if (in_array($fieldType, ['int', 'float', 'bool'])) {
+                    if (in_array($fieldType, ['int', 'float', 'bool', 'date', 'datetime'])) {
                         $conditions[] = $column . ' IS NULL';
                     } else {
                         $conditions[] = '(' . $column . ' IS NULL OR ' . $column . ' = :empty)';
