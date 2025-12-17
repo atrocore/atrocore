@@ -49,7 +49,7 @@ class MassCreate extends AbstractJob implements JobInterface
         $input = !empty($data['input']) ? json_decode(json_encode($data['input'])) : new \stdClass();
 
         foreach ($collection as $entity) {
-            $this->getCreateAction()->createEntity($entity, $action, $input);
+            $this->getCreateAction()->createEntity($entity, $execution, $input);
         }
     }
 

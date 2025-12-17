@@ -75,7 +75,7 @@ class Create extends AbstractAction
                 return true;
             } else {
                 foreach ($repository->find($selectParams) as $entity) {
-                    $this->createEntity($entity, $action, $input);
+                    $this->createEntity($entity, $execution, $input);
                 }
             }
         } else {
@@ -100,7 +100,7 @@ class Create extends AbstractAction
                 }
             }
 
-            $this->createEntity($entity, $action, $input);
+            $this->createEntity($entity, $execution, $input);
         }
 
         $execution->set('status', 'done');
@@ -109,14 +109,21 @@ class Create extends AbstractAction
         return true;
     }
 
-    public function createEntity(?Entity $entity, Entity $action, \stdClass $input): bool
+    public function createEntity(?Entity $entity, ActionExecution $execution, \stdClass $input): bool
     {
+        $action = $execution->get('action');
         $targetEntityName = $action->get('targetEntity');
         $actionData = $action->get('data');
 
         if (empty($actionData->field) || empty($actionData->field->updateType)) {
             return false;
         }
+
+        $log = $this->getEntityManager()->getRepository('ActionExecutionLog')->get();
+        $log->set([
+            'actionExecutionId' => $execution->id,
+            'entityName'        => $targetEntityName
+        ]);
 
         $inputData = null;
         switch ($actionData->field->updateType) {
@@ -134,7 +141,10 @@ class Create extends AbstractAction
                         ->renderTemplate($actionData->field->updateScript, $templateData);
                     $input = @json_decode((string)$outputJson);
                     if ($input === null) {
-                        $GLOBALS['log']->error("Action '{$action->get('name')}' failed. Script generated invalid JSON: $outputJson");
+                        $log->set('type', 'error');
+                        $log->set('message', "Action '{$action->get('name')}' failed. Script generated invalid JSON: $outputJson");
+                        $this->getEntityManager()->saveEntity($log);
+
                         return false;
                     }
                     $inputData = $input;
@@ -143,10 +153,16 @@ class Create extends AbstractAction
         }
 
         if ($inputData === null) {
+            $log->set('type', 'error');
+            $log->set('message', "Payload is empty. Please check Script.");
+            $this->getEntityManager()->saveEntity($log);
+
             return false;
         }
 
         $inputData->_workflowAction = true;
+
+        $log->set('payload', $inputData);
 
         if (property_exists($inputData, 'id')) {
             $existed = $this->getEntityManager()->getEntity($targetEntityName, $inputData->id);
@@ -154,9 +170,15 @@ class Create extends AbstractAction
                 if ($action->get('type') === 'createOrUpdate') {
                     try {
                         $this->getService($targetEntityName)->updateEntity($existed->id, $inputData);
+
+                        $log->set('type', 'update');
+                        $log->set('entityId', $existed->id);
+                        $this->getEntityManager()->saveEntity($log);
                     } catch (NotModified $e) {
                     } catch (\Throwable $e) {
-                        $GLOBALS['log']->error("Update of '{$targetEntityName}: $existed->id' failed: {$e->getMessage()}");
+                        $log->set('type', 'error');
+                        $log->set('message', $e->getMessage());
+                        $this->getEntityManager()->saveEntity($log);
                     }
                 }
                 return true;
@@ -164,10 +186,16 @@ class Create extends AbstractAction
         }
 
         try {
-            $this->getService($targetEntityName)->createEntity($inputData);
+            $created = $this->getService($targetEntityName)->createEntity($inputData);
+
+            $log->set('type', 'create');
+            $log->set('entityId', $created->id);
+            $this->getEntityManager()->saveEntity($log);
         } catch (NotUnique $e) {
         } catch (\Throwable $e) {
-            $GLOBALS['log']->error("Create of '$targetEntityName' failed: {$e->getMessage()}");
+            $log->set('type', 'error');
+            $log->set('message', $e->getMessage());
+            $this->getEntityManager()->saveEntity($log);
         }
 
         return true;
