@@ -112,13 +112,6 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 });
             }
             return list;
-        },
-
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-            if(this.model.name === 'Product') {
-                debugger
-            }
         }
     });
 
