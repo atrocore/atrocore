@@ -81,6 +81,27 @@
       "type": "datetime",
       "protected": true
     },
+    "createdCount": {
+      "type": "int",
+      "notStorable": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "updatedCount": {
+      "type": "int",
+      "notStorable": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "failedCount": {
+      "type": "int",
+      "notStorable": true,
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
     "logs": {
       "type": "linkMultiple",
       "layoutDetailDisabled": true,

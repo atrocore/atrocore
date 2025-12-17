@@ -6,7 +6,10 @@
     "statusMessage": "Status Message",
     "startedAt": "Started At",
     "finishedAt": "Finished At",
-    "logs": "Logs"
+    "logs": "Logs",
+    "createdCount": "Created",
+    "updatedCount": "Updated",
+    "failedCount": "Failed"
   },
   "options": {
     "type": {
