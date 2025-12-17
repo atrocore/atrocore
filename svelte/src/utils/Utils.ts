@@ -1,5 +1,8 @@
+import RequestParams from "./interfaces/RequestParams";
+
 import {UserData} from "./UserData";
 import {Storage} from "./Storage";
+import {Metadata} from "./Metadata";
 
 export const Utils = {
     upperCaseFirst(value: string): string {
@@ -25,13 +28,13 @@ export const Utils = {
     request(method: string, url: string, data: any) {
         const userData = UserData.get();
 
-        const params = {
+        const params: RequestParams = {
             'method': method,
             'headers': {
                 'Content-Type': 'application/json',
             },
             body: undefined
-        }
+        };
 
         if (userData?.user) {
             params['headers']['Authorization-Token'] = btoa(userData.user.userName + ':' + userData.token)
@@ -50,7 +53,7 @@ export const Utils = {
         return fetch(this.joinURL('/api/v1', url), params)
     },
 
-    joinURL(baseURL, path) {
+    joinURL(baseURL: string, path: string) {
         const normalizedBase = baseURL.endsWith('/') ? baseURL.slice(0, -1) : baseURL;
         const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
 
@@ -104,5 +107,30 @@ export const Utils = {
             }
         }
         return color;
+    },
+
+    getTabIcon(scope: string): string | null {
+        const iconClass: string | null = Metadata.get(['clientDefs', scope, 'iconClass']) || null;
+        if (iconClass) {
+            const systemIcons: Record<string, any> = Metadata.get(['app', 'systemIcons']) || {};
+            if (iconClass in systemIcons && systemIcons[iconClass].path) {
+                return systemIcons[iconClass].path;
+            }
+        }
+
+        const firstSymbol = scope.match(/\p{L}/u)?.[0] || null;
+        let key = null;
+
+        if (firstSymbol) {
+            if (Number.isInteger(firstSymbol)) {
+                key = firstSymbol + '-numbers-icon.svg';
+            } else {
+                key = firstSymbol.toLowerCase() + '-alphabet-icon.svg';
+            }
+
+            return 'client/img/icons/default/' + key;
+        }
+
+        return null;
     }
 };
