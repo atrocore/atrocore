@@ -508,7 +508,8 @@
     "openLink": "Відкрити посилання",
     "view": "Переглянути",
     "Items": "Предмети",
-    "hideAll": "Сховати все"
+    "hideAll": "Сховати все",
+    "Relations": "Стосунки"
   },
   "insightsPanels": {
     "summary": "Підсумок",
