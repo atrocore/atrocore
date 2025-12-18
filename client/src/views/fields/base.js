@@ -921,8 +921,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
+           this.initListViewInlineEdit();
+
+            if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
+                this.toggleVisibility();
+            }
+        },
+
+        initListViewInlineEdit() {
             if (this.isListView() && this.listInlineEditModeEnabled()) {
-               this.buildElementForInlineEditView();
+                this.buildElementForInlineEditView();
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
@@ -932,12 +940,12 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 }
             }
 
-            if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
-                this.toggleVisibility();
-            }
-
             if(this.isListView() && !this.listInlineEditModeEnabled()) {
                 this.setReadOnly(true);
+            }
+
+            if (this.isListView()) {
+                this.toggleVisibility();
             }
         },
 
