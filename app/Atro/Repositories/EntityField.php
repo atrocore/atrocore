@@ -242,6 +242,12 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        if (!empty($entity->get('foreignEntityId'))) {
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
+                throw new Forbidden();
+            }
+        }
+
         if ($entity->get('type') == 'linkMultiple') {
             if (
                 ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData' && $entity->isNew())
@@ -321,7 +327,7 @@ class EntityField extends ReferenceData
                         $fieldName .= 'Id';
                     }
                     $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
-                    if (in_array($fieldType, ['int', 'float', 'bool'])) {
+                    if (in_array($fieldType, ['int', 'float', 'bool', 'date', 'datetime'])) {
                         $conditions[] = $column . ' IS NULL';
                     } else {
                         $conditions[] = '(' . $column . ' IS NULL OR ' . $column . ' = :empty)';

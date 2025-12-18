@@ -53,7 +53,8 @@
     let layoutLoading: boolean = false;
     let treeLoading: boolean = false;
     let searchValue: string = '';
-    let treeScope: string;
+    let treeScope: string | null;
+    let treeIcon: string | null;
     let layoutData: any;
     let selectNodeId: string | null = null;
     let isHidden: boolean = false;
@@ -63,7 +64,14 @@
     let applyAdvancedFilter: boolean = false;
     let showEmptyPlaceholder: boolean = false;
 
-    $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
+    $: {
+        treeScope = activeItem ? getLinkScope(activeItem.name) : null;
+        if (treeScope) {
+            treeIcon = Utils.getTabIcon(treeScope);
+        } else {
+            treeIcon = null;
+        }
+    }
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
     $: {
         if (!treeScope) {
@@ -173,8 +181,10 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
+            data === null
+            && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
             && (canUseDataRequest() || hasTextFilter)
+            && activeItem.name !== '_bookmark'
         ) {
             treeLoading = true;
             if (searchValue) {
@@ -265,9 +275,14 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope) {
-                        const $el = window.$(`<span class="load-items ${((isNodeInSubTree(node) && node.has_children) || node.scope === scope) ? '' : 'ph ph-plus-square'}"></span>`)
+
+                    if (activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node)) {
+                        const $el = window.$(`<span class="load-items"></span>`)
                         $li.find('.jqtree-element').prepend($el);
+                    }
+                    if (!node.disabled && !node.has_children && node.scope !== scope) {
+                        const $el = $li.find('.jqtree-element .load-items');
+                        $el.addClass('ph').addClass('ph-plus-square');
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
                     }
@@ -412,8 +427,6 @@
             if ($el.length > 0) {
                 $el.removeClass('ph-plus-square').addClass('ph-minus-square');
             }
-
-            console.log(e);
         });
 
         $tree.on('tree.close', e => {
@@ -931,10 +944,11 @@
         return layoutData;
     }
 
-    function onSortByChange(event) {
-        sortBy = event.target.value
-        Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
-        rebuildTree()
+    function setSortBy(field: string): void
+    {
+        sortBy = field;
+        Storage.set('treeItemSorting', scope, {sortBy, sortAsc});
+        rebuildTree();
     }
 
     function onSortAscChange(event) {
@@ -1206,20 +1220,20 @@
                 <Preloader heightPx={12}/>
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px; min-height: 26px;">
-                <div class="btn-group">
+            <div class="panel-group" style="padding-bottom: 10px;min-height: 26px;margin-bottom: 0;margin-left: -8px;">
+                <div class="tree-items-container">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
+                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
-                    <span bind:this={layoutEditorElement} class="btn layout-editor-container"></span>
+                    <span bind:this={layoutEditorElement} class="layout-editor-container"></span>
                 </div>
             </div>
             {#if activeItem}
                 <div class="sidebar-header">
-                    <h5>{activeItem.label}</h5>
+                    <h5>{#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
                 </div>
 
                 {#if scope === 'Selection' && activeItem.name === '_items'}
@@ -1241,8 +1255,26 @@
                                 </button>
                             </div>
                         </div>
-                        {#if showApplyQuery }
-                            <div style="margin-top:  20px;">
+                        <div class="search-wrapper">
+                            {#if showApplySortOrder && activeItem.name !== '_admin' }
+                                <div class="sort-container">
+                                    <div class="button-group">
+                                        <button type="button" class="sort-dir-button"
+                                                title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                                on:click={onSortAscChange}>
+                                            <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
+                                        </button>
+                                        <button type="button" class="sort-by-button" data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
+                                        <ul class="dropdown-menu">
+                                            {#each sortFields.filter(field => field.name !== sortBy) as field }
+                                                <li><a href="#" on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a></li>
+                                            {/each}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') }
+                                <div class="main-filter-container">
                                      <span class="icons-wrapper">
                                         <span class="toggle" class:active={applyAdvancedFilter}
                                               on:click|stopPropagation|preventDefault={handleFilterToggle}
@@ -1255,27 +1287,10 @@
                                         </span>
                                          {Language.translate('applyMainSearchAndFilter')}
                                     </span>
-                            </div>
-                        {/if}
-                        {#if showApplySortOrder && activeItem.name !== '_admin' }
-                            <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
-                                <div class="button-group" style="display:flex; align-items: stretch;">
-                                    <button type="button" class="sort-btn" data-tippy="true"
-                                            title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
-                                            on:click={onSortAscChange}>
-                                        <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
-                                    </button>
-                                    <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
-                                            on:change={onSortByChange}>
-                                        {#each sortFields as field }
-                                            <option value="{field.name}">
-                                                {field.label}
-                                            </option>
-                                        {/each}
-                                    </select>
                                 </div>
-                            </div>
-                        {/if}
+                            {/if}
+
+                        </div>
                     </div>
 
                     <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
@@ -1296,10 +1311,13 @@
     }
 
     .field[data-name="category-search"] > input.category-search {
-        border: 0;
-        border-bottom: 1px solid #e8eced;
-        background-color: transparent;
+        background-color: #fff;
         padding: 8px 36px 8px 12px;
+        border-radius: 5px;
+    }
+
+    .field[data-name="category-search"] > input.category-search:focus {
+        border-color: #06c;
     }
 
     .field[data-name="category-search"] > input.category-search.search-enabled {
@@ -1327,44 +1345,31 @@
         border-bottom: 1px solid #e8eced;
     }
 
+    .tree-items-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
     .tree-item {
-        padding: 4px 20px 4px 0;
+        padding: 4px 8px;
         color: #333;
-        text-decoration: underline;
+        border-radius: 16px;
+        text-decoration: none;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid transparent;
     }
 
     .tree-item.active {
-        color: #2895ea;
+        color: #06c;
     }
 
+    .tree-item.active,
     .tree-item:hover:not(.active) {
-        color: #2895ea85;
-    }
-
-    .unset-selection {
-        background: #dae8fc;
-        border: 1px solid;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .sort-btn:focus {
-        background: white;
-    }
-
-    .sort-btn + select {
-        border-left: 0;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-    }
-
-    .sort-btn + select,
-    .sort-btn + select:focus {
-        border-color: #e0e0e0;
-    }
-
-    .unset-selection i {
-        font-size: 14px;
+        border-color: #06c;
     }
 
     .layout-editor-container:empty {
@@ -1374,6 +1379,14 @@
     .layout-editor-container:not(:empty) {
         padding: 4px 0;
         line-height: 0;
+    }
+
+    .tree-scope-icon {
+        width: 22px;
+        height: 22px;
+        margin-inline-end: .5em;
+        filter: brightness(0);
+        user-select: none;
     }
 
     .layout-editor-container:not(:empty):active {
@@ -1398,6 +1411,7 @@
         margin-right: .5em;
         order: 2;
         color: var(--primary-font-color);
+        position: relative;
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
@@ -1425,7 +1439,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
         right: 0;
@@ -1433,7 +1447,7 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .add-to-filter-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
         right: 30px;
@@ -1455,7 +1469,59 @@
         color: #06c;
     }
 
-    .category-panel .icons-wrapper .toggle i {
-        font-size: 24px;
+    .search-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .sort-container, .main-filter-container {
+        margin-top: 5px;
+    }
+
+    .sort-container,
+    .sort-by-button,
+    .sort-dir-button {
+        font-size: 12px;
+    }
+
+    .sort-by-button,
+    .sort-dir-button {
+        background-color: transparent;
+        padding: 0 3px;
+        border-color: transparent;
+        border-radius: 3px;
+        outline: 0;
+        color: var(--primary-font-color);
+    }
+
+    .sort-dir-button {
+        padding: 0;
+        margin-inline-end: 2px;
+    }
+
+    .sort-dir-button i {
+        font-size: 16px;
+    }
+
+    .sort-container .dropdown-menu li a {
+        padding: 5px 15px;
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .sort-by-button:hover,
+    .sort-container .button-group.open .sort-by-button {
+        border-color: var(--primary-border-color);
+    }
+
+    .main-filter-container {
+        font-size: 12px;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .main-filter-container i {
+        font-size: 16px;
     }
 </style>

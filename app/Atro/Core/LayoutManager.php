@@ -306,13 +306,13 @@ class LayoutManager
         }
 
         $selectedFields = [];
-        if($layoutName === 'detail') {
+        if ($layoutName === 'detail') {
             foreach ($layoutData as $data) {
-                if(!empty($data['rows'])) {
+                if (!empty($data['rows'])) {
                     foreach ($data['rows'] as $row) {
-                        if(!empty($row)) {
+                        if (!empty($row)) {
                             foreach ($row as $cell) {
-                                if(empty($cell['name'])) {
+                                if (empty($cell['name'])) {
                                     continue;
                                 }
                                 $selectedFields[] = $cell['name'];
@@ -323,7 +323,7 @@ class LayoutManager
             }
 
             foreach ($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []) as $field => $fieldDef) {
-                if(!empty($fieldDef['multilangField'])) {
+                if (!empty($fieldDef['multilangField'])) {
                     continue;
                 }
                 if (!empty($fieldDef['layoutRemoveDisabled'])) {
@@ -457,6 +457,24 @@ class LayoutManager
                     // prepare data
                     $data = Json::decode($fileData, true);
                 }
+            }
+        }
+
+        if (empty($data) && $name === 'summary') {
+            $data = [
+                [
+                    'rows' => []
+                ]
+            ];
+
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'created', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'created', 'fullWidth' => true]];
+            }
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modified', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'modified', 'fullWidth' => true]];
+            }
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'followers', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'followers', 'fullWidth' => true]];
             }
         }
 

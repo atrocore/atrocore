@@ -11,4 +11,5 @@
 export default interface Item {
     name: string;
     label: string;
+    iconClass?: string;
 }
