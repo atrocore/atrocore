@@ -40,6 +40,9 @@ Espo.define('views/fields/unit-varchar', 'views/fields/varchar', Dep => {
             Dep.prototype.setup.call(this);
             this.prepareOriginalName()
             this.afterSetup();
+            this.listenTo(this.model, 'partFieldChange:' + this.name, () => {
+                this.reRender();
+            });
         },
 
         onInlineEditSave(res, attrs, model) {
