@@ -60,6 +60,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -77,6 +81,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -100,6 +108,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -113,6 +125,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "statusField"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -215,6 +231,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -237,6 +257,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -616,6 +640,10 @@
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
             {
               "type": "in",
               "attribute": "type",
