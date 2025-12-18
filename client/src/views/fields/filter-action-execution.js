@@ -13,8 +13,6 @@ Espo.define('views/fields/filter-action-execution', 'views/fields/link',
 
         foreignScope: 'ActionExecution',
 
-        searchTypeList: ['isOneOf', 'isNotOneOf'],
-
         searchScope: null,
 
         setup() {
@@ -39,7 +37,11 @@ Espo.define('views/fields/filter-action-execution', 'views/fields/link',
 
         getFilterName(type = null) {
             return this.filterName ?? this.name;
-        }
+        },
+
+        getQueryBuilderOperators() {
+            return ['in', 'not_in'];
+        },
 
     })
 );

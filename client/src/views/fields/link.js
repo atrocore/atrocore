@@ -931,7 +931,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             })
         },
 
-        createQueryBuilderFilter(type = null) {
+        getQueryBuilderOperators() {
             let operators = ['in', 'not_in'];
             if (this.getForeignScope() === 'User') {
                 operators = operators.concat(['is_me', 'is_not_me', 'is_team_member'])
@@ -943,12 +943,16 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
 
             operators = operators.concat(['is_null', 'is_not_null']);
 
+            return operators;
+        },
+
+        createQueryBuilderFilter(type = null) {
             return {
                 id: this.getFilterName(type),
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
                 optgroup: this.getLanguage().translate('Fields'),
-                operators: operators,
+                operators: this.getQueryBuilderOperators(),
                 input: (rule, inputName) => {
                     if (!rule || !inputName) {
                         return '';
