@@ -1381,7 +1381,8 @@ class Metadata extends AbstractListener
                     "foreign"                     => lcfirst($scope),
                     "layoutRelationshipsDisabled" => true,
                     "entity"                      => "{$scope}AttributeValue",
-                    "disableMassRelation"         => true
+                    "disableMassRelation"         => true,
+                    "notMergeable"                => true
                 ];
 
                 $metadata["entityDefs"][$entityName] = [
@@ -2361,9 +2362,10 @@ class Metadata extends AbstractListener
                 'noLoad' => true
             ];
             $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
-                'type'    => 'hasMany',
-                'foreign' => 'primaryRecord',
-                'entity'  => $scope
+                'type'         => 'hasMany',
+                'foreign'      => 'primaryRecord',
+                'entity'       => $scope,
+                'notMergeable' => true
             ];
         }
     }

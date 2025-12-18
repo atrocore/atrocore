@@ -83,7 +83,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.listenTo(this, 'merge', (dialog) => {
-                this.applyMerge(() => dialog.close());
+                this.applyMerge(() => {
+                    dialog.close()
+                    if (this.options.mergeCallback) {
+                        this.options.mergeCallback();
+                    }
+                });
             });
 
             this.listenTo(this, 'open-filter', () => {
@@ -292,6 +297,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.renderedPanels = this.renderedPanels.filter(panel => !this.fieldPanels.map(f => f.name).includes(panel));
             this.fieldPanels.forEach((panel, index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
+
                 fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
                 let fieldListByGroup = {};
                 fieldList.forEach((field) => {
@@ -384,6 +390,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 models: this.getModels(),
                 distantModels: this.getDistantModels(),
                 instanceComparison: this.instanceComparison,
+                derivativeComparison: this.options.derivativeComparison,
                 columns: this.buildComparisonTableHeaderColumn(),
                 versionModel: this.options.versionModel,
                 merging: this.merging,
