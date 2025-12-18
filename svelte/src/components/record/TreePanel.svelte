@@ -173,8 +173,10 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
+            data === null
+            && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
             && (canUseDataRequest() || hasTextFilter)
+            && activeItem.name !== '_bookmark'
         ) {
             treeLoading = true;
             if (searchValue) {
