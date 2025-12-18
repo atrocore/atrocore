@@ -493,6 +493,36 @@ class V2Dot2Dot0 extends Base
 
     protected function step12(): void
     {
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE action_execution (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', status VARCHAR(255) DEFAULT NULL, status_message TEXT DEFAULT NULL, payload TEXT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, started_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, finished_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_count INT DEFAULT NULL, updated_count INT DEFAULT NULL, failed_count INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, action_id VARCHAR(36) DEFAULT NULL, incoming_webhook_id VARCHAR(36) DEFAULT NULL, scheduled_job_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, workflow_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_ACTION_ID ON action_execution (action_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_SCHEDULED_JOB_ID ON action_execution (scheduled_job_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_CREATED_BY_ID ON action_execution (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_MODIFIED_BY_ID ON action_execution (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_WORKFLOW_ID ON action_execution (workflow_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_NAME ON action_execution (name, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_STATUS ON action_execution (status, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_CREATED_AT ON action_execution (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_MODIFIED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_STARTED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_FINISHED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("COMMENT ON COLUMN action_execution.payload IS '(DC2Type:jsonObject)'");
+
+            $this->exec("CREATE TABLE action_execution_log (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(10) DEFAULT NULL, entity_name VARCHAR(100) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, message TEXT DEFAULT NULL, payload TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, action_execution_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ACTION_EXECUTION_ID ON action_execution_log (action_execution_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_CREATED_BY_ID ON action_execution_log (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_MODIFIED_BY_ID ON action_execution_log (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_TYPE ON action_execution_log (type, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_NAME ON action_execution_log (entity_name, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_ID ON action_execution_log (entity_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_CREATED_AT ON action_execution_log (created_at, deleted)");
+            $this->exec("COMMENT ON COLUMN action_execution_log.payload IS '(DC2Type:jsonObject)'");
+            $this->exec("DROP TABLE action_log");
+        } else {
+            $this->exec("CREATE TABLE action_execution (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', status VARCHAR(255) DEFAULT NULL, status_message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', type VARCHAR(255) DEFAULT NULL, started_at DATETIME DEFAULT NULL, finished_at DATETIME DEFAULT NULL, created_count INT DEFAULT NULL, updated_count INT DEFAULT NULL, failed_count INT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_id VARCHAR(36) DEFAULT NULL, incoming_webhook_id VARCHAR(36) DEFAULT NULL, scheduled_job_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, workflow_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_ACTION_ID (action_id, deleted), INDEX IDX_ACTION_EXECUTION_SCHEDULED_JOB_ID (scheduled_job_id, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_WORKFLOW_ID (workflow_id, deleted), INDEX IDX_ACTION_EXECUTION_NAME (name, deleted), INDEX IDX_ACTION_EXECUTION_STATUS (status, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_AT (created_at, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_STARTED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_FINISHED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("CREATE TABLE action_execution_log (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(10) DEFAULT NULL, entity_name VARCHAR(100) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_execution_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_LOG_ACTION_EXECUTION_ID (action_execution_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_TYPE (type, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_NAME (entity_name, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_ID (entity_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("DROP TABLE action_log");
+        }
     }
 
     protected function exec(string $sql): void
