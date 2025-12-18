@@ -508,7 +508,8 @@
     "openLink": "Open link",
     "view": "View",
     "Items": "Items",
-    "hideAll": "Hide all"
+    "hideAll": "Hide all",
+    "Relations": "Relations"
   },
   "insightsPanels": {
     "summary": "Summary",

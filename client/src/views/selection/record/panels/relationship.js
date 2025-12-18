@@ -116,7 +116,11 @@ Espo.define('views/selection/record/panels/relationship', ['view', 'views/record
         },
 
         modifyAttributeList(attributeList) {
-            return _.union(attributeList, this.getMetadata().get(['clientDefs', this.scope, 'additionalSelectAttributes']));
+            return List.prototype.modifyAttributeList.call(this, attributeList);
+        },
+
+        getConditionGroupFields (item) {
+            return List.prototype.getConditionGroupFields.call(this, item);
         },
 
         filterListLayout: function (listLayout) {
