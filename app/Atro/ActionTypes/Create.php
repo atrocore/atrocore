@@ -11,6 +11,7 @@
 
 namespace Atro\ActionTypes;
 
+use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Entities\ActionExecution;
@@ -174,7 +175,7 @@ class Create extends AbstractAction
                         $log->set('type', 'update');
                         $log->set('entityId', $existed->id);
                         $this->getEntityManager()->saveEntity($log);
-                    } catch (NotModified $e) {
+                    } catch (Forbidden|NotModified $e) {
                     } catch (\Throwable $e) {
                         $log->set('type', 'error');
                         $log->set('message', $e->getMessage());
@@ -191,7 +192,7 @@ class Create extends AbstractAction
             $log->set('type', 'create');
             $log->set('entityId', $created->id);
             $this->getEntityManager()->saveEntity($log);
-        } catch (NotUnique $e) {
+        } catch (Forbidden|NotUnique $e) {
         } catch (\Throwable $e) {
             $log->set('type', 'error');
             $log->set('message', $e->getMessage());

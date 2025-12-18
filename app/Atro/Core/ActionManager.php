@@ -67,8 +67,7 @@ class ActionManager
 
             $params = [
                 'action'             => 'action',
-                'maxCountWithoutJob' => property_exists($input,
-                    'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
+                'maxCountWithoutJob' => property_exists($input, 'actionSetLinkerId') ? 0 : $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200),
                 'maxChunkSize'       => $this->getConfig()->get('massUpdateMaxChunkSize', 3000),
                 'minChunkSize'       => $this->getConfig()->get('massUpdateMinChunkSize', 400),
                 'where'              => json_decode(json_encode($data['where']), true),
