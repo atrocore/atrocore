@@ -166,7 +166,7 @@ class LayoutManager
             'target' => $scope . 'Layout',
             'params' => [
                 'scope'           => $scope,
-                'derivativeScope' => $derivativeScope,
+                'derivativeScope' => $derivativeScope ?? null,
                 'viewType'        => $viewType,
                 'relatedEntity'   => $relatedEntity,
                 'relatedLink'     => $relatedLink,

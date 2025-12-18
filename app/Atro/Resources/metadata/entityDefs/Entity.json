@@ -34,8 +34,7 @@
       "options": [
         "Base",
         "Hierarchy",
-        "ReferenceData",
-        "Derivative"
+        "ReferenceData"
       ],
       "conditionalProperties": {
         "protected": {
