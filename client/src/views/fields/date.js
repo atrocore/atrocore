@@ -225,8 +225,6 @@ Espo.define('views/fields/date', 'views/fields/base', function (Dep) {
                     this.handleSearchType($searchType.val());
                 }
             }
-
-            this.initListViewInlineEdit();
         },
 
         handleSearchType: function (type) {
