@@ -81,21 +81,32 @@
       "type": "datetime",
       "protected": true
     },
+    "listScope": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
     "createdCount": {
       "type": "int",
-      "filterDisabled": true,
+      "view": "views/action-execution/fields/counter-link",
       "massUpdateDisabled": true,
       "protected": true
     },
     "updatedCount": {
       "type": "int",
-      "filterDisabled": true,
+      "view": "views/action-execution/fields/counter-link",
       "massUpdateDisabled": true,
       "protected": true
     },
     "failedCount": {
       "type": "int",
-      "filterDisabled": true,
       "massUpdateDisabled": true,
       "protected": true
     },
