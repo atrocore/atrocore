@@ -921,24 +921,30 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 this.initElement();
             }
 
-            if (this.isListView() && this.listInlineEditModeEnabled()) {
-               this.buildElementForInlineEditView();
+            if (['edit', 'detail'].includes(this.mode)) {
+                this.toggleVisibility();
+            }
+        },
+
+        initListViewInlineEdit() {
+            if(!this.isListView()) {
+                return;
+            }
+
+            if (this.listInlineEditModeEnabled()) {
+                this.buildElementForInlineEditView();
                 this.initStatusContainer();
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
                 }
-                if(this.getCellElement().attr('data-mode') === 'edit') {
-                    this.addInlineEditLinks();
-                }
             }
 
-            if (['edit', 'detail'].includes(this.mode) || this.isListView()) {
-                this.toggleVisibility();
-            }
-
-            if(this.isListView() && !this.listInlineEditModeEnabled()) {
+            if(!this.listInlineEditModeEnabled()) {
                 this.setReadOnly(true);
             }
+
+            this.toggleVisibility();
+
         },
 
         buildElementForInlineEditView() {
@@ -1115,10 +1121,16 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                     name +='Id';
                 }
                 this.listenTo(this.model, 'change:'+name, () => {
-                  this.reRender();
+                    this.reRender();
                 });
                 this.listenTo(this, 'change', () => {
                     this.model.trigger('partFieldChange:'+this.model.getFieldParam(this.name, 'mainField'));
+                });
+            }
+
+            if(this.isListView()) {
+                this.listenTo(this, 'after:render', () => {
+                    this.initListViewInlineEdit();
                 });
             }
         },
