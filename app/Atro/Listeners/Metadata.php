@@ -2309,8 +2309,6 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
-                $fieldDefs['customizable'] = false;
-
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
 
@@ -2325,6 +2323,7 @@ class Metadata extends AbstractListener
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
                 'primaryEntityId'    => $primaryEntity,
                 'isCustom'           => true,
+                'customizable'       => false,
                 'description'        => $scopeDefs['description'] ?? null,
                 'sortBy'             => $scopeDefs['sortBy'] ?? null,
                 'sortDirection'      => $scopeDefs['sortDirection'] ?? null,

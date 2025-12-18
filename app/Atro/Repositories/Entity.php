@@ -296,6 +296,8 @@ class Entity extends ReferenceData
 
             $this->getDataManager()->rebuild();
 
+            $entity->id = $entity->get('code');
+
             return true;
         }
 
@@ -505,10 +507,6 @@ class Entity extends ReferenceData
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
         if (empty($entity->get('isCustom'))) {
-            throw new Forbidden();
-        }
-
-        if ($this->getMetadata()->get("scopes.{$entity->get('code')}.customizable") === false) {
             throw new Forbidden();
         }
 

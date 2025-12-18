@@ -242,6 +242,12 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
+        if (!empty($entity->get('foreignEntityId'))) {
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
+                throw new Forbidden();
+            }
+        }
+
         if ($entity->get('type') == 'linkMultiple') {
             if (
                 ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'ReferenceData' && $entity->isNew())

@@ -100,11 +100,16 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
             if (this.measureId) {
                 this.unitFieldName = this.name + 'UnitId';
+                this.unitFieldNameName = this.name + 'UnitName';
                 this.loadUnitOptions();
                 if (this.model.isNew() && this.defaultUnit) {
                     this.model.set(this.unitFieldName, this.defaultUnit);
                 }
             }
+
+            this.listenTo(this.model, 'partFieldChange:' + this.name, () => {
+                this.reRender();
+            });
         },
 
         afterRender: function () {
@@ -123,7 +128,9 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
                 this.initSelectizeClearPlugin();
                 this.$el.find('.unit-select select').selectize({
                     plugins: ['clear_button']
-                });
+                }).on('change', function() {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 
@@ -265,6 +272,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
             if (this.measureId) {
                 let $unit = this.$el.find(`[name="${this.unitFieldName}"]`);
                 data[this.unitFieldName] = $unit ? $unit.val() : null;
+                data[ this.unitFieldNameName] = this.unitListTranslates[$unit.val()] ||  data[this.unitFieldName]
             }
 
             return data;

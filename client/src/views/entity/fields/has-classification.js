@@ -24,7 +24,12 @@ Espo.define('views/entity/fields/has-classification', 'views/fields/bool',
             const scope = this.model.id;
 
             this.$el.parent().hide();
-            if (!this.model.isNew() && !this.getMetadata().get(`scopes.${scope}.attributesDisabled`) && this.model.get('hasAttribute') && scope !== 'Listing') {
+            if (
+                !this.model.isNew()
+                && !this.getMetadata().get(`scopes.${scope}.attributesDisabled`)
+                && this.getMetadata().get(`scopes.${scope}.customizable`)
+                && this.model.get('hasAttribute') && scope !== 'Listing'
+            ) {
                 this.$el.parent().show();
             }
         }
