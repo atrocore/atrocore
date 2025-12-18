@@ -461,6 +461,24 @@ class LayoutManager
             }
         }
 
+        if (empty($data) && $name === 'summary') {
+            $data = [
+                [
+                    'rows' => []
+                ]
+            ];
+
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'created', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'created', 'fullWidth' => true]];
+            }
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modified', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'modified', 'fullWidth' => true]];
+            }
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'followers', 'type']))) {
+                $data[0]['rows'][] = [['name' => 'followers', 'fullWidth' => true]];
+            }
+        }
+
         if ($name === 'relationships' && !empty($this->getMetadata()->get(['scopes', $scope, 'hasAssociate']))) {
             $data = $data ?? [];
 

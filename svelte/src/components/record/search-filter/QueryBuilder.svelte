@@ -334,6 +334,19 @@
 
         $queryBuilder.on('afterUpdateRuleOperator.queryBuilder', (e, rule) => {
             model.trigger('afterUpdateRuleOperator', rule);
+            if (  ['extensibleMultiEnum', 'array'].includes(rule?.filter?.realType)) {
+                let operator = rule.operator?.type;
+                if (!rule.data) {
+                    rule.data = {};
+                }
+                if (operator=== 'is_null') {
+                    rule.data['operatorType'] = 'arrayIsEmpty'
+                }
+
+                if (operator === 'is_not_null') {
+                    rule.data['operatorType'] = 'arrayIsNotEmpty'
+                }
+            }
         });
 
         $queryBuilder.on('beforeUpdateRuleFilter.queryBuilder', function (e, rule, previousFilter) {

@@ -116,23 +116,6 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
                 }])
             }
 
-            rows.push([{
-                "name": "created",
-                "fullWidth": true
-            }])
-
-            rows.push([{
-                "name": "modified",
-                "fullWidth": true
-            }])
-
-            if (this.canLoadActivities()) {
-                rows.push([{
-                    "name": "followers",
-                    "fullWidth": true
-                }])
-            }
-
             return [
                 {
                     "rows": rows
@@ -156,22 +139,22 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
         afterRender: function () {
             this.initListenToInlineMode();
 
+            let emptyLayout = true
+            this.gridLayout.layout.forEach(panel => {
+                panel.rows.forEach(row => {
+                    row.forEach(field => {
+                        if (field) {
+                            emptyLayout = false
+                        }
+                    })
+                })
+            })
+
             if (this.options.defs?.name === 'summary') {
                 // hide access management panel if summary contains accessManagement panel
                 if (this.layoutData.layout.find(item => item.label === 'accessManagement')) {
                     this.getParentView().hidePanel('accessManagement')
                 }
-
-                let emptyLayout = true
-                this.layoutData.layout.forEach(panel => {
-                    panel.rows.forEach(row => {
-                        row.forEach(field => {
-                            if (field) {
-                                emptyLayout = false
-                            }
-                        })
-                    })
-                })
 
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
                     // show configurator
@@ -192,6 +175,10 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
                     })
                 } else if (emptyLayout) {
                     this.getParentView().hidePanel('summary')
+                }
+            }else{
+                if (emptyLayout) {
+                    this.getParentView().hidePanel('accessManagement')
                 }
             }
         },
