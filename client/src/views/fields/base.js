@@ -937,9 +937,6 @@ Espo.define('views/fields/base', ['view', 'conditions-checker'], function (Dep, 
                 if (!this.inlineEditDisabled) {
                     this.initInlineEdit();
                 }
-                if(this.getCellElement().attr('data-mode') === 'edit') {
-                    this.addInlineEditLinks();
-                }
             }
 
             if(!this.listInlineEditModeEnabled()) {
