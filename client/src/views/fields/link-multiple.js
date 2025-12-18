@@ -969,6 +969,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', this.model.urlRoot),
                 type: 'string',
+                realType: type,
                 optgroup: this.getLanguage().translate('Fields'),
                 operators: operators,
                 input: (rule, inputName) => {
@@ -986,23 +987,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     this.initialOperatorType[inputName] = rule.operator.type;
 
                     this.createFilterView(rule, inputName, type, true);
-                    const callback = function (e) {
-                        if (type === 'extensibleMultiEnum') {
-                            if (!rule.data) {
-                                rule.data = {};
-                            }
-                            if (e.target.value === 'is_null') {
-                                rule.data['operatorType'] = 'arrayIsEmpty'
-                            }
-
-                            if (e.target.value === 'is_not_null') {
-                                rule.data['operatorType'] = 'arrayIsNotEmpty'
-                            }
-                        }
-                    }.bind(this);
 
                     if (!this.isNotListeningToOperatorChange[inputName]) {
-                        rule.$el.find('.rule-operator-container select').on('change', callback);
                         this.listenTo(this.model, 'afterUpdateRuleOperator', rule => {
                             if (rule.$el.find('.rule-value-container > input').attr('name') !== inputName) {
                                 return;
