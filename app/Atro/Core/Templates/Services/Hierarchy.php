@@ -152,7 +152,7 @@ class Hierarchy extends Record
     {
         $entity = $this->getEntity($id);
 
-        if(!empty($entity)) {
+        if (!empty($entity)) {
             throw new NotFound();
         }
 
