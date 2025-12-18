@@ -24,7 +24,7 @@
                                     <thead>
                                     <tr>
                                         {{#each columns}}
-                                        <th class="text-center" style="position: relative; padding-right: 65px; padding-left: 35px" data-id="{{id}}">
+                                        <th  style="position: relative; padding-right: 65px; padding-left: 25px!important;" data-id="{{id}}">
                                             {{{name}}}
                                             <div class="pull-right inline-actions hidden " style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
                                                 <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 8px">
@@ -33,8 +33,6 @@
                                                 <a href="javascript:" class="pull-right remove-entity" style="padding-right: 8px" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
                                                     <i class="ph ph-trash-simple"></i>
                                                 </a>
-                                                <div class="layout-editor-container pull-right">
-                                                </div>
                                             </div>
                                         </th>
                                         {{/each}}
@@ -43,8 +41,17 @@
                                     <tbody>
                                     <tr class="list-row">
                                         {{#each columns}}
-                                        <td class="record-content" data-id="{{id}}"> {{translate 'Loading...'}}</td>
+                                        <td data-id="{{id}}" style="position:relative">
+                                            <div class="record-content"> {{translate 'Loading...'}}</div>
+                                            <div class="bottom-layout-bottoms " style="opacity: 0">
+                                                <div class="layout-editor-container selection">
+                                                </div>
+                                                <div class="layout-editor-container relations">
+                                                </div>
+                                            </div>
+                                        </td>
                                         {{/each}}
+
                                     </tr>
                                     </tbody>
                                 </table>
