@@ -3,7 +3,13 @@
     "incomingWebhook": "Incoming Webhook",
     "scheduledJob": "Scheduled Job",
     "workflow": "Workflow",
-    "statusMessage": "Status Message"
+    "statusMessage": "Status Message",
+    "startedAt": "Started At",
+    "finishedAt": "Finished At",
+    "logs": "Logs",
+    "createdCount": "Created",
+    "updatedCount": "Updated",
+    "failedCount": "Failed"
   },
   "options": {
     "type": {
@@ -13,7 +19,8 @@
       "workflow": "Workflow"
     },
     "status": {
-      "executed": "Executed",
+      "running": "Running",
+      "done": "Done",
       "failed": "Failed"
     }
   }

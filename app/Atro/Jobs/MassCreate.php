@@ -15,6 +15,7 @@ namespace Atro\Jobs;
 
 use Atro\ActionTypes\Create;
 use Atro\Core\Exceptions\Error;
+use Atro\Entities\ActionExecution;
 use Atro\Entities\Job;
 
 class MassCreate extends AbstractJob implements JobInterface
@@ -24,11 +25,17 @@ class MassCreate extends AbstractJob implements JobInterface
     public function run(Job $job): void
     {
         $data = $job->getPayload();
-        if (empty($data['ids']) || empty($data['actionId'])) {
+        if (empty($data['ids']) || empty($data['actionExecutionId'])) {
             return;
         }
 
-        $action = $this->getEntityManager()->getRepository('Action')->get($data['actionId']);
+        /** @var ActionExecution $execution */
+        $execution = $this->getEntityManager()->getRepository('ActionExecution')->get($data['actionExecutionId']);
+        if (empty($execution)) {
+            return;
+        }
+
+        $action = $execution->get('action');
         if (empty($action)) {
             return;
         }
@@ -42,7 +49,7 @@ class MassCreate extends AbstractJob implements JobInterface
         $input = !empty($data['input']) ? json_decode(json_encode($data['input'])) : new \stdClass();
 
         foreach ($collection as $entity) {
-            $this->getCreateAction()->createEntity($entity, $action, $input);
+            $this->getCreateAction()->createEntity($entity, $execution, $input);
         }
     }
 

@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Atro\ActionTypes;
+namespace Atro\Entities;
 
-use Atro\Entities\ActionExecution;
+use Atro\Core\Templates\Entities\Base;
 
-interface TypeInterface
+class ActionExecution extends Base
 {
-    public function execute(ActionExecution $execution, \stdClass $input): bool;
+    protected $entityType = "ActionExecution";
 }

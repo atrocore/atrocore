@@ -27,6 +27,14 @@
       ],
       [
         {
+          "name": "startedAt"
+        },
+        {
+          "name": "finishedAt"
+        }
+      ],
+      [
+        {
           "name": "incomingWebhook"
         },
         false

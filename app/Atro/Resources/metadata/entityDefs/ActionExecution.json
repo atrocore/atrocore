@@ -5,24 +5,6 @@
       "required": true,
       "trim": true
     },
-    "createdAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "modifiedAt": {
-      "type": "datetime",
-      "readOnly": true
-    },
-    "createdBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
-    "modifiedBy": {
-      "type": "link",
-      "readOnly": true,
-      "view": "views/fields/user"
-    },
     "action": {
       "type": "link",
       "readOnly": true
@@ -58,14 +40,16 @@
     },
     "status": {
       "type": "enum",
-      "view": "views/action-log/fields/status",
+      "view": "views/action-execution/fields/status",
       "required": true,
       "readOnly": true,
       "options": [
-        "executed",
+        "running",
+        "done",
         "failed"
       ],
       "optionColors": [
+        "fff078",
         "8fff87",
         "ff6262"
       ]
@@ -88,9 +72,76 @@
         "scheduledJob",
         "workflow"
       ]
+    },
+    "startedAt": {
+      "type": "datetime",
+      "protected": true
+    },
+    "finishedAt": {
+      "type": "datetime",
+      "protected": true
+    },
+    "listScope": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "createdCount": {
+      "type": "int",
+      "view": "views/action-execution/fields/counter-link",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "updatedCount": {
+      "type": "int",
+      "view": "views/action-execution/fields/counter-link",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "failedCount": {
+      "type": "int",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "logs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
     }
   },
   "links": {
+    "logs": {
+      "type": "hasMany",
+      "foreign": "actionExecution",
+      "entity": "ActionExecutionLog"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
@@ -101,7 +152,7 @@
     },
     "action": {
       "type": "belongsTo",
-      "foreign": "logs",
+      "foreign": "executions",
       "entity": "Action"
     },
     "scheduledJob": {
@@ -110,13 +161,19 @@
     }
   },
   "collection": {
-    "sortBy": "createdAt",
+    "sortBy": "startedAt",
     "asc": false
   },
   "indexes": {
     "name": {
       "columns": [
         "name",
+        "deleted"
+      ]
+    },
+    "status": {
+      "columns": [
+        "status",
         "deleted"
       ]
     },
@@ -127,6 +184,18 @@
       ]
     },
     "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "startedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "finishedAt": {
       "columns": [
         "modifiedAt",
         "deleted"

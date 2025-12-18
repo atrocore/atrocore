@@ -13,7 +13,6 @@
       "workflow": "Pracovní postupy"
     },
     "status": {
-      "executed": "Provedeno",
       "failed": "Neúspěšný"
     }
   }

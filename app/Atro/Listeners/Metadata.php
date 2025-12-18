@@ -415,11 +415,40 @@ class Metadata extends AbstractListener
                 ],
             ];
 
-            if (in_array($action['type'], ['update', 'create'])) {
+            if (in_array($action['type'], ['update', 'create', 'createOrUpdate'])) {
                 $params['acl'] = [
                     'scope'  => $action['target_entity'],
                     'action' => 'edit',
                 ];
+
+                $filterFields = [];
+                switch ($action['type']) {
+                    case 'create':
+                        $filterFields = ['createdCount'];
+                        break;
+                    case 'update':
+                        $filterFields = ['updatedCount'];
+                        break;
+                    case 'createOrUpdate':
+                        $filterFields = ['createdCount', 'updatedCount'];
+                        break;
+                }
+
+                foreach ($filterFields as $field) {
+                    $data['entityDefs'][$action['target_entity']]['fields']["{$field}FilterActionExecution"] = [
+                        'type'                     => 'enum',
+                        'notStorable'              => true,
+                        'view'                     => 'views/fields/filter-action-execution',
+                        'scope'                    => $action['target_entity'],
+                        'layoutDetailDisabled'     => true,
+                        'layoutListDisabled'       => true,
+                        'layoutMassUpdateDisabled' => true,
+                        'exportDisabled'           => true,
+                        'importDisabled'           => true,
+                        'textFilterDisabled'       => true,
+                        'emHidden'                 => true,
+                    ];
+                }
             } elseif ($action['type'] == 'delete') {
                 $params['acl'] = [
                     'scope'  => $action['target_entity'],

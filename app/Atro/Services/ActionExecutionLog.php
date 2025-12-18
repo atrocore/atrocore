@@ -9,13 +9,11 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-declare(strict_types=1);
+namespace Atro\Services;
 
-namespace Atro\ActionTypes;
+use Atro\Core\Templates\Services\Archive;
 
-use Atro\Entities\ActionExecution;
-
-interface TypeInterface
+class ActionExecutionLog extends Archive
 {
-    public function execute(ActionExecution $execution, \stdClass $input): bool;
+    protected $mandatorySelectAttributeList = ['entityName', 'entityId'];
 }

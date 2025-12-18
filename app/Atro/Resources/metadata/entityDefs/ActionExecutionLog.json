@@ -1,0 +1,109 @@
+{
+  "fields": {
+    "actionExecution": {
+      "type": "link",
+      "protected": true
+    },
+    "type": {
+      "type": "enum",
+      "len": 10,
+      "options": [
+        "create",
+        "update",
+        "error"
+      ],
+      "protected": true
+    },
+    "entityRecord": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/action-execution-log/fields/entity-record",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "entityName": {
+      "type": "varchar",
+      "len": 100,
+      "protected": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "len": 36,
+      "protected": true
+    },
+    "message": {
+      "type": "wysiwyg",
+      "rows": 30,
+      "lengthOfCut": 400,
+      "protected": true
+    },
+    "payload": {
+      "type": "jsonObject",
+      "protected": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "actionExecution": {
+      "type": "belongsTo",
+      "foreign": "logs",
+      "entity": "ActionExecution"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  },
+  "collection": {
+    "sortBy": "id",
+    "asc": false
+  },
+  "indexes": {
+    "type": {
+      "columns": [
+        "type",
+        "deleted"
+      ]
+    },
+    "entityName": {
+      "columns": [
+        "entityName",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    }
+  }
+}

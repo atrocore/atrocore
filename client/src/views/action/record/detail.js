@@ -59,6 +59,9 @@ Espo.define('views/action/record/detail', ['views/record/detail', 'views/action/
                             this.notify(response.message, 'error');
                         }
                     }
+                    setTimeout(() => {
+                        $('.action[data-action=refresh][data-panel=executions]').click();
+                    }, 2000)
                 });
             });
         },

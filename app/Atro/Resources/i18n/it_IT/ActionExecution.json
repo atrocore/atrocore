@@ -13,8 +13,7 @@
       "workflow": "Flusso di lavoro"
     },
     "status": {
-      "failed": "Fallito",
-      "executed": "Eseguito"
+      "failed": "Fallito"
     }
   }
 }

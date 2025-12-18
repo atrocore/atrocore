@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/action-log/fields/status', 'views/fields/colored-enum',
+Espo.define('views/action-execution/fields/status', 'views/fields/colored-enum',
     Dep => Dep.extend({
 
         afterRender() {

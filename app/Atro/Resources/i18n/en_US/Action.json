@@ -27,7 +27,8 @@
     "applyToPreselectedRecords": "Apply to pre-selected records",
     "updateType": "Update Type",
     "updateFields": "Update Fields",
-    "updateScript": "Script"
+    "updateScript": "Script",
+    "executions": "Executions"
   },
   "labels": {
     "execute": "Execute",
