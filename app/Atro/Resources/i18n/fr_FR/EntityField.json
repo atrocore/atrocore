@@ -62,7 +62,7 @@
     "modifiedExtendedEnabled": "Enregistrer le changement comme une modification",
     "duplicateIgnore": "Non duplicable",
     "recordRelatedChangesInStream": "Enregistrez les modifications apportées aux enregistrements connexes pour l'entité actuelle.",
-    "conditionalRequired": "Exigée",
+    "conditionalRequired": "Requis",
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
@@ -120,7 +120,7 @@
     "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
   },
   "labels": {
-    "resetToDefault": "Rétablissement des valeurs par défaut",
+    "resetToDefault": "Réinitialiser par défaut",
     "relationManagement": "Gestion des relations",
     "conditionalProperties": "Propriétés conditionnelles"
   },
