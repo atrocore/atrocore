@@ -20,7 +20,7 @@
     "displayField": "Champ d'affichage",
     "mode": "Mode",
     "emailScript": "Script",
-    "emailTemplate": "Modèle d'e-mail",
+    "emailTemplate": "Modèle de courrier électronique",
     "targetEntity": "Entité cible",
     "hideTextLabel": "Masquer l'étiquette de texte sur le bouton",
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
@@ -70,7 +70,7 @@
       "system": "Système"
     },
     "mode": {
-      "basic": "De base",
+      "basic": "Basique",
       "script": "Script"
     }
   },
