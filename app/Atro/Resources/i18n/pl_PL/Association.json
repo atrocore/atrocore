@@ -1,7 +1,7 @@
 {
   "fields": {
     "description": "Description",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "reverseAssociation": "Odwrócone stowarzyszenie",
     "code": "Kod",
     "default": "Domyślny"
