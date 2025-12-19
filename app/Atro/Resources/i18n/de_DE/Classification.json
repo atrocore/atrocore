@@ -21,6 +21,7 @@
   "exceptions": {
     "classificationHasRecords": "Klassifizierungen mit Bezugsdatensätzen können nicht gelöscht werden.",
     "entityCannotBeChanged": "Die Entität kann nicht geändert werden.",
-    "classificationForToAnotherEntity": "Die Klassifizierung kann nicht mit diesem Datensatz verknüpft werden, da sie für eine andere Entität verwendet wird."
+    "classificationForToAnotherEntity": "Die Klassifizierung kann nicht mit diesem Datensatz verknüpft werden, da sie für eine andere Entität verwendet wird.",
+    "entityNotAllowToChoose": "Die Entität darf nicht wählen"
   }
 }
