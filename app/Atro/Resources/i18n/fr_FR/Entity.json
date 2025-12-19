@@ -40,7 +40,8 @@
     "nonDuplicatableFields": "Champs non dupliqués",
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
-    "primaryEntity": "Entité primaire"
+    "primaryEntity": "Entité primaire",
+    "role": "Rôle"
   },
   "options": {
     "type": {
