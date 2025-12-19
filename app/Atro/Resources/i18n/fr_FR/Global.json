@@ -535,7 +535,6 @@
     "accessManagement": "Gestion des accès",
     "Attributes": "Attributs",
     "unselectAll": "Désélectionner tout",
-    "masterDataManagement": "Gestion des données de référence",
     "addFields": "Ajouter des champs",
     "addAttributes": "Ajouter des attributs",
     "matchings": "Appariements"
@@ -704,7 +703,6 @@
     "MatchedRecord": "Enregistrements appariés",
     "Matching": "Appariements",
     "ThumbnailType": "Types de vignettes",
-    "ActionLog": "Journaux d'action",
     "IncomingWebhook": "Webhooks entrants",
     "RoleScopeAttributePanel": "Panneaux d'attributs",
     "AttributePanel": "Panneaux d'attributs",
@@ -718,8 +716,7 @@
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
     "SelectionRecord": "Elements de sélection",
-    "MasterDataEntity": "Entités de reference",
-    "notPossibleToOpenDetailView": "Il est impossible d’ouvrir la vue détaillée."
+    "MasterDataEntity": "Entités de reference"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
