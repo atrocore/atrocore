@@ -97,6 +97,7 @@
     "attributeNotBelongToEntity": "L'attribut n'appartient pas à cette entité.",
     "entityCannotBeChanged": "L'entité ne peut être modifiée.",
     "compositeAttributeNotFound": "Attribut composite introuvable.",
-    "compositeAttributeCannotBeChild": "L'attribut composite ne peut pas être un enfant."
+    "compositeAttributeCannotBeChild": "L'attribut composite ne peut pas être un enfant.",
+    "entityNotAllowToChoose": "L'entité n'est pas autorisée à choisir"
   }
 }
