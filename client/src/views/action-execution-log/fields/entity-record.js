@@ -14,7 +14,6 @@ Espo.define('views/action-execution-log/fields/entity-record', 'views/fields/lin
 
         setup() {
             this.options.foreignScope = this.model.get('entityName');
-            this.name = 'entity';
 
             Dep.prototype.setup.call(this);
         },

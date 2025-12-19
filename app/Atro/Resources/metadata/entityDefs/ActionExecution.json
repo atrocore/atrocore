@@ -107,6 +107,8 @@
     },
     "failedCount": {
       "type": "int",
+      "logType": "error",
+      "view": "views/action-execution/fields/counter-link-to-logs",
       "massUpdateDisabled": true,
       "protected": true
     },

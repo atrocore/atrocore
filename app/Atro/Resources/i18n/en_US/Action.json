@@ -31,6 +31,7 @@
     "executions": "Executions"
   },
   "labels": {
+    "allLogs": "All Logs",
     "execute": "Execute",
     "Parameters": "Parameters",
     "fieldsPanel": "Update"

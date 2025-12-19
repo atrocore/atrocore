@@ -58,5 +58,35 @@ Espo.define('views/action/record/panels/executions', 'views/record/panels/relati
             Dep.prototype.setup.call(this);
         },
 
+        actionAllLogs(data) {
+            this.getStorage().set('listQueryBuilder', 'ActionExecutionLog', {
+                textFilter: '',
+                primary: null,
+                presetName: null,
+                bool: {},
+                queryBuilder: {
+                    condition: 'AND',
+                    rules: [
+                        {
+                            id: 'actionExecutionId',
+                            field: 'actionExecutionId',
+                            type: 'string',
+                            operator: 'in',
+                            value: [data.id],
+                            data: {
+                                nameHash: {
+                                    [data.id]: data.name
+                                }
+                            }
+                        }
+                    ],
+                    valid: true
+                },
+                queryBuilderApplied: true
+            });
+
+            window.open(`#ActionExecutionLog`, '_blank');
+        },
+
     })
 );
