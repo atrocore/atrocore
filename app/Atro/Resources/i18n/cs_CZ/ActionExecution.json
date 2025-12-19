@@ -3,7 +3,10 @@
     "incomingWebhook": "Příchozí Webhook",
     "scheduledJob": "Naplánovaná úloha",
     "workflow": "Pracovní postupy",
-    "statusMessage": "Stavová zpráva"
+    "statusMessage": "Stavová zpráva",
+    "startedAt": "Začínáme v",
+    "finishedAt": "Dokončeno v",
+    "updatedCount": "Aktualizováno"
   },
   "options": {
     "type": {
@@ -13,7 +16,8 @@
       "workflow": "Pracovní postupy"
     },
     "status": {
-      "failed": "Neúspěšný"
+      "failed": "Neúspěšný",
+      "running": "Běh"
     }
   }
 }
