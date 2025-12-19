@@ -74,7 +74,7 @@
     "RoleScopeAttribute": "Atributo",
     "Attribute": "Atributo",
     "RoleScopeField": "Campo",
-    "ExtensibleEnum": "List",
+    "ExtensibleEnum": "Lista",
     "Locale": "Localización",
     "Measure": "Medida",
     "File": "Archivo",
@@ -482,7 +482,7 @@
     "Clear": "Claro",
     "Record cannot be saved": "No se puede guardar el registro",
     "Activities": "Actividades planeadas",
-    "Reset to Default": "Restablecer a (por defecto)",
+    "Reset to Default": "Aplicar a valores por defecto",
     "code": "Código",
     "label": "Etiqueta",
     "color": "Color",
@@ -507,7 +507,8 @@
     "openLink": "Abrir enlace",
     "Items": "Artículos",
     "hideAll": "Ocultar todo",
-    "Relations": "Relaciones"
+    "Relations": "Relaciones",
+    "view": "Ver"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -749,7 +750,7 @@
     "status": "Status",
     "followers": "Seguidores",
     "file": "Archivo",
-    "extensibleEnum": "List",
+    "extensibleEnum": "Lista",
     "sortOrder": "ordenar Orden",
     "assignedAccounts": "Cuentas",
     "isActive": "Activo",
@@ -763,7 +764,8 @@
     "primaryRecord": "Registro primario",
     "derivedRecords": "Registros derivados",
     "updatedCountFilterActionExecution": "Actualizado por Ejecución de la acción",
-    "createdCountFilterActionExecution": "Creado por Ejecución de acciones"
+    "createdCountFilterActionExecution": "Creado por Ejecución de acciones",
+    "field": "Campo"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",
