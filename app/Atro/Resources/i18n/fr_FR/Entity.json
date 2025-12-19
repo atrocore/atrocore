@@ -41,7 +41,11 @@
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
     "primaryEntity": "Entité primaire",
-    "role": "Rôle"
+    "role": "Rôle",
+    "hasStaging": "Activer la mise à disposition",
+    "stagingEntity": "Entité de transit",
+    "matchDuplicates": "Faire correspondre les doublons",
+    "matchMasterRecords": "Fiches du maître du match"
   },
   "options": {
     "type": {
@@ -53,6 +57,9 @@
     "sortDirection": {
       "asc": "Ascendante",
       "desc": "Descente"
+    },
+    "role": {
+      "staging": "Mise en scène"
     }
   },
   "labels": {
@@ -60,7 +67,8 @@
     "hierarchyManagement": "Gestion de la hiérarchie",
     "other": "Autre",
     "resetToDefault": "Réinitialiser par défaut",
-    "attributes": "Attributs"
+    "attributes": "Attributs",
+    "mdm": "Gestion des données de référence"
   },
   "confirmations": {
     "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
@@ -88,6 +96,8 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {enfants} ne doivent pas figurer tous les deux dans les relations avec date/heure de modification.",
     "entityAlreadyHasAttributesInUse": "Has Attribute param ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
-    "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer."
+    "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer.",
+    "derivativeWithSuchRoleExists": "Une entité dérivée jouant ce rôle existe déjà.",
+    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut être créée à partir d'une autre entité dérivée."
   }
 }
