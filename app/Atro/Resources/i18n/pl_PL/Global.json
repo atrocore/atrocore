@@ -81,7 +81,9 @@
     "RoleScopeAttribute": "Atrybut",
     "Selection": "Wybór",
     "SelectionRecord": "Rekord wyboru",
-    "MasterDataEntity": "Podmiot danych podstawowych"
+    "MasterDataEntity": "Podmiot danych podstawowych",
+    "ActionExecution": "Wykonanie akcji",
+    "ActionExecutionLog": "Dziennik wykonania akcji"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -134,14 +136,14 @@
     "ProductGroup": "Grupy produktów",
     "ThumbnailType": "Thumbnail Types",
     "IncomingWebhook": "Przychodzące webhooki",
-    "RoleScopeAttribute": "Atrybut",
+    "RoleScopeAttribute": "Atrybuty",
     "RoleScopeAttributePanel": "Panele atrybutów",
     "Classification": "Klasyfikacje",
     "Bookmark": "Zakładki",
     "MatchedRecord": "Dopasowane rekordy",
     "Matching": "Dopasowania",
     "ClassificationAttribute": "Atrybuty klasyfikacji",
-    "Attribute": "Atrybut",
+    "Attribute": "Atrybuty",
     "AttributeGroup": "Grupy atrybutów",
     "AttributePanel": "Panele atrybutów",
     "RoleScope": "Lunety",
@@ -150,7 +152,9 @@
     "RoleScopeField": "Pola",
     "Selection": "Wybór",
     "SelectionRecord": "Rekordy selekcji",
-    "MasterDataEntity": "Podmioty danych podstawowych"
+    "MasterDataEntity": "Podmioty danych podstawowych",
+    "ActionExecution": "Wykonywanie akcji",
+    "ActionExecutionLog": "Dzienniki wykonania akcji"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -390,7 +394,7 @@
     "filterPlaceHolder": "Proszę wybrać atrybut / pole",
     "emptySavedSearchPlaceholder": "Brak zapisanych filtrów",
     "General Filters": "Filtry ogólne",
-    "Attributes": "Atrybut",
+    "Attributes": "Atrybuty",
     "Advanced Filter": "Filtr zaawansowany",
     "Apply Advanced Filter": "Zastosuj filtr zaawansowany",
     "Unset": "Nieustawiony",
@@ -414,7 +418,7 @@
     "sort": "Sortuj",
     "recalculateScript": "Przelicz skrypt",
     "editLabels": "Proszę edytować etykiety",
-    "Duplicates": "Duplikat",
+    "Duplicates": "Duplikaty",
     "matchedRecords": "Dopasowane rekordy",
     "noMatches": "Brak dopasowań",
     "basic": "Podstawowy",
@@ -496,10 +500,14 @@
     "unselectAll": "Odznacz wszystko",
     "splitHorizontal": "Podział w poziomie",
     "expandWindow": "Proszę rozwinąć okno",
-    "addFields": "Dodaj pole",
+    "addFields": "Dodaj pola",
     "addAttributes": "Proszę dodać atrybuty",
     "Insights": "Spostrzeżenia",
-    "matchings": "Dopasowania"
+    "matchings": "Dopasowania",
+    "openLink": "Proszę otworzyć link",
+    "Items": "Przedmioty",
+    "hideAll": "Proszę ukryć wszystko",
+    "Relations": "Relacje"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -550,11 +558,11 @@
     "inheritAllConfirmation": "Czy na pewno chcesz dziedziczyć wszystkie rekordy?",
     "unlinkAllConfirmation": "Czy na pewno chcesz odłączyć wszystkie rekordy?",
     "deleteAllConfirmation": "Czy na pewno chcesz usunąć wszystkie rekordy?",
-    "removeRecordConfirmation": "Czy na pewno chcesz usunąć wszystkie rekordy?",
+    "removeRecordConfirmation": "Czy na pewno chce Pan/Pani usunąć rekord?",
     "restoreRecordConfirmation": "Wybrany rekord zostanie przywrócony. Czy na pewno chcesz go przywrócić?",
     "unlinkRecordConfirmation": "Czy na pewno chcesz odłączyć powiązany rekord?",
     "removeRecordConfirmationHierarchically": "Wybrany rekord i jego rekordy potomne zostaną trwale usunięte. Czy na pewno chcesz je/usunąć?",
-    "removeSelectedRecordsConfirmation": "Czy na pewno chcesz przywrócić wybrane rekordy?",
+    "removeSelectedRecordsConfirmation": "Czy na pewno chce Pan/Pani usunąć wybrane rekordy?",
     "restoreSelectedRecordsConfirmation": "Czy na pewno chcesz przywrócić wybrane rekordy?",
     "massUpdateResultSingle": "{count} rekord został zaktualizowany",
     "noRecordsUpdated": "Nie zaktualizowano żadnych rekordów",
@@ -617,7 +625,7 @@
     "withArchived": "Z zarchiwizowanymi",
     "onlyDeleted": "Usunięte",
     "onlyFollowed": "Śledzone",
-    "onlyMyTeams": "Mój Zespół",
+    "onlyMyTeams": "Moje zespoły",
     "onlyBookmarked": "Dodany do zakładek",
     "multipleClassifications": "Wiele klasyfikacji"
   },
@@ -741,7 +749,7 @@
     "associateEverything": "Powiązanie każdego rekordu z każdym innym rekordem",
     "conditionalProperties": "Właściwości warunkowe",
     "start": "Start",
-    "end": "Zakończ",
+    "end": "Koniec",
     "action": "Akcja",
     "payload": "Dane wejściowe",
     "hash": "Hash",
@@ -753,7 +761,9 @@
     "goldenRecord": "Złota płyta",
     "sourceRecords": "Zapisy źródłowe",
     "primaryRecord": "Główny rekord",
-    "derivedRecords": "Rekordy pochodne"
+    "derivedRecords": "Rekordy pochodne",
+    "createdCountFilterActionExecution": "Stworzone przez Action Execution",
+    "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji"
   },
   "dashlets": {
     "Stream": "Aktywności",
@@ -832,7 +842,7 @@
     "assign": "{użytkownik} przypisał {entityType} {podmiot} do {odbiorca}",
     "assignThis": "{user} przypisał ten {entityType} do {assignee}.",
     "assignYou": "{user} przypisał {entityType} {podmiot} do Pana/Pani",
-    "unrelateThis": "{user} linked {relatedEntityType} {relatedEntity} with this {entityType}",
+    "unrelateThis": "{użytkownik} odłączony {relatedEntityType} {relatedEntity} z tego {entityType}.",
     "updateOneInThis": "{user} w tym {entityType} zaktualizowany w {relatedEntityType} {relatedEntity}",
     "updateFromToInThis": "{user} w tym {entityType} zaktualizowany w {relatedEntityType} {relatedEntity}",
     "updateOneIn": "{user} w {entityType} {podmiot} zaktualizowany w {relatedEntityType} {relatedEntity}",
@@ -1208,7 +1218,7 @@
     "entityCannotBeBookmarked": "Rekordy tego podmiotu nie mogą być dodawane do zakładek.",
     "integerValueValidationFailed": "Wartość całkowita dla pola/atrybutu \"%s\" musi zawierać się w przedziale od %s do %s",
     "singleClassificationAllowed": "Dozwolona jest tylko jedna klasyfikacja",
-    "dateIsInvalid": "Plik dla pola '%s' jest nieprawidłowy.",
+    "dateIsInvalid": "Data dla pola '%s' jest nieprawidłowa.",
     "datetimeIsInvalid": "Data-czas dla pola \"%s\" jest nieprawidłowa."
   },
   "queryBuilderFilter": {
