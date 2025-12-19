@@ -81,7 +81,9 @@
     "RoleScopeField": "Поле",
     "RoleScopeAttribute": "Атрибут",
     "Selection": "Выбор",
-    "SelectionRecord": "Запись о выборе"
+    "SelectionRecord": "Запись о выборе",
+    "ActionExecution": "Выполнение действий",
+    "ActionExecutionLog": "Журнал выполнения действий"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сущности основных данных",
@@ -150,7 +152,9 @@
     "Language": "Языки",
     "Action": "Действия",
     "Selection": "Подборки",
-    "SelectionRecord": "Записи о выборе"
+    "SelectionRecord": "Записи о выборе",
+    "ActionExecutionLog": "Журналы выполнения действий",
+    "ActionExecution": "Выполнение действий"
   },
   "labels": {
     "matchings": "Соответствия",
@@ -433,7 +437,7 @@
     "recalculateScript": "Сценарий пересчета",
     "color": "Цвет",
     "editLabels": "Редактирование этикеток",
-    "Duplicates": "Дубликат",
+    "Duplicates": "Дубликаты",
     "matchedRecords": "Сопоставленные записи",
     "noMatches": "Нет совпадений",
     "script": "Скрипт",
@@ -493,14 +497,18 @@
     "scopeFilter": "Канал",
     "Activities": "Действия",
     "accessManagement": "Управление доступом",
-    "Start": "Старт",
+    "Start": "Начните",
     "unitPart": "(Unit)",
     "unselectAll": "Отменить выбор Все",
     "splitHorizontal": "Горизонтальное разделение",
     "splitVertical": "Разделить по вертикали",
     "expandWindow": "Развернуть окно",
     "Insights": "Insights",
-    "view": "Просмотреть"
+    "view": "Просмотреть",
+    "openLink": "Открытая ссылка",
+    "Items": "Предметы",
+    "hideAll": "Скрыть все",
+    "Relations": "Отношения"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -522,7 +530,7 @@
     "inheritAllConfirmation": "Вы уверены, что хотите унаследовать все записи?",
     "unlinkAllConfirmation": "Вы действительно хотите убрать все связанные записи?",
     "deleteAllConfirmation": "Вы действительно хотите удалить все записи?",
-    "removeRecordConfirmation": "Вы действительно хотите удалить все записи?",
+    "removeRecordConfirmation": "Вы уверены, что хотите удалить запись?",
     "unlinkRecordConfirmation": "Вы действительно хотите убрать связанную запись?",
     "removeRecordConfirmationHierarchically": "Вы действительно хотите удалить записи иерархично?",
     "removeSelectedRecordsConfirmation": "Вы уверены, что хотите удалить выбранные записи?",
@@ -581,7 +589,7 @@
     "closePanelConfirmation": "Вы уверены, что хотите закрыть панель?",
     "removeRelatedRecords": "Вы уверены, что хотите удалить все записи для выбранной Ассоциации из текущей записи? Все связанные записи будут сохранены.",
     "queryHasErrors": "В Вашем запросе есть несколько ошибок",
-    "confirmInheritAllFromParent": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
+    "confirmInheritAllFromParent": "Вы уверены, что хотите, чтобы все элементы унаследовали значения полей (и атрибутов), а также отношения от элементов родительской записи? Существующие значения не будут заменены.",
     "fieldShouldAfterOrEqual": "{поле} должно быть после или равно {другому полю}.",
     "fieldShouldBeforeOrEqual": "{поле} должно быть раньше или равно {другому полю}.",
     "restoreRecordConfirmation": "Выбранная запись будет восстановлена. Вы уверены, что хотите восстановить ее?",
@@ -615,7 +623,7 @@
     "onlyMy": "Только мои",
     "onlyArchived": "Без неархивированных",
     "withArchived": "С архивными",
-    "onlyMyTeams": "Только моя группа",
+    "onlyMyTeams": "Мои команды",
     "onlyBookmarked": "В закладки",
     "multipleClassifications": "Несколько классификаций",
     "notActive": "Неактивный",
@@ -740,7 +748,7 @@
     "isPublic": "Публичный",
     "associateEverything": "Свяжите каждую запись с любой другой записью",
     "conditionalProperties": "Условные свойства",
-    "start": "Старт",
+    "start": "Начните",
     "action": "Действие",
     "payload": "Параметры",
     "hash": "Hash",
@@ -754,8 +762,10 @@
     "isActive": "Активный",
     "created": "Создано",
     "modified": "Изменено",
-    "end": "Завершение",
-    "emailAddress": "Эл. почта"
+    "end": "Конец",
+    "emailAddress": "Эл. почта",
+    "createdCountFilterActionExecution": "Создано с помощью Action Execution",
+    "updatedCountFilterActionExecution": "Обновлено выполнением действия"
   },
   "dashlets": {
     "Stream": "Действия",
@@ -813,7 +823,7 @@
     "postTargetSelfAndOthers": "{user} оставил сообщение для {target} и для себя",
     "composerUpdateThis": "{user}",
     "unrelate": "{user} отвязал {relatedEntityType} {relatedEntity} от {entityType} {entity}",
-    "unrelateThis": "{user} связал {relatedEntityType} {relatedEntity} с этим {entityType}",
+    "unrelateThis": "{пользователь} отсоединил {relatedEntityType} {relatedEntity} из этого {entityType}",
     "updateOneThis": "{user} обновил {entityType} {entity}",
     "updateFromToThis": "{user} обновил {entityType} {entity}",
     "updateOne": "{user} обновил {entityType} {entity}",
@@ -1210,7 +1220,7 @@
     "imageScaleHeightValidationFailed": "Высота изображения должна быть больше, чем %spx.",
     "imageMinSizeValidationFailed": "Размер файла должен быть больше %skb.",
     "imageMaxSizeValidationFailed": "Размер файла должен быть меньше %skb.",
-    "dateIsInvalid": "Файл для поля '%s' не допустим.",
+    "dateIsInvalid": "Дата для поля '%s' не является действительной.",
     "datetimeIsInvalid": "Дата-время для поля '%s' не является действительной."
   },
   "queryBuilderFilter": {
