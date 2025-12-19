@@ -3,7 +3,7 @@
     "type": "Тип",
     "entity": "Сущность",
     "isMultilang": "Многоязычность",
-    "required": "Обязательно",
+    "required": "Обязательный",
     "notNull": "Отключите нулевое значение",
     "readOnly": "Только для чтения",
     "protected": "Защищенный",
@@ -62,7 +62,7 @@
     "modifiedExtendedEnabled": "Запишите изменение как модификацию",
     "duplicateIgnore": "Не дублируется",
     "recordRelatedChangesInStream": "Запишите изменения в связанных записях для текущей сущности.",
-    "conditionalRequired": "Обязательно",
+    "conditionalRequired": "Обязательный",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
@@ -120,7 +120,7 @@
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
   },
   "labels": {
-    "resetToDefault": "Восстановить настройки по умолчанию",
+    "resetToDefault": "Восстановить по умолчанию",
     "relationManagement": "Управление отношениями",
     "conditionalProperties": "Условные свойства"
   },
