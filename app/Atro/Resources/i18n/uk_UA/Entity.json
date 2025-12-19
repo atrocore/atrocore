@@ -43,7 +43,9 @@
     "primaryEntity": "Первинна сутність",
     "matchDuplicates": "Пошук дублікатів",
     "matchMasterRecords": "Пошук мастер запису",
-    "role": "Роль"
+    "role": "Роль",
+    "hasStaging": "Увімкнути Сценізацію",
+    "stagingEntity": "Організаційна одиниця"
   },
   "options": {
     "type": {
@@ -55,6 +57,9 @@
     "sortDirection": {
       "asc": "За зростанням",
       "desc": "За спаданням"
+    },
+    "role": {
+      "staging": "Постановка"
     }
   },
   "labels": {
@@ -62,7 +67,8 @@
     "hierarchyManagement": "Управління ієрархією",
     "other": "Інше",
     "resetToDefault": "Скинути до значень за замовчуванням",
-    "attributes": "Атрибути"
+    "attributes": "Атрибути",
+    "mdm": "Управління основними даними"
   },
   "confirmations": {
     "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до заводських налаштувань?"
@@ -90,6 +96,8 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
     "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути.",
     "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності.",
-    "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр."
+    "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр.",
+    "derivativeWithSuchRoleExists": "Похідний інструмент з такою роллю вже існує.",
+    "derivativeFromDerivativeNotSupporting": "Похідний інструмент не може бути створений з іншого похідного інструменту"
   }
 }
