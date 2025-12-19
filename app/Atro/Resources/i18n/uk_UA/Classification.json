@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "classificationForToAnotherEntity": "Класифікація не може бути пов'язана з цим записом, оскільки він використовується для іншого об'єкта.",
-    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити."
+    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити.",
+    "entityNotAllowToChoose": "Суб'єкт господарювання не має права обирати"
   }
 }
