@@ -43,7 +43,9 @@
     "primaryEntity": "Первичная сущность",
     "matchDuplicates": "Поиск дубликатов",
     "matchMasterRecords": "Поиск мастер записи",
-    "role": "Роль"
+    "role": "Роль",
+    "hasStaging": "Включить постановку",
+    "stagingEntity": "Постановочная сущность"
   },
   "options": {
     "type": {
@@ -55,6 +57,9 @@
     "sortDirection": {
       "asc": "Восходящий",
       "desc": "Спуск"
+    },
+    "role": {
+      "staging": "Постановка"
     }
   },
   "labels": {
@@ -62,7 +67,8 @@
     "hierarchyManagement": "Управление иерархией",
     "other": "Другие",
     "resetToDefault": "Восстановить по умолчанию",
-    "attributes": "Атрибуты"
+    "attributes": "Атрибуты",
+    "mdm": "Управление основными данными"
   },
   "confirmations": {
     "resetToDefault": "Вы уверены, что хотите сбросить конфигурацию по умолчанию?"
@@ -90,6 +96,8 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} и {children} не должны быть оба в Отношениях, влияющих на дату/время изменения",
     "entityAlreadyHasAttributesInUse": "Параметр \"Имеет атрибут\" не может быть деактивирован. Пожалуйста, сначала удалите все связанные с ним атрибуты.",
     "entityHasDirectlyLinkedAttributes": "Уже есть атрибуты, связанные напрямую. Пожалуйста, удалите их из записей.",
-    "entityTypeIsNotSuitableForAssociates": "Этот тип сущности не может содержать параметр \"Has Associates\". Только \"Base\" и \"Hierarchy\" могут иметь его."
+    "entityTypeIsNotSuitableForAssociates": "Этот тип сущности не может содержать параметр \"Has Associates\". Только \"Base\" и \"Hierarchy\" могут иметь его.",
+    "derivativeWithSuchRoleExists": "Производная организация с такой ролью уже существует.",
+    "derivativeFromDerivativeNotSupporting": "Производная организация не может быть создана из другой производной организации"
   }
 }
