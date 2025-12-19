@@ -66,8 +66,8 @@
     "AuthToken": "Auth Token",
     "LayoutManager": "Layout Manager",
     "Admin": "Admin",
-    "MatchedRecord": "Übereinstimmende Datensätze",
-    "Matching": "Matchings",
+    "MatchedRecord": "Abgestimmter Datensatz",
+    "Matching": "Passend dazu",
     "ThumbnailType": "Thumbnail Type",
     "ProductHierarchy": "Produkt-Hierarchie",
     "Account": "Konto",
@@ -81,7 +81,9 @@
     "RoleScope": "Geltungsbereich",
     "RoleScopeField": "Feld",
     "Selection": "Auswahl",
-    "SelectionRecord": "Auswahldatensätze"
+    "SelectionRecord": "Auswahlsatz",
+    "ActionExecution": "Aktion Ausführung",
+    "ActionExecutionLog": "Aktion Ausführungsprotokoll"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
@@ -137,7 +139,7 @@
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Typen",
     "RoleScope": "Geltungsbereiche",
-    "Background": "Hintergrund",
+    "Background": "Hintergründe",
     "EntityRelation": "Entitätsbeziehungen",
     "DocumentFolder": "Dokumentenmappen",
     "AuthToken": "Authentifizierungs-Token",
@@ -149,8 +151,10 @@
     "Account": "Accounts",
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
-    "Selection": "Auswahl",
-    "SelectionRecord": "Auswahldatensätze"
+    "Selection": "Selektionen",
+    "SelectionRecord": "Auswahldatensätze",
+    "ActionExecution": "Ausführen von Aktionen",
+    "ActionExecutionLog": "Protokolle der Aktionsausführung"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
@@ -495,7 +499,7 @@
     "Admin": "Admin",
     "Administration": "Verwaltung",
     "editGroup": "Gruppe bearbeiten",
-    "Duplicates": "Duplikat",
+    "Duplicates": "Dupliziert",
     "Person": "Person",
     "Original": "Original",
     "basic": "Basic",
@@ -810,7 +814,9 @@
     "downloadUrl": "URL herunterladen",
     "start": "Start",
     "id": "ID",
-    "end": "Ende"
+    "end": "Ende",
+    "createdCountFilterActionExecution": "Erstellt von Action Execution",
+    "updatedCountFilterActionExecution": "Aktualisiert durch Ausführung der Aktion"
   },
   "tooltips": {
     "groupEnd": "Markieren Sie dieses Element, um das Ende der gruppierten Navigationselemente zu markieren. Alle Elemente nach diesem Element werden nicht mehr gruppiert."
@@ -874,7 +880,7 @@
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
-    "unrelateThis": "{user} verknüpfte {relatedEntityType} {relatedEntity} mit diese(r/m) {entityType}",
+    "unrelateThis": "{Benutzer} unverknüpft {relatedEntityType} {relatedEntity} von diesem {entityType}",
     "updateOneThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateFromToThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateOne": "{user} aktualisierte {entityType} {entity}",
