@@ -71,7 +71,7 @@
     "mdm": "Gestion des données de référence"
   },
   "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Les enregistrements de cette entité sont définitivement supprimés XX jours après la date de suppression.",
