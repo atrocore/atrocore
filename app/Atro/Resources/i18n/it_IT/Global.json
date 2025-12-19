@@ -81,7 +81,9 @@
     "ProductGroup": "Gruppo di prodotti",
     "Selection": "Selezione",
     "SelectionRecord": "Record di selezione",
-    "MasterDataEntity": "Entità di dati master"
+    "MasterDataEntity": "Entità di dati master",
+    "ActionExecution": "Esecuzione dell'azione",
+    "ActionExecutionLog": "Registro di esecuzione dell'azione"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -430,7 +432,12 @@
     "expandWindow": "Espandi la finestra",
     "Compare": "Confronta",
     "Standard": "Standard",
-    "addItem": "Aggiungi articolo"
+    "addItem": "Aggiungi articolo",
+    "openLink": "Aprire il link",
+    "view": "Vista",
+    "Items": "Articoli",
+    "hideAll": "Nascondi tutto",
+    "Relations": "Relazioni"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -907,7 +914,9 @@
     "ProductGroup": "Gruppi di prodotti",
     "Selection": "Selezioni",
     "SelectionRecord": "Registri di selezione",
-    "MasterDataEntity": "Entità di dati master"
+    "MasterDataEntity": "Entità di dati master",
+    "ActionExecution": "Esecuzioni di azioni",
+    "ActionExecutionLog": "Registri di esecuzione delle azioni"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
@@ -1062,7 +1071,9 @@
     "reverseAssociation": "Associazione inversa",
     "sorting": "Ordinamento",
     "associateEverything": "Associa ogni record a ogni altro record",
-    "conditionalProperties": "Proprietà condizionali"
+    "conditionalProperties": "Proprietà condizionali",
+    "createdCountFilterActionExecution": "Creato da Esecuzione azione",
+    "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione"
   },
   "tooltips": {
     "groupEnd": "Selezioni per utilizzare questo elemento per contrassegnare la fine degli elementi di navigazione raggruppati. Tutti gli elementi successivi a questa voce saranno disaggregati."
