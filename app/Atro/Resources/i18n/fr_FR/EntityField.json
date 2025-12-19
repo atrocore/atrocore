@@ -66,7 +66,8 @@
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
-    "conditionalDisableOptions": "Options désactivées"
+    "conditionalDisableOptions": "Options désactivées",
+    "urlLabel": "Label URL"
   },
   "tooltips": {
     "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l'entité liée pour la relation en amont.",
