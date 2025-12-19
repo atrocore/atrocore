@@ -81,7 +81,9 @@
     "NotificationTemplate": "Šablona oznámení",
     "Selection": "Výběr",
     "SelectionRecord": "Záznam o výběru",
-    "MasterDataEntity": "Subjekt kmenových dat"
+    "MasterDataEntity": "Subjekt kmenových dat",
+    "ActionExecution": "Provedení akce",
+    "ActionExecutionLog": "Protokol o provedení akce"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -150,7 +152,9 @@
     "Folder": "Složky",
     "Selection": "Výběry",
     "SelectionRecord": "Výběrové záznamy",
-    "MasterDataEntity": "Subjekty kmenových dat"
+    "MasterDataEntity": "Subjekty kmenových dat",
+    "ActionExecution": "Provádění akcí",
+    "ActionExecutionLog": "Protokoly o provádění akcí"
   },
   "labels": {
     "basic": "Základní",
@@ -499,7 +503,11 @@
     "addFields": "Přidat pole",
     "addAttributes": "Přidání atributů",
     "Insights": "Insights",
-    "matchings": "Shody"
+    "matchings": "Shody",
+    "openLink": "Otevřít odkaz",
+    "Items": "Položky",
+    "hideAll": "Skrýt vše",
+    "Relations": "Vztahy"
   },
   "fields": {
     "width": "Šířka",
@@ -606,7 +614,9 @@
     "goldenRecord": "Zlatý rekord",
     "sourceRecords": "Zdrojové záznamy",
     "derivedRecords": "Odvozené záznamy",
-    "primaryRecord": "Primární záznam"
+    "primaryRecord": "Primární záznam",
+    "createdCountFilterActionExecution": "Vytvořil Action Execution",
+    "updatedCountFilterActionExecution": "Aktualizováno provedením akce"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -805,7 +815,7 @@
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
+    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
     "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}",
     "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}",
     "ownThisSelf": "{uživatel} se nastavil jako vlastník pro tento {entityType}",
@@ -1238,7 +1248,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
@@ -1277,7 +1287,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {
