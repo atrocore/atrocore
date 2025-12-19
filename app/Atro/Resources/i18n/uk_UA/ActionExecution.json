@@ -8,7 +8,8 @@
     "finishedAt": "Завершено о",
     "createdCount": "Створено",
     "updatedCount": "Оновлено",
-    "failedCount": "Не вконано"
+    "failedCount": "Не вконано",
+    "logs": "Журнали"
   },
   "options": {
     "type": {
