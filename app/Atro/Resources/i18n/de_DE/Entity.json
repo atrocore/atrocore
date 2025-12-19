@@ -42,7 +42,8 @@
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
     "matchDuplicates": "Duplikate abgleichen",
-    "matchMasterRecords": "Stammdaten abgleichen"
+    "matchMasterRecords": "Stammdaten abgleichen",
+    "role": "Rolle"
   },
   "options": {
     "type": {
