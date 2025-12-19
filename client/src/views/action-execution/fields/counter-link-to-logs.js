@@ -20,12 +20,16 @@ Espo.define('views/action-execution/fields/counter-link-to-logs', 'views/fields/
             }
         }, Dep.prototype.events),
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
+        setup() {
+            Dep.prototype.setup.call(this);
 
-            if (['list', 'detail'].includes(this.mode) && this.model.get(this.name) && this.model.get(this.name) > 0) {
-                this.$el.find('.inline-container').html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
-            }
+            this.listScope = this.model.get('listScope');
+
+            this.listenTo(this, 'after:render', () => {
+                if (['list', 'detail'].includes(this.mode) && this.model.get(this.name) && this.model.get(this.name) > 0) {
+                    this.$el.find('.inline-container').html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
+                }
+            });
         },
 
         actionShowList() {

@@ -24,16 +24,14 @@ Espo.define('views/action-execution/fields/counter-link', 'views/fields/int',
             Dep.prototype.setup.call(this);
 
             this.listScope = this.model.get('listScope');
-        },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (['list', 'detail'].includes(this.mode) && this.model.get(this.name) && this.model.get(this.name) > 0) {
-                if (!(this.getConfig().get('clickhouse')?.active && this.model.get(this.name) > 65000)) {
-                    this.$el.find('.inline-container').html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
+            this.listenTo(this, 'after:render', () => {
+                if (['list', 'detail'].includes(this.mode) && this.model.get(this.name) && this.model.get(this.name) > 0) {
+                    if (!(this.getConfig().get('clickhouse')?.active && this.model.get(this.name) > 65000)) {
+                        this.$el.find('.inline-container').html(`<a href="javascript:" data-action="showList" data-name="${this.name}">${this.model.get(this.name)}</a>`);
+                    }
                 }
-            }
+            });
         },
 
         actionShowList() {
