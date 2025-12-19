@@ -3,7 +3,8 @@
     "incomingWebhook": "Webhook in arrivo",
     "scheduledJob": "Lavoro programmato",
     "workflow": "Flusso di lavoro",
-    "statusMessage": "Messaggio di stato"
+    "statusMessage": "Messaggio di stato",
+    "failedCount": "Fallito"
   },
   "options": {
     "type": {
