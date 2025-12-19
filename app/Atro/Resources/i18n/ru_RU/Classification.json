@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Сущность не может быть изменена.",
     "classificationForToAnotherEntity": "Классификация не может быть связана с этой записью, поскольку она используется для другой сущности.",
-    "classificationHasRecords": "Классификация со связанными записями не может быть удалена."
+    "classificationHasRecords": "Классификация со связанными записями не может быть удалена.",
+    "entityNotAllowToChoose": "Субъекту не разрешается выбирать"
   }
 }
