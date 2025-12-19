@@ -155,8 +155,11 @@ class Entity extends ReferenceData
 
         $stagingEntityId = null;
         foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
-            if ($scopeDefs['primaryEntityId'] ?? null === $code && $scopeDefs['role'] ?? 'staging' === 'staging') {
-                $stagingEntityId = $scopeName;
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
+                $role = $scopeDefs['role'] ?? 'staging';
+                if ($role === 'staging') {
+                    $stagingEntityId = $scopeName;
+                }
             }
         }
 
