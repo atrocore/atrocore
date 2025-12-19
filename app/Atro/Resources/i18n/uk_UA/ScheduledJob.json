@@ -8,7 +8,8 @@
     "executeNow": "Виконати зараз"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Неправильна конфігурація crontab"
+    "wrongCrontabConfiguration": "Неправильна конфігурація crontab",
+    "onlyOneJobTypeAllowed": "Допускається лише одна робота '%s'"
   },
   "options": {
     "type": {

@@ -66,8 +66,8 @@
     "AuthToken": "Auth Token",
     "LayoutManager": "Layout Manager",
     "Admin": "Admin",
-    "MatchedRecord": "Abgestimmter Datensatz",
-    "Matching": "Passend dazu",
+    "MatchedRecord": "Übereinstimmende Datensätze",
+    "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Type",
     "ProductHierarchy": "Produkt-Hierarchie",
     "Account": "Konto",
@@ -81,7 +81,7 @@
     "RoleScope": "Geltungsbereich",
     "RoleScopeField": "Feld",
     "Selection": "Auswahl",
-    "SelectionRecord": "Auswahlsatz"
+    "SelectionRecord": "Auswahldatensätze"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
@@ -137,7 +137,7 @@
     "Matching": "Matchings",
     "ThumbnailType": "Thumbnail Typen",
     "RoleScope": "Geltungsbereiche",
-    "Background": "Hintergründe",
+    "Background": "Hintergrund",
     "EntityRelation": "Entitätsbeziehungen",
     "DocumentFolder": "Dokumentenmappen",
     "AuthToken": "Authentifizierungs-Token",
@@ -149,7 +149,7 @@
     "Account": "Accounts",
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
-    "Selection": "Selektionen",
+    "Selection": "Auswahl",
     "SelectionRecord": "Auswahldatensätze"
   },
   "descriptions": {
@@ -495,7 +495,7 @@
     "Admin": "Admin",
     "Administration": "Verwaltung",
     "editGroup": "Gruppe bearbeiten",
-    "Duplicates": "Dupliziert",
+    "Duplicates": "Duplikat",
     "Person": "Person",
     "Original": "Original",
     "basic": "Basic",
@@ -874,7 +874,7 @@
     "postTargetSelf": "{user} notierte für sich selbst",
     "postTargetSelfAndOthers": "{user} notierte für {target} und für sich selbst",
     "unrelate": "{user} entfernte Verknüpfung von {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
-    "unrelateThis": "{Benutzer} unverknüpft {relatedEntityType} {relatedEntity} von diesem {entityType}",
+    "unrelateThis": "{user} verknüpfte {relatedEntityType} {relatedEntity} mit diese(r/m) {entityType}",
     "updateOneThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateFromToThis": "{user} aktualisierte diese(s/n) {entityType}",
     "updateOne": "{user} aktualisierte {entityType} {entity}",
