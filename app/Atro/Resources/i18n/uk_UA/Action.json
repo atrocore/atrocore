@@ -26,12 +26,15 @@
     "applyToPreselectedRecords": "Застосувати до попередньо вибраних записів",
     "updateType": "Тип оновлення",
     "updateScript": "Скрипт",
-    "updateFields": "Оновити поля"
+    "updateFields": "Оновити поля",
+    "searchEntity": "Об'єкт пошуку",
+    "executions": "Страти"
   },
   "labels": {
     "execute": "Виконати",
     "Parameters": "Параметри",
-    "fieldsPanel": "Оновлення"
+    "fieldsPanel": "Оновлення",
+    "allLogs": "Всі журнали"
   },
   "massActions": {
     "execute": "Виконати"
@@ -51,7 +54,8 @@
       "set": "Набір дій",
       "email": "Відправити лист",
       "webhook": "Веб-гачок",
-      "customCode": "Користувацький код"
+      "customCode": "Користувацький код",
+      "createOrUpdate": "Створити або оновити"
     },
     "usage": {
       "entity": "Кнопка на рівні сутності",
