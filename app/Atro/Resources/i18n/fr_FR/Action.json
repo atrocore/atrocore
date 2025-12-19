@@ -26,12 +26,15 @@
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
     "updateType": "Type de mise à jour",
     "updateScript": "Script",
-    "updateFields": "Mise à jour des champs"
+    "updateFields": "Mise à jour des champs",
+    "searchEntity": "Entité de recherche",
+    "executions": "Exécutions"
   },
   "labels": {
     "execute": "Exécuter",
     "Parameters": "Paramètres",
-    "fieldsPanel": "Mise à jour"
+    "fieldsPanel": "Mise à jour",
+    "allLogs": "Tous les journaux"
   },
   "massActions": {
     "execute": "Exécuter"
@@ -51,7 +54,8 @@
       "set": "Ensemble d'actions",
       "webhook": "Point d'encrage Web",
       "email": "Envoyer un e-mail",
-      "customCode": "Code personnalisé"
+      "customCode": "Code personnalisé",
+      "createOrUpdate": "Créer ou mettre à jour"
     },
     "usage": {
       "entity": "Bouton d'action de l'entité",
