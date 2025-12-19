@@ -3,7 +3,11 @@
     "incomingWebhook": "Входящий Webhook",
     "scheduledJob": "Задание планировщика",
     "workflow": "Рабочий процесс",
-    "statusMessage": "Сообщение о состоянии"
+    "statusMessage": "Сообщение о состоянии",
+    "startedAt": "Начато в",
+    "finishedAt": "Завершено в",
+    "createdCount": "Создано",
+    "failedCount": "Не выполнено"
   },
   "options": {
     "type": {
@@ -14,7 +18,8 @@
     },
     "status": {
       "done": "Выполнено",
-      "failed": "Не выполнено"
+      "failed": "Не выполнено",
+      "running": "Выполняется"
     }
   }
 }
