@@ -57,7 +57,8 @@
     "noAttributeConverterFound": "La conversione dell'attributo dal tipo '%s' a '%s' è impossibile.",
     "attributeValueIsInUse": "Il valore dell'attributo è in uso e non può essere cancellato.",
     "youCantChangeFieldOfTypeInAttribute": "Non può cambiare il tipo di attributo.",
-    "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già."
+    "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già.",
+    "entityNotAllowToChoose": "L'entità non può scegliere"
   },
   "labels": {
     "Classification": "Classificazione",
