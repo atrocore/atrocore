@@ -662,6 +662,10 @@
             {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "stagingEntityId"
             }
           ]
         }

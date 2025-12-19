@@ -432,6 +432,19 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
+            } elseif ($field === 'hasStaging') {
+                if (!empty($entity->get($field))) {
+                    $staging = $this->get();
+                    $staging->set('code', $entity->get('code') . 'Staging');
+                    $staging->set('name', $entity->get('code') . 'Staging');
+                    $staging->set('namePlural', $entity->get('code') . 'Stagings');
+                    $staging->set('primaryEntityId', $entity->id);
+                    $staging->set('role', 'staging');
+                    $this->save($staging);
+                } else {
+                    $stagingEntity = $this->get($entity->get('stagingEntityId'));
+                    $this->deleteEntity($stagingEntity);
+                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 
