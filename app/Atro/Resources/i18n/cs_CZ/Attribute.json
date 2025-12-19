@@ -97,6 +97,7 @@
     "attributeWithSuchCodeAlreadyExist": "Atribut s takovým kódem již existuje.",
     "attributeIsUsedInProducts": "Atribut se používá v produktech. Nejprve prosím aktualizujte produkty.",
     "attributeIsUsedInClassifications": "Atribut se používá v klasifikacích. Nejprve prosím aktualizujte klasifikace.",
-    "invalidType": "Typ atributu '{type}' je neplatný"
+    "invalidType": "Typ atributu '{type}' je neplatný",
+    "entityNotAllowToChoose": "Subjekt si nemůže vybrat"
   }
 }
