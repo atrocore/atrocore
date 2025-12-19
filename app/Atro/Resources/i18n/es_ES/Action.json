@@ -26,12 +26,15 @@
     "updateScript": "Guión",
     "updateFields": "Campos de actualización",
     "applyToPreselectedRecords": "Aplicar a registros preseleccionados",
-    "updateType": "Tipo de actualización"
+    "updateType": "Tipo de actualización",
+    "searchEntity": "Entidad de búsqueda",
+    "executions": "Ejecuciones"
   },
   "labels": {
     "execute": "Ejecute",
     "Parameters": "Parámetros",
-    "fieldsPanel": "Guardar"
+    "fieldsPanel": "Guardar",
+    "allLogs": "Todos los registros"
   },
   "massActions": {
     "execute": "Ejecute"
@@ -59,7 +62,8 @@
       "email": "Enviar correo electrónico",
       "update": "Guardar",
       "create": "Crear",
-      "delete": "Borrar"
+      "delete": "Borrar",
+      "createOrUpdate": "Crear o actualizar"
     },
     "executeAs": {
       "system": "Sistema",
