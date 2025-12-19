@@ -44,7 +44,8 @@
     "hasStaging": "Povolení etapizace",
     "stagingEntity": "Subjekt etapizace",
     "matchDuplicates": "Shoda duplicit",
-    "matchMasterRecords": "Hlavní záznamy o zápasech"
+    "matchMasterRecords": "Hlavní záznamy o zápasech",
+    "role": "Role"
   },
   "options": {
     "type": {
