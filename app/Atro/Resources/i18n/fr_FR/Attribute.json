@@ -36,7 +36,7 @@
     "attributePanel": "Panneau d'attributs",
     "conditionalVisible": "Visible",
     "fullWidth": "Largeur totale",
-    "conditionalRequired": "Exigée",
+    "conditionalRequired": "Requis",
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
     "channel": "Canal",
