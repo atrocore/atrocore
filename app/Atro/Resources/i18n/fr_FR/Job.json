@@ -6,9 +6,9 @@
     "priority": "Priorité",
     "handler": "Gestionnaire",
     "payload": "Payload",
-    "scheduledJob": "Tâche programmée",
+    "scheduledJob": "Tâche planifiée",
     "message": "Message",
-    "startedAt": "Commencé à",
+    "startedAt": "Démarré à",
     "endedAt": "Terminé le"
   },
   "labels": {
