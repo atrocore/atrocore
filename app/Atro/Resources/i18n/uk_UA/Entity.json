@@ -42,7 +42,8 @@
     "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
     "primaryEntity": "Первинна сутність",
     "matchDuplicates": "Пошук дублікатів",
-    "matchMasterRecords": "Пошук мастер запису"
+    "matchMasterRecords": "Пошук мастер запису",
+    "role": "Роль"
   },
   "options": {
     "type": {
