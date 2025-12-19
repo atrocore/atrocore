@@ -66,7 +66,8 @@
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",
-    "conditionalDisableOptions": "Отключенные опции"
+    "conditionalDisableOptions": "Отключенные опции",
+    "urlLabel": "Ярлык URL"
   },
   "tooltips": {
     "foreignCode": "Это кодовое имя используется для поля, созданного в связанной сущности для обратной связи.",
