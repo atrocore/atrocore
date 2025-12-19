@@ -40,14 +40,20 @@
     "textFilterFields": "Campi del filtro di testo",
     "nonDuplicatableFields": "Campi non duplicati",
     "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
-    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione"
+    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
+    "role": "Ruolo",
+    "hasStaging": "Abilita la messa in scena",
+    "stagingEntity": "Entità di stazionamento",
+    "matchDuplicates": "Abbinare i duplicati",
+    "matchMasterRecords": "Registri master delle partite"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",
     "attributes": "Attributi",
     "accessManagement": "Gestione degli accessi",
     "hierarchyManagement": "Gestione della gerarchia",
-    "other": "Altro"
+    "other": "Altro",
+    "mdm": "Gestione dei dati master"
   },
   "options": {
     "type": {
@@ -59,6 +65,9 @@
     "sortDirection": {
       "asc": "In salita",
       "desc": "In discesa"
+    },
+    "role": {
+      "staging": "Stabilizzazione"
     }
   },
   "confirmations": {
@@ -87,6 +96,8 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{genitori} e {figli} non dovrebbero essere entrambi nelle Relazioni che effettuano la data/ora di modifica.",
     "entityAlreadyHasAttributesInUse": "Il parametro Has Attribute non può essere disattivato. Per favore, rimuova prima tutti gli attributi correlati.",
     "entityHasDirectlyLinkedAttributes": "Ci sono già degli attributi collegati direttamente. La preghiamo di rimuoverli dai record.",
-    "entityTypeIsNotSuitableForAssociates": "Questo tipo di entità non può contenere il parametro \"Ha associati\". Solo \"Base\" e \"Gerarchia\" possono averlo."
+    "entityTypeIsNotSuitableForAssociates": "Questo tipo di entità non può contenere il parametro \"Ha associati\". Solo \"Base\" e \"Gerarchia\" possono averlo.",
+    "derivativeWithSuchRoleExists": "L'entità derivata con tale ruolo esiste già.",
+    "derivativeFromDerivativeNotSupporting": "L'entità derivata non può essere creata da un'altra entità derivata."
   }
 }
