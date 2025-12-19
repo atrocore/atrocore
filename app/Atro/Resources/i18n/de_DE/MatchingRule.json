@@ -17,5 +17,8 @@
       "and": "AND",
       "or": "OR"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Der Code darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten."
   }
 }
