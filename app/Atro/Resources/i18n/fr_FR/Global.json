@@ -104,7 +104,9 @@
     "goldenRecord": "Enregistrement d'or",
     "sourceRecords": "Éléments source",
     "primaryRecord": "Enregistrement pincipal",
-    "derivedRecords": "Enregistrements dérivés"
+    "derivedRecords": "Enregistrements dérivés",
+    "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
+    "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -168,7 +170,7 @@
     "SystemIcon": "Icône du système",
     "MatchedRecord": "Enregistrement apparié",
     "Matching": "Appariement",
-    "ThumbnailType": "Types de vignettes",
+    "ThumbnailType": "Type de vignette",
     "IncomingWebhook": "Webhook entrant",
     "RoleScopeAttributePanel": "Panneau d'attributs",
     "AttributePanel": "Panneau d'attributs",
@@ -188,7 +190,9 @@
     "LayoutProfile": "Profil de Disposition",
     "Selection": "Sélection",
     "SelectionRecord": "Élément de sélection",
-    "MasterDataEntity": "Entité de reférence"
+    "MasterDataEntity": "Entité de reférence",
+    "ActionExecution": "Exécution de l'action",
+    "ActionExecutionLog": "Journal d'exécution de l'action"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -461,7 +465,7 @@
     "associatingTitle": "Lié à l'élément actuel en tant que :name :",
     "recalculateScript": "Recalculer le script",
     "editLabels": "Modifier les libellés",
-    "Duplicates": "Dupliquer",
+    "Duplicates": "Doublons",
     "matchedRecords": "Enregistrements appariés",
     "noMatches": "Aucune correspondance",
     "phpCode": "Code PHP",
@@ -474,7 +478,7 @@
     "jobManager": "Gestionnaire des tâches",
     "massActionDelegatedToJm": "Votre action a été déléguée avec succès au gestionnaire des tâches.",
     "massActionJobName": "%s sur l'entité '%s' (%s sur %s)",
-    "inheritedFromParent": "Hériter du parent",
+    "inheritedFromParent": "Héritée du parent",
     "notInheritedFromParent": "Non hérité du parent",
     "showKanban": "Voir le kanban",
     "Added": "Ajouté",
@@ -514,7 +518,7 @@
     "actionBookmark": "Cliquer pour ajouter un signet",
     "actionUnbookmark": "Marqué d'un signet, Cliquez pour supprimer le signet",
     "actionOpenFilter": "Ouvrir le Filter",
-    "sidebarUnpin": "L'extension automatique du panneau est active",
+    "sidebarUnpin": "L'extension automatique du panneau est inactive",
     "sidebarPin": "L'extension automatique du panneau est active",
     "sidebarExpand": "Cliquez pour agrandir",
     "sidebarCollapse": "Cliquez pour réduire",
@@ -537,7 +541,10 @@
     "unselectAll": "Désélectionner tout",
     "addFields": "Ajouter des champs",
     "addAttributes": "Ajouter des attributs",
-    "matchings": "Appariements"
+    "matchings": "Appariements",
+    "openLink": "Ouvrir le lien",
+    "Items": "Articles",
+    "hideAll": "Cacher tout"
   },
   "insightsPanels": {
     "summary": "Sommaire",
@@ -584,7 +591,7 @@
     "inheritAllConfirmation": "Êtes-vous sûr de vouloir hériter de tous les enregistrements ?",
     "unlinkAllConfirmation": "Êtes-vous sûr de vouloir dissocier tous les enregistrements ?",
     "deleteAllConfirmation": "Êtes-vous sûr de vouloir supprimer tous les enregistrements ?",
-    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer tous les enregistrements ?",
+    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer l'enregistrement ?",
     "unlinkRecordConfirmation": "Êtes-vous sûr de vouloir dissocier l'enregistrement lié ?",
     "removeRecordConfirmationHierarchically": "L'enregistrement sélectionné et ses enregistrements enfants seront définitivement supprimés. Êtes-vous sûr de vouloir les supprimer ?",
     "massUpdateResultSingle": "{count} enregistrement a été mis à jour",
@@ -615,7 +622,7 @@
     "resetAllToDefaultConfirm": "Êtes-vous sûr de vouloir réinitialiser toutes les dispositions aux valeurs par défaut pour :name ?",
     "fieldShouldAfterOrEqual": "{field} doit être postérieur ou égal à {otherField}",
     "fieldShouldBeGreater": "{field} ne doit pas être inférieur à {value}",
-    "removeSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir restaurer les enregistrements sélectionnés ?",
+    "removeSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés ?",
     "massRemoveResult": "{count} enregistrements ont été supprimés",
     "confirmInheritAllForChildren": "Êtes-vous sûr de vouloir que tous les éléments enfants héritent des valeurs de champ (et d'attribut) ainsi que des relations de cet élément parent ? Les valeurs existantes ne seront pas remplacées.",
     "confirmInheritAllFromParent": "Êtes-vous sûr de vouloir que tous les éléments héritent des valeurs des champs (et des attributs) ainsi que des relations des éléments de l'enregistrement parent ? Les valeurs existantes ne seront pas remplacées.",
@@ -633,7 +640,7 @@
     "massUnfollowResultSingle": "{count} enregistrement n'est pas suivi",
     "massFollowZeroResult": "Rien n'a été suivi",
     "closePanelConfirmation": "Êtes-vous sûr de vouloir fermer le panneau ?",
-    "removeRelatedRecords": "Êtes-vous sûr de vouloir retirer tous les produits de l'association sélectionnée du produit actuel ? Tous les produits associés seront conservés.",
+    "removeRelatedRecords": "Êtes-vous sûr de vouloir supprimer tous les enregistrements de l'association sélectionnée dans l'enregistrement actuel ? Tous les enregistrements liés seront conservés.",
     "queryHasErrors": "Il y a des erreurs dans votre requête",
     "jobAdded": "La tâche a été ajouté avec succès au gestionnaire de tâche",
     "linked": "Les enregistrements ont été associés avec succès.",
@@ -695,7 +702,7 @@
     "PasswordChangeRequest": "Demandes de changement de mot de passe",
     "HtmlSanitizer": "Filtres HTML",
     "SystemIcon": "Icônes du système",
-    "EntityField": "Champ de l'entité",
+    "EntityField": "Champs d'entité",
     "EntityRelation": "Relations d'entités",
     "Bookmark": "Signets",
     "AccountGroup": "Groupes de comptes",
@@ -708,7 +715,7 @@
     "AttributePanel": "Panneaux d'attributs",
     "RoleScope": "Domaine d'application",
     "UserProfile": "Profils des utilisateurs",
-    "Background": "Arrière Plan",
+    "Background": "Arrière-plans",
     "Entity": "Entités",
     "Language": "Langues",
     "LayoutProfile": "Profils de mise en page",
@@ -716,7 +723,9 @@
     "RoleScopeField": "Champs",
     "Selection": "Sélections",
     "SelectionRecord": "Elements de sélection",
-    "MasterDataEntity": "Entités de reference"
+    "MasterDataEntity": "Entités de reference",
+    "ActionExecution": "Exécution des actions",
+    "ActionExecutionLog": "Journaux d'exécution des actions"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
@@ -1153,7 +1162,7 @@
     "singleClassificationAllowed": "Une seule classification est autorisée",
     "moreThanOneClassification": "Certains enregistrements ont plus d'une classification.",
     "notAllowedOption": "L'option \"%s\" n'est pas autorisée pour \"%s\".",
-    "dateIsInvalid": "Le fichier pour le champ '%s' n'est pas valide.",
+    "dateIsInvalid": "La date du champ '%s' n'est pas valide.",
     "datetimeIsInvalid": "La date et l'heure du champ \"%s\" ne sont pas valides.",
     "notUniqueRecordField": "L'enregistrement ne peut pas être sauvegardé, l'enregistrement avec un tel \"%s\" existe déjà.",
     "entityCannotBeBookmarked": "Les enregistrements de cette entité ne peuvent pas être mis en signet.",
