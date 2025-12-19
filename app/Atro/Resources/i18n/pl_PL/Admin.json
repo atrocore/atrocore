@@ -91,7 +91,8 @@
     "selection": "Wybór",
     "navigation": "Nawigacja",
     "insights": "Spostrzeżenia",
-    "summary": "Podsumowanie"
+    "summary": "Podsumowanie",
+    "selectionRelations": "Relacje selekcji"
   },
   "fieldTypes": {
     "color": "Kolor",
