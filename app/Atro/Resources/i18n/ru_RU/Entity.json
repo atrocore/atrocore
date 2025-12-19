@@ -42,7 +42,8 @@
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
     "matchDuplicates": "Поиск дубликатов",
-    "matchMasterRecords": "Поиск мастер записи"
+    "matchMasterRecords": "Поиск мастер записи",
+    "role": "Роль"
   },
   "options": {
     "type": {
