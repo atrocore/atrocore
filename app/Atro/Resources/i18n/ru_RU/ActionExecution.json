@@ -7,7 +7,9 @@
     "startedAt": "Начато в",
     "finishedAt": "Завершено в",
     "createdCount": "Создано",
-    "failedCount": "Не выполнено"
+    "failedCount": "Не выполнено",
+    "logs": "Журналы",
+    "updatedCount": "Обновленный"
   },
   "options": {
     "type": {
