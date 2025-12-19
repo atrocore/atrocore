@@ -106,7 +106,8 @@
     "primaryRecord": "Enregistrement pincipal",
     "derivedRecords": "Enregistrements dérivés",
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
-    "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action"
+    "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
+    "field": "Champ"
   },
   "scopeNames": {
     "Classification": "Classification",
@@ -544,7 +545,9 @@
     "matchings": "Appariements",
     "openLink": "Ouvrir le lien",
     "Items": "Articles",
-    "hideAll": "Cacher tout"
+    "hideAll": "Cacher tout",
+    "Relations": "Relations",
+    "view": "Voir"
   },
   "insightsPanels": {
     "summary": "Sommaire",
