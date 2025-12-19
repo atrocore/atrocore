@@ -66,7 +66,8 @@
     "conditionalVisible": "Viditelné",
     "conditionalReadOnly": "Pouze pro čtení",
     "conditionalProtected": "Chráněné stránky",
-    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením"
+    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením",
+    "urlLabel": "Označení URL"
   },
   "tooltips": {
     "foreignCode": "Tento kódový název se používá pro pole vytvořené v související entitě pro zpětný vztah.",
