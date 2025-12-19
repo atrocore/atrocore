@@ -97,6 +97,7 @@
     "attributeWithSuchCodeAlreadyExist": "Atrybut z takim kodem już istnieje.",
     "attributeIsUsedInProducts": "Atrybut jest używany w produktach. Proszę najpierw zaktualizować produkty.",
     "attributeIsUsedInClassifications": "Atrybut jest używany w klasyfikacjach. Proszę najpierw zaktualizować klasyfikacje.",
-    "invalidType": "Atrybut type '{type}' jest nieprawidłowy"
+    "invalidType": "Atrybut type '{type}' jest nieprawidłowy",
+    "entityNotAllowToChoose": "Podmiot nie może wybrać"
   }
 }
