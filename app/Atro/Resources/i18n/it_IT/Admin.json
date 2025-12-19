@@ -174,7 +174,8 @@
     "navigation": "Navigazione",
     "insights": "Approfondimenti",
     "summary": "Sommario",
-    "selection": "Selezione"
+    "selection": "Selezione",
+    "selectionRelations": "Relazioni di selezione"
   },
   "fieldTypes": {
     "color": "Colore",
