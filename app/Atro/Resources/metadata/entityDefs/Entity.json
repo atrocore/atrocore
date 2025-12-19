@@ -619,6 +619,54 @@
         }
       }
     },
+    "hasStaging": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "stagingEntity": {
+      "type": "link",
+      "view": "views/fields/link",
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasStaging"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
     "primaryEntity": {
       "type": "link",
       "view": "views/entity/fields/primary-entity",
@@ -899,6 +947,10 @@
   },
   "links": {
     "primaryEntity": {
+      "type": "belongsTo",
+      "entity": "Entity"
+    },
+    "stagingEntity": {
       "type": "belongsTo",
       "entity": "Entity"
     },

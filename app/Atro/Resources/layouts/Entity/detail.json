@@ -172,6 +172,14 @@
         {
           "name": "role"
         }
+      ],
+      [
+        {
+          "name": "hasStaging"
+        },
+        {
+          "name": "stagingEntity"
+        }
       ]
     ]
   },

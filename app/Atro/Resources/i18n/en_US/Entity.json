@@ -42,6 +42,8 @@
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
     "role": "Role",
+    "hasStaging": "Enable Staging",
+    "stagingEntity": "Staging Entity",
     "matchDuplicates": "Match Duplicates",
     "matchMasterRecords": "Match Master Records"
   },
@@ -91,6 +93,7 @@
     "linkAttributesWithClassificationAutomatically": "If an attribute is directly linked to a record, and that record is linked to a classification, then the attribute will also be linked to that classification."
   },
   "exceptions": {
+    "derivativeWithSuchRoleExists": "Derivative entity with such role already exists.",
     "derivativeFromDerivativeNotSupporting": "Derivative entity cannot be created from other derivative entity",
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
     "entityAlreadyHasAttributesInUse": "Has Attribute param cannot be deactivated. Please, remove all related attributes first.",

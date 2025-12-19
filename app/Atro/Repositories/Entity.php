@@ -153,6 +153,13 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
+        $stagingEntityId = null;
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if ($scopeDefs['primaryEntityId'] ?? null === $code && $scopeDefs['role'] ?? 'staging' === 'staging') {
+                $stagingEntityId = $scopeName;
+            }
+        }
+
         return array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
@@ -164,7 +171,10 @@ class Entity extends ReferenceData
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
             'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords'])
+            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords']),
+            'hasStaging'            => !empty($stagingEntityId),
+            'stagingEntityId'       => $stagingEntityId,
+            'stagingEntityName'     => empty($stagingEntityId) ? null : $this->getLanguage()->translate($stagingEntityId, 'scopeNames'),
         ]);
     }
 
@@ -260,6 +270,15 @@ class Entity extends ReferenceData
 
         // create derived entity
         if (!empty($entity->get('primaryEntityId'))) {
+            foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
+                if (
+                    $scopeDefs['primaryEntityId'] ?? null === $entity->get('primaryEntityId')
+                && $entity->get('role') === $scopeDefs['role'] ?? 'staging'
+                ) {
+                    throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+                }
+            }
+
             $data = [
                 'primaryEntityId' => $entity->get('primaryEntityId'),
                 'role'            => $entity->get('role'),
