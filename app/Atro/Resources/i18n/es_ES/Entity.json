@@ -40,7 +40,8 @@
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
-    "primaryEntity": "Entidad primaria"
+    "primaryEntity": "Entidad primaria",
+    "role": "Rol"
   },
   "options": {
     "type": {
@@ -58,7 +59,7 @@
     "accessManagement": "Access Management",
     "hierarchyManagement": "Gestión jerárquica",
     "other": "Otros",
-    "resetToDefault": "Restablecer a (por defecto)",
+    "resetToDefault": "Aplicar a valores por defecto",
     "attributes": "Atributos"
   },
   "confirmations": {
