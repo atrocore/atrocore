@@ -507,7 +507,8 @@
     "openLink": "Proszę otworzyć link",
     "Items": "Przedmioty",
     "hideAll": "Proszę ukryć wszystko",
-    "Relations": "Relacje"
+    "Relations": "Relacje",
+    "view": "Zobacz"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -763,7 +764,8 @@
     "primaryRecord": "Główny rekord",
     "derivedRecords": "Rekordy pochodne",
     "createdCountFilterActionExecution": "Stworzone przez Action Execution",
-    "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji"
+    "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji",
+    "field": "Pole"
   },
   "dashlets": {
     "Stream": "Aktywności",
