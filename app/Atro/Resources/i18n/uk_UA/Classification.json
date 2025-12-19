@@ -5,9 +5,9 @@
     "release": "Реліз",
     "synonyms": "Синоніми",
     "code": "Код",
-    "isActive": "Активний",
+    "isActive": "Активні",
     "classifications": "Класифікації",
-    "classificationAttributes": "Атрибути класифікації",
+    "classificationAttributes": "Класифікаційні атрибути",
     "type": "Тип"
   },
   "options": {
