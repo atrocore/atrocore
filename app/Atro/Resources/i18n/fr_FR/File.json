@@ -18,7 +18,7 @@
     "uploadUrl": "URL"
   },
   "labels": {
-    "Upload": "Télécharger",
+    "Upload": "Importer",
     "zipDownloadNotification": "Vous pouvez télécharger <a href=\"?entryPoint=download&amp;id=%s\" target=\"_blank\"></a> le fichier",
     "Preview": "Aperçu",
     "retry": "Réessayer ?",
