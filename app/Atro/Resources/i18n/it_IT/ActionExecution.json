@@ -4,7 +4,12 @@
     "scheduledJob": "Lavoro programmato",
     "workflow": "Flusso di lavoro",
     "statusMessage": "Messaggio di stato",
-    "failedCount": "Fallito"
+    "failedCount": "Fallito",
+    "startedAt": "Iniziato a",
+    "finishedAt": "Finito a",
+    "logs": "Registri",
+    "createdCount": "Creato",
+    "updatedCount": "Aggiornato"
   },
   "options": {
     "type": {
@@ -14,7 +19,9 @@
       "workflow": "Flusso di lavoro"
     },
     "status": {
-      "failed": "Fallito"
+      "failed": "Fallito",
+      "running": "In esecuzione",
+      "done": "Fatto"
     }
   }
 }
