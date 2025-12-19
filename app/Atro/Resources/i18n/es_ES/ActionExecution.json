@@ -3,7 +3,11 @@
     "incomingWebhook": "Webhook entrante",
     "scheduledJob": "Tarea Programada",
     "workflow": "Flujo de trabajo",
-    "statusMessage": "Mensaje de estado"
+    "statusMessage": "Mensaje de estado",
+    "startedAt": "Comenzó en",
+    "finishedAt": "Terminado en",
+    "logs": "Registros",
+    "updatedCount": "Actualizado"
   },
   "options": {
     "type": {
@@ -13,7 +17,8 @@
       "workflow": "Flujo de trabajo"
     },
     "status": {
-      "failed": "Fallida"
+      "failed": "Fallida",
+      "running": "Correr"
     }
   }
 }
