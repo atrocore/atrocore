@@ -15,7 +15,7 @@
     "progressLog": "Progression des logs",
     "System": "Système",
     "Settings": "Paramètres",
-    "Scheduled Jobs": "Tâches programmées",
+    "Scheduled Jobs": "Tâches planifiées",
     "Action": "Actions",
     "Locale": "Paramètre régionaux",
     "Clear Cache": "Vider le cache du système",
@@ -198,7 +198,7 @@
     "matchings": "Les appariements permettent d’identifier des enregistrements similaires entre différentes entités à l’aide de règles définies par l’utilisateur.",
     "incomingWebhook": "Les webhooks entrants permettent de déclencher des actions prédéfinies via des requêtes HTTP externes, avec des options de sécurité comme la vérification par hachage et la liste blanche d’adresses IP.",
     "thumbnailTypes": "Gérer les types de vignettes pour modifier la largeur ou la hauteur d'une vignette, ou pour en créer une nouvelle.",
-    "scheduledJob": "Gérer les tâches progammées du système",
+    "scheduledJob": "Gérer les tâches planifiées du système",
     "jobs": "Gérer les tâches du système qui s'exécutent en arrière-plan sans interaction directe avec l'utilisateur.",
     "apiRequest": "Utiliser cette fonction pour créer rapidement des structures de données complexes telles que des flux d'importation ou d'exportation configurés.",
     "style": "Créer, mettre à jour et personnaliser de nouveaux styles afin d'apporter des ajustements aux feuilles de style standard"
