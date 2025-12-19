@@ -507,7 +507,8 @@
     "openLink": "Otevřít odkaz",
     "Items": "Položky",
     "hideAll": "Skrýt vše",
-    "Relations": "Vztahy"
+    "Relations": "Vztahy",
+    "view": "Zobrazit"
   },
   "fields": {
     "width": "Šířka",
@@ -616,7 +617,8 @@
     "derivedRecords": "Odvozené záznamy",
     "primaryRecord": "Primární záznam",
     "createdCountFilterActionExecution": "Vytvořil Action Execution",
-    "updatedCountFilterActionExecution": "Aktualizováno provedením akce"
+    "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
+    "field": "Pole"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
