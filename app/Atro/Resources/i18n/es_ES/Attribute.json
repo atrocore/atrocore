@@ -97,6 +97,7 @@
     "attributeWithSuchCodeAlreadyExist": "Ya existen atributos con ese código.",
     "attributeIsUsedInProducts": "El atributo se utiliza en los productos. Por favor, actualice primero los productos.",
     "attributeIsUsedInClassifications": "El atributo se utiliza en las clasificaciones. Por favor, actualice primero las clasificaciones.",
-    "invalidType": "El tipo de atributo '{type}' no es válido"
+    "invalidType": "El tipo de atributo '{type}' no es válido",
+    "entityNotAllowToChoose": "La entidad no puede elegir"
   }
 }
