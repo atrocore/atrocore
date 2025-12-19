@@ -40,8 +40,7 @@
     "textFilterFields": "Campi del filtro di testo",
     "nonDuplicatableFields": "Campi non duplicati",
     "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
-    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
-    "derivedEntities": "Entità derivate"
+    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",

@@ -41,7 +41,7 @@
     "deleteValuesAfterUnlinkingClassification": "Delete attribute values after unlinking classifications",
     "linkAttributesWithClassificationAutomatically": "Link Attributes with the Classification automatically",
     "primaryEntity": "Primary Entity",
-    "derivedEntities": "Derived Entities",
+    "role": "Role",
     "matchDuplicates": "Match Duplicates",
     "matchMasterRecords": "Match Master Records"
   },
@@ -55,6 +55,9 @@
     "sortDirection": {
       "asc": "Ascending",
       "desc": "Descending"
+    },
+    "role": {
+      "staging": "Staging"
     }
   },
   "labels": {
@@ -62,7 +65,8 @@
     "hierarchyManagement": "Hierarchy management",
     "other": "Other",
     "resetToDefault": "Reset to default",
-    "attributes": "Attributes"
+    "attributes": "Attributes",
+    "mdm": "Master Data Management"
   },
   "confirmations": {
     "resetToDefault": "Are you sure you want to reset configuration to default?"

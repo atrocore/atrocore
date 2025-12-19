@@ -116,23 +116,12 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
-        if ($link === 'derivedEntities') {
-            $selectParams['whereClause'] = [['primaryEntityId=' => $entity->get('id')]];
-            return $this->getEntityManager()->getRepository('Entity')->find($selectParams);
-        }
-
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
         if ($relationName === 'fields') {
-            $params['offset'] = 0;
-            $params['limit'] = \PHP_INT_MAX;
-            return count($this->findRelated($entity, $relationName, $params));
-        }
-
-        if ($relationName === 'derivedEntities') {
             $params['offset'] = 0;
             $params['limit'] = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -273,6 +262,7 @@ class Entity extends ReferenceData
         if (!empty($entity->get('primaryEntityId'))) {
             $data = [
                 'primaryEntityId' => $entity->get('primaryEntityId'),
+                'role'            => $entity->get('role'),
                 'isCustom'        => true
             ];
 
