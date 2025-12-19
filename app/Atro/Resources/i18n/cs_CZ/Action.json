@@ -26,12 +26,15 @@
     "updateScript": "Skript",
     "updateFields": "Aktualizace polí",
     "applyToPreselectedRecords": "Použít na předem vybrané záznamy",
-    "updateType": "Typ aktualizace"
+    "updateType": "Typ aktualizace",
+    "searchEntity": "Vyhledávací subjekt",
+    "executions": "Exekuce"
   },
   "labels": {
     "execute": "Provést",
     "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizace"
+    "fieldsPanel": "Aktualizace",
+    "allLogs": "Všechny protokoly"
   },
   "massActions": {
     "execute": "Provést"
@@ -59,7 +62,8 @@
       "email": "Odeslat e-mail",
       "update": "Aktualizace",
       "create": "Vytvořit",
-      "delete": "Odstranit"
+      "delete": "Odstranit",
+      "createOrUpdate": "Vytvořit nebo aktualizovat"
     },
     "executeAs": {
       "system": "Systém",
