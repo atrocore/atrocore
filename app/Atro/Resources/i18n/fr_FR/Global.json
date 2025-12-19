@@ -539,7 +539,8 @@
     "addAttributes": "Ajouter des attributs",
     "matchings": "Appariements",
     "Items": "Éléments",
-    "hideAll": "Cacher tout"
+    "hideAll": "Cacher tout",
+    "Relations": "Relations"
   },
   "insightsPanels": {
     "summary": "Sommaire",

@@ -506,7 +506,8 @@
     "openLink": "Link öffnen",
     "view": "Ansehen",
     "Items": "Artikel",
-    "hideAll": "Alles ausblenden"
+    "hideAll": "Alles ausblenden",
+    "Relations": "Beziehungen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
