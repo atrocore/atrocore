@@ -8,7 +8,8 @@
     "failedCount": "Gescheitert",
     "startedAt": "Angefangen bei",
     "finishedAt": "Beendet am",
-    "createdCount": "Erstellt"
+    "createdCount": "Erstellt",
+    "logs": "Protokolle"
   },
   "options": {
     "type": {
