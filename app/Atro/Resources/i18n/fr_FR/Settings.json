@@ -32,7 +32,7 @@
     "tabIconsDisabled": "Désactiver les icônes du menu de navigation",
     "emailAddressIsOptedOutByDefault": "Marquer les nouvelles adresses e-mail comme désabonnées",
     "customStylesheet": "CSS",
-    "customHeadCode": "Code du header de la page",
+    "customHeadCode": "Code du header",
     "passwordRegexPattern": "Motif Regex du mot de passe",
     "passwordExpireDays": "Période d'expiration du mot de passe (en jours)",
     "sendOutNotifications": "Envoyer des notifications",
