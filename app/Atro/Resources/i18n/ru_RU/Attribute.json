@@ -76,7 +76,8 @@
     "maxLessThanMin": "Min должен быть меньше Max.",
     "noAttributeConverterFound": "Преобразование атрибута из типа '%s' в '%s' невозможно.",
     "attributeIsUsedInClassifications": "Атрибут используется в классификациях. Пожалуйста, сначала обновите классификации.",
-    "invalidType": "Тип атрибута '{type}' недопустим"
+    "invalidType": "Тип атрибута '{type}' недопустим",
+    "entityNotAllowToChoose": "Субъекту не разрешается выбирать"
   },
   "options": {
     "type": {
