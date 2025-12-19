@@ -26,12 +26,15 @@
     "applyToPreselectedRecords": "Applica ai record preselezionati",
     "updateType": "Tipo di aggiornamento",
     "updateFields": "Campi di aggiornamento",
-    "updateScript": "Scrittura"
+    "updateScript": "Scrittura",
+    "searchEntity": "Entità di ricerca",
+    "executions": "Esecuzioni"
   },
   "labels": {
     "execute": "Eseguire",
     "Parameters": "Parametri",
-    "fieldsPanel": "Aggiornamento"
+    "fieldsPanel": "Aggiornamento",
+    "allLogs": "Tutti i registri"
   },
   "massActions": {
     "execute": "Eseguire"
@@ -59,7 +62,8 @@
       "set": "Set d'azione",
       "webhook": "Webhook",
       "customCode": "Codice personalizzato",
-      "email": "Invii l'e-mail"
+      "email": "Invii l'e-mail",
+      "createOrUpdate": "Creare o aggiornare"
     },
     "executeAs": {
       "system": "Sistema",
