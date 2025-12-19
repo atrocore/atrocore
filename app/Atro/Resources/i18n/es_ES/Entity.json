@@ -40,7 +40,6 @@
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
-    "derivedEntities": "Entidades derivadas",
     "primaryEntity": "Entidad primaria"
   },
   "options": {

@@ -41,7 +41,6 @@
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
-    "derivedEntities": "Производные сущности",
     "matchDuplicates": "Поиск дубликатов",
     "matchMasterRecords": "Поиск мастер записи"
   },

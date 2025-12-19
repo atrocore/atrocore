@@ -116,23 +116,12 @@ class Entity extends ReferenceData
             return $this->getEntityManager()->getRepository('EntityField')->find($selectParams);
         }
 
-        if ($link === 'derivedEntities') {
-            $selectParams['whereClause'] = [['primaryEntityId=' => $entity->get('id')]];
-            return $this->getEntityManager()->getRepository('Entity')->find($selectParams);
-        }
-
         return parent::findRelated($entity, $link, $selectParams);
     }
 
     public function countRelated(OrmEntity $entity, string $relationName, array $params = []): int
     {
         if ($relationName === 'fields') {
-            $params['offset'] = 0;
-            $params['limit'] = \PHP_INT_MAX;
-            return count($this->findRelated($entity, $relationName, $params));
-        }
-
-        if ($relationName === 'derivedEntities') {
             $params['offset'] = 0;
             $params['limit'] = \PHP_INT_MAX;
             return count($this->findRelated($entity, $relationName, $params));
@@ -164,6 +153,13 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
+        $stagingEntityId = null;
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if ($scopeDefs['primaryEntityId'] ?? null === $code && $scopeDefs['role'] ?? 'staging' === 'staging') {
+                $stagingEntityId = $scopeName;
+            }
+        }
+
         return array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
@@ -175,7 +171,10 @@ class Entity extends ReferenceData
             'color'                 => $this->getMetadata()->get(['clientDefs', $code, 'color']),
             'sortBy'                => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'sortBy']),
             'sortDirection'         => $this->getMetadata()->get(['entityDefs', $code, 'collection', 'asc']) ? 'asc' : 'desc',
-            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords'])
+            'hasMasterDataEntity'   => $this->getMetadata()->get(['scopes', $code, 'matchDuplicates']) || $this->getMetadata()->get(['scopes', $code, 'matchMasterRecords']),
+            'hasStaging'            => !empty($stagingEntityId),
+            'stagingEntityId'       => $stagingEntityId,
+            'stagingEntityName'     => empty($stagingEntityId) ? null : $this->getLanguage()->translate($stagingEntityId, 'scopeNames'),
         ]);
     }
 
@@ -271,8 +270,18 @@ class Entity extends ReferenceData
 
         // create derived entity
         if (!empty($entity->get('primaryEntityId'))) {
+            foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
+                if (
+                    $scopeDefs['primaryEntityId'] ?? null === $entity->get('primaryEntityId')
+                && $entity->get('role') === $scopeDefs['role'] ?? 'staging'
+                ) {
+                    throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+                }
+            }
+
             $data = [
                 'primaryEntityId' => $entity->get('primaryEntityId'),
+                'role'            => $entity->get('role'),
                 'isCustom'        => true
             ];
 
@@ -423,6 +432,19 @@ class Entity extends ReferenceData
                     ]);
                 }
                 $saveMetadata = true;
+            } elseif ($field === 'hasStaging') {
+                if (!empty($entity->get($field))) {
+                    $staging = $this->get();
+                    $staging->set('code', $entity->get('code') . 'Staging');
+                    $staging->set('name', $entity->get('code') . 'Staging');
+                    $staging->set('namePlural', $entity->get('code') . 'Stagings');
+                    $staging->set('primaryEntityId', $entity->id);
+                    $staging->set('role', 'staging');
+                    $this->save($staging);
+                } else {
+                    $stagingEntity = $this->get($entity->get('stagingEntityId'));
+                    $this->deleteEntity($stagingEntity);
+                }
             } else {
                 $loadedVal = $loadedData['scopes'][$entity->get('code')][$field] ?? null;
 

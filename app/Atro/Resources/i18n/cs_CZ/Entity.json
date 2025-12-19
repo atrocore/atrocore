@@ -40,7 +40,6 @@
     "nonDuplicatableFields": "Neduplikovaná pole",
     "deleteValuesAfterUnlinkingClassification": "Odstranění hodnot atributů po zrušení propojení klasifikací",
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
-    "derivedEntities": "Odvozené subjekty",
     "primaryEntity": "Primární subjekt"
   },
   "options": {

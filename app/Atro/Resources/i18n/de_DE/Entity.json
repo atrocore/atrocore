@@ -41,7 +41,6 @@
     "customizable": "Anpassbar",
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
-    "derivedEntities": "Abgeleitete Entitäten",
     "matchDuplicates": "Duplikate abgleichen",
     "matchMasterRecords": "Stammdaten abgleichen"
   },
