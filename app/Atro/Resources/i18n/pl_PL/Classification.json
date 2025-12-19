@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
     "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego Podmiotu.",
-    "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta."
+    "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta.",
+    "entityNotAllowToChoose": "Podmiot nie może wybrać"
   }
 }
