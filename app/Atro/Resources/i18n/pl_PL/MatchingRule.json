@@ -17,5 +17,8 @@
       "and": "ORAZ",
       "or": "LUB"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Kod musi zawierać wyłącznie litery, cyfry, podkreślniki i myślniki."
   }
 }
