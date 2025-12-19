@@ -23,7 +23,7 @@
     "actionIconColor": "Couleur de l'icône d'action",
     "navigationIconColor": "Couleur de l'icône de navigation",
     "statusIconColor": "Couleur de l'icône d'état",
-    "customHeadCode": "Code du header de la page",
+    "customHeadCode": "Code du header",
     "highlightingColorForRequired": "Couleur de surbrillance pour les données requises",
     "toolbarBackgroundColor": "Couleur d'arrière-plan de la barre d'outils",
     "toolbarFontColor": "Couleur de la police de la barre d'outils"
