@@ -274,11 +274,11 @@ class Entity extends ReferenceData
         // create derived entity
         if (!empty($entity->get('primaryEntityId'))) {
             foreach ($this->getMetadata()->get('scopes', []) as $scopeDefs) {
-                if (
-                    $scopeDefs['primaryEntityId'] ?? null === $entity->get('primaryEntityId')
-                && $entity->get('role') === $scopeDefs['role'] ?? 'staging'
-                ) {
-                    throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+                if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $entity->get('primaryEntityId')) {
+                    $role = $scopeDefs['role'] ?? 'staging';
+                    if ($entity->get('role') === $role) {
+                        throw new BadRequest($this->getLanguage()->translate('derivativeWithSuchRoleExists', 'exceptions', 'Entity'));
+                    }
                 }
             }
 
