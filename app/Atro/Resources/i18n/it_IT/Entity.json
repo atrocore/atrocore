@@ -6,8 +6,6 @@
     "customizable": "Personalizzabile",
     "unInheritedRelations": "Relazioni non ereditate",
     "primaryEntity": "Entità primaria",
-    "hasDuplicates": "Controlla i duplicati",
-    "masterEntity": "Entità master",
     "hasArchive": "Archiviabile",
     "hasActive": "Attivabile",
     "hideFieldTypeFilters": "Nascondere i filtri del tipo di campo",
@@ -42,8 +40,7 @@
     "textFilterFields": "Campi del filtro di testo",
     "nonDuplicatableFields": "Campi non duplicati",
     "deleteValuesAfterUnlinkingClassification": "Cancellare i valori degli attributi dopo aver scollegato le classificazioni",
-    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione",
-    "derivedEntities": "Entità derivate"
+    "linkAttributesWithClassificationAutomatically": "Collega automaticamente gli Attributi con la Classificazione"
   },
   "labels": {
     "resetToDefault": "Ripristino delle impostazioni predefinite",
@@ -57,8 +54,7 @@
       "Base": "Base",
       "Hierarchy": "Gerarchia",
       "ReferenceData": "Riferimento",
-      "Archive": "Archivio",
-      "Derivative": "Derivato"
+      "Archive": "Archivio"
     },
     "sortDirection": {
       "asc": "In salita",

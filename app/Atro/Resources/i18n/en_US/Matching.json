@@ -2,7 +2,6 @@
   "fields": {
     "minimumScore": "Minimum Score, %",
     "entity": "Entity",
-    "sourceEntity": "Source Entity",
     "masterEntity": "Master Entity",
     "matchingRules": "Matching Rules",
     "matchedRecords": "Matched Records",

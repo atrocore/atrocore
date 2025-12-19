@@ -299,6 +299,12 @@
         {
           "name": "recordRelatedChangesInStream"
         }
+      ],
+      [
+        {
+          "name": "urlLabel"
+        },
+        false
       ]
     ]
   },

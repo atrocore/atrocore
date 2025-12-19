@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "incomingWebhook": "Webhook entrant",
+    "scheduledJob": "Tâche programmée",
+    "workflow": "Flux de travail",
+    "statusMessage": "Message d'état"
+  },
+  "options": {
+    "type": {
+      "manual": "Manuel",
+      "incomingWebhook": "Webhook entrant",
+      "scheduledJob": "Tâche programmée",
+      "workflow": "Flux de travail"
+    },
+    "status": {
+      "failed": "Échec"
+    }
+  }
+}

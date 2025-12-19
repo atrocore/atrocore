@@ -5,7 +5,6 @@
     "MatchedRecord": "Record abbinato",
     "Matching": "Abbinamento",
     "ThumbnailType": "Tipo di miniatura",
-    "ActionLog": "Registro delle azioni",
     "IncomingWebhook": "Webhook in arrivo",
     "RoleScopeAttribute": "Attributo",
     "RoleScopeAttributePanel": "Pannello degli attributi",
@@ -395,7 +394,7 @@
     "expandAll": "Espandi tutto",
     "fullscreen": "Schermo intero",
     "Copy": "Copia",
-    "applyMainSearchAndFilter": "Applica la ricerca e il filtro principali",
+    "applyMainSearchAndFilter": "Filtro principale",
     "Reset to Default": "Ripristino delle impostazioni predefinite",
     "relatedAssociates": "Associazioni a ritroso",
     "Associated": "Associato",
@@ -431,8 +430,7 @@
     "expandWindow": "Espandi la finestra",
     "Compare": "Confronta",
     "Standard": "Standard",
-    "addItem": "Aggiungi articolo",
-    "masterDataManagement": "Gestione dei dati master"
+    "addItem": "Aggiungi articolo"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -846,7 +844,6 @@
     "MatchedRecord": "Record abbinati",
     "Matching": "Abbinamenti",
     "ThumbnailType": "Tipi di miniature",
-    "ActionLog": "Diari d'azione",
     "IncomingWebhook": "Webhook in arrivo",
     "RoleScopeAttribute": "Attributi",
     "RoleScopeAttributePanel": "Pannelli di attributi",

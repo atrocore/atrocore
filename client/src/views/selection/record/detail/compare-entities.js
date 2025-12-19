@@ -55,18 +55,28 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                         $(this).find('div.inline-actions').addClass('hidden')
                     }.bind(this));
                 });
+
+                this.$el.find('.bottom-layout-bottoms').each(function (e) {
+                    $(this).on('mouseenter', function (e) {
+                        e.stopPropagation();
+                        $(this).css('opacity', 1)
+                    }.bind(this)).on('mouseleave', function (e) {
+                        e.stopPropagation();
+                        $(this).css('opacity', 0)
+                    }.bind(this));
+                });
             });
 
             this.models.forEach(model => {
                 this.listenTo(model, 'before:save', (attrs) => {
                     $.each(attrs, (name, value) => {
-                        if(!model.defs['fields'][name]) {
+                        if (!model.defs['fields'][name]) {
                             return;
                         }
-                        if(model.defs['fields'][name].attributeId) {
-                            if(!attrs['__attributes']) {
+                        if (model.defs['fields'][name].attributeId) {
+                            if (!attrs['__attributes']) {
                                 attrs['__attributes'] = [model.defs['fields'][name].attributeId];
-                            }else{
+                            } else {
                                 attrs['__attributes'].push([model.defs['fields'][name].attributeId]);
                             }
                         }
@@ -130,12 +140,41 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         afterRender() {
             let count = 0;
             this.models.forEach(m => {
+                if (this.getUser().isAdmin()) {
+                    this.createView(m.id + 'layoutConfiguratorSelection', "views/record/layout-configurator", {
+                        scope: m.name,
+                        viewType: 'selection',
+                        label: this.translate('Fields'),
+                        layoutData: this.layoutData[m.name].layoutData,
+                        el: this.options.el + ` td[data-id="${m.id}"] .layout-editor-container.selection`,
+                    }, (view) => {
+                        view.render()
+                        view.on("refresh", () => this.getParentView().refreshContent());
+                    });
+
+                    this._helper.layoutManager.get(this.model.name, 'selectionRelations', null,  (data) => {
+                        this.createView(m.id + 'layoutConfiguratorSelectionRelation', "views/record/layout-configurator", {
+                            scope: m.name,
+                            viewType: 'selectionRelations',
+                            label: this.translate('Relations'),
+                            layoutData: data,
+                            el: this.options.el + ` td[data-id="${m.id}"] .layout-editor-container.relations`,
+                            alignRight: true
+                        }, (view) => {
+                            view.render()
+                            view.on("refresh", () => this.getParentView().refreshContent());
+
+                        });
+                    })
+
+                }
                 this.createView(m.id, this.detailComparisonView, {
-                    el: this.options.el + ` .record-content[data-id="${m.id}"]`,
+                    el: this.options.el + ` td[data-id="${m.id}"] .record-content`,
                     scope: m.name,
                     mode: 'detail',
                     model: m,
-                    detailLayout: this.layoutData[m.name]
+                    detailLayout: this.layoutData[m.name].detailLayout,
+                    bottomView: 'views/selection/record/detail-bottom-comparison'
                 }, view => {
                     view.render(() => {
                         count++;

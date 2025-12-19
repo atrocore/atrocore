@@ -53,17 +53,29 @@
     function readDataFromLayout(model, layout: Layout) {
         let allFields: string[] = [];
 
+        let linkTypes = [];
+        if (params.onlyManyToMany) {
+            linkTypes = ['hasMany']
+        } else {
+            linkTypes = ['belongsTo', 'hasMany', 'hasChildren']
+        }
         for (let field in model.defs.links) {
-            if (['belongsTo', 'hasMany', 'hasChildren'].includes(model.defs.links[field].type)) {
+            if (linkTypes.includes(model.defs.links[field].type)) {
                 if (isLinkEnabled(model, field)) {
+                    if (params.onlyManyToMany && !model.defs.links[field].relationName) {
+                        continue;
+                    }
                     allFields.push(field);
                 }
             }
         }
         const bottomPanels = Metadata.get(['clientDefs', params.scope, 'bottomPanels', 'detail']) || [];
-        for (let panel of bottomPanels) {
-            if (!panel.layoutRelationshipsDisabled) {
-                allFields.push(panel.name);
+
+        if (!params.onlyManyToMany) {
+            for (let panel of bottomPanels) {
+                if (!panel.layoutRelationshipsDisabled) {
+                    allFields.push(panel.name);
+                }
             }
         }
 

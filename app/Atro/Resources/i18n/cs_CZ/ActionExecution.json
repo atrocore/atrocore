@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "incomingWebhook": "Příchozí Webhook",
+    "scheduledJob": "Naplánovaná úloha",
+    "workflow": "Pracovní postupy",
+    "statusMessage": "Stavová zpráva"
+  },
+  "options": {
+    "type": {
+      "manual": "Manuální",
+      "incomingWebhook": "Příchozí Webhook",
+      "scheduledJob": "Naplánovaná úloha",
+      "workflow": "Pracovní postupy"
+    },
+    "status": {
+      "failed": "Neúspěšný"
+    }
+  }
+}

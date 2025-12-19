@@ -24,6 +24,9 @@ Espo.define('views/entity/fields/link-attributes-with-classification-automatical
                 }
                 this.reRender();
             });
+            this.listenTo(this.model, 'change:primaryEntityId', () => {
+                this.reRender();
+            });
         },
 
         isVisible() {
@@ -33,6 +36,7 @@ Espo.define('views/entity/fields/link-attributes-with-classification-automatical
                 && !this.model.get('disableAttributeLinking')
                 && this.model.id !== 'Listing'
                 && this.model.get('hasClassification')
+                && !this.model.get('primaryEntityId')
                 && this.model.get('hasAttribute');
         },
 

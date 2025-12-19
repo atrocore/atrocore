@@ -517,6 +517,11 @@ class Metadata
 
     public function getEntityPath(string $entityName, string $delim = '\\'): string
     {
+        // for derivative entities
+        if (!empty($primaryEntityId = $this->get("scopes.$entityName.primaryEntityId"))) {
+            $entityName = $primaryEntityId;
+        }
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Entities', Util::normilizeClassName(ucfirst($entityName))]);
@@ -531,9 +536,6 @@ class Metadata
 
         if (!class_exists($path)) {
             $type = $this->get("scopes.$entityName.type");
-            if ($type === 'Derivative') {
-                $type = $this->get("scopes.{$this->get("scopes.$entityName.primaryEntityId")}.type");
-            }
             $path = "\\Atro\\Core\\Templates\\Entities\\$type";
         }
 
@@ -542,6 +544,11 @@ class Metadata
 
     public function getRepositoryPath(string $entityName, string $delim = '\\'): string
     {
+        // for derivative entities
+        if (!empty($primaryEntityId = $this->get("scopes.$entityName.primaryEntityId"))) {
+            $entityName = $primaryEntityId;
+        }
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);
@@ -556,10 +563,6 @@ class Metadata
 
         if (!class_exists($path)) {
             $type = $this->get("scopes.$entityName.type");
-            if ($type === 'Derivative') {
-                $type = $this->get("scopes.{$this->get("scopes.$entityName.primaryEntityId")}.type");
-            }
-
             $path = "\\Atro\\Core\\Templates\\Repositories\\$type";
         }
 

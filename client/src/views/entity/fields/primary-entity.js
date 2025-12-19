@@ -13,13 +13,24 @@ Espo.define('views/entity/fields/primary-entity', 'views/fields/link',
 
         createDisabled: true,
 
-        selectBoolFilterList: ['fieldsFilter'],
+        selectBoolFilterList: ['fieldsFilter', 'onlyForDerivativeEnabled'],
 
         boolFilterData: {
             fieldsFilter() {
                 return {
-                    type: ["Base", "Hierarchy"]
+                    type: [this.model.get('type')]
                 };
+            }
+        },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+
+            if (this.model.isNew()) {
+                this.listenTo(this.model, 'change:type', () => {
+                    this.model.set(this.idName, null);
+                    this.model.set(this.nameName, null);
+                });
             }
         },
 

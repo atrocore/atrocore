@@ -90,8 +90,11 @@ class Metadata extends AbstractListener
         $this->prepareEntityFields($data);
 
         foreach ($data['scopes'] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type']) || !in_array($scopeDefs['type'],
-                    ['Base', 'Hierarchy'])) {
+            if (!empty($scopeDefs['emHidden']) || empty($scopeDefs['type'])
+                || !in_array(
+                    $scopeDefs['type'],
+                    ['Base', 'Hierarchy']
+                )) {
                 $data['scopes'][$scope]['attributesDisabled'] = true;
             }
         }
@@ -344,8 +347,12 @@ class Metadata extends AbstractListener
 
             foreach ($entityDefs['fields'] as $field => $fieldDefs) {
                 $dropdownTypes = ['extensibleEnum', 'extensibleMultiEnum', 'link', 'linkMultiple', 'measure'];
-                if (!empty($fieldDefs['type']) && in_array($fieldDefs['type'],
-                        $dropdownTypes) && empty($fieldDefs['view'])) {
+                if (!empty($fieldDefs['type'])
+                    && in_array(
+                        $fieldDefs['type'],
+                        $dropdownTypes
+                    )
+                    && empty($fieldDefs['view'])) {
                     if (!empty($fieldDefs['dropdown'])) {
                         switch ($fieldDefs['type']) {
                             case 'extensibleEnum':
@@ -415,11 +422,40 @@ class Metadata extends AbstractListener
                 ],
             ];
 
-            if (in_array($action['type'], ['update', 'create'])) {
+            if (in_array($action['type'], ['update', 'create', 'createOrUpdate'])) {
                 $params['acl'] = [
                     'scope'  => $action['target_entity'],
                     'action' => 'edit',
                 ];
+
+                $filterFields = [];
+                switch ($action['type']) {
+                    case 'create':
+                        $filterFields = ['createdCount'];
+                        break;
+                    case 'update':
+                        $filterFields = ['updatedCount'];
+                        break;
+                    case 'createOrUpdate':
+                        $filterFields = ['createdCount', 'updatedCount'];
+                        break;
+                }
+
+                foreach ($filterFields as $field) {
+                    $data['entityDefs'][$action['target_entity']]['fields']["{$field}FilterActionExecution"] = [
+                        'type'                     => 'enum',
+                        'notStorable'              => true,
+                        'view'                     => 'views/fields/filter-action-execution',
+                        'scope'                    => $action['target_entity'],
+                        'layoutDetailDisabled'     => true,
+                        'layoutListDisabled'       => true,
+                        'layoutMassUpdateDisabled' => true,
+                        'exportDisabled'           => true,
+                        'importDisabled'           => true,
+                        'textFilterDisabled'       => true,
+                        'emHidden'                 => true,
+                    ];
+                }
             } elseif ($action['type'] == 'delete') {
                 $params['acl'] = [
                     'scope'  => $action['target_entity'],
@@ -428,10 +464,10 @@ class Metadata extends AbstractListener
             }
 
             if (!empty($action['icon_class']) && !empty($data['app']['systemIcons'][$action['icon_class']]['path'])) {
-                $html = '<img src="'.  $data['app']['systemIcons'][$action['icon_class']]['path'] .'" class="icon-button" >';
+                $html = '<img src="' . $data['app']['systemIcons'][$action['icon_class']]['path'] . '" class="icon-button" >';
                 if (empty($action['hide_text_label'])) {
                     $html .= ' ' . $action['name'];
-                }else{
+                } else {
                     $params['tooltip'] = $action['name'];
                 }
                 $params['html'] = $html;
@@ -577,8 +613,11 @@ class Metadata extends AbstractListener
                 if (!empty($fieldDefs['relationVirtualField'])) {
                     continue;
                 }
-                if (empty($fieldDefs['type']) || !in_array($fieldDefs['type'],
-                        ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar'])) {
+                if (empty($fieldDefs['type'])
+                    || !in_array(
+                        $fieldDefs['type'],
+                        ['int', 'float', 'rangeInt', 'rangeFloat', 'varchar']
+                    )) {
                     continue;
                 }
 
@@ -595,6 +634,7 @@ class Metadata extends AbstractListener
                     "type"        => "link",
                     "view"        => "views/fields/unit-link",
                     "measureId"   => $fieldDefs['measureId'],
+                    "default"     => $fieldDefs['defaultUnit'] ?? null,
                     "unitIdField" => true,
                     "mainField"   => $field,
                     "required"    => !empty($fieldDefs['required']),
@@ -712,10 +752,14 @@ class Metadata extends AbstractListener
                     $data['entityDefs'][$entityType]['fields'][$field]['unitField'] = true;
                 }
 
-                foreach (in_array($fieldDefs['type'], ['int', 'float', 'varchar']) ? [$field] : [
-                    $field . 'From',
-                    $field . 'To'
-                ] as $v) {
+                foreach (
+                    in_array($fieldDefs['type'], ['int', 'float', 'varchar'])
+                        ? [$field]
+                        : [
+                        $field . 'From',
+                        $field . 'To'
+                    ] as $v
+                ) {
                     $data['entityDefs'][$entityType]['fields'][$v . 'AllUnits'] = [
                         "type"                 => "jsonObject",
                         "notStorable"          => true,
@@ -991,12 +1035,18 @@ class Metadata extends AbstractListener
             }
         }
 
-        $defaultClientDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/clientDefs.json'),
-            true);
-        $defaultEntityDefs = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'),
-            true);
-        $defaultScopes = json_decode(file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'),
-            true);
+        $defaultClientDefs = json_decode(
+            file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/clientDefs.json'),
+            true
+        );
+        $defaultEntityDefs = json_decode(
+            file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/entityDefs.json'),
+            true
+        );
+        $defaultScopes = json_decode(
+            file_get_contents(dirname(__DIR__) . '/Core/Templates/Metadata/Relation/scopes.json'),
+            true
+        );
 
         $defaultEntityDefs['fields']['created'] = [
             'type'                => 'datetime',
@@ -1026,8 +1076,12 @@ class Metadata extends AbstractListener
 
         foreach ($res as $entityName => $entityDefs) {
             $current = $data['clientDefs'][$entityName] ?? [];
-            $data['clientDefs'][$entityName] = empty($current) ? $defaultClientDefs : Util::merge($defaultClientDefs,
-                $current);
+            $data['clientDefs'][$entityName] = empty($current)
+                ? $defaultClientDefs
+                : Util::merge(
+                    $defaultClientDefs,
+                    $current
+                );
 
             $current = $data['entityDefs'][$entityName] ?? [];
             $current = empty($current) ? $entityDefs : Util::merge($entityDefs, $current);
@@ -1173,7 +1227,8 @@ class Metadata extends AbstractListener
                     "importDisabled"            => false
                 ];
 
-                $data['entityDefs'][$scope]['fields']['parents'] = array_merge($data['entityDefs'][$scope]['fields']['parents'],
+                $data['entityDefs'][$scope]['fields']['parents'] = array_merge(
+                    $data['entityDefs'][$scope]['fields']['parents'],
                     [
                         "layoutListDisabled"        => true,
                         "layoutDetailDisabled"      => true,
@@ -1182,7 +1237,8 @@ class Metadata extends AbstractListener
                         "filterDisabled"            => true,
                         "importDisabled"            => true,
                         "emHidden"                  => true
-                    ]);
+                    ]
+                );
                 $data['entityDefs'][$scope]['links']['parents']['layoutRelationshipsDisabled'] = true;
             }
         }
@@ -1191,12 +1247,11 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array  &$metadata,
+        array &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    )
-    {
+    ) {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -1208,8 +1263,10 @@ class Metadata extends AbstractListener
                 "aclScopesList" => [$scope, $relationEntityName]
             ];
         } else {
-            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge($data['aclScopesList'] ?? [],
-                [$scope, $relationEntityName]);
+            $metadata['clientDefs'][$scope]['relationshipPanels'][$relation]["aclScopesList"] = array_merge(
+                $data['aclScopesList'] ?? [],
+                [$scope, $relationEntityName]
+            );
         }
     }
 
@@ -1805,8 +1862,10 @@ class Metadata extends AbstractListener
                 $notificationRules = $connection->createQueryBuilder()
                     ->select('nr.*')
                     ->from($connection->quoteIdentifier('notification_rule'), 'nr')
-                    ->leftJoin('nr', 'notification_profile', 'np',
-                        'nr.notification_profile_id = np.id AND np.deleted = :false')
+                    ->leftJoin(
+                        'nr', 'notification_profile', 'np',
+                        'nr.notification_profile_id = np.id AND np.deleted = :false'
+                    )
                     ->where('nr.is_active = :true')
                     ->andWhere('nr.deleted = :false')
                     ->andWhere('np.is_active = :true')
@@ -1824,8 +1883,10 @@ class Metadata extends AbstractListener
 
                 if (!isset($users[$notificationProfileId])) {
                     try {
-                        $users[$notificationProfileId] = NotificationRule::getNotificationProfileUsers($notificationProfileId,
-                            $this->getConfig(), $this->getConnection());
+                        $users[$notificationProfileId] = NotificationRule::getNotificationProfileUsers(
+                            $notificationProfileId,
+                            $this->getConfig(), $this->getConnection()
+                        );
 
                         if (!empty($users[$notificationProfileId])) {
                             $notificationProfilesIds[] = $notificationProfileId;
@@ -1836,11 +1897,13 @@ class Metadata extends AbstractListener
                 }
             }
 
-            $dataManager->setCacheData(NotificationRule::CACHE_NAME, $cachedData = [
+            $dataManager->setCacheData(
+                NotificationRule::CACHE_NAME, $cachedData = [
                 "notificationProfilesIds" => $notificationProfilesIds,
                 "notificationRules"       => $notificationRules,
                 "users"                   => $users
-            ]);
+            ]
+            );
         }
 
         $data['app']['activeNotificationProfilesIds'] = $cachedData['notificationProfilesIds'];
@@ -2213,7 +2276,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $scope => $scopeDefs) {
-            if (empty($scopeDefs['type']) || $scopeDefs['type'] !== 'Derivative') {
+            if (empty($scopeDefs['primaryEntityId'])) {
                 continue;
             }
 
@@ -2225,8 +2288,14 @@ class Metadata extends AbstractListener
                     continue;
                 }
 
-                if ($fieldDefs['type'] === 'linkMultiple') {
-                    continue;
+                // disable require
+                if (!empty($fieldDefs['required'])) {
+                    $fieldDefs['required'] = false;
+                }
+
+                // disable require via conditional properties
+                if (!empty($fieldDefs['conditionalProperties']['required'])) {
+                    unset($fieldDefs['conditionalProperties']['required']);
                 }
 
                 // disable unique indexes
@@ -2237,15 +2306,74 @@ class Metadata extends AbstractListener
                 if ($fieldDefs['type'] === 'link') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
                     if (!empty($linkDefs['foreign'])) {
-                        unset($linkDefs['foreign']);
+                        $foreign = lcfirst($scope) . 'sDerivatives';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                        $linkDefs['foreign'] = $foreign;
                     }
                     $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
-                $fieldDefs['customizable'] = false;
+                if ($fieldDefs['type'] === 'linkMultiple') {
+                    $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
+                    if (!empty($linkDefs['derivativePrepared'])) {
+                        continue;
+                    }
+
+                    // for oneToMany relation
+                    if (empty($linkDefs['relationName'])) {
+                        $foreign = lcfirst($scope) . 'Derivative';
+
+                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+
+                        $linkDefs['foreign'] = $foreign;
+                    }
+
+                    // for manyToMany relation
+                    if (!empty($linkDefs['relationName'])) {
+                        // for manyToMany relation
+                        if ($linkDefs['relationName'] === "{$linkDefs['entity']}Hierarchy") {
+                            $relationName = "{$scope}Hierarchy";
+                            $linkDefs['entity'] = $scope;
+                        } else {
+                            $relationName = 'derivativeMiddle_' . md5("{$linkDefs['relationName']}_$scope");
+                            if ($fieldName === 'followers') {
+                                $relationName = $linkDefs['entity'] . 'Followed' . $scope;
+                            } elseif ($fieldName === 'teams') {
+                                $relationName = $linkDefs['relationName'];
+                            } elseif (str_starts_with($linkDefs['relationName'], lcfirst($primaryEntity))) {
+                                $relationName = str_replace(lcfirst($primaryEntity), lcfirst($scope), $linkDefs['relationName']);
+                            }
+
+                            if (!empty($linkDefs['foreign'])) {
+                                $foreign = lcfirst($scope) . 'sDerivatives';
+                                $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['relationName'] = $relationName;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                                $linkDefs['foreign'] = $foreign;
+                            }
+                        }
+
+                        $linkDefs['relationName'] = $relationName;
+                    }
+
+                    $linkDefs['derivativePrepared'] = true;
+
+                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
+                }
 
                 $data['entityDefs'][$scope]['fields'][$fieldName] = $fieldDefs;
             }
+
             if (!empty($data['entityDefs'][$primaryEntity]['indexes'])) {
                 $data['entityDefs'][$scope]['indexes'] = $data['entityDefs'][$primaryEntity]['indexes'];
             }
@@ -2255,15 +2383,34 @@ class Metadata extends AbstractListener
 
             // clone scope defs
             $data['scopes'][$scope] = array_merge($data['scopes'][$primaryEntity], [
-                'type'            => 'Derivative',
-                'primaryEntityId' => $primaryEntity,
-                'layouts'         => false
+                'primaryEntityId'    => $primaryEntity,
+                'isCustom'           => true,
+                'customizable'       => false,
+                'role'               => $scopeDefs['role'] ?? null,
+                'description'        => $scopeDefs['description'] ?? null,
+                'sortBy'             => $scopeDefs['sortBy'] ?? null,
+                'sortDirection'      => $scopeDefs['sortDirection'] ?? null,
+                'matchDuplicates'    => $scopeDefs['matchDuplicates'] ?? false,
+                'matchMasterRecords' => $scopeDefs['matchMasterRecords'] ?? false,
+                'createdAt'          => $scopeDefs['createdAt'] ?? null,
+                'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
+                'createdById'        => $scopeDefs['createdById'] ?? null,
+                'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
+                'layouts'            => false
+            ]);
+            if (array_key_exists('module', $data['scopes'][$scope])) {
+                unset($data['scopes'][$scope]['module']);
+            }
+
+            // clone client defs
+            $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
+                'iconClass' => $data['clientDefs'][$primaryEntity]['iconClass'] ?? null
             ]);
 
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
                 'type'     => 'link',
-                'required' => true
+                'required' => false
             ];
             $data['entityDefs'][$scope]['links']['primaryRecord'] = [
                 'type'    => 'belongsTo',
@@ -2290,7 +2437,7 @@ class Metadata extends AbstractListener
         }
 
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
-            if (!empty($defs['hasDuplicates'])) {
+            if (!empty($defs['matchDuplicates'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2303,7 +2450,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (!empty($defs['masterEntity'])) {
+            if (!empty($defs['matchMasterRecords'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
                     'type'                 => 'bool',
                     "layoutListDisabled"   => true,
@@ -2316,7 +2463,7 @@ class Metadata extends AbstractListener
                 ];
             }
 
-            if (empty($defs['masterEntity'])) {
+            if (empty($defs['matchMasterRecords'])) {
                 continue;
             }
 
@@ -2329,16 +2476,16 @@ class Metadata extends AbstractListener
             $data['entityDefs'][$sourceEntity]['links']['goldenRecord'] = [
                 'type'    => 'belongsTo',
                 'foreign' => $sourceRecords,
-                'entity'  => $defs['masterEntity'],
+                'entity'  => $defs['primaryEntityId'],
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['fields'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['fields'][$sourceRecords] = [
                 'type'         => 'linkMultiple',
                 'noLoad'       => true,
                 'customizable' => false,
             ];
 
-            $data['entityDefs'][$defs['masterEntity']]['links'][$sourceRecords] = [
+            $data['entityDefs'][$defs['primaryEntityId']]['links'][$sourceRecords] = [
                 'type'    => 'hasMany',
                 'foreign' => 'goldenRecord',
                 'entity'  => $sourceEntity,
@@ -2369,13 +2516,13 @@ class Metadata extends AbstractListener
 
             if (empty($data['entityDefs']['File']['fields'][$field])) {
                 $data['entityDefs']['File']['fields'][$field] = [
-                    'type' => 'varchar',
-                    'notStorable' => true,
-                    'readOnly' => true,
+                    'type'                     => 'varchar',
+                    'notStorable'              => true,
+                    'readOnly'                 => true,
                     'layoutMassUpdateDisabled' => true,
-                    'filterDisabled' => true,
-                    'importDisabled' => true,
-                    'openApiEnabled' => true
+                    'filterDisabled'           => true,
+                    'importDisabled'           => true,
+                    'openApiEnabled'           => true
                 ];
             }
         }

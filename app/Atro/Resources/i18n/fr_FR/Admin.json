@@ -209,13 +209,14 @@
     "not": "PAS"
   },
   "layouts": {
-    "relationships": "Relations avec le public",
+    "relationships": "Relations",
     "list": "Liste",
     "detail": "Détails",
     "massUpdate": "Mise à jour des masses",
     "kanban": "Kanban",
     "navigation": "Navigation",
     "insights": "Resumé",
+    "selectionRelations": "Relations de la sélection",
     "upload": "Télécharger",
     "summary": "Résumé",
     "selection": "Sélection"

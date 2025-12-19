@@ -510,6 +510,7 @@ Espo.define('views/fields/array', ['views/fields/base', 'lib!Selectize'], functi
                 id: this.name,
                 label: this.getLanguage().translate(this.name, 'fields', scope),
                 type: 'string',
+                realType: 'array',
                 optgroup: this.getLanguage().translate('Fields'),
                 operators: [
                     'array_any_of',

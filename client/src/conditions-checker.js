@@ -187,6 +187,37 @@ Espo.define('conditions-checker', [], function () {
             const usersIds = Espo[key]
 
             return this.checkIn(usersIds, setValue)
+        },
+
+        getConditionGroupFields(data, type) {
+            let fieldList = [];
+            type = type || 'and';
+
+            if(['and', 'or', 'not'].includes(type)) {
+                list = data || [];
+                for (var i in list) {
+                    for (const field of this.getConditionFields(list[i])) {
+                        if(!fieldList.includes(field)) {
+                            fieldList.push(field);
+                        }
+                    }
+                }
+            }
+
+            return fieldList;
+        },
+
+        getConditionFields(defs) {
+            defs = defs || {};
+            var type = defs.type || 'equals';
+
+            if (['or', 'and', 'not'].includes(type)) {
+                return this.getConditionGroupFields(defs.value, type);
+            }
+
+            if (!defs.attribute) return [];
+
+            return [{name: defs.data?.field || defs.attribute, attributeId: defs.attributeId}];
         }
     });
 

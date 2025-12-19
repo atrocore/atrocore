@@ -4,8 +4,6 @@
     "namePlural": "Имя во множественном числе",
     "disabled": "Отключено",
     "customizable": "Настраиваемый",
-    "hasDuplicates": "Проверять дубликаты",
-    "masterEntity": "Мастер сущность",
     "hasArchive": "Архивируемый",
     "hasActive": "Активируемый",
     "hideFieldTypeFilters": "Скрыть фильтры типов полей",
@@ -43,15 +41,15 @@
     "deleteValuesAfterUnlinkingClassification": "Удалите значения атрибутов после отсоединения классификаций",
     "linkAttributesWithClassificationAutomatically": "Свяжите атрибуты с классификацией автоматически",
     "primaryEntity": "Первичная сущность",
-    "derivedEntities": "Производные сущности"
+    "matchDuplicates": "Поиск дубликатов",
+    "matchMasterRecords": "Поиск мастер записи"
   },
   "options": {
     "type": {
       "Base": "Базовая",
       "Hierarchy": "Иерархия",
       "ReferenceData": "Ссылка",
-      "Archive": "Архив",
-      "Derivative": "Производная"
+      "Archive": "Архив"
     },
     "sortDirection": {
       "asc": "Восходящий",

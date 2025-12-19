@@ -25,7 +25,7 @@ class Delete extends AbstractAction
     public function executeNow(Entity $action, \stdClass $input): bool
     {
         if (property_exists($input, 'where')) {
-            $res = $this->getServiceFactory()->create($action->get('targetEntity'))->massRemove([
+            $res = $this->getServiceFactory()->create($action->get('searchEntity'))->massRemove([
                 'where' => json_decode(json_encode($input->where), true)
             ]);
             return !empty($res);
@@ -55,7 +55,7 @@ class Delete extends AbstractAction
             $whereJson = $this->container->get('twig')->renderTemplate($whereJson, $templateData);
             $where = @json_decode($whereJson, true);
 
-            $res = $this->getServiceFactory()->create($action->get('targetEntity'))->massRemove([
+            $res = $this->getServiceFactory()->create($action->get('searchEntity'))->massRemove([
                 'where' => $where
             ]);
 

@@ -19,6 +19,9 @@ class Classification extends Base
     {
         $entityName = (string)$this->getBoolFilterParameter('onlyForEntity');
         if (!empty($entityName)) {
+            if ($this->getMetadata()->get("scopes.$entityName.primaryEntityId")) {
+                $entityName = $this->getMetadata()->get("scopes.$entityName.primaryEntityId");
+            }
             $result['whereClause'][] = [
                 'entityId' => $entityName
             ];

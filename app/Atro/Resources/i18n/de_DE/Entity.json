@@ -3,8 +3,6 @@
     "name": "Name Singular",
     "namePlural": "Name Plural",
     "disabled": "Deaktiviert",
-    "hasDuplicates": "Auf Duplikate prüfen",
-    "masterEntity": "Master-Entität",
     "hasArchive": "Archivierbar",
     "hasActive": "Aktivierbar",
     "hideFieldTypeFilters": "Feldtypfilter ausblenden",
@@ -43,15 +41,15 @@
     "customizable": "Anpassbar",
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
-    "derivedEntities": "Abgeleitete Entitäten"
+    "matchDuplicates": "Duplikate abgleichen",
+    "matchMasterRecords": "Stammdaten abgleichen"
   },
   "options": {
     "type": {
       "Base": "Basis",
       "Hierarchy": "Hierarchie",
       "ReferenceData": "Referenz",
-      "Archive": "Archiv",
-      "Derivative": "Derivat"
+      "Archive": "Archiv"
     },
     "sortDirection": {
       "asc": "Aufsteigend",

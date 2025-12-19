@@ -85,10 +85,10 @@ Espo.define('views/admin/field-manager/record/panels/attributes', 'views/record/
         panelVisible() {
             if (!this.model.get('type')) {
                 return this.getMetadata().get(['scopes', this.model.id, 'hasAttribute'])
-                    && this.getMetadata().get(['scopes', this.model.id, 'type']) !== 'Derivative';
+                    && !this.getMetadata().get(['scopes', this.model.id, 'primaryEntityId']);
             }
 
-            return this.model.get('hasAttribute') && this.model.get('type') !== 'Derivative';
+            return this.model.get('hasAttribute') && !this.model.get('primaryEntityId');
         },
     })
 );

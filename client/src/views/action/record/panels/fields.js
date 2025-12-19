@@ -100,9 +100,11 @@ Espo.define('views/action/record/panels/fields', 'view',
                 this.$el.find('[data-action="reset"]').removeClass('hidden');
             }
 
-            let label = this.translate(name, 'fields', this.scope);
-            let html = '<div class="cell form-group col-sm-12" data-name="' + name + '"><label class="control-label">' + label + '</label><div class="field" data-name="' + name + '" /></div>';
-            this.$el.find('.fields-container').append(html);
+            if (this.$el.find(`.fields-container .cell[data-name="${name}"]`).length === 0) {
+                let label = this.translate(name, 'fields', this.scope);
+                let html = '<div class="cell form-group col-sm-12" data-name="' + name + '"><label class="control-label">' + label + '</label><div class="field" data-name="' + name + '" /></div>';
+                this.$el.find('.fields-container').append(html);
+            }
 
             let type = this.fieldsModel.getFieldType(name);
 

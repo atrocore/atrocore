@@ -2,7 +2,24 @@
   {
     "label": "",
     "rows": [
-      [{"name": "preview", "fullWidth":  true}]
+      [
+        {
+          "name": "preview",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "created",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "modified",
+          "fullWidth": true
+        }
+      ]
     ]
   }
 ]

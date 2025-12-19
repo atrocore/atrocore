@@ -30,13 +30,11 @@
     },
     "type": {
       "type": "enum",
-      "view": "views/entity/fields/type",
       "required": true,
       "options": [
         "Base",
         "Hierarchy",
-        "ReferenceData",
-        "Derivative"
+        "ReferenceData"
       ],
       "conditionalProperties": {
         "protected": {
@@ -62,6 +60,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -79,6 +81,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -102,6 +108,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -115,6 +125,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "statusField"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -151,6 +165,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -169,6 +187,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -209,6 +231,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -231,6 +257,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -247,13 +277,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -270,13 +303,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -293,13 +329,16 @@
               "attribute": "type",
               "value": [
                 "Relation",
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -315,13 +354,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -336,6 +378,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -351,6 +397,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -365,6 +415,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -385,6 +439,10 @@
               "type": "equals",
               "attribute": "type",
               "value": "Hierarchy"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -405,6 +463,10 @@
             {
               "type": "isTrue",
               "attribute": "relationInheritance"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -477,13 +539,88 @@
         }
       }
     },
+    "hasMasterDataEntity": {
+      "type": "bool",
+      "protected": true
+    },
     "matchingDisabled": {
       "type": "bool",
       "protected": true
     },
-    "hasDuplicates": {
+    "matchMasterRecords": {
       "type": "bool",
-      "view": "views/entity/fields/has-duplicates",
+      "view": "views/entity/fields/match-master-records",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
+            }
+          ]
+        }
+      }
+    },
+    "matchDuplicates": {
+      "type": "bool",
+      "view": "views/entity/fields/match-duplicates",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isFalse",
+              "attribute": "matchingDisabled"
+            }
+          ]
+        }
+      }
+    },
+    "role": {
+      "type": "enum",
+      "options": [
+        "staging"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasStaging": {
+      "type": "bool",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -496,8 +633,39 @@
               ]
             },
             {
-              "type": "isFalse",
-              "attribute": "matchingDisabled"
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "stagingEntity": {
+      "type": "link",
+      "view": "views/fields/link",
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasStaging"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "stagingEntityId"
             }
           ]
         }
@@ -513,59 +681,30 @@
               "type": "in",
               "attribute": "type",
               "value": [
-                "Derivative"
-              ]
-            }
-          ]
-        },
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Derivative"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "derivedEntities": {
-      "type": "linkMultiple",
-      "noLoad": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "masterEntity": {
-      "type": "varchar",
-      "view": "views/entity/fields/master-entity",
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
                 "Base",
                 "Hierarchy"
               ]
             },
             {
-              "type": "isFalse",
-              "attribute": "matchingDisabled"
+              "type": "or",
+              "value": [
+                {
+                  "type": "isEmpty",
+                  "attribute": "id"
+                },
+                {
+                  "type": "isNotEmpty",
+                  "attribute": "primaryEntityId"
+                }
+              ]
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
             }
           ]
         }
@@ -583,6 +722,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -611,6 +754,10 @@
       }
     },
     "isCustom": {
+      "type": "bool",
+      "readOnly": true
+    },
+    "derivativeEnabled": {
       "type": "bool",
       "readOnly": true
     },
@@ -651,6 +798,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -668,13 +819,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -692,13 +846,16 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
             },
             {
               "type": "isTrue",
               "attribute": "customizable"
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -719,9 +876,12 @@
               "type": "notIn",
               "attribute": "type",
               "value": [
-                "Archive",
-                "Derivative"
+                "Archive"
               ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -772,11 +932,8 @@
         "visible": {
           "conditionGroup": [
             {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "Derivative"
-              ]
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
             }
           ]
         }
@@ -795,12 +952,10 @@
   "links": {
     "primaryEntity": {
       "type": "belongsTo",
-      "foreign": "derivedEntities",
       "entity": "Entity"
     },
-    "derivedEntities": {
-      "type": "hasMany",
-      "foreign": "primaryEntity",
+    "stagingEntity": {
+      "type": "belongsTo",
       "entity": "Entity"
     },
     "createdBy": {

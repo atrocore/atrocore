@@ -19,6 +19,26 @@ use Espo\ORM\Entity;
 
 class Action extends Base
 {
+    protected function beforeSave(Entity $entity, array $options = [])
+    {
+        parent::beforeSave($entity, $options);
+
+        if (
+            $entity->isAttributeChanged('targetEntity')
+            && in_array($entity->get('type'), ['update', 'email', 'delete'])
+        ) {
+            $entity->set('searchEntity', $entity->get('targetEntity'));
+        }
+
+        if (
+            $entity->isAttributeChanged('searchEntity')
+            && in_array($entity->get('type'), ['create', 'createOrUpdate'])
+            && $entity->get('updateType') !== 'script'
+        ) {
+            $entity->set('updateType', 'script');
+        }
+    }
+
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->deleteCacheFile();

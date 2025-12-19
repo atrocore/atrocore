@@ -24,6 +24,9 @@ Espo.define('views/entity/fields/disable-attribute-linking', 'views/fields/bool'
                 }
                 this.reRender();
             });
+            this.listenTo(this.model, 'change:primaryEntityId', () => {
+                this.reRender();
+            });
         },
 
         afterRender(){
@@ -35,6 +38,7 @@ Espo.define('views/entity/fields/disable-attribute-linking', 'views/fields/bool'
                 && this.initialAttributes['hasAttribute']
                 && this.initialAttributes['hasClassification']
                 && this.model.id !== 'Listing'
+                && !this.model.get('primaryEntityId')
                 && this.model.get('hasClassification')
             ){
                 this.show();

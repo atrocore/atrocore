@@ -22,6 +22,9 @@
     export let mode: string;
     export let maxSize: number = Config.get('recordsPerPageSmall') || 20;
 
+    export let showItems: boolean = true;
+    export let hasItems: boolean = false;
+
     export let renderLayoutEditor: Function = () => {
     };
 
@@ -31,8 +34,18 @@
 
     export let showApplySortOrder: boolean = true
 
+    export function setShowItems(value: string[]) {
+        showItems = value;
+        if(value){
+            setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
+        }else if(!value && activeItem.name === '_items') {
+            setActiveItem(treeItems[0]);
+        }
+    }
+
     let isPinned: boolean = true;
     let treeElement: HTMLElement;
+    let selectionItemElement: HTMLElement;
     let layoutEditorElement: HTMLElement;
     let searchInputElement: HTMLInputElement;
     let treeItems: [] = [];
@@ -40,7 +53,8 @@
     let layoutLoading: boolean = false;
     let treeLoading: boolean = false;
     let searchValue: string = '';
-    let treeScope: string;
+    let treeScope: string | null;
+    let treeIcon: string | null;
     let layoutData: any;
     let selectNodeId: string | null = null;
     let isHidden: boolean = false;
@@ -50,7 +64,14 @@
     let applyAdvancedFilter: boolean = false;
     let showEmptyPlaceholder: boolean = false;
 
-    $: treeScope = activeItem ? getLinkScope(activeItem.name) : null
+    $: {
+        treeScope = activeItem ? getLinkScope(activeItem.name) : null;
+        if (treeScope) {
+            treeIcon = Utils.getTabIcon(treeScope);
+        } else {
+            treeIcon = null;
+        }
+    }
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
     $: {
         if (!treeScope) {
@@ -110,10 +131,10 @@
     }
 
     function canUseDataRequest() {
-        if (!['_self', '_bookmark'].includes(activeItem.name) || !applyAdvancedFilter) {
+        if (!['_self', '_bookmark'].includes(activeItem.name) || applyAdvancedFilter) {
             return true
         }
-        return Storage.get('useDataRequest', scope) === 'yes'
+        return false
     }
 
     function getHashScope() {
@@ -126,7 +147,7 @@
             return;
         }
 
-        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-caret-right')
+        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-plus-square');
 
         if (isClosed && !node.getData().length) {
             Notifier.notify('Loading...')
@@ -137,11 +158,11 @@
 
         if (isClosed) {
             $tree.tree('openNode', node, true, () => {
-                window.$(node.element).find('.load-items').removeClass('ph-caret-right').addClass('ph-caret-down');
+                window.$(node.element).find('.load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
             });
         } else {
             $tree.tree('closeNode', node, true)
-            window.$(node.element).find('.load-items').removeClass('ph-caret-down').addClass('ph-caret-right');
+            window.$(node.element).find('.load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
         }
 
     }
@@ -160,8 +181,10 @@
         let hasTextFilter = !!searchValue;
 
         if (
-            data === null && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
+            data === null
+            && Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy'
             && (canUseDataRequest() || hasTextFilter)
+            && activeItem.name !== '_bookmark'
         ) {
             treeLoading = true;
             if (searchValue) {
@@ -189,8 +212,8 @@
             autoOpen: false,
             dragAndDrop: Metadata.get(['scopes', treeScope, 'multiParents']) !== true && Metadata.get(['scopes', treeScope, 'dragAndDrop']) && sortBy === 'sortOrder',
             useContextMenu: false,
-            closedIcon: window.$('<i class="ph ph-folder"></i>'),
-            openedIcon: window.$('<i class="ph ph-folder-open"></i>'),
+            closedIcon: window.$('<i class="ph ph-caret-right"></i>'),
+            openedIcon: window.$('<i class="ph ph-caret-down"></i>'),
             onCreateLi: function (node, $li, is_selected) {
                 if (node.disabled) {
                     $li.addClass('disabled');
@@ -225,7 +248,7 @@
                     $li.addClass('jqtree-selected');
                 }
 
-                if (!['_self', '_bookmark'].includes(activeItem.name) && selectNodeId === node.id) {
+                if (!['_self', '_bookmark', '_admin'].includes(activeItem.name) && selectNodeId === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                     appendUnsetButton($li)
@@ -252,12 +275,27 @@
                     $li.find('.jqtree-title').addClass('more-label');
                 } else {
                     $title.attr('title', node.name);
-                    if (!node.disabled && activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node) && !node.has_children) {
-                        const $el = window.$('<span class="load-items ph ph-caret-right"></span>')
-                        $li.find('.jqtree-element').append($el);
+
+                    if (activeItem.name !== '_admin' && scope !== treeScope && !isNodeInSubTree(node)) {
+                        const $el = window.$(`<span class="load-items"></span>`)
+                        $li.find('.jqtree-element').prepend($el);
+                    }
+                    if (!node.disabled && !node.has_children && node.scope !== scope) {
+                        const $el = $li.find('.jqtree-element .load-items');
+                        $el.addClass('ph').addClass('ph-plus-square');
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
                     }
+                }
+
+                if ($li.hasClass('jqtree-folder')) {
+                    return;
+                }
+
+                const $element = $li.find('> .jqtree-element');
+
+                if ($element.children('.jqtree-toggler').length === 0) {
+                    $element.prepend('<i class="jqtree-toggler jqtree_common jqtree-toggler-left" role="presentation"></i>')
                 }
             }.bind(this),
             onCanMove: function (node) {
@@ -272,19 +310,18 @@
             showEmptyPlaceholder = data.length === 0
         }
 
-        $tree.tree(treeData);
-        $tree.on('tree.loading_data', e => {
-            if (e.isLoading) {
+        let dataLoaded = false;
+
+        $tree.on('tree.load_data', e => {
+            Notifier.notify(false)
+            if (dataLoaded) {
                 return
             }
 
-            Notifier.notify(false)
-
-            if (!e.node) {
-                if (callbacks?.treeLoad) {
-                    callbacks.treeLoad(treeScope, treeData);
-                }
+            if (callbacks?.treeLoad) {
+                callbacks.treeLoad(treeScope, treeData);
             }
+            dataLoaded = true;
         })
         $tree.on('tree.refresh', e => {
             showEmptyPlaceholder = $tree.tree('getTree')?.children?.length === 0
@@ -292,10 +329,7 @@
             if (activeItem.name === '_admin') {
                 let hashScope = getHashScope();
                 if (Metadata.get(['scopes', hashScope])) {
-                    selectTreeNode(hashScope, [])
-                    if (callbacks?.selectNode) {
-                        callbacks.selectNode({id: hashScope}, true);
-                    }
+                    selectTreeNode('#' + hashScope, [])
                 }
                 return;
             }
@@ -382,15 +416,45 @@
                 }
             }
         });
+
+        $tree.on('tree.open', e => {
+            if (!e.node?.element) {
+                return;
+            }
+
+            const $element = window.$(e.node.element);
+            const $el = $element.find('> .jqtree-element .load-items');
+            if ($el.length > 0) {
+                $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+            }
+        });
+
+        $tree.on('tree.close', e => {
+            if (!e.node?.element) {
+                return;
+            }
+
+            const $element = window.$(e.node.element);
+            const $el = $element.find('> .jqtree-element .load-items');
+            if ($el.length > 0) {
+                $el.removeClass('ph-minus-square').addClass('ph-plus-square');
+            }
+        });
+
+        $tree.tree(treeData);
     }
 
     function appendUnsetButton($el): void {
+        if (['_admin', '_self', '_bookmark'].includes(activeItem.name)) {
+            return
+        }
+
         if ($el && $el.length) {
             removeUnsetButton($el);
 
             if (selectNodeId && isSelectionEnabled) {
                 let button = document.createElement('span');
-                button.classList.add('reset-button', 'ph', 'ph-x', 'pull-right');
+                button.classList.add('reset-button', 'tree-button', 'ph', 'ph-x', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callUnselectNode();
@@ -398,7 +462,7 @@
                 $el.append(button);
 
                 button = document.createElement('span');
-                button.classList.add('add-to-filter-button', 'ph', 'ph-plus-circle', 'pull-right');
+                button.classList.add('add-to-filter-button', 'tree-button', 'ph', 'ph-funnel', 'pull-right');
                 button.addEventListener('click', () => {
                     removeUnsetButton($el);
                     callAddNodeToFilter();
@@ -451,7 +515,7 @@
                     // Fix caret loader
                     const $el = window.$(parentNode.element).find('.load-items');
                     if ($el.length > 0) {
-                        $el.removeClass('ph-caret-right').addClass('ph-caret-down');
+                        $el.removeClass('ph-plus-square').addClass('ph-minus-square');
                     }
                 }
             }
@@ -481,6 +545,7 @@
             return generateSubTreeUrl(node)
         }
 
+        let treeScope = activeItem ? getLinkScope(activeItem.name) : null
         let url = treeScope + `/action/Tree?isTreePanel=1&scope=${scope}&link=${activeItem.name}`;
         if (sortBy) {
             url += `&sortBy=${sortBy}&asc=${sortAsc ? 'true' : 'false'}`
@@ -814,27 +879,35 @@
         if (activeItem && activeItem.name === treeItem.name) {
             return
         }
-        searchValue = ''
-        searchInputElement.value = ''
-        Storage.clear('treeSearchValue', treeScope)
-        Storage.clear('treeSearchValue', '_admin')
-
-        if (mode === 'list') {
-            if (selectNodeId) {
-                if (callbacks?.selectNode) {
-                    callbacks.selectNode({id: selectNodeId});
-                }
-                selectNodeId = null
-            }
-        } else {
-            selectNodeId = null
-        }
 
         activeItem = treeItem
-        initSorting(false)
         Storage.set('treeItem', scope, treeItem.name)
-        Notifier.notify('Loading...')
+
+
         tick().then(() => {
+            if(scope === 'Selection' && treeItem.name === '_items') {
+                if(callbacks?.onActiveItems) {
+                    callbacks?.onActiveItems(selectionItemElement);
+                }
+                return;
+            }
+            Notifier.notify('Loading...')
+            searchValue = ''
+            searchInputElement.value = ''
+            Storage.clear('treeSearchValue', treeScope)
+            Storage.clear('treeSearchValue', '_admin')
+
+            if (mode === 'list') {
+                if (selectNodeId) {
+                    if (callbacks?.selectNode) {
+                        callbacks.selectNode({id: selectNodeId});
+                    }
+                    selectNodeId = null
+                }
+            } else {
+                selectNodeId = null
+            }
+            initSorting(false)
             rebuildTree()
         })
     }
@@ -871,10 +944,11 @@
         return layoutData;
     }
 
-    function onSortByChange(event) {
-        sortBy = event.target.value
-        Storage.set('treeItemSorting', scope, {sortBy, sortAsc})
-        rebuildTree()
+    function setSortBy(field: string): void
+    {
+        sortBy = field;
+        Storage.set('treeItemSorting', scope, {sortBy, sortAsc});
+        rebuildTree();
     }
 
     function onSortAscChange(event) {
@@ -962,6 +1036,8 @@
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
+                    }else if (item.name === '_items') {
+                        label = Language.get('Global', 'labels', 'Items')
                     } else {
                         if (type == 'link') {
                             const itemScope = getLinkScope(item.name)
@@ -1065,6 +1141,13 @@
         }
 
         loadLayout(() => {
+            if(hasItems) {
+                treeItems = [...treeItems, {
+                    name: '_items',
+                    label: Language.get('Global', 'labels', 'Items')
+                }];
+            }
+
             if (treeItems.length === 0) {
                 isCollapsed = true
                 if (!UserData.get()?.user?.isAdmin) {
@@ -1073,6 +1156,7 @@
                 }
             }
             tick().then(() => {
+
                 if (activeItem?.name === '_admin') {
                     searchValue = Storage.get('treeSearchValue', '_admin') || null;
                 } else {
@@ -1082,7 +1166,9 @@
                     searchInputElement.value = searchValue;
                 }
 
-                if (!isCollapsed) {
+                if(scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
+                    callbacks?.onActiveItems(selectionItemElement);
+                }else if (!isCollapsed) {
                     buildTree();
                 }
 
@@ -1091,6 +1177,10 @@
                 }
             })
         });
+
+        if(callbacks?.afterMounted) {
+            callbacks.afterMounted();
+        }
     });
 
     function onSidebarResize(e: CustomEvent): void {
@@ -1130,79 +1220,85 @@
                 <Preloader heightPx={12}/>
             </div>
         {:else if treeItems.length > 0 }
-            <div class="panel-group" style="margin-bottom: 10px; min-height: 26px;">
-                <div class="btn-group">
+            <div class="panel-group" style="padding-bottom: 10px;min-height: 26px;margin-bottom: 0;margin-left: -8px;">
+                <div class="tree-items-container">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="btn btn-link tree-item" class:active={treeItem.name===activeItem.name}>
+                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
-                    <span bind:this={layoutEditorElement} class="btn layout-editor-container"></span>
+                    <span bind:this={layoutEditorElement} class="layout-editor-container"></span>
                 </div>
             </div>
             {#if activeItem}
                 <div class="sidebar-header">
-                    <h5>{activeItem.label}</h5>
+                    <h5>{#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
                 </div>
 
-                <div class="panel-group category-search" style="margin-bottom: 20px">
-                    <div class="field" data-name="category-search">
-                        <input type="text" bind:this={searchInputElement}
-                               on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
-                               class="form-control category-search" class:search-enabled={!!searchValue}
-                               placeholder={Language.translate('typeToSearch')}>
+                {#if scope === 'Selection' && activeItem.name === '_items'}
+                    <div class="selection-items" bind:this={selectionItemElement}></div>
+                {:else}
+                    <div class="panel-group category-search" style="margin-bottom: 20px">
+                        <div class="field" data-name="category-search">
+                            <input type="text" bind:this={searchInputElement}
+                                   on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
+                                   class="form-control category-search" class:search-enabled={!!searchValue}
+                                   placeholder={Language.translate('typeToSearch')}>
 
-                        <div class="button-container">
-                            {#if searchValue}
-                                <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
-                            {/if}
-                            <button on:click={applySearch} class="search-in-tree-button">
-                                <i class="ph ph-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </div>
-                    {#if showApplyQuery }
-                        <div style="margin-top:  20px;">
-                                 <span class="icons-wrapper">
-                                    <span class="toggle" class:active={applyAdvancedFilter}
-                                          on:click|stopPropagation|preventDefault={handleFilterToggle}
-                                    >
-                                        {#if applyAdvancedFilter}
-                                            <i class="ph-fill ph-toggle-right"></i>
-                                        {:else}
-                                            <i class="ph-fill ph-toggle-left"></i>
-                                        {/if}
-                                    </span>
-                                     {Language.translate('applyMainSearchAndFilter')}
-                                </span>
-                        </div>
-                    {/if}
-                    {#if showApplySortOrder && activeItem.name !== '_admin' }
-                        <div style="margin-top: 20px;display: flex; justify-content: space-between; flex-wrap: wrap">
-                            <div class="button-group" style="display:flex; align-items: stretch;">
-                                <button type="button" class="sort-btn" data-tippy="true"
-                                        title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
-                                        on:click={onSortAscChange}>
-                                    <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
+                            <div class="button-container">
+                                {#if searchValue}
+                                    <button on:click={treeReset} class="ph ph-x reset-search-in-tree-button"></button>
+                                {/if}
+                                <button on:click={applySearch} class="search-in-tree-button">
+                                    <i class="ph ph-magnifying-glass"></i>
                                 </button>
-                                <select class="form-control" style="max-width: 300px; flex: 1;" bind:value={sortBy}
-                                        on:change={onSortByChange}>
-                                    {#each sortFields as field }
-                                        <option value="{field.name}">
-                                            {field.label}
-                                        </option>
-                                    {/each}
-                                </select>
                             </div>
                         </div>
-                    {/if}
-                </div>
+                        <div class="search-wrapper">
+                            {#if showApplySortOrder && activeItem.name !== '_admin' }
+                                <div class="sort-container">
+                                    <div class="button-group">
+                                        <button type="button" class="sort-dir-button"
+                                                title={Language.translateOption(sortAsc?'asc':'desc','sortDirection','Entity')}
+                                                on:click={onSortAscChange}>
+                                            <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
+                                        </button>
+                                        <button type="button" class="sort-by-button" data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
+                                        <ul class="dropdown-menu">
+                                            {#each sortFields.filter(field => field.name !== sortBy) as field }
+                                                <li><a href="#" on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a></li>
+                                            {/each}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') }
+                                <div class="main-filter-container">
+                                     <span class="icons-wrapper">
+                                        <span class="toggle" class:active={applyAdvancedFilter}
+                                              on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                        >
+                                            {#if applyAdvancedFilter}
+                                                <i class="ph-fill ph-toggle-right"></i>
+                                            {:else}
+                                                <i class="ph-fill ph-toggle-left"></i>
+                                            {/if}
+                                        </span>
+                                         {Language.translate('applyMainSearchAndFilter')}
+                                    </span>
+                                </div>
+                            {/if}
 
-                <div class="panel-group category-tree" bind:this={treeElement}>
-                </div>
-                {#if showEmptyPlaceholder}
-                    <p>{Language.translate('No Data')}</p>
+                        </div>
+                    </div>
+
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
+                    </div>
+
+                    {#if showEmptyPlaceholder}
+                        <p>{Language.translate('No Data')}</p>
+                    {/if}
                 {/if}
             {/if}
         {/if}
@@ -1215,10 +1311,13 @@
     }
 
     .field[data-name="category-search"] > input.category-search {
-        border: 0;
-        border-bottom: 1px solid #e8eced;
-        background-color: transparent;
+        background-color: #fff;
         padding: 8px 36px 8px 12px;
+        border-radius: 5px;
+    }
+
+    .field[data-name="category-search"] > input.category-search:focus {
+        border-color: #06c;
     }
 
     .field[data-name="category-search"] > input.category-search.search-enabled {
@@ -1246,44 +1345,31 @@
         border-bottom: 1px solid #e8eced;
     }
 
+    .tree-items-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
     .tree-item {
-        padding: 4px 20px 4px 0;
+        padding: 4px 8px;
         color: #333;
-        text-decoration: underline;
+        border-radius: 16px;
+        text-decoration: none;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid transparent;
     }
 
     .tree-item.active {
-        color: #2895ea;
+        color: #06c;
     }
 
+    .tree-item.active,
     .tree-item:hover:not(.active) {
-        color: #2895ea85;
-    }
-
-    .unset-selection {
-        background: #dae8fc;
-        border: 1px solid;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .sort-btn:focus {
-        background: white;
-    }
-
-    .sort-btn + select {
-        border-left: 0;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-    }
-
-    .sort-btn + select,
-    .sort-btn + select:focus {
-        border-color: #e0e0e0;
-    }
-
-    .unset-selection i {
-        font-size: 14px;
+        border-color: #06c;
     }
 
     .layout-editor-container:empty {
@@ -1295,6 +1381,14 @@
         line-height: 0;
     }
 
+    .tree-scope-icon {
+        width: 22px;
+        height: 22px;
+        margin-inline-end: .5em;
+        filter: brightness(0);
+        user-select: none;
+    }
+
     .layout-editor-container:not(:empty):active {
         box-shadow: none;
     }
@@ -1304,21 +1398,48 @@
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
-        display: -webkit-box;
-        line-clamp: 1;
-        -webkit-line-clamp: 1;
+        line-height: 1.36;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .load-items) {
+        display: inline-block;
+        width: 16px;
+        margin-right: .5em;
+        order: 2;
+        color: var(--primary-font-color);
+        position: relative;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
+        order: 1;
+    }
+
+    :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-title) {
+        order: 3;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
         text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        overflow-y: clip;
-        line-height: normal;
     }
 
     :global(ul.jqtree-tree li.jqtree_common) {
         position: relative;
     }
 
+    :global(ul.jqtree-tree li.jqtree_common .tree-button) {
+        background-color: rgba(255, 255, 255, .9);
+        border-radius: 5px;
+        padding: 3px 4px;
+        font-size: 16px;
+        border: 1px solid var(--primary-border-color);
+    }
+
     :global(ul.jqtree-tree li.jqtree_common .reset-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
         right: 0;
@@ -1326,11 +1447,16 @@
     }
 
     :global(ul.jqtree-tree li.jqtree_common .add-to-filter-button) {
-        margin-top: 6px;
+        margin-top: 4px;
         position: absolute;
         top: 0;
-        right: 25px;
+        right: 30px;
         cursor: pointer;
+    }
+
+    :global(.tree-_admin ul.jqtree-tree .jqtree_common.disabled > div > span) {
+        color: #000;
+        font-weight: bold;
     }
 
     .category-panel .icons-wrapper .toggle {
@@ -1343,7 +1469,59 @@
         color: #06c;
     }
 
-    .category-panel .icons-wrapper .toggle i {
-        font-size: 24px;
+    .search-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .sort-container, .main-filter-container {
+        margin-top: 5px;
+    }
+
+    .sort-container,
+    .sort-by-button,
+    .sort-dir-button {
+        font-size: 12px;
+    }
+
+    .sort-by-button,
+    .sort-dir-button {
+        background-color: transparent;
+        padding: 0 3px;
+        border-color: transparent;
+        border-radius: 3px;
+        outline: 0;
+        color: var(--primary-font-color);
+    }
+
+    .sort-dir-button {
+        padding: 0;
+        margin-inline-end: 2px;
+    }
+
+    .sort-dir-button i {
+        font-size: 16px;
+    }
+
+    .sort-container .dropdown-menu li a {
+        padding: 5px 15px;
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .sort-by-button:hover,
+    .sort-container .button-group.open .sort-by-button {
+        border-color: var(--primary-border-color);
+    }
+
+    .main-filter-container {
+        font-size: 12px;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .main-filter-container i {
+        font-size: 16px;
     }
 </style>

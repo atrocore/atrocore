@@ -40,18 +40,14 @@
     "nonDuplicatableFields": "Pola niepowielone",
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
-    "hasDuplicates": "Sprawdź duplikaty",
-    "masterEntity": "Podmiot główny",
-    "primaryEntity": "Podmiot główny",
-    "derivedEntities": "Podmioty pochodne"
+    "primaryEntity": "Podmiot główny"
   },
   "options": {
     "type": {
       "Base": "Podstawa",
       "Hierarchy": "Hierarchia",
       "ReferenceData": "Odniesienie",
-      "Archive": "Archiwum",
-      "Derivative": "Instrument pochodny"
+      "Archive": "Archiwum"
     },
     "sortDirection": {
       "asc": "Rosnąco",

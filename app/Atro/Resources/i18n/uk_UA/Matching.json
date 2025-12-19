@@ -2,7 +2,6 @@
   "fields": {
     "minimumScore": "Мінімальний бал, %",
     "entity": "Сутність",
-    "sourceEntity": "Джерело",
     "masterEntity": "Мастер",
     "matchingRules": "Правила збігу",
     "matchedRecords": "Співставлені записи",

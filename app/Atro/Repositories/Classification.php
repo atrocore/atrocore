@@ -74,6 +74,15 @@ class Classification extends Hierarchy
             throw new BadRequest($this->exception('entityCannotBeChanged'));
         }
 
+        if ($entity->isAttributeChanged('entityId')) {
+            if (
+                !$this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasClassification")
+                || $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")
+            ) {
+                throw new BadRequest($this->exception('entityNotAllowToChoose'));
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 

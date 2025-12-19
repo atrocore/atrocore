@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "incomingWebhook": "Incoming Webhook",
+    "scheduledJob": "Scheduled Job",
+    "workflow": "Workflow",
+    "statusMessage": "Status Message",
+    "startedAt": "Started At",
+    "finishedAt": "Finished At",
+    "logs": "Logs",
+    "createdCount": "Created",
+    "updatedCount": "Updated",
+    "failedCount": "Failed"
+  },
+  "options": {
+    "type": {
+      "manual": "Manual",
+      "incomingWebhook": "Incoming Webhook",
+      "scheduledJob": "Scheduled Job",
+      "workflow": "Workflow"
+    },
+    "status": {
+      "running": "Running",
+      "done": "Done",
+      "failed": "Failed"
+    }
+  }
+}

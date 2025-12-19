@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "incomingWebhook": "Eingehender Webhook",
+    "scheduledJob": "Geplante Aufgabe",
+    "workflow": "Workflow",
+    "statusMessage": "Statusmeldung"
+  },
+  "options": {
+    "type": {
+      "manual": "Manuell",
+      "incomingWebhook": "Eingehender Webhook",
+      "scheduledJob": "Geplante Aufgabe",
+      "workflow": "Workflow"
+    },
+    "status": {
+      "failed": "Gescheitert"
+    }
+  }
+}

@@ -255,10 +255,7 @@ class Attribute extends Base
             throw new NotFound();
         }
 
-        $checkEntity = $this->getMetadata()->get("scopes.$entityName.type") === 'Derivative'
-            ? $this->getMetadata()->get("scopes.$entityName.primaryEntityId")
-            : $entityName;
-
+        $checkEntity = $this->getMetadata()->get("scopes.$entityName.primaryEntityId") ?? $entityName;
         if ($attribute->get('entityId') !== $checkEntity) {
             throw new BadRequest($this->exception('attributeNotBelongToEntity'));
         }
@@ -533,6 +530,15 @@ class Attribute extends Base
 
         if (!$entity->isNew() && $entity->isAttributeChanged('entityId')) {
             throw new BadRequest($this->exception('entityCannotBeChanged'));
+        }
+
+        if ($entity->isAttributeChanged('entityId')) {
+            if (
+                !$this->getMetadata()->get("scopes.{$entity->get('entityId')}.hasAttribute")
+                || $this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")
+            ) {
+                throw new BadRequest($this->exception('entityNotAllowToChoose'));
+            }
         }
 
         $attributePanel = $this->getEntityManager()->getEntity('AttributePanel', $entity->get('attributePanelId'));

@@ -15,6 +15,7 @@ namespace Atro\Listeners;
 
 use Atro\Core\EventManager\Event;
 use Atro\Core\EventManager\Manager;
+use Atro\Core\LayoutManager;
 use Espo\Core\Utils\Json;
 use Atro\Core\Utils\Util;
 
@@ -66,15 +67,29 @@ class Layout extends AbstractListener
         if ($event->getArgument('params')['viewType'] === 'selection') {
             $result = $event->getArgument('result');
             if (empty($event->getArgument('params')['isCustom']) && empty($result)) {
-                $scope = $event->getArgument('params')['scope'];
+                $params = $event->getArgument('params');
                 $result = [];
 
-                $scopeDefs = $this->getMetadata()->get(['scopes', $scope]);
+                $data = $this->getLayoutManager()->get($params['scope'], 'detail',
+                    null, null, $params['layoutProfileId'] ?? null,
+                    $params['isAdminPage']);
 
-                if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name', 'type']))) {
-                    $result[] = ["name" => "name"];
-                } else {
-                    $result[] = ["name" => "id"];
+                if (!empty($data['layout'])) {
+                    foreach ($data['layout'] as $panel) {
+                        if (!empty($panel['rows'])) {
+                            foreach ($panel['rows'] as $rows) {
+                                if (!empty($rows)) {
+                                    foreach ($rows as $row) {
+                                        if (!empty($row['name'])) {
+                                            $result[] = [
+                                                'name' => $row['name'],
+                                            ];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 $event->setArgument('result', $result);
@@ -86,7 +101,7 @@ class Layout extends AbstractListener
             $scope = $event->getArgument('params')['scope'];
 
             if (empty($event->getArgument('params')['isCustom'])) {
-                if (empty($result)){
+                if (empty($result)) {
                     $result = [['name' => 'summary'], ['name' => 'accessManagement']];
                     $event->setArgument('result', $result);
                 }
@@ -116,5 +131,10 @@ class Layout extends AbstractListener
     protected function getEventManager(): Manager
     {
         return $this->getContainer()->get('eventManager');
+    }
+
+    public function getLayoutManager(): LayoutManager
+    {
+        return $this->getContainer()->get('layoutManager');
     }
 }

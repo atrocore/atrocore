@@ -16,6 +16,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\JobManager;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Entities\Job as JobEntity;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
@@ -76,6 +77,10 @@ class Job extends Base
         }
     }
 
+    /**
+     * @param JobEntity $entity
+     * @param array  $options
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
@@ -85,6 +90,8 @@ class Job extends Base
         }
 
         if ($entity->isAttributeChanged('status')) {
+            $this->checkActionExecution($entity);
+
             if ($entity->get('status') === 'Canceled' && !empty($entity->get('pid'))) {
                 exec("kill -9 {$entity->get('pid')}");
             }
@@ -109,6 +116,35 @@ class Job extends Base
         }
 
         parent::beforeRemove($entity, $options);
+    }
+
+    public function checkActionExecution(JobEntity $job): void
+    {
+        $actionExecutionId = $job->getPayload()['actionExecutionId'] ?? null;
+        if (empty($actionExecutionId)) {
+            return;
+        }
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from($this->getConnection()->quoteIdentifier('job'))
+            ->where('payload LIKE :payload')
+            ->andWhere('status IN (:statuses)')
+            ->andWhere('deleted = :false')
+            ->setParameter('payload', '%"actionExecutionId":"' . $actionExecutionId . '"%')
+            ->setParameter('statuses', ['Pending', 'Running'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAssociative();
+
+        if (!empty($res)) {
+            return;
+        }
+
+        $execution = $this->getEntityManager()->getRepository('ActionExecution')->get($actionExecutionId);
+        if (!empty($execution)) {
+            $execution->set('status', 'done');
+            $this->getEntityManager()->saveEntity($execution);
+        }
     }
 
     public function cancelMatchingJobs(string $matchingId): void

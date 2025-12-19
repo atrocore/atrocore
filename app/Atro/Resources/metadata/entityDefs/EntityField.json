@@ -221,7 +221,18 @@
     },
     "required": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": ["linkMultiple"]
+            }
+          ]
+        }
+      }
     },
     "notNull": {
       "type": "bool"
@@ -297,6 +308,11 @@
             {
               "type": "isTrue",
               "attribute": "required"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": ["rangeInt", "rangeFloat"]
             }
           ]
         }
@@ -324,12 +340,50 @@
     "defaultFrom": {
       "type": "float",
       "notStorable": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "required"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["rangeInt", "rangeFloat"]
+            }
+          ]
+        }
+      }
     },
     "defaultTo": {
       "type": "float",
       "notStorable": true,
-      "readOnly": true
+      "readOnly": true,
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "required"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["rangeInt", "rangeFloat"]
+            }
+          ]
+        }
+      }
     },
     "pattern": {
       "type": "varchar",
@@ -337,7 +391,30 @@
     },
     "defaultUnit": {
       "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit"
+      "view": "views/admin/field-manager/fields/default-unit",
+      "conditionalProperties": {
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isEmpty",
+              "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "required"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": ["rangeInt", "rangeFloat","int","float","varchar"]
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "measureId"
+            }
+          ]
+        }
+      }
     },
     "tooltip": {
       "type": "bool"
@@ -717,6 +794,24 @@
       "type": "bool",
       "view": "views/admin/field-manager/fields/record-related-changes-in-stream"
     },
+    "urlLabel": {
+      "type": "enum",
+      "options": [
+        "openLink",
+        "view"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "url"
+            }
+          ]
+        }
+      }
+    },
     "conditionalRequired": {
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
@@ -726,6 +821,11 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": ["linkMultiple"]
             }
           ]
         }

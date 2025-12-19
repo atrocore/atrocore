@@ -159,24 +159,39 @@
           "name": "autoDeleteAfterDays"
         },
         false
-      ],
-      [
-        {
-          "name": "primaryEntity"
-        },
-        false
       ]
     ]
   },
   {
-    "label": "masterDataManagement",
+    "label": "mdm",
     "rows": [
       [
         {
-          "name": "hasDuplicates"
+          "name": "primaryEntity"
         },
         {
-          "name": "masterEntity"
+          "name": "role"
+        }
+      ],
+      [
+        {
+          "name": "hasStaging"
+        },
+        {
+          "name": "stagingEntity"
+        }
+      ]
+    ]
+  },
+  {
+    "label": "matchings",
+    "rows": [
+      [
+        {
+          "name": "matchDuplicates"
+        },
+        {
+          "name": "matchMasterRecords"
         }
       ]
     ]

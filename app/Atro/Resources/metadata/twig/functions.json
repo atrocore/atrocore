@@ -40,6 +40,14 @@
     "handler": "\\Atro\\TwigFunction\\FindEntities",
     "insertText": "findEntities(${1:entityName}, $0)"
   },
+  "entitiesCount": {
+    "handler": "\\Atro\\TwigFunction\\CountEntities",
+    "insertText": "entitiesCount(${1:entityName}, ${2:{}})"
+  },
+  "recordsCount": {
+    "handler": "\\Atro\\TwigFunction\\CountEntities",
+    "insertText": "recordsCount(${1:entityName}, $0)"
+  },
   "convertAssetToBase64FromUrl": {
     "handler": "\\Atro\\TwigFunction\\ConvertFileToBase64FromUrl"
   },

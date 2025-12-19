@@ -44,4 +44,11 @@ class Entity extends Base
             'canHasAssociates' => true
         ];
     }
+
+    protected function boolFilterOnlyForDerivativeEnabled(&$result)
+    {
+        $result['whereClause'][] = [
+            'onlyForDerivativeEnabled' => true
+        ];
+    }
 }

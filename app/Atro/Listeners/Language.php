@@ -213,7 +213,7 @@ class Language extends AbstractListener
         }
 
         foreach ($this->getMetadata()->get('scopes') ?? [] as $scope => $scopeDefs) {
-            if (!empty($scopeDefs['type']) && $scopeDefs['type'] === 'Derivative') {
+            if (!empty($scopeDefs['type']) && !empty($scopeDefs['primaryEntityId'])) {
                 foreach ($data as $locale => $rows) {
                     if (!empty($rows[$scopeDefs['primaryEntityId']])) {
                         $data[$locale][$scope] = $rows[$scopeDefs['primaryEntityId']];

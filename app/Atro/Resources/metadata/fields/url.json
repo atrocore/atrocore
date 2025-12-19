@@ -50,6 +50,10 @@
     {
       "name": "duplicateIgnore",
       "type": "bool"
+    },
+    {
+      "name": "urlLabel",
+      "type": "enum"
     }
   ],
   "filter": true,

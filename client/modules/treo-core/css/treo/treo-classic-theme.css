@@ -2819,14 +2819,18 @@ th {
 }
 
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-    padding: 8px;
+    padding: 8px 5px;
     line-height: 1.36;
     vertical-align: top;
 }
 
 .table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
-    max-width: 16em;
-    min-width: 8em;
+    max-width: 22em;
+    min-width: 12em;
+}
+
+.table > tbody > tr > td.cell {
+    border: 1px solid transparent;
 }
 
 .table > thead > tr > th {
@@ -2894,10 +2898,6 @@ table td[class*="col-"], table th[class*="col-"] {
     position: static;
     float: none;
     display: table-cell
-}
-
-.table > thead > tr > td.active, .table > tbody > tr > td.active, .table > tfoot > tr > td.active, .table > thead > tr > th.active, .table > tbody > tr > th.active, .table > tfoot > tr > th.active, .table > thead > tr.active > td, .table > tbody > tr.active > td, .table > tbody > tr.active > td[data-name=buttons], .table > tfoot > tr.active > td, .table > thead > tr.active > th, .table > tbody > tr.active > th, .table > tfoot > tr.active > th {
-    background-color: #e8eced
 }
 
 .table-hover > tbody > tr > td.active:hover, .table-hover > tbody > tr > th.active:hover, .table-hover > tbody > tr.active:hover > td, .table-hover > tbody > tr:hover > .active, .table-hover > tbody > tr.active:hover > th {
@@ -7441,6 +7441,7 @@ button.close {
     border-radius: 2px;
     box-sizing: border-box;
     line-height: 1;
+    flex-shrink: 0;
 }
 
 .selectize-control.plugin-remove_button [data-value] .remove:before {
@@ -7517,7 +7518,15 @@ button.close {
     display: -moz-inline-stack;
     display: inline-block;
     zoom: 1;
-    *display: inline
+    flex-shrink: 0;
+}
+
+.selectize-input:not(.multi):not(.items) > .item:first-of-type:last-of-type {
+    flex: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .selectize-control.multi .selectize-input > div {
@@ -7527,6 +7536,7 @@ button.close {
     border: 1px solid transparent;
     display: inline-flex;
     align-items: center;
+    max-width: 100%;
 }
 
 .selectize-control.multi .selectize-input > div {
@@ -7536,6 +7546,14 @@ button.close {
 .selectize-control.multi .selectize-input > div:hover {
     border-color: #ccc;
     background-color: rgba(0, 0, 0, 0.03);
+}
+
+.selectize-control.multi .selectize-input > div > span {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .selectize-input > input {
@@ -10279,6 +10297,7 @@ table.table > thead th > div > a {
 
 #main main > .list-container > .list > table td:first-child, #main main > .list-container > .list > table th:first-child {
     padding-left: 10px;
+    padding-right: 10px;
 }
 
 @media screen and (min-width: 768px) {
@@ -10298,6 +10317,7 @@ table.table > thead th > div > a {
 
     #main main > .list-container > .list > table td:first-child, #main main > .list-container > .list > table th:first-child {
         padding-left: 20px;
+        padding-right: 10px;
     }
 
     #main main > .list-container > .list > table tr {
@@ -10683,14 +10703,18 @@ td.cell  .selectize-input{
 }
 
 .cell > .field .input-group > .input-group-btn,
-td.cell  .input-group > .input-group-btn  {
+td.cell  .input-group > .input-group-btn {
     background-color: var(--field-inline-edit-color);
     gap: 5px;
     margin: 0 0 0 10px;
 }
 
+td.cell  .input-group > .input-group-btn {
+    margin-left: 0;
+}
+
 .cell > .field .input-group > .input-group-btn button,
-td.cell .input-group > .input-group-btn button{
+td.cell .input-group > .input-group-btn button {
     background-color: transparent;
     border: 0;
     border-radius: 0;
@@ -11197,12 +11221,29 @@ table.no-margin {
     overflow: hidden
 }
 
+.list > table thead tr {
+    background-color: inherit;
+}
+
 .list > table td[data-name="r-checkbox"] {
-    overflow: visible
+    overflow: visible;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.list > table tr.active td[data-name="r-checkbox"] {
+    background-color: #f6fafd;
 }
 
 .list > table th[data-name="r-checkbox"] {
-    white-space: nowrap
+    white-space: nowrap;
+    background-color: inherit;
+}
+
+.list > table td[data-name="r-checkbox"],
+.list > table th[data-name="r-checkbox"] {
+    position: sticky;
+    left: -10px;
+    z-index: 9;
 }
 
 .list > table th[data-name="r-checkbox"] .select-all-container {
@@ -11232,15 +11273,15 @@ table.no-margin {
 
 .list > table td.cell[data-name="buttons"] {
     overflow: visible;
-    background-color: transparent;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-right: 5px;
+    padding: 3px 5px;
     right: -10px;
 }
 
 .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
     position: sticky;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
 }
 
 .panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
@@ -11250,7 +11291,13 @@ table.no-margin {
 @media (min-width: 768px) {
     .list > table td.cell[data-name="buttons"] {
         padding-right: 12px;
+        padding-left: 12px;
         right: -20px;
+    }
+
+    .list > table td[data-name="r-checkbox"],
+    .list > table th[data-name="r-checkbox"] {
+        left: -20px;
     }
 }
 
@@ -11292,7 +11339,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 .list > table td.cell[data-name="buttons"] > .list-row-buttons > .dropdown-toggle,
 .list > table td.cell[data-name="buttons"] > .list-row-buttons .icons-container > button {
     background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
+    border-radius: 5px;
     margin-left: 0;
 }
 
@@ -13485,10 +13532,6 @@ input#sn-checkbox-open-in-new-window {
     border-top: 1px solid #f5f5f5;
 }
 
-.list > table tbody tr:not(.active-dropdown):hover {
-    background-color: #f8f8f8;
-}
-
 .modal-body .list > table thead,
 .panel-body .list > table thead {
     background-color: transparent;
@@ -13862,19 +13905,24 @@ ul.dropdown-menu > li.checkbox {
     margin-right: -15px;
 }
 
-@media screen and (min-width: 768px) {
-    .table > tbody > tr:not(:first-child) {
-        border-top: 1px solid var(--secondary-border-color);
-    }
+.table > tbody > tr.active td[data-name="r-checkbox"]:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    display: block;
+    background-color: #06c;
 }
 
-.table > tbody > tr.active-dropdown,
-.table > tbody > tr.active {
-    background: #e8eced;
+.table > tbody > tr:not(:first-child) td {
+    border-top-color: #f1f1f1;
 }
 
 .table > tbody > tr.active {
     z-index: 1;
+    background-color: #f6fafd;
 }
 
 .table > tbody > tr.active-dropdown {
@@ -14839,11 +14887,15 @@ ul.jqtree-tree {
 
 ul.jqtree-tree ul.jqtree_common {
     list-style: none outside;
-    margin-left: 22px;
+    margin-left: 16px;
     margin-right: 0;
     margin-bottom: 0;
     padding: 0;
     display: block;
+}
+
+ul.jqtree-tree .sub-tree-container > ul.jqtree_common {
+    margin-left: 37px;
 }
 
 ul.jqtree-tree span.jqtree_common:focus {
@@ -14862,14 +14914,7 @@ ul.jqtree-tree li.jqtree_common {
 ul.jqtree-tree .load-items.ph {
     font-size: 16px;
     cursor: pointer;
-}
-
-li.sub-tree-container > div.jqtree_common .jqtree-toggler{
-    display: none;
-}
-
-li.sub-tree-container > ul.jqtree_common {
-    margin-left: 5px;
+    background-color: var(--sidebar-color);
 }
 
 ul.jqtree-tree .jqtree-toggler {
@@ -14877,6 +14922,16 @@ ul.jqtree-tree .jqtree-toggler {
     color: #333;
     text-decoration: none;
     vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    width: 16px;
+    background-color: var(--sidebar-color);
+}
+
+ul.jqtree-tree .sub-tree-container > .jqtree-element .jqtree-toggler {
+    opacity: 0;
+    pointer-events: none;
 }
 
 ul.jqtree-tree .jqtree-toggler:hover {
@@ -14899,6 +14954,19 @@ ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
 ul.jqtree-tree .jqtree-element:not(.btn) {
     position: relative;
     padding: 5px 15px 0 5px;
+    height: 25px;
+}
+
+ul.jqtree-tree .sub-tree-container .jqtree-element:not(.btn) {
+    color: #00166d;
+}
+
+ul.jqtree-tree .sub-tree-container .jqtree-element.jqtree-selected:not(.btn) {
+    color: #06c;
+}
+
+ul.jqtree-tree .sub-tree-container > .jqtree-element:not(.btn) {
+    color: var(--primary-font-color);
 }
 
 ul.jqtree-tree .jqtree-toggler, ul.jqtree-tree .jqtree-title {
@@ -14911,6 +14979,57 @@ ul.jqtree-tree .jqtree-title {
 
 ul.jqtree-tree li.jqtree-folder {
     margin-bottom: 4px;
+}
+
+ul.jqtree-tree .jqtree-folder:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 1px;
+    border-left: 1px dotted #ccc;
+    top: 25px;
+    bottom: 10px;
+}
+
+ul.jqtree-tree .jqtree-folder:not(.sub-tree-container):after {
+    left: 12px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:after {
+    left: 35px;
+}
+
+ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common:before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:before {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 1px;
+    width: 30px;
+    border-bottom: 1px dotted #ccc;
+    top: 14px;
+    left: -2px;
+}
+
+ul.jqtree-tree .jqtree-folder > .jqtree_common:has(> .load-items):before,
+ul.jqtree-tree .jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:has(> .jqtree-element > .load-items):before {
+    width: 52px;
+}
+
+ul.jqtree-tree .jqtree-folder.sub-tree-container:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    left: 37px
+}
+
+ul.jqtree-tree .jqtree-folder:has(> .jqtree_common[role="group"] > .jqtree-folder):before {
+    left: 12px;
+    width: 6px;
+    top: auto;
+    bottom: 10px;
+}
+
+ul.jqtree-tree > .jqtree-folder > .jqtree_common:before {
+    content: none;
 }
 
 ul.jqtree-tree li.jqtree-folder.jqtree-closed {
@@ -14977,10 +15096,7 @@ ul.jqtree-tree span.jqtree-border {
 }
 
 ul.jqtree-tree li.jqtree-selected > .jqtree-element,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element .jqtree-toggler,
-ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover,
-ul.jqtree-tree li.jqtree-selected > .reset-button,
-ul.jqtree-tree li.jqtree-selected > .add-to-filter-button{
+ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
     color: #2895ea !important;
     background-color: transparent;
     border-color: transparent;
@@ -15829,30 +15945,30 @@ span.became .file-link {
     padding: 0 !important;
 }
 
-.field .unit-group.input-group {
+.cell .unit-group.input-group {
     width: 100%;
 }
 
-.field .unit-group.input-group .unit-input,
-.field .range-container > input {
+.cell .unit-group.input-group .unit-input,
+.cell .range-container > input {
     flex: 1;
     min-width: 0;
 }
 
-.field .unit-group.input-group .unit-select,
-.field .range-container .unit-select {
+.cell .unit-group.input-group .unit-select,
+.cell .range-container .unit-select {
     display: inline-block;
     width: fit-content;
     min-width: 100px;
     max-width: 50%;
 }
 
-.field .unit-group.input-group .unit-select {
+.cell .unit-group.input-group .unit-select {
     margin-left: 10px;
 }
 
-.field .unit-group.input-group .unit-select .selectize-control,
-.field .range-container .unit-select .selectize-control {
+.cell .unit-group.input-group .unit-select .selectize-control,
+.cell .range-container .unit-select .selectize-control {
     min-width: auto;
 }
 
@@ -18781,6 +18897,15 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     max-width: 100%;
 }
 
+
+.compare-records table tr th,
+.compare-entities table tr th,
+.compare-records table tr th a,
+.compare-entities table tr th a {
+    color: black;
+    font-weight: 500;
+}
+
 .compare-records .overlay, .compare-entities .overlay {
     position: fixed;
     top: 0;
@@ -18917,64 +19042,58 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     opacity: 1;
 }
 
-
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) > div,
-.list-container > .list[data-editable=true] > table tr td.cell > div:has(> input[type="checkbox"]), .query-builder .form-select:not(.selectize-control):not(.selectize-dropdown),
-.list-container .list .record-checkbox-container {
-    padding: 3px 5px;
-}
-
-.list-container .list .record-checkbox-container {
-    padding: 0 5px;
+.list-container table {
+    border-collapse: separate;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
     position: relative;
-    min-width: 208px;
-}
-
-.list-container > .list[data-editable=true] > table tr td.cell {
-    padding-top: 18px;
-    padding-bottom: 18px;
-}
-
-.list-container > .list[data-editable=true] > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons])[data-readonly] div {
-    display: inline-block;
-}
-
-.list-container > .list[data-editable=true] > table tr td.cell >div:not(.inline-actions):not(.btn-group) {
-    min-height: 25px;
-    border-top: 1px solid transparent;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) > div:not(.inline-actions):not(.btn-group)  {
-    padding-right: 18px;
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) {
+    padding: 5px 10px;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div .selectize-input  {
-    padding-left: 5px;
+.list-container > .list[data-editable=true] > table tr th {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell > div {
-    position: relative;
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):first-child {
+    padding-left: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):first-child {
+        padding-left: 20px;
+    }
+
+    .modal-body .list-container > .list[data-editable=true] > table tr th:first-child {
+        padding-left: 20px;
+    }
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div .selectize-input {
+    min-height: 29px;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell div.inline-actions {
     position: absolute;
-    top: -20px;
-    right: 0;
+    top: 3px;
+    right: 3px;
     z-index: 9;
     padding: 0;
     background-color: transparent;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]) div.inline-actions {
-    top: 5px;
-    right: 3px;
+.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions > a {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    padding: 1px 3px;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell .form-control.selectize-control {
@@ -18992,4 +19111,107 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-name=tag] {
     line-height: initial !important;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):not([data-readonly=true]):not([data-visible=false]):not([data-readonly]):not([data-name=r-checkbox]):not([data-name=buttons]):hover {
+    background-color: var(--field-inline-edit-color);
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] {
+    padding: 5px;
+    border-color: #06c;
+    background-color: #fff;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit]:first-child {
+    padding-left: 15px !important;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
+    border-bottom: 0;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, input:not([type=radio]):not([type=checkbox]), .selectize-input) {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] .selectize-input {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] > div > input[type="checkbox"]:first-child {
+    margin-left: 5px;
+}
+
+.compare-entities .detail > .overview {
+    min-height: 0;
+}
+
+.compare-entities .bottom .panel-body {
+    padding: 0 20px;
+}
+
+.compare-entities .bottom .panel {
+    margin-bottom: 15px;
+}
+
+.compare-entities .bottom .panel-heading {
+    border-top: 0;
+    border-bottom: 3px solid var(--primary-border-color);
+}
+
+.compare-entities .bottom .panel-heading .panel-title {
+    font-weight: 500;
+}
+
+.record .compare-entities .bottom .middle {
+    margin-bottom: 0;
+}
+
+.compare-entities .bottom .records > .row {
+    margin: 0 -8px;
+    padding-top: 20px;
+}
+
+.compare-entities .bottom .panel-heading .layout-editor-container {
+    right: 0;
+}
+
+.compare-entities .bottom .records > .row.not-first {
+    border-top: 2px solid var(--primary-border-color);
+}
+
+.compare-entities .list-row .record-content > div.detail {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 30px;
+}
+
+.compare-entities .bottom-layout-bottoms .layout-editor-container {
+    opacity: 1;
+    text-align: center;
+}
+
+.compare-entities .bottom-layout-bottoms {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.compare-entities .bottom-layout-bottoms .layout-editor-container .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #888;
+    font-size: 18px;
+    background-color: transparent;
 }

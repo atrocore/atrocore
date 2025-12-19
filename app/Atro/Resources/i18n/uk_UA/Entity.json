@@ -4,8 +4,6 @@
     "namePlural": "Ім'я множина",
     "disabled": "Відключено",
     "customizable": "Налаштовується",
-    "hasDuplicates": "Перевірка на дублікати",
-    "masterEntity": "Мастер сутність",
     "hasArchive": "Архівується",
     "hasActive": "Активується",
     "hideFieldTypeFilters": "Приховати фільтри типів полів",
@@ -43,15 +41,15 @@
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
     "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
     "primaryEntity": "Первинна сутність",
-    "derivedEntities": "Похідні сутності"
+    "matchDuplicates": "Пошук дублікатів",
+    "matchMasterRecords": "Пошук мастер запису"
   },
   "options": {
     "type": {
       "Base": "Базова",
       "Hierarchy": "Ієрархія",
       "ReferenceData": "Довідник",
-      "Archive": "Архів",
-      "Derivative": "Похідна"
+      "Archive": "Архів"
     },
     "sortDirection": {
       "asc": "За зростанням",

@@ -238,8 +238,14 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.type") === 'Derivative') {
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")) {
             throw new Forbidden();
+        }
+
+        if (!empty($entity->get('foreignEntityId'))) {
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
+                throw new Forbidden();
+            }
         }
 
         if ($entity->get('type') == 'linkMultiple') {
@@ -250,8 +256,8 @@ class EntityField extends ReferenceData
                 throw new BadRequest("It is not possible to create a relationship with an entity of type 'ReferenceData'.");
             }
 
-            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.type") === 'Derivative') {
-                throw new BadRequest("It is not possible to create a relationship with an entity of type 'Derivative'.");
+            if ($this->getMetadata()->get("scopes.{$entity->get('foreignEntityId')}.primaryEntityId")) {
+                throw new BadRequest("It is not possible to create a relationship with a Derivative Entity.");
             }
         }
 
@@ -309,28 +315,38 @@ class EntityField extends ReferenceData
                 $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $fieldName = $entity->get('code');
 
+                $conditions = [];
+
                 if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
-                    $columnFrom = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
-                    $columnTo = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where("deleted= :false and $columnFrom is null and $columnTo is null")
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->fetchOne();
+                    $fromColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
+                    $toColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
+
+                    $conditions[] = '(' . $fromColumn . ' IS NULL AND ' . $toColumn . ' IS NULL)';
                 } else {
                     if (in_array($fieldType, ['file', 'link'])) {
                         $fieldName .= 'Id';
                     }
                     $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
-                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                        ->select('id')
-                        ->from($tableName)
-                        ->where('deleted= :false and ' . $column . ' is null')
-                        ->setParameter('false', false, ParameterType::BOOLEAN)
-                        ->fetchOne();
+                    if (in_array($fieldType, ['int', 'float', 'bool', 'date', 'datetime'])) {
+                        $conditions[] = $column . ' IS NULL';
+                    } else {
+                        $conditions[] = '(' . $column . ' IS NULL OR ' . $column . ' = :empty)';
+                    }
                 }
 
+                if (!empty($entity->get('measureId')) && in_array($fieldType, ['int', 'float', 'varchar', 'rangeInt', 'rangeFloat'])) {
+                    $unitColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
+                    $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
+                }
+
+                $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                    ->select('id')
+                    ->from($tableName)
+                    ->where('deleted = :false')
+                    ->andWhere(implode(' OR ', $conditions))
+                    ->setParameter('false', false, ParameterType::BOOLEAN)
+                    ->setParameter('empty', '')
+                    ->fetchOne();
 
                 if (!empty($res)) {
                     throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));

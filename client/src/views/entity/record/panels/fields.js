@@ -19,14 +19,5 @@ Espo.define('views/entity/record/panels/fields', 'views/record/panels/relationsh
             });
         },
 
-        afterRender() {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.model.get('type') === 'Derivative') {
-                this.$el.parent().find('[data-action="createRelated"]').remove();
-            }
-
-        },
-
     })
 );

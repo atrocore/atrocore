@@ -14,13 +14,6 @@
       "view": "views/entity/record/panels/fields",
       "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink",
       "hideShowFullList": true
-    },
-    "derivedEntities": {
-      "select": false,
-      "limit": 2000,
-      "view": "views/entity/record/panels/fields",
-      "rowActionsView": "views/admin/field-manager/record/row-actions/relationship-no-unlink",
-      "hideShowFullList": true
     }
   },
   "bottomPanels": {
@@ -35,11 +28,13 @@
   "boolFilterList": [
     "canHasAttributes",
     "canHasClassifications",
-    "canHasAssociates"
+    "canHasAssociates",
+    "onlyForDerivativeEnabled"
   ],
   "hiddenBoolFilterList": [
     "canHasAttributes",
     "canHasClassifications",
-    "canHasAssociates"
+    "canHasAssociates",
+    "onlyForDerivativeEnabled"
   ]
 }

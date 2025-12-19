@@ -103,6 +103,7 @@ class Layout extends Base
                 return $data;
 
             case 'relationships':
+            case 'selectionRelations':
                 /* @var $listItems EntityCollection */
                 $relationshipItems = $this->get('relationshipItems');
                 $relationshipItems = empty($relationshipItems) ? [] : $relationshipItems->toArray();

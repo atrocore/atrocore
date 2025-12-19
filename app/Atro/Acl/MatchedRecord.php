@@ -17,18 +17,23 @@ use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
+    public function checkScope(\Espo\Entities\User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
+    {
+        return $this->getAclManager()->checkScope($user, 'Matching', $action);
+    }
+
     public function checkEntityRead(User $user, Entity $entity, $data)
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        $stagingEntity = $this
+        $sourceEntity = $this
             ->getEntityManager()
-            ->getRepository($entity->get('stagingEntity'))
-            ->get($entity->get('stagingEntityId'));
+            ->getRepository($entity->get('sourceEntity'))
+            ->get($entity->get('sourceEntityId'));
 
-        if (empty($stagingEntity)) {
+        if (empty($sourceEntity)) {
             return false;
         }
 
@@ -43,7 +48,7 @@ class MatchedRecord extends Base
 
         return
             $this->checkEntity($user, $entity, $data, 'read')
-            && $this->getAclManager()->checkEntity($user, $stagingEntity, 'read')
+            && $this->getAclManager()->checkEntity($user, $sourceEntity, 'read')
             && $this->getAclManager()->checkEntity($user, $masterEntity, 'read');
     }
 

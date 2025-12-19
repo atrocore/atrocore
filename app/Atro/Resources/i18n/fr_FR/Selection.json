@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nom",
     "description": "Description",
-    "selectionRecords": "Elements de selection"
+    "selectionRecords": "Éléments de selection"
   },
   "options": {
     "type": {
@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Vous ne pouvez pas définir \"Entité unique\", car vous avez plusieurs entités dans vos enregistrements."
+    "cannotSetToSingle": "Vous ne pouvez pas définir \"Entité unique\", car vous avez plusieurs entités dans vos enregistrements.",
+    "youNeedAtLeastTwoItem": "Vous avez besoin d'au moins deux éléments pour la comparaison."
   },
   "labels": {
     "createSelection": "Créer une sélection"

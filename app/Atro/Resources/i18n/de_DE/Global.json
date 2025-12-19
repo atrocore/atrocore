@@ -1,7 +1,6 @@
 {
   "scopeNames": {
     "MasterDataEntity": "Stammdaten-Entität",
-    "ActionLog": "Aktionsprotokoll",
     "IncomingWebhook": "Eingehender Webhook",
     "Classification": "Klassifikation",
     "ClassificationAttribute": "Klassifikationsattribut",
@@ -86,7 +85,6 @@
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
-    "ActionLog": "Aktionsprotokolle",
     "IncomingWebhook": "Eingehende Webhooks",
     "Classification": "Klassifikationen",
     "ClassificationAttribute": "Klassifikationsattribute",
@@ -161,7 +159,6 @@
     "matchings": "Matchings",
     "addFields": "Felder hinzufügen",
     "addAttributes": "Attribute hinzufügen",
-    "masterDataManagement": "Stammdatenmanagement",
     "fieldValueFilters": "Feldwert-Filter",
     "authenticate": "Authentifizieren",
     "Load data": "Daten laden",
@@ -443,7 +440,7 @@
     "expandAll": "Alle erweitern",
     "fullscreen": "Vollbild",
     "Copy": "Kopieren",
-    "applyMainSearchAndFilter": "Hauptsuche und Filter anwenden",
+    "applyMainSearchAndFilter": "Hauptfilter",
     "Reset to Default": "Auf Standard zurücksetzen",
     "associatingItem": "Assoziierendes Element",
     "associatingItems": "Assoziierende Elemente",
@@ -505,7 +502,12 @@
     "script": "Script",
     "unitPart": "(Maßeinheit)",
     "Details": "Details",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "openLink": "Link öffnen",
+    "view": "Ansehen",
+    "Items": "Artikel",
+    "hideAll": "Alles ausblenden",
+    "Relations": "Beziehungen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
@@ -703,6 +705,7 @@
     "select": "Wählen"
   },
   "fields": {
+    "field": "Feld",
     "primaryRecord": "Primärer Datensatz",
     "derivedRecords": "Abgeleitete Datensätze",
     "goldenRecord": "Golden Record",

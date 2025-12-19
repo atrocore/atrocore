@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Atro\ActionTypes;
 
-use Atro\Core\EventManager\Event;
-use Espo\ORM\Entity;
+use Atro\Entities\ActionExecution;
 
 interface TypeInterface
 {
-    public function executeNow(Entity $action, \stdClass $input): bool;
+    public function execute(ActionExecution $execution, \stdClass $input): bool;
 }

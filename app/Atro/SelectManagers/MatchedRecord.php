@@ -33,19 +33,23 @@ class MatchedRecord extends Base
         $whereGroups = [];
         foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
             $where = [];
-            foreach (['stagingEntity', 'masterEntity'] as $field) {
-                $column = Util::toUnderScore($field);
+            foreach (['entity', 'masterEntity'] as $field) {
+                $column = $field === 'entity' ? 'source_entity' : Util::toUnderScore($field);
                 $repository = $this->getEntityManager()->getRepository($matching->get($field));
                 $sp = $this->createSelectManager($matching->get($field))->getSelectParams([], true, true);
                 $sp['select'] = ['id'];
 
                 $subQb = $repository->getMapper()->createSelectQueryBuilder($repository->get(), $sp, true);
-                $subQb->setParameter("{$column}_{$matching->id}", $matching->get($field));
-                $innerSql = str_replace($a, "t_".$matching->id, $subQb->getSql());
+
+                $param = Util::generateId();
+
+                $subQb->setParameter($param, $matching->get($field));
+
+                $innerSql = str_replace($a, "t_".$param, $subQb->getSql());
 
                 $where[] = [
                     'innerSql' => [
-                        "sql"        => "$a.$column = :{$column}_{$matching->id} AND $a.{$column}_id IN ({$innerSql})",
+                        "sql"        => "$a.$column = :{$param} AND $a.{$column}_id IN ({$innerSql})",
                         "parameters" => $subQb->getParameters(),
                     ],
                 ];

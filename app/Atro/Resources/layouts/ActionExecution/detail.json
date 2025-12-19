@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Details",
+    "style": "default",
+    "rows": [
+      [
+        {
+          "name": "name"
+        },
+        {
+          "name": "action"
+        }
+      ],
+      [
+        {
+          "name": "type"
+        },
+        {
+          "name": "status"
+        }
+      ],
+      [
+        {
+          "name": "statusMessage",
+          "fullWidth": true
+        }
+      ],
+      [
+        {
+          "name": "startedAt"
+        },
+        {
+          "name": "finishedAt"
+        }
+      ],
+      [
+        {
+          "name": "incomingWebhook"
+        },
+        false
+      ],
+      [
+        {
+          "name": "scheduledJob"
+        },
+        false
+      ],
+      [
+        {
+          "name": "workflow"
+        },
+        false
+      ],
+      [
+        {
+          "name": "payload",
+          "fullWidth": true
+        }
+      ]
+    ]
+  }
+]

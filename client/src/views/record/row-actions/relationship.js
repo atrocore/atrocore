@@ -111,9 +111,16 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     }
                 });
             }
+
+            list.push({
+                divider: true
+            });
+
+            list.push({
+                preloader: true
+            });
+
             return list;
         }
-
     });
-
 });

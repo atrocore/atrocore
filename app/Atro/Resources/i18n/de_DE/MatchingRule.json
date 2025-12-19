@@ -2,10 +2,6 @@
   "fields": {
     "matching": "Passend dazu",
     "weight": "Gewicht",
-    "sourceField": "Quelle Feld",
-    "masterField": "Master Feld",
-    "sourceEntity": "Quellentität",
-    "masterEntity": "Master-Entität",
     "matchingRuleSet": "Set",
     "matchingRules": "Übereinstimmungsregeln",
     "operator": "Operator"

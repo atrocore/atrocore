@@ -65,7 +65,6 @@
     "ProductGroup": "Група продуктів",
     "Matching": "Відповідності",
     "ThumbnailType": "Тип мініатюри",
-    "ActionLog": "Журнал дій",
     "ProductHierarchy": "Ієрархія продуктів",
     "IncomingWebhook": "Вхідні вебхуки",
     "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
@@ -138,7 +137,6 @@
     "MatchedRecord": "Співставлені записи",
     "Matching": "Відповідності",
     "ThumbnailType": "Типи мініатюр",
-    "ActionLog": "Журнали дій",
     "AttributePanel": "Панель атрибутів",
     "RoleScope": "Сфери застосування",
     "UserProfile": "Профілі користувачів",
@@ -161,7 +159,6 @@
     "matchings": "Відповідності",
     "addFields": "Додати поля",
     "addAttributes": "Додати атрибути",
-    "masterDataManagement": "Управління основними даними",
     "selectAll": "Вибрати все",
     "unselectAll": "Відмінити вибір всіх",
     "contentLanguages": "Мови контенту",
@@ -438,7 +435,7 @@
     "searchResults": "Результати пошуку",
     "fullscreen": "На весь екран",
     "Copy": "Копіювати",
-    "applyMainSearchAndFilter": "Застосувати основний пошук і фільтр",
+    "applyMainSearchAndFilter": "Основний фільтр",
     "Reset to Default": "Відновити стандартні значення",
     "associatingItem": "Асоціюючі елементи",
     "associatingItems": "Асоціюючі елементи",
@@ -505,7 +502,12 @@
     "Download": "Завантажити",
     "unitPart": "(Unit)",
     "Username can not be empty!": "Ім'я користувача не може бути порожнім",
-    "script": "Скрипт"
+    "script": "Скрипт",
+    "openLink": "Відкрити посилання",
+    "view": "Переглянути",
+    "Items": "Предмети",
+    "hideAll": "Сховати все",
+    "Relations": "Стосунки"
   },
   "insightsPanels": {
     "summary": "Підсумок",
@@ -659,6 +661,7 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "field": "Поле",
     "primaryRecord": "Первинний запис",
     "derivedRecords": "Похідні записи",
     "goldenRecord": "Золотий запис",

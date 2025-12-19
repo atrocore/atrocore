@@ -172,6 +172,31 @@ class Mapper implements MapperInterface
             }
         }
 
+        if (!empty($params['subQueryCallbacks'])) {
+            $oldQb = $qb;
+            $mainTableAlias = $this->getQueryConverter()->getMainTableAlias();
+            $oldQb->addSelect("$mainTableAlias.id as id");
+
+
+            $sql = preg_replace(
+                '/\b' . preg_quote($mainTableAlias, '/') . '\b/',
+                't_subquery',
+                $oldQb->getSQL()
+            );
+
+            $qb = $conn->createQueryBuilder()
+                ->select("$mainTableAlias.*")
+                ->from('(' . $sql . ')', $mainTableAlias);
+
+            foreach ($oldQb->getParameters() as $pName => $pValue) {
+                $qb->setParameter($pName, $pValue, $this->getParameterType($pValue));
+            }
+
+            foreach ($params['subQueryCallbacks'] as $callback) {
+                call_user_func($callback, $qb, $entity, $params, $this);
+            }
+        }
+
         return $qb;
     }
 
@@ -179,7 +204,7 @@ class Mapper implements MapperInterface
     {
         if (!isset($this->singleParentHierarchy[$entity->getEntityType()])) {
             $scopeDefs = $this->getMetadata()->get(['scopes', $entity->getEntityType()], []);
-            $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy'  && empty($scopeDefs['multiParents']);
+            $this->singleParentHierarchy[$entity->getEntityType()] = !empty($scopeDefs['type']) && $scopeDefs['type'] === 'Hierarchy' && empty($scopeDefs['multiParents']);
         }
 
         return $this->singleParentHierarchy[$entity->getEntityType()];

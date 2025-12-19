@@ -40,9 +40,6 @@
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
-    "hasDuplicates": "Comprobar duplicados",
-    "masterEntity": "Entidad principal",
-    "derivedEntities": "Entidades derivadas",
     "primaryEntity": "Entidad primaria"
   },
   "options": {
@@ -50,8 +47,7 @@
       "Base": "Base",
       "Hierarchy": "Jerarquía",
       "ReferenceData": "Referencia",
-      "Archive": "Archivo",
-      "Derivative": "Derivados"
+      "Archive": "Archivo"
     },
     "sortDirection": {
       "asc": "Ascendente",
