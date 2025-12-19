@@ -41,7 +41,11 @@
     "deleteValuesAfterUnlinkingClassification": "Usuwanie wartości atrybutów po odłączeniu klasyfikacji",
     "linkAttributesWithClassificationAutomatically": "Automatyczne powiązanie atrybutów z klasyfikacją",
     "primaryEntity": "Podmiot główny",
-    "role": "Rola"
+    "role": "Rola",
+    "stagingEntity": "Podmiot etapowy",
+    "hasStaging": "Proszę włączyć etapowanie",
+    "matchDuplicates": "Dopasuj duplikaty",
+    "matchMasterRecords": "Główne rekordy meczu"
   },
   "options": {
     "type": {
@@ -53,6 +57,9 @@
     "sortDirection": {
       "asc": "Rosnąco",
       "desc": "Zstępujący"
+    },
+    "role": {
+      "staging": "Inscenizacja"
     }
   },
   "labels": {
@@ -60,7 +67,8 @@
     "hierarchyManagement": "Zarządzanie hierarchią",
     "other": "Inne",
     "resetToDefault": "Resetuj do domyślnego",
-    "attributes": "Atrybuty"
+    "attributes": "Atrybuty",
+    "mdm": "Zarządzanie danymi podstawowymi"
   },
   "confirmations": {
     "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
@@ -88,6 +96,8 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{rodzice} i {dzieci} nie powinny znajdować się jednocześnie w relacjach skutkujących datą/godziną modyfikacji.",
     "entityAlreadyHasAttributesInUse": "Nie można dezaktywować parametru Has Attribute. Proszę najpierw usunąć wszystkie powiązane atrybuty.",
     "entityHasDirectlyLinkedAttributes": "Istnieją już bezpośrednio powiązane atrybuty. Proszę usunąć je z rekordów.",
-    "entityTypeIsNotSuitableForAssociates": "Ten typ encji nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać."
+    "entityTypeIsNotSuitableForAssociates": "Ten typ encji nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać.",
+    "derivativeWithSuchRoleExists": "Podmiot pochodny pełniący taką rolę już istnieje.",
+    "derivativeFromDerivativeNotSupporting": "Podmiot pochodny nie może zostać utworzony z innego podmiotu pochodnego."
   }
 }
