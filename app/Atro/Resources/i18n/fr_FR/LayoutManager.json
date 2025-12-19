@@ -30,12 +30,12 @@
   "labels": {
     "New panel": "Nouveau panel",
     "Layout": "Disposition",
-    "reset": "Remise à zéro de la mise en page",
+    "reset": "Réinitialiser la disposition",
     "fullEdit": "Édition complète",
-    "resetToSystem": "Réinitialisation de la configuration du système",
-    "layoutManagement": "Gestion de la mise en page",
-    "layoutSelection": "Sélection de la mise en page",
-    "layoutCustomization": "Personnalisation de la mise en page",
+    "resetToSystem": "Réinitialiser à la disposition système",
+    "layoutManagement": "Gestion des dispositions",
+    "layoutSelection": "Disposition de la sélection",
+    "layoutCustomization": "Personnalisation de la disposition",
     "configure": "Configurer",
     "Current Layout": "Disposition actuelle"
   }
