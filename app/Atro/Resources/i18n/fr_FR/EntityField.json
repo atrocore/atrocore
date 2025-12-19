@@ -118,7 +118,7 @@
     }
   },
   "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   },
   "labels": {
     "resetToDefault": "Réinitialiser par défaut",
