@@ -6,7 +6,10 @@
     "statusMessage": "Komunikat o statusie",
     "failedCount": "Niepowodzenie",
     "createdCount": "Utworzony",
-    "updatedCount": "Zaktualizowane"
+    "updatedCount": "Zaktualizowane",
+    "startedAt": "Rozpoczęto od",
+    "finishedAt": "Zakończono w",
+    "logs": "Dzienniki"
   },
   "options": {
     "type": {
