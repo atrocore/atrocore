@@ -1073,7 +1073,8 @@
     "associateEverything": "Associa ogni record a ogni altro record",
     "conditionalProperties": "Proprietà condizionali",
     "createdCountFilterActionExecution": "Creato da Esecuzione azione",
-    "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione"
+    "updatedCountFilterActionExecution": "Aggiornato dall'esecuzione dell'azione",
+    "field": "Campo"
   },
   "tooltips": {
     "groupEnd": "Selezioni per utilizzare questo elemento per contrassegnare la fine degli elementi di navigazione raggruppati. Tutti gli elementi successivi a questa voce saranno disaggregati."
