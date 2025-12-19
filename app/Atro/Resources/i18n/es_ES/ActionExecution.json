@@ -7,7 +7,9 @@
     "startedAt": "Comenzó en",
     "finishedAt": "Terminado en",
     "logs": "Registros",
-    "updatedCount": "Actualizado"
+    "updatedCount": "Actualizado",
+    "createdCount": "Creado",
+    "failedCount": "Fallida"
   },
   "options": {
     "type": {
@@ -18,7 +20,8 @@
     },
     "status": {
       "failed": "Fallida",
-      "running": "Correr"
+      "running": "Correr",
+      "done": "Hecho"
     }
   }
 }
