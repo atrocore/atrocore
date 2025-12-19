@@ -7,7 +7,9 @@
     "updatedCount": "Mise à jour",
     "failedCount": "Échec",
     "startedAt": "Commencé à",
-    "createdCount": "Créé"
+    "createdCount": "Créé",
+    "finishedAt": "Terminé à",
+    "logs": "Journaux"
   },
   "options": {
     "type": {
