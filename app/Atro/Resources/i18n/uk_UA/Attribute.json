@@ -76,7 +76,8 @@
     "attributeNotBelongToEntity": "Атрибут не належить цій сутності.",
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "compositeAttributeNotFound": "Композитний атрибут не знайдено.",
-    "compositeAttributeCannotBeChild": "Складений атрибут не може бути дочірнім."
+    "compositeAttributeCannotBeChild": "Складений атрибут не може бути дочірнім.",
+    "entityNotAllowToChoose": "Суб'єкт господарювання не має права обирати"
   },
   "options": {
     "type": {
