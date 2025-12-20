@@ -78,12 +78,12 @@
     "All": "All"
   },
   "tooltips": {
-    "pattern": "To enable only capital letters with 10-symbol length use \"\/^[A-Z]{1,10}$\/\"",
+    "pattern": "To enable only capital letters with 10-symbol length use \"/^[A-Z]{1,10}$/\"",
     "defaultDate": "Attribute value modifier (e.g. +5 days, -3 months)",
     "dropdown": "Do not use the dropdown if there are more than 300 options in the list."
   },
   "exceptions": {
-    "entityNotAllowToChoose": "Entity is not allowed to choose",
+    "entityNotAllowToChoose": "The entity cannot be chosen.",
     "wrongAttributeEntity": "Not allowed Entity has been chosen. Entity needs to be the same with Attribute Panel and Attribute Group.",
     "attributeEntityMustBeSameAsInCompositeAttribute": "Attribute Entity must be same as in Composite Attribute",
     "attributeNotBelongToEntity": "Attribute does not belong to this Entity.",
