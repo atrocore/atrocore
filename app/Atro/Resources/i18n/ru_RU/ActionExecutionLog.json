@@ -1,10 +1,10 @@
 {
   "fields": {
-    "actionExecution": "",
+    "actionExecution": "Выполнение действий",
     "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
+    "entityRecord": "Запись о сущности",
+    "entityName": "Название организации",
+    "entityId": "ID субъекта",
     "message": "",
     "payload": ""
   },
