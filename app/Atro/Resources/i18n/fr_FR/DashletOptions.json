@@ -9,7 +9,7 @@
     "mode": "Mode",
     "enabledScopeList": "Ce qu'il faut afficher",
     "users": "Utilisateurs",
-    "entityType": "Entité",
+    "entityType": "Type d'entité",
     "primaryFilter": "Filtre primaire",
     "boolFilterList": "Filtres supplémentaires",
     "sortBy": "Ordre (champ)",
