@@ -1,6 +1,6 @@
 {
   "fields": {
-    "fileNameRegexPattern": "Expression régulière pour le nom des fichiers",
+    "fileNameRegexPattern": "Regex pour le nom des fichiers",
     "variables": "Variables",
     "locale": "Paramètre régional par défaut",
     "appId": "ID",
