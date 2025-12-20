@@ -1,10 +1,10 @@
 {
   "fields": {
-    "actionExecution": "",
+    "actionExecution": "Wykonanie akcji",
     "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
+    "entityRecord": "Rekord podmiotu",
+    "entityName": "Nazwa podmiotu",
+    "entityId": "Identyfikator podmiotu",
     "message": "",
     "payload": ""
   },
