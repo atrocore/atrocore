@@ -1,12 +1,12 @@
 {
   "fields": {
     "incomingWebhook": "Eingehender Webhook",
-    "scheduledJob": "Geplante Aufgabe",
+    "scheduledJob": "Geplanter Auftrag",
     "workflow": "Workflow",
     "statusMessage": "Statusmeldung",
     "updatedCount": "Aktualisiert",
     "failedCount": "Gescheitert",
-    "startedAt": "Angefangen bei",
+    "startedAt": "Angefangen um",
     "finishedAt": "Beendet am",
     "createdCount": "Erstellt",
     "logs": "Protokolle"
