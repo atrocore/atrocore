@@ -1154,7 +1154,7 @@
     "suchUrlExists": "Cette URL existe déjà",
     "siteUrlEmpty": "L'URL du site est vide.",
     "notDashletService": "Le service %s doit implémenter l'interface Dashlet",
-    "dontMatchToPattern": "La valeur du champ \"{field}\" ne correspond pas au motif \"{pattern}\".",
+    "dontMatchToPattern": "La valeur du champ \"{field}\" ne correspond pas au Regex \"{pattern}\".",
     "notUniqueValue": "L'enregistrement ne peut pas être créé/mis à jour en raison de contraintes liées à la base de données.",
     "optionIsDisabled": "L'élément \"%s\" est désactivé pour le champ \"%s\".",
     "someCouldNotLinked": "Certains enregistrements n'ont pas pu être associés",
