@@ -1,7 +1,7 @@
 {
   "fields": {
     "actionExecution": "Ejecución de la acción",
-    "type": "",
+    "type": "Tipo",
     "entityRecord": "Registro de entidad",
     "entityName": "Nombre de la entidad",
     "entityId": "ID de la entidad",
@@ -10,10 +10,10 @@
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "error": ""
+      "create": "Crear",
+      "update": "Guardar",
+      "delete": "Borrar",
+      "error": "Error"
     }
   }
 }
