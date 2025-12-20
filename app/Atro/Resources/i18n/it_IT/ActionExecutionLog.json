@@ -1,19 +1,19 @@
 {
   "fields": {
-    "actionExecution": "",
-    "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
-    "message": "",
-    "payload": ""
+    "actionExecution": "Esecuzione dell'azione",
+    "type": "Tipo",
+    "entityRecord": "Record dell'entità",
+    "entityName": "Nome dell'entità",
+    "entityId": "ID dell'entità",
+    "message": "Messaggio",
+    "payload": "Carico utile"
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "error": ""
+      "create": "Creare",
+      "update": "Aggiornamento",
+      "delete": "Cancellare",
+      "error": "Errore"
     }
   }
 }
