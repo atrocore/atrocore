@@ -9,7 +9,7 @@
     "mode": "Mode",
     "enabledScopeList": "What to display",
     "users": "Users",
-    "entityType": "Entity",
+    "entityType": "Entity Type",
     "primaryFilter": "Primary Filter",
     "boolFilterList": "Additional Filters",
     "sortBy": "Order (field)",
