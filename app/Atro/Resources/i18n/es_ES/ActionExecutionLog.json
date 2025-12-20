@@ -1,12 +1,12 @@
 {
   "fields": {
-    "actionExecution": "",
+    "actionExecution": "Ejecución de la acción",
     "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
-    "message": "",
-    "payload": ""
+    "entityRecord": "Registro de entidad",
+    "entityName": "Nombre de la entidad",
+    "entityId": "ID de la entidad",
+    "message": "Mensaje",
+    "payload": "Carga útil"
   },
   "options": {
     "type": {
