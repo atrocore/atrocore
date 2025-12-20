@@ -39,7 +39,7 @@
             if (data && data.user && data.user.isAdmin) {
                 buttonList.unshift({
                     name: 'fullEdit',
-                    label: Language.translate('Full Edit', 'labels', "LayoutManager")
+                    label: Language.translate('fullEdit', 'labels', "LayoutManager")
                 })
             }
         }

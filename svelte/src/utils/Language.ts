@@ -1,7 +1,6 @@
 import {writable, get} from 'svelte/store';
 
 const data = writable({});
-const fallbackData = writable({});
 
 export const Language = {
 
@@ -11,10 +10,6 @@ export const Language = {
 
     setTranslations(newTranslations: any): void {
         data.set(newTranslations);
-    },
-
-    setFallbackTranslations(newTranslations: any): void {
-        fallbackData.set(newTranslations);
     },
 
     has(name: string, category: string, scope: string): boolean {
@@ -36,12 +31,7 @@ export const Language = {
 
     get(scope: string, category: string, name: string): string | null | object {
         let translatedText: any = name;
-        let relevantData = data;
-        if(get(fallbackData) && !this.has(name, category, scope)) {
-            relevantData = fallbackData;
-        }
-
-        relevantData.subscribe((current: any) => {
+        data.subscribe((current: any) => {
             if (scope in current) {
                 if (category in current[scope]) {
                     if (name in current[scope][category]) {
@@ -59,9 +49,9 @@ export const Language = {
                     }
                 }
             }
-            if (scope == 'Global') {
-                translatedText = name;
-                return;
+
+            if(scope === 'Global') {
+                return translatedText;
             }
 
             translatedText = null;
