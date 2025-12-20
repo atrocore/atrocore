@@ -44,7 +44,7 @@
     "matchDuplicates": "Duplikate abgleichen",
     "matchMasterRecords": "Stammdaten abgleichen",
     "role": "Rolle",
-    "hasStaging": "Aktivieren Sie Staging",
+    "hasStaging": "Staging aktivieren",
     "stagingEntity": "Staging-Entität"
   },
   "options": {
@@ -59,7 +59,7 @@
       "desc": "Absteigend"
     },
     "role": {
-      "staging": "Inszenierung"
+      "staging": "Staging"
     }
   },
   "labels": {
