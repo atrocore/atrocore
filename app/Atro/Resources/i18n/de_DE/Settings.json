@@ -23,7 +23,7 @@
     "notificationSoundsDisabled": "Benachrichtigungstöne deaktivieren",
     "applicationName": "Name der Applikation",
     "assignmentEmailNotifications": "E-Mail Benachrichtigungen bei Zuweisungen senden",
-    "streamEmailNotifications": "Benachrichtigungen über Aktualisierungen in Aktivitäten für interne Benutzer",
+    "streamEmailNotifications": "Benachrichtigungen für interne Benutzer über Aktualisierungen in Aktivitäten",
     "mentionEmailNotifications": "Benachrichtigungen für Erwähnungen in Beträgen",
     "aclStrictMode": "ACL Strict-Modus",
     "authTokenPreventConcurrent": "Nur ein Auth Token pro Benutzer",
