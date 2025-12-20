@@ -95,7 +95,7 @@
     "start": "Démarrer",
     "end": "Fin",
     "action": "Action",
-    "payload": "Payload",
+    "payload": "Charge utile",
     "hash": "Hash",
     "classification": "Classification",
     "entity": "Entité",
