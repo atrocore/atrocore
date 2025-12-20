@@ -71,13 +71,13 @@
     "attributeIsUsedInProducts": "Атрибут уже використовується в продуктах. Будь ласка, спочатку оновіть продукти.",
     "attributeIsUsedInClassifications": "Атрибут уже використовується в класифікаціях. Будь ласка, спочатку оновіть класифікації.",
     "invalidType": "Тип атрибута '{type}' недійсний",
-    "wrongAttributeEntity": "Вибрано неприпустиму сутність. Сутність має збігатися з Панеллю атрибутів та Групою атрибутів.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Атрибут Entity має бути таким самим, як у складеному атрибуті",
+    "wrongAttributeEntity": "Вибрана сутність не допускається. Сутність має відповідати панелі атрибутів та групі атрибутів.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Сутьність атрибуту повинна бути такою ж, як і в складеному атрибуті.",
     "attributeNotBelongToEntity": "Атрибут не належить цій сутності.",
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "compositeAttributeNotFound": "Композитний атрибут не знайдено.",
     "compositeAttributeCannotBeChild": "Складений атрибут не може бути дочірнім.",
-    "entityNotAllowToChoose": "Суб'єкт господарювання не має права обирати"
+    "entityNotAllowToChoose": "Сутність не може бути обраною."
   },
   "options": {
     "type": {
