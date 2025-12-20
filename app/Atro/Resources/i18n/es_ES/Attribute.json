@@ -83,8 +83,8 @@
     "dropdown": "No utilice el desplegable si hay más de 300 opciones en la lista."
   },
   "exceptions": {
-    "wrongAttributeEntity": "No se ha elegido la Entidad permitida. La entidad debe coincidir con el panel de atributos y el grupo de atributos.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "La entidad del atributo debe ser la misma que en el atributo compuesto",
+    "wrongAttributeEntity": "La entidad seleccionada no está permitida. La entidad debe ser la misma que la del Panel de atributos y el Grupo de atributos.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "La entidad de atributo debe ser la misma que en el atributo compuesto.",
     "attributeNotBelongToEntity": "El atributo no pertenece a esta Entidad.",
     "entityCannotBeChanged": "La entidad no puede modificarse.",
     "compositeAttributeNotFound": "Atributo compuesto no encontrado.",
@@ -98,6 +98,6 @@
     "attributeIsUsedInProducts": "El atributo se utiliza en los productos. Por favor, actualice primero los productos.",
     "attributeIsUsedInClassifications": "El atributo se utiliza en las clasificaciones. Por favor, actualice primero las clasificaciones.",
     "invalidType": "El tipo de atributo '{type}' no es válido",
-    "entityNotAllowToChoose": "La entidad no puede elegir"
+    "entityNotAllowToChoose": "La entidad no puede ser elegida."
   }
 }

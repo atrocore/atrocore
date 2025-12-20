@@ -93,11 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Si un atributo está vinculado directamente a un registro, y ese registro está vinculado a una clasificación, entonces el atributo también estará vinculado a esa clasificación."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} y {children} no deben estar ambos en Relaciones que efectúan la fecha/hora de modificación",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} y {children} no deben estar ambos en Relaciones que afectan a la fecha/hora de modificación.",
     "entityAlreadyHasAttributesInUse": "No se puede desactivar el parámetro Atributo. Por favor, elimine primero todos los atributos relacionados.",
     "entityHasDirectlyLinkedAttributes": "Ya existen atributos vinculados directamente. Por favor, elimínelos de los registros.",
     "entityTypeIsNotSuitableForAssociates": "Este tipo de entidad no puede contener el parámetro \"Tiene asociados\". Sólo \"Base\" y \"Jerarquía\" pueden tenerlo.",
-    "derivativeWithSuchRoleExists": "Ya existe una entidad derivada con esa función.",
-    "derivativeFromDerivativeNotSupporting": "La entidad derivada no puede crearse a partir de otra entidad derivada"
+    "derivativeWithSuchRoleExists": "Ya existe una entidad derivada con esta función.",
+    "derivativeFromDerivativeNotSupporting": "Una entidad derivada no puede crearse a partir de otra entidad derivada."
   }
 }

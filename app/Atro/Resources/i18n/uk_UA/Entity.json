@@ -93,11 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Якщо атрибут безпосередньо пов'язаний із записом, а цей запис пов'язаний із класифікацією, то атрибут також буде пов'язаний із цією класифікацією."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} та {children} не повинні бути одночасно в звʼязках, що впливають на дату/час модифікації.",
     "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути.",
     "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності.",
     "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр.",
-    "derivativeWithSuchRoleExists": "Похідний інструмент з такою роллю вже існує.",
-    "derivativeFromDerivativeNotSupporting": "Похідний інструмент не може бути створений з іншого похідного інструменту"
+    "derivativeWithSuchRoleExists": "Похідна сутність з такою роллю вже існує.",
+    "derivativeFromDerivativeNotSupporting": "Похідна сутність не може бути створена з іншої похідної сутності."
   }
 }

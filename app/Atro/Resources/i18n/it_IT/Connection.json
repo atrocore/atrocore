@@ -75,7 +75,7 @@
   },
   "options": {
     "smtpAuthType": {
-      "basic": "Di base",
+      "basic": "Basic",
       "oauth": "Oauth"
     }
   },
