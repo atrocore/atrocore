@@ -58,7 +58,7 @@
     "attributeValueIsInUse": "Il valore dell'attributo è in uso e non può essere cancellato.",
     "youCantChangeFieldOfTypeInAttribute": "Non può cambiare il tipo di attributo.",
     "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già.",
-    "entityNotAllowToChoose": "L'entità non può scegliere"
+    "entityNotAllowToChoose": "L'entità non può essere scelta."
   },
   "labels": {
     "Classification": "Classificazione",
