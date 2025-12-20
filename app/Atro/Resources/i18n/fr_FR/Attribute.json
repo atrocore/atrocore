@@ -92,11 +92,11 @@
     "attributeIsUsedInProducts": "L'attribut est utilisé dans les produits. Veuillez d'abord mettre à jour les produits.",
     "attributeIsUsedInClassifications": "L'attribut est utilisé dans les classifications. Veuillez d'abord mettre à jour les classifications.",
     "invalidType": "Le type d'attribut '{type}' n'est pas valide",
-    "wrongAttributeEntity": "L'entité choisie n'est pas autorisée. L'entité doit être la même que pour le panneau d'attributs et le groupe d'attributs.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "L'entité de l'attribut doit être la même que celle de l'attribut composite",
+    "wrongAttributeEntity": "L'entité choisie n'est pas autorisée. L'entité doit être identique au panneau d'attributs et au groupe d'attributs.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "L'entité d'attribut doit être identique à celle de l'attribut composite.",
     "attributeNotBelongToEntity": "L'attribut n'appartient pas à cette entité.",
     "entityCannotBeChanged": "L'entité ne peut être modifiée.",
-    "compositeAttributeNotFound": "Attribut composite introuvable.",
+    "compositeAttributeNotFound": "L'attribut composite est introuvable.",
     "compositeAttributeCannotBeChild": "Un attribut composite ne peut pas être un enfant.",
     "entityNotAllowToChoose": "L'entité n'est pas autorisée à choisir"
   }
