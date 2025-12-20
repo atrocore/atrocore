@@ -9,7 +9,7 @@
     "mode": "Режим",
     "enabledScopeList": "Что отображать",
     "users": "Пользователи",
-    "entityType": "Сущность",
+    "entityType": "Тип сущности",
     "primaryFilter": "Первичный фильтр",
     "boolFilterList": "Дополнительные фильтры",
     "sortBy": "Сортировка (поле)",
