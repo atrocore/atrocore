@@ -12,7 +12,7 @@
     "type": {
       "create": "Créer",
       "update": "Mise à jour",
-      "delete": "Supprimer",
+      "delete": "Suppression",
       "error": "Erreur"
     }
   }
