@@ -83,7 +83,8 @@
     "AccountGroup": "Account Group",
     "ProductGroup": "Product Group",
     "Selection": "Selection",
-    "SelectionRecord": "Selection Record"
+    "SelectionRecord": "Selection Record",
+    "Layout": "Layout"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Master Data Entities",
@@ -154,7 +155,8 @@
     "AccountGroup": "Account Groups",
     "ProductGroup": "Product Groups",
     "Selection": "Selections",
-    "SelectionRecord": "Selection Records"
+    "SelectionRecord": "Selection Records",
+    "Layout": "Layouts"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
