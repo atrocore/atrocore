@@ -57,7 +57,7 @@
       "extensibleEnum": "Liste",
       "float": "Flottant",
       "int": "Entier",
-      "extensibleMultiEnum": "Liste de valeurs multiples",
+      "extensibleMultiEnum": "Liste multi-valeurs",
       "text": "Texte",
       "markdown": "Markdown",
       "url": "Url",
