@@ -10,7 +10,7 @@
     "favicon": "Favicon",
     "globalSearchEntityList": "Liste des entités pour la recherche globale",
     "assignmentEmailNotifications": "Notifications à l'assignation",
-    "streamEmailNotifications": "Notifications des changements dans le panneau activités pour les utilisateurs internes",
+    "streamEmailNotifications": "Notifications destinées aux utilisateurs internes concernant les mises à jour dans Activités",
     "avatarsDisabled": "Désactiver les avatars",
     "displayListViewRecordCount": "Afficher le nombre total (en vue liste)",
     "userThemesDisabled": "Désactiver les thèmes utilisateur",
