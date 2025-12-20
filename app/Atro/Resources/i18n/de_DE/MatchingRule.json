@@ -1,9 +1,9 @@
 {
   "fields": {
-    "matching": "Passend dazu",
+    "matching": "Übereinstimmung",
     "weight": "Gewicht",
-    "matchingRuleSet": "Set",
-    "matchingRules": "Übereinstimmungsregeln",
+    "matchingRuleSet": "Satz",
+    "matchingRules": "Übereinstimmungs-Regeln",
     "operator": "Operator"
   },
   "options": {
