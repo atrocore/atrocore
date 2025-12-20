@@ -66,9 +66,9 @@
     "AuthToken": "Auth Token",
     "LayoutManager": "Layout Manager",
     "Admin": "Admin",
-    "MatchedRecord": "Abgestimmter Datensatz",
-    "Matching": "Passend dazu",
-    "ThumbnailType": "Thumbnail Type",
+    "MatchedRecord": "Übereinstimmender Datensatz",
+    "Matching": "Übereinstimmung",
+    "ThumbnailType": "Vorschaubild-Typ",
     "ProductHierarchy": "Produkt-Hierarchie",
     "Account": "Konto",
     "Store": "Store",
@@ -82,8 +82,8 @@
     "RoleScopeField": "Feld",
     "Selection": "Auswahl",
     "SelectionRecord": "Auswahlsatz",
-    "ActionExecution": "Aktion Ausführung",
-    "ActionExecutionLog": "Aktion Ausführungsprotokoll"
+    "ActionExecution": "Aktions-Ausführung",
+    "ActionExecutionLog": "Aktions-Ausführungsprotokoll"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
@@ -807,7 +807,7 @@
     "extension": "Erweiterung",
     "hierarchySortOrder": "Hierarchie Sortierreihenfolge",
     "emailAddressData": "E-Mail Adresse Daten",
-    "teams": "Mannschaften",
+    "teams": "Teams",
     "team": "Team",
     "ids": "IDs",
     "folderPath": "Ordner Pfad",
