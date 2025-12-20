@@ -17,7 +17,7 @@
     "notificationSoundsDisabled": "Desactivar los sonidos de notificación",
     "applicationName": "Nombre de la aplicación",
     "assignmentEmailNotifications": "Se enviará un correo cuando reciba una asignación",
-    "streamEmailNotifications": "Notificaciones sobre actualizaciones en Actividades para usuarios internos",
+    "streamEmailNotifications": "Notificaciones para usuarios internos sobre actualizaciones en Actividades",
     "mentionEmailNotifications": "Se enviará un correo cuando sean mencionados en los mensajes",
     "aclStrictMode": "ACL en modo estricto",
     "appId": "ID",
