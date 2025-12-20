@@ -15,7 +15,7 @@
     "isRequired": "Erforderlich",
     "isReadOnly": "Schreibgeschützt",
     "isProtected": "Geschützt",
-    "tooltip": "Kurzinfo",
+    "tooltip": "Hinweis",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "amountOfDigitsAfterComma": "Anzahl der Ziffern nach dem Komma",
