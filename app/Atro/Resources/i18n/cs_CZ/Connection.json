@@ -75,7 +75,7 @@
   },
   "options": {
     "smtpAuthType": {
-      "basic": "Základní",
+      "basic": "Basic",
       "oauth": "Oauth"
     }
   },
