@@ -9,22 +9,22 @@
   },
   "exceptions": {
     "wrongCrontabConfiguration": "Mauvaise configuration de la crontab",
-    "onlyOneJobTypeAllowed": "Un seul travail \"%s\" est autorisé"
+    "onlyOneJobTypeAllowed": "Une seule tâche \"%s\" est autorisé"
   },
   "messages": {
-    "jobLaunched": "L'emploi a été créé",
-    "jobAlreadyExist": "Un emploi a été créé il y a moins d'une minute"
+    "jobLaunched": "La tâche a été créé",
+    "jobAlreadyExist": "Une tâche a été créé il y a moins d'une minute"
   },
   "options": {
     "type": {
       "ComposerAutoUpdate": "Mise à jour automatique du système",
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
-      "CheckUpdates": "Vérifier les mises à jour du système",
-      "ScanStorage": "Stockage par balayage",
-      "ClearEntities": "Effacer les données supprimées",
-      "FindMatches": "Trouver des correspondances",
+      "CheckUpdates": "Vérification des mises à jour système",
+      "ScanStorage": "Scan du stockage",
+      "ClearEntities": "Nettoyer les données supprimées",
+      "FindMatches": "Recherce de correspondances",
       "CalculateScriptFieldsForEntities": "Calcule des champs scripts",
-      "SendReports": "Envoyer des rapports d'erreur anonymes"
+      "SendReports": "Envoie des rapports d'erreur anonymes"
     }
   },
   "tooltips": {
