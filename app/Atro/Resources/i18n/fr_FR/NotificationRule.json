@@ -13,7 +13,7 @@
     "asNotificationProfile": "En tant qu'utilisateur du profil de notification",
     "emailActive": "Notification par courriel",
     "systemActive": "Notification du système",
-    "emailTemplateId": "Modèle de courrier électronique",
+    "emailTemplateId": "Modèle d'e-mail",
     "systemTemplateId": "Modèle de système"
   },
   "options": {
