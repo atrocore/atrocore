@@ -93,11 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Pokud je atribut přímo spojen se záznamem a tento záznam je spojen s klasifikací, bude atribut spojen také s touto klasifikací."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{rodiče} a {děti} by neměli být oba ve Vztazích ovlivňujících datum/čas změny.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} a {children} by neměly být oba v vztazích ovlivňujících datum/čas úpravy.",
     "entityAlreadyHasAttributesInUse": "Param Has Attribute nelze deaktivovat. Nejprve odstraňte všechny související atributy.",
     "entityHasDirectlyLinkedAttributes": "Existují již přímo propojené atributy. Odstraňte je prosím ze záznamů.",
     "entityTypeIsNotSuitableForAssociates": "Tento typ entity nemůže obsahovat parametr \"Has Associates\". Mohou ho mít pouze \"Base\" a \"Hierarchy\".",
-    "derivativeWithSuchRoleExists": "Odvozený subjekt s takovou rolí již existuje.",
-    "derivativeFromDerivativeNotSupporting": "Derivátový subjekt nelze vytvořit z jiného derivátového subjektu"
+    "derivativeWithSuchRoleExists": "Již existuje odvozená entita s touto rolí.",
+    "derivativeFromDerivativeNotSupporting": "Odvozená entita nemůže být vytvořena z jiné odvozené entity."
   }
 }
