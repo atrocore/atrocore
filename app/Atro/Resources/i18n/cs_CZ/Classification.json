@@ -22,6 +22,6 @@
     "entityCannotBeChanged": "Entitu nelze změnit.",
     "classificationForToAnotherEntity": "Klasifikaci nelze s tímto záznamem spojit, protože se používá pro jiný subjekt.",
     "classificationHasRecords": "Klasifikaci se souvisejícími záznamy nelze vymazat.",
-    "entityNotAllowToChoose": "Subjekt si nemůže vybrat"
+    "entityNotAllowToChoose": "Entitu nelze vybrat."
   }
 }
