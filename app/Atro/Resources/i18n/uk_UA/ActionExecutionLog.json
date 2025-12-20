@@ -1,10 +1,10 @@
 {
   "fields": {
-    "actionExecution": "",
+    "actionExecution": "Виконання дій Виконання дій",
     "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
+    "entityRecord": "Запис сутності",
+    "entityName": "Назва суб'єкта Назва суб'єкта",
+    "entityId": "Ідентифікатор сутності",
     "message": "",
     "payload": ""
   },
