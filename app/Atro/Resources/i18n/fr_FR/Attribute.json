@@ -11,7 +11,7 @@
     "measure": "Mesure",
     "defaultUnit": "Unité par défaut",
     "defaultDate": "Date par défaut",
-    "isRequired": "Exigée",
+    "isRequired": "Requis",
     "isReadOnly": "Lecture seule",
     "isProtected": "Protegé",
     "tooltip": "Bulle d'aide",
