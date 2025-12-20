@@ -26,7 +26,7 @@
     "recordsPerPage": "Enregistrements par page",
     "notificationSmtpConnection": "Connexion pour les notifications par e-mail",
     "disableEmailDelivery": "Désactiver l'envoi d'e-mails",
-    "recordsPerPageSmall": "Enregistrements par page (version réduite)",
+    "recordsPerPageSmall": "Enregistrements par page (Vue Liste des relations)",
     "aclStrictMode": "Mode ACL strict",
     "authTokenPreventConcurrent": "Un seul jeton d'authentification par utilisateur",
     "tabIconsDisabled": "Désactiver les icônes du menu de navigation",
