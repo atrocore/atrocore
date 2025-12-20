@@ -21,7 +21,7 @@
     "notificationSoundsDisabled": "Вимкнути звукові нагадування",
     "applicationName": "Назва програми",
     "assignmentEmailNotifications": "Сповіщати по ел. пошті при призначенні",
-    "streamEmailNotifications": "Сповіщення про оновлення в Діяльності для внутрішніх користувачів",
+    "streamEmailNotifications": "Повідомлення для внутрішніх користувачів про оновлення в розділі Активностей",
     "mentionEmailNotifications": "Надіслати сповіщення ел. поштою про згадки в повідомленнях",
     "authTokenPreventConcurrent": "Тільки один токен аутентифікації для кожного користувача",
     "tabIconsDisabled": "Вимкнути значки меню навігації",
