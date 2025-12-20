@@ -7,7 +7,7 @@
     "appId": "ID",
     "useCache": "Use Cache",
     "onlyStableReleases": "Use Only Stable Releases",
-    "currencyRates": "Rate Values",
+    "currencyRates": "Exchange Rates",
     "companyLogo": "Header Logo",
     "favicon": "Favicon",
     "notificationSmtpConnection": "Connection for E-Mail Notifications",
