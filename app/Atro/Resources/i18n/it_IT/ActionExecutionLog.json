@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "",
+    "type": "",
+    "entityRecord": "",
+    "entityName": "",
+    "entityId": "",
+    "message": "",
+    "payload": ""
+  },
+  "options": {
+    "type": {
+      "create": "",
+      "update": "",
+      "delete": "",
+      "error": ""
+    }
+  }
+}
