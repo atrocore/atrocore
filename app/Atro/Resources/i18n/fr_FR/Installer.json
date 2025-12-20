@@ -31,7 +31,7 @@
     "back": "Retour",
     "next": "Suivant",
     "finish": "Finition",
-    "required": "Exigée"
+    "required": "Requis"
   },
   "errors": {
     "alreadyInstalled": "AtroCore déjà installé",
