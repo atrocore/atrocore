@@ -78,8 +78,8 @@
     }
   },
   "exceptions": {
-    "regexNotValid": "Ce motif REGEX n'est pas valide.",
+    "regexNotValid": "Ce motif Regex n'est pas valide.",
     "someFieldNotUnique": "Certaines valeurs de champ ne sont pas uniques.",
-    "someFieldDontMathToPattern": "Certains champs ne correspondent pas au modèle."
+    "someFieldDontMathToPattern": "Certains champs ne correspondent pas au motif regex."
   }
 }
