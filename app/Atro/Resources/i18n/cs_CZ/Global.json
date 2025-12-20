@@ -157,7 +157,7 @@
     "ActionExecutionLog": "Protokoly o provádění akcí"
   },
   "labels": {
-    "basic": "Základní",
+    "basic": "Basic",
     "script": "Skript",
     "phpCode": "Kód PHP",
     "_addAttribute": "[Přidat atribut]",
