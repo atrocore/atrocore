@@ -81,7 +81,7 @@
   },
   "options": {
     "smtpAuthType": {
-      "basic": "Основные",
+      "basic": "Basic",
       "oauth": "Oauth"
     }
   }
