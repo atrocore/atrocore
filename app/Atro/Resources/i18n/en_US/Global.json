@@ -513,7 +513,8 @@
     "view": "View",
     "Items": "Items",
     "hideAll": "Hide all",
-    "Relations": "Relations"
+    "Relations": "Relations",
+    "Saved Filters": "Saved Filters"
   },
   "insightsPanels": {
     "summary": "Summary",
