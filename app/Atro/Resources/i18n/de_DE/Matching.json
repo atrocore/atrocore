@@ -2,7 +2,7 @@
   "fields": {
     "minimumScore": "Mindestpunktzahl, %",
     "masterEntity": "Stammdaten-Entität",
-    "matchingRules": "Übereinstimmungsregeln",
+    "matchingRules": "Übereinstimmungs-Regeln",
     "entity": "Entität",
     "matchedRecords": "Übereinstimmende Datensätze",
     "matchedRecordsMax": "Maximale Anzahl übereinstimmender Datensätze"
