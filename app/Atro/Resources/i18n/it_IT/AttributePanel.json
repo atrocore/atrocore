@@ -4,6 +4,6 @@
     "default": "Predefinito"
   },
   "exceptions": {
-    "entityIsUsed": "L'Attributo Panel non può essere eliminato perché viene utilizzato in diversi Attributi."
+    "entityIsUsed": "Il pannello Attributi non può essere eliminato perché utilizza uno o più attributi."
   }
 }
