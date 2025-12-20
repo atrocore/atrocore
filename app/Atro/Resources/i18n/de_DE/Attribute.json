@@ -92,11 +92,11 @@
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
     "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
     "invalidType": "Der Attributtyp „{type}“ ist ungültig",
-    "compositeAttributeNotFound": "Zusammengesetztes Attribut nicht gefunden.",
+    "compositeAttributeNotFound": "Das zusammengesetzte Attribut wurde nicht gefunden.",
     "compositeAttributeCannotBeChild": "Zusammengesetztes Attribut kann nicht untergeordnet sein.",
     "entityCannotBeChanged": "Die Entität kann nicht geändert werden.",
-    "wrongAttributeEntity": "Es wurde eine nicht zulässige Entität gewählt. Die Entität muss mit dem Attribut-Panel und der Attribut-Gruppe übereinstimmen.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Das Attribut Entität muss dasselbe sein wie im zusammengesetzten Attribut",
+    "wrongAttributeEntity": "Die ausgewählte Entität ist nicht zulässig. Die Entität muss mit dem Attributfeld und der Attributgruppe übereinstimmen.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Das Attribut-Entität muss dasselbe sein wie im zusammengesetzten Attribut.",
     "attributeNotBelongToEntity": "Das Attribut gehört nicht zu dieser Entität.",
     "entityNotAllowToChoose": "Die Entität kann nicht ausgewählt werden."
   }
