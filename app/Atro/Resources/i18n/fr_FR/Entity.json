@@ -94,9 +94,9 @@
   },
   "exceptions": {
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {children} ne doivent pas figurer tous les deux dans les relations affectant la date/l'heure de modification.",
-    "entityAlreadyHasAttributesInUse": "Has Attribute param ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
+    "entityAlreadyHasAttributesInUse": "\"A des attributs\" ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
-    "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer.",
+    "entityTypeIsNotSuitableForAssociates": "Ce type d’entité ne peut pas inclure le paramètre « A des associés ». Seuls les types « Base » et « Hiérarchie » sont autorisés.",
     "derivativeWithSuchRoleExists": "Il existe déjà une entité dérivée qui remplit cette fonction.",
     "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée."
   }
