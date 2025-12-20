@@ -2,7 +2,7 @@
   "fields": {
     "classification": "Classification",
     "attribute": "Attribut",
-    "isRequired": "Exigée",
+    "isRequired": "Requis",
     "isReadOnly": "Lecture seule",
     "isProtected": "Protegé",
     "maxLength": "Longueur maximale",
