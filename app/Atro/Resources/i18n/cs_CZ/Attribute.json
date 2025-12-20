@@ -83,8 +83,8 @@
     "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte."
   },
   "exceptions": {
-    "wrongAttributeEntity": "Není povoleno Subjekt byl vybrán. Entita musí být shodná s Attribute Panel a Attribute Group.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Atribut Entita musí být stejný jako v atributu Composite.",
+    "wrongAttributeEntity": "Zvolená entita není povolena. Entita musí být stejná jako panel atributů a skupina atributů.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Entita atributu musí být stejná jako v kompozitním atributu.",
     "attributeNotBelongToEntity": "Atribut nepatří této entitě.",
     "entityCannotBeChanged": "Entitu nelze změnit.",
     "compositeAttributeNotFound": "Kompozitní atribut nebyl nalezen.",
