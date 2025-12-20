@@ -2,10 +2,10 @@
   "fields": {
     "actionExecution": "Aktions-Ausführung",
     "type": "Typ",
-    "entityRecord": "Entitätssatz",
-    "entityName": "Entität Name",
+    "entityRecord": "Entitätsdatensatz",
+    "entityName": "Entitäts-Name",
     "entityId": "Entitäts-ID",
-    "message": "Botschaft",
+    "message": "Nachricht",
     "payload": "Payload"
   },
   "options": {
