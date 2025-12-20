@@ -2,7 +2,7 @@
   "fields": {
     "name": "Geltungsbereich",
     "role": "Rolle",
-    "hasAccess": "Berechtigungen",
+    "hasAccess": "Berechtigung",
     "createAction": "Erstellen",
     "readAction": "Lesen",
     "editAction": "Bearbeiten",
