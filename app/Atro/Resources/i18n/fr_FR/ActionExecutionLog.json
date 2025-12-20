@@ -1,19 +1,19 @@
 {
   "fields": {
-    "actionExecution": "",
-    "type": "",
+    "actionExecution": "Exécution de l'action",
+    "type": "Type",
     "entityRecord": "",
     "entityName": "",
     "entityId": "",
-    "message": "",
-    "payload": ""
+    "message": "Message",
+    "payload": "Payload"
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "error": ""
+      "create": "Créer",
+      "update": "Mise à jour",
+      "delete": "Supprimer",
+      "error": "Erreur"
     }
   }
 }
