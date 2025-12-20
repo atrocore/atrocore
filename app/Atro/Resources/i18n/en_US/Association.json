@@ -4,7 +4,7 @@
     "isActive": "Active",
     "reverseAssociation": "Reverse Association",
     "code": "Code",
-    "default": "Default"
+    "default": "Default Value"
   },
   "exceptions": {
     "associationIsLinkedWithRecords": "Association is linked with record(s). Please, unlink record(s) first",
