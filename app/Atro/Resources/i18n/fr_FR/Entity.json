@@ -93,11 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Si un attribut est directement lié à un enregistrement et que cet enregistrement est lié à une classification, l'attribut sera également lié à cette classification."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {enfants} ne doivent pas figurer tous les deux dans les relations avec date/heure de modification.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {children} ne doivent pas figurer tous les deux dans les relations affectant la date/l'heure de modification.",
     "entityAlreadyHasAttributesInUse": "Has Attribute param ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
     "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer.",
-    "derivativeWithSuchRoleExists": "Une entité dérivée jouant ce rôle existe déjà.",
-    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut être créée à partir d'une autre entité dérivée."
+    "derivativeWithSuchRoleExists": "Il existe déjà une entité dérivée qui remplit cette fonction.",
+    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée."
   }
 }
