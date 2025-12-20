@@ -4,7 +4,7 @@
     "isReadOnly": "Schreibgeschützt",
     "isProtected": "Geschützt",
     "classification": "Klassifikation",
-    "attribute": "Attribute",
+    "attribute": "Attribut",
     "maxLength": "Maximallänge",
     "countBytesInsteadOfCharacters": "Bytes statt Zeichen zählen",
     "value": "Standardwert",
