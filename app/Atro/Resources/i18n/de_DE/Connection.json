@@ -40,7 +40,7 @@
     "dsn": "Dsn",
     "ftpSsl": "TLS/SSL",
     "oauthUrl": "OAuth URL",
-    "oauthGrantType": "OAuth Grant Type",
+    "oauthGrantType": "OAuth-Grant-Typ",
     "additionalParameters": "Zusätzliche Parameter",
     "atrocoreUrl": "URL",
     "smtpServer": "Server",
