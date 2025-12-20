@@ -195,7 +195,7 @@
     "emailTemplates": "Gérer les modèles d’e-mails pour l’envoi manuel ou automatisé (hors notifications standard).",
     "notificationTemplates": "Gérer le modèle de notification standard du système.",
     "layoutProfiles": "Gérer et personnaliser les différentes configuration des dispositions de l'interface utilisateur du système",
-    "matchings": "Les appariements permettent d’identifier des enregistrements similaires entre différentes entités à l’aide de règles définies par l’utilisateur.",
+    "matchings": "Les correspondances permettent d'identifier des enregistrements similaires entre différentes entités à l'aide de règles définies par l'utilisateur.",
     "incomingWebhook": "Les webhooks entrants permettent de déclencher des actions prédéfinies via des requêtes HTTP externes, avec des options de sécurité comme la vérification par hachage et la liste blanche d’adresses IP.",
     "thumbnailTypes": "Gérer les types de vignettes pour modifier la largeur ou la hauteur d'une vignette, ou pour en créer une nouvelle.",
     "scheduledJob": "Gérer les tâches planifiées du système",
