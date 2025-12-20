@@ -9,7 +9,7 @@
     "controllerName": "Controller Name",
     "controllerAction": "Controller-Aktion",
     "authToken": "Authentifizierungstoken",
-    "targetName": "Ziel Name",
+    "targetName": "Ziel-Name",
     "targetId": "Ziel-ID",
     "data": "Daten"
   }
