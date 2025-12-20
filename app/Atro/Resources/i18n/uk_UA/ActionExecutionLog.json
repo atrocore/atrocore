@@ -1,19 +1,19 @@
 {
   "fields": {
     "actionExecution": "Виконання дій Виконання дій",
-    "type": "",
+    "type": "Тип",
     "entityRecord": "Запис сутності",
     "entityName": "Назва суб'єкта Назва суб'єкта",
     "entityId": "Ідентифікатор сутності",
-    "message": "",
-    "payload": ""
+    "message": "Повідомлення",
+    "payload": "корисне навантаження"
   },
   "options": {
     "type": {
-      "create": "",
-      "update": "",
-      "delete": "",
-      "error": ""
+      "create": "Створити",
+      "update": "Оновлення",
+      "delete": "Видалити",
+      "error": "Помилка"
     }
   }
 }
