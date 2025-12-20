@@ -21,7 +21,7 @@
     "vendorOauthUrl": "Anbieter-Oauth-URL",
     "vendorOauthScopes": "Oauth-Bereiche des Anbieters",
     "oauthConsumerKey": "Oauth-Schlüssel des Verbrauchers",
-    "oauthConsumerSecret": "Oauth Consumer Secret",
+    "oauthConsumerSecret": "Oauth-Geheimnis des Verbrauchers",
     "requestTokenUrl": "Token url anfordern",
     "accessTokenUrl": "Zugangs-Token Url",
     "oauthVerifier": "Oauth Verifier",
