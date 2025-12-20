@@ -5,7 +5,7 @@
     "pid": "PID",
     "priority": "Priorité",
     "handler": "Gestionnaire",
-    "payload": "Payload",
+    "payload": "Charge utile",
     "scheduledJob": "Tâche planifiée",
     "message": "Message",
     "startedAt": "Démarré à",
@@ -18,7 +18,7 @@
     "status": {
       "Pending": "En attente",
       "Success": "Succès",
-      "Running": "La course à pied",
+      "Running": "En cours",
       "Failed": "Échec",
       "Canceled": "Annulé",
       "Awaiting": "En attente",
@@ -29,6 +29,6 @@
     "priority": "Un numéro plus élevé signifie une plus grande priorité"
   },
   "exceptions": {
-    "jobIsRunning": "Un travail en cours ne peut pas être supprimé."
+    "jobIsRunning": "Une tâche en cours ne peut pas être supprimé."
   }
 }

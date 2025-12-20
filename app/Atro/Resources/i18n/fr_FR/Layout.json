@@ -2,7 +2,7 @@
   "fields": {
     "entity": "Entité",
     "viewType": "Type de vue",
-    "layoutProfile": "Profil de Disposition",
+    "layoutProfile": "Profil de disposition",
     "relatedEntity": "Entité associée"
   },
   "groupOptions": {

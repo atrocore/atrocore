@@ -20,7 +20,7 @@
     },
     "status": {
       "failed": "Échec",
-      "running": "La course à pied",
+      "running": "En cours",
       "done": "Terminé"
     }
   }

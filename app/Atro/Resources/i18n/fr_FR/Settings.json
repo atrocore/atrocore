@@ -33,7 +33,7 @@
     "emailAddressIsOptedOutByDefault": "Marquer les nouvelles adresses e-mail comme désabonnées",
     "customStylesheet": "CSS",
     "customHeadCode": "Code du header",
-    "passwordRegexPattern": "Motif Regex du mot de passe",
+    "passwordRegexPattern": "Regex du mot de passe",
     "passwordExpireDays": "Période d'expiration du mot de passe (en jours)",
     "sendOutNotifications": "Envoyer des notifications",
     "sendNotificationInSync": "Envoyer des notifications sans tâche de fond",

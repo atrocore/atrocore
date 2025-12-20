@@ -4,8 +4,8 @@
     "dateFormat": "Format de la date",
     "weekStart": "Premier jour de la semaine",
     "timeFormat": "Format de l'heure",
-    "thousandSeparator": "Mille séparateurs",
-    "decimalMark": "Point décimal",
+    "thousandSeparator": "Séparateur de milliers",
+    "decimalMark": "Symbole du décimal",
     "languageCode": "Code langue",
     "fallbackLanguageCode": "Code de la langue de secours"
   },
