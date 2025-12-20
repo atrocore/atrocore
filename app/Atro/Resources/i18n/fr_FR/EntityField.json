@@ -45,7 +45,7 @@
     "strip": "Bande",
     "height": "Hauteur (px)",
     "useIframe": "Utiliser l'iframe en mode affichage",
-    "htmlSanitizer": "HTML Sanitizer",
+    "htmlSanitizer": "Filtre HTML",
     "foreignCode": "Code étranger",
     "relationType": "Relation Type",
     "foreignEntity": "Entité étrangère",
