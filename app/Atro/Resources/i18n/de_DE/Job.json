@@ -7,7 +7,7 @@
   },
   "options": {
     "status": {
-      "Pending": "Steht aus",
+      "Pending": "Ausstehend",
       "Success": "Erfolg",
       "Running": "In Arbeit",
       "Failed": "Fehlgeschlagen",
