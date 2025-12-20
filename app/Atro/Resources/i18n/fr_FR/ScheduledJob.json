@@ -21,7 +21,7 @@
       "UpdateCurrencyExchangeViaECB": "Mise à jour du taux de change via la BCE",
       "CheckUpdates": "Vérification des mises à jour système",
       "ScanStorage": "Scan du stockage",
-      "ClearEntities": "Nettoyer les données supprimées",
+      "ClearEntities": "Nettoyage des données supprimées",
       "FindMatches": "Recherce de correspondances",
       "CalculateScriptFieldsForEntities": "Calcule des champs scripts",
       "SendReports": "Envoie des rapports d'erreur anonymes"
