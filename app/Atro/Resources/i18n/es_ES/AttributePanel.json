@@ -4,6 +4,6 @@
     "default": "Por defecto"
   },
   "exceptions": {
-    "entityIsUsed": "El panel de atributos no se puede eliminar porque se utiliza en varios atributos."
+    "entityIsUsed": "El panel de atributos no se puede eliminar porque utiliza uno o más atributos."
   }
 }
