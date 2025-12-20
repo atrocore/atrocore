@@ -9,7 +9,7 @@
     "mode": "Režim",
     "enabledScopeList": "Co zobrazit",
     "users": "Uživatelé",
-    "entityType": "Subjekt",
+    "entityType": "Typ entity",
     "primaryFilter": "Primární filtr",
     "boolFilterList": "Další filtry",
     "sortBy": "Objednávka (pole)",
