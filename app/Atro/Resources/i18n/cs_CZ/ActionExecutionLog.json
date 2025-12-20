@@ -1,11 +1,11 @@
 {
   "fields": {
-    "actionExecution": "",
+    "actionExecution": "Provedení akce",
     "type": "",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
-    "message": "",
+    "entityRecord": "Záznam subjektu",
+    "entityName": "Název subjektu",
+    "entityId": "ID subjektu",
+    "message": "Zpráva",
     "payload": ""
   },
   "options": {
