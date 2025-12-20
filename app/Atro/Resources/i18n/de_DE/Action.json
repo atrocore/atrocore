@@ -28,13 +28,13 @@
     "updateFields": "Felder aktualisieren",
     "changeFields": "Felder",
     "searchEntity": "Suchentität",
-    "executions": "Exekutionen"
+    "executions": "Läufe"
   },
   "labels": {
     "execute": "Ausführen",
     "Parameters": "Parameter",
     "fieldsPanel": "Aktualisieren",
-    "allLogs": "Alle Logs"
+    "allLogs": "Alle Protokolle"
   },
   "massActions": {
     "execute": "Ausführen"
