@@ -51,7 +51,7 @@ export const Language = {
             }
 
             if(scope === 'Global') {
-                return translatedText;
+                return;
             }
 
             translatedText = null;
