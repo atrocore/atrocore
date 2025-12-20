@@ -2,9 +2,9 @@
   "fields": {
     "actionExecution": "Exécution de l'action",
     "type": "Type",
-    "entityRecord": "",
-    "entityName": "",
-    "entityId": "",
+    "entityRecord": "Enregistrement de l'entité",
+    "entityName": "Nom de l'entité",
+    "entityId": "ID de l'entité",
     "message": "Message",
     "payload": "Payload"
   },
