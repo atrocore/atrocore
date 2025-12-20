@@ -96,8 +96,8 @@
     "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
     "entityHasDirectlyLinkedAttributes": "Es gibt bereits direkt verknüpfte Attribute. Bitte entfernen Sie diese aus den Datensätzen.",
     "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben.",
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{Eltern} und {Kinder} sollten nicht beide in der Beziehung sein, die Datum/Uhrzeit der Änderung bewirkt",
-    "derivativeWithSuchRoleExists": "Ein abgeleitetes Unternehmen mit einer solchen Rolle existiert bereits.",
-    "derivativeFromDerivativeNotSupporting": "Ein Derivat kann nicht aus einem anderen Derivat erstellt werden"
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} und {children} sollten nicht beide in Beziehungen enthalten sein, die sich auf das Änderungsdatum/-zeit auswirken.",
+    "derivativeWithSuchRoleExists": "Es gibt bereits eine abgeleitete Entität mit dieser Rolle.",
+    "derivativeFromDerivativeNotSupporting": "Eine abgeleitete Entität kann nicht aus einer anderen abgeleiteten Entität erstellt werden."
   }
 }
