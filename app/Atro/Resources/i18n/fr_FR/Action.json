@@ -11,18 +11,18 @@
     "actions": "Actions",
     "webhookUrl": "URL",
     "showEmailPreview": "Prévisualisation avant envoi",
-    "emailTo": "Email à",
+    "emailTo": "E-mail du destinataire",
     "focusField": "Champ",
     "changeFields": "Champs",
-    "emailCc": "Email CC",
-    "emailBcc": "Email BCC",
+    "emailCc": "E-mail CC",
+    "emailBcc": "E-mail BCC",
     "executeAs": "Exécuter en tant que",
-    "displayField": "Champ d'affichage",
+    "displayField": "Champ",
     "mode": "Mode",
     "emailScript": "Script",
     "emailTemplate": "Modèle d'e-mail",
     "targetEntity": "Entité cible",
-    "hideTextLabel": "Masquer l'étiquette de texte sur le bouton",
+    "hideTextLabel": "Masquer le libellé de texte sur le bouton",
     "applyToPreselectedRecords": "Appliquer aux enregistrements présélectionnés",
     "updateType": "Type de mise à jour",
     "updateScript": "Script",
@@ -45,25 +45,25 @@
   "options": {
     "display": {
       "dropdown": "Liste déroulante",
-      "single": "Unique"
+      "single": "Seul"
     },
     "type": {
       "create": "Créer",
       "update": "Mise à jour",
-      "delete": "Supprimer",
+      "delete": "Suppression",
       "set": "Ensemble d'actions",
-      "webhook": "Point d'encrage Web",
+      "webhook": "Webhook",
       "email": "Envoyer un e-mail",
       "customCode": "Code personnalisé",
-      "createOrUpdate": "Créer ou mettre à jour"
+      "createOrUpdate": "Création ou mise à jour"
     },
     "usage": {
-      "entity": "Bouton d'action de l'entité",
-      "record": "Bouton d'enregistrement d'une action",
+      "entity": "Bouton d'action d'entité",
+      "record": "Bouton d'action d'enregistrement",
       "field": "Bouton d'action de champ",
-      "onFieldFocus": "Mise au point sur le terrain",
-      "onFieldChange": "Changement sur le terrain",
-      "onRecordLoad": "Création/mise à jour des registres"
+      "onFieldFocus": "Au focus du champ",
+      "onFieldChange": "Au changement du champ",
+      "onRecordLoad": "À la création/mise à jour d’un enregistrement"
     },
     "executeAs": {
       "sameUser": "Même utilisateur",
