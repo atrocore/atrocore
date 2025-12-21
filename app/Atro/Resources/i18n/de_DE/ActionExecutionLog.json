@@ -6,7 +6,7 @@
     "entityName": "Entitäts-Name",
     "entityId": "Entitäts-ID",
     "message": "Nachricht",
-    "payload": "Payload"
+    "payload": "Nutzdaten"
   },
   "options": {
     "type": {
