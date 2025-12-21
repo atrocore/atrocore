@@ -8,9 +8,9 @@
   },
   "options": {
     "type": {
-      "equal": "Equal",
-      "like": "Like",
-      "contains": "Contains",
+      "equal": "Gleich",
+      "like": "Vergleichbar mit",
+      "contains": "Beinhaltet",
       "set": "Set"
     },
     "operator": {
