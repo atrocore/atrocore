@@ -1677,7 +1677,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 linkList.forEach(link => {
                     let defs = links[link];
 
-                    if (defs.foreign && defs.entity && this.getAcl().check(defs.entity, 'edit') && !defs.readOnly) {
+                    if (defs?.foreign && defs.entity && this.getAcl().check(defs.entity, 'edit') && !defs.readOnly) {
                         let foreignType = this.getMetadata().get(['entityDefs', defs.entity, 'links', defs.foreign, 'type']);
                         if (this.checkRelationshipType(defs.type, foreignType)
                             && (this.getMetadata().get(['scopes', defs.entity, 'entity']) || defs.addRelationCustomDefs)
