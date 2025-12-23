@@ -83,7 +83,8 @@
     "Selection": "Auswahl",
     "SelectionRecord": "Auswahl-Datensatz",
     "ActionExecution": "Aktions-Ausführung",
-    "ActionExecutionLog": "Aktions-Ausführungsprotokoll"
+    "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
+    "Layout": "Layout"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
@@ -154,7 +155,8 @@
     "Selection": "Auswahlen",
     "SelectionRecord": "Auswahldatensätze",
     "ActionExecution": "Aktions-Ausführungen",
-    "ActionExecutionLog": "Protokolle der Aktionsausführung"
+    "ActionExecutionLog": "Protokolle der Aktionsausführung",
+    "Layout": "Layouts"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
