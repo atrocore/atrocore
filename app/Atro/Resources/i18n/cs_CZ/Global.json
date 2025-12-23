@@ -83,7 +83,8 @@
     "SelectionRecord": "Záznam o výběru",
     "MasterDataEntity": "Subjekt kmenových dat",
     "ActionExecution": "Provedení akce",
-    "ActionExecutionLog": "Protokol o provedení akce"
+    "ActionExecutionLog": "Protokol o provedení akce",
+    "Layout": "Rozložení"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
