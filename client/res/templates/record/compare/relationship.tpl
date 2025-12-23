@@ -30,7 +30,7 @@
         <tr> <td  colspan="{{columnLength}}"> No Data</td></tr>
         {{/unless}}
         {{#each tableRows}}
-        <tr class="list-row  {{class}}" >
+        <tr class="list-row  {{#unless @first}}{{class}} {{/unless}}" >
             <td class="cell l-200" data-field="name" title="{{title}}">
                 {{{label }}}
             </td>
