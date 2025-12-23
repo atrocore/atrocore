@@ -39,10 +39,12 @@ class Update extends AbstractAction
             $whereJson = $this->getTwig()->renderTemplate($whereJson, $templateData);
             $where = @json_decode($whereJson, true);
 
-            /** @var \Espo\Core\SelectManagers\Base $selectManager */
-            $selectManager = $this->container->get('selectManagerFactory')->create($action->get('searchEntity'));
+            $searchEntityType = $action->get('searchEntity');
+
+            /** @var \Atro\Core\SelectManagers\Base $selectManager */
+            $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityType);
             /** @var \Atro\Core\Templates\Repositories\Base $repository */
-            $repository = $this->getEntityManager()->getRepository($action->get('searchEntity'));
+            $repository = $this->getEntityManager()->getRepository($searchEntityType);
 
             $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
             $repository->handleSelectParams($selectParams);
@@ -55,7 +57,7 @@ class Update extends AbstractAction
                 return true;
             }
 
-            if ($count > $this->container->get('config')->get('massUpdateMaxCountWithoutJob', 200)) {
+            if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
                 // build chunks
                 $chunks = [];
                 $chunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
@@ -64,7 +66,7 @@ class Update extends AbstractAction
 
                 $select = ['id'];
                 $orderBy = 'id';
-                if (!empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']))) {
+                if (!empty($this->getMetadata()->get(['entityDefs', $searchEntityType, 'fields', 'createdAt']))) {
                     $orderBy = 'createdAt';
                     $select[] = $orderBy;
                 }
