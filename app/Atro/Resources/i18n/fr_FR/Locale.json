@@ -14,6 +14,6 @@
     "monday": "Lundi"
   },
   "exceptions": {
-    "localeIsUsed": "La localité utilisée ne peut pas être supprimée."
+    "localeIsUsed": "Le paramètre régional utilisé ne peut pas être supprimée."
   }
 }

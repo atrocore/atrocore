@@ -66,7 +66,7 @@
     "companyLogo": "Types de fichiers disponibles : image/jpeg, image/png, image/gif, image/svg+xml"
   },
   "labels": {
-    "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues pour cette language sont automatiquement supprimées par le biais de la tâche programmée <a href=\"/#ScheduledJob\" target=\"_blank\">Tâche planifiée</a> .",
+    "confirmLocaleChanges": "Si la langue est supprimée, toutes les données précédemment saisies dans les champs multilingues pour cette language sont automatiquement supprimées par le biais de la tâche planifiée <a href=\"/#ScheduledJob\" target=\"_blank\">Tâche planifiée</a> .",
     "Representation": "Représentation",
     "System Notifications": "Notifications du système",
     "notAllowByContent": "Non autorisé, vérifier selon le contenu du fichier",
@@ -74,7 +74,7 @@
     "notAllowByContentAndName": "Non autorisé, vérifier selon le nom et le contenu du fichier",
     "allow": "Permettre",
     "System": "Système",
-    "Locale": "Paramètre régional",
+    "Locale": "Paramètres régionaux",
     "SMTP": "SMTP",
     "Configuration": "Configuration",
     "Admin Notifications": "Notifications administrateur",
