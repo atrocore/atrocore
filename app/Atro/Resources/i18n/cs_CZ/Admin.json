@@ -174,7 +174,7 @@
     "rebuildDb": "Změny, které se použijí v databázi po kliknutí na tlačítko \"Použít\", jsou uvedeny níže. Některá data mohou být s novou verzí softwaru nekompatibilní a může dojít k jejich ztrátě. Tato akce je nevratná."
   },
   "descriptions": {
-    "matchings": "Shody pomáhají identifikovat podobné záznamy napříč entitami pomocí pravidel definovaných uživatelem.",
+    "matchings": "Porovnávání pomáhá identifikovat podobné záznamy napříč entitami pomocí pravidel definovaných uživatelem.",
     "incomingWebhook": "Příchozí webové háčky umožňují spouštět předdefinované akce prostřednictvím externích požadavků HTTP s volitelným zabezpečením, jako je ověření hash a whitelisting IP.",
     "Storage": "Správa fyzických umístění všech nahraných souborů (místní souborový systém, Microsoft Sharepoint, Amazon S3 atd.).",
     "listOfSupportedFilesTypes": "Správa typů souborů pro další ověřování souborů (např. obrázků, dokumentů, videí atd.) a klasifikaci.",

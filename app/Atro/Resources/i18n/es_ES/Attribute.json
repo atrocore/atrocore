@@ -88,7 +88,7 @@
     "attributeNotBelongToEntity": "El atributo no pertenece a esta Entidad.",
     "entityCannotBeChanged": "La entidad no puede modificarse.",
     "compositeAttributeNotFound": "Atributo compuesto no encontrado.",
-    "compositeAttributeCannotBeChild": "El atributo compuesto no puede ser hijo.",
+    "compositeAttributeCannotBeChild": "Un atributo compuesto no puede ser hijo.",
     "fileTypeCannotBeDeleted": "El registro no puede borrarse porque se utiliza en el atributo '%s'.",
     "maxLessThanMin": "Min debe ser menor que Max.",
     "noAttributeConverterFound": "La conversión de atributos del tipo '%s' a '%s' es imposible.",

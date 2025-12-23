@@ -10,7 +10,7 @@
     "type": {
       "equal": "Equal",
       "like": "Like",
-      "contains": "Contains",
+      "contains": "містить",
       "set": "Set"
     },
     "operator": {

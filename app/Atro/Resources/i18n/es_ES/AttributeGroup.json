@@ -11,7 +11,7 @@
     "unlinkAttributeGroupConfirmation": "¿Está seguro de que desea desvincular todos los atributos del grupo de atributos?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "El grupo de atributos está vinculado con atributo(s). Por favor, desvincule primero el atributo(s)",
+    "attributeGroupSsLinkedWithAttributes": "El grupo de atributos sigue vinculado a algún atributo o atributos. Por favor, desvincule primero los atributos.",
     "entityIsUsed": "El Grupo de Atributos no se puede eliminar porque se utiliza en varios Atributos."
   }
 }

@@ -1,7 +1,7 @@
 {
   "fields": {
     "attributes": "Attributs",
-    "default": "Défaut"
+    "default": "Valeur par défaut"
   },
   "exceptions": {
     "entityIsUsed": "Le panneau Attributs ne peut pas être supprimé car il utilise un ou plusieurs attributs."

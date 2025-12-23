@@ -88,7 +88,7 @@
     "attributeNotBelongToEntity": "Atrybut nie należy do tego podmiotu.",
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
     "compositeAttributeNotFound": "Nie znaleziono atrybutu złożonego.",
-    "compositeAttributeCannotBeChild": "Atrybut złożony nie może być podrzędny.",
+    "compositeAttributeCannotBeChild": "Atrybut złożony nie może być elementem podrzędnym.",
     "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w atrybucie \"%s\".",
     "maxLessThanMin": "Min powinna być mniejsza niż Max.",
     "noAttributeConverterFound": "Konwersja atrybutu z typu '%s' na '%s' jest niemożliwa.",

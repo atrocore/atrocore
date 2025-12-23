@@ -51,7 +51,7 @@
     "attributeNotBelongToEntity": "L'attributo non appartiene a questa Entità.",
     "entityCannotBeChanged": "L'entità non può essere modificata.",
     "compositeAttributeNotFound": "Attributo composito non trovato.",
-    "compositeAttributeCannotBeChild": "L'attributo composito non può essere figlio.",
+    "compositeAttributeCannotBeChild": "Un attributo composito non può essere un figlio.",
     "fileTypeCannotBeDeleted": "Il record non può essere cancellato perché è utilizzato nell'attributo '%s'.",
     "maxLessThanMin": "Min dovrebbe essere inferiore a Max.",
     "noAttributeConverterFound": "La conversione dell'attributo dal tipo '%s' a '%s' è impossibile.",
