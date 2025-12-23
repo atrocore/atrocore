@@ -44,6 +44,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         selectionModel: null,
 
+        layoutData: null,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -59,12 +61,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         setup() {
             this.instanceComparison = this.options.instanceComparison ?? this.instanceComparison;
-            this.links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
             this.nonComparableFields = this.getMetadata().get('scopes.' + this.scope + '.nonComparableFields') ?? [];
             this.merging = this.options.merging || this.merging;
             this.renderedPanels = [];
             this.hideButtonPanel = false;
-            this.selectedFilters =  this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
+            this.selectedFilters = this.selectedFilters || this.getStorage().get('compareFilters', this.scope) || {};
             this.selectionModel = this.options.selectionModel || this.selectionModel;
             this.collection = this.options.collection;
             this.models = this.options.models || this.models;
@@ -72,7 +73,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.scope = this.name = this.options.scope || this.model?.name;
 
             this.setupFieldPanels();
-            this.prepareFieldsData();
+            this.wait(true);
+            this.prepareFieldsData(() => {
+                this.wait(false);
+            });
 
             this.listenTo(this, 'cancel', (dialog) => {
                 if (this.merging) {
@@ -100,7 +104,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 relationshipsPanels.changeViewMode('detail');
                 this.renderFieldsPanels();
                 relationshipsPanels.merging = false;
-                this.$el.find('div.compare-records').attr('data-mode','compare')
+                this.$el.find('div.compare-records').attr('data-mode', 'compare')
             }
         },
 
@@ -115,7 +119,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 })
                 relationshipsPanels.merging = true;
                 relationshipsPanels.changeViewMode('edit');
-                this.$el.find('div.compare-records').attr('data-mode','merge')
+                this.$el.find('div.compare-records').attr('data-mode', 'merge')
                 return;
             }
 
@@ -139,7 +143,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             let buttons = this.getParentView().$el.find('.modal-footer button');
 
-            if(relationshipsPanels) {
+            if (relationshipsPanels) {
                 relationshipData = relationshipsPanels.fetch();
 
                 if (relationshipsPanels.validate()) {
@@ -193,6 +197,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldPanels = [{
                 name: 'fieldsOverviews',
                 title: this.translate('Fields'),
+                hasLayoutEditor: true,
                 filter: (field) => !field.attributeId
             }];
 
@@ -212,80 +217,111 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         },
 
-        prepareFieldsData() {
+        prepareFieldsData(callback) {
             this.fieldsArr = [];
             let modelCurrent = this.model;
             let modelOthers = this.getOtherModelsForComparison(this.model);
 
             let forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
 
-            Object.entries(this.model.defs.fields).forEach(function ([field, fieldDef]) {
+            let processFields = (fields) => {
+                for (const field of fields) {
+                    if (forbiddenList.includes(field)) {
+                        continue;
+                    }
 
-                if(forbiddenList.includes(field)) {
-                    return;
+                    if (this.nonComparableFields.includes(field)) {
+                        continue;
+                    }
+
+                    let fieldDef = this.model.defs.fields[field];
+
+                    if (!fieldDef) {
+                        continue;
+                    }
+
+                    const type = fieldDef['type'];
+
+                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
+                        continue;
+                    }
+
+                    if (!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
+                        continue;
+                    }
+
+                    if (this.merging && fieldDef['unitField']) {
+                        continue;
+                    }
+
+                    let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
+
+                    if (forbiddenFieldList.includes(field)) {
+                        continue;
+                    }
+
+                    let fieldValueRows = [{
+                        id: modelCurrent.id,
+                        key: field + 'Current',
+                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!modelCurrent.get(field),
+                        class: 'current'
+                    }];
+
+                    modelOthers.forEach((element, index) => {
+                        return fieldValueRows.push({
+                            id: element.id,
+                            key: field + 'Other' + index, index,
+                            shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!element.get(field),
+                            class: `other${index}`
+                        })
+                    });
+
+                    this.fieldsArr.push({
+                        field: field,
+                        type: type,
+                        label: fieldDef.detailViewLabel ?? fieldDef['label'] ?? this.translate(field, 'fields', this.scope),
+                        fieldValueRows: fieldValueRows,
+                        different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
+                        required: !!fieldDef['required'],
+                        disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id',
+                        attributeId: fieldDef['attributeId'],
+                        attributePanelId: fieldDef['attributePanelId'],
+                        attributeGroup: fieldDef.attributeGroup,
+                        sortOrder: fieldDef.sortOrder,
+                        sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
+                    });
                 }
 
-                if (this.nonComparableFields.includes(field)) {
-                    return;
+                this.fieldPanels = this.fieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
+            }
+
+            if (this.layoutData) {
+                let fields = this.layoutData.layout.map(row => row.name);
+                processFields(fields);
+                if (callback) {
+                    callback();
                 }
+            } else {
+                this.getHelper().layoutManager.get(this.model.name, 'selection', null, null, data => {
+                    this.layoutData = data;
+                    let fields = []
+                    for (const fieldData of this.layoutData.layout) {
+                        fields.push(fieldData.name);
+                        if (fieldData.attributeId) {
+                            this.getModels().forEach(model => {
+                                model.defs.fields[fieldData.name] = fieldData.attributeDefs;
+                                model.defs.fields[fieldData.name].disableAttributeRemove = true;
+                            });
+                        }
+                    }
+                    processFields(fields);
 
-                const type = fieldDef['type'];
-
-                if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
-                    return;
-                }
-
-                if (!this.isAllowFieldUsingFilter(field, fieldDef, this.areEquals(modelCurrent, modelOthers, field, fieldDef))) {
-                    return;
-                }
-
-                if (this.merging && fieldDef['unitField']) {
-                    return;
-                }
-
-                let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'read');
-
-                if (forbiddenFieldList.includes(field)) {
-                    return;
-                }
-
-                let fieldValueRows = [{
-                    id: modelCurrent.id,
-                    key: field + 'Current',
-                    shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!modelCurrent.get(field),
-                    class: 'current'
-                }];
-
-                modelOthers.forEach((element, index) => {
-                    return fieldValueRows.push({
-                        id: element.id,
-                        key: field + 'Other' + index, index,
-                        shouldNotCenter: ['text', 'wysiwyg', 'markdown'].includes(type) && !!element.get(field),
-                        class: `other${index}`
-                    })
+                    if (callback) {
+                        callback();
+                    }
                 });
+            }
 
-                this.fieldsArr.push({
-                    field: field,
-                    type: type,
-                    label: fieldDef.detailViewLabel ?? fieldDef['label'] ?? this.translate(field, 'fields', this.scope),
-                    fieldValueRows: fieldValueRows,
-                    different: !this.areEquals(modelCurrent, modelOthers, field, fieldDef),
-                    required: !!fieldDef['required'],
-                    disabled: this.model.getFieldParam(field, 'readOnly') || field === 'id',
-                    attributeId: fieldDef['attributeId'],
-                    attributePanelId: fieldDef['attributePanelId'],
-                    attributeGroup: fieldDef.attributeGroup,
-                    sortOrder: fieldDef.sortOrder,
-                    sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
-                });
-            }, this);
-
-            this.fieldsArr.sort((v1, v2) =>
-                v1.label.localeCompare(v2.label)
-            );
-
-            this.fieldPanels = this.fieldPanels.filter(panel => this.fieldsArr.filter(panel.filter).length > 0);
         },
 
         renderFieldsPanels() {
@@ -335,25 +371,35 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.prepareFieldsData();
 
                         for (let el of this.fieldsArr) {
-                            if(fieldDefs.field === el.field) {
-                                if(el.different) {
+                            if (fieldDefs.field === el.field) {
+                                if (el.different) {
                                     this.$el.find(`tr[data-field="${el.field}"]`).addClass('danger');
-                                }else{
+                                } else {
                                     this.$el.find(`tr[data-field="${el.field}"]`).removeClass('danger');
                                 }
                                 break;
                             }
                         }
-
                     });
 
                     view.render(() => {
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered', panel.name);
+                        this.createView('layoutConfiguratorSelection', "views/record/layout-configurator", {
+                            scope: this.model.name,
+                            viewType: 'selection',
+                            layoutData: this.layoutData,
+                            alignRight: true,
+                            el: this.options.el + ` .panel-heading .layout-editor-container`,
+                        }, (view) => {
+                            view.render()
+                            view.on("refresh", () => this.trigger('layout-refreshed'));
+                        });
                     });
 
                 }, true);
             });
+
         },
 
         getDefaultModelId() {
@@ -366,143 +412,119 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
 
-            let panelList = this.getRelationshipPanels();
 
-            if(panelList.length === 0) {
-                this.handlePanelRendering('relationshipsPanels');
-                return;
-            }
-
-            this.renderedPanels = this.renderedPanels.filter(panel => panel !== 'relationshipsPanels');
-
-            this.notify('Loading...');
-            this.createView('relationshipsPanels', this.relationshipsPanelsView, {
-                scope: this.scope,
-                model: this.model,
-                relationshipsPanels: panelList,
-                collection: this.collection,
-                models: this.getModels(),
-                distantModels: this.getDistantModels(),
-                instanceComparison: this.instanceComparison,
-                columns: this.buildComparisonTableHeaderColumn(),
-                versionModel: this.options.versionModel,
-                merging: this.merging,
-                el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
-                selectedFilters: this.selectedFilters
-            }, view => {
-
-                this.listenTo(view, 'all-panels-rendered', () => {
+            this.prepareRelationshipPanels((panelList) => {
+                if (panelList.length === 0) {
                     this.handlePanelRendering('relationshipsPanels');
-                    this.trigger('after:relationship-panels-render')
-                });
+                    return;
+                }
 
-                view.render();
+                this.renderedPanels = this.renderedPanels.filter(panel => panel !== 'relationshipsPanels');
 
-            }, true);
+                this.notify('Loading...');
+                this.createView('relationshipsPanels', this.relationshipsPanelsView, {
+                    scope: this.scope,
+                    model: this.model,
+                    relationshipsPanels: panelList,
+                    collection: this.collection,
+                    models: this.getModels(),
+                    distantModels: this.getDistantModels(),
+                    instanceComparison: this.instanceComparison,
+                    columns: this.buildComparisonTableHeaderColumn(),
+                    versionModel: this.options.versionModel,
+                    merging: this.merging,
+                    el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
+                    selectedFilters: this.selectedFilters
+                }, view => {
+
+                    this.listenTo(view, 'all-panels-rendered', () => {
+                        this.handlePanelRendering('relationshipsPanels');
+                        this.trigger('after:relationship-panels-render')
+                    });
+
+                    view.render();
+
+                }, true);
+            });
         },
 
-        getRelationshipPanels() {
+        prepareRelationshipPanels(callback) {
             if (this.isComparisonAcrossScopes()) {
                 return [];
             }
 
-            let relationshipsPanels = [];
-            const bottomPanels = this.getMetadata().get(['clientDefs', this.model.name, 'bottomPanels', 'detail']) || [];
-
-            for (let link in this.model.defs.links) {
-
-                if (!this.isLinkEnabled(this.model, link) || this.nonComparableFields.includes(link) ||
-                    !this.isComparableLink(link)) {
-                    continue;
-                }
+            let processLinks = (links) => {
+                let relationshipsPanels = [];
 
 
-                let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
-                let relationScope = relationDefs['entity'];
+                for (let link of links) {
 
-                if(!this.getAcl().check(relationScope, 'read')) {
-                    continue;
-                }
-
-                let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
-
-                let relationName = relationDefs['relationName'];
-
-                if (relationName) {
-                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-                    if(!this.getAcl().check(relationName, 'read')) {
+                    if (!this.isLinkEnabled(this.model, link) || this.nonComparableFields.includes(link) ||
+                        !this.isComparableLink(link)) {
                         continue;
                     }
-                }
 
-                let panelData = {
-                    label: this.translate(link, 'fields', this.model.name),
-                    scope: relationScope,
-                    name: link,
-                    type: relationDefs['type'],
-                    inverseType: inverseRelationType,
-                    foreign: relationDefs['foreign'],
-                    relationName: relationName,
-                    defs: {},
-                    link: link
-                };
 
-                if (relationDefs['isAssociateRelation']) {
-                    Object.entries(this.getMetadata().get(['entityDefs', this.model.name, 'links'])).forEach(([name, defs]) => {
-                        if (defs?.relationName === relationName && link !== name) {
-                            panelData.foreign = name;
-                        }
-                    })
-                }
+                    let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
+                    let relationScope = relationDefs['entity'];
 
-                relationshipsPanels.push(panelData);
-            }
-
-            bottomPanels.forEach(bottomPanel => {
-                if (bottomPanel.layoutRelationshipsDisabled) {
-                    return;
-                }
-
-                let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', bottomPanel.link]);
-                if (!relationDefs) {
-                    return;
-                }
-
-                if(!this.getAcl().check(relationDefs['entity'], 'read')) {
-                    return;
-                }
-
-                let relationName = relationDefs['relationName'];
-
-                if (relationName) {
-                    relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
-                    if(!this.getAcl().check(relationName, 'read')) {
-                        return ;
+                    if (!this.getAcl().check(relationScope, 'read')) {
+                        continue;
                     }
+
+                    let inverseRelationType = this.getMetadata().get(['entityDefs', relationScope, 'links', relationDefs['foreign'], 'type']);
+
+                    let relationName = relationDefs['relationName'];
+
+                    if (relationName) {
+                        relationName = relationName.charAt(0).toUpperCase() + relationName.slice(1);
+                        if (!this.getAcl().check(relationName, 'read')) {
+                            continue;
+                        }
+                    }
+
+                    let title = this.translate(link, 'fields', this.model.name);
+
+                    let panelData = {
+                        label: title,
+                        title: title,
+                        scope: relationScope,
+                        name: link,
+                        type: relationDefs['type'],
+                        inverseType: inverseRelationType,
+                        foreign: relationDefs['foreign'],
+                        relationName: relationName,
+                        defs: {},
+                        link: link
+                    };
+
+                    relationshipsPanels.push(panelData);
                 }
 
-                relationshipsPanels.push({
-                    label: this.translate(bottomPanel.label, 'labels', this.model.name),
-                    scope: relationDefs['entity'],
-                    name: bottomPanel.name,
-                    type: relationDefs['type'],
-                    foreign: relationDefs['foreign'],
-                    relationName: relationName,
-                    defs: bottomPanel,
-                    link: bottomPanel.link
+                return relationshipsPanels;
+            };
+
+            if (this.relationLayoutData) {
+                let links = this.relationLayoutData.layout.map(row => row.name);
+                processLinks(links);
+                let list = processLinks(links);
+                if (callback) {
+                    callback(list);
+                }
+            } else {
+                this.getHelper().layoutManager.get(this.model.name, 'selectionRelations', null, null, data => {
+                    this.relationLayoutData = data;
+                    let links = data.layout.map(row => row.name);
+                    let list = processLinks(links);
+                    if (callback) {
+                        callback(list);
+                    }
                 });
-            });
-
-            relationshipsPanels.sort(function (v1, v2) {
-                return v1.label.localeCompare(v2.label);
-            });
-
-            return relationshipsPanels;
+            }
         },
 
         data() {
             let column = this.buildComparisonTableHeaderColumn()
-
             return {
                 fieldPanels: this.fieldPanels,
                 columns: column,
@@ -612,7 +634,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let columns = [];
 
             columns.push({
-                name: this.translate('Name'),
+                name: this.translate('name', 'fields'),
                 isFirst: true,
             });
 
@@ -634,7 +656,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging && !this.getFieldManager().isMergeable(type)) {
                 return false;
             }
-            return type && !['linkMultiple', 'composite'].includes(type);
+            return type && !['composite'].includes(type);
         },
 
         isFieldEnabled(model, name) {
@@ -789,52 +811,63 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return;
             }
 
-            let panelList = this.getRelationshipPanels().map(m => {
-                m.title = m.label;
-                return m;
-            });
+            this.prepareRelationshipPanels(panelList => {
+                panelList = this.getPanelWithFields().concat(panelList);
 
-            panelList = this.getPanelWithFields().concat(panelList);
+                if (this.anchorNavigation !== null) {
+                    try {
+                        this.anchorNavigation.$destroy();
+                    } catch (e) {
 
-
-            if (this.anchorNavigation !== null) {
-                try {
-                    this.anchorNavigation.$destroy();
-                } catch (e) {
-
+                    }
                 }
-            }
 
-            let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
-            if (!anchorContainer.length) {
-                let id = Math.floor(Math.random() * 10000);
-                anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>`)
-                this.getParentView().$el.find('.modal-footer').append(anchorContainer)
-            }
+                let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
+                if (!anchorContainer.length) {
+                    let id = Math.floor(Math.random() * 10000);
+                    anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>`)
+                    this.getParentView().$el.find('.modal-footer').append(anchorContainer)
+                }
 
-            this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
+                this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
 
-            setTimeout(() => {
-                this.anchorNavigation = new Svelte.AnchorNavigation({
-                    target: anchorContainer.get(0),
-                    props: {
-                        items: panelList,
-                        scrollCallback: (name) => {
-                            let panel = this.$el.find(`.panel[data-name="${name}"]`);
-                            if (panel.size() > 0) {
-                                panel = panel.get(0);
-                                let content = this.getParentView().$el.find('.modal-body').get(0);
-                                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
-                                content.scrollTo({
-                                    top: window.screen.width < 768 ? panelOffset : panelOffset,
-                                    behavior: "smooth"
-                                });
+                setTimeout(() => {
+                    this.anchorNavigation = new Svelte.AnchorNavigation({
+                        target: anchorContainer.get(0),
+                        props: {
+                            items: panelList,
+                            hasLayoutEditor: true,
+                            afterOnMount: () => {
+                                this.createLayoutConfigurator();
+                            },
+                            scrollCallback: (name) => {
+                                let panel = this.$el.find(`.panel[data-name="${name}"]`);
+                                if (panel.size() > 0) {
+                                    panel = panel.get(0);
+                                    let content = this.getParentView().$el.find('.modal-body').get(0);
+                                    const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                                    content.scrollTo({
+                                        top: window.screen.width < 768 ? panelOffset : panelOffset,
+                                        behavior: "smooth"
+                                    });
+                                }
                             }
                         }
-                    }
-                });
-            }, 100)
+                    });
+                }, 100)
+            })
+        },
 
+        createLayoutConfigurator(selector = null) {
+            this.createView('layoutConfigurator', "views/record/layout-configurator", {
+                scope: this.model.name,
+                viewType: 'selectionRelations',
+                layoutData: this.layoutData || {},
+                el: selector || '.anchor-nav-container .panel-navigation .layout-editor-container',
+            }, (view) => {
+                view.render();
+                view.on("refresh", () => this.trigger('layout-refreshed'));
+            })
         },
 
         getOverviewFiltersList: function () {
@@ -985,10 +1018,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.notify('Loading...');
             this.renderedPanels = [];
 
+
             this.renderFieldsPanels();
             this.renderPanelNavigationView();
             this.renderRelationshipsPanels();
             this.toggleFieldPanels();
+
         },
 
         getModelsForAttributes() {

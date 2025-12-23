@@ -18879,6 +18879,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     border-bottom: none;
     padding-top: 10px;
     padding-bottom: 10px;
+    position: relative;
 }
 
 .compare-records .compare-panel .panel-default > .panel-heading .panel-title {

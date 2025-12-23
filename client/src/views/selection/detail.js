@@ -403,6 +403,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.notify(false);
                 });
 
+                this.listenTo(view, 'layout-refreshed', () => {
+                    this.setupRecord();
+                })
+
                 if (this.isRendered()) {
                     view.render();
                 }
@@ -539,6 +543,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.treeAllowed = false
             Dep.prototype.afterRender.call(this);
             this.renderLeftPanel();
+        },
+
+        setupLayoutEditorButton() {
+            if(this.selectionViewMode !== 'standard' && !this.comparisonAcrossEntities() && this.getMainRecord()) {
+                this.getMainRecord().createLayoutConfigurator();
+            }
         },
 
         initSelectLeftPanel() {
@@ -701,7 +711,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         label: this.translate('Duplicate'),
                         name: 'duplicate'
                     }
-                ]
+                ],
+                hasLayoutEditor: true
             }
 
             if (this.getAcl().check('Selection', 'edit')) {
@@ -726,11 +737,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             } : {});
         },
 
-        getEntityTypes() {
-            if (this.model.get('entityTypes')) {
-                return this.model.get('entityTypes');
-            }
+        hasLayoutEditor() {
+           return  this.selectionViewMode !== 'standard' && this.getAcl().check('LayoutProfile', 'read');
+        },
 
+        getEntityTypes() {
             if (this.selectionRecordModels) {
                 let entityTypes = [];
                 this.selectionRecordModels.forEach(m => {
@@ -739,6 +750,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     }
                 });
                 return entityTypes;
+            }
+
+            if (this.model.get('entityTypes')) {
+                return this.model.get('entityTypes');
             }
 
             return [];
