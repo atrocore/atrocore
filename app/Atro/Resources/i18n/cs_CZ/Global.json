@@ -155,7 +155,8 @@
     "SelectionRecord": "Výběrové záznamy",
     "MasterDataEntity": "Subjekty kmenových dat",
     "ActionExecution": "Provádění akcí",
-    "ActionExecutionLog": "Protokoly o provádění akcí"
+    "ActionExecutionLog": "Protokoly o provádění akcí",
+    "Layout": "Rozložení"
   },
   "labels": {
     "basic": "Basic",
@@ -509,7 +510,8 @@
     "Items": "Položky",
     "hideAll": "Skrýt vše",
     "Relations": "Vztahy",
-    "view": "Zobrazit"
+    "view": "Zobrazit",
+    "Saved Filters": "Uložené filtry"
   },
   "fields": {
     "width": "Šířka",
