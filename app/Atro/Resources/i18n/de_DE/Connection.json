@@ -6,7 +6,7 @@
     "port": "Port",
     "user": "Benutzer",
     "password": "Passwort",
-    "payload": "Payload",
+    "payload": "Nutzdaten",
     "loginUrl": "Anmelde-URL",
     "smtpSecurity": "Transportsicherheit",
     "smtpUsername": "Benutzername",

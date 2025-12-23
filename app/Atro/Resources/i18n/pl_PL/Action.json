@@ -70,7 +70,7 @@
       "system": "System"
     },
     "mode": {
-      "basic": "Podstawowy",
+      "basic": "Basic",
       "script": "Skrypt"
     }
   },
@@ -80,6 +80,6 @@
     "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
   },
   "exceptions": {
-    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być użyta tutaj."
+    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta."
   }
 }

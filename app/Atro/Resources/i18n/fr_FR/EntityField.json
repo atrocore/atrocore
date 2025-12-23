@@ -57,7 +57,7 @@
     "isUninheritableRelation": "Sans héritage",
     "isUninheritableField": "Sans héritage",
     "auditableEnabled": "Enregistrez la modification en tant qu'activité d'enregistrement",
-    "auditableDisabled": "Ne pas créer d'activité d'enregistrement",
+    "auditableDisabled": "Ne pas créer d'enregistrement dans le panneau activités",
     "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification",
     "modifiedExtendedEnabled": "Enregistrer le changement comme une modification",
     "duplicateIgnore": "Non duplicable",
@@ -98,7 +98,7 @@
     "outputType": {
       "text": "Texte",
       "int": "Entier",
-      "float": "Flotteur",
+      "float": "Flottant",
       "bool": "Booléen",
       "date": "Date",
       "datetime": "Date et heure"

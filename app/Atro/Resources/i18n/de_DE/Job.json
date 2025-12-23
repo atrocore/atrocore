@@ -20,7 +20,7 @@
     "status": "Status",
     "scheduledJob": "Geplanter Auftrag",
     "priority": "Priorität",
-    "payload": "Payload",
+    "payload": "Nutzdaten",
     "message": "Nachricht",
     "executeTime": "Ausführen um",
     "pid": "PID",

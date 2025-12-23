@@ -118,7 +118,7 @@
   },
   "descriptions": {
     "authLog": "Esamini la cronologia degli accessi.",
-    "matchings": "Le corrispondenze aiutano a identificare i record simili tra le entità, utilizzando regole definite dall'utente.",
+    "matchings": "Le corrispondenze aiutano a identificare record simili tra entità diverse utilizzando regole definite dall'utente.",
     "incomingWebhook": "I Webhook in arrivo le consentono di attivare azioni predefinite tramite richieste HTTP esterne, con sicurezza opzionale come la verifica dell'hash e il whitelisting IP.",
     "Storage": "Gestisce le ubicazioni fisiche di tutti i file caricati (File System locale, Microsoft Sharepoint, Amazon S3, ecc.)",
     "listOfSupportedFilesTypes": "Gestisce i tipi di file per un'ulteriore convalida dei file (ad esempio, immagini, documenti, video, ecc.) e classificazione.",

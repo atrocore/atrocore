@@ -11,7 +11,7 @@
     "unlinkAttributeGroupConfirmation": "Möchten Sie die Verknüpfung aller Attribute der Attributgruppe wirklich aufheben?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "Attributgruppe ist mit Attributen verknüpft. Bitte heben Sie zuerst die Verknüpfung mit Attributen auf.",
+    "attributeGroupSsLinkedWithAttributes": "Die Attributgruppe ist noch mit einigen Attributen verknüpft. Bitte trennen Sie zuerst die Verknüpfung zu den Attributen.",
     "entityIsUsed": "Die Attributgruppe kann nicht gelöscht werden, da sie in mehreren Attributen verwendet wird."
   }
 }
