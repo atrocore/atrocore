@@ -83,7 +83,8 @@
     "Selection": "Выбор",
     "SelectionRecord": "Запись о выборе",
     "ActionExecution": "Выполнение действий",
-    "ActionExecutionLog": "Журнал выполнения действий"
+    "ActionExecutionLog": "Журнал выполнения действий",
+    "Layout": "Макет"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сущности основных данных",
@@ -154,7 +155,8 @@
     "Selection": "Подборки",
     "SelectionRecord": "Записи о выборе",
     "ActionExecutionLog": "Журналы выполнения действий",
-    "ActionExecution": "Выполнение действий"
+    "ActionExecution": "Выполнение действий",
+    "Layout": "Лейауты"
   },
   "labels": {
     "matchings": "Соответствия",
