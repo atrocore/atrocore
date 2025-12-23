@@ -220,6 +220,13 @@ class Language extends AbstractListener
                     }
                 }
             }
+            if (!empty($scopeDefs['type']) && !empty($scopeDefs['derivativeForRelation'])) {
+                foreach ($data as $locale => $rows) {
+                    if (!empty($rows[$scopeDefs['derivativeForRelation']])) {
+                        $data[$locale][$scope] = $rows[$scopeDefs['derivativeForRelation']];
+                    }
+                }
+            }
         }
 
         $event->setArgument('data', $data);
