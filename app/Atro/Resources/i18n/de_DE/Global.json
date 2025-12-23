@@ -521,7 +521,8 @@
     "view": "Ansehen",
     "Items": "Artikel",
     "hideAll": "Alles ausblenden",
-    "Relations": "Beziehungen"
+    "Relations": "Beziehungen",
+    "Saved Filters": "Gespeicherte Filter"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
