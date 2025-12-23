@@ -13158,7 +13158,8 @@ table.table {
 
 .modal-footer {
     padding-top: 10px;
-    padding-bottom: 10px
+    padding-bottom: 10px;
+    z-index: 1;
 }
 
 @media (min-width: 768px) {
@@ -18795,7 +18796,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: center;
 }
 
-.compare-records [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border {
+.compare-records [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border td {
     border-top: 3px solid rgba(0, 0, 0, 0.3);
 }
 
