@@ -399,7 +399,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 }, true);
             });
-
         },
 
         getDefaultModelId() {
@@ -411,7 +410,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.handlePanelRendering('relationshipsPanels');
                 return;
             }
-
 
             this.prepareRelationshipPanels((panelList) => {
                 if (panelList.length === 0) {
@@ -456,14 +454,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let processLinks = (links) => {
                 let relationshipsPanels = [];
 
-
                 for (let link of links) {
 
                     if (!this.isLinkEnabled(this.model, link) || this.nonComparableFields.includes(link) ||
                         !this.isComparableLink(link)) {
                         continue;
                     }
-
 
                     let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
                     let relationScope = relationDefs['entity'];
@@ -724,7 +720,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     if (hide && languageFilter.includes('unilingual') && this.isUniLingualField(field, fieldLanguage)) {
                         hide = false;
                     }
-
                 }
             }
 
