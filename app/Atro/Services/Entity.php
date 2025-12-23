@@ -76,13 +76,21 @@ class Entity extends ReferenceData
         $needToUpdate = false;
 
         foreach ($this->getMetadata()->get(['entityDefs', $duplicatingEntity->get('code'), 'fields'], []) as $field => $defs) {
-            if ($field == 'id' || empty($defs['isCustom'])) {
+            if ($field == 'id') {
+                continue;
+            }
+
+            if (empty($defs['isCustom'])) {
+                continue;
+            }
+
+            if ($defs['type'] == 'linkMultiple') {
                 continue;
             }
 
             $fieldsDefs[$field] = $defs;
 
-            if (in_array($defs['type'], ['link', 'linkMultiple'])) {
+            if ($defs['type'] == 'link') {
                 $linkDefs = $this->getMetadata()->get(['entityDefs', $duplicatingEntity->get('code'), 'links', $field], []);
 
                 if (!empty($linkDefs['foreign']) && !empty($linkDefs['entity'])) {
@@ -106,16 +114,6 @@ class Entity extends ReferenceData
 
                         if (!empty($foreignLinkDefs['entity'])) {
                             $foreignLinkDefs['entity'] = $entity->get('code');
-                        }
-
-                        if (!empty($foreignLinkDefs['relationName'])) {
-                            if (str_starts_with($foreignLinkDefs['relationName'], lcfirst($duplicatingEntity->get('code')))) {
-                                $foreignLinkDefs['relationName'] = str_replace(lcfirst($duplicatingEntity->get('code')), lcfirst($entity->get('code')), $foreignLinkDefs['relationName']);
-                            } elseif (str_ends_with($foreignLinkDefs['relationName'], ucfirst($duplicatingEntity->get('code')))) {
-                                $foreignLinkDefs['relationName'] = str_replace(ucfirst($duplicatingEntity->get('code')), ucfirst($entity->get('code')), $foreignLinkDefs['relationName']);
-                            }
-
-                            $linkDefs['relationName'] = $foreignLinkDefs['relationName'];
                         }
 
                         $this->getMetadata()->set('entityDefs', $linkDefs['entity'], [
