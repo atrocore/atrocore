@@ -196,11 +196,10 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                             entityIndex: el.entityValueKeys.length - 1
                         }, view => {
                             view.initialAttributes = view.model.getClonedAttributes();
-
                             if (field === this.isLinkedColumns) {
                                 this.listenTo(view.model, 'change:' + this.isLinkedColumns, () => {
                                     data.forEach(el => {
-                                        if (!el.field || el.field === this.isLinkedColumns) {
+                                        if (!el.field || el.field === this.isLinkedColumns || !el.isRelationField) {
                                             return;
                                         }
 
