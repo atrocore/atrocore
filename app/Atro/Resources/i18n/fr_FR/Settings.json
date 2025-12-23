@@ -74,7 +74,7 @@
     "notAllowByContentAndName": "Non autorisé, vérifier selon le nom et le contenu du fichier",
     "allow": "Permettre",
     "System": "Système",
-    "Locale": "Paramètre régionaux",
+    "Locale": "Paramètre régional",
     "SMTP": "SMTP",
     "Configuration": "Configuration",
     "Admin Notifications": "Notifications administrateur",
