@@ -137,6 +137,10 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return columns;
         },
 
+        getModels() {
+            return this.models;
+        },
+
         afterRender() {
             let count = 0;
             this.models.forEach(m => {

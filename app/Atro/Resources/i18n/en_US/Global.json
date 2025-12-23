@@ -511,7 +511,9 @@
     "view": "View",
     "Items": "Items",
     "hideAll": "Hide all",
-    "Relations": "Relations"
+    "Relations": "Relations",
+    "replaceItem": "Replace Item",
+    "removeItem": "Remove Item"
   },
   "insightsPanels": {
     "summary": "Summary",
