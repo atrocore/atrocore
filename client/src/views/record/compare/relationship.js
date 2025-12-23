@@ -196,17 +196,6 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                             entityIndex: el.entityValueKeys.length - 1
                         }, view => {
                             view.initialAttributes = view.model.getClonedAttributes();
-                            this.listenTo(view, 'after:render', () => {
-                                if (view.defs.isRelationField || view.defs.field === this.isLinkedColumns) {
-                                    return;
-                                }
-
-                                let linkedView = this.getView(view.defs.linkedColumnViewKey);
-
-                                if (!linkedView || !linkedView.model.get(this.isLinkedColumns)) {
-                                    view.$el.text('...')
-                                }
-                            });
 
                             if (field === this.isLinkedColumns) {
                                 this.listenTo(view.model, 'change:' + this.isLinkedColumns, () => {
@@ -221,22 +210,14 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                                             return;
                                         }
                                         const mode = fieldView.mode
-                                        if (!el.isRelationField) {
-                                            if (view.model.get(this.isLinkedColumns)) {
-                                                fieldView.reRender();
-                                            } else {
-                                                fieldView.$el.text('...');
-                                            }
+                                        if (view.model.get(this.isLinkedColumns)) {
+                                            fieldView.setMode('edit');
                                         } else {
-                                            if (view.model.get(this.isLinkedColumns)) {
-                                                fieldView.setMode('edit');
-                                            } else {
-                                                fieldView.setMode('detail');
-                                            }
-                                            if (mode !== fieldView.mode) {
-                                                fieldView.model = this.relationModels[el.linkedEntityId][view.options.entityIndex].clone();
-                                                fieldView.reRender();
-                                            }
+                                            fieldView.setMode('detail');
+                                        }
+                                        if (mode !== fieldView.mode) {
+                                            fieldView.model = this.relationModels[el.linkedEntityId][view.options.entityIndex].clone();
+                                            fieldView.reRender();
                                         }
                                     });
                                 });
