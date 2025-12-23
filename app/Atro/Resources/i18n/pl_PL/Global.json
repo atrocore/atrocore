@@ -510,7 +510,8 @@
     "Items": "Przedmioty",
     "hideAll": "Proszę ukryć wszystko",
     "Relations": "Relacje",
-    "view": "Zobacz"
+    "view": "Zobacz",
+    "Saved Filters": "Zapisane filtry"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
@@ -828,7 +829,7 @@
     "updateFromToThis": "{user} in this {entityType} updated",
     "updateOne": "{user} in {entityType} {entity} updated",
     "updateFromTo": "{user} in {entityType} {entity} updated",
-    "assignThisVoid": "{user} nieprzypisany ten {entityType}.",
+    "assignThisVoid": "{user} nie przypisał tego {entityType}.",
     "assignVoid": "{user} nieprzypisany {entityType} {entity}.",
     "assignThisSelf": "{user} samodzielnie przypisał ten {entityType}.",
     "assignSelf": "{user} samodzielnie przypisany {entityType} {entity}.",
@@ -839,7 +840,7 @@
     "own": "{user} ustawił {owner} jako właściciela dla {entityType} {entity}",
     "ownThis": "{user} ustawił {owner} jako właściciela dla tego {entityType}",
     "ownYou": "{user} ustawił Pana/Panią jako właściciela dla {entityType} {entity}.",
-    "ownThisVoid": "{user} nie ustawia właściciela dla tego {entityType}.",
+    "ownThisVoid": "{user} proszę cofnąć ustawienie właściciela dla tego {entityType}.",
     "ownVoid": "{user} cofnąć ustawienie właściciela dla {entityType} {entity}.",
     "ownThisSelf": "{user} ustawił siebie jako właściciela dla tego {entityType}.",
     "ownSelf": "{user} ustawił siebie jako właściciela dla {entityType} {entity}.",
