@@ -74,7 +74,7 @@
     "RoleScopeAttribute": "Atributo",
     "Attribute": "Atributo",
     "RoleScopeField": "Campo",
-    "ExtensibleEnum": "Lista",
+    "ExtensibleEnum": "List",
     "Locale": "Localización",
     "Measure": "Medida",
     "File": "Archivo",
@@ -83,7 +83,8 @@
     "SelectionRecord": "Registro de selección",
     "MasterDataEntity": "Entidad de datos maestros",
     "ActionExecution": "Ejecución de la acción",
-    "ActionExecutionLog": "Registro de ejecución de acciones"
+    "ActionExecutionLog": "Registro de ejecución de acciones",
+    "Layout": "Diseño"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -154,7 +155,8 @@
     "SelectionRecord": "Registros de selección",
     "MasterDataEntity": "Entidades de datos maestros",
     "ActionExecution": "Ejecución de acciones",
-    "ActionExecutionLog": "Registros de ejecución de acciones"
+    "ActionExecutionLog": "Registros de ejecución de acciones",
+    "Layout": "Diseño"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
@@ -482,7 +484,7 @@
     "Clear": "Claro",
     "Record cannot be saved": "No se puede guardar el registro",
     "Activities": "Actividades planeadas",
-    "Reset to Default": "Aplicar a valores por defecto",
+    "Reset to Default": "Restablecer a (por defecto)",
     "code": "Código",
     "label": "Etiqueta",
     "color": "Color",
@@ -750,7 +752,7 @@
     "status": "Status",
     "followers": "Seguidores",
     "file": "Archivo",
-    "extensibleEnum": "Lista",
+    "extensibleEnum": "List",
     "sortOrder": "ordenar Orden",
     "assignedAccounts": "Cuentas",
     "isActive": "Activo",
