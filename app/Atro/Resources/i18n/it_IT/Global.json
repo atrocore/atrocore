@@ -83,7 +83,8 @@
     "SelectionRecord": "Record di selezione",
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzione dell'azione",
-    "ActionExecutionLog": "Registro di esecuzione dell'azione"
+    "ActionExecutionLog": "Registro di esecuzione dell'azione",
+    "Layout": "Layout"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -437,7 +438,8 @@
     "view": "Vista",
     "Items": "Articoli",
     "hideAll": "Nascondi tutto",
-    "Relations": "Relazioni"
+    "Relations": "Relazioni",
+    "Saved Filters": "Filtri salvati"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
@@ -916,7 +918,8 @@
     "SelectionRecord": "Registri di selezione",
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzioni di azioni",
-    "ActionExecutionLog": "Registri di esecuzione delle azioni"
+    "ActionExecutionLog": "Registri di esecuzione delle azioni",
+    "Layout": "Layout"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
