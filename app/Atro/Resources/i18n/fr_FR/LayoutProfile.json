@@ -11,7 +11,7 @@
     "dashboardLayout": "Disposition du tableau de bord"
   },
   "labels": {
-    "addGroup": "Nouveau groupe",
+    "addGroup": "Ajout groupe",
     "Menu": "Menu",
     "Dashboards": "Tableaux de bord",
     "Favorites": "Favoris"

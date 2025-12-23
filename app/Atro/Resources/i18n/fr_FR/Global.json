@@ -1247,8 +1247,8 @@
       "datetime_exceed_max": "Doit être avant {0}",
       "datetime_between_invalid": "Valeurs non valides, {0} est supérieur à {1}"
     },
-    "add_rule": "Nouvelle règle",
-    "add_group": "Nouveau groupe",
+    "add_rule": "Ajout règle",
+    "add_group": "Ajout groupe",
     "delete_rule": "Supprimer",
     "delete_group": "Supprimer",
     "conditions": {
