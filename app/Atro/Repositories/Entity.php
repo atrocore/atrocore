@@ -672,7 +672,7 @@ class Entity extends ReferenceData
                     'id'           => $code,
                     'type'         => 'masterRecord',
                     'minimumScore' => 100,
-                    'sourceEntity' => $entity->id,
+                    'entity'       => $entity->id,
                     'masterEntity' => $entity->get('primaryEntityId'),
                     'isActive'     => false,
                 ]);
