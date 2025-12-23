@@ -83,7 +83,8 @@
     "SelectionRecord": "Rekord wyboru",
     "MasterDataEntity": "Podmiot danych podstawowych",
     "ActionExecution": "Wykonanie akcji",
-    "ActionExecutionLog": "Dziennik wykonania akcji"
+    "ActionExecutionLog": "Dziennik wykonania akcji",
+    "Layout": "Układ"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -154,7 +155,8 @@
     "SelectionRecord": "Rekordy selekcji",
     "MasterDataEntity": "Podmioty danych podstawowych",
     "ActionExecution": "Wykonywanie akcji",
-    "ActionExecutionLog": "Dzienniki wykonania akcji"
+    "ActionExecutionLog": "Dzienniki wykonania akcji",
+    "Layout": "Układy"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
@@ -487,7 +489,7 @@
     "accessManagement": "Zarządzanie dostępem",
     "Fields": "Pola",
     "Reset to Default": "Przywróć domyślne",
-    "code": "Kod",
+    "code": "Code",
     "label": "Etykieta",
     "color": "Kolor",
     "script": "Skrypt",
