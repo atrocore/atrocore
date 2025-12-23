@@ -23,6 +23,6 @@ class MasterDataEntity extends Base
         parent::prepareEntityForOutput($entity);
 
         $entity->set('name', $this->getInjection('language')->translate($entity->id, 'scopeNames', 'Global'));
-        $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.masterEntity"));
+        $entity->set('masterEntity', $this->getMetadata()->get("scopes.{$entity->id}.primaryEntityId"));
     }
 }
