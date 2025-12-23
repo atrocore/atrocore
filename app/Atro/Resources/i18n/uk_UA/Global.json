@@ -521,7 +521,8 @@
     "view": "Переглянути",
     "Items": "Предмети",
     "hideAll": "Сховати все",
-    "Relations": "Стосунки"
+    "Relations": "Стосунки",
+    "Saved Filters": "Збережені фільтри"
   },
   "insightsPanels": {
     "summary": "Підсумок",
