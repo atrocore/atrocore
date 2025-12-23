@@ -7,25 +7,25 @@
   },
   "options": {
     "status": {
-      "Pending": "Steht aus",
+      "Pending": "Ausstehend",
       "Success": "Erfolg",
       "Running": "In Arbeit",
       "Failed": "Fehlgeschlagen",
       "Canceled": "Abgebrochen",
-      "Awaiting": "Warten auf",
+      "Awaiting": "erwartend",
       "Closed": "Geschlossen"
     }
   },
   "fields": {
     "status": "Status",
-    "scheduledJob": "Geplante Aufgabe",
+    "scheduledJob": "Geplanter Auftrag",
     "priority": "Priorität",
-    "payload": "Payload",
-    "message": "Botschaft",
-    "executeTime": "Ausführen bei",
+    "payload": "Nutzdaten",
+    "message": "Nachricht",
+    "executeTime": "Ausführen um",
     "pid": "PID",
     "handler": "Handler",
-    "startedAt": "Begonnen bei",
+    "startedAt": "Angefangen um",
     "endedAt": "Beendet am"
   },
   "exceptions": {

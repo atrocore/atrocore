@@ -1442,6 +1442,7 @@ class Base
                 $foreignRepository = $this->getEntityManager()->getRepository($foreignEntity);
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = [$foreignField];
+                $sp['additionalSelectColumns'] = [];
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [

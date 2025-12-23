@@ -20,12 +20,20 @@ class AddressLayout extends AbstractLayoutListener
 {
     public function detail(Event $event): void
     {
-        if ($this->getRelatedEntity($event) === 'Account') {
+        $entityName = $this->getRelatedEntity($event);
+        if ($entityName === 'Account') {
             $result = $event->getArgument('result');
 
             if (!str_contains(json_encode($result), '"AddressAccount__default"')) {
                 $result[0]['rows'][] = [['name' => 'AddressAccount__default'], false];
             }
+
+            $event->setArgument('result', $result);
+        } else if ($this->getMetadata()->get(['scopes', $entityName, 'primaryEntityId']) === 'Account') {
+            $result = $event->getArgument('result');
+
+            $relationName = ucfirst($this->getMetadata()->get(['entityDefs', $entityName, 'links', 'addresses', 'relationName']));
+            $result[0]['rows'][] = [['name' => "{$relationName}__default"], false];
 
             $event->setArgument('result', $result);
         }

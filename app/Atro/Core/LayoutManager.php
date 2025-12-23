@@ -473,9 +473,6 @@ class LayoutManager
             if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'modified', 'type']))) {
                 $data[0]['rows'][] = [['name' => 'modified', 'fullWidth' => true]];
             }
-            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'followers', 'type']))) {
-                $data[0]['rows'][] = [['name' => 'followers', 'fullWidth' => true]];
-            }
         }
 
         if ($name === 'relationships' && !empty($this->getMetadata()->get(['scopes', $scope, 'hasAssociate']))) {

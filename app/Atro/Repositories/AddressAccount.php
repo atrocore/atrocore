@@ -21,12 +21,13 @@ class AddressAccount extends Relation
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('default') && $entity->get('default') && !empty($account = $entity->get('account'))) {
+        $field = $this->getRelatedLink('Account');
+        if ($entity->isAttributeChanged('default') && $entity->get('default') && !empty($foreign = $entity->get($field))) {
             $exist = $this
                 ->where([
-                    'default' => true,
-                    'accountId' => $account->get('id'),
-                    'id!=' => $entity->get('id')
+                    'default'    => true,
+                    "{$field}Id" => $foreign->get('id'),
+                    'id!='       => $entity->get('id')
                 ])
                 ->findOne();
 

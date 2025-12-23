@@ -609,13 +609,13 @@
     <div id="layout" class="row">
         <div class="col-md-8">
             <div class="well">
-                <header><h5>{Language.translate('Current Layout', 'LayoutManager')}</h5> <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'Admin')}</a></header>
+                <header><h5>{Language.translate('Current Layout', 'labels', 'LayoutManager')}</h5> <a href="#" on:click|preventDefault={addPanel}>{Language.translate('Add Panel', 'labels', 'Admin')}</a></header>
                 <div class="rows-wrapper">
                     <ul class="panels">
                         {#each panels as panel (panel.number)}
                             <li data-number={panel.number} class="panel-layout">
                                 <header data-name={panel.name}>
-                                    <label data-is-custom={panel.customLabel ? 'true' : undefined}>{panel.customLabel || panel.label || ''}</label>&nbsp;
+                                    <label data-is-custom={panel.customLabel ? 'true' : undefined}>{Language.translate(panel.customLabel || panel.label || '', 'labels', params.scope)}</label>&nbsp;
                                     <div>
                                         <a href="#" data-action="edit-panel-label" class="edit-panel-label"
                                            on:click|preventDefault={() => editPanelLabel(panel)}>
@@ -704,7 +704,7 @@
         </div>
         <div class="col-md-4">
             <div class="well available-fields">
-                <header><h5>{Language.translate('Available Fields', 'Admin')}</h5></header>
+                <header><h5>{Language.translate('Available Fields', 'labels', 'Admin')}</h5></header>
                 <div class="rows-wrapper">
                     {#each availableGroups as group (group.name)}
                         <div class:group={availableGroups.length>1}>

@@ -26,12 +26,15 @@
     "applyToPreselectedRecords": "Применить к предварительно выбранным записям",
     "updateType": "Тип обновления",
     "updateFields": "Обновление полей",
-    "updateScript": "Скрипт"
+    "updateScript": "Скрипт",
+    "searchEntity": "Объект поиска",
+    "executions": "Казни"
   },
   "labels": {
     "execute": "Выполнить",
     "Parameters": "Параметры",
-    "fieldsPanel": "Обновить"
+    "fieldsPanel": "Обновить",
+    "allLogs": "Все журналы"
   },
   "massActions": {
     "execute": "Выполнить"
@@ -59,14 +62,15 @@
       "email": "Отправить электронную почту",
       "create": "Создать",
       "update": "Обновить",
-      "delete": "Удалить"
+      "delete": "Удалить",
+      "createOrUpdate": "Создать или обновить"
     },
     "executeAs": {
       "system": "Система",
       "sameUser": "Тот же пользователь"
     },
     "mode": {
-      "basic": "Основные",
+      "basic": "Basic",
       "script": "Скрипт"
     }
   },

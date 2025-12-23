@@ -37,6 +37,10 @@ class FindMatches extends AbstractJob implements JobInterface
                 continue;
             }
 
+            if (empty($matching->get('matchingRules')[0])) {
+                continue;
+            }
+
             $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching->id);
 
             $offset = 0;

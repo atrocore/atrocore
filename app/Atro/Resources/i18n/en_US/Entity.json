@@ -93,9 +93,9 @@
     "linkAttributesWithClassificationAutomatically": "If an attribute is directly linked to a record, and that record is linked to a classification, then the attribute will also be linked to that classification."
   },
   "exceptions": {
-    "derivativeWithSuchRoleExists": "Derivative entity with such role already exists.",
-    "derivativeFromDerivativeNotSupporting": "Derivative entity cannot be created from other derivative entity",
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
+    "derivativeWithSuchRoleExists": "There is already a derivative entity with this role.",
+    "derivativeFromDerivativeNotSupporting": "A derived entity cannot be created from another derived entity.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not both be in relations that affect the modification date/time.",
     "entityAlreadyHasAttributesInUse": "Has Attribute param cannot be deactivated. Please, remove all related attributes first.",
     "entityHasDirectlyLinkedAttributes": "There are already directly linked attributes. Please remove them from records.",
     "entityTypeIsNotSuitableForAssociates": "This entity type cannot contain the \"Has Associates\" parameter. Only \"Base\" and \"Hierarchy\" are allowed to have it."

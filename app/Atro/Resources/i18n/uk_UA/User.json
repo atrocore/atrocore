@@ -37,7 +37,7 @@
     "style": "Стиль інтерфейсу користувача",
     "notificationProfile": "Профіль сповіщення",
     "layoutProfile": "Лейаут профіль",
-    "locale": "Мова"
+    "locale": "Локаль"
   },
   "labels": {
     "Generate": "Згенерувати",
@@ -51,7 +51,7 @@
     "External Accounts": "Зовнішні облікові записи",
     "Email Accounts": "Облікові записи ел. пошти",
     "Preferences": "Уподобання",
-    "Notifications": "Сповіщення"
+    "Notifications": "Повідомлення"
   },
   "tooltips": {
     "defaultTeam": "Усі записи, створені цим користувачем, за промовчанням будуть відноситися до цієї групи.",

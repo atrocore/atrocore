@@ -338,7 +338,7 @@ class Relation extends Base
                 continue;
             }
 
-            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy' ) {
+            if ($this->getMetadata()->get(['scopes', $entity, 'type']) !== 'Hierarchy') {
                 continue;
             }
 
@@ -585,5 +585,20 @@ class Relation extends Base
     protected function getPseudoTransactionManager(): PseudoTransactionManager
     {
         return $this->getInjection('pseudoTransactionManager');
+    }
+
+    public function getRelatedLink(string $entityName): ?string
+    {
+        $derivedScope = $this->getMetadata()->get(['scopes', $this->entityType, 'derivativeScope']);
+        if (!empty($derivedScope) && $this->getMetadata()->get(['scopes', $derivedScope, 'primaryEntityId']) === $entityName) {
+            $entityName = $derivedScope;
+        }
+
+        foreach ($this->getMetadata()->get(['entityDefs', $this->entityType, 'links']) as $link => $defs) {
+            if (!empty($defs['entity']) && $defs['entity'] === $entityName) {
+                return $link;
+            }
+        }
+        return null;
     }
 }

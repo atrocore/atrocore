@@ -26,12 +26,15 @@
     "updateType": "Update Type",
     "updateFields": "Pola aktualizacji",
     "applyToPreselectedRecords": "Zastosowanie do wstępnie wybranych rekordów",
-    "updateScript": "Skrypt"
+    "updateScript": "Skrypt",
+    "executions": "Egzekucje",
+    "searchEntity": "Podmiot wyszukujący"
   },
   "labels": {
     "execute": "Wykonaj",
     "Parameters": "Parametry",
-    "fieldsPanel": "Aktualizuj"
+    "fieldsPanel": "Aktualizuj",
+    "allLogs": "Wszystkie dzienniki"
   },
   "massActions": {
     "execute": "Wykonaj"
@@ -59,14 +62,15 @@
       "customCode": "Kod niestandardowy",
       "update": "Aktualizuj",
       "create": "Utwórz",
-      "delete": "Usuń"
+      "delete": "Usuń",
+      "createOrUpdate": "Tworzenie lub aktualizacja"
     },
     "executeAs": {
       "sameUser": "Ten sam użytkownik",
       "system": "System"
     },
     "mode": {
-      "basic": "Podstawowy",
+      "basic": "Basic",
       "script": "Skrypt"
     }
   },
@@ -76,6 +80,6 @@
     "executeAs": "Proszę określić użytkownika, którego system użyje do wykonania akcji."
   },
   "exceptions": {
-    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być użyta tutaj."
+    "forEditModeOnly": "Akcja \"%s\" jest dostępna tylko w trybie edycji i nie może być tutaj użyta."
   }
 }

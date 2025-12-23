@@ -67,8 +67,8 @@
     "youCantChangeFieldOfTypeInAttribute": "Вы не можете изменить тип атрибута.",
     "attributeWithSuchCodeAlreadyExist": "Атрибут с таким кодом уже существует.",
     "attributeIsUsedInProducts": "Атрибут уже используется в продуктах. Пожалуйста, сначала оновите продукты.",
-    "wrongAttributeEntity": "Выбрана недопустимая сущность. Сущность должна совпадать с панелью атрибутов и группой атрибутов.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Сущность атрибута должна быть такой же, как и в составном атрибуте",
+    "wrongAttributeEntity": "Выбранная сущьность не допускается. Сущность должна совпадать с панелью атрибутов и группой атрибутов.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Сущность атрибута должна быть такой же, как и в составном атрибуте.",
     "attributeNotBelongToEntity": "Атрибут не принадлежит этой сущности.",
     "entityCannotBeChanged": "Сущность не может быть изменена.",
     "compositeAttributeNotFound": "Составной атрибут не найден.",
@@ -76,7 +76,8 @@
     "maxLessThanMin": "Min должен быть меньше Max.",
     "noAttributeConverterFound": "Преобразование атрибута из типа '%s' в '%s' невозможно.",
     "attributeIsUsedInClassifications": "Атрибут используется в классификациях. Пожалуйста, сначала обновите классификации.",
-    "invalidType": "Тип атрибута '{type}' недопустим"
+    "invalidType": "Тип атрибута '{type}' недопустим",
+    "entityNotAllowToChoose": "Сущность не может быть выбрана."
   },
   "options": {
     "type": {

@@ -11,7 +11,7 @@
     "unlinkAttributeGroupConfirmation": "Are you sure you want to unlink all Attribute Group's Attributes?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "Attribute group is linked with attribute(s). Please, unlink attribute(s) first",
-    "entityIsUsed": "Attribute Group cannot be deleted because it used in several Attributes."
+    "attributeGroupSsLinkedWithAttributes": "The Attribute Group is still linked with some attribute(s). Please, unlink attribute(s) first.",
+    "entityIsUsed": "The Attribute Group cannot be deleted because one or more attributes use it."
   }
 }

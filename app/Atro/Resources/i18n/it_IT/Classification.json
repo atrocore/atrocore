@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "L'entità non può essere modificata.",
     "classificationForToAnotherEntity": "La classificazione non può essere collegata a questo record, perché è utilizzata per un'altra Entità.",
-    "classificationHasRecords": "Le classificazioni con i record correlati non possono essere eliminate."
+    "classificationHasRecords": "Le classificazioni con i record correlati non possono essere eliminate.",
+    "entityNotAllowToChoose": "L'entità non può essere scelta."
   }
 }

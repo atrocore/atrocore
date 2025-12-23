@@ -17,5 +17,8 @@
       "and": "A",
       "or": "NEBO"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Kód musí obsahovat pouze písmena, číslice, podtržítka a pomlčky."
   }
 }
