@@ -26,12 +26,15 @@
     "updateType": "Aktualisierungstyp",
     "updateScript": "Script",
     "updateFields": "Felder aktualisieren",
-    "changeFields": "Felder"
+    "changeFields": "Felder",
+    "searchEntity": "Suchentität",
+    "executions": "Läufe"
   },
   "labels": {
     "execute": "Ausführen",
     "Parameters": "Parameter",
-    "fieldsPanel": "Aktualisieren"
+    "fieldsPanel": "Aktualisieren",
+    "allLogs": "Alle Protokolle"
   },
   "massActions": {
     "execute": "Ausführen"
@@ -51,7 +54,8 @@
       "set": "Aktionsset",
       "email": "E-Mail senden",
       "webhook": "Webhook",
-      "customCode": "Benutzerdefinierter Code"
+      "customCode": "Benutzerdefinierter Code",
+      "createOrUpdate": "Erstellen oder Aktualisieren"
     },
     "executeAs": {
       "system": "System",

@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Non può impostare 'Entità singola', perché ha molte entità nei suoi record."
+    "cannotSetToSingle": "Non può impostare 'Entità singola', perché ha molte entità nei suoi record.",
+    "youNeedAtLeastTwoItem": "Sono necessari almeno due articoli per il confronto."
   },
   "labels": {
     "createSelection": "Creare la selezione"

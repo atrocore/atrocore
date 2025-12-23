@@ -17,5 +17,8 @@
       "and": "Y",
       "or": "O"
     }
+  },
+  "exceptions": {
+    "notValidCode": "El código debe contener sólo letras, números, guiones bajos y guiones."
   }
 }

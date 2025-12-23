@@ -83,12 +83,12 @@
     "dropdown": "Proszę nie używać listy rozwijanej, jeśli na liście znajduje się więcej niż 300 opcji."
   },
   "exceptions": {
-    "wrongAttributeEntity": "Wybrano niedozwolony podmiot. Podmiot musi być taki sam jak panel atrybutów i grupa atrybutów.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Podmiot atrybutu musi być taki sam jak w atrybucie złożonym.",
+    "wrongAttributeEntity": "Wybrany podmiot nie jest dozwolony. Podmiot musi być taki sam jak w panelu atrybutów i grupie atrybutów.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Entytet atrybutu musi być taki sam jak w atrybucie złożonym.",
     "attributeNotBelongToEntity": "Atrybut nie należy do tego podmiotu.",
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
     "compositeAttributeNotFound": "Nie znaleziono atrybutu złożonego.",
-    "compositeAttributeCannotBeChild": "Atrybut złożony nie może być podrzędny.",
+    "compositeAttributeCannotBeChild": "Atrybut złożony nie może być elementem podrzędnym.",
     "fileTypeCannotBeDeleted": "Rekord nie może zostać usunięty, ponieważ jest używany w atrybucie \"%s\".",
     "maxLessThanMin": "Min powinna być mniejsza niż Max.",
     "noAttributeConverterFound": "Konwersja atrybutu z typu '%s' na '%s' jest niemożliwa.",
@@ -97,6 +97,7 @@
     "attributeWithSuchCodeAlreadyExist": "Atrybut z takim kodem już istnieje.",
     "attributeIsUsedInProducts": "Atrybut jest używany w produktach. Proszę najpierw zaktualizować produkty.",
     "attributeIsUsedInClassifications": "Atrybut jest używany w klasyfikacjach. Proszę najpierw zaktualizować klasyfikacje.",
-    "invalidType": "Atrybut type '{type}' jest nieprawidłowy"
+    "invalidType": "Atrybut type '{type}' jest nieprawidłowy",
+    "entityNotAllowToChoose": "Nie można wybrać podmiotu."
   }
 }

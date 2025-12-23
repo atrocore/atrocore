@@ -10,12 +10,15 @@
     "type": {
       "equal": "Equal",
       "like": "Like",
-      "contains": "Contains",
+      "contains": "cодержит",
       "set": "Set"
     },
     "operator": {
       "and": "AND",
       "or": "OR"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Код должен содержать только буквы, цифры, символы подчеркивания и тире."
   }
 }

@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Nie można ustawić opcji \"Pojedynczy podmiot\", ponieważ w rekordach znajduje się wiele podmiotów."
+    "cannotSetToSingle": "Nie można ustawić opcji \"Pojedynczy podmiot\", ponieważ w rekordach znajduje się wiele podmiotów.",
+    "youNeedAtLeastTwoItem": "Potrzebują Państwo co najmniej dwóch przedmiotów do porównania."
   },
   "labels": {
     "createSelection": "Utwórz wybór"

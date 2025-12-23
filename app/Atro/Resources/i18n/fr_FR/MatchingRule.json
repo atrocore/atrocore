@@ -11,11 +11,14 @@
       "equal": "Égal à",
       "like": "Comme",
       "contains": "Contient",
-      "set": "Fixer"
+      "set": "Ensemble"
     },
     "operator": {
       "and": "ET",
       "or": "OU"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Le code ne doit contenir que des lettres, des chiffres, des traits de soulignement et des tirets."
   }
 }

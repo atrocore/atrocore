@@ -2,7 +2,7 @@
   "fields": {
     "isActive": "Actif",
     "description": "Description",
-    "layouts": "Mise en page",
+    "layouts": "Dispositions",
     "isDefault": "Défaut",
     "hideShowFullList": "Masquer \"Show List\" sur les panneaux de relation",
     "parent": "Profil de disposition parent",
@@ -11,19 +11,19 @@
     "dashboardLayout": "Disposition du tableau de bord"
   },
   "labels": {
-    "addGroup": "Ajouter un groupe",
+    "addGroup": "Ajout groupe",
     "Menu": "Menu",
     "Dashboards": "Tableaux de bord",
     "Favorites": "Favoris"
   },
   "exceptions": {
-    "defaultIsRequired": "Un profil de mise en page par défaut doit exister dans le système"
+    "defaultIsRequired": "Un profil de disposition par défaut doit exister dans le système"
   },
   "messages": {
     "profileWillBeNewDefault": "Ce profil sera le nouveau profil par défaut, êtes-vous sûr ?",
     "navigationUpdate": "Le menu de navigation a été ajusté par le système."
   },
   "boolFilters": {
-    "withLayouts": "Avec mise en page stockée"
+    "withLayouts": "Avec une disposition stockée"
   }
 }

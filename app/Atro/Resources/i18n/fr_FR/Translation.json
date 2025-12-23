@@ -140,11 +140,11 @@
     "kokIn": "kok_IN"
   },
   "messages": {
-    "resetConfirm": "Êtes-vous sûr de vouloir rétablir les étiquettes par défaut ?",
-    "resetSuccessfully": "Les étiquettes ont été réinitialisées avec succès."
+    "resetConfirm": "Êtes-vous sûr de vouloir rétablir les libellés par défaut ?",
+    "resetSuccessfully": "Les libellés ont été réinitialisées avec succès."
   },
   "labels": {
-    "reset": "Rétablissement des valeurs par défaut",
+    "reset": "Réinitialiser par défaut",
     "push": "Envoyer pour examen"
   }
 }

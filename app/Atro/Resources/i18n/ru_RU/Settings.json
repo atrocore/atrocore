@@ -18,7 +18,7 @@
     "notificationSoundsDisabled": "Отключить звуковые напоминания",
     "applicationName": "Название приложения",
     "assignmentEmailNotifications": "Оповещать по эл. почте при назначении",
-    "streamEmailNotifications": "Уведомления об обновлениях в разделе \"Деятельность\" для внутренних пользователей",
+    "streamEmailNotifications": "Уведомления для внутренних пользователей об обновлениях в панели Активностей",
     "mentionEmailNotifications": "Отправить уведомления по эл. почте об упоминаниях в сообщениях",
     "authTokenPreventConcurrent": "Только один токен аутентификации для каждого пользователя",
     "tabIconsDisabled": "Отключить значки меню навигации",

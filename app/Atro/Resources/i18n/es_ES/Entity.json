@@ -40,7 +40,12 @@
     "nonDuplicatableFields": "Campos no duplicados",
     "deleteValuesAfterUnlinkingClassification": "Borrar valores de atributos tras desvincular clasificaciones",
     "linkAttributesWithClassificationAutomatically": "Vincule automáticamente los atributos con la clasificación",
-    "primaryEntity": "Entidad primaria"
+    "primaryEntity": "Entidad primaria",
+    "role": "Rol",
+    "hasStaging": "Habilitar la puesta a disposición",
+    "stagingEntity": "Entidad de puesta en escena",
+    "matchDuplicates": "Coincidir duplicados",
+    "matchMasterRecords": "Registros maestros de partidos"
   },
   "options": {
     "type": {
@@ -52,14 +57,18 @@
     "sortDirection": {
       "asc": "Ascendente",
       "desc": "Descendente"
+    },
+    "role": {
+      "staging": "Puesta en escena"
     }
   },
   "labels": {
     "accessManagement": "Access Management",
     "hierarchyManagement": "Gestión jerárquica",
     "other": "Otros",
-    "resetToDefault": "Restablecer a (por defecto)",
-    "attributes": "Atributos"
+    "resetToDefault": "Aplicar a valores por defecto",
+    "attributes": "Atributos",
+    "mdm": "Gestión de datos maestros"
   },
   "confirmations": {
     "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
@@ -84,9 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Si un atributo está vinculado directamente a un registro, y ese registro está vinculado a una clasificación, entonces el atributo también estará vinculado a esa clasificación."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} y {children} no deben estar ambos en Relaciones que efectúan la fecha/hora de modificación",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} y {children} no deben estar ambos en Relaciones que afectan a la fecha/hora de modificación.",
     "entityAlreadyHasAttributesInUse": "No se puede desactivar el parámetro Atributo. Por favor, elimine primero todos los atributos relacionados.",
     "entityHasDirectlyLinkedAttributes": "Ya existen atributos vinculados directamente. Por favor, elimínelos de los registros.",
-    "entityTypeIsNotSuitableForAssociates": "Este tipo de entidad no puede contener el parámetro \"Tiene asociados\". Sólo \"Base\" y \"Jerarquía\" pueden tenerlo."
+    "entityTypeIsNotSuitableForAssociates": "Este tipo de entidad no puede contener el parámetro \"Tiene asociados\". Sólo \"Base\" y \"Jerarquía\" pueden tenerlo.",
+    "derivativeWithSuchRoleExists": "Ya existe una entidad derivada con esta función.",
+    "derivativeFromDerivativeNotSupporting": "Una entidad derivada no puede crearse a partir de otra entidad derivada."
   }
 }

@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Вы не можете установить значение 'Single Entity', потому что в Ваших записях есть много сущностей."
+    "cannotSetToSingle": "Вы не можете установить значение 'Single Entity', потому что в Ваших записях есть много сущностей.",
+    "youNeedAtLeastTwoItem": "Вам нужно как минимум два предмета для сравнения."
   },
   "labels": {
     "createSelection": "Создать выбор"

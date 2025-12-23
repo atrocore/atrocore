@@ -1,9 +1,9 @@
 {
   "fields": {
     "attributes": "Atrybuty",
-    "default": "Domyślny"
+    "default": "Wartość domyślna"
   },
   "exceptions": {
-    "entityIsUsed": "Atrybut Panel nie może zostać usunięty, ponieważ jest używany w kilku atrybutach."
+    "entityIsUsed": "Panel atrybutów nie może zostać usunięty, ponieważ wykorzystuje jeden lub więcej atrybutów."
   }
 }
