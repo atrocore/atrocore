@@ -83,7 +83,8 @@
     "Selection": "Вибірка",
     "SelectionRecord": "Запис вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
-    "ActionExecutionLog": "Журнал виконання дій"
+    "ActionExecutionLog": "Журнал виконання дій",
+    "Layout": "Лейаут"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
@@ -154,7 +155,8 @@
     "Selection": "Вибірки",
     "SelectionRecord": "Записи вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
-    "ActionExecutionLog": "Журнали виконання дій"
+    "ActionExecutionLog": "Журнали виконання дій",
+    "Layout": "Лейаути"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
