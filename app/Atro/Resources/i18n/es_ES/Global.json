@@ -510,7 +510,8 @@
     "Items": "Artículos",
     "hideAll": "Ocultar todo",
     "Relations": "Relaciones",
-    "view": "Ver"
+    "view": "Ver",
+    "Saved Filters": "Filtros guardados"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
