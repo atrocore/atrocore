@@ -51,7 +51,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 this.tableRows.forEach(row => {
 
                     row.entityValueKeys.forEach((data, index) => {
-                        if(!row.isRelationField) {
+                        if (!row.isRelationField) {
                             return;
                         }
                         let view = this.getView(data.key);
@@ -63,7 +63,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         if (selectedIndex === index && (row.field === this.isLinkedColumns || this.relationModels[row.linkedEntityId][index].get(this.isLinkedColumns))) {
                             view.setMode('edit');
                         } else {
-                            if(view.initialAttributes) {
+                            if (view.initialAttributes) {
                                 view.model.set(view.initialAttributes);
                             }
                             view.setMode('detail');
@@ -566,7 +566,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                     let mode = view.mode;
 
                     if (selectedIndex === index && (row.field === this.isLinkedColumns || this.relationModels[row.linkedEntityId][index].get(this.isLinkedColumns))) {
-                        if(view.initialAttributes) {
+                        if (view.initialAttributes) {
                             view.model.set(view.initialAttributes);
                         }
                         view.setMode(newMode);
