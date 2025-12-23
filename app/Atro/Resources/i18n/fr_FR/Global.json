@@ -193,7 +193,8 @@
     "SelectionRecord": "Élément de sélection",
     "MasterDataEntity": "Entité de reférence",
     "ActionExecution": "Exécution de l'action",
-    "ActionExecutionLog": "Journal d'exécution de l'action"
+    "ActionExecutionLog": "Journal d'exécution de l'action",
+    "Layout": "Disposition"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -459,8 +460,8 @@
     "associatingItems": "Éléments à associer",
     "associatedItem": "Élément associé",
     "associatedItems": "Éléments associés",
-    "emailTo": "Email à",
-    "emailCc": "Email CC",
+    "emailTo": "E-mail du destinataire",
+    "emailCc": "E-mail CC",
     "associationTooltip": "Définit la manière dont l'élément à associer est lié à l'élément associé.",
     "associatedTitle": "L'élément actuel est lié à :name to :",
     "associatingTitle": "Lié à l'élément actuel en tant que :name :",
@@ -728,7 +729,8 @@
     "SelectionRecord": "Elements de sélection",
     "MasterDataEntity": "Entités de reference",
     "ActionExecution": "Exécution des actions",
-    "ActionExecutionLog": "Journaux d'exécution des actions"
+    "ActionExecutionLog": "Journaux d'exécution des actions",
+    "Layout": "Dispositions"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
