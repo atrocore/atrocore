@@ -548,7 +548,8 @@
     "Items": "Articles",
     "hideAll": "Cacher tout",
     "Relations": "Relations",
-    "view": "Voir"
+    "view": "Voir",
+    "Saved Filters": "Filtres enregistrés"
   },
   "insightsPanels": {
     "summary": "Sommaire",
