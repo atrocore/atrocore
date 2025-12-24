@@ -16,5 +16,8 @@
   "bookmarkDisabled": true,
   "emHidden": true,
   "openApiHidden": true,
-  "hideFieldTypeFilters": true
+  "hideFieldTypeFilters": true,
+  "duplicatableRelations": [
+    "fields"
+  ]
 }

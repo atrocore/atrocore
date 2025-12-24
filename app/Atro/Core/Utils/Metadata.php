@@ -549,6 +549,11 @@ class Metadata
             $entityName = $primaryEntityId;
         }
 
+        // for derivative relations
+        if (!empty($entityId = $this->get("scopes.$entityName.derivativeForRelation"))) {
+            $entityName = $entityId;
+        }
+
         $path = $this->getScopePath($entityName, $delim);
 
         $path = implode($delim, [$path, 'Repositories', Util::normilizeClassName(ucfirst($entityName))]);

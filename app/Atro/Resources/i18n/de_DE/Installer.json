@@ -30,7 +30,7 @@
     "required": "Erforderlich",
     "currentVersion": "Aktuelle Version",
     "status": "Status",
-    "reportingEnabled": "Senden Sie anonyme Fehlerberichte, um Probleme schneller zu identifizieren und zu lösen",
+    "reportingEnabled": "Senden Sie anonyme Fehlerberichte für schnelle Problemidentifizierung und -Lösung",
     "dbSystem": "Datenbank-System"
   },
   "errors": {

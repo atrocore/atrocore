@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "Esecuzione dell'azione",
+    "type": "Tipo",
+    "entityRecord": "Record dell'entità",
+    "entityName": "Nome dell'entità",
+    "entityId": "ID dell'entità",
+    "message": "Messaggio",
+    "payload": "Carico utile"
+  },
+  "options": {
+    "type": {
+      "create": "Creare",
+      "update": "Aggiornamento",
+      "delete": "Cancellare",
+      "error": "Errore"
+    }
+  }
+}

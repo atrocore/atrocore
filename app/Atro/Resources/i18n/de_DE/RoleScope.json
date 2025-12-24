@@ -2,7 +2,7 @@
   "fields": {
     "name": "Geltungsbereich",
     "role": "Rolle",
-    "hasAccess": "Berechtigungen",
+    "hasAccess": "Berechtigung",
     "createAction": "Erstellen",
     "readAction": "Lesen",
     "editAction": "Bearbeiten",
@@ -18,7 +18,7 @@
   "labels": {
     "all": "Alle",
     "team": "Team",
-    "own": "Eigene",
+    "own": "Eigene/s/r",
     "no": "Nein",
     "yes": "Ja"
   }

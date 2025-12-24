@@ -29,13 +29,13 @@
   },
   "labels": {
     "New panel": "Nouveau panel",
-    "Layout": "Mise en page",
-    "reset": "Remise à zéro de la mise en page",
-    "fullEdit": "Édition complète",
-    "resetToSystem": "Réinitialisation de la configuration du système",
-    "layoutManagement": "Gestion de la mise en page",
-    "layoutSelection": "Sélection de la mise en page",
-    "layoutCustomization": "Personnalisation de la mise en page",
+    "Layout": "Disposition",
+    "reset": "Réinitialiser la disposition",
+    "fullEdit": "Modification complète",
+    "resetToSystem": "Réinitialiser à la disposition système",
+    "layoutManagement": "Gestion des dispositions",
+    "layoutSelection": "Profile de la disposition",
+    "layoutCustomization": "Personnalisation de la disposition",
     "configure": "Configurer",
     "Current Layout": "Disposition actuelle"
   }

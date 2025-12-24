@@ -3,7 +3,13 @@
     "incomingWebhook": "Вхідний веб-хук",
     "scheduledJob": "Розклад роботи",
     "workflow": "Воркфлоу",
-    "statusMessage": "Повідомлення про стан"
+    "statusMessage": "Повідомлення про стан",
+    "startedAt": "Розпочато о",
+    "finishedAt": "Завершено о",
+    "createdCount": "Створено",
+    "updatedCount": "Оновлено",
+    "failedCount": "Не вконано",
+    "logs": "Журнали"
   },
   "options": {
     "type": {
@@ -14,7 +20,8 @@
     },
     "status": {
       "done": "Виконано",
-      "failed": "Не вконано"
+      "failed": "Не вконано",
+      "running": "Виконується"
     }
   }
 }

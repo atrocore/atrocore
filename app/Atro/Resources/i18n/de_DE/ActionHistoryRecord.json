@@ -8,8 +8,8 @@
     "createdAt": "Datum",
     "controllerName": "Controller Name",
     "controllerAction": "Controller-Aktion",
-    "authToken": "Auth Token",
-    "targetName": "Ziel Name",
+    "authToken": "Authentifizierungstoken",
+    "targetName": "Ziel-Name",
     "targetId": "Ziel-ID",
     "data": "Daten"
   }

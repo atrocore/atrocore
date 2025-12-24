@@ -1,7 +1,7 @@
 {
   "fields": {
     "extensibleEnumOptions": "Параметры списка",
-    "multilingual": "Многоязычность"
+    "multilingual": "Многоязычный"
   },
   "exceptions": {
     "extensibleEnumIsUsed": "Список '%s' используется полем '%s' в сущности '%s'."

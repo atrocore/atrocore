@@ -77,13 +77,13 @@ class MatchingManager
         $this->getEntityManager()->saveEntity($jobEntity);
     }
 
-    public function collectAllMatchingFields(?EntityCollection $matchingRules, string $fieldName, array &$fields): void
+    public function collectAllMatchingFields(?EntityCollection $matchingRules, array &$fields): void
     {
         foreach ($matchingRules ?? [] as $rule) {
-            if (!empty($rule->get($fieldName)) && !in_array($rule->get($fieldName), $fields)) {
-                $fields[] = $rule->get($fieldName);
+            if (!empty($rule->get('field')) && !in_array($rule->get('field'), $fields)) {
+                $fields[] = $rule->get('field');
             }
-            $this->collectAllMatchingFields($rule->get('matchingRules'), $fieldName, $fields);
+            $this->collectAllMatchingFields($rule->get('matchingRules'), $fields);
         }
     }
 
@@ -104,16 +104,16 @@ class MatchingManager
 
             if ($matching->get('masterEntity') === $entity->getEntityName()) {
                 $fields = [];
-                $this->collectAllMatchingFields($matching->get('matchingRules'), 'masterField', $fields);
+                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields);
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
                         $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
                         break;
                     }
                 }
-            } elseif ($matching->get('sourceEntity') === $entity->getEntityName()) {
+            } elseif ($matching->get('entity') === $entity->getEntityName()) {
                 $fields = [];
-                $this->collectAllMatchingFields($matching->get('matchingRules'), 'sourceField', $fields);
+                $this->collectAllMatchingFields($matching->get('matchingRules'), $fields);
                 foreach ($fields as $field) {
                     if ($entity->isAttributeChanged($field)) {
                         $this->getMatchingRepository()->unmarkMatchingSearchedForEntity($matching, $entity);

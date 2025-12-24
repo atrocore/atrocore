@@ -35,18 +35,7 @@
       "view": "views/matching/fields/matching-entity-type",
       "protected": true,
       "customizable": false,
-      "layoutRemoveDisabled": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "duplicate"
-            }
-          ]
-        }
-      }
+      "layoutRemoveDisabled": true
     },
     "masterEntity": {
       "type": "varchar",

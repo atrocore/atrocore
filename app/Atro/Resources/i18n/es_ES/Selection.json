@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "No puede establecer 'Entidad única', porque tiene muchas entidades en sus registros."
+    "cannotSetToSingle": "No puede establecer 'Entidad única', porque tiene muchas entidades en sus registros.",
+    "youNeedAtLeastTwoItem": "Necesita al menos dos artículos para comparar."
   },
   "labels": {
     "createSelection": "Crear selección"

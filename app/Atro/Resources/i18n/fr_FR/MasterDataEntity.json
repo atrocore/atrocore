@@ -1,7 +1,7 @@
 {
   "fields": {
     "masterEntity": "Entité de référence",
-    "mappingScript": "Script de cartographie"
+    "mappingScript": "Script de mapping"
   },
   "tooltips": {
     "mappingScript": "Configurez la façon dont les données sources sont transformées, unifiées et mises en correspondance avec la fiche."

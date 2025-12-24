@@ -27,17 +27,17 @@
     "lastAccess": "Dernier accès",
     "passwordUpdatedAt": "Mot de passe mis à jour le",
     "passwordUpdatedBy": "Mot de passe mis à jour par",
-    "teams": "Les équipes",
+    "teams": "Équipes",
     "notes": "Notes",
     "tasks": "Tâches",
-    "followEntityOnAssignment": "Suivi automatique de l'affectation",
-    "followEntityOnStreamPost": "Suivi automatique des enregistrements après leur publication dans les activités",
+    "followEntityOnAssignment": "Suivi automatique à l'assignation",
+    "followEntityOnStreamPost": "Suivi automatique des enregistrements après leur publication dans le panneau Activités",
     "receiveNotifications": "Recevoir des notifications",
-    "style": "Style d'interface utilisateur",
+    "style": "Style de l'interface utilisateur",
     "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur",
     "notificationProfile": "Profil de notification",
-    "layoutProfile": "Profil de la mise en page",
-    "locale": "Local"
+    "layoutProfile": "Profil de disposition",
+    "locale": "Paramètre regional"
   },
   "labels": {
     "Generate": "Générer",

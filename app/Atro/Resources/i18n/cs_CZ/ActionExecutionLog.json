@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "Provedení akce",
+    "type": "Typ",
+    "entityRecord": "Záznam subjektu",
+    "entityName": "Název subjektu",
+    "entityId": "ID subjektu",
+    "message": "Zpráva",
+    "payload": "Payload (užitečná data)"
+  },
+  "options": {
+    "type": {
+      "create": "Vytvořit",
+      "update": "Aktualizace",
+      "delete": "Odstranit",
+      "error": "Chyba"
+    }
+  }
+}
