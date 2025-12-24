@@ -40,16 +40,27 @@ Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum'
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if(this.mode === 'list'){
+            if (this.mode === 'list') {
                 return;
             }
 
             this.$el.parent().hide();
-            if (this.model.get('measureId')) {
+            if (this.model.get('measureId') && this.supportDefaultUnit()) {
                 this.$el.parent().show();
             }
         },
 
+        supportDefaultUnit() {
+            let result = true;
+
+            if (this.model.urlRoot === 'EntityField') {
+                let defs = this.getMetadata().get(['fields', this.model.get('type'), 'params']) || [];
+
+               result = defs.some(item => item.name === this.name);
+            }
+
+            return result;
+        }
     });
 
 });
