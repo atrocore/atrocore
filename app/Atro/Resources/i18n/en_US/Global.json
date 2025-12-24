@@ -155,7 +155,8 @@
     "AccountGroup": "Account Groups",
     "ProductGroup": "Product Groups",
     "Selection": "Selections",
-    "SelectionRecord": "Selection Records"
+    "SelectionRecord": "Selection Records",
+    "Layout": "Layouts"
   },
   "descriptions": {
     "previewTemplate": "Manage HTML/CSS templates for automatic data preview"
