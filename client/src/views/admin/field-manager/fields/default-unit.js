@@ -56,7 +56,7 @@ Espo.define('views/admin/field-manager/fields/default-unit', 'views/fields/enum'
             if (this.model.urlRoot === 'EntityField') {
                 let defs = this.getMetadata().get(['fields', this.model.get('type'), 'params']) || [];
 
-               result = defs.some(item => item.name === this.name);
+                result = defs.some(item => item.name === this.name);
             }
 
             return result;
