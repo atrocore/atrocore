@@ -32,7 +32,7 @@
     "Action": "Aktionen",
     "Clear Cache": "Systemcache leeren",
     "clearCacheTooltip": "Cache erstellt unter",
-    "rebuildDb": "Datenbank wiederherstellen",
+    "rebuildDb": "Datenbank neu aufbauen",
     "rebuildDbWarning": "Die Datenbankstruktur wurde geändert. Um die ordnungsgemäße Funktionalität sicherzustellen, ist ein Rebuild erforderlich.",
     "updatesAvailable": "Neue Updates sind verfügbar!",
     "Maintenance": "Wartung",
@@ -57,7 +57,7 @@
     "Action History": "Aktionsverlauf",
     "Auth Log": "Auth-Protokoll",
     "Layout Manager": "Layouts",
-    "Accounts": "Konto",
+    "Accounts": "Konten",
     "Contacts": "Kontakte",
     "Addresses": "Adressen",
     "Currency": "Währungen",
@@ -72,11 +72,11 @@
     "apiRequest": "API-Anfrag",
     "style": "Stile",
     "incomingWebhook": "Eingehende Webhooks",
-    "matchings": "Matchings",
-    "ThumbnailTypes": "Thumbnail Typen",
-    "Teams": "Mannschaften",
+    "matchings": "Übereinstimmungen",
+    "ThumbnailTypes": "Vorschaubild-Typen",
+    "Teams": "Teams",
     "Auth Tokens": "Authentifizierungs-Tokens",
-    "Upgrading...": "Aufrüsten...",
+    "Upgrading...": "Upgraden...",
     "Jobs": "Aufträge",
     "GeneralSetting": "Allgemeine Einstellungen",
     "System": "System"
@@ -216,9 +216,9 @@
     "layoutProfiles": "Verwalten und passen Sie verschiedene Layoutkonfigurationen für die Benutzeroberfläche des Systems an",
     "apiRequest": "Führen Sie API-Anfragen aus, indem Sie direkt einen JSON-Text liefern. Verwenden Sie diese Funktion, um schnell komplexe Datenstrukturen zu erstellen, wie z. B. konfigurierte Import- oder Export-Feeds.",
     "style": "Erstellen, Aktualisieren und Anpassen von neuen Stilen, um Anpassungen an Standard-CSS vorzunehmen",
-    "matchings": "Matchings hilft bei der Identifizierung ähnlicher Datensätze über Entitäten hinweg anhand benutzerdefinierter Regeln.",
-    "thumbnailTypes": "Verwalten Sie die Thumbnail-Typen, um die Breite oder Höhe eines Thumbnails zu ändern oder um ein neues zu erstellen.",
-    "scheduledJob": "Verwalten Sie geplante Systemaufträge.",
-    "jobs": "Verwalten Sie Systemaufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen."
+    "matchings": "Übereinstimmungen helfen dabei, ähnliche Datensätze über verschiedene Entitäten hinweg anhand benutzerdefinierter Regeln zu identifizieren.",
+    "thumbnailTypes": "Verwalten Sie die Vorschaubild-Typen, um die Breite oder Höhe eines Vorschaubildes zu ändern oder um ein neues zu erstellen.",
+    "scheduledJob": "Verwalten Sie geplante System-Aufträge.",
+    "jobs": "Verwalten Sie System-Aufträge, die ohne direkte Benutzerinteraktion im Hintergrund laufen."
   }
 }

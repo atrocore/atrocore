@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "Выполнение действий",
+    "type": "Type",
+    "entityRecord": "Запись о сущности",
+    "entityName": "Название организации",
+    "entityId": "ID субъекта",
+    "message": "Сообщение",
+    "payload": "Параметры"
+  },
+  "options": {
+    "type": {
+      "create": "Создать",
+      "update": "Обновить",
+      "delete": "Удалить",
+      "error": "Ошибка"
+    }
+  }
+}

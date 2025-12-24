@@ -1,14 +1,14 @@
 {
   "fields": {
     "entity": "Entité",
-    "viewType": "Voir le type",
-    "layoutProfile": "Profil de la mise en page",
+    "viewType": "Type de vue",
+    "layoutProfile": "Profil de disposition",
     "relatedEntity": "Entité associée"
   },
   "groupOptions": {
     "viewType": {
       "viewGroup": "Voir le groupe",
-      "view": "Vu"
+      "view": "Vue"
     }
   },
   "tooltips": {

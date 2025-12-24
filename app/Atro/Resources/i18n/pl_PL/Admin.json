@@ -91,7 +91,8 @@
     "selection": "Wybór",
     "navigation": "Nawigacja",
     "insights": "Spostrzeżenia",
-    "summary": "Podsumowanie"
+    "summary": "Podsumowanie",
+    "selectionRelations": "Relacje selekcji"
   },
   "fieldTypes": {
     "color": "Kolor",
@@ -209,7 +210,7 @@
     "apiRequest": "Funkcja ta umożliwia szybkie tworzenie złożonych struktur danych, takich jak skonfigurowane kanały importu lub eksportu.",
     "style": "Tworzenie, aktualizowanie i dostosowywanie nowych stylów w celu dostosowania do standardowego CSS",
     "incomingWebhook": "Przychodzące Webhooki umożliwiają wyzwalanie predefiniowanych akcji za pośrednictwem zewnętrznych żądań HTTP, z opcjonalnymi zabezpieczeniami, takimi jak weryfikacja hash i biała lista adresów IP.",
-    "matchings": "Dopasowania pomagają identyfikować podobne rekordy między jednostkami przy użyciu reguł zdefiniowanych przez użytkownika.",
+    "matchings": "Dopasowywanie pomaga identyfikować podobne rekordy w różnych jednostkach przy użyciu reguł zdefiniowanych przez użytkownika.",
     "scheduledJob": "Zarządzanie zaplanowanymi zadaniami systemowymi.",
     "notificationTemplates": "Proszę zarządzać szablonem standardowego powiadomienia systemu.",
     "notificationProfiles": "Skonfiguruj profile powiadomień i reguły powiadomień, aby skutecznie usprawnić proces zarządzania alertami, tak aby były one aktualne i istotne.",

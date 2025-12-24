@@ -1,7 +1,7 @@
 {
   "fields": {
     "status": "Статус",
-    "executeTime": "Выполнить при",
+    "executeTime": "Выполнить в",
     "pid": "PID",
     "priority": "Приоритет",
     "handler": "Обработчик",

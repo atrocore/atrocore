@@ -13,7 +13,7 @@
     "trim": "Supprimez les espaces blancs de début et de fin",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
-    "pattern": "Modèle d'expressions rationnelles",
+    "pattern": "Modif Regex",
     "defaultUnit": "Unité par défaut",
     "default": "Défaut",
     "defaultValueType": "Valeur par défaut Type",
@@ -45,7 +45,7 @@
     "strip": "Bande",
     "height": "Hauteur (px)",
     "useIframe": "Utiliser l'iframe en mode affichage",
-    "htmlSanitizer": "HTML Sanitizer",
+    "htmlSanitizer": "Filtre HTML",
     "foreignCode": "Code étranger",
     "relationType": "Relation Type",
     "foreignEntity": "Entité étrangère",
@@ -57,16 +57,17 @@
     "isUninheritableRelation": "Sans héritage",
     "isUninheritableField": "Sans héritage",
     "auditableEnabled": "Enregistrez la modification en tant qu'activité d'enregistrement",
-    "auditableDisabled": "Ne pas créer d'activité d'enregistrement",
+    "auditableDisabled": "Ne pas créer d'enregistrement dans le panneau activités",
     "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification",
     "modifiedExtendedEnabled": "Enregistrer le changement comme une modification",
     "duplicateIgnore": "Non duplicable",
     "recordRelatedChangesInStream": "Enregistrez les modifications apportées aux enregistrements connexes pour l'entité actuelle.",
-    "conditionalRequired": "Exigée",
+    "conditionalRequired": "Requis",
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
-    "conditionalDisableOptions": "Options désactivées"
+    "conditionalDisableOptions": "Options désactivées",
+    "urlLabel": "Label URL"
   },
   "tooltips": {
     "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l'entité liée pour la relation en amont.",
@@ -97,7 +98,7 @@
     "outputType": {
       "text": "Texte",
       "int": "Entier",
-      "float": "Flotteur",
+      "float": "Flottant",
       "bool": "Booléen",
       "date": "Date",
       "datetime": "Date et heure"
@@ -117,10 +118,10 @@
     }
   },
   "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   },
   "labels": {
-    "resetToDefault": "Rétablissement des valeurs par défaut",
+    "resetToDefault": "Réinitialiser par défaut",
     "relationManagement": "Gestion des relations",
     "conditionalProperties": "Propriétés conditionnelles"
   },

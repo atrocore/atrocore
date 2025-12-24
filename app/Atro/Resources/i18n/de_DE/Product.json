@@ -2,7 +2,7 @@
   "fields": {
     "number": "Nummer",
     "isActive": "Aktiv",
-    "image": "Image",
+    "image": "Bild",
     "price": "Preis",
     "description": "Kurze Beschreibung",
     "longDescription": "Lange Beschreibung",

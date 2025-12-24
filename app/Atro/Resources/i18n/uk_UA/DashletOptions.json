@@ -9,7 +9,7 @@
     "mode": "Режим",
     "enabledScopeList": "Що відображати",
     "users": "Користувачі",
-    "entityType": "Сутність",
+    "entityType": "Тип сутністі",
     "primaryFilter": "Первинний фільтр",
     "boolFilterList": "Додаткові фільтри",
     "sortBy": "Сортування (поле)",

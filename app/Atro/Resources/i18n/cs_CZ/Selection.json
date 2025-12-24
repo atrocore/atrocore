@@ -11,7 +11,8 @@
     }
   },
   "messages": {
-    "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit."
+    "cannotSetToSingle": "Nemůžete nastavit \"Single Entity\", protože v záznamech máte mnoho entit.",
+    "youNeedAtLeastTwoItem": "Pro srovnání potřebujete alespoň dvě položky."
   },
   "labels": {
     "createSelection": "Vytvořit výběr"

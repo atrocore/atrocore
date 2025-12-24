@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "Wykonanie akcji",
+    "type": "Typ",
+    "entityRecord": "Rekord podmiotu",
+    "entityName": "Nazwa podmiotu",
+    "entityId": "Identyfikator podmiotu",
+    "message": "Wiadomość",
+    "payload": "Dane wejściowe"
+  },
+  "options": {
+    "type": {
+      "create": "Utwórz",
+      "update": "Aktualizuj",
+      "delete": "Usuń",
+      "error": "Błąd"
+    }
+  }
+}

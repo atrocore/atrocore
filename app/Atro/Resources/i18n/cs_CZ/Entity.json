@@ -40,7 +40,12 @@
     "nonDuplicatableFields": "Neduplikovaná pole",
     "deleteValuesAfterUnlinkingClassification": "Odstranění hodnot atributů po zrušení propojení klasifikací",
     "linkAttributesWithClassificationAutomatically": "Automatické propojení atributů s klasifikací",
-    "primaryEntity": "Primární subjekt"
+    "primaryEntity": "Primární subjekt",
+    "hasStaging": "Povolení etapizace",
+    "stagingEntity": "Subjekt etapizace",
+    "matchDuplicates": "Shoda duplicit",
+    "matchMasterRecords": "Hlavní záznamy o zápasech",
+    "role": "Role"
   },
   "options": {
     "type": {
@@ -52,6 +57,9 @@
     "sortDirection": {
       "asc": "Vzestupně",
       "desc": "Sestupné"
+    },
+    "role": {
+      "staging": "Inscenace"
     }
   },
   "labels": {
@@ -59,7 +67,8 @@
     "hierarchyManagement": "Správa hierarchie",
     "other": "Další",
     "resetToDefault": "Obnovení výchozího nastavení",
-    "attributes": "Atributy"
+    "attributes": "Atributy",
+    "mdm": "Správa hlavních dat"
   },
   "confirmations": {
     "resetToDefault": "Jste si jisti, že chcete obnovit výchozí konfiguraci?"
@@ -84,9 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Pokud je atribut přímo spojen se záznamem a tento záznam je spojen s klasifikací, bude atribut spojen také s touto klasifikací."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{rodiče} a {děti} by neměli být oba ve Vztazích ovlivňujících datum/čas změny.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} a {children} by neměly být oba v vztazích ovlivňujících datum/čas úpravy.",
     "entityAlreadyHasAttributesInUse": "Param Has Attribute nelze deaktivovat. Nejprve odstraňte všechny související atributy.",
     "entityHasDirectlyLinkedAttributes": "Existují již přímo propojené atributy. Odstraňte je prosím ze záznamů.",
-    "entityTypeIsNotSuitableForAssociates": "Tento typ entity nemůže obsahovat parametr \"Has Associates\". Mohou ho mít pouze \"Base\" a \"Hierarchy\"."
+    "entityTypeIsNotSuitableForAssociates": "Tento typ entity nemůže obsahovat parametr \"Has Associates\". Mohou ho mít pouze \"Base\" a \"Hierarchy\".",
+    "derivativeWithSuchRoleExists": "Již existuje odvozená entita s touto rolí.",
+    "derivativeFromDerivativeNotSupporting": "Odvozená entita nemůže být vytvořena z jiné odvozené entity."
   }
 }

@@ -81,7 +81,9 @@
     "NotificationTemplate": "Šablona oznámení",
     "Selection": "Výběr",
     "SelectionRecord": "Záznam o výběru",
-    "MasterDataEntity": "Subjekt kmenových dat"
+    "MasterDataEntity": "Subjekt kmenových dat",
+    "ActionExecution": "Provedení akce",
+    "ActionExecutionLog": "Protokol o provedení akce"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -150,10 +152,12 @@
     "Folder": "Složky",
     "Selection": "Výběry",
     "SelectionRecord": "Výběrové záznamy",
-    "MasterDataEntity": "Subjekty kmenových dat"
+    "MasterDataEntity": "Subjekty kmenových dat",
+    "ActionExecution": "Provádění akcí",
+    "ActionExecutionLog": "Protokoly o provádění akcí"
   },
   "labels": {
-    "basic": "Základní",
+    "basic": "Basic",
     "script": "Skript",
     "phpCode": "Kód PHP",
     "_addAttribute": "[Přidat atribut]",
@@ -499,7 +503,12 @@
     "addFields": "Přidat pole",
     "addAttributes": "Přidání atributů",
     "Insights": "Insights",
-    "matchings": "Shody"
+    "matchings": "Shody",
+    "openLink": "Otevřít odkaz",
+    "Items": "Položky",
+    "hideAll": "Skrýt vše",
+    "Relations": "Vztahy",
+    "view": "Zobrazit"
   },
   "fields": {
     "width": "Šířka",
@@ -606,7 +615,10 @@
     "goldenRecord": "Zlatý rekord",
     "sourceRecords": "Zdrojové záznamy",
     "derivedRecords": "Odvozené záznamy",
-    "primaryRecord": "Primární záznam"
+    "primaryRecord": "Primární záznam",
+    "createdCountFilterActionExecution": "Vytvořil Action Execution",
+    "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
+    "field": "Pole"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
@@ -624,7 +636,7 @@
     "removeRelatedRecords": "Opravdu chcete odstranit všechny záznamy vybrané asociace z aktuálního záznamu? Všechny související záznamy zůstanou zachovány.",
     "queryHasErrors": "Ve vašem dotazu je několik chyb",
     "actionExecuted": "Akce \"%s\" byla úspěšně provedena",
-    "jobAdded": "Úloha byla úspěšně přidána do Správce úloh",
+    "jobAdded": "Úloha byla úspěšně přidána do Správce úloh.",
     "confirmInheritAllFromParent": "Opravdu chcete, aby všechny položky dědily hodnoty polí (a atributů) i vztahy od položek nadřazeného záznamu? Existující hodnoty nebudou nahrazeny.",
     "optionValueCannotBeEmpty": "Hodnota možnosti nemůže být prázdná",
     "minimumOneOptionsRequired": "Je vyžadována minimálně jedna hodnota volby.",
@@ -682,9 +694,9 @@
     "clickToRefresh": "Klikněte pro obnovení",
     "streamPostInfo": "Pro uvedení uživatelů v příspěvku zadejte <strong>@username</strong>.",
     "writeMessageToUser": "Napište zprávu uživateli {user}",
-    "writeMessageToSelf": "Napište zprávu o svých aktivitách",
+    "writeMessageToSelf": "Napište si zprávu sobě samému",
     "typeAndPressEnter": "Zadejte a stiskněte enter",
-    "checkForNewNotes": "Zkontrolujte aktualizace aktivit",
+    "checkForNewNotes": "Zkontrolujte aktualizace v sekci Aktivity",
     "internalPost": "Příspěvek uvidí pouze interní uživatelé",
     "internalPostTitle": "Příspěvek vidí pouze interní uživatelé",
     "done": "Hotovo",
@@ -798,19 +810,19 @@
     "deleteRecordAssociationThis": "{uživatel} odstranil asociaci k {relatedRecord} jako {asociace}",
     "deleteAssociationRecordThis": "{uživatel} odstranil asociaci {mainRecord} s {relatedRecord}",
     "own": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
-    "assignVoid": "{user} nepřiřazeno {entityType} {entity}",
+    "assignVoid": "{user} nepřiřazeno {entityType} {entity}.",
     "postThis": "{uživatel} vyslal",
     "emailReceivedThis": "Obdržený e-mail",
     "emailSent": "{uživatel} úspěšně odeslal e-mail s předmětem '{předmět}' na adresu '{emailTo}' dne '{createdAt}', týkající se {entityType} {entita}",
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
-    "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}",
-    "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}",
-    "ownThisSelf": "{uživatel} se nastavil jako vlastník pro tento {entityType}",
-    "assignThisSelf": "{uživatel} sám přidělil tento {entityType}",
-    "assignSelf": "{uživatel} samostatně přidělený {entityType} {entity}",
+    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
+    "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}.",
+    "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}.",
+    "ownThisSelf": "{user} se nastavil jako vlastník pro tento {entityType}.",
+    "assignThisSelf": "{user} sám přidělil tento {entityType}.",
+    "assignSelf": "{user} samostatně přidělený {entityType} {entity}.",
     "attachThis": "{uživatel} připojen",
     "statusThis": "{uživatel} aktualizoval {pole}",
     "createRelated": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s {entityType} {entita}",
@@ -818,15 +830,15 @@
     "relateThis": "{user} propojený s {relatedEntityType} {relatedEntity} s tímto {entityType}",
     "emailReceivedInitialThis": "Přijatý e-mail, tento {entityType} vytvořen",
     "emailReceivedFrom": "E-mail přijatý od {od}, týkající se {entityType} {entita}",
-    "updateOneInThis": "{user} v tomto {entityType} aktualizováno v {relatedEntityType} {relatedEntity}",
-    "updateFromToIn": "{user} v {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
+    "updateOneInThis": "{user} aktualizoval {relatedEntityType} {relatedEntity} v tomto {entityType}.",
+    "updateFromToIn": "{user} v {entityType} {entity} aktualizoval {relatedEntityType} {relatedEntity}.",
     "to": "na",
     "was": "byl",
     "become": "stát se",
-    "ownSelf": "{uživatel} se nastavil jako vlastník pro {entityType} {entity}",
-    "assign": "{uživatel} přidělil {entityType} {entita} na {příjemce}",
-    "assignThis": "{uživatel} přidělil tento {typ entity} {příjemci}",
-    "assignThisVoid": "{user} unassigned this {entityType}",
+    "ownSelf": "{user} se nastavil jako vlastník pro {entityType} {entity}.",
+    "assign": "{user} přidělil {entityType} {entity} na {assignee}.",
+    "assignThis": "{user} přidělil tento {entityType} {assignee}.",
+    "assignThisVoid": "{user} nepřidělil tento {entityType}.",
     "updateThis": "{uživatel} aktualizoval tento {entityType}",
     "createRelatedThis": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s touto {entityType}",
     "emailReceivedInitialFromThis": "Email přijatý od {from}, tento {entityType} vytvořen",
@@ -836,14 +848,14 @@
     "emailReceivedInitialFrom": "E-mail přijatý od {from}, {entityType} {entita} vytvořeno",
     "emailSentThis": "{uživatel} úspěšně odeslal e-mail s předmětem '{předmět}' na adresu '{emailTo}' dne '{createdAt}'.",
     "unrelate": "{user} odpojeno {relatedEntityType} {relatedEntity} mit {entityType} {entity}",
-    "unrelateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}",
+    "unrelateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}.",
     "updateOneThis": "{user} v tomto {entityType} aktualizováno",
-    "updateFromToInThis": "{user} v tomto {entityType} aktualizováno v {relatedEntityType} {relatedEntity}",
+    "updateFromToInThis": "{user} v tomto {entityType} aktualizováno {relatedEntityType} {relatedEntity}.",
     "updateOne": "{user} v {entityType} {entity} updated",
-    "updateOneIn": "{user} v {entityType} {entity} updated in {relatedEntityType} {relatedEntity}",
+    "updateOneIn": "{user} v {entityType} {entity} aktualizoval {relatedEntityType} {relatedEntity}.",
     "updateFromTo": "{user} v {entityType} {entity} updated",
     "from": "z",
-    "assignYou": "{uživatel} přiřazen {entityType} {entita} vám",
+    "assignYou": "{user} přiřazen {entityType} {entity} vám.",
     "emailReceivedFromThis": "E-mail přijatý od {od}"
   },
   "dayNamesShort": {
@@ -1238,7 +1250,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
@@ -1277,7 +1289,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
+    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {

@@ -7,32 +7,32 @@
     "isActive": "Actif",
     "ignoreSelfAction": "Ignorer ses propres actions",
     "asOwner": "En tant que propriétaire",
-    "asFollower": "En tant que suiveur",
-    "asAssignee": "En tant que cessionnaire",
+    "asFollower": "En tant que abonné",
+    "asAssignee": "En tant que utilisateur assigné",
     "asTeamMember": "En tant que membre de l'équipe",
     "asNotificationProfile": "En tant qu'utilisateur du profil de notification",
-    "emailActive": "Notification par courriel",
-    "systemActive": "Notification du système",
-    "emailTemplateId": "Modèle de courrier électronique",
-    "systemTemplateId": "Modèle de système"
+    "emailActive": "Notification par e-mail",
+    "systemActive": "Notification système",
+    "emailTemplateId": "Modèle d'e-mail",
+    "systemTemplateId": "Modèle de notification système"
   },
   "options": {
     "occurrence": {
-      "creation": "Créer",
+      "creation": "Création",
       "updating": "Mise à jour",
-      "linking": "Lien",
-      "unlinking": "Dissocier",
-      "deletion": "Supprimer",
-      "note_created": "Créer une note",
-      "note_updated": "Note de mise à jour",
-      "note_deleted": "Supprimer la note",
-      "ownership_assignment": "Définir le propriétaire/l'utilisateur assigné",
-      "unlinking_ownership_assignment": "Propriétaire non défini/Utilisateur désigné",
+      "linking": "Association",
+      "unlinking": "Dissociation",
+      "deletion": "Suppression",
+      "note_created": "Création de note",
+      "note_updated": "Mise à jour de note",
+      "note_deleted": "Suppression de note",
+      "ownership_assignment": "Définition du propriétaire/utilisateur assigné",
+      "unlinking_ownership_assignment": "Retrait proprietaire/utilisateur assigné",
       "mentioned": "Mention"
     }
   },
   "labels": {
     "Notify User": "Notifier l'utilisateur",
-    "Transport": "Transport"
+    "Transport": "Canal de Notification"
   }
 }
