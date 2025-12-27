@@ -36,9 +36,9 @@
 
     export function setShowItems(value: string[]) {
         showItems = value;
-        if(value){
-            setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
-        }else if(!value && activeItem.name === '_items') {
+        if (value) {
+            setActiveItem(treeItems.filter(v => v.name === '_items')[0])
+        } else if (!value && activeItem.name === '_items') {
             setActiveItem(treeItems[0]);
         }
     }
@@ -243,7 +243,7 @@
                     }
                 }
 
-                if (['_self', '_bookmark'].includes(activeItem.name) && model && model.get('id') === node.id) {
+                if ((['_self', '_bookmark'].includes(activeItem.name) || node.scope === model.name) && model && model.get('id') === node.id) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -885,8 +885,8 @@
 
 
         tick().then(() => {
-            if(scope === 'Selection' && treeItem.name === '_items') {
-                if(callbacks?.onActiveItems) {
+            if (scope === 'Selection' && treeItem.name === '_items') {
+                if (callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
                 }
                 return;
@@ -944,8 +944,7 @@
         return layoutData;
     }
 
-    function setSortBy(field: string): void
-    {
+    function setSortBy(field: string): void {
         sortBy = field;
         Storage.set('treeItemSorting', scope, {sortBy, sortAsc});
         rebuildTree();
@@ -1036,7 +1035,7 @@
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
-                    }else if (item.name === '_items') {
+                    } else if (item.name === '_items') {
                         label = Language.get('Global', 'labels', 'Items')
                     } else {
                         if (type == 'link') {
@@ -1141,7 +1140,7 @@
         }
 
         loadLayout(() => {
-            if(hasItems) {
+            if (hasItems) {
                 treeItems = [...treeItems, {
                     name: '_items',
                     label: Language.get('Global', 'labels', 'Items')
@@ -1166,9 +1165,9 @@
                     searchInputElement.value = searchValue;
                 }
 
-                if(scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
+                if (scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
-                }else if (!isCollapsed) {
+                } else if (!isCollapsed) {
                     buildTree();
                 }
 
@@ -1178,7 +1177,7 @@
             })
         });
 
-        if(callbacks?.afterMounted) {
+        if (callbacks?.afterMounted) {
             callbacks.afterMounted();
         }
     });
@@ -1224,7 +1223,8 @@
                 <div class="tree-items-container">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
+                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems}
+                           data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
@@ -1233,7 +1233,8 @@
             </div>
             {#if activeItem}
                 <div class="sidebar-header">
-                    <h5>{#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
+                    <h5>
+                        {#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
                 </div>
 
                 {#if scope === 'Selection' && activeItem.name === '_items'}
@@ -1264,10 +1265,13 @@
                                                 on:click={onSortAscChange}>
                                             <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
                                         </button>
-                                        <button type="button" class="sort-by-button" data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
+                                        <button type="button" class="sort-by-button"
+                                                data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
                                         <ul class="dropdown-menu">
                                             {#each sortFields.filter(field => field.name !== sortBy) as field }
-                                                <li><a href="#" on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a></li>
+                                                <li><a href="#"
+                                                       on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a>
+                                                </li>
                                             {/each}
                                         </ul>
                                     </div>
@@ -1293,7 +1297,8 @@
                         </div>
                     </div>
 
-                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;"
+                         bind:this={treeElement}>
                     </div>
 
                     {#if showEmptyPlaceholder}
