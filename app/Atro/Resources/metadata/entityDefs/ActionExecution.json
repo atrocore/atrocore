@@ -1,0 +1,207 @@
+{
+  "fields": {
+    "name": {
+      "type": "varchar",
+      "required": true,
+      "trim": true
+    },
+    "action": {
+      "type": "link",
+      "readOnly": true
+    },
+    "incomingWebhook": {
+      "type": "link",
+      "entity": "IncomingWebhook",
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "incomingWebhookId"
+            }
+          ]
+        }
+      }
+    },
+    "scheduledJob": {
+      "type": "link",
+      "readOnly": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "scheduledJobId"
+            }
+          ]
+        }
+      }
+    },
+    "status": {
+      "type": "enum",
+      "view": "views/action-execution/fields/status",
+      "required": true,
+      "readOnly": true,
+      "options": [
+        "running",
+        "done",
+        "failed"
+      ],
+      "optionColors": [
+        "fff078",
+        "8fff87",
+        "ff6262"
+      ]
+    },
+    "statusMessage": {
+      "type": "text",
+      "readOnly": true
+    },
+    "payload": {
+      "type": "jsonObject",
+      "readOnly": true
+    },
+    "type": {
+      "type": "enum",
+      "required": true,
+      "readOnly": true,
+      "options": [
+        "manual",
+        "incomingWebhook",
+        "scheduledJob",
+        "workflow"
+      ]
+    },
+    "startedAt": {
+      "type": "datetime",
+      "protected": true
+    },
+    "finishedAt": {
+      "type": "datetime",
+      "protected": true
+    },
+    "listScope": {
+      "type": "varchar",
+      "notStorable": true,
+      "readOnly": true,
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "filterDisabled": true,
+      "exportDisabled": true,
+      "importDisabled": true,
+      "emHidden": true
+    },
+    "createdCount": {
+      "type": "int",
+      "view": "views/action-execution/fields/counter-link",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "updatedCount": {
+      "type": "int",
+      "view": "views/action-execution/fields/counter-link",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "failedCount": {
+      "type": "int",
+      "logType": "error",
+      "view": "views/action-execution/fields/counter-link-to-logs",
+      "massUpdateDisabled": true,
+      "protected": true
+    },
+    "logs": {
+      "type": "linkMultiple",
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true,
+      "noLoad": true,
+      "importDisabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true,
+      "view": "views/fields/user"
+    }
+  },
+  "links": {
+    "logs": {
+      "type": "hasMany",
+      "foreign": "actionExecution",
+      "entity": "ActionExecutionLog"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "action": {
+      "type": "belongsTo",
+      "foreign": "executions",
+      "entity": "Action"
+    },
+    "scheduledJob": {
+      "type": "belongsTo",
+      "entity": "ScheduledJob"
+    }
+  },
+  "collection": {
+    "sortBy": "startedAt",
+    "asc": false
+  },
+  "indexes": {
+    "name": {
+      "columns": [
+        "name",
+        "deleted"
+      ]
+    },
+    "status": {
+      "columns": [
+        "status",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "startedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    },
+    "finishedAt": {
+      "columns": [
+        "modifiedAt",
+        "deleted"
+      ]
+    }
+  }
+}

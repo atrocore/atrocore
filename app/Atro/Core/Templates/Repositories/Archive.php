@@ -40,6 +40,18 @@ class Archive extends Base
         return parent::find($params);
     }
 
+    public function count(array $params = [])
+    {
+        if ($this->hasClickHouse() && $this->moveDataOnFind) {
+            $this
+                ->getInjection('container')
+                ->get('\ClickHouseIntegration\Console\SyncEntity')
+                ->moveData($this->entityName);
+        }
+
+        return parent::count($params);
+    }
+
     public function hasDeletedRecordsToClear(): bool
     {
         if (empty($this->seed)) {

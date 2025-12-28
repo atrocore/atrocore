@@ -33,10 +33,11 @@
       },
       "view": "views/action/record/panels/actions"
     },
-    "logs": {
+    "executions": {
       "create": false,
       "select": false,
-      "rowActionsView": "views/record/row-actions/relationship-no-unlink"
+      "rowActionsView": "views/action/record/row-actions/action-executions",
+      "view": "views/action/record/panels/executions"
     }
   }
 }

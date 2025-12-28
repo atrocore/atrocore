@@ -17,5 +17,8 @@
       "and": "E",
       "or": "O"
     }
+  },
+  "exceptions": {
+    "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi."
   }
 }

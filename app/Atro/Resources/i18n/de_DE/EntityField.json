@@ -64,7 +64,7 @@
     "conditionalRequired": "Erforderlich",
     "conditionalReadOnly": "Schreibgeschützt",
     "conditionalProtected": "Geschützt",
-    "tooltip": "Kurzinfo",
+    "tooltip": "Hinweis",
     "conditionalVisible": "Sichtbar",
     "conditionalDisableOptions": "Deaktivierte Optionen",
     "urlLabel": "URL Label"

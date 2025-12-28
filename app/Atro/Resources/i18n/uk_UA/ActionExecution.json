@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "incomingWebhook": "Вхідний веб-хук",
+    "scheduledJob": "Розклад роботи",
+    "workflow": "Воркфлоу",
+    "statusMessage": "Повідомлення про стан",
+    "startedAt": "Розпочато о",
+    "finishedAt": "Завершено о",
+    "createdCount": "Створено",
+    "updatedCount": "Оновлено",
+    "failedCount": "Не вконано",
+    "logs": "Журнали"
+  },
+  "options": {
+    "type": {
+      "manual": "Посібник",
+      "incomingWebhook": "Вхідний веб-хук",
+      "scheduledJob": "Розклад роботи",
+      "workflow": "Воркфлоу"
+    },
+    "status": {
+      "done": "Виконано",
+      "failed": "Не вконано",
+      "running": "Виконується"
+    }
+  }
+}

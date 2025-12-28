@@ -87,6 +87,17 @@ class SelectionRecord extends Base
                 }
             }
         }
+
+        // we reset the index from 0 in case of unset
+        $entities = [];
+        foreach ($collection as $key => $record) {
+            $entities[] = $record;
+            $collection->offsetUnset($key);
+        }
+
+        foreach ($entities as $key => $entity) {
+            $collection->offsetSet($key, $entity);
+        }
     }
 
     protected function getService(string $name): Record

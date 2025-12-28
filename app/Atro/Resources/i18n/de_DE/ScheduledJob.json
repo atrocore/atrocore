@@ -14,7 +14,7 @@
   "options": {
     "type": {
       "ComposerAutoUpdate": "Alle installierten Module automatisch aktualisieren",
-      "ClearEntities": "Gelöschte Daten löschen",
+      "ClearEntities": "Gelöschte Daten entgültig löschen",
       "UpdateCurrencyExchangeViaECB": "Währungsumtausch über die EZB aktualisieren",
       "CheckUpdates": "System-Updates prüfen",
       "ScanStorage": "Speicher scannen",
@@ -27,6 +27,7 @@
     "scheduling": "Definiert wann und wie oft ein Job läuft\n\n*/5 * * * * - alle 5 Minuten\n\n0 */2 * * * - alle 2 Stunden\n\n30 1 * * * - um 01:30 einmal am Tag\n\n0 0 1 * * - am ersten Tag des Monats"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration"
+    "wrongCrontabConfiguration": "Falsche Crontab-Konfiguration",
+    "onlyOneJobTypeAllowed": "Nur ein '%s' Auftrag ist erlaubt"
   }
 }

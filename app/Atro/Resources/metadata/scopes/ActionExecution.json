@@ -9,7 +9,7 @@
   "stream": false,
   "streamDisabled": true,
   "disabled": false,
-  "type": "Archive",
+  "type": "Base",
   "object": true,
   "notificationDisabled": true,
   "hideFieldTypeFilters": true,

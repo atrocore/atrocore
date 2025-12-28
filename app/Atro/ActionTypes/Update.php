@@ -17,13 +17,15 @@ use Atro\Core\Exceptions\NotModified;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Forbidden;
 use Atro\Core\Exceptions\NotFound;
+use Atro\Entities\ActionExecution;
 use Atro\Services\Record;
 use Espo\ORM\Entity;
 
 class Update extends AbstractAction
 {
-    public function executeNow(Entity $action, \stdClass $input): bool
+    public function execute(ActionExecution $execution, \stdClass $input): bool
     {
+        $action = $execution->get('action');
         $sourceEntity = $this->getSourceEntity($action, $input);
 
         if (empty($action->get('applyToPreselectedRecords'))) {
@@ -37,99 +39,91 @@ class Update extends AbstractAction
             $whereJson = $this->getTwig()->renderTemplate($whereJson, $templateData);
             $where = @json_decode($whereJson, true);
 
-            /** @var \Espo\Core\SelectManagers\Base $selectManager */
-            $selectManager = $this->container->get('selectManagerFactory')->create($action->get('searchEntity'));
+            $searchEntityType = $action->get('searchEntity');
+
+            /** @var \Atro\Core\SelectManagers\Base $selectManager */
+            $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityType);
             /** @var \Atro\Core\Templates\Repositories\Base $repository */
-            $repository = $this->getEntityManager()->getRepository($action->get('searchEntity'));
+            $repository = $this->getEntityManager()->getRepository($searchEntityType);
 
-            if (property_exists($input, 'queueData') && isset($input->queueData['targetIds'])) {
-                $targetIds = $input->queueData['targetIds'];
-                if (empty($targetIds)) {
-                    return true;
-                }
-                $collection = $repository->findByIds($targetIds);
-            } else {
-                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
-                $repository->handleSelectParams($selectParams);
-                $count = $repository->count($selectParams);
+            $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
+            $repository->handleSelectParams($selectParams);
+            $count = $repository->count($selectParams);
 
-                if ($count === 0) {
-                    return true;
-                }
+            if ($count === 0) {
+                $execution->set('status', 'done');
+                $this->getEntityManager()->saveEntity($execution);
 
-                if ($count > $this->container->get('config')->get('massUpdateMaxCountWithoutJob', 200)) {
-                    // build chunks
-                    $chunks = [];
-                    $chunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
-
-                    $offset = 0;
-
-                    $select = ['id'];
-                    $orderBy = 'id';
-                    if (!empty($this->getMetadata()->get(['entityDefs', $entityName, 'fields', 'createdAt']))) {
-                        $orderBy = 'createdAt';
-                        $select[] = $orderBy;
-                    }
-
-                    while (true) {
-                        $collection = $repository
-                            ->select($select)
-                            ->limit($offset, $chunkSize)
-                            ->order($orderBy)
-                            ->find($selectParams);
-
-                        $offset = $offset + $chunkSize;
-                        $ids = array_column($collection->toArray(), 'id');
-                        if (empty($ids)) {
-                            break;
-                        }
-
-                        $chunks[] = $ids;
-                    }
-
-                    $data = [
-                        'actionId'     => $action->get('id'),
-                        'sourceEntity' => $action->get('sourceEntity'),
-                        'ids'          => !empty($sourceEntity) ? [$sourceEntity->get('id')] : []
-                    ];
-                    if (property_exists($input, 'queueData') && !empty($input->queueData['actionSetLinkerId'])) {
-                        $data['actionSetLinkerId'] = $input->queueData['actionSetLinkerId'];
-                    } else if (property_exists($input, 'actionSetLinkerId')) {
-                        $data['actionSetLinkerId'] = $input->actionSetLinkerId;
-                    }
-
-                    foreach ($chunks as $index => $ids) {
-                        $jobEntity = $this->getEntityManager()->getEntity('Job');
-
-                        $jobEntity->set([
-                            'name'    => $action->get('name') . " (" . ($index + 1) . "/" . count($chunks) . ")",
-                            'type'    => 'ActionHandler',
-                            'payload' => array_merge($data, ['targetIds' => $ids])
-                        ]);
-                        $this->getEntityManager()->saveEntity($jobEntity);
-                    }
-
-                    return true;
-                }
-
-                $collection = $repository->find($selectParams);
+                return true;
             }
 
+            if ($count > $this->getConfig()->get('massUpdateMaxCountWithoutJob', 200)) {
+                // build chunks
+                $chunks = [];
+                $chunkSize = $this->getConfig()->get('massUpdateMaxChunkSize', 3000);
+
+                $offset = 0;
+
+                $select = ['id'];
+                $orderBy = 'id';
+                if (!empty($this->getMetadata()->get(['entityDefs', $searchEntityType, 'fields', 'createdAt']))) {
+                    $orderBy = 'createdAt';
+                    $select[] = $orderBy;
+                }
+
+                while (true) {
+                    $collection = $repository
+                        ->select($select)
+                        ->limit($offset, $chunkSize)
+                        ->order($orderBy)
+                        ->find($selectParams);
+
+                    $offset = $offset + $chunkSize;
+                    $ids = array_column($collection->toArray(), 'id');
+                    if (empty($ids)) {
+                        break;
+                    }
+
+                    $chunks[] = $ids;
+                }
+
+                $data = [
+                    'actionExecutionId' => $execution->get('id'),
+                    'sourceEntity'      => $action->get('sourceEntity'),
+                    'sourceEntityId'    => $sourceEntity->id ?? null
+                ];
+                if (property_exists($input, 'queueData') && !empty($input->queueData['actionSetLinkerId'])) {
+                    $data['actionSetLinkerId'] = $input->queueData['actionSetLinkerId'];
+                } elseif (property_exists($input, 'actionSetLinkerId')) {
+                    $data['actionSetLinkerId'] = $input->actionSetLinkerId;
+                }
+
+                foreach ($chunks as $index => $ids) {
+                    $jobEntity = $this->getEntityManager()->getEntity('Job');
+                    $jobEntity->set([
+                        'name'    => $action->get('name') . " (" . ($index + 1) . "/" . count($chunks) . ")",
+                        'type'    => 'MassUpdate',
+                        'payload' => array_merge($data, ['ids' => $ids])
+                    ]);
+                    $this->getEntityManager()->saveEntity($jobEntity);
+                }
+
+                return true;
+            }
+
+            $collection = $repository->find($selectParams);
 
             $result = false;
             foreach ($collection as $entity) {
-                try {
-                    $repository->putToCache($entity->get('id'), $entity);
-                    if ($this->updateEntity($entity, $sourceEntity, $action, $input)) {
-                        $result = true;
-                    }
-                } catch (Forbidden $e) {
-                } catch (NotFound $e) {
-                } catch (BadRequest $e) {
-                } catch (\Throwable $e) {
-                    $GLOBALS['log']->error("Update Action failed: " . $e->getMessage());
+                $repository->putToCache($entity->get('id'), $entity);
+                if ($this->updateEntity($entity, $sourceEntity, $execution, $input)) {
+                    $result = true;
                 }
             }
+
+            $execution->set('status', 'done');
+            $this->getEntityManager()->saveEntity($execution);
+
             return $result;
         } else {
             if (empty($sourceEntity)) {
@@ -137,17 +131,30 @@ class Update extends AbstractAction
             }
         }
 
-        return $this->updateEntity($sourceEntity, $sourceEntity, $action, $input);
+        $result = $this->updateEntity($sourceEntity, $sourceEntity, $execution, $input);
+
+        $execution->set('status', 'done');
+        $this->getEntityManager()->saveEntity($execution);
+
+        return $result;
     }
 
 
-    protected function updateEntity(Entity $entity, ?Entity $triggeredEntity, Entity $action, \stdClass $input): bool
+    public function updateEntity(Entity $entity, ?Entity $triggeredEntity, ActionExecution $execution, \stdClass $input): bool
     {
+        $action = $execution->get('action');
         $actionData = $action->get('data');
 
         if (empty($actionData->field) || empty($actionData->field->updateType)) {
             return false;
         }
+
+        $log = $this->getEntityManager()->getRepository('ActionExecutionLog')->get();
+        $log->set([
+            'actionExecutionId' => $execution->id,
+            'entityName'        => $entity->getEntityType(),
+            'entityId'          => $entity->get('id')
+        ]);
 
         $inputData = null;
         switch ($actionData->field->updateType) {
@@ -167,13 +174,21 @@ class Update extends AbstractAction
                     $outputJson = $this->container->get('twig')->renderTemplate($actionData->field->updateScript, $templateData);
                     $inputData = @json_decode((string)$outputJson);
                     if (empty($inputData) && !empty(trim($outputJson))) {
-                        throw new Error("Invalid Json for Update: " . $outputJson);
+                        $log->set('type', 'error');
+                        $log->set('message', "Invalid Json for Update: " . $outputJson);
+                        $this->getEntityManager()->saveEntity($log);
+
+                        return false;
                     }
                 }
                 break;
         }
 
         if ($inputData === null) {
+            $log->set('type', 'error');
+            $log->set('message', "Payload is empty. Please check Script.");
+            $this->getEntityManager()->saveEntity($log);
+
             return false;
         }
 
@@ -193,7 +208,13 @@ class Update extends AbstractAction
 
         try {
             $service->updateEntity($entity->get('id'), $inputData);
-        } catch (NotModified $e) {
+            $log->set('type', 'update');
+            $this->getEntityManager()->saveEntity($log);
+        } catch (Forbidden|NotModified|NotFound $e) {
+        } catch (\Throwable $e) {
+            $log->set('type', 'error');
+            $log->set('message', $e->getMessage());
+            $this->getEntityManager()->saveEntity($log);
         }
 
         return true;

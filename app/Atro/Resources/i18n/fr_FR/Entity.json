@@ -9,19 +9,19 @@
     "hideFieldTypeFilters": "Masquer les filtres de type de champ",
     "streamDisabled": "Désactiver le panel des activités",
     "iconClass": "Icône",
-    "sortBy": "Champ de commande par défaut",
-    "sortDirection": "Sens de l'ordre par défaut",
+    "sortBy": "Champ de tri par défaut",
+    "sortDirection": "Direction de tri par défaut",
     "statusField": "Champ de statut",
     "kanbanViewMode": "Vue Kanban",
     "kanbanStatusIgnoreList": "Listes ignorées dans la vue Kanban",
-    "deleteWithoutConfirmation": "Supprimer sans confirmation",
+    "deleteWithoutConfirmation": "Suppression sans confirmation",
     "autoDeleteAfterDays": "Période de suppression automatique, en jours",
     "clearDeletedAfterDays": "Période de suppression permanente, en jours",
-    "modifiedExtendedRelations": "Relations effectuant la modification date/heure",
+    "modifiedExtendedRelations": "Relations affectant la modification date/heure",
     "duplicatableRelations": "Relations duplicables",
-    "hasAssignedUser": "Activer l'utilisateur assigné",
-    "hasTeam": "Permettre aux équipes de travailler",
-    "hasOwner": "Activer le propriétaire",
+    "hasAssignedUser": "Activer la fonction d'utilisateur assigné",
+    "hasTeam": "Activer les équipes",
+    "hasOwner": "Activer la fonction d'utilisateur propriétaire",
     "multiParents": "Parents multiples",
     "dragAndDrop": "Glisser-déposer",
     "fieldValueInheritance": "Héritage des valeurs des champs",
@@ -30,18 +30,22 @@
     "unInheritedRelations": "Relations non héritées",
     "fields": "Champs",
     "auditedDisabledFields": "Pas d'enregistrement d'activité pour les champs",
-    "auditedEnabledRelations": "Enregistrer l'activité des relations",
+    "auditedEnabledRelations": "Enregistrer dans le panneau Activités les relations",
     "hasAttribute": "A des attributs",
     "hasClassification": "A des classifications",
-    "singleClassification": "Classification unique uniquement",
-    "disableAttributeLinking": "Désactiver le lien d'attribut direct",
-    "hasAssociate": "Associés de Has",
+    "singleClassification": "Une classification uniquement",
+    "disableAttributeLinking": "Désactiver le lien direct à un attribut",
+    "hasAssociate": "À des Associés",
     "textFilterFields": "Champs du filtre de texte",
     "nonDuplicatableFields": "Champs non dupliqués",
     "deleteValuesAfterUnlinkingClassification": "Supprimer les valeurs d'attributs après avoir dissocié les classifications",
     "linkAttributesWithClassificationAutomatically": "Lier automatiquement les attributs à la classification",
     "primaryEntity": "Entité primaire",
-    "derivedEntities": "Entités dérivées"
+    "role": "Rôle",
+    "hasStaging": "Activer la préproduction",
+    "stagingEntity": "Entité de préproduction",
+    "matchDuplicates": "Apparier les doublons",
+    "matchMasterRecords": "Apparier les enregistrements de référence"
   },
   "options": {
     "type": {
@@ -53,31 +57,35 @@
     "sortDirection": {
       "asc": "Ascendante",
       "desc": "Descente"
+    },
+    "role": {
+      "staging": "Préproduction"
     }
   },
   "labels": {
-    "accessManagement": "Gestion de l'accès",
+    "accessManagement": "Gestion des accès",
     "hierarchyManagement": "Gestion de la hiérarchie",
     "other": "Autre",
-    "resetToDefault": "Rétablissement des valeurs par défaut",
-    "attributes": "Attributs"
+    "resetToDefault": "Réinitialiser par défaut",
+    "attributes": "Attributs",
+    "mdm": "Gestion des données de référence"
   },
   "confirmations": {
-    "resetToDefault": "Êtes-vous sûr de vouloir rétablir la configuration par défaut ?"
+    "resetToDefault": "Êtes-vous sûr de vouloir réinitialiser la configuration par défaut ?"
   },
   "tooltips": {
     "clearDeletedAfterDays": "Les enregistrements de cette entité sont définitivement supprimés XX jours après la date de suppression.",
     "autoDeleteAfterDays": "Les enregistrements de cette entité sont supprimés XX jours après la date de la dernière modification.",
     "disabled": "Vérifiez si vous n'avez pas besoin de cette entité dans votre système.",
-    "statusField": "Les mises à jour de ce champ sont enregistrées dans Activités.",
+    "statusField": "Les mises à jour de ce champ sont repertoriées dans Activités.",
     "deleteWithoutConfirmation": "Si cette case est cochée, l'enregistrement individuel est supprimé sans confirmation de l'utilisateur. La suppression de plusieurs enregistrements doit encore être confirmée.",
     "modifiedExtendedRelations": "Les changements dans ces relations entraîneront la mise à jour de la date et de l'heure \"Modifié le\".",
     "dragAndDrop": "Cette option active l'ordre de tri de la hiérarchie. Cela signifie qu'aucun autre tri n'est possible dans la navigation hiérarchique.",
     "unInheritedFields": "Les valeurs de ces champs ne sont pas héritées de l'élément parent.",
     "unInheritedRelations": "Les relations avec ces entités ne seront pas héritées de l'élément parent.",
-    "hasAssignedUser": "Activer l'utilisateur assigné pour la gestion de l'accès.",
-    "hasTeam": "Activez les équipes pour la gestion des accès.",
-    "hasOwner": "Activer le propriétaire pour la gestion de l'accès.",
+    "hasAssignedUser": "Activer \"utilisateur assigné\" pour la gestion des accès.",
+    "hasTeam": "Activez la fonction \"équipes\" pour la gestion des accès.",
+    "hasOwner": "Activer la fonction \"propriétaire\" pour la gestion de l'accès.",
     "streamDisabled": "Si cette option est cochée, aucun panneau Activités ne s'affiche sur la page Détails de l'enregistrement. Vous ne pourrez pas ajouter de notes.",
     "disableActionHistory": "Si cette case est cochée, aucune action de l'utilisateur sur les enregistrements de cette entité ne sera enregistrée.",
     "auditedDisabledFields": "Les modifications apportées à ces champs ne sont pas affichées en tant qu'activité.",
@@ -85,9 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Si un attribut est directement lié à un enregistrement et que cet enregistrement est lié à une classification, l'attribut sera également lié à cette classification."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {enfants} ne doivent pas figurer tous les deux dans les relations avec date/heure de modification.",
-    "entityAlreadyHasAttributesInUse": "Has Attribute param ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} et {children} ne doivent pas figurer tous les deux dans les relations affectant la date/l'heure de modification.",
+    "entityAlreadyHasAttributesInUse": "\"A des attributs\" ne peut pas être désactivé. Veuillez d'abord supprimer tous les attributs associés.",
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
-    "entityTypeIsNotSuitableForAssociates": "Ce Type d'entité ne peut pas contenir le paramètre \"A des associés\". Seuls les types \"Base\" et \"Hiérarchie\" sont autorisés à en disposer."
+    "entityTypeIsNotSuitableForAssociates": "Ce type d’entité ne peut pas inclure le paramètre « A des associés ». Seuls les types « Base » et « Hiérarchie » sont autorisés.",
+    "derivativeWithSuchRoleExists": "Il existe déjà une entité dérivée qui remplit cette fonction.",
+    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée."
   }
 }

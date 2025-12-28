@@ -2,7 +2,7 @@
   "fields": {
     "classification": "Классификация",
     "attribute": "Атрибут",
-    "isRequired": "Обязательно",
+    "isRequired": "Обязательный",
     "isReadOnly": "Только для чтения",
     "isProtected": "Защищенный",
     "maxLength": "Максимальная длина",
@@ -25,7 +25,7 @@
     "enableConditionalReadOnly": "Включить Только для чтения",
     "enableConditionalProtected": "Включить защиту",
     "enableConditionalDisableOptions": "Включить Отключенные опции",
-    "conditionalRequired": "Обязательно",
+    "conditionalRequired": "Обязательный",
     "conditionalVisible": "Видимый",
     "conditionalReadOnly": "Только для чтения",
     "conditionalProtected": "Защищенный",

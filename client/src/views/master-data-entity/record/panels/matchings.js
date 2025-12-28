@@ -52,8 +52,8 @@ Espo.define('views/master-data-entity/record/panels/matchings', ['views/record/p
                     condition: 'OR',
                     rules: [
                         {
-                            id: 'sourceEntity',
-                            field: 'sourceEntity',
+                            id: 'entity',
+                            field: 'entity',
                             value: [this.model.id],
                             type: 'string',
                             operator: 'in'

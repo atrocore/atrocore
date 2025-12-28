@@ -3,7 +3,13 @@
     "incomingWebhook": "Webhook in arrivo",
     "scheduledJob": "Lavoro programmato",
     "workflow": "Flusso di lavoro",
-    "statusMessage": "Messaggio di stato"
+    "statusMessage": "Messaggio di stato",
+    "failedCount": "Fallito",
+    "startedAt": "Iniziato a",
+    "finishedAt": "Finito a",
+    "logs": "Registri",
+    "createdCount": "Creato",
+    "updatedCount": "Aggiornato"
   },
   "options": {
     "type": {
@@ -14,7 +20,8 @@
     },
     "status": {
       "failed": "Fallito",
-      "executed": "Eseguito"
+      "running": "In esecuzione",
+      "done": "Fatto"
     }
   }
 }

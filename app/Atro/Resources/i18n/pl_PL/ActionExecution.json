@@ -3,7 +3,13 @@
     "incomingWebhook": "Przychodzący Webhook",
     "scheduledJob": "Zaplanowane zadanie",
     "workflow": "Przepływ pracy",
-    "statusMessage": "Komunikat o statusie"
+    "statusMessage": "Komunikat o statusie",
+    "failedCount": "Niepowodzenie",
+    "createdCount": "Utworzony",
+    "updatedCount": "Zaktualizowane",
+    "startedAt": "Rozpoczęto od",
+    "finishedAt": "Zakończono w",
+    "logs": "Dzienniki"
   },
   "options": {
     "type": {
@@ -13,8 +19,9 @@
       "workflow": "Przepływ pracy"
     },
     "status": {
-      "executed": "Wykonano",
-      "failed": "Niepowodzenie"
+      "failed": "Niepowodzenie",
+      "running": "Trwa",
+      "done": "Gotowe"
     }
   }
 }

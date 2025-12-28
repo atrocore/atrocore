@@ -27,9 +27,11 @@
     "applyToPreselectedRecords": "Apply to pre-selected records",
     "updateType": "Update Type",
     "updateFields": "Update Fields",
-    "updateScript": "Script"
+    "updateScript": "Script",
+    "executions": "Executions"
   },
   "labels": {
+    "allLogs": "All Logs",
     "execute": "Execute",
     "Parameters": "Parameters",
     "fieldsPanel": "Update"
@@ -78,6 +80,6 @@
     "executeAs": "Specify which user the system will use to perform the action"
   },
   "exceptions": {
-    "forEditModeOnly": "Action '%s' is only available in edit mode and cannot be used here."
+    "forEditModeOnly": "The action '%s' is only available in edit mode and cannot be used here."
   }
 }

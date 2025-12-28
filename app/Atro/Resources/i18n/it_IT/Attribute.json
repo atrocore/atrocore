@@ -46,18 +46,19 @@
     "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",
     "attributeIsUsedInClassifications": "L'attributo è utilizzato nelle classificazioni. Per favore, aggiorni prima le classificazioni.",
     "invalidType": "Il tipo di attributo '{type}' non è valido.",
-    "wrongAttributeEntity": "È stata scelta un'Entità non consentita. L'entità deve essere la stessa del Pannello attributi e del Gruppo attributi.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "L'Entità dell'attributo deve essere la stessa dell'Attributo composito.",
+    "wrongAttributeEntity": "L'entità selezionata non è consentita. L'entità deve essere la stessa del pannello Attributi e del gruppo Attributi.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "L'entità attributo deve essere la stessa dell'attributo composito.",
     "attributeNotBelongToEntity": "L'attributo non appartiene a questa Entità.",
     "entityCannotBeChanged": "L'entità non può essere modificata.",
     "compositeAttributeNotFound": "Attributo composito non trovato.",
-    "compositeAttributeCannotBeChild": "L'attributo composito non può essere figlio.",
+    "compositeAttributeCannotBeChild": "Un attributo composito non può essere un figlio.",
     "fileTypeCannotBeDeleted": "Il record non può essere cancellato perché è utilizzato nell'attributo '%s'.",
     "maxLessThanMin": "Min dovrebbe essere inferiore a Max.",
     "noAttributeConverterFound": "La conversione dell'attributo dal tipo '%s' a '%s' è impossibile.",
     "attributeValueIsInUse": "Il valore dell'attributo è in uso e non può essere cancellato.",
     "youCantChangeFieldOfTypeInAttribute": "Non può cambiare il tipo di attributo.",
-    "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già."
+    "attributeWithSuchCodeAlreadyExist": "L'attributo con tale codice esiste già.",
+    "entityNotAllowToChoose": "L'entità non può essere scelta."
   },
   "labels": {
     "Classification": "Classificazione",

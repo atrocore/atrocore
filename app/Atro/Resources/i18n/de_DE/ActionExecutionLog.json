@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "actionExecution": "Aktions-Ausführung",
+    "type": "Typ",
+    "entityRecord": "Entitätsdatensatz",
+    "entityName": "Entitäts-Name",
+    "entityId": "Entitäts-ID",
+    "message": "Nachricht",
+    "payload": "Nutzdaten"
+  },
+  "options": {
+    "type": {
+      "create": "Erstellen",
+      "update": "Aktualisierung",
+      "delete": "Löschen",
+      "error": "Fehler"
+    }
+  }
+}

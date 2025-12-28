@@ -38,6 +38,8 @@ class V2Dot2Dot0 extends Base
         $this->step9();
         $this->step10();
         $this->step11();
+
+        $this->step12();
     }
 
     protected function step1(): void
@@ -64,14 +66,18 @@ class V2Dot2Dot0 extends Base
         $this->exec("DROP TABLE matched_record");
 
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 ON matched_record (hash, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CREATED_BY_ID ON matched_record (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_MODIFIED_BY_ID ON matched_record (modified_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_STAGING_ENTITY ON matched_record (type, source_entity, source_entity_id)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_MASTER_ENTITY ON matched_record (type, master_entity, master_entity_id)");
         } else {
-            $this->exec("CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 (hash, deleted), INDEX IDX_MATCHED_RECORD_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHED_RECORD_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHED_RECORD_STAGING_ENTITY (type, source_entity, source_entity_id), INDEX IDX_MATCHED_RECORD_MASTER_ENTITY (type, master_entity, master_entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec(
+                "CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 (hash, deleted), INDEX IDX_MATCHED_RECORD_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHED_RECORD_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHED_RECORD_STAGING_ENTITY (type, source_entity, source_entity_id), INDEX IDX_MATCHED_RECORD_MASTER_ENTITY (type, master_entity, master_entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
         }
 
         if (file_exists('data/reference-data/Matching.json')) {
@@ -105,20 +111,26 @@ class V2Dot2Dot0 extends Base
     protected function step5(): void
     {
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE matching (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', code VARCHAR(255) DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, minimum_score INT DEFAULT 100, entity VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matching (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', code VARCHAR(255) DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, minimum_score INT DEFAULT 100, entity VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_DC10F28977153098EB3B4E33 ON matching (code, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_CREATED_BY_ID ON matching (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_MODIFIED_BY_ID ON matching (modified_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_OWNER_USER_ID ON matching (owner_user_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_ASSIGNED_USER_ID ON matching (assigned_user_id, deleted)");
 
-            $this->exec("CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, master_field VARCHAR(255) DEFAULT NULL, source_field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, master_field VARCHAR(255) DEFAULT NULL, source_field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MATCHING_ID ON matching_rule (matching_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID ON matching_rule (matching_rule_set_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_CREATED_BY_ID ON matching_rule (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID ON matching_rule (modified_by_id, deleted)");
 
-            $this->exec("CREATE TABLE user_followed_matching (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE user_followed_matching (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_UNIQUE_RELATION ON user_followed_matching (deleted, matching_id, user_id)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_BY_ID ON user_followed_matching (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_BY_ID ON user_followed_matching (modified_by_id, deleted)");
@@ -127,7 +139,9 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_AT ON user_followed_matching (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_AT ON user_followed_matching (modified_at, deleted)");
 
-            $this->exec("CREATE TABLE user_followed_matching_rule (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_rule_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE user_followed_matching_rule (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_rule_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_UNIQUE_RELATION ON user_followed_matching_rule (deleted, matching_rule_id, user_id)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_BY_ID ON user_followed_matching_rule (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_BY_ID ON user_followed_matching_rule (modified_by_id, deleted)");
@@ -136,10 +150,18 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_AT ON user_followed_matching_rule (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_AT ON user_followed_matching_rule (modified_at, deleted)");
         } else {
-            $this->exec("CREATE TABLE matching (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', code VARCHAR(255) DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, minimum_score INT DEFAULT 100, entity VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_DC10F28977153098EB3B4E33 (code, deleted), INDEX IDX_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHING_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MATCHING_ASSIGNED_USER_ID (assigned_user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, master_field VARCHAR(255) DEFAULT NULL, source_field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MATCHING_RULE_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID (matching_rule_set_id, deleted), INDEX IDX_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE user_followed_matching (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_UNIQUE_RELATION (deleted, matching_id, user_id), INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MATCHING_ID (matching_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE user_followed_matching_rule (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_rule_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_UNIQUE_RELATION (deleted, matching_rule_id, user_id), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MATCHING_RULE_ID (matching_rule_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec(
+                "CREATE TABLE matching (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', code VARCHAR(255) DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, minimum_score INT DEFAULT 100, entity VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_DC10F28977153098EB3B4E33 (code, deleted), INDEX IDX_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHING_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MATCHING_ASSIGNED_USER_ID (assigned_user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, master_field VARCHAR(255) DEFAULT NULL, source_field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MATCHING_RULE_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID (matching_rule_set_id, deleted), INDEX IDX_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE user_followed_matching (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_UNIQUE_RELATION (deleted, matching_id, user_id), INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MATCHING_ID (matching_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE user_followed_matching_rule (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, matching_rule_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MATCHING_RULE_UNIQUE_RELATION (deleted, matching_rule_id, user_id), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MATCHING_RULE_ID (matching_rule_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MATCHING_RULE_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
         }
 
         if (file_exists("data/reference-data/Matching.json")) {
@@ -150,7 +172,11 @@ class V2Dot2Dot0 extends Base
                     $qb->insert('matching');
                     foreach ($matching as $field => $value) {
                         $column = Util::toUnderScore($field);
-                        if (!in_array($column, ['id', 'name', 'code', 'created_at', 'modified_at', 'type', 'description', 'minimum_score', 'entity', 'source_entity', 'master_entity', 'is_active', 'created_by_id', 'modified_by_id'])) {
+                        if (!in_array(
+                            $column,
+                            ['id', 'name', 'code', 'created_at', 'modified_at', 'type', 'description', 'minimum_score', 'entity', 'source_entity', 'master_entity', 'is_active',
+                             'created_by_id', 'modified_by_id']
+                        )) {
                             continue;
                         }
                         $qb->setValue($column, ':' . $field)->setParameter($field, $value, Mapper::getParameterType($value));
@@ -197,7 +223,11 @@ class V2Dot2Dot0 extends Base
                     $qb->insert('matching_rule');
                     foreach ($rule as $field => $value) {
                         $column = Util::toUnderScore($field);
-                        if (!in_array($column, ['id', 'name', 'code', 'created_at', 'modified_at', 'weight', 'type', 'master_field', 'source_field', 'operator', 'matching_id', 'matching_rule_set_id', 'created_by_id', 'modified_by_id'])) {
+                        if (!in_array(
+                            $column,
+                            ['id', 'name', 'code', 'created_at', 'modified_at', 'weight', 'type', 'master_field', 'source_field', 'operator', 'matching_id', 'matching_rule_set_id',
+                             'created_by_id', 'modified_by_id']
+                        )) {
                             continue;
                         }
 
@@ -218,7 +248,9 @@ class V2Dot2Dot0 extends Base
         $this->exec("ALTER TABLE matched_record ADD matching_id VARCHAR(36) DEFAULT NULL");
 
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE master_data_entity (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', mapping_script TEXT DEFAULT NULL, description TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE master_data_entity (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', mapping_script TEXT DEFAULT NULL, description TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_CREATED_BY_ID ON master_data_entity (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_BY_ID ON master_data_entity (modified_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_OWNER_USER_ID ON master_data_entity (owner_user_id, deleted)");
@@ -226,7 +258,9 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_CREATED_AT ON master_data_entity (created_at, deleted)");
             $this->exec("CREATE INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_AT ON master_data_entity (modified_at, deleted)");
 
-            $this->exec("CREATE TABLE user_followed_master_data_entity (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, master_data_entity_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE user_followed_master_data_entity (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, master_data_entity_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_UNIQUE_RELATION ON user_followed_master_data_entity (deleted, master_data_entity_id, user_id)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_CREATED_BY_ID ON user_followed_master_data_entity (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_BY_ID ON user_followed_master_data_entity (modified_by_id, deleted)");
@@ -236,8 +270,12 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_AT ON user_followed_master_data_entity (modified_at, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_MATCHING_ID ON matched_record (matching_id, deleted)");
         } else {
-            $this->exec("CREATE TABLE master_data_entity (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', mapping_script LONGTEXT DEFAULT NULL, description LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MASTER_DATA_ENTITY_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_ASSIGNED_USER_ID (assigned_user_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_CREATED_AT (created_at, deleted), INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE user_followed_master_data_entity (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, master_data_entity_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_UNIQUE_RELATION (deleted, master_data_entity_id, user_id), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MASTER_DATA_ENTITY_ID (master_data_entity_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec(
+                "CREATE TABLE master_data_entity (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', mapping_script LONGTEXT DEFAULT NULL, description LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MASTER_DATA_ENTITY_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_ASSIGNED_USER_ID (assigned_user_id, deleted), INDEX IDX_MASTER_DATA_ENTITY_CREATED_AT (created_at, deleted), INDEX IDX_MASTER_DATA_ENTITY_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE user_followed_master_data_entity (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, master_data_entity_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_UNIQUE_RELATION (deleted, master_data_entity_id, user_id), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MASTER_DATA_ENTITY_ID (master_data_entity_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_MASTER_DATA_ENTITY_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
         }
 
         try {
@@ -330,7 +368,7 @@ class V2Dot2Dot0 extends Base
                     }
                     if (!empty($fieldDefs['conditionalProperties']['required'])) {
                         unset($data['fields'][$field]['conditionalProperties']['required']);
-                        if (empty($data['fields'][$field]['conditionalProperties'])){
+                        if (empty($data['fields'][$field]['conditionalProperties'])) {
                             unset($data['fields'][$field]['conditionalProperties']);
                         }
                         $changed = true;
@@ -354,9 +392,12 @@ class V2Dot2Dot0 extends Base
                     $table = $toSchema->getTable($tableName);
                     foreach ($entityDefs['fields'] as $fieldName => $fieldDefs) {
                         $columnName = Util::toUnderScore($fieldName . 'UnitId');
-                        if (!empty($fieldDefs['measureId']) && !empty($fieldDefs['defaultUnit']) &&
-                            in_array($fieldDefs['type'] ?? null, ['varchar', 'int', 'float', 'rangeInt', 'rangeFloat']) &&
-                            $table->hasColumn($columnName) && empty($table->getColumn($columnName)->getDefault())) {
+                        if (!empty($fieldDefs['measureId']) && !empty($fieldDefs['defaultUnit'])
+                            && in_array(
+                                $fieldDefs['type'] ?? null, ['varchar', 'int', 'float', 'rangeInt', 'rangeFloat']
+                            )
+                            && $table->hasColumn($columnName)
+                            && empty($table->getColumn($columnName)->getDefault())) {
                             $table->getColumn($columnName)->setDefault($fieldDefs['defaultUnit']);
                         }
                     }
@@ -380,7 +421,9 @@ class V2Dot2Dot0 extends Base
         $this->exec("TRUNCATE master_data_entity");
 
         if ($this->isPgSQL()) {
-            $this->exec("CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 ON matched_record (hash, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_MATCHING_ID ON matched_record (matching_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CREATED_BY_ID ON matched_record (created_by_id, deleted)");
@@ -388,22 +431,32 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_SOURCE_ENTITY ON matched_record (type, source_entity, source_entity_id)");
             $this->exec("CREATE INDEX IDX_MATCHED_RECORD_MASTER_ENTITY ON matched_record (type, master_entity, master_entity_id)");
 
-            $this->exec("CREATE TABLE matching (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, minimum_score INT DEFAULT 100, matched_records_max INT DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matching (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, minimum_score INT DEFAULT 100, matched_records_max INT DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, is_active BOOLEAN DEFAULT 'false' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE INDEX IDX_MATCHING_CREATED_BY_ID ON matching (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_MODIFIED_BY_ID ON matching (modified_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_OWNER_USER_ID ON matching (owner_user_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_ASSIGNED_USER_ID ON matching (assigned_user_id, deleted)");
 
-            $this->exec("CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', code VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec(
+                "CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', code VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))"
+            );
             $this->exec("CREATE UNIQUE INDEX UNIQ_BACFF97B77153098EB3B4E33 ON matching_rule (code, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MATCHING_ID ON matching_rule (matching_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID ON matching_rule (matching_rule_set_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_CREATED_BY_ID ON matching_rule (created_by_id, deleted)");
             $this->exec("CREATE INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID ON matching_rule (modified_by_id, deleted)");
         } else {
-            $this->exec("CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 (hash, deleted), INDEX IDX_MATCHED_RECORD_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHED_RECORD_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHED_RECORD_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHED_RECORD_SOURCE_ENTITY (type, source_entity, source_entity_id), INDEX IDX_MATCHED_RECORD_MASTER_ENTITY (type, master_entity, master_entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE matching (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, minimum_score INT DEFAULT 100, matched_records_max INT DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHING_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MATCHING_ASSIGNED_USER_ID (assigned_user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
-            $this->exec("CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', code VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_BACFF97B77153098EB3B4E33 (code, deleted), INDEX IDX_MATCHING_RULE_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID (matching_rule_set_id, deleted), INDEX IDX_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec(
+                "CREATE TABLE matched_record (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, source_entity VARCHAR(255) DEFAULT NULL, source_entity_id VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, master_entity_id VARCHAR(255) DEFAULT NULL, score INT DEFAULT NULL, hash VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_A88D469ED1B862B8EB3B4E33 (hash, deleted), INDEX IDX_MATCHED_RECORD_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHED_RECORD_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHED_RECORD_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHED_RECORD_SOURCE_ENTITY (type, source_entity, source_entity_id), INDEX IDX_MATCHED_RECORD_MASTER_ENTITY (type, master_entity, master_entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE matching (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, minimum_score INT DEFAULT 100, matched_records_max INT DEFAULT NULL, entity VARCHAR(255) DEFAULT NULL, master_entity VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, is_active TINYINT(1) DEFAULT '0' NOT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, owner_user_id VARCHAR(36) DEFAULT NULL, assigned_user_id VARCHAR(36) DEFAULT NULL, INDEX IDX_MATCHING_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_MATCHING_OWNER_USER_ID (owner_user_id, deleted), INDEX IDX_MATCHING_ASSIGNED_USER_ID (assigned_user_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
+            $this->exec(
+                "CREATE TABLE matching_rule (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', code VARCHAR(255) DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, weight INT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, field VARCHAR(255) DEFAULT NULL, operator VARCHAR(255) DEFAULT NULL, matching_id VARCHAR(36) DEFAULT NULL, matching_rule_set_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX UNIQ_BACFF97B77153098EB3B4E33 (code, deleted), INDEX IDX_MATCHING_RULE_MATCHING_ID (matching_id, deleted), INDEX IDX_MATCHING_RULE_MATCHING_RULE_SET_ID (matching_rule_set_id, deleted), INDEX IDX_MATCHING_RULE_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_MATCHING_RULE_MODIFIED_BY_ID (modified_by_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB"
+            );
         }
     }
 
@@ -435,6 +488,40 @@ class V2Dot2Dot0 extends Base
                 ->setParameter('id', $row['id'])
                 ->setParameter('searchEntity', $row['target_entity'])
                 ->executeQuery();
+        }
+    }
+
+    protected function step12(): void
+    {
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE TABLE action_execution (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted BOOLEAN DEFAULT 'false', status VARCHAR(255) DEFAULT NULL, status_message TEXT DEFAULT NULL, payload TEXT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, started_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, finished_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_count INT DEFAULT NULL, updated_count INT DEFAULT NULL, failed_count INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, action_id VARCHAR(36) DEFAULT NULL, incoming_webhook_id VARCHAR(36) DEFAULT NULL, scheduled_job_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, workflow_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_ACTION_ID ON action_execution (action_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_SCHEDULED_JOB_ID ON action_execution (scheduled_job_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_CREATED_BY_ID ON action_execution (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_MODIFIED_BY_ID ON action_execution (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_WORKFLOW_ID ON action_execution (workflow_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_NAME ON action_execution (name, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_STATUS ON action_execution (status, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_CREATED_AT ON action_execution (created_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_MODIFIED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_STARTED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_FINISHED_AT ON action_execution (modified_at, deleted)");
+            $this->exec("COMMENT ON COLUMN action_execution.payload IS '(DC2Type:jsonObject)'");
+
+            $this->exec("CREATE TABLE action_execution_log (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', type VARCHAR(10) DEFAULT NULL, entity_name VARCHAR(100) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, message TEXT DEFAULT NULL, payload TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, modified_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, action_execution_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id))");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ACTION_EXECUTION_ID ON action_execution_log (action_execution_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_CREATED_BY_ID ON action_execution_log (created_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_MODIFIED_BY_ID ON action_execution_log (modified_by_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_TYPE ON action_execution_log (type, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_NAME ON action_execution_log (entity_name, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_ID ON action_execution_log (entity_id, deleted)");
+            $this->exec("CREATE INDEX IDX_ACTION_EXECUTION_LOG_CREATED_AT ON action_execution_log (created_at, deleted)");
+            $this->exec("COMMENT ON COLUMN action_execution_log.payload IS '(DC2Type:jsonObject)'");
+            $this->exec("DROP TABLE action_log");
+        } else {
+            $this->exec("CREATE TABLE action_execution (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', status VARCHAR(255) DEFAULT NULL, status_message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', type VARCHAR(255) DEFAULT NULL, started_at DATETIME DEFAULT NULL, finished_at DATETIME DEFAULT NULL, created_count INT DEFAULT NULL, updated_count INT DEFAULT NULL, failed_count INT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_id VARCHAR(36) DEFAULT NULL, incoming_webhook_id VARCHAR(36) DEFAULT NULL, scheduled_job_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, workflow_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_ACTION_ID (action_id, deleted), INDEX IDX_ACTION_EXECUTION_SCHEDULED_JOB_ID (scheduled_job_id, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_WORKFLOW_ID (workflow_id, deleted), INDEX IDX_ACTION_EXECUTION_NAME (name, deleted), INDEX IDX_ACTION_EXECUTION_STATUS (status, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_AT (created_at, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_STARTED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_FINISHED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("CREATE TABLE action_execution_log (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(10) DEFAULT NULL, entity_name VARCHAR(100) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_execution_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_LOG_ACTION_EXECUTION_ID (action_execution_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_TYPE (type, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_NAME (entity_name, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_ID (entity_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
+            $this->exec("DROP TABLE action_log");
         }
     }
 

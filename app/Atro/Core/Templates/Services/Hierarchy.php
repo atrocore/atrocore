@@ -152,6 +152,10 @@ class Hierarchy extends Record
     {
         $entity = $this->getEntity($id);
 
+        if (empty($entity)) {
+            throw new NotFound();
+        }
+
         $treeBranches = [];
         $this->createTreeBranches($entity, $treeBranches);
 

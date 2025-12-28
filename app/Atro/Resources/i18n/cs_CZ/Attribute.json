@@ -83,8 +83,8 @@
     "dropdown": "Pokud je v seznamu více než 300 možností, rozbalovací seznam nepoužívejte."
   },
   "exceptions": {
-    "wrongAttributeEntity": "Není povoleno Subjekt byl vybrán. Entita musí být shodná s Attribute Panel a Attribute Group.",
-    "attributeEntityMustBeSameAsInCompositeAttribute": "Atribut Entita musí být stejný jako v atributu Composite.",
+    "wrongAttributeEntity": "Zvolená entita není povolena. Entita musí být stejná jako panel atributů a skupina atributů.",
+    "attributeEntityMustBeSameAsInCompositeAttribute": "Entita atributu musí být stejná jako v kompozitním atributu.",
     "attributeNotBelongToEntity": "Atribut nepatří této entitě.",
     "entityCannotBeChanged": "Entitu nelze změnit.",
     "compositeAttributeNotFound": "Kompozitní atribut nebyl nalezen.",
@@ -97,6 +97,7 @@
     "attributeWithSuchCodeAlreadyExist": "Atribut s takovým kódem již existuje.",
     "attributeIsUsedInProducts": "Atribut se používá v produktech. Nejprve prosím aktualizujte produkty.",
     "attributeIsUsedInClassifications": "Atribut se používá v klasifikacích. Nejprve prosím aktualizujte klasifikace.",
-    "invalidType": "Typ atributu '{type}' je neplatný"
+    "invalidType": "Typ atributu '{type}' je neplatný",
+    "entityNotAllowToChoose": "Entitu nelze vybrat."
   }
 }

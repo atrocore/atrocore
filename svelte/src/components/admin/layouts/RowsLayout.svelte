@@ -93,7 +93,7 @@
                 onEnd: function (evt) {
                     const toUl = evt.to.closest('.connected')
                     let movedItem = null
-                    if (toUl.classList.contains('disabled') ) {
+                    if (toUl.classList.contains('disabled')) {
                         if (toUl !== ul) {
                             // cancel drop
                             if (evt.oldIndex >= evt.from.children.length) {
@@ -158,6 +158,10 @@
         let data = UserData.get();
 
         return !!(data && data.user && data.user.isAdmin);
+    }
+
+    function canEdit() {
+        return params.dataAttributeList.filter(attr => attr !== 'id' && attr !== 'name').length > 0;
     }
 
     function removeField(item) {
@@ -262,10 +266,10 @@
         <div class="col-sm-5">
             <div class="well">
                 <header>
-                    <h5>{Language.translate('Current Layout', 'LayoutManager')}</h5>
+                    <h5>{Language.translate('Current Layout', 'labels', 'LayoutManager')}</h5>
                     {#if hasAttributes && !['navigation', 'insights', 'relationships'].includes(params.type)}
                         <a href="#"
-                           on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'LayoutManager')}</a>
+                           on:click|preventDefault={addAttribute}>{Language.translate('Add Attribute', 'labels', 'LayoutManager')}</a>
                     {/if}
                 </header>
                 <div class="rows-wrapper">
@@ -277,16 +281,18 @@
                                 </div>
                                 {#if params.editable}
                                     <div class="right">
-                                        {#if isAdmin() && !item.attributeId}
+                                        {#if isAdmin() && !item.attributeId && params.type !== 'insights'}
                                             <a href="javascript:" data-action="change-label" class="change-label"
                                                on:click|preventDefault={() => openLabelDialog(item)}>
                                                 <i class="ph ph-globe-simple"></i>
                                             </a>
                                         {/if}
-                                        <a href="javascript:" data-action="editField" class="edit-field"
-                                           on:click={()=>editField(item)}>
-                                            <i class="ph ph-pencil-simple"></i>
-                                        </a>
+                                        {#if canEdit()}
+                                            <a href="javascript:" data-action="editField" class="edit-field"
+                                               on:click={()=>editField(item)}>
+                                                <i class="ph ph-pencil-simple"></i>
+                                            </a>
+                                        {/if}
                                         {#if !nonRemovableFields.includes(item.name)}
                                             <a href="javascript:" class="remove-field"
                                                on:click={()=>removeField(item)}>
@@ -304,7 +310,7 @@
         <div class="col-sm-1" style="width: 35px"></div>
         <div class="col-sm-5">
             <div class="well">
-                <header>{Language.translate(['navigation', 'insights', 'relationships'].includes(params.type) ? 'Available Panels' : 'Available Fields', 'Admin')}</header>
+                <header>{Language.translate(['navigation', 'insights', 'relationships'].includes(params.type) ? 'Available Panels' : 'Available Fields', 'labels', 'Admin')}</header>
                 <div class="rows-wrapper">
                     {#each availableGroups as group (group.name)}
                         <div class:group={availableGroups.length>1}>

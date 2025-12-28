@@ -11,7 +11,7 @@
     "unlinkAttributeGroupConfirmation": "Jste si jisti, že chcete zrušit propojení všech atributů skupiny atributů?"
   },
   "exceptions": {
-    "attributeGroupSsLinkedWithAttributes": "Skupina atributů je propojena s atributem (atributy). Nejprve zrušte propojení atributů.",
+    "attributeGroupSsLinkedWithAttributes": "Skupina atributů je stále propojena s některými atributy. Nejprve prosím odpojte atributy.",
     "entityIsUsed": "Skupinu atributů nelze odstranit, protože se používá v několika atributech."
   }
 }

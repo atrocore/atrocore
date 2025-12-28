@@ -60,6 +60,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -77,6 +81,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -100,6 +108,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -113,6 +125,10 @@
             {
               "type": "isNotEmpty",
               "attribute": "statusField"
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -215,6 +231,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -237,6 +257,10 @@
                 "Base",
                 "Hierarchy"
               ]
+            },
+            {
+              "type": "isTrue",
+              "attribute": "customizable"
             }
           ]
         }
@@ -571,6 +595,82 @@
         }
       }
     },
+    "role": {
+      "type": "enum",
+      "options": [
+        "staging"
+      ],
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "hasStaging": {
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            }
+          ]
+        }
+      }
+    },
+    "stagingEntity": {
+      "type": "link",
+      "view": "views/fields/link",
+      "protected": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isTrue",
+              "attribute": "hasStaging"
+            },
+            {
+              "type": "in",
+              "attribute": "type",
+              "value": [
+                "Base",
+                "Hierarchy"
+              ]
+            },
+            {
+              "type": "isEmpty",
+              "attribute": "primaryEntityId"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "stagingEntityId"
+            }
+          ]
+        }
+      }
+    },
     "primaryEntity": {
       "type": "link",
       "view": "views/entity/fields/primary-entity",
@@ -605,37 +705,6 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
-            }
-          ]
-        }
-      }
-    },
-    "derivedEntities": {
-      "type": "linkMultiple",
-      "noLoad": true,
-      "conditionalProperties": {
-        "visible": {
-          "conditionGroup": [
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "Base",
-                "Hierarchy"
-              ]
-            },
-            {
-              "type": "or",
-              "value": [
-                {
-                  "type": "isTrue",
-                  "attribute": "isCustom"
-                },
-                {
-                  "type": "isTrue",
-                  "attribute": "derivativeEnabled"
-                }
-              ]
             }
           ]
         }
@@ -883,12 +952,10 @@
   "links": {
     "primaryEntity": {
       "type": "belongsTo",
-      "foreign": "derivedEntities",
       "entity": "Entity"
     },
-    "derivedEntities": {
-      "type": "hasMany",
-      "foreign": "primaryEntity",
+    "stagingEntity": {
+      "type": "belongsTo",
       "entity": "Entity"
     },
     "createdBy": {

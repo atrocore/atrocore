@@ -1,6 +1,6 @@
 {
   "fields": {
-    "entityType": "Entity",
+    "entityType": "Entity Type",
     "isActive": "Active",
     "template": "HTML/CSS template"
   }

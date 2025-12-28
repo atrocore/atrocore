@@ -19200,8 +19200,34 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     border-top: 2px solid var(--primary-border-color);
 }
 
-.compare-entities .list-row >.record-content > div.detail {
+.compare-entities .list-row .record-content > div.detail {
     max-height: calc(100vh - 400px);
     overflow-y: auto;
     overflow-x: hidden;
+    padding-bottom: 30px;
+}
+
+.compare-entities .bottom-layout-bottoms .layout-editor-container {
+    opacity: 1;
+    text-align: center;
+}
+
+.compare-entities .bottom-layout-bottoms {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.compare-entities .bottom-layout-bottoms .layout-editor-container .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #888;
+    font-size: 18px;
+    background-color: transparent;
 }

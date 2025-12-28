@@ -59,6 +59,8 @@ class Base
 
     protected array $textFilterUseContainsAttributeList = [];
 
+    protected array $actionExecutionFilter = [];
+
     public function __construct(EntityManager $entityManager, User $user, Acl $acl, AclManager $aclManager, Metadata $metadata, Config $config, InjectableFactory $injectableFactory)
     {
         $this->entityManager = $entityManager;
@@ -934,6 +936,8 @@ class Base
             ->dispatch('Entity', 'beforeGetSelectParams', new Event(['params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('params');
 
+        $this->prepareActionExecutionFilter($params);
+
         $this->selectParameters = $params;
 
         $this->prepareForExtensibleEnumOption($params);
@@ -1027,6 +1031,76 @@ class Base
         return $this
             ->dispatch('Entity', 'afterGetSelectParams', new Event(['result' => $result, 'params' => $params, 'entityType' => $this->entityType]))
             ->getArgument('result');
+    }
+
+    public function applyActionExecutionFilter(QueryBuilder $qb, IEntity $relEntity, array $params, Mapper $mapper): void
+    {
+        if (empty($this->actionExecutionFilter)) {
+            return;
+        }
+
+        if ($this->actionExecutionFilter['ruleId'] === 'createdCountFilterActionExecution') {
+            $type = 'create';
+        } elseif ($this->actionExecutionFilter['ruleId'] === 'updatedCountFilterActionExecution') {
+            $type = 'update';
+        } else {
+            return;
+        }
+
+        if ($this->actionExecutionFilter['operator'] === 'in') {
+            $operator = 'IN';
+        } elseif ($this->actionExecutionFilter['operator'] === 'not_in') {
+            $operator = 'NOT IN';
+        } else {
+            return;
+        }
+
+        $alias = $mapper->getQueryConverter()->getMainTableAlias();
+
+        if ($this->getEntityManager()->getRepository('ActionExecutionLog')->hasClickHouse()) {
+            $collection = $this->getEntityManager()->getRepository('ActionExecutionLog')
+                ->where([
+                    'actionExecutionId' => $this->actionExecutionFilter['actionExecutionId'],
+                    'type'              => $type
+                ])
+                ->find();
+
+            $qb
+                ->andWhere("$alias.id $operator (:entityIds)")
+                ->setParameter("entityIds", array_column($collection->toArray(), 'entityId'), Connection::PARAM_STR_ARRAY);
+        } else {
+            $qb->andWhere(
+                "$alias.id $operator (SELECT ael.entity_id FROM action_execution_log ael WHERE ael.deleted=:false AND ael.type=:actionType AND ael.action_execution_id=:actionExecutionId)"
+            );
+
+            $qb->setParameter('false', false, ParameterType::BOOLEAN);
+            $qb->setParameter('actionType', $type);
+            $qb->setParameter('actionExecutionId', $this->actionExecutionFilter['actionExecutionId']);
+        }
+    }
+
+    protected function prepareActionExecutionFilter(&$params): void
+    {
+        foreach ($params['where'] ?? [] as $key => $row) {
+            foreach ($row['rules'] ?? [] as $rule) {
+                if (empty($rule['id'])) {
+                    continue;
+                }
+
+                if (in_array($rule['id'], ['createdCountFilterActionExecution', 'updatedCountFilterActionExecution'])) {
+                    $this->actionExecutionFilter = [
+                        'ruleId'            => $rule['id'],
+                        'operator'          => $rule['operator'],
+                        'actionExecutionId' => $rule['value'][0] ?? null
+                    ];
+
+                    unset($params['where'][$key]);
+                    $params['where'] = array_values($params['where']);
+
+                    $params['filterCallbacks'][] = [$this, 'applyActionExecutionFilter'];
+                }
+            }
+        }
     }
 
     protected function prepareForExtensibleEnumOption(array &$params): void
@@ -1368,6 +1442,7 @@ class Base
                 $foreignRepository = $this->getEntityManager()->getRepository($foreignEntity);
                 $sp = $this->createSelectManager($foreignEntity)->getSelectParams(['where' => $item['subQuery']], true, true);
                 $sp['select'] = [$foreignField];
+                $sp['additionalSelectColumns'] = [];
                 $qb1 = $foreignRepository->getMapper()->createSelectQueryBuilder($foreignRepository->get(), $sp, true);
                 $item['value'] = [
                     "innerSql" => [

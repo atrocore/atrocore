@@ -2,7 +2,7 @@
   "fields": {
     "classification": "Classification",
     "attribute": "Attribut",
-    "isRequired": "Exigée",
+    "isRequired": "Requis",
     "isReadOnly": "Lecture seule",
     "isProtected": "Protegé",
     "maxLength": "Longueur maximale",
@@ -21,7 +21,7 @@
     "min": "Min",
     "max": "Max",
     "conditionalProtected": "Protegé",
-    "conditionalRequired": "Exigée",
+    "conditionalRequired": "Requis",
     "conditionalReadOnly": "Lecture seule",
     "conditionalDisableOptions": "Options désactivées",
     "enableConditionalRequired": "Activation requise",

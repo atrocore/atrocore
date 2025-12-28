@@ -5,7 +5,7 @@
     "release": "Zwolnienie",
     "synonyms": "Synonimy",
     "code": "Kod",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "classifications": "Klasyfikacje",
     "classificationAttributes": "Atrybuty klasyfikacji",
     "type": "Typ"
@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Podmiot nie może zostać zmieniony.",
     "classificationForToAnotherEntity": "Klasyfikacja nie może być powiązana z tym rekordem, ponieważ jest używana dla innego Podmiotu.",
-    "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta."
+    "classificationHasRecords": "Klasyfikacja z powiązanymi rekordami nie może zostać usunięta.",
+    "entityNotAllowToChoose": "Nie można wybrać podmiotu."
   }
 }

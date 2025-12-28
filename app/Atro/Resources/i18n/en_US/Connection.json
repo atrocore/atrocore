@@ -16,7 +16,7 @@
     "vendorOauthScopes": "Vendor Oauth Scopes",
     "oauthConsumerKey": "Oauth Consumer Key",
     "oauthConsumerSecret": "Oauth Consumer Secret",
-    "requestTokenUrl": "Request token url",
+    "requestTokenUrl": "Request Token URL",
     "accessTokenUrl": "Access Token Url",
     "oauthVerifier": "Oauth Verifier",
     "oauthToken": "Access Token",

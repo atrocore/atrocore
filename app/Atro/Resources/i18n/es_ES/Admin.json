@@ -91,7 +91,8 @@
     "selection": "Selección",
     "navigation": "Navegación",
     "insights": "Perspectivas",
-    "summary": "Resumen"
+    "summary": "Resumen",
+    "selectionRelations": "Relaciones de selección"
   },
   "fieldTypes": {
     "array": "Lista ordenable",
@@ -133,7 +134,7 @@
     "script": "Guión",
     "extensibleMultiEnum": "Lista multivalor",
     "markdown": "Markdown",
-    "extensibleEnum": "List",
+    "extensibleEnum": "Lista",
     "multiLanguage": "Códigos lingüísticos",
     "measure": "Medida"
   },
@@ -195,7 +196,7 @@
     "addresses": "Son detalles de ubicación estructurados para las cuentas, lo que permite una identificación, facturación y operaciones de envío precisas.",
     "lists": "Gestione sus listas y sus opciones para listas simples o multivalor.",
     "emailTemplates": "Administre plantillas de correo electrónico para entrega de correo electrónico manual o automatizada (no para notificaciones estándar).",
-    "matchings": "Las correspondencias ayudan a identificar registros similares entre entidades utilizando reglas definidas por el usuario.",
+    "matchings": "Las coincidencias ayudan a identificar registros similares entre entidades mediante el uso de reglas definidas por el usuario.",
     "Storage": "Gestione las ubicaciones físicas de todos los archivos cargados (Sistema de archivos local, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Gestione los tipos de archivos para una validación adicional de los mismos (por ejemplo, imágenes, documentos, vídeos, etc.) y su clasificación.",
     "measure": "Gestione sus medidas y unidades de medida, establezca unidades de medida predeterminadas y multiplicadores para la conversión automática de unidades de medida.",

@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "incomingWebhook": "Webhook entrant",
+    "scheduledJob": "Tâche planifiée",
+    "workflow": "Flux de travail",
+    "statusMessage": "Message d'état",
+    "updatedCount": "Mise à jour",
+    "failedCount": "Échec",
+    "startedAt": "Démarré à",
+    "createdCount": "Créé",
+    "finishedAt": "Terminé à",
+    "logs": "Journaux"
+  },
+  "options": {
+    "type": {
+      "manual": "Manuel",
+      "incomingWebhook": "Webhook entrant",
+      "scheduledJob": "Tâche planifiée",
+      "workflow": "Flux de travail"
+    },
+    "status": {
+      "failed": "Échec",
+      "running": "En cours",
+      "done": "Terminé"
+    }
+  }
+}

@@ -65,7 +65,6 @@
     "ProductGroup": "Група продуктів",
     "Matching": "Відповідність",
     "ThumbnailType": "Тип мініатюри",
-    "ActionLog": "Журнал дій",
     "ProductHierarchy": "Ієрархія продуктів",
     "IncomingWebhook": "Вхідний веб-хук",
     "ExtensibleEnumExtensibleEnumOption": "Список (опція \"Список\")",
@@ -80,9 +79,11 @@
     "RoleScope": "Область застосування",
     "RoleScopeAttribute": "Атрибут",
     "RoleScopeAttributePanel": "Панель атрибутів",
-    "RoleScopeField": "польовий",
+    "RoleScopeField": "Поле",
     "Selection": "Вибірка",
-    "SelectionRecord": "Запис вибірки"
+    "SelectionRecord": "Запис вибірки",
+    "ActionExecution": "Виконання дій Виконання дій",
+    "ActionExecutionLog": "Журнал виконання дій"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
@@ -138,7 +139,6 @@
     "MatchedRecord": "Співставлені записи",
     "Matching": "Відповідності",
     "ThumbnailType": "Типи мініатюр",
-    "ActionLog": "Журнали дій",
     "AttributePanel": "Панелі атрибутів",
     "RoleScope": "Сфери застосування",
     "UserProfile": "Профілі користувачів",
@@ -152,7 +152,9 @@
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
     "Selection": "Вибірки",
-    "SelectionRecord": "Записи вибірки"
+    "SelectionRecord": "Записи вибірки",
+    "ActionExecution": "Виконання дій Виконання дій",
+    "ActionExecutionLog": "Журнали виконання дій"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -468,7 +470,7 @@
     "Compare": "Порівняйте",
     "Standard": "Стандартний",
     "addItem": "додати товар",
-    "basic": "Базовий",
+    "basic": "Basic",
     "UserFollowed": "Користувач Підписався",
     "authenticate": "Автентифікація",
     "Load data": "Завантажте дані",
@@ -508,7 +510,8 @@
     "openLink": "Відкрити посилання",
     "view": "Переглянути",
     "Items": "Предмети",
-    "hideAll": "Сховати все"
+    "hideAll": "Сховати все",
+    "Relations": "Стосунки"
   },
   "insightsPanels": {
     "summary": "Підсумок",
@@ -517,7 +520,7 @@
   "messages": {
     "queryHasErrors": "Це помилки у вашому запиті",
     "actionExecuted": "Дію \"%s\" успішно виконано",
-    "jobAdded": "Завдання успішно додано до менеджера задач",
+    "jobAdded": "Завдання успішно додано до менеджера задач.",
     "confirmInheritAllForChildren": "Ви впевнені, що хочете, щоб усі дочірні елементи успадкували значення полів (і атрибутів), а також відносини від цього батьківського елемента? Існуючі значення не будуть замінені.",
     "confirmInheritAllFromParent": "Ви впевнені, що хочете, щоб усі елементи успадковували значення полів (і атрибутів), а також зв'язки від елементів батьківського запису? Існуючі значення не будуть замінені.",
     "optionValueCannotBeEmpty": "Значення опції не може бути порожнім",
@@ -559,8 +562,8 @@
     "checkForNewNotifications": "Перевірити нові сповіщення",
     "duplicate": "Створюваний запис є дублікатом вже існуючого",
     "dropToAttach": "Перетягніть щоб прикріпити",
-    "writeMessageToSelf": "Напишіть повідомлення про свою діяльність",
-    "checkForNewNotes": "Перевірте оновлення заходів",
+    "writeMessageToSelf": "Напишіть повідомлення собі",
+    "checkForNewNotes": "Перевірити наявність оновлень у розділі «Діяльність»",
     "internalPost": "Повідомлення буде видно тільки внутрішнім користувачам",
     "done": "Готово",
     "confirmMassFollow": "Ви впевнені, що хочете підписатися на вибрані записи?",
@@ -767,7 +770,9 @@
     "payload": "корисне навантаження",
     "hash": "Хеш",
     "entity": "Сутність",
-    "followers": "Підписники"
+    "followers": "Передплатники",
+    "createdCountFilterActionExecution": "Створено командою Action Execution",
+    "updatedCountFilterActionExecution": "Оновлено за даними Виконання заходів"
   },
   "tooltips": {
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
@@ -804,8 +809,8 @@
     "mentionYouInPostTargetNoTarget": "{user} згадав Вас у повідомленні",
     "create": "{user} створив {entityType} {entity}",
     "createThis": "{user} створив {entityType}",
-    "assign": "{user} призначив {entityType} {entity} (кому) {assignee}",
-    "assignThis": "{user} призначив {entityType} {assignee}",
+    "assign": "{user} призначив {entityType} {entity} (кому) {assignee}.",
+    "assignThis": "{user} призначив {entityType} (кому) {assignee}.",
     "postThis": "{user} залишив повідомлення",
     "attachThis": "{user} прикріпив",
     "statusThis": "{user} оновив {field}",
@@ -829,7 +834,7 @@
     "postTargetSelfAndOthers": "{user} залишив повідомлення для {target} і для себе",
     "composerUpdateThis": "{user}",
     "unrelate": "{user} відв'язав {relatedEntityType} {relatedEntity} від {entityType} {entity}",
-    "unrelateThis": "{користувач} від'єднав {relatedEntityType} {relatedEntity} від цього {entityType}",
+    "unrelateThis": "{user} від'єднав {relatedEntityType} {relatedEntity} від цього {entityType}.",
     "updateOneThis": "{user} оновив {entityType} {entity}",
     "updateFromToThis": "{user} оновив {entityType} {entity}",
     "updateOne": "{user} оновив {entityType} {entity}",
@@ -843,22 +848,22 @@
     "createAssociationRecordThis": "{користувач} пов'язав {mainRecord} з {relatedRecord}",
     "deleteAssociationRecordThis": "{користувач} видалив зв'язок {mainRecord} з {relatedRecord}",
     "own": "{user} встановлює {owner} як власника для {entityType} {entity}",
-    "ownThisVoid": "{користувач} встановлює власника для цього {entityType}",
-    "assignYou": "{user} призначив {entityType} {entity} вам",
-    "assignThisVoid": "{user} скасував призначення цього {entityType}",
-    "assignVoid": "{user} unassigned {entityType} {entity}",
-    "updateOneInThis": "{user} у цій {entityType} оновлено у {relatedEntityType} {relatedEntity}",
-    "updateFromToInThis": "{user} у цій {entityType} оновлено у {relatedEntityType} {relatedEntity}",
-    "updateOneIn": "{user} в {entityType} {entity} оновлено в {relatedEntityType} {relatedEntity}",
-    "updateFromToIn": "{user} в {entityType} {entity} оновлено в {relatedEntityType} {relatedEntity}",
+    "ownThisVoid": "{user} відмінив власника для цієї {entityType}.",
+    "assignYou": "{user} призначив {entityType} {entity} Вам.",
+    "assignThisVoid": "{user} скасував призначення цієї {entityType}.",
+    "assignVoid": "{user} скасував призначення {entityType} {entity}.",
+    "updateOneInThis": "{user} оновив {relatedEntityType} {relatedEntity} в цьому {entityType}.",
+    "updateFromToInThis": "{user} у цій {entityType} оновив {relatedEntityType} {relatedEntity}.",
+    "updateOneIn": "{user} в {entityType} {entity} оновив {relatedEntityType} {relatedEntity}.",
+    "updateFromToIn": "{user} в {entityType} {entity} оновив {relatedEntityType} {relatedEntity}.",
     "createRecordAssociationThis": "{user} асоціював {relatedRecord} як {association}",
-    "ownVoid": "{користувач} скидає власника для {entityType} {entity}",
-    "ownThisSelf": "{user} встановив себе як власника для цього {entityType}",
-    "ownSelf": "{user} встановив себе як власника для {entityType} {entity}",
+    "ownVoid": "{user} відмінив власника для {entityType} {entity}.",
+    "ownThisSelf": "{user} встановив себе власником для цієї {entityType}.",
+    "ownSelf": "{user} встановив себе як власника для {entityType} {entity}.",
     "ownThis": "{user} встановлює {owner} як власника для цього {entityType}",
     "ownYou": "{user} призначить вас власником для {entityType} {entity}",
-    "assignThisSelf": "{user} самостійно призначив цей {entityType}",
-    "assignSelf": "{user} self-assigned {entityType} {entity}"
+    "assignThisSelf": "{user} призначив цю {entityType} собі самому.",
+    "assignSelf": "{user} призначив {entityType} {entity} собі самому."
   },
   "streamMessagesMale": {
     "composerUpdateThis": "{user}",

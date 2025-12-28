@@ -1,7 +1,7 @@
 {
   "fields": {
     "subject": "Thema",
-    "body": "Körper",
+    "body": "Inhalt",
     "isHtml": "HTML"
   },
   "labels": {

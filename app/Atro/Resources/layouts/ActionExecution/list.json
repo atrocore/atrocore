@@ -1,0 +1,21 @@
+[
+  {
+    "name": "name",
+    "link": true
+  },
+  {
+    "name": "action"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "status"
+  },
+  {
+    "name": "startedAt"
+  },
+  {
+    "name": "finishedAt"
+  }
+]

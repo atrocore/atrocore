@@ -11,8 +11,8 @@
     "asAssignee": "В качестве Правоприобретателя",
     "asTeamMember": "Как член команды",
     "asNotificationProfile": "Как пользователь профиля уведомлений",
-    "emailActive": "Уведомление по электронной почте",
-    "systemActive": "Системное уведомление",
+    "emailActive": "Оповещения по эл. почте",
+    "systemActive": "Системные уведомления",
     "emailTemplateId": "Шаблон электронной почты",
     "systemTemplateId": "Шаблон системы"
   },

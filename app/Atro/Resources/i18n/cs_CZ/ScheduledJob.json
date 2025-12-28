@@ -8,7 +8,8 @@
     "executeNow": "Provést nyní"
   },
   "exceptions": {
-    "wrongCrontabConfiguration": "Špatná konfigurace crontabu"
+    "wrongCrontabConfiguration": "Špatná konfigurace crontabu",
+    "onlyOneJobTypeAllowed": "Je povolena pouze jedna úloha '%s'"
   },
   "messages": {
     "jobLaunched": "Pracovní místo bylo vytvořeno",

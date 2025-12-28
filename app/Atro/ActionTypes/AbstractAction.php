@@ -17,6 +17,7 @@ use Atro\Core\Container;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\KeyValueStorages\MemoryStorage;
 use Atro\Core\Twig\Twig;
+use Atro\Entities\ActionExecution;
 use Atro\Repositories\SavedSearch;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
@@ -111,6 +112,32 @@ abstract class AbstractAction implements TypeInterface
         if ($className && is_a($className, AbstractConditionType::class, true)) {
             $input->actionEntity = $action;
             return $this->container->get($className)->proceed($input);
+        }
+
+        return true;
+    }
+
+    public function execute(ActionExecution $execution, \stdClass $input): bool
+    {
+        // for backward compatibility
+        if (method_exists($this, 'executeNow')) {
+            $action = $execution->get('action');
+            try {
+                $res = $this->executeNow($action, $input);
+                $execution->set('status', 'done');
+            } catch (\Throwable $e) {
+                $res = false;
+                $execution->set('status', 'failed');
+                $execution->set('statusMessage', $e->getMessage());
+
+                if ($e instanceof BadRequest && $action->get('type') === 'error') {
+                    $res = true;
+                    $execution->set('status', 'done');
+                }
+            }
+            $this->getEntityManager()->saveEntity($execution);
+
+            return $res;
         }
 
         return true;

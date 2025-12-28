@@ -159,12 +159,27 @@
           "name": "autoDeleteAfterDays"
         },
         false
-      ],
+      ]
+    ]
+  },
+  {
+    "label": "mdm",
+    "rows": [
       [
         {
           "name": "primaryEntity"
         },
-        false
+        {
+          "name": "role"
+        }
+      ],
+      [
+        {
+          "name": "hasStaging"
+        },
+        {
+          "name": "stagingEntity"
+        }
       ]
     ]
   },

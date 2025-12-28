@@ -1,0 +1,24 @@
+[
+  {
+    "name": "id",
+    "link": true
+  },
+  {
+    "name": "actionExecution"
+  },
+  {
+    "name": "type"
+  },
+  {
+    "name": "entityName"
+  },
+  {
+    "name": "entityRecord"
+  },
+  {
+    "name": "message"
+  },
+  {
+    "name": "createdAt"
+  }
+]

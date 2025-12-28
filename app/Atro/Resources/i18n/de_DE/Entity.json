@@ -41,9 +41,11 @@
     "customizable": "Anpassbar",
     "fields": "Felder",
     "primaryEntity": "Primäre Entität",
-    "derivedEntities": "Abgeleitete Entitäten",
     "matchDuplicates": "Duplikate abgleichen",
-    "matchMasterRecords": "Stammdaten abgleichen"
+    "matchMasterRecords": "Stammdaten abgleichen",
+    "role": "Rolle",
+    "hasStaging": "Staging aktivieren",
+    "stagingEntity": "Staging-Entität"
   },
   "options": {
     "type": {
@@ -55,6 +57,9 @@
     "sortDirection": {
       "asc": "Aufsteigend",
       "desc": "Absteigend"
+    },
+    "role": {
+      "staging": "Staging"
     }
   },
   "labels": {
@@ -62,7 +67,8 @@
     "hierarchyManagement": "Hierarchieverwaltung",
     "other": "Sonstiges",
     "resetToDefault": "Auf Standardwerte zurücksetzen",
-    "attributes": "Attribute"
+    "attributes": "Attribute",
+    "mdm": "Stammdaten-Management"
   },
   "confirmations": {
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardeinstellungen zurücksetzen möchten?"
@@ -90,6 +96,8 @@
     "entityAlreadyHasAttributesInUse": "Has Attribut param kann nicht deaktiviert werden. Bitte entfernen Sie zuerst alle zugehörigen Attribute.",
     "entityHasDirectlyLinkedAttributes": "Es gibt bereits direkt verknüpfte Attribute. Bitte entfernen Sie diese aus den Datensätzen.",
     "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben.",
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{Eltern} und {Kinder} sollten nicht beide in der Beziehung sein, die Datum/Uhrzeit der Änderung bewirkt"
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} und {children} sollten nicht beide in Beziehungen enthalten sein, die sich auf das Änderungsdatum/-zeit auswirken.",
+    "derivativeWithSuchRoleExists": "Es gibt bereits eine abgeleitete Entität mit dieser Rolle.",
+    "derivativeFromDerivativeNotSupporting": "Eine abgeleitete Entität kann nicht aus einer anderen abgeleiteten Entität erstellt werden."
   }
 }

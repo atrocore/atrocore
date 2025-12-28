@@ -5,7 +5,7 @@
     "release": "Реліз",
     "synonyms": "Синоніми",
     "code": "Код",
-    "isActive": "Активний",
+    "isActive": "Активні",
     "classifications": "Класифікації",
     "classificationAttributes": "Класифікаційні атрибути",
     "type": "Тип"
@@ -21,6 +21,7 @@
   "exceptions": {
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "classificationForToAnotherEntity": "Класифікація не може бути пов'язана з цим записом, оскільки він використовується для іншого об'єкта.",
-    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити."
+    "classificationHasRecords": "Класифікацію з пов'язаними записами не можна видалити.",
+    "entityNotAllowToChoose": "Cутність не може бути обраною."
   }
 }

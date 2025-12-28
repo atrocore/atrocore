@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "incomingWebhook": "Eingehender Webhook",
+    "scheduledJob": "Geplanter Auftrag",
+    "workflow": "Workflow",
+    "statusMessage": "Statusmeldung",
+    "updatedCount": "Aktualisiert",
+    "failedCount": "Gescheitert",
+    "startedAt": "Angefangen um",
+    "finishedAt": "Beendet am",
+    "createdCount": "Erstellt",
+    "logs": "Protokolle"
+  },
+  "options": {
+    "type": {
+      "manual": "Manuell",
+      "incomingWebhook": "Eingehender Webhook",
+      "scheduledJob": "Geplante Aufgabe",
+      "workflow": "Workflow"
+    },
+    "status": {
+      "failed": "Gescheitert",
+      "running": "In Arbeit",
+      "done": "Fertig"
+    }
+  }
+}

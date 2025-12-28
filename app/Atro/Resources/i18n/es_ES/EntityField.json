@@ -66,7 +66,8 @@
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
-    "conditionalDisableOptions": "Opciones para discapacitados"
+    "conditionalDisableOptions": "Opciones para discapacitados",
+    "urlLabel": "Etiqueta URL"
   },
   "tooltips": {
     "foreignCode": "Este nombre en clave se utiliza para el campo creado en la entidad relacionada para la relación hacia atrás.",
@@ -120,7 +121,7 @@
     "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
   },
   "labels": {
-    "resetToDefault": "Restablecer a (por defecto)",
+    "resetToDefault": "Aplicar a valores por defecto",
     "relationManagement": "Gestión de relaciones",
     "conditionalProperties": "Propiedades condicionales"
   },

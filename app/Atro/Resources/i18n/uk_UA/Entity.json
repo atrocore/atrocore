@@ -41,9 +41,11 @@
     "deleteValuesAfterUnlinkingClassification": "Видалити значення атрибутів після від’єднання класифікацій",
     "linkAttributesWithClassificationAutomatically": "Автоматично прив'язувати атрибути до класифікації",
     "primaryEntity": "Первинна сутність",
-    "derivedEntities": "Похідні сутності",
     "matchDuplicates": "Пошук дублікатів",
-    "matchMasterRecords": "Пошук мастер запису"
+    "matchMasterRecords": "Пошук мастер запису",
+    "role": "Роль",
+    "hasStaging": "Увімкнути Сценізацію",
+    "stagingEntity": "Організаційна одиниця"
   },
   "options": {
     "type": {
@@ -55,6 +57,9 @@
     "sortDirection": {
       "asc": "За зростанням",
       "desc": "За спаданням"
+    },
+    "role": {
+      "staging": "Постановка"
     }
   },
   "labels": {
@@ -62,7 +67,8 @@
     "hierarchyManagement": "Управління ієрархією",
     "other": "Інше",
     "resetToDefault": "Скинути до значень за замовчуванням",
-    "attributes": "Атрибути"
+    "attributes": "Атрибути",
+    "mdm": "Управління основними даними"
   },
   "confirmations": {
     "resetToDefault": "Ви впевнені, що хочете скинути конфігурацію до заводських налаштувань?"
@@ -87,9 +93,11 @@
     "linkAttributesWithClassificationAutomatically": "Якщо атрибут безпосередньо пов'язаний із записом, а цей запис пов'язаний із класифікацією, то атрибут також буде пов'язаний із цією класифікацією."
   },
   "exceptions": {
-    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not be both in Relations effecting modification date/time",
+    "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} та {children} не повинні бути одночасно в звʼязках, що впливають на дату/час модифікації.",
     "entityAlreadyHasAttributesInUse": "Параметр \"Має атрибути\" не можна деактивувати. Будь ласка, видаліть спочатку усі пов'язані із сутністю атрибути.",
     "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності.",
-    "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр."
+    "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр.",
+    "derivativeWithSuchRoleExists": "Похідна сутність з такою роллю вже існує.",
+    "derivativeFromDerivativeNotSupporting": "Похідна сутність не може бути створена з іншої похідної сутності."
   }
 }

@@ -1,9 +1,9 @@
 {
   "fields": {
     "attributes": "Attributes",
-    "default": "Default"
+    "default": "Default Value"
   },
   "exceptions": {
-    "entityIsUsed": "Attribute Panel cannot be deleted because it used in several Attributes."
+    "entityIsUsed": "The Attribute Panel cannot be deleted because it is used for one or more attributes."
   }
 }

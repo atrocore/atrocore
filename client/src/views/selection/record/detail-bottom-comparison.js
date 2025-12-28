@@ -80,7 +80,6 @@ Espo.define('views/selection/record/detail-bottom-comparison', 'view', function 
 
                     p.label = this.translate(p.name, 'fields', this.scope)
 
-                    p.layoutConfigurator = p.name + 'LayoutConfigurator'
                     this.panelList.push(p);
 
                 });
@@ -90,23 +89,6 @@ Espo.define('views/selection/record/detail-bottom-comparison', 'view', function 
 
         setupPanelViews() {
             this.panelList.forEach(p => {
-                if (this.getUser().isAdmin()) {
-                    this.createView(p.layoutConfigurator, "views/record/layout-configurator", {
-                        scope: this.scope,
-                        viewType: 'selectionRelations',
-                        layoutData: this.layoutData,
-                        el: this.options.el + ' .panel[data-name="' + p.name + '"]' + ' .panel-heading .layout-editor-container',
-                        alignRight: true
-                    }, (view) => {
-                        view.on("refresh", () => {
-                            this.getParentView()
-                                .getParentView()
-                                .getParentView()
-                                .refreshContent()
-                        });
-                    });
-                }
-
                 this.createView(p.name, p.view, {
                     scope: p.scope,
                     model: this.model,
