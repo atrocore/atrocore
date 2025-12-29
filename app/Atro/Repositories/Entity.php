@@ -535,6 +535,10 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
+        if (!empty($entity->get('primaryEntityId'))) {
+            throw new BadRequest($this->getLanguage()->translate('cannotRemoveDerivativeDirectly', 'exceptions', 'Entity'));
+        }
+
         parent::beforeRemove($entity, $options);
     }
 
@@ -578,6 +582,22 @@ class Entity extends ReferenceData
                 || $label->get('code') === "Global.scopeNamesPlural.{$entity->get('code')}"
             ) {
                 $this->getEntityManager()->removeEntity($label);
+            }
+        }
+
+        if (!empty($entity->get('matchDuplicates'))) {
+            $code = Matching::createCodeForDuplicate($entity->id);
+            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
+            if (!empty($matching)) {
+                $this->getEntityManager()->removeEntity($matching);
+            }
+        }
+
+        if (!empty($entity->get('matchMasterRecords'))) {
+            $code = Matching::createCodeForMasterRecord($entity->id);
+            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
+            if (!empty($matching)) {
+                $this->getEntityManager()->removeEntity($matching);
             }
         }
 
