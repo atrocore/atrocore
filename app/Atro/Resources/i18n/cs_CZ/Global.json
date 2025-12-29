@@ -519,7 +519,9 @@
     "pageNotFoundDescription": "Hledaný zdroj mohl být přesunut, odstraněn nebo neexistuje.",
     "errorCode": "Kód chyby",
     "accessDeniedDescription": "Váš účet nemá potřebná oprávnění k zobrazení tohoto zdroje. Pokud se domníváte, že byste měli mít přístup, obraťte se na svého správce.",
-    "accessDenied": "Přístup odepřen"
+    "accessDenied": "Přístup odepřen",
+    "replaceItem": "Nahradit položku",
+    "removeItem": "Odebrat položku"
   },
   "fields": {
     "width": "Šířka",
