@@ -10,7 +10,7 @@
   },
   "options": {
     "type": {
-      "create": "Créer",
+      "create": "Création",
       "update": "Mise à jour",
       "delete": "Suppression",
       "error": "Erreur"
