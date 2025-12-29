@@ -86,7 +86,7 @@
     "hasAssignedUser": "Habilitar usuario asignado para la gestión de acceso.",
     "hasTeam": "Habilite los equipos para la gestión del acceso.",
     "hasOwner": "Habilitar propietario para la gestión de acceso.",
-    "streamDisabled": "Si está marcada, no aparecerá ningún panel de Actividades en la página Detalles del registro. No podrá añadir notas.",
+    "streamDisabled": "Si está marcada, no aparecerá ningún panel de Actividades en la página de Detalles del registro. No podrá añadir notas.",
     "disableActionHistory": "Si está marcada, no se registrará ninguna acción del usuario en los registros de esta entidad.",
     "auditedDisabledFields": "Los cambios en estos campos no se muestran como Actividad.",
     "auditedEnabledRelations": "Los cambios en estas relaciones se muestran como Actividad.",
@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Ya existen atributos vinculados directamente. Por favor, elimínelos de los registros.",
     "entityTypeIsNotSuitableForAssociates": "Este tipo de entidad no puede contener el parámetro \"Tiene asociados\". Sólo \"Base\" y \"Jerarquía\" pueden tenerlo.",
     "derivativeWithSuchRoleExists": "Ya existe una entidad derivada con esta función.",
-    "derivativeFromDerivativeNotSupporting": "Una entidad derivada no puede crearse a partir de otra entidad derivada."
+    "derivativeFromDerivativeNotSupporting": "Una entidad derivada no puede crearse a partir de otra entidad derivada.",
+    "cannotRemoveDerivativeDirectly": "Las entidades derivadas no pueden eliminarse directamente."
   }
 }
