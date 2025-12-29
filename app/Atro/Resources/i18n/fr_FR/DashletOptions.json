@@ -17,7 +17,7 @@
     "expandedLayout": "Disposition",
     "dateFilter": "Filtre de date",
     "savedFilter": "Filtre sauvegardé",
-    "entityListType": "Type de liste d'entités"
+    "entityListType": "Liste de types d'entités"
   },
   "messages": {
     "selectEntityType": "Sélectionnez le type d'entité dans les options du dashlet."
