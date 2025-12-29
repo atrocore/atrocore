@@ -245,7 +245,7 @@ class Matching extends Base
             'status'   => 'Pending',
             'priority' => 25,
             'payload'  => [
-                'matchingId' => $matching->id,
+                'matching'   => $matching->toPayload(),
                 'entityName' => $entity->getEntityName(),
                 'entityId'   => $entity->id,
             ],

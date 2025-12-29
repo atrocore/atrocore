@@ -11,7 +11,7 @@
 Espo.define('treo-core:controllers/admin', 'class-replace!treo-core:controllers/admin', function (Dep) {
     return Dep.extend({
         error404: function () {
-            this.entire('views/base', {template: 'errors/404'}, function (view) {
+            this.entire('views/error', {template: 'errors/404'}, function (view) {
                 view.render();
             });
         },
