@@ -90,11 +90,11 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
                     'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
                 };
 
-                if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+                if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
                     return this.translate('Today') + ' ' + d.format(this.getDateTime().timeFormat);
-                } else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
+                } else if (d.unix() >= ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
                     return this.translate('Tomorrow') + ' ' + d.format(this.getDateTime().timeFormat);
-                } else if (d.unix() > ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
+                } else if (d.unix() >= ranges['yesterday'][0] && d.unix() < ranges['yesterday'][1]) {
                     return this.translate('Yesterday') + ' ' + d.format(this.getDateTime().timeFormat);
                 }
             }
