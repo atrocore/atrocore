@@ -14929,7 +14929,7 @@ ul.jqtree-tree .jqtree-toggler {
     background-color: var(--sidebar-color);
 }
 
-ul.jqtree-tree .sub-tree-container > .jqtree-element .jqtree-toggler {
+ul.jqtree-tree .sub-tree-container:not(.has-children) > .jqtree-element .jqtree-toggler {
     opacity: 0;
     pointer-events: none;
 }
