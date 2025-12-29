@@ -25,9 +25,9 @@
     "conditionalReadOnly": "Lecture seule",
     "conditionalDisableOptions": "Options désactivées",
     "enableConditionalRequired": "Activation requise",
-    "enableConditionalVisible": "Activer Visible",
-    "enableConditionalReadOnly": "Activer Lecture seule",
-    "enableConditionalProtected": "Activer Protégé",
+    "enableConditionalVisible": "Activer visible",
+    "enableConditionalReadOnly": "Activer la lecture seule",
+    "enableConditionalProtected": "Activer \"protégé\"",
     "enableConditionalDisableOptions": "Activer les options désactivées",
     "conditionalVisible": "Visible"
   },
