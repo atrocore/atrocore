@@ -106,6 +106,76 @@ class V2Dot2Dot0 extends Base
             ->setParameter('newType', 'summary')
             ->setParameter('oldType', 'rightSideView')
             ->executeStatement();
+
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id', 'entity', 'view_type', 'layout_profile_id')
+            ->from('layout')
+            ->where('view_type = :viewType and deleted = :false')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('viewType', 'summary')
+            ->fetchAllAssociative();
+
+
+        $path = 'data/reference-data/QualityCheck.json';
+        $content = [];
+        if (file_exists($path)) {
+            $content = @json_decode(@file_get_contents($path), true) ?? [];
+        }
+
+
+        foreach ($res as $row) {
+            try {
+                $id = Util::generateId();
+                $this->getConnection()->createQueryBuilder()
+                    ->insert('layout')
+                    ->values([
+                        'id'                => ':id',
+                        'entity'            => ':entity',
+                        'view_type'         => ':viewType',
+                        'layout_profile_id' => ':layoutProfileId',
+                    ])
+                    ->setParameter('id', $id)
+                    ->setParameter('entity', $row['entity'])
+                    ->setParameter('viewType', 'insights')
+                    ->setParameter('layoutProfileId', $row['layout_profile_id'])
+                    ->executeStatement();
+
+                $this->getConnection()->createQueryBuilder()
+                    ->insert('layout_list_item')
+                    ->values([
+                        'id'         => ':id',
+                        'layout_id'  => ':layoutId',
+                        'name'       => ':name',
+                        'sort_order' => ':sortOrder'
+                    ])
+                    ->setParameter('id', Util::generateId())
+                    ->setParameter('layoutId', $id)
+                    ->setParameter('name', 'summary')
+                    ->setParameter('sortOrder', 10)
+                    ->executeStatement();
+
+                // add dataQuality panel if enabled
+                foreach ($content as $item) {
+                    if ($item['entityId'] === $row['entity']) {
+                        $this->getConnection()->createQueryBuilder()
+                            ->insert('layout_list_item')
+                            ->values([
+                                'id'         => ':id',
+                                'layout_id'  => ':layoutId',
+                                'name'       => ':name',
+                                'sort_order' => ':sortOrder'
+                            ])
+                            ->setParameter('id', Util::generateId())
+                            ->setParameter('layoutId', $id)
+                            ->setParameter('name', 'dataQuality')
+                            ->setParameter('sortOrder', 20)
+                            ->executeStatement();
+                        break;
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+        }
     }
 
     protected function step5(): void
@@ -175,7 +245,7 @@ class V2Dot2Dot0 extends Base
                         if (!in_array(
                             $column,
                             ['id', 'name', 'code', 'created_at', 'modified_at', 'type', 'description', 'minimum_score', 'entity', 'source_entity', 'master_entity', 'is_active',
-                             'created_by_id', 'modified_by_id']
+                                'created_by_id', 'modified_by_id']
                         )) {
                             continue;
                         }
@@ -226,7 +296,7 @@ class V2Dot2Dot0 extends Base
                         if (!in_array(
                             $column,
                             ['id', 'name', 'code', 'created_at', 'modified_at', 'weight', 'type', 'master_field', 'source_field', 'operator', 'matching_id', 'matching_rule_set_id',
-                             'created_by_id', 'modified_by_id']
+                                'created_by_id', 'modified_by_id']
                         )) {
                             continue;
                         }

@@ -151,11 +151,6 @@ Espo.define('views/record/right-side-view-panel', ['views/record/detail', 'view-
             })
 
             if (this.options.defs?.name === 'summary') {
-                // hide access management panel if summary contains accessManagement panel
-                if (this.layoutData.layout.find(item => item.label === 'accessManagement')) {
-                    this.getParentView().hidePanel('accessManagement')
-                }
-
                 if (this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getUser().isAdmin() && this.mode === 'detail') {
                     // show configurator
                     const $container = this.$el.closest('.panel-summary').find('.panel-title')

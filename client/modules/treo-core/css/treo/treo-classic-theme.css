@@ -3585,6 +3585,7 @@ a[role=button]:hover, a[role=button]:focus, a[role=button].focus,
     color: #333;
     background-color: #fafafa;
     border-color: #ccc;
+    text-decoration: none;
 }
 
 .btn:hover, .btn:focus, .btn.focus {
@@ -13683,6 +13684,7 @@ ul.dropdown-menu > li.checkbox {
     background: #fff;
     color: #424242;
     margin-top: 50px;
+    border-radius: 10px;
 }
 
 #login.panel-updating label {
@@ -13697,10 +13699,12 @@ ul.dropdown-menu > li.checkbox {
     border-bottom: 0;
     -webkit-box-shadow: 0 -8px 10px -10px;
     box-shadow: 0 -8px 10px -10px;
+    border-radius: 10px 10px 0 0;
 }
 
 #login.panel > .panel-body {
     border: 1px solid #c0c0c0;
+    border-radius: 0 0 10px 10px;
 }
 
 #login .logo-container {
@@ -19214,4 +19218,59 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: #888;
     font-size: 18px;
     background-color: transparent;
+}
+
+body > .error-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body > .error-container > .error-panel {
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px 30px;
+    box-shadow: 0 -8px 10px -10px;
+    max-width: 550px;
+}
+
+body > .error-container .logo {
+    width: 100px;
+    display: inline-block;
+    margin-top: 2em;
+}
+
+body > .error-container .logo img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+}
+
+body > .error-container .error-content {
+    margin: 2em 0;
+}
+
+body > .error-container .error-content h1 {
+    margin: 25px 0;
+}
+
+body > .error-container .error-content .error-code {
+    margin-top: 1em;
+    color: #888;
+}
+
+body > .error-container .error-links {
+    margin-top: 4em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em 2em;
+    justify-content: space-evenly;
+}
+
+body > .error-container .error-links a {
+    font-size: 12px;
+    color: #888;
 }

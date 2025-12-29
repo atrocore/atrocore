@@ -1,6 +1,25 @@
-<div class="container">
-    <div class="col-sm-6 col-sm-offset-2">
-        <h1>Error 403</h1>
-        You don't have an access to this area.
+<div class="error-container">
+    <div class="error-panel">
+        <picture class="logo">
+            <img src="{{logo}}" alt="">
+        </picture>
+
+        <div class="error-content">
+            <h1>{{ translate 'accessDenied' }}</h1>
+            <p>{{ translate 'accessDeniedDescription' }}</p>
+            <p class="error-code">{{ translate 'errorCode' }}: 403</p>
+        </div>
+
+        <div class="error-button">
+            <a role="button" class="primary" href="#">{{ translate 'Open Dashboard' }}</a>
+        </div>
+
+        <div class="error-links">
+            <a href="https://github.com/atrocore/atrocore/issues/new" target="_blank">{{translate 'Report a Bug'}}</a>
+            <a href="https://community.atrocore.com" target="_blank">{{translate 'Visit Community'}}</a>
+            <a href="https://help.atrocore.com" target="_blank">{{translate 'Help Center'}}</a>
+            <a href="https://support.atrocore.com" target="_blank">{{translate 'Support'}}</a>
+            <a href="https://atrocore.com/contact" target="_blank">{{translate 'Contact Us'}}</a>
+        </div>
     </div>
 </div>

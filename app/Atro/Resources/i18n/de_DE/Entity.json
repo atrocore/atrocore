@@ -98,6 +98,7 @@
     "entityTypeIsNotSuitableForAssociates": "Dieser Entitätstyp kann den Parameter \"Hat assoziierte Datensätze\" nicht enthalten. Nur \"Basis\" und \"Hierarchie\" dürfen ihn haben.",
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} und {children} sollten nicht beide in Beziehungen enthalten sein, die sich auf das Änderungsdatum/-zeit auswirken.",
     "derivativeWithSuchRoleExists": "Es gibt bereits eine abgeleitete Entität mit dieser Rolle.",
-    "derivativeFromDerivativeNotSupporting": "Eine abgeleitete Entität kann nicht aus einer anderen abgeleiteten Entität erstellt werden."
+    "derivativeFromDerivativeNotSupporting": "Eine abgeleitete Entität kann nicht aus einer anderen abgeleiteten Entität erstellt werden.",
+    "cannotRemoveDerivativeDirectly": "Abgeleitete Entitäten können nicht direkt gelöscht werden."
   }
 }

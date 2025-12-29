@@ -255,7 +255,7 @@
                     }
                 }
 
-                if (['_self', '_bookmark'].includes(activeItem.name) && model && model.get('id') === node.id) {
+                if (model && model.get('id') === node.id && (['_self', '_bookmark'].includes(activeItem.name) || node.scope === model.name)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }

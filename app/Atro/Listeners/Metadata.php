@@ -1140,7 +1140,6 @@ class Metadata extends AbstractListener
                 "view"               => "views/fields/hierarchy-routes",
                 "protected"          => true,
                 "massUpdateDisabled" => true,
-                "filterDisabled"     => true,
                 "importDisabled"     => true,
                 "emHidden"           => true,
             ];
@@ -2396,6 +2395,8 @@ class Metadata extends AbstractListener
                 'modifiedAt'         => $scopeDefs['modifiedAt'] ?? null,
                 'createdById'        => $scopeDefs['createdById'] ?? null,
                 'modifiedById'       => $scopeDefs['modifiedById'] ?? null,
+                'enableVersioning'   => $scopeDefs['enableVersioning'] ?? false,
+                'defaultVersionName' => $scopeDefs['defaultVersionName'] ?? null,
                 'layouts'            => false
             ]);
             if (array_key_exists('module', $data['scopes'][$scope])) {
