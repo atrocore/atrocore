@@ -422,7 +422,7 @@
     "Summary": "Підсумок",
     "Insights": "Інсайти",
     "Activities": "Діяльність",
-    "enableAutomaticClosing": "Увімкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
+    "enableAutomaticClosing": "Увімкніть автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "accessManagement": "Керування доступом",
     "sidebarUnpin": "Автоматичне розкриття панелі неактивне",
@@ -488,7 +488,7 @@
     "inheritedFromParent": "Успадковано від батьків",
     "Action Forbidden": "Дія заборонена",
     "Duplicate and Select": "Дублюйте та виділяйте",
-    "actionFollow": "Натисніть, щоб продовжити",
+    "actionFollow": "Натисніть, щоб приєднатися",
     "actionUnfollow": "Ви стежите за нами, натисніть, щоб скасувати підписку",
     "collapseAll": "Згорнути все",
     "relatedAssociates": "Відсталі асоціації",
@@ -505,7 +505,7 @@
     "actionBookmark": "Натисніть, щоб додати в закладки",
     "actionUnbookmark": "Додано до закладок, натисніть, щоб видалити закладку",
     "actionOpenFilter": "Відкрити фільтр",
-    "expandAll": "Розгорнути всі",
+    "expandAll": "Розгорнути все",
     "Associated": "Асоційований",
     "Associating": "Асоціювання",
     "matchedRecords": "Співставлені записи",
@@ -522,7 +522,9 @@
     "Items": "Предмети",
     "hideAll": "Сховати все",
     "Relations": "Стосунки",
-    "Saved Filters": "Збережені фільтри"
+    "Saved Filters": "Збережені фільтри",
+    "replaceItem": "Замінити елемент",
+    "removeItem": "Видалити елемент"
   },
   "insightsPanels": {
     "summary": "Підсумок",
