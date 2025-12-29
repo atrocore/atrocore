@@ -153,7 +153,6 @@
             node.subTreeData = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
         }
 
-        console.log(node);
         if (!node.subTreeLoaded) {
             if (node.has_children) {
                 $tree.tree('loadData', [...node.subTreeData, ...node.getData()], node);
