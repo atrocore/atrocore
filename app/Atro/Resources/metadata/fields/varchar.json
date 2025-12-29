@@ -37,6 +37,10 @@
       "type": "enum"
     },
     {
+      "name": "defaultUnit",
+      "type": "varchar"
+    },
+    {
       "name": "readOnly",
       "type": "bool"
     },
