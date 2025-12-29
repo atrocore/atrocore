@@ -513,7 +513,7 @@
     "addGroup": "Groupe de début / de fin",
     "Summary": "Sommaire",
     "Insights": "Informations",
-    "enableAutomaticClosing": "Activer l'ouverture et la fermeture automatiques de ce panneau au passage de la souris.",
+    "enableAutomaticClosing": "Activez l'ouverture et la fermeture automatiques de ce panneau au passage de la souris.",
     "disableAutomaticClosing": "Désactiver l'ouverture et la fermeture automatiques de ce panneau au passage de la souris.",
     "actionFollow": "Cliquer pour suivre",
     "actionUnfollow": "Vous êtes abonné, cliquez pour vous désabonner",
@@ -549,7 +549,16 @@
     "hideAll": "Cacher tout",
     "Relations": "Relations",
     "view": "Voir",
-    "Saved Filters": "Filtres enregistrés"
+    "Saved Filters": "Filtres enregistrés",
+    "Support": "Soutien",
+    "Contact Us": "Contactez nous",
+    "pageNotFoundDescription": "La ressource que vous recherchez a peut-être été déplacée, supprimée ou n'existe pas.",
+    "errorCode": "Code d'erreur",
+    "replaceItem": "Remplacer l'article",
+    "Open Dashboard": "Ouvrir le tableau de bord",
+    "pageNotFound": "Page non trouvée",
+    "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
+    "removeItem": "Supprimer l'article"
   },
   "insightsPanels": {
     "summary": "Sommaire",
