@@ -489,7 +489,7 @@
     "accessManagement": "Zarządzanie dostępem",
     "Fields": "Pola",
     "Reset to Default": "Przywróć domyślne",
-    "code": "Code",
+    "code": "Kod",
     "label": "Etykieta",
     "color": "Kolor",
     "script": "Skrypt",
@@ -520,7 +520,8 @@
     "pageNotFoundDescription": "Zasób, którego Państwo szukają, mógł zostać przeniesiony, usunięty lub nie istnieje.",
     "errorCode": "Kod błędu",
     "replaceItem": "Proszę wymienić element",
-    "removeItem": "Proszę usunąć przedmiot"
+    "removeItem": "Proszę usunąć przedmiot",
+    "accessDenied": "Odmowa dostępu"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
