@@ -19222,10 +19222,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 body > .error-container {
     width: 100%;
-    height: 100%;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: url(/?entryPoint=background);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 body > .error-container > .error-panel {
@@ -19239,6 +19243,7 @@ body > .error-container > .error-panel {
 
 body > .error-container .logo {
     width: 100px;
+    height: 100px;
     display: inline-block;
     margin-top: 2em;
 }
