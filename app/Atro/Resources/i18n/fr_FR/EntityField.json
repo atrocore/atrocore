@@ -70,7 +70,7 @@
     "urlLabel": "Label de l'URL"
   },
   "tooltips": {
-    "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l’entité liée pour la relation inverse.",
+    "foreignCode": "Ce nom de code est utilisé pour le champ créé dans l’entité étrangère pour la relation inverse.",
     "foreignEntity": "Il s’agit de l’entité liée dont les enregistrements sont référencés dans le champ actuel.",
     "relationName": "Ce code est utilisé pour définir le nom système de l’entité de type « Relation » créée automatiquement.",
     "isMultilang": "Création automatique de champs par clonage du champ actuel autant de fois qu'il y a de langues activées dans les Paramètres multi-langues.",
