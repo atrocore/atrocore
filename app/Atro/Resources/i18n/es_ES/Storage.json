@@ -25,7 +25,7 @@
     "storageHasItems": "La carpeta montada no puede modificarse para un almacenamiento no vacío.",
     "storagePathNotUnique": "La ruta de almacenamiento debe ser única.",
     "storagePathContainFilesFromAnotherStorage": "El árbol de carpetas iniciado por la ruta de almacenamiento seleccionada no puede contener carpetas/archivos asociados a otro almacenamiento.",
-    "storageTypeCannotBeChanged": "El Tipo de almacenamiento no se puede cambiar.",
+    "storageTypeCannotBeChanged": "El Tipo de almacenamiento no puede modificarse.",
     "storagePathCannotBeChanged": "La ruta de almacenamiento no puede modificarse."
   }
 }
