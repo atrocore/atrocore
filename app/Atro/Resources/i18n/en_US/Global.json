@@ -514,7 +514,9 @@
     "Items": "Items",
     "hideAll": "Hide all",
     "Relations": "Relations",
-    "Saved Filters": "Saved Filters"
+    "Saved Filters": "Saved Filters",
+    "replaceItem": "Replace Item",
+    "removeItem": "Remove Item"
   },
   "insightsPanels": {
     "summary": "Summary",

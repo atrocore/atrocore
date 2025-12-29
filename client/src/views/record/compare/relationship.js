@@ -105,7 +105,7 @@ Espo.define('views/record/compare/relationship', 'view', function (Dep) {
         setupRelationship(callback) {
             this.tableRows = [];
             this.linkedEntities.forEach((linkedEntity) => {
-                let selectedModelId = $('input[name="check-all"]:checked').val();
+                let selectedModelId = $('input[name="check-all"]:checked').val() || this.models[0].id;
                 let selectedIndex = this.models.findIndex(model => model.id === selectedModelId);
                 let data = this.getFieldColumns(linkedEntity);
 
