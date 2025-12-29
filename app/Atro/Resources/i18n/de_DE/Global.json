@@ -422,7 +422,7 @@
     "Summary": "Zusammenfassung",
     "Insights": "Einblicke",
     "Activities": "Aktivitäten",
-    "enableAutomaticClosing": "Aktivieren  des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
+    "enableAutomaticClosing": "Aktivieren Sie das automatische Öffnen und Schließen dieses Fensters beim Überfahren mit der Maus.",
     "disableAutomaticClosing": "Deaktivieren des automatischen Öffnens und Schließens dieses Panels beim Überfahren mit der Maus.",
     "accessManagement": "Zugangsverwaltung",
     "sidebarUnpin": "Automatische Erweiterung des Panels ist inaktiv",
@@ -522,7 +522,9 @@
     "Items": "Artikel",
     "hideAll": "Alles ausblenden",
     "Relations": "Beziehungen",
-    "Saved Filters": "Gespeicherte Filter"
+    "Saved Filters": "Gespeicherte Filter",
+    "replaceItem": "Artikel austauschen",
+    "removeItem": "Artikel entfernen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
