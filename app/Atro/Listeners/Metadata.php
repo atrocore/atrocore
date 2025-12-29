@@ -1140,7 +1140,6 @@ class Metadata extends AbstractListener
                 "view"               => "views/fields/hierarchy-routes",
                 "protected"          => true,
                 "massUpdateDisabled" => true,
-                "filterDisabled"     => true,
                 "importDisabled"     => true,
                 "emHidden"           => true,
             ];
