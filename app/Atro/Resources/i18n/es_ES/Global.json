@@ -520,7 +520,8 @@
     "replaceItem": "Sustituir elemento",
     "removeItem": "Quitar artículo",
     "errorCode": "Código de error",
-    "accessDeniedDescription": "Su cuenta no tiene los permisos necesarios para ver este recurso. Si cree que debería tener acceso, póngase en contacto con su administrador."
+    "accessDeniedDescription": "Su cuenta no tiene los permisos necesarios para ver este recurso. Si cree que debería tener acceso, póngase en contacto con su administrador.",
+    "accessDenied": "Acceso denegado"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
