@@ -18,8 +18,6 @@ Espo.define('views/fields/hierarchy-routes', 'views/fields/link', Dep => {
 
         detailTemplate: 'fields/hierarchy-routes/detail',
 
-        searchTypeList: ['isOneOf', 'isNotOneOf'],
-
         setup() {
             this.idName = this.name;
             this.nameName = this.name + 'Names';
