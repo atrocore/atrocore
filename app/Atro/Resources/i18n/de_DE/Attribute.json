@@ -40,7 +40,8 @@
     "channel": "Kanal",
     "conditionalRequired": "Erforderlich",
     "conditionalReadOnly": "Schreibgeschützt",
-    "conditionalProtected": "Geschützt"
+    "conditionalProtected": "Geschützt",
+    "modifiedExtendedDisabled": "Keine Aufzeichnung als Änderung"
   },
   "labels": {
     "addNewValue": "Neuen Wert hinzufügen",

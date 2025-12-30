@@ -40,7 +40,8 @@
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
     "channel": "Canal",
-    "entity": "Entité"
+    "entity": "Entité",
+    "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification"
   },
   "labels": {
     "Classification": "Classification",

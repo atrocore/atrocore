@@ -27,7 +27,8 @@ class ArrayType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $row['id'],
             'column'      => "json_value",
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
@@ -64,7 +65,8 @@ class ArrayType extends AbstractFieldType
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
             'notSortable'               => true,
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $attributesDefs[$name] = $entity->entityDefs['fields'][$name];

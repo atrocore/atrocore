@@ -40,7 +40,8 @@
     "conditionalVisible": "Visibile",
     "conditionalReadOnly": "In sola lettura",
     "conditionalProtected": "Protetto",
-    "conditionalDisableOptions": "Opzioni disabilitate"
+    "conditionalDisableOptions": "Opzioni disabilitate",
+    "modifiedExtendedDisabled": "Nessuna registrazione come modifica"
   },
   "exceptions": {
     "attributeIsUsedInProducts": "L'attributo è utilizzato nei prodotti. Per favore, aggiorni prima i prodotti.",

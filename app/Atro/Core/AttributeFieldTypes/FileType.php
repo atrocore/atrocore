@@ -38,7 +38,8 @@ class FileType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $row['id'],
             'column'      => 'reference_value',
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->fields[$name . 'Name'] = [
@@ -81,7 +82,8 @@ class FileType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
     }
 

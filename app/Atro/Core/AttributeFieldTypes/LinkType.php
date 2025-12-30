@@ -42,7 +42,8 @@ class LinkType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $id,
             'column'      => 'reference_value',
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->fields[$name . 'Name'] = [
@@ -80,7 +81,8 @@ class LinkType extends AbstractFieldType
                 'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
                 'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
                 'fullWidth'                 => !empty($attributeData['fullWidth']),
-                'conditionalProperties'     => $this->prepareConditionalProperties($row)
+                'conditionalProperties'     => $this->prepareConditionalProperties($row),
+                'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
             ];
 
             if (!empty($attributeData['dropdown'])) {
