@@ -521,7 +521,8 @@
     "removeItem": "Quitar artículo",
     "errorCode": "Código de error",
     "accessDeniedDescription": "Su cuenta no tiene los permisos necesarios para ver este recurso. Si cree que debería tener acceso, póngase en contacto con su administrador.",
-    "accessDenied": "Acceso denegado"
+    "accessDenied": "Acceso denegado",
+    "isLinked": "Está vinculado"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
