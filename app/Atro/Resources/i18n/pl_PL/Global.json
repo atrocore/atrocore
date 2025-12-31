@@ -521,7 +521,8 @@
     "errorCode": "Kod błędu",
     "replaceItem": "Proszę wymienić element",
     "removeItem": "Proszę usunąć przedmiot",
-    "accessDenied": "Odmowa dostępu"
+    "accessDenied": "Odmowa dostępu",
+    "isLinked": "Jest powiązany"
   },
   "messages": {
     "actionExecuted": "Akcja \"%s\" została pomyślnie wykonana",
