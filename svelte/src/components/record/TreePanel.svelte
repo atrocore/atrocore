@@ -147,24 +147,35 @@
             return;
         }
 
-        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-plus-square');
-
-        if (isClosed && !node.getData().length) {
+        if (!node.subTreeData) {
             Notifier.notify('Loading...')
             const resp = await Utils.getRequest(generateSubTreeUrl(node))
-            const data = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
-            $tree.tree('loadData', data, node);
+            node.subTreeData = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
         }
 
-        if (isClosed) {
-            $tree.tree('openNode', node, true, () => {
-                window.$(node.element).find('.load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
-            });
+        if (!node.subTreeLoaded) {
+            if (node.has_children) {
+                $tree.tree('loadData', [...node.subTreeData, ...node.getData()], node);
+            } else if (node.getData().length === 0) {
+                $tree.tree('loadData', node.subTreeData, node);
+            }
+            node.subTreeLoaded = true;
+            if (!node.is_open) {
+                $tree.tree('openNode', node, true, () => {
+                    window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
+                });
+            } else {
+                window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
+            }
         } else {
-            $tree.tree('closeNode', node, true)
-            window.$(node.element).find('.load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
+            node.subTreeLoaded = false;
+            if (!node.has_children) {
+                $tree.tree('closeNode', node, true)
+            } else {
+                window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
+                $tree.tree('loadData', getDataWithoutSubTree(node), node);
+            }
         }
-
     }
 
     function buildTree(data = null): void {
@@ -280,11 +291,14 @@
                         const $el = window.$(`<span class="load-items"></span>`)
                         $li.find('.jqtree-element').prepend($el);
                     }
-                    if (!node.disabled && !node.has_children && node.scope !== scope) {
+                    if (!node.disabled && node.scope !== scope) {
                         const $el = $li.find('.jqtree-element .load-items');
-                        $el.addClass('ph').addClass('ph-plus-square');
+                        $el.addClass('ph').addClass(node.subTreeLoaded ? 'ph-minus-square' : 'ph-plus-square');
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
+                        if (node.has_children) {
+                            $li.addClass('has-children');
+                        }
                     }
                 }
 
@@ -425,7 +439,9 @@
             const $element = window.$(e.node.element);
             const $el = $element.find('> .jqtree-element .load-items');
             if ($el.length > 0) {
-                $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+                if (!e.node.has_children) {
+                    $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+                }
             }
         });
 
@@ -433,15 +449,23 @@
             if (!e.node?.element) {
                 return;
             }
-
-            const $element = window.$(e.node.element);
+            const node = e.node
+            const $element = window.$(node.element);
             const $el = $element.find('> .jqtree-element .load-items');
             if ($el.length > 0) {
                 $el.removeClass('ph-minus-square').addClass('ph-plus-square');
+                if (node.subTreeData && node.subTreeLoaded && node.has_children) {
+                    node.subTreeLoaded = false;
+                    $tree.tree('loadData', getDataWithoutSubTree(node), node);
+                }
             }
         });
 
         $tree.tree(treeData);
+    }
+
+    function getDataWithoutSubTree(node) {
+        return node.getData().filter(item => !node.subTreeData.find(i => i.id === item.id))
     }
 
     function appendUnsetButton($el): void {
