@@ -559,7 +559,8 @@
     "pageNotFound": "Page non trouvée",
     "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
     "removeItem": "Supprimer l'élément",
-    "accessDenied": "Accès refusé"
+    "accessDenied": "Accès refusé",
+    "isLinked": "Est lié"
   },
   "insightsPanels": {
     "summary": "Sommaire",
