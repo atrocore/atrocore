@@ -524,7 +524,8 @@
     "Relations": "Стосунки",
     "Saved Filters": "Збережені фільтри",
     "replaceItem": "Замінити елемент",
-    "removeItem": "Видалити елемент"
+    "removeItem": "Видалити елемент",
+    "isLinked": "Пов'язано"
   },
   "insightsPanels": {
     "summary": "Підсумок",
