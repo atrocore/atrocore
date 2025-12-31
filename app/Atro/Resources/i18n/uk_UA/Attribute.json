@@ -40,7 +40,7 @@
     "conditionalRequired": "Обов'язковий",
     "entity": "Сутність",
     "classifications": "Класифікації",
-    "channel": "Канал",
+    "channel": "Ла-Манш",
     "modifiedExtendedDisabled": "Не фіксувати як зміну"
   },
   "labels": {
@@ -78,7 +78,7 @@
     "entityCannotBeChanged": "Сутність не може бути змінена.",
     "compositeAttributeNotFound": "Композитний атрибут не знайдено.",
     "compositeAttributeCannotBeChild": "Складений атрибут не може бути дочірнім.",
-    "entityNotAllowToChoose": "Сутність не може бути обраною."
+    "entityNotAllowToChoose": "Cутність не може бути обраною."
   },
   "options": {
     "type": {
