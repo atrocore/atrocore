@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Ci sono già degli attributi collegati direttamente. La preghiamo di rimuoverli dai record.",
     "entityTypeIsNotSuitableForAssociates": "Questo tipo di entità non può contenere il parametro \"Ha associati\". Solo \"Base\" e \"Gerarchia\" possono averlo.",
     "derivativeWithSuchRoleExists": "Esiste già un'entità derivata con questo ruolo.",
-    "derivativeFromDerivativeNotSupporting": "Un'entità derivata non può essere creata da un'altra entità derivata."
+    "derivativeFromDerivativeNotSupporting": "Un'entità derivata non può essere creata da un'altra entità derivata.",
+    "cannotRemoveDerivativeDirectly": "Le entità derivate non possono essere eliminate direttamente."
   }
 }

@@ -31,7 +31,7 @@
     "notes": "Notes",
     "tasks": "Tâches",
     "followEntityOnAssignment": "Suivi automatique à l'assignation",
-    "followEntityOnStreamPost": "Suivi automatique des enregistrements après leur publication dans le panneau Activités",
+    "followEntityOnStreamPost": "Suivi auto des enregistrements après publication dans Activités",
     "receiveNotifications": "Recevoir des notifications",
     "style": "Style de l'interface utilisateur",
     "followCreatedEntities": "Suivi automatique des enregistrements créés par l'utilisateur",

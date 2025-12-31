@@ -29,7 +29,7 @@
     "relationInheritance": "Héritage des relations",
     "unInheritedRelations": "Relations non héritées",
     "fields": "Champs",
-    "auditedDisabledFields": "Pas d'enregistrement d'activité pour les champs",
+    "auditedDisabledFields": "Pas d'enregistrement dans \"Activité\" pour les champs",
     "auditedEnabledRelations": "Enregistrer dans le panneau Activités les relations",
     "hasAttribute": "A des attributs",
     "hasClassification": "A des classifications",
@@ -88,7 +88,7 @@
     "hasOwner": "Activer la fonction \"propriétaire\" pour la gestion de l'accès.",
     "streamDisabled": "Si cette option est cochée, aucun panneau Activités ne s'affiche sur la page Détails de l'enregistrement. Vous ne pourrez pas ajouter de notes.",
     "disableActionHistory": "Si cette case est cochée, aucune action de l'utilisateur sur les enregistrements de cette entité ne sera enregistrée.",
-    "auditedDisabledFields": "Les modifications apportées à ces champs ne sont pas affichées en tant qu'activité.",
+    "auditedDisabledFields": "Les modifications apportées à ces champs ne sont pas affichées dans \"Activités\".",
     "auditedEnabledRelations": "Les changements dans ces relations sont affichés sous forme d'activité.",
     "linkAttributesWithClassificationAutomatically": "Si un attribut est directement lié à un enregistrement et que cet enregistrement est lié à une classification, l'attribut sera également lié à cette classification."
   },
@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Il existe déjà des attributs directement liés. Veuillez les supprimer des enregistrements.",
     "entityTypeIsNotSuitableForAssociates": "Ce type d’entité ne peut pas inclure le paramètre « A des associés ». Seuls les types « Base » et « Hiérarchie » sont autorisés.",
     "derivativeWithSuchRoleExists": "Il existe déjà une entité dérivée qui remplit cette fonction.",
-    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée."
+    "derivativeFromDerivativeNotSupporting": "Une entité dérivée ne peut pas être créée à partir d'une autre entité dérivée.",
+    "cannotRemoveDerivativeDirectly": "Les entités dérivées ne peuvent pas être supprimées directement."
   }
 }

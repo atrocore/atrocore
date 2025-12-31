@@ -4,7 +4,7 @@
     "role": "Rôle",
     "hasAccess": "Accès",
     "createAction": "Créer",
-    "readAction": "Lecture",
+    "readAction": "Lire",
     "editAction": "Éditer",
     "deleteAction": "Supprimer",
     "streamAction": "Activités",
@@ -18,7 +18,7 @@
   "labels": {
     "all": "Tous",
     "team": "Equipe",
-    "own": "S'approprier",
+    "own": "Données propres",
     "no": "Non",
     "yes": "Oui"
   }

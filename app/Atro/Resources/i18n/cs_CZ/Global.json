@@ -83,7 +83,8 @@
     "SelectionRecord": "Záznam o výběru",
     "MasterDataEntity": "Subjekt kmenových dat",
     "ActionExecution": "Provedení akce",
-    "ActionExecutionLog": "Protokol o provedení akce"
+    "ActionExecutionLog": "Protokol o provedení akce",
+    "Layout": "Rozložení"
   },
   "scopeNamesPlural": {
     "MatchedRecord": "Shodné záznamy",
@@ -154,7 +155,8 @@
     "SelectionRecord": "Výběrové záznamy",
     "MasterDataEntity": "Subjekty kmenových dat",
     "ActionExecution": "Provádění akcí",
-    "ActionExecutionLog": "Protokoly o provádění akcí"
+    "ActionExecutionLog": "Protokoly o provádění akcí",
+    "Layout": "Rozložení"
   },
   "labels": {
     "basic": "Basic",
@@ -508,7 +510,18 @@
     "Items": "Položky",
     "hideAll": "Skrýt vše",
     "Relations": "Vztahy",
-    "view": "Zobrazit"
+    "view": "Zobrazit",
+    "Saved Filters": "Uložené filtry",
+    "Support": "Podpora",
+    "Contact Us": "Kontaktujte nás",
+    "Open Dashboard": "Otevřít přístrojový panel",
+    "pageNotFound": "Stránka nebyla nalezena",
+    "pageNotFoundDescription": "Hledaný zdroj mohl být přesunut, odstraněn nebo neexistuje.",
+    "errorCode": "Kód chyby",
+    "accessDeniedDescription": "Váš účet nemá potřebná oprávnění k zobrazení tohoto zdroje. Pokud se domníváte, že byste měli mít přístup, obraťte se na svého správce.",
+    "accessDenied": "Přístup odepřen",
+    "replaceItem": "Nahradit položku",
+    "removeItem": "Odebrat položku"
   },
   "fields": {
     "width": "Šířka",
