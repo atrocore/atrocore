@@ -524,7 +524,8 @@
     "Relations": "Beziehungen",
     "Saved Filters": "Gespeicherte Filter",
     "replaceItem": "Artikel austauschen",
-    "removeItem": "Artikel entfernen"
+    "removeItem": "Artikel entfernen",
+    "isLinked": "Ist verknüpft"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",
