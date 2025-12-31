@@ -630,6 +630,9 @@
       "type": "jsonObject",
       "notStorable": true,
       "view": "views/fields/conditional-properties"
+    },
+    "modifiedExtendedDisabled": {
+      "type": "bool"
     }
   },
   "links": {

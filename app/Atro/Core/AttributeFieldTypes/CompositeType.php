@@ -41,7 +41,8 @@ class CompositeType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'fullWidth'                 => true,
             'notSortable'               => true,
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->entityDefs['fields'][$name]['childrenIds'] = $this->em->getConnection()->createQueryBuilder()

@@ -40,7 +40,8 @@
     "conditionalRequired": "Обов'язковий",
     "entity": "Сутність",
     "classifications": "Класифікації",
-    "channel": "Канал"
+    "channel": "Канал",
+    "modifiedExtendedDisabled": "Не фіксувати як зміну"
   },
   "labels": {
     "addNewValue": "Додати нове значення",

@@ -31,6 +31,7 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'column'      => "json_value",
             'required'    => !empty($row['is_required']),
             'fullWidth'   => !empty($attributeData['fullWidth']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->fields[$name . 'Names'] = [
@@ -93,7 +94,8 @@ class ExtensibleMultiEnumType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'notSortable'               => true,
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
         if (!empty($attributeData['dropdown'])) {
             $entity->entityDefs['fields'][$name]['view'] = "views/fields/extensible-multi-enum-dropdown";

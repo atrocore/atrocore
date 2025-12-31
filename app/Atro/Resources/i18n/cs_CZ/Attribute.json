@@ -40,7 +40,8 @@
     "conditionalVisible": "Viditelné",
     "conditionalReadOnly": "Pouze pro čtení",
     "conditionalProtected": "Chráněné stránky",
-    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením"
+    "conditionalDisableOptions": "Možnosti pro osoby se zdravotním postižením",
+    "modifiedExtendedDisabled": "Žádný záznam jako změna"
   },
   "labels": {
     "Classification": "Klasifikace",
