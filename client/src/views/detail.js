@@ -429,7 +429,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
 
             const record = this.getView('record');
 
-            const hasLayoutEditor = this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
+            const hasLayoutEditor = this.hasLayoutEditor();
             const recordButtons = Object.assign(record?.getRecordButtons() || {}, {
                 headerButtons: this.getMenu(),
                 isOverviewFilterActive: this.isOverviewFilterApply(),
@@ -512,6 +512,10 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                     }
                 }
             };
+        },
+
+        hasLayoutEditor() {
+           return this.getMetadata().get(['scopes', this.model.name, 'layouts']) && this.getAcl().check('LayoutProfile', 'read');
         },
 
         setupHeader: function () {

@@ -7,6 +7,8 @@
     };
     export let hasLayoutEditor: boolean = false;
 
+    export let afterOnMount: Function = () => {}
+
     let container: HTMLDivElement;
     let navPills: HTMLUListElement;
 
@@ -179,6 +181,10 @@
 
         observer.observe(container, {childList: true, subtree: true});
         resizeObserver.observe(container);
+
+        tick().then(() => {
+            afterOnMount();
+        })
     });
 
     onDestroy(() => {

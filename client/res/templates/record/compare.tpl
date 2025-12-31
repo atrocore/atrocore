@@ -17,6 +17,9 @@
                         <h4 class="panel-title">
                             {{title}}
                         </h4>
+                        {{#if hasLayoutEditor}}
+                        <div class="layout-editor-container pull-right"></div>
+                        {{/if}}
                     </div>
 
                     <div class="panel-body">
