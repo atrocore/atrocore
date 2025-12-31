@@ -144,7 +144,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
         afterRender() {
             let count = 0;
             this.models.forEach(m => {
-                if (this.getUser().isAdmin()) {
+                if (this.getAcl().check('LayoutProfile', 'read')) {
                     this.createView(m.id + 'layoutConfiguratorSelection', "views/record/layout-configurator", {
                         scope: m.name,
                         viewType: 'selection',

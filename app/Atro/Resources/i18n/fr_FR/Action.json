@@ -48,7 +48,7 @@
       "single": "Seul"
     },
     "type": {
-      "create": "Créer",
+      "create": "Création",
       "update": "Mise à jour",
       "delete": "Suppression",
       "set": "Ensemble d'actions",
@@ -80,6 +80,6 @@
     "executeAs": "Indiquez l'utilisateur que le système utilisera pour effectuer l'action."
   },
   "exceptions": {
-    "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode édition et ne peut pas être utilisée ici."
+    "forEditModeOnly": "L'action \"%s\" n'est disponible qu'en mode modification et ne peut pas être utilisée ici."
   }
 }

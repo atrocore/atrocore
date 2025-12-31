@@ -226,7 +226,7 @@
             return false
         }
 
-        const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`];
+        const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`, 'layoutListDisabled'];
         if (params.reelType) {
             disabledParameters.push(`layout${Utils.upperCaseFirst(params.reelType)}Disabled`)
         }

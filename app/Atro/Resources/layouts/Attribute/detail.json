@@ -160,6 +160,12 @@
           "name": "compositeAttribute"
         },
         false
+      ],
+      [
+        {
+          "name": "modifiedExtendedDisabled"
+        },
+        false
       ]
     ]
   },

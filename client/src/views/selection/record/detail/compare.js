@@ -108,13 +108,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             })
 
             this.listenToOnce(this, 'all-panels-rendered', () => {
-                let panelList = this.getRelationshipPanels().map(m => {
-                    m.title = m.label;
-                    return m;
+                this.prepareRelationshipPanels((panelList) => {
+                    panelList = this.getPanelWithFields().concat(panelList);
+                    this.trigger('detailPanelsLoaded', {list: panelList});
                 });
-
-                panelList = this.getPanelWithFields().concat(panelList);
-                this.trigger('detailPanelsLoaded', {list: panelList});
             });
 
 

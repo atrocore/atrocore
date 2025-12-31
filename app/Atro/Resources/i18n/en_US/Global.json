@@ -524,7 +524,8 @@
     "Relations": "Relations",
     "Saved Filters": "Saved Filters",
     "replaceItem": "Replace Item",
-    "removeItem": "Remove Item"
+    "removeItem": "Remove Item",
+    "isLinked": "Is Linked"
   },
   "insightsPanels": {
     "summary": "Summary",

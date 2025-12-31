@@ -39,7 +39,7 @@
     "smtpOauthAuthorizeUrl": "URL d'autorisation Oauth",
     "smtpOauthTokenUrl": "URL du jeton Oauth",
     "smtpClientId": "Identifiant du client",
-    "smtpClientSecret": "Secret du client",
+    "smtpClientSecret": "Secret client",
     "smtpAuthType": "Type d'authentification",
     "dsn": "Dsn",
     "headers": "En-têtes",
@@ -77,7 +77,7 @@
     "sqlsrvMissing": "L'extension PHP MSSQL n'est pas installée.",
     "connectionFailed": "La connexion n'a pas pu être établie : %s",
     "noSuchType": "Aucun type de connexion de ce type.",
-    "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par courrier électronique et ne peut pas être supprimée."
+    "notificationConnectionCannotBeDeleted": "Cette connexion est utilisée pour les notifications par e‑mail et ne peut pas être supprimée."
   },
   "options": {
     "smtpAuthType": {

@@ -30,15 +30,9 @@
         <tr> <td  colspan="{{columnLength}}"> No Data</td></tr>
         {{/unless}}
         {{#each tableRows}}
-        <tr class="list-row  {{class}}" >
+        <tr class="list-row  {{#unless @first}}{{class}} {{/unless}}" >
             <td class="cell l-200" data-field="name" title="{{title}}">
-                {{#if isField}}
-                <div data-key="{{key}}" style="display:flex; flex-direction: column; align-items: baseline">
-                    {{{var key ../this}}}
-                </div>
-                {{else}}
                 {{{label }}}
-                {{/if}}
             </td>
             {{#each entityValueKeys}}
             <td class="cell text-center" style="min-width: {{../../minWidth}}px">

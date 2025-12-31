@@ -326,6 +326,7 @@ var Espo = Espo || {classMap:{}};
                 dataType: 'text',
                 mimeType: 'text/plain',
                 local: true,
+                main: (name || '').includes('controllers'),
                 url: this.basePath + path,
                 success: function (response) {
                     if (this.cache && !noAppCache) {

@@ -8,17 +8,17 @@
   },
   "filters": {
     "all": "Tous",
-    "posts": "Postes",
+    "posts": "Publications",
     "updates": "Mises à jour",
     "notes": "Notes",
-    "emails": "Emails"
+    "emails": "E-mails"
   },
   "messages": {
     "writeMessage": "Ecrivez votre message ici"
   },
   "options": {
     "type": {
-      "Post": "Poste"
+      "Post": "Publication"
     }
   }
 }

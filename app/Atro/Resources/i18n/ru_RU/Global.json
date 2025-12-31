@@ -51,7 +51,7 @@
     "Background": "Фон",
     "EntityField": "Поле сущности",
     "ExtensibleEnumOption": "Вариант списка",
-    "ExtensibleEnumExtensibleEnumOption": "Список (опция списка)",
+    "ExtensibleEnumExtensibleEnumOption": "Список (опция \"Список\")",
     "Association": "Ассоциация",
     "AttributePanel": "Панель атрибутов",
     "MatchedRecord": "Сопоставленная запись",
@@ -68,7 +68,7 @@
     "Bookmark": "Закладка",
     "SystemIcon": "Системный значок",
     "ProductHierarchy": "Иерархия продуктов",
-    "AccountGroup": "Группа счетов",
+    "AccountGroup": "Учетная группа",
     "ProductGroup": "Группа продуктов",
     "Classification": "Классификация",
     "ClassificationAttribute": "Атрибут классификации",
@@ -83,7 +83,8 @@
     "Selection": "Выбор",
     "SelectionRecord": "Запись о выборе",
     "ActionExecution": "Выполнение действий",
-    "ActionExecutionLog": "Журнал выполнения действий"
+    "ActionExecutionLog": "Журнал выполнения действий",
+    "Layout": "Макет"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сущности основных данных",
@@ -154,7 +155,8 @@
     "Selection": "Подборки",
     "SelectionRecord": "Записи о выборе",
     "ActionExecutionLog": "Журналы выполнения действий",
-    "ActionExecution": "Выполнение действий"
+    "ActionExecution": "Выполнение действий",
+    "Layout": "Лейауты"
   },
   "labels": {
     "matchings": "Соответствия",
@@ -458,7 +460,7 @@
     "enableAutomaticClosing": "Включите автоматическое открытие и закрытие этой панели при наведении мыши.",
     "disableAutomaticClosing": "Отключите автоматическое открытие и закрытие этой панели при наведении мыши.",
     "actionFollow": "Нажмите, чтобы следовать",
-    "actionUnfollow": "За Вами следят, Нажмите, чтобы отменить слежку",
+    "actionUnfollow": "За Вами следят, Нажмите, чтобы отменить",
     "actionBookmark": "Нажмите, чтобы добавить в закладки",
     "actionUnbookmark": "Закладка, Нажмите, чтобы снять закладку",
     "actionOpenFilter": "Открытый фильтр",
@@ -508,7 +510,18 @@
     "openLink": "Открытая ссылка",
     "Items": "Предметы",
     "hideAll": "Скрыть все",
-    "Relations": "Отношения"
+    "Relations": "Отношения",
+    "Saved Filters": "Сохраненные фильтры",
+    "Support": "Поддержите",
+    "replaceItem": "Заменить предмет",
+    "removeItem": "Remove Item",
+    "Contact Us": "Свяжитесь с нами",
+    "Open Dashboard": "Откройте приборную панель",
+    "pageNotFound": "Страница не найдена",
+    "pageNotFoundDescription": "Возможно, ресурс, который Вы ищете, был перемещен, удален или не существует.",
+    "errorCode": "Код ошибки",
+    "accessDeniedDescription": "Ваша учетная запись не имеет необходимых прав для просмотра этого ресурса. Если Вы считаете, что у Вас должен быть доступ, пожалуйста, свяжитесь с Вашим администратором.",
+    "accessDenied": "В доступе отказано"
   },
   "messages": {
     "confirmInheritAllForChildren": "Вы уверены, что хотите, чтобы все дочерние элементы унаследовали значения полей (и атрибутов), а также отношения от этого родительского элемента? Существующие значения не будут заменены.",
@@ -645,14 +658,14 @@
     "addRelation": "Добавить связь",
     "removeRelation": "Удалить связь",
     "massRemove": "Массовое удаление",
-    "restore": "Восстановите",
+    "restore": "Восстановить",
     "massRestore": "Массовое восстановление",
     "deletePermanently": "Удалить навсегда",
     "massDelete": "Массовое удаление",
     "download": "Скачать",
     "compare": "Сравнить",
     "removeAttribute": "Удалить атрибут",
-    "update": "Обновить массово",
+    "update": "Массовое обновление",
     "delete": "Удалить",
     "select": "Выбрать",
     "cancel": "Отменить"
@@ -1311,8 +1324,8 @@
   },
   "firstStepsDashlet": {
     "title": {
-      "readDocumentation": "Читайте документацию",
-      "customizeDesign": "Настройте дизайн системы",
+      "readDocumentation": "Прочитайте документацию",
+      "customizeDesign": "Индивидуальный дизайн системы",
       "createUsers": "Создание пользователей",
       "configureDataModel": "Настройте Вашу модель данных",
       "importData": "Импорт данных",

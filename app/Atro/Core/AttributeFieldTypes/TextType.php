@@ -44,7 +44,8 @@ class TextType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $id,
             'column'      => $this->column,
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         if (empty($skipValueProcessing)) {
@@ -73,7 +74,8 @@ class TextType extends AbstractFieldType
             'label'                     => $row[$this->prepareKey('name', $row)],
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         if ($this->type === 'varchar') {
@@ -189,7 +191,8 @@ class TextType extends AbstractFieldType
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
                 'layoutDetailDisabled'      => true,
-                'conditionalProperties'     => $this->prepareConditionalProperties($row)
+                'conditionalProperties'     => $this->prepareConditionalProperties($row),
+                'modifiedExtendedDisabled'  => !empty($row['modified_extended_disabled'])
             ];
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];

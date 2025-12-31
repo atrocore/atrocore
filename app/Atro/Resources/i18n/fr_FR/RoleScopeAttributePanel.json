@@ -2,7 +2,7 @@
   "fields": {
     "attributePanel": "Panneau d'attributs",
     "roleScope": "Champ d'application",
-    "readAction": "Lecture",
+    "readAction": "Lire",
     "editAction": "Éditer"
   }
 }

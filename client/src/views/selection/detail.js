@@ -403,6 +403,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     this.notify(false);
                 });
 
+                this.listenTo(view, 'layout-refreshed', () => {
+                    this.setupRecord();
+                })
+
                 if (this.isRendered()) {
                     view.render();
                 }
@@ -541,6 +545,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.renderLeftPanel();
         },
 
+        setupLayoutEditorButton() {
+            if (this.selectionViewMode !== 'standard' && !this.comparisonAcrossEntities() && this.getMainRecord()) {
+                this.getMainRecord().createLayoutConfigurator();
+            }
+        },
+
         initSelectLeftPanel() {
             if (['compare', 'merge'].includes(this.selectionViewMode) && !this.getStorage().get('treeItem', 'Selection')) {
                 this.getStorage().set('treeItem', 'Selection', '_items');
@@ -641,17 +651,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         afterRemoveSelectedRecords(selectedRecordIds) {
             this.selectionRecordModels = this.selectionRecordModels.filter(m => !selectedRecordIds.includes(m.get('_selectionRecordId')))
 
-            if(this.selectionRecordModels.length === 0) {
+            if (this.selectionRecordModels.length === 0) {
                 this.actionShowSelectionView({name: 'standard'});
                 return;
             }
 
             window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
-            if(this.selectionRecordModels.length === 2) {
+            if (this.selectionRecordModels.length === 2) {
                 this.selectedIds = this.selectionRecordModels.map(m => m.id);
-            }else{
-                this.selectedIds = this.selectedIds.filter(id =>  this.selectionRecordModels.find(v => v.id===id ))
+            } else {
+                this.selectedIds = this.selectedIds.filter(id => this.selectionRecordModels.find(v => v.id === id))
             }
 
             window.leftSidePanel?.setSelectedIds(this.selectedIds);
@@ -701,7 +711,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         label: this.translate('Duplicate'),
                         name: 'duplicate'
                     }
-                ]
+                ],
+                hasLayoutEditor: true
             }
 
             if (this.getAcl().check('Selection', 'edit')) {
@@ -726,11 +737,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             } : {});
         },
 
-        getEntityTypes() {
-            if (this.model.get('entityTypes')) {
-                return this.model.get('entityTypes');
-            }
+        hasLayoutEditor() {
+            return this.selectionViewMode !== 'standard' && this.getAcl().check('LayoutProfile', 'read');
+        },
 
+        getEntityTypes() {
             if (this.selectionRecordModels) {
                 let entityTypes = [];
                 this.selectionRecordModels.forEach(m => {
@@ -739,6 +750,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     }
                 });
                 return entityTypes;
+            }
+
+            if (this.model.get('entityTypes')) {
+                return this.model.get('entityTypes');
             }
 
             return [];

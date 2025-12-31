@@ -74,7 +74,7 @@
     "resetToDefault": "Czy na pewno chce Pan przywrócić domyślną konfigurację?"
   },
   "tooltips": {
-    "clearDeletedAfterDays": "Rekordy dotyczące tego podmiotu są trwale usuwane XX dni po dacie usunięcia.",
+    "clearDeletedAfterDays": "Rekordy dla tego podmiotu są trwale usuwane XX dni po dacie usunięcia.",
     "autoDeleteAfterDays": "Rekordy dotyczące tego podmiotu są usuwane XX dni po dacie ostatniej zmiany.",
     "disabled": "Proszę sprawdzić, czy ta jednostka nie jest potrzebna w Państwa systemie.",
     "statusField": "Aktualizacje tego pola są rejestrowane w Aktywnościach.",
@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Istnieją już bezpośrednio powiązane atrybuty. Proszę usunąć je z rekordów.",
     "entityTypeIsNotSuitableForAssociates": "Ten typ encji nie może zawierać parametru \"Has Associates\". Tylko \"Base\" i \"Hierarchy\" mogą go posiadać.",
     "derivativeWithSuchRoleExists": "Istnieje już podmiot pochodny pełniący tę rolę.",
-    "derivativeFromDerivativeNotSupporting": "Jednostka pochodna nie może być utworzona na podstawie innej jednostki pochodnej."
+    "derivativeFromDerivativeNotSupporting": "Jednostka pochodna nie może być utworzona na podstawie innej jednostki pochodnej.",
+    "cannotRemoveDerivativeDirectly": "Podmioty pochodne nie mogą być usuwane bezpośrednio."
   }
 }

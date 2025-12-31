@@ -38,8 +38,8 @@ class V2Dot2Dot0 extends Base
         $this->step9();
         $this->step10();
         $this->step11();
-
         $this->step12();
+        $this->step13();
     }
 
     protected function step1(): void
@@ -592,6 +592,24 @@ class V2Dot2Dot0 extends Base
             $this->exec("CREATE TABLE action_execution (id VARCHAR(36) NOT NULL, name VARCHAR(255) DEFAULT NULL, deleted TINYINT(1) DEFAULT '0', status VARCHAR(255) DEFAULT NULL, status_message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', type VARCHAR(255) DEFAULT NULL, started_at DATETIME DEFAULT NULL, finished_at DATETIME DEFAULT NULL, created_count INT DEFAULT NULL, updated_count INT DEFAULT NULL, failed_count INT DEFAULT NULL, created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_id VARCHAR(36) DEFAULT NULL, incoming_webhook_id VARCHAR(36) DEFAULT NULL, scheduled_job_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, workflow_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_ACTION_ID (action_id, deleted), INDEX IDX_ACTION_EXECUTION_SCHEDULED_JOB_ID (scheduled_job_id, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_WORKFLOW_ID (workflow_id, deleted), INDEX IDX_ACTION_EXECUTION_NAME (name, deleted), INDEX IDX_ACTION_EXECUTION_STATUS (status, deleted), INDEX IDX_ACTION_EXECUTION_CREATED_AT (created_at, deleted), INDEX IDX_ACTION_EXECUTION_MODIFIED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_STARTED_AT (modified_at, deleted), INDEX IDX_ACTION_EXECUTION_FINISHED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             $this->exec("CREATE TABLE action_execution_log (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', type VARCHAR(10) DEFAULT NULL, entity_name VARCHAR(100) DEFAULT NULL, entity_id VARCHAR(36) DEFAULT NULL, message LONGTEXT DEFAULT NULL, payload LONGTEXT DEFAULT NULL COMMENT '(DC2Type:jsonObject)', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, action_execution_id VARCHAR(36) DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, INDEX IDX_ACTION_EXECUTION_LOG_ACTION_EXECUTION_ID (action_execution_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_TYPE (type, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_NAME (entity_name, deleted), INDEX IDX_ACTION_EXECUTION_LOG_ENTITY_ID (entity_id, deleted), INDEX IDX_ACTION_EXECUTION_LOG_CREATED_AT (created_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             $this->exec("DROP TABLE action_log");
+        }
+    }
+
+    protected function step13(): void
+    {
+        $fromSchema = $this->getCurrentSchema();
+        $toSchema = clone $fromSchema;
+
+        if ($toSchema->hasTable('attribute')) {
+            $table = $toSchema->getTable('attribute');
+
+            if (!$table->hasColumn('modified_extended_disabled')) {
+                $table->addColumn('modified_extended_disabled', 'boolean', ['default' => false, 'notnull' => true]);
+
+                foreach ($this->schemasDiffToSql($fromSchema, $toSchema) as $sql) {
+                    $this->exec($sql);
+                }
+            }
         }
     }
 

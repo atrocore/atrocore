@@ -26,6 +26,6 @@
     "storageHasItems": "Zamontowanego folderu nie można zmienić w przypadku niepustej pamięci masowej."
   },
   "tooltips": {
-    "syncFolders": "Jeśli ta opcja jest zaznaczona, fizyczna struktura plików i folderów w pamięci masowej będzie taka sama jak w systemie. Oznacza to, że tylko jeden plik/folder o podobnej nazwie może być przechowywany w tej samej ścieżce."
+    "syncFolders": "Jeśli to pole jest zaznaczone, fizyczna struktura plików i folderów w pamięci masowej będzie taka sama jak w systemie. Oznacza to, że tylko jeden plik/folder o podobnej nazwie może być przechowywany w tej samej ścieżce."
   }
 }

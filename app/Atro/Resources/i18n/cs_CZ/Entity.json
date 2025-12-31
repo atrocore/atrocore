@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Existují již přímo propojené atributy. Odstraňte je prosím ze záznamů.",
     "entityTypeIsNotSuitableForAssociates": "Tento typ entity nemůže obsahovat parametr \"Has Associates\". Mohou ho mít pouze \"Base\" a \"Hierarchy\".",
     "derivativeWithSuchRoleExists": "Již existuje odvozená entita s touto rolí.",
-    "derivativeFromDerivativeNotSupporting": "Odvozená entita nemůže být vytvořena z jiné odvozené entity."
+    "derivativeFromDerivativeNotSupporting": "Odvozená entita nemůže být vytvořena z jiné odvozené entity.",
+    "cannotRemoveDerivativeDirectly": "Odvozené entity nelze odstranit přímo."
   }
 }

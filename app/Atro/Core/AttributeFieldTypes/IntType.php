@@ -42,7 +42,8 @@ class IntType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $id,
             'column'      => "{$this->type}_value",
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $entity->set($name, $row[$entity->fields[$name]['column']] ?? null);
@@ -70,7 +71,8 @@ class IntType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         $attributeData = @json_decode($row['data'], true)['field'] ?? null;
@@ -154,7 +156,8 @@ class IntType extends AbstractFieldType
                 'required'                  => !empty($row['is_required']),
                 'readOnly'                  => !empty($row['is_read_only']),
                 'protected'                 => !empty($row['is_protected']),
-                'layoutDetailDisabled'      => true
+                'layoutDetailDisabled'      => true,
+                'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
             ];
             $attributesDefs[$name] = $entity->entityDefs['fields'][$name];
             $attributesDefs[$name . 'Unit'] = $entity->entityDefs['fields'][$name . 'Unit'];
