@@ -449,7 +449,8 @@
     "pageNotFound": "Pagina non trovata",
     "pageNotFoundDescription": "La risorsa che sta cercando potrebbe essere stata spostata, cancellata o non esistere.",
     "errorCode": "Codice di errore",
-    "accessDenied": "Accesso negato"
+    "accessDenied": "Accesso negato",
+    "isLinked": "È collegato"
   },
   "messages": {
     "optionValueCannotBeEmpty": "Il valore dell'opzione non può essere vuoto",
