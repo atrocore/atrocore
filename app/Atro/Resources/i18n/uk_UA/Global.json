@@ -775,7 +775,7 @@
     "downloadUrl": "URL-адреса для завантаження",
     "routes": "Маршрут(и)",
     "conditionalProperties": "Умовні властивості",
-    "emailAddress": "Email",
+    "emailAddress": "Електронна пошта",
     "width": "Ширина",
     "height": "Висота",
     "start": "Старт",
