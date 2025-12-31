@@ -521,7 +521,8 @@
     "accessDeniedDescription": "Váš účet nemá potřebná oprávnění k zobrazení tohoto zdroje. Pokud se domníváte, že byste měli mít přístup, obraťte se na svého správce.",
     "accessDenied": "Přístup odepřen",
     "replaceItem": "Nahradit položku",
-    "removeItem": "Odebrat položku"
+    "removeItem": "Odebrat položku",
+    "isLinked": "Je propojen"
   },
   "fields": {
     "width": "Šířka",
