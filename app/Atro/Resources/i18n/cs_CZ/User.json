@@ -71,7 +71,7 @@
     "passwordResetEmailBody": "Heslo můžete obnovit pomocí tohoto odkazu {link}. Platnost této jedinečné adresy URL brzy vyprší.",
     "passwordExpiredForm": "Platnost vašeho hesla vypršela. Aktualizujte ho prosím pomocí níže uvedeného formuláře.",
     "passwordChanged": "Heslo bylo změněno",
-    "userCantBeEmpty": "Uživatelské jméno nemůže být prázdné!",
+    "userCantBeEmpty": "Uživatelské jméno nelze nechat prázdné.",
     "wrongUsernamePasword": "Špatné uživatelské jméno/heslo",
     "emailAddressCantBeEmpty": "E-mailová adresa nesmí být prázdná",
     "userNameEmailAddressNotFound": "Uživatelské jméno/e-mailová adresa nebyly nalezeny",
