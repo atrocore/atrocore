@@ -1,7 +1,7 @@
 {
   "fields": {
     "entityType": "Encja",
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "template": "Szablon HTML/CSS"
   }
 }
