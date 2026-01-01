@@ -18,7 +18,7 @@
     "dateValue": "Standardwert: Datum",
     "datetimeValue": "Standardwert: Datum-Uhrzeit",
     "boolValue": "Standardwert: Boolesch",
-    "min": "Min",
+    "min": "Minimum",
     "max": "Max",
     "conditionalDisableOptions": "Deaktivierte Optionen",
     "enableConditionalRequired": "Erforderliche aktivieren",
