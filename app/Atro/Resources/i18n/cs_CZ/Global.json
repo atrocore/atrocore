@@ -408,7 +408,7 @@
     "Select Image": "Výběr existujícího obrázku",
     "Upload Image": "Nahrání obrázku z místního souborového systému",
     "copyConfigurations": "Kopírování konfigurací",
-    "youMustConfigureNotificationConnection": "Aby bylo možné odesílat oznámení, je třeba nejprve nakonfigurovat připojení pro e-mailová oznámení.",
+    "youMustConfigureNotificationConnection": "Nejprve musíte nakonfigurovat připojení pro e-mailová oznámení, abyste mohli oznámení přijímat.",
     "Unbookmark": "Zrušit záložku",
     "Bookmark": "Záložka",
     "Unbookmarking": "Zrušení záložky",
@@ -1121,7 +1121,7 @@
   },
   "exceptions": {
     "reverseAssociationError": "Chyba zpětného přiřazení: %s",
-    "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s",
+    "integerValueValidationFailed": "Celočíselná hodnota pole/atributu \"%s\" musí být mezi %s a %s.",
     "singleClassificationAllowed": "Je povolena pouze jedna klasifikace",
     "moreThanOneClassification": "Některé záznamy mají více než jednu klasifikaci.",
     "noSuchAssociation": "Ověření se nezdařilo. Žádná taková asociace neexistuje.",
