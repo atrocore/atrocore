@@ -523,8 +523,8 @@
     "hideAll": "Alles ausblenden",
     "Relations": "Beziehungen",
     "Saved Filters": "Gespeicherte Filter",
-    "replaceItem": "Artikel austauschen",
-    "removeItem": "Artikel entfernen",
+    "replaceItem": "Element austauschen",
+    "removeItem": "Element entfernen",
     "isLinked": "Ist verknüpft"
   },
   "insightsPanels": {
