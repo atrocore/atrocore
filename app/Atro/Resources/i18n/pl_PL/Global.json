@@ -444,7 +444,7 @@
     "Select Image": "Proszę wybrać istniejący obraz",
     "Upload Image": "Przesyłanie obrazu z lokalnego systemu plików",
     "copyConfigurations": "Konfiguracje kopiowania",
-    "youMustConfigureNotificationConnection": "Aby powiadomienia były wysyłane, należy najpierw skonfigurować połączenie powiadomień e-mail.",
+    "youMustConfigureNotificationConnection": "Najpierw należy skonfigurować połączenie powiadomień e-mail, aby otrzymywać powiadomienia.",
     "Bookmarking": "Zakładki",
     "Unbookmark": "Unbookmark",
     "Bookmark": "Zakładka",
@@ -1232,7 +1232,7 @@
     "massDeleteSomeRecordNotProceed": "Nie udało się usunąć niektórych rekordów.",
     "massRestoreSomeRecordNotProceed": "Nie udało się przywrócić niektórych rekordów.",
     "entityCannotBeBookmarked": "Rekordy tego podmiotu nie mogą być dodawane do zakładek.",
-    "integerValueValidationFailed": "Wartość całkowita dla pola/atrybutu \"%s\" musi zawierać się w przedziale od %s do %s",
+    "integerValueValidationFailed": "Wartość całkowita dla pola/atrybutu \"%s\" musi zawierać się w przedziale od %s do %s.",
     "singleClassificationAllowed": "Dozwolona jest tylko jedna klasyfikacja",
     "dateIsInvalid": "Data dla pola '%s' jest nieprawidłowa.",
     "datetimeIsInvalid": "Data-czas dla pola \"%s\" jest nieprawidłowa."
