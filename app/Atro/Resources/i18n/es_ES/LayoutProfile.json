@@ -17,7 +17,7 @@
     "Favorites": "Favoritos"
   },
   "exceptions": {
-    "defaultIsRequired": "Debe existir un perfil de disposición por defecto en el sistema"
+    "defaultIsRequired": "Debe existir un perfil de disposición por defecto en el sistema."
   },
   "messages": {
     "profileWillBeNewDefault": "Este perfil será el nuevo predeterminado, ¿está seguro?",
