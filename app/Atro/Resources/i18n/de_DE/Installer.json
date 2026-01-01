@@ -37,7 +37,7 @@
     "alreadyInstalled": "AtroCore ist schon installiert",
     "differentPass": "Verschiedene Passwörter",
     "notCorrectDatabaseConfig": "Ungültige Datenbank Einstellungen",
-    "filePermissionsError": "You have insufficient file permissions. Please configure permissions according to instruction."
+    "filePermissionsError": "Sie haben keine ausreichenden Dateiberechtigungen. Bitte konfigurieren Sie die Berechtigungen gemäß den Anweisungen."
   },
   "messages": {
     "youMustAgreeToTheLicenseAgreement": "Sie müssen den Lizenzvertrag akzeptieren",
