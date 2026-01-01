@@ -17,7 +17,7 @@
     "invalidVersion": "Verze modulu je neplatná.",
     "downgradeProhibited": "Verze modulu je neplatná. Downgrade je zakázán.",
     "hasRequireds": "Modul nesplňuje požadavky",
-    "hasRequiredsDelete": "Požadovaný modul nelze odstranit",
+    "hasRequiredsDelete": "Povinný modul nelze odstranit.",
     "suchModuleIsAlreadyInstalled": "Takový modul je již nainstalován",
     "suchModuleVersionAlreadyInstalled": "Taková verze modulu je již nainstalována",
     "noSuchModuleVersion": "Žádná taková verze modulu",
