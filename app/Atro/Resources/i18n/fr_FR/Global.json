@@ -486,7 +486,7 @@
     "Added": "Ajouté",
     "RememberUsername": "Mémoriser le nom d'utilisateur",
     "Clear": "Effacer",
-    "youMustConfigureNotificationConnection": "Vous devez d'abord configurer la connexion de notification par e-mail pour que les notifications soient envoyées.",
+    "youMustConfigureNotificationConnection": "Tout d'abord, vous devez configurer la connexion de notification par e-mail afin de recevoir les notifications.",
     "Bookmarking": "Signets",
     "Unbookmark": "Supprimer les signets",
     "Bookmark": "Signet",
@@ -1183,7 +1183,7 @@
     "datetimeIsInvalid": "La date et l'heure du champ \"%s\" ne sont pas valides.",
     "notUniqueRecordField": "L'enregistrement ne peut pas être sauvegardé, l'enregistrement avec un tel \"%s\" existe déjà.",
     "entityCannotBeBookmarked": "Les enregistrements de cette entité ne peuvent pas être mis en signet.",
-    "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s",
+    "integerValueValidationFailed": "La valeur entière du champ/attribut \"%s\" doit être comprise entre %s et %s.",
     "notUniqueCreatedValue": "Ces relations existent déjà et ne peuvent donc pas être ajoutées."
   },
   "queryBuilderFilter": {
