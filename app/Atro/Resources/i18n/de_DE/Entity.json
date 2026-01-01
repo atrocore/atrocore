@@ -12,7 +12,7 @@
     "sortDirection": "Standard-Sortierrichtung",
     "statusField": "Statusfeld",
     "kanbanViewMode": "Kanban-Ansicht",
-    "kanbanStatusIgnoreList": "Die in der Kanban-Ansicht ignorierten Listen ",
+    "kanbanStatusIgnoreList": "Die in der Kanban-Ansicht ignorierten Listen",
     "deleteWithoutConfirmation": "Löschen ohne Bestätigung",
     "autoDeleteAfterDays": "Zeitraum für automatisches Löschen, in Tagen",
     "clearDeletedAfterDays": "Zeitraum für dauerhaftes Löschen, in Tagen",
@@ -65,8 +65,8 @@
   "labels": {
     "accessManagement": "Zugriffsverwaltung",
     "hierarchyManagement": "Hierarchieverwaltung",
-    "other": "Sonstiges",
-    "resetToDefault": "Auf Standardwerte zurücksetzen",
+    "other": "Sonstige",
+    "resetToDefault": "Auf Standardwert zurücksetzen",
     "attributes": "Attribute",
     "mdm": "Stammdaten-Management"
   },
@@ -79,7 +79,7 @@
     "disabled": "Prüfen Sie, ob Sie diese Entität in Ihrem System nicht benötigen.",
     "statusField": "Aktualisierungen dieses Feldes werden im Aktivitäten protokolliert.",
     "deleteWithoutConfirmation": "Wenn diese Option aktiviert ist, wird der einzelne Datensatz ohne Benutzerbestätigung gelöscht. Die Löschung mehrerer Datensätze soll weiterhin bestätigt werden.",
-    "modifiedExtendedRelations": "Änderungen bei diesen Beziehungen führen zur Aktualisierung des Datums und der Uhrzeit von \"Geändert am\"",
+    "modifiedExtendedRelations": "Änderungen bei diesen Beziehungen führen zur Aktualisierung von \"Geändert am\".",
     "dragAndDrop": "Mit dieser Option wird die Sortierreihenfolge der Hierarchie aktiviert. Dies bedeutet, dass keine andere Sortierung in der hierarchischen Navigation möglich ist.",
     "unInheritedFields": "Die Werte für diese Felder werden nicht vom übergeordneten Element vererbt.",
     "unInheritedRelations": "Die Beziehungen zu diesen Entitäten werden nicht vom übergeordneten Element vererbt.",
@@ -89,7 +89,7 @@
     "streamDisabled": "Wenn diese Option aktiviert ist, wird auf der Seite mit den Datensatzdetails kein Aktivitätenbereich angezeigt. Sie können dann auch keine Notizen hinzufügen.",
     "disableActionHistory": "Wenn diese Option aktiviert ist, werden keine Benutzeraktionen für die Datensätze dieser Entität protokolliert.",
     "auditedDisabledFields": "Änderungen in diesen Feldern werden nicht als Aktivität angezeigt.",
-    "auditedEnabledRelations": "CÄnderungen in diesen Relationen werden als Aktivität angezeigt. ",
+    "auditedEnabledRelations": "Änderungen in diesen Relationen werden als Aktivität angezeigt.",
     "linkAttributesWithClassificationAutomatically": "Wenn ein Attribut direkt mit einem Datensatz verknüpft ist und dieser Datensatz mit einer Klassifikation verknüpft ist, wird das Attribut ebenfalls mit dieser Klassifikation verknüpft."
   },
   "exceptions": {
