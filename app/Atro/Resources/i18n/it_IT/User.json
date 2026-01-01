@@ -71,7 +71,7 @@
     "passwordResetEmailBody": "Può ripristinare la sua password seguendo questo link {link}. Questo URL unico scadrà presto.",
     "passwordExpiredForm": "La sua password è scaduta. La preghiamo di aggiornarla utilizzando il modulo sottostante.",
     "passwordChanged": "La password è stata modificata",
-    "userCantBeEmpty": "Il nome utente non può essere vuoto",
+    "userCantBeEmpty": "Il nome utente non può essere lasciato vuoto.",
     "wrongUsernamePasword": "Nome utente/password sbagliati",
     "emailAddressCantBeEmpty": "L'indirizzo e-mail non può essere vuoto",
     "userNameEmailAddressNotFound": "Nome utente/indirizzo e-mail non trovati",
