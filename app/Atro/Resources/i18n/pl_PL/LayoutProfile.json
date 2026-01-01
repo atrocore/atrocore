@@ -17,7 +17,7 @@
     "Favorites": "Ulubione"
   },
   "exceptions": {
-    "defaultIsRequired": "W systemie powinien istnieć domyślny profil układu"
+    "defaultIsRequired": "W systemie powinien istnieć domyślny profil układu."
   },
   "messages": {
     "profileWillBeNewDefault": "Ten profil będzie nowym domyślnym, jest Pan pewien?",
