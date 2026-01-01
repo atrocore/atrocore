@@ -33,7 +33,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "textFilterDisabled": true
+      "textFilterDisabled": true,
+      "openApiEnabled": true
     },
     "conditionPhpCode": {
       "type": "wysiwyg",
@@ -44,7 +45,8 @@
       "massUpdateDisabled": true,
       "filterDisabled": true,
       "importDisabled": true,
-      "textFilterDisabled": true
+      "textFilterDisabled": true,
+      "openApiEnabled": true
     },
     "executeAs": {
       "type": "enum",
@@ -220,7 +222,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "inBackground": {
       "type": "bool",
@@ -545,7 +548,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "emailTemplateId": {
       "type": "varchar",
@@ -559,7 +563,8 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true,
-      "emHidden": true
+      "emHidden": true,
+      "openApiEnabled": true
     },
     "emailTemplateName": {
       "type": "varchar",
@@ -645,7 +650,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "emailCc": {
       "type": "array",
@@ -673,7 +679,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "emailBcc": {
       "type": "array",
@@ -701,7 +708,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "emailScript": {
       "type": "text",
@@ -730,7 +738,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "mode": {
       "type": "enum",
@@ -765,7 +774,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "iconClass": {
       "type": "varchar",
@@ -846,7 +856,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "updateType": {
       "type": "extensibleEnum",
@@ -902,7 +913,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "updateFields": {
       "type": "jsonObject",
@@ -932,7 +944,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "updateScript": {
       "type": "text",
@@ -981,7 +994,8 @@
             }
           ]
         }
-      }
+      },
+      "openApiEnabled": true
     },
     "createdAt": {
       "type": "datetime",
