@@ -42,7 +42,7 @@
     "rowsMin": "Mindestanzahl der Zeilen des Textfeldes",
     "useDisabledTextareaInViewMode": "Deaktivierten Textfeld im Ansichtsmodus verwenden",
     "strip": "Leere Zeichen vorne und hinten abschneiden",
-    "height": "Height (px)",
+    "height": "Höhe (px)",
     "useIframe": "Iframe im Ansichtsmodus verwenden",
     "htmlSanitizer": "HTML Sanitizer",
     "foreignCode": "Fremd-Code",
@@ -98,13 +98,13 @@
     "outputType": {
       "text": "Text",
       "int": "Integer",
-      "float": "Float",
+      "float": "Kommazahl",
       "bool": "Boolesch",
       "date": "Datum",
       "datetime": "Datum und Zeit"
     },
     "relationType": {
-      "oneToMany": "Eins-zu-viele",
+      "oneToMany": "Eins-zu-Vielen",
       "manyToMany": "Viele-zu-Viele"
     }
   },
@@ -114,14 +114,14 @@
       "numeric": "Numerisch",
       "date": "Datum / Uhrzeit",
       "reference": "Referenz",
-      "other": "Andere"
+      "other": "Sonstige"
     }
   },
   "confirmations": {
     "resetToDefault": "Sind Sie sicher, dass Sie die Konfiguration auf die Standardwerte zurücksetzen wollen?"
   },
   "labels": {
-    "resetToDefault": "Auf Standardwerte zurücksetzen",
+    "resetToDefault": "Auf Standardwert zurücksetzen",
     "relationManagement": "Beziehungs-Management",
     "conditionalProperties": "Bedingte Eigenschaften"
   },
