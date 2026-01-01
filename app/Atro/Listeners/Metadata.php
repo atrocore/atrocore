@@ -2405,7 +2405,7 @@ class Metadata extends AbstractListener
 
             // clone client defs
             $data['clientDefs'][$scope] = array_merge($data['clientDefs'][$primaryEntity], [
-                'iconClass' => $data['clientDefs'][$primaryEntity]['iconClass'] ?? null
+                'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? $data['clientDefs'][$primaryEntity]['iconClass'] ?? null
             ]);
 
             // add link to the primary entity
