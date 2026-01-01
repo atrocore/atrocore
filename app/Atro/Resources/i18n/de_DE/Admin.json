@@ -37,7 +37,7 @@
     "updatesAvailable": "Neue Updates sind verfügbar!",
     "Maintenance": "Wartung",
     "Roles": "Rollen",
-    "Account": "Account Management",
+    "Account": "Konten-Verwaltung",
     "Outbound Emails": "Ausgehende E-Mails",
     "User Interface": "Benutzeroberfläche",
     "Authentication": "Authentifizierung",
@@ -144,7 +144,7 @@
     "link": "Link"
   },
   "fields": {
-    "request": "Request",
+    "request": "Anfrage",
     "response": "Antwort",
     "fontSize": "Schriftgröße",
     "type": "Typ",
