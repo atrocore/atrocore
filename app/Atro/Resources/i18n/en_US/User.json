@@ -71,7 +71,7 @@
     "passwordResetEmailBody": "You can restore your password following this link {link}. This unique URL will be expired soon.",
     "passwordExpiredForm": "Your password has been expired. Please update it using the form below.",
     "passwordChanged": "Password has been changed",
-    "userCantBeEmpty": "Username can not be empty",
+    "userCantBeEmpty": "The username cannot be left blank.",
     "wrongUsernamePasword": "Wrong username/password",
     "emailAddressCantBeEmpty": "Email Address can not be empty",
     "userNameEmailAddressNotFound": "Username/Email Address not found",
