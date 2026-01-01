@@ -344,7 +344,7 @@
     "Select Image": "Seleziona l'immagine esistente",
     "Upload Image": "Carica l'immagine da un filesystem locale",
     "copyConfigurations": "Copiare le configurazioni",
-    "youMustConfigureNotificationConnection": "Per inviare le notifiche, deve prima configurare la connessione di notifica e-mail.",
+    "youMustConfigureNotificationConnection": "Per prima cosa, devi configurare la connessione per le notifiche via e-mail per poter ricevere le notifiche.",
     "Bookmarking": "Segnalibro",
     "Unbookmark": "Non segnare",
     "Bookmark": "Segnalibro",
