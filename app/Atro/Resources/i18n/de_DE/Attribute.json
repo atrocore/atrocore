@@ -8,7 +8,7 @@
     "isMultilang": "Mehrsprachig",
     "fileType": "Datei-Typ",
     "name": "Attributname",
-    "pattern": "Regex Pattern",
+    "pattern": "Regex-Muster",
     "measure": "Maß",
     "defaultUnit": "Standard Maßeinheit",
     "defaultDate": "Standard Datum",
@@ -22,7 +22,7 @@
     "useDisabledTextareaInViewMode": "Deaktivierte Textarea im Ansichtsmodus verwenden",
     "description": "Beschreibung",
     "extensibleEnum": "Liste",
-    "min": "Min",
+    "min": "Minimum",
     "max": "Max",
     "notNull": "Deaktivieren Nullwert",
     "trim": "Führende und nachfolgende Whitespaces entfernen",
@@ -80,7 +80,7 @@
   },
   "tooltips": {
     "pattern": "Um nur Großbuchstaben mit einer Länge von 10 Zeichen zu ermöglichen, verwenden Sie \"/^[A-Z]{1,10}$/\"",
-    "defaultDate": "Attributwertmodifikator (z. B.  +5 days, -3 months)",
+    "defaultDate": "Attributwertmodifikator (z. B. +5 Tage, -3 Monate)",
     "dropdown": "Verwenden Sie die Auswahlliste nicht, wenn mehr als 300 Optionen in der Liste enthalten sind."
   },
   "exceptions": {
@@ -91,7 +91,7 @@
     "attributeIsUsedInClassifications": "Das Attribut wird in den Klassifikationen verwendet. Bitte aktualisieren Sie zuerst die Klassifikationen.",
     "attributeIsUsedInProducts": "Das Attribut wird in den Produkten verwendet. Bitte aktualisieren Sie zuerst die Produkte.",
     "attributeWithSuchCodeAlreadyExist": "Das Attribut mit einem solchen Code existiert bereits.",
-    "youCantChangeFieldOfTypeInAttribute": "Sie können das Feld Typ im Attribut nicht ändern",
+    "youCantChangeFieldOfTypeInAttribute": "Sie können den Datentyp eines Attributs nicht ändern.",
     "invalidType": "Der Attributtyp „{type}“ ist ungültig",
     "compositeAttributeNotFound": "Das zusammengesetzte Attribut wurde nicht gefunden.",
     "compositeAttributeCannotBeChild": "Zusammengesetztes Attribut kann nicht untergeordnet sein.",
