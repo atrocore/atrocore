@@ -425,7 +425,7 @@
     "Select Image": "Seleccionar imagen existente",
     "Upload Image": "Cargar imagen desde un sistema de archivos local",
     "copyConfigurations": "Copiar configuraciones",
-    "youMustConfigureNotificationConnection": "Primero debe configurar la conexión de notificación por correo electrónico para que se envíen las notificaciones.",
+    "youMustConfigureNotificationConnection": "En primer lugar, debe configurar la conexión de notificaciones por correo electrónico para poder recibir notificaciones.",
     "Bookmarking": "Marcadores",
     "Unbookmark": "Desmarque",
     "Bookmark": "Marcar como favorito",
@@ -1232,7 +1232,7 @@
     "massDeleteSomeRecordNotProceed": "No se ha podido eliminar correctamente algún(os) registro(s).",
     "massRestoreSomeRecordNotProceed": "No se ha podido restaurar correctamente algún(os) registro(s).",
     "entityCannotBeBookmarked": "Los registros de esta entidad no pueden marcarse.",
-    "integerValueValidationFailed": "El valor entero para el campo/atributo '%s' debe estar entre %s y %s",
+    "integerValueValidationFailed": "El valor entero para el campo/atributo '%s' debe estar entre %s y %s.",
     "imageSizeValidationFailed": "El tamaño del archivo debe estar entre %skb y %skb.",
     "notUniqueRecordField": "El registro no puede guardarse, el registro con tal '%s' ya existe.",
     "notUniqueValue": "El registro no puede crearse/actualizarse debido a restricciones de la base de datos."
