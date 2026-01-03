@@ -17,11 +17,11 @@
     "Favorites": "Oblíbené položky"
   },
   "exceptions": {
-    "defaultIsRequired": "V systému by měl existovat výchozí profil rozvržení."
+    "defaultIsRequired": "V systému by měl existovat výchozí profil rozložení."
   },
   "messages": {
     "profileWillBeNewDefault": "Tento profil bude novým výchozím profilem, jste si jisti?",
-    "navigationUpdate": "Systém upravil navigační nabídku."
+    "navigationUpdate": "Navigační menu bylo upraveno systémem."
   },
   "boolFilters": {
     "withLayouts": "S uloženým rozložením"
