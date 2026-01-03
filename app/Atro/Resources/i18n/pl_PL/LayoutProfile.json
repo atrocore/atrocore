@@ -1,6 +1,6 @@
 {
   "fields": {
-    "isActive": "Active",
+    "isActive": "Aktywny",
     "isDefault": "Domyślny",
     "description": "Description",
     "hideShowFullList": "Ukryj \"Pokaż pełną listę\" w panelach relacji",
