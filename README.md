@@ -134,6 +134,7 @@ Installation Guide is [here](https://help.atrocore.com/installation-and-maintena
 ### Docker Installation
 
 Installation Guide for Docker is [here](https://help.atrocore.com/installation-and-maintenance/installation/docker-configuration).
+
 Docker Image is [here](https://gitlab.atrocore.com/atrocore/docker).
 
 If you want to test AtroCore without PIM, simply uninstall the PIM module after installing the Docker Image.
