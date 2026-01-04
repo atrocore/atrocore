@@ -9,6 +9,6 @@
     "folderRenameFailed": "Перейменування папки не вдалося.",
     "folderMoveFailed": "Переміщення папки не вдалося.",
     "folderDeleteFailed": "Видалення папки не вдалося.",
-    "folderStorageCannotBeChanged": "Сховище папок не можна змінити."
+    "folderStorageCannotBeChanged": "Сховище папок не може бути змінено."
   }
 }
