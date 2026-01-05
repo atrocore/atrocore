@@ -527,9 +527,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     view.render();
                     view.notify(false);
                     this.listenToOnce(view, 'after:save', () => {
-                        if (view.getView('record')?.model) {
-                            if (this.toggleSelected(view.getView('record').model.get('entityId'))) {
+                        let model = view.getView('record')?.model;
+                        if (model) {
+                            if (this.toggleSelected(model.get('entityId'))) {
                                 window.leftSidePanel?.setSelectedIds(this.selectedIds);
+                            }
+                            if(!this.model.get('entityTypes')) {
+                                this.model.set('entityTypes', []);
+                            }
+                            if(!this.model.get('entityTypes').includes(model.get('entityType'))) {
+                                this.model.get('entityTypes').push(model.get('entityType'))
                             }
                         }
                         this.model.trigger('after:relate', 'selections');
@@ -742,7 +749,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getEntityTypes() {
-            if (this.selectionRecordModels) {
+            if (this.selectionRecordModels && this.selectionRecordModels.length) {
                 let entityTypes = [];
                 this.selectionRecordModels.forEach(m => {
                     if (!entityTypes.includes(m.name)) {
