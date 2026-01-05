@@ -19010,6 +19010,13 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: #fcfcfc;
     border-radius: 5px;
     border: 1px solid var(--primary-border-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cards-container > .card.entity-card {
+    display: flex;
+    align-items: center;
 }
 
 .cards-container > .card:hover {
@@ -19033,6 +19040,14 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .cards-container > .card .title {
     font-weight: 500;
     vertical-align: middle;
+}
+
+.cards-container > .card.entity-card .title {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .cards-container > .card .description {
