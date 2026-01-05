@@ -78,7 +78,7 @@
             sortFields = []
         } else {
             const sortScope = treeScope === 'Bookmark' ? scope : treeScope
-            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']);
+            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']) ?? {};
             sortFields = Object.keys(fieldDefs).filter(function (item) {
                 return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
             }).sort(function (v1, v2) {
@@ -131,7 +131,7 @@
     }
 
     function canUseDataRequest() {
-        if (!['_self', '_bookmark'].includes(activeItem.name) || applyAdvancedFilter) {
+        if (!['_self', '_bookmark', '_lastViewed'].includes(activeItem.name) || applyAdvancedFilter) {
             return true
         }
         return false
@@ -254,7 +254,7 @@
                     }
                 }
 
-                if (model && model.get('id') === node.id && (['_self', '_bookmark'].includes(activeItem.name) || node.scope === model.name)) {
+                if (model && model.get('id') === node.id && (['_self', '_bookmark', '_lastViewed'].includes(activeItem.name) || node.scope === model.name)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -356,7 +356,7 @@
                 }
             }
             if (mode === 'detail') {
-                if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
+                if (model && ['_self', '_bookmark', '_lastViewed'].includes(activeItem.name)) {
                     selectTreeNode(model.get('id'), (model.get('routesNames')?.[0]?.map(item => item.id) || []).reverse())
                 } else if (Storage.get('selectedNodeId', scope)) {
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
@@ -469,7 +469,7 @@
     }
 
     function appendUnsetButton($el): void {
-        if (['_admin', '_self', '_bookmark'].includes(activeItem.name)) {
+        if (['_admin', '_self', '_bookmark', '_lastViewed'].includes(activeItem.name)) {
             return
         }
 
@@ -889,12 +889,17 @@
     //endregion Tree methods
 
     function getLinkScope(link): string | null {
-        if (link === '_self') {
+        if (link === '_self' ) {
             return scope
         }
         if (link === '_bookmark') {
             return 'Bookmark'
         }
+
+        if(link === '_lastViewed') {
+            return 'LastViewed';
+        }
+
         return Metadata.get(['entityDefs', scope, 'links', link, 'entity']) ||
             Metadata.get(['entityDefs', scope, 'fields', link, 'entity'])
     }
@@ -945,7 +950,7 @@
     }
 
     function applySearch() {
-        searchValue = searchInputElement.value
+        searchValue =  searchInputElement.value
         if (searchValue && activeItem.name === '_admin') {
             Storage.set('treeSearchValue', '_admin', searchValue)
         } else if (searchValue) {
@@ -1057,6 +1062,8 @@
                         label = Language.get('Global', 'scopeNamesPlural', scope)
                     } else if (item.name === '_bookmark') {
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
+                    } else if (item.name === '_lastViewed') {
+                        label = Language.get('Global', 'scopeNamesPlural', 'LastViewed')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
                     } else if (item.name === '_items') {
@@ -1263,8 +1270,8 @@
 
                 {#if scope === 'Selection' && activeItem.name === '_items'}
                     <div class="selection-items" bind:this={selectionItemElement}></div>
-                {:else}
-                    <div class="panel-group category-search" style="margin-bottom: 20px">
+                {:else }
+                    <div class="panel-group category-search" style="margin-bottom: 20px" class:hidden ={['_lastViewed'].includes(activeItem.name)}>
                         <div class="field" data-name="category-search">
                             <input type="text" bind:this={searchInputElement}
                                    on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
@@ -1281,7 +1288,7 @@
                             </div>
                         </div>
                         <div class="search-wrapper">
-                            {#if showApplySortOrder && activeItem.name !== '_admin' }
+                            {#if showApplySortOrder && !['_admin'].includes(activeItem.name) }
                                 <div class="sort-container">
                                     <div class="button-group">
                                         <button type="button" class="sort-dir-button"
@@ -1301,20 +1308,20 @@
                                     </div>
                                 </div>
                             {/if}
-                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') }
+                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && !['_lastViewed', '_admin'].includes(activeItem.name) }
                                 <div class="main-filter-container">
-                                     <span class="icons-wrapper">
-                                        <span class="toggle" class:active={applyAdvancedFilter}
-                                              on:click|stopPropagation|preventDefault={handleFilterToggle}
-                                        >
-                                            {#if applyAdvancedFilter}
-                                                <i class="ph-fill ph-toggle-right"></i>
-                                            {:else}
-                                                <i class="ph-fill ph-toggle-left"></i>
-                                            {/if}
-                                        </span>
-                                         {Language.translate('applyMainSearchAndFilter')}
-                                    </span>
+                             <span class="icons-wrapper">
+                                <span class="toggle" class:active={applyAdvancedFilter}
+                                      on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                >
+                                    {#if applyAdvancedFilter}
+                                        <i class="ph-fill ph-toggle-right"></i>
+                                    {:else}
+                                        <i class="ph-fill ph-toggle-left"></i>
+                                    {/if}
+                                </span>
+                                 {Language.translate('applyMainSearchAndFilter')}
+                            </span>
                                 </div>
                             {/if}
 
