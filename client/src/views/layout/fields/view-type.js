@@ -32,11 +32,11 @@ Espo.define('views/layout/fields/view-type', 'views/fields/enum', function (Dep)
             this.params.groupOptions = [
                 {
                     name: "view",
-                    options: this.params.options.filter(o => !(["relationships", "navigation", "insights"].includes(o)))
+                    options: this.params.options.filter(o => !(["relationships", "navigation", "insights", "selectionRelations"].includes(o)))
                 },
                 {
                     name: "viewGroup",
-                    options: ["relationships", "navigation", "insights"]
+                    options: ["relationships", "navigation", "insights", "selectionRelations"]
                 }
             ]
         },

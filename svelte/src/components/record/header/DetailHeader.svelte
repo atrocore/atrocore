@@ -60,7 +60,7 @@
                                 {recordButtons} {callbacks}/>
         </div>
     {/if}
-    {#if anchorNavItems.length > 1}
+    {#if anchorNavItems.length > 0}
         <div class="anchor-nav-container">
             <AnchorNavigation items={anchorNavItems} scrollCallback={anchorScrollCallback}
                               hasLayoutEditor={recordButtons?.hasLayoutEditor && params.mode !== 'edit'}/>

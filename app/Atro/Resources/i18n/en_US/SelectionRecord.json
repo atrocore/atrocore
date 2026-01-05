@@ -2,7 +2,7 @@
   "fields": {
     "name": "Name",
     "entityId": "Record",
-    "entityType": "Entity Type"
+    "entityType": "Entity"
   },
   "messages": {
     "selectionDisabledForEntity": "Selection disabled for entity '%s'."
