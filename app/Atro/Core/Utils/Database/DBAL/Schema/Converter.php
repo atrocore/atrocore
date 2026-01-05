@@ -96,9 +96,6 @@ class Converter
             }
 
             $tableName = Util::toUnderScore($entityName);
-            if(empty($tableName)) {
-                continue;
-            }
             if ($schema->hasTable($tableName)) {
                 $table = $schema->getTable($tableName);
             } else {
