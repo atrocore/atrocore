@@ -779,7 +779,8 @@
     "derivedRecords": "Registros derivados",
     "updatedCountFilterActionExecution": "Actualizado por Ejecución de la acción",
     "createdCountFilterActionExecution": "Creado por Ejecución de acciones",
-    "field": "Campo"
+    "field": "Campo",
+    "derivativeStatus": "Estado derivado"
   },
   "dashlets": {
     "Stream": "Actividades planeadas",
