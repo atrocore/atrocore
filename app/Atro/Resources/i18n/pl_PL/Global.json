@@ -779,7 +779,8 @@
     "derivedRecords": "Rekordy pochodne",
     "createdCountFilterActionExecution": "Stworzone przez Action Execution",
     "updatedCountFilterActionExecution": "Aktualizacja przez wykonanie akcji",
-    "field": "Pole"
+    "field": "Pole",
+    "derivativeStatus": "Status instrumentu pochodnego"
   },
   "dashlets": {
     "Stream": "Aktywności",
