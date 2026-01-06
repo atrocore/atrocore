@@ -632,7 +632,8 @@
     "primaryRecord": "Primární záznam",
     "createdCountFilterActionExecution": "Vytvořil Action Execution",
     "updatedCountFilterActionExecution": "Aktualizováno provedením akce",
-    "field": "Pole"
+    "field": "Pole",
+    "derivativeStatus": "Stav derivátu"
   },
   "descriptions": {
     "previewTemplate": "Správa šablon HTML/CSS pro automatický náhled dat"
