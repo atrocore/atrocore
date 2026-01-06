@@ -66,7 +66,7 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
             }).then(data => {
                 let result = {};
                 data.list.forEach(item => {
-                    if(!result[item.controllerName]) {
+                    if (!result[item.controllerName]) {
                         result[item.controllerName] = {
                             key: item.controllerName,
                             collection: [],
@@ -85,7 +85,7 @@ Espo.define('views/last-viewed/panel', 'view', function (Dep) {
 
                 if (this.groups.length) {
                     let keys = this.groups.map(group => group.key);
-                   Object.values(result).forEach((el) => {
+                    Object.values(result).forEach((el) => {
                         if (!keys.includes(el.key)) {
                             this.groups.push(el)
                         } else {
