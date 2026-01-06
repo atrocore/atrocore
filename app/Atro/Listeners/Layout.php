@@ -63,8 +63,11 @@ class Layout extends AbstractListener
                     $event->setArgument('result', $result);
                 }
 
-                $result[] = ['name' => '_lastViewed'];
-                $event->setArgument('result', $result);
+                if(empty($this->getMetadata()->get(['scopes', $scope, 'hideLastViewed']))) {
+                    $result = $event->getArgument('result');
+                    $result[] = ['name' => '_lastViewed'];
+                    $event->setArgument('result', $result);
+                }
             }
         }
 

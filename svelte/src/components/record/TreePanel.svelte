@@ -217,7 +217,7 @@
 
         let treeData = {
             dataUrl: generateUrl,
-            dataFilter: response => filterResponse(response),
+            dataFilter: (response) => filterResponse(response),
             selectable: true,
             saveState: false,
             autoOpen: false,
@@ -565,7 +565,7 @@
     }
 
     function generateUrl(node) {
-        if (isNodeInSubTree(node)) {
+        if (isNodeInSubTree(node) && !['_bookmark', '_lastViewed'].includes(activeItem.name)) {
             return generateSubTreeUrl(node)
         }
 
