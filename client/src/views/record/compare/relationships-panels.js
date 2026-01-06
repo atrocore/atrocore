@@ -37,7 +37,11 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
 
             this.versionModel = this.options.versionModel;
             if (this.versionModel) {
-                this.relationshipView = 'views/record/compare/relationship-version';
+                this.relationshipView = 'versioning:views/record/compare/relationship-version';
+            }
+
+            if (this.options.derivativeComparison) {
+                this.relationshipView = 'versioning:views/record/compare/relationship-derivative';
             }
 
             this.listenTo(this, 'after:render', () => {
