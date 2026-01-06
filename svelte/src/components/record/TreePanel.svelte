@@ -68,6 +68,8 @@
         treeScope = activeItem ? getLinkScope(activeItem.name) : null;
         if (treeScope) {
             treeIcon = Utils.getTabIcon(treeScope);
+        } else if (activeItem?.name === '_admin') {
+            treeIcon = Utils.getSystemIconUrl('gear');
         } else {
             treeIcon = null;
         }
@@ -1301,7 +1303,7 @@
                                     </div>
                                 </div>
                             {/if}
-                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') }
+                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && activeItem.name !== '_admin' }
                                 <div class="main-filter-container">
                                      <span class="icons-wrapper">
                                         <span class="toggle" class:active={applyAdvancedFilter}
@@ -1422,34 +1424,21 @@
         box-shadow: none;
     }
 
-    :global(ul.jqtree-tree .jqtree-toggler .ph) {
-        font-size: 16px;
-    }
-
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
-        line-height: 1.36;
+        line-height: 16px;
         white-space: nowrap;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
     }
 
-    :global(ul.jqtree-tree .jqtree-element:not(.btn) .load-items) {
-        display: inline-block;
-        width: 16px;
-        margin-right: .5em;
-        order: 2;
-        color: var(--primary-font-color);
-        position: relative;
-    }
-
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
         order: 1;
+        flex-shrink: 0;
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-title) {
         order: 3;
-        flex: 1;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
