@@ -2,7 +2,7 @@
     {{#if treeAllowed}}
         <aside class="tree-panel-anchor"></aside>
     {{/if}}
-    <main>
+    <main data-mode="edit">
         <div class="header page-header">{{{header}}}</div>
         <div class="record">{{{record}}}</div>
     </main>
