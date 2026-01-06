@@ -492,7 +492,9 @@ class Record extends RecordService
                         $linkedList = $this->getEntityManager()->getRepository($foreignScope)->findByIds($linkedIds);
                     }
                 } else {
-                    $linkedList = $repository->findRelated($source, $link);
+                    if ($source->getEntityType() === $this->getEntityType()) {
+                        $linkedList = $repository->findRelated($source, $link);
+                    }
                 }
                 foreach ($linkedList as $linked) {
                     try {

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
@@ -155,7 +156,7 @@ class Entity extends ReferenceData
 
         $stagingEntityId = $this->getStagingEntityId($code);
 
-        return array_merge($row, [
+        $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
             'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
@@ -171,6 +172,9 @@ class Entity extends ReferenceData
             'stagingEntityId'       => $stagingEntityId,
             'stagingEntityName'     => empty($stagingEntityId) ? null : $this->getLanguage()->translate($stagingEntityId, 'scopeNames'),
         ]);
+
+
+        return $this->getEventManager()->dispatch('EntityEntity', 'afterPrepareItem', new Event(['result' => $res]))->getArgument('result');
     }
 
     protected function getAllItems(array $params = []): array
@@ -515,14 +519,6 @@ class Entity extends ReferenceData
             $primaryEntity = $this->get($entity->get('primaryEntityId'));
             if (!empty($primaryEntity) && !empty($primaryEntity->get('primaryEntityId'))) {
                 throw new BadRequest($this->getLanguage()->translate('derivativeFromDerivativeNotSupporting', 'exceptions', 'Entity'));
-            }
-        }
-
-        if ($entity->isNew() && !empty($entity->get('primaryEntityId'))) {
-            foreach ($this->getMetadata()->get(['scopeDefs']) ?? [] as $scope => $scopeData) {
-                if (!empty($scopeData['primaryEntityId']) && $scopeData['primaryEntityId'] === $entity->get('primaryEntityId')) {
-                    throw new BadRequest($this->getLanguage()->translate('derivativePrimaryEntityUnique', 'exceptions', 'Entity'));
-                }
             }
         }
 

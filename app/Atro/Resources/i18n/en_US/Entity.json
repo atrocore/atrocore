@@ -93,7 +93,6 @@
     "linkAttributesWithClassificationAutomatically": "If an attribute is directly linked to a record, and that record is linked to a classification, then the attribute will also be linked to that classification."
   },
   "exceptions": {
-    "derivativePrimaryEntityUnique": "Another derivative entity is already using this primary entity",
     "derivativeWithSuchRoleExists": "There is already a derivative entity with this role.",
     "derivativeFromDerivativeNotSupporting": "A derived entity cannot be created from another derived entity.",
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not both be in relations that affect the modification date/time.",
