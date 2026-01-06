@@ -1246,10 +1246,8 @@ class OpenApiGenerator
             return;
         }
 
-        if (empty($fieldData['openApiEnabled'])) {
-            if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-                return;
-            }
+        if (empty($fieldData['openApiEnabled']) && !empty($fieldData['noLoad'])) {
+            return;
         }
 
         if($fieldData['type'] === 'script') {
