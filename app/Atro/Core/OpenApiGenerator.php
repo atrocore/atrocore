@@ -105,6 +105,7 @@ class OpenApiGenerator
             }
 
             $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
+            $entityDefs = $this->getMetadata()->get(['entityDefs', $scopeName]);
 
             $result['tags'][] = ['name' => $scopeName];
 

@@ -7,12 +7,12 @@
     },
     "action": {
       "type": "link",
-      "readOnly": true
+      "protected": true
     },
     "incomingWebhook": {
       "type": "link",
       "entity": "IncomingWebhook",
-      "readOnly": true,
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -26,7 +26,7 @@
     },
     "scheduledJob": {
       "type": "link",
-      "readOnly": true,
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -42,7 +42,7 @@
       "type": "enum",
       "view": "views/action-execution/fields/status",
       "required": true,
-      "readOnly": true,
+      "protected": true,
       "options": [
         "running",
         "done",
@@ -56,16 +56,16 @@
     },
     "statusMessage": {
       "type": "text",
-      "readOnly": true
+      "protected": true
     },
     "payload": {
       "type": "jsonObject",
-      "readOnly": true
+      "protected": true
     },
     "type": {
       "type": "enum",
       "required": true,
-      "readOnly": true,
+      "protected": true,
       "options": [
         "manual",
         "incomingWebhook",
@@ -121,20 +121,20 @@
     },
     "createdAt": {
       "type": "datetime",
-      "readOnly": true
+      "protected": true
     },
     "modifiedAt": {
       "type": "datetime",
-      "readOnly": true
+      "protected": true
     },
     "createdBy": {
       "type": "link",
-      "readOnly": true,
+      "protected": true,
       "view": "views/fields/user"
     },
     "modifiedBy": {
       "type": "link",
-      "readOnly": true,
+      "protected": true,
       "view": "views/fields/user"
     }
   },
