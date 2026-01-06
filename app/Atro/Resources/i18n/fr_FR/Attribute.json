@@ -14,7 +14,7 @@
     "isRequired": "Requis",
     "isReadOnly": "Lecture seule",
     "isProtected": "Protegé",
-    "tooltip": "Bulle d'aide",
+    "tooltip": "Info-bulle",
     "maxLength": "Longueur maximale",
     "countBytesInsteadOfCharacters": "Comptez les octets au lieu des caractères",
     "useDisabledTextareaInViewMode": "Utiliser la zone de texte désactivée en mode affichage",
@@ -40,7 +40,8 @@
     "conditionalReadOnly": "Lecture seule",
     "conditionalProtected": "Protegé",
     "channel": "Canal",
-    "entity": "Entité"
+    "entity": "Entité",
+    "modifiedExtendedDisabled": "Pas d'enregistrement en tant que modification"
   },
   "labels": {
     "Classification": "Classification",

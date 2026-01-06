@@ -2,8 +2,8 @@
   "fields": {
     "host": "Nom de l'hôte",
     "dbname": "Nom de la base de données",
-    "user": "Nom de l'utilisateur de la base de données",
-    "username": "Nom de l'utilisateur",
+    "user": "Utilisateur base de données",
+    "username": "Nom d'utilisateur",
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe"
   },
@@ -21,20 +21,20 @@
     "status": "Statut",
     "hostName": "Nom de l'hôte",
     "databaseName": "Nom de la base de données",
-    "databaseUserName": "Nom de l'utilisateur de la base de données",
-    "databaseUserPassword": "Mot de passe de l'utilisateur de la base de données",
+    "databaseUserName": "Utilisateur base de données",
+    "databaseUserPassword": "Mot de passe Utilisateur base de données",
     "port": "Port",
     "reCheck": "Revérifier",
-    "userName": "Nom de l'utilisateur",
+    "userName": "Nom d'utilisateur",
     "password": "Mot de passe",
     "confirmYourPassword": "Confirmez votre mot de passe",
     "back": "Retour",
     "next": "Suivant",
-    "finish": "Finition",
+    "finish": "Terminer",
     "required": "Requis"
   },
   "errors": {
-    "alreadyInstalled": "AtroCore déjà installé",
+    "alreadyInstalled": "AtroCore est déjà installé",
     "differentPass": "Mots de passe différents",
     "notCorrectDatabaseConfig": "Paramètres de la base de données invalides",
     "filePermissionsError": "Les droits d'accès aux fichiers sont insuffisants. Veuillez configurer les autorisations conformément aux instructions."

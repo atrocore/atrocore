@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Уже есть атрибуты, связанные напрямую. Пожалуйста, удалите их из записей.",
     "entityTypeIsNotSuitableForAssociates": "Этот тип сущности не может содержать параметр \"Has Associates\". Только \"Base\" и \"Hierarchy\" могут иметь его.",
     "derivativeWithSuchRoleExists": "Производная организация с такой ролью уже существует.",
-    "derivativeFromDerivativeNotSupporting": "Производная сущность не может быть создана из другой производной сущности."
+    "derivativeFromDerivativeNotSupporting": "Производная сущность не может быть создана из другой производной сущности.",
+    "cannotRemoveDerivativeDirectly": "Производные сущности не могут быть удалены напрямую."
   }
 }

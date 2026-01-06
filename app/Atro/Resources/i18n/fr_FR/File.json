@@ -23,7 +23,7 @@
     "Preview": "Aperçu",
     "retry": "Réessayer ?",
     "uploaded": "téléchargé",
-    "putUploadUrl": "Indiquez l'URL du fichier si vous souhaitez le télécharger via l'URL.",
+    "putUploadUrl": "Indiquez l’URL du fichier si vous souhaitez le téléverser via une URL",
     "Share": "Partager",
     "thumbnailUrl": "URL de la vignette (%s)"
   },

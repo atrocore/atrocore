@@ -31,7 +31,8 @@ class DateType extends AbstractFieldType
             'name'        => $name,
             'attributeId' => $row['id'],
             'column'      => $this->column,
-            'required'    => !empty($row['is_required'])
+            'required'    => !empty($row['is_required']),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
 
         if (empty($skipValueProcessing)) {
@@ -61,7 +62,8 @@ class DateType extends AbstractFieldType
             'tooltip'                   => !empty($row[$this->prepareKey('tooltip', $row)]),
             'tooltipText'               => $row[$this->prepareKey('tooltip', $row)],
             'fullWidth'                 => !empty($attributeData['fullWidth']),
-            'conditionalProperties'     => $this->prepareConditionalProperties($row)
+            'conditionalProperties'     => $this->prepareConditionalProperties($row),
+            'modifiedExtendedDisabled' => !empty($row['modified_extended_disabled'])
         ];
     }
 

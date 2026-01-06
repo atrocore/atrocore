@@ -40,7 +40,8 @@
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Sólo lectura",
     "conditionalProtected": "Protegido",
-    "conditionalDisableOptions": "Opciones para discapacitados"
+    "conditionalDisableOptions": "Opciones para discapacitados",
+    "modifiedExtendedDisabled": "No se registra como modificación"
   },
   "labels": {
     "Classification": "Clasificación",

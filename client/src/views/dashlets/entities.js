@@ -41,7 +41,7 @@ Espo.define('views/dashlets/entities', 'views/dashlets/abstract/base', function 
                 list = list.filter(i => this.getAcl().check(i, 'read'));
             } else {
                 const entries = Object.entries(this.getMetadata().get('scopes'))
-                list = entries.filter(([key, defs]) => this.getAcl().check(key, 'read') && defs.tab === true).map(([key, _]) => key);
+                list = entries.filter(([key, defs]) => this.getAcl().check(key, 'read') && defs.tab === true && defs.type !== 'Relation').map(([key, _]) => key);
             }
 
             return list.map(key => ({

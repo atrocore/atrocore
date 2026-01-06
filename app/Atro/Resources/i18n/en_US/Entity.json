@@ -99,6 +99,7 @@
     "parentsAndChildrenShouldNotBeInModifiedExtendedRelations": "{parents} and {children} should not both be in relations that affect the modification date/time.",
     "entityAlreadyHasAttributesInUse": "Has Attribute param cannot be deactivated. Please, remove all related attributes first.",
     "entityHasDirectlyLinkedAttributes": "There are already directly linked attributes. Please remove them from records.",
-    "entityTypeIsNotSuitableForAssociates": "This entity type cannot contain the \"Has Associates\" parameter. Only \"Base\" and \"Hierarchy\" are allowed to have it."
+    "entityTypeIsNotSuitableForAssociates": "This entity type cannot contain the \"Has Associates\" parameter. Only \"Base\" and \"Hierarchy\" are allowed to have it.",
+    "cannotRemoveDerivativeDirectly": "Derived entities cannot be deleted directly."
   }
 }

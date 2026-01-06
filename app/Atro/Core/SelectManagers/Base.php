@@ -1348,6 +1348,62 @@ class Base
 
     protected function modifyPartForHierarchy(array &$item): void
     {
+        $this->modifyRoutesField($item);
+        $this->modifyParentField($item);
+    }
+
+    protected function modifyRoutesField(array &$item): void
+    {
+        if (isset($item['attribute']) && $item['attribute'] === 'routesId') {
+            switch ($item['type']) {
+                case 'in':
+                    $values = [];
+                    foreach ($item['value'] as $value) {
+                        $values[] = [
+                            'type' => 'contains',
+                            'attribute' => 'routes',
+                            'value' => $value
+                        ];
+                    }
+
+                    $item = [
+                        'type' => 'or',
+                        'value' => $values
+                    ];
+                    break;
+                case 'notIn':
+                    $values = [];
+                    foreach ($item['value'] as $value) {
+                        $values[] = [
+                            'type' => 'notContains',
+                            'attribute' => 'routes',
+                            'value' => $value
+                        ];
+                    }
+
+                    $item = [
+                        'type' => 'and',
+                        'value' => $values
+                    ];
+                    break;
+                case 'isNull':
+                    $item = [
+                        'type' => 'arrayIsEmpty',
+                        'attribute' => 'routes'
+                    ];
+                    break;
+                case 'isNotNull':
+                    $item = [
+                        'type' => 'arrayIsNotEmpty',
+                        'attribute' => 'routes'
+                    ];
+                    break;
+            }
+        }
+    }
+
+    protected function modifyParentField(array &$item): void
+    {
         if (isset($item['attribute']) && $item['attribute'] === 'parentId') {
             $subQuery = $item['subQuery'] ?? null;
             switch ($item['type']) {

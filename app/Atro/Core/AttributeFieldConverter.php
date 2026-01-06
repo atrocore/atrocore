@@ -181,7 +181,8 @@ class AttributeFieldConverter
             'ag.name as attribute_group_name',
             'ag.sort_order as attribute_group_sort_order',
             'a.sort_order as sort_order',
-            'a.attribute_group_sort_order as sort_order_in_attribute_group'
+            'a.attribute_group_sort_order as sort_order_in_attribute_group',
+            'a.modified_extended_disabled as modified_extended_disabled'
         ];
 
         if (class_exists("\\Pim\\Module")) {
@@ -323,10 +324,22 @@ class AttributeFieldConverter
 
         $attributesDefs = [];
 
+        $isDerivative = !empty($this->metadata->get("scopes.{$entity->getEntityType()}.primaryEntityId"));
+
         foreach ($res as $row) {
             // set null if attribute-panel does not exist
             if (!empty($row['attribute_panel_id']) && !in_array($row['attribute_panel_id'], $attributePanelsIds)) {
                 $row['attribute_panel_id'] = null;
+            }
+
+            // remove required property for derivatives
+            if ($isDerivative) {
+                if (!empty($row['is_required'])) {
+                    $row['is_required'] = false;
+                }
+                if (!empty($row['conditional_required'])) {
+                    unset($row['conditional_required']);
+                }
             }
             $this->convert($entity, $row, $attributesDefs);
         }

@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/fields/hierarchy-routes', 'views/fields/base', Dep => {
+Espo.define('views/fields/hierarchy-routes', 'views/fields/link', Dep => {
 
     return Dep.extend({
 
@@ -18,6 +18,15 @@ Espo.define('views/fields/hierarchy-routes', 'views/fields/base', Dep => {
 
         detailTemplate: 'fields/hierarchy-routes/detail',
 
+        setup() {
+            this.idName = this.name;
+            this.nameName = this.name + 'Names';
+
+            Dep.prototype.setup.call(this);
+
+            this.foreignScope = this.model.name;
+        },
+
         data() {
             let data = Dep.prototype.data.call(this);
             data.valueIsNull = this.model.get(this.name) === null;
@@ -26,7 +35,6 @@ Espo.define('views/fields/hierarchy-routes', 'views/fields/base', Dep => {
 
             return data;
         },
-
     });
 });
 

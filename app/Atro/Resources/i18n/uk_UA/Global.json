@@ -83,7 +83,8 @@
     "Selection": "Вибірка",
     "SelectionRecord": "Запис вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
-    "ActionExecutionLog": "Журнал виконання дій"
+    "ActionExecutionLog": "Журнал виконання дій",
+    "Layout": "Лейаут"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
@@ -154,7 +155,8 @@
     "Selection": "Вибірки",
     "SelectionRecord": "Записи вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
-    "ActionExecutionLog": "Журнали виконання дій"
+    "ActionExecutionLog": "Журнали виконання дій",
+    "Layout": "Лейаути"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
@@ -404,6 +406,14 @@
     "Report a bug": "Повідомити про помилку",
     "Visit Community": "Відвідати спільноту",
     "Help Center": "Довідковий центр",
+    "Support": "Підтримка",
+    "Contact Us": "Зв'яжіться з нами",
+    "Open Dashboard": "Відкрити панель",
+    "pageNotFound": "Сторінку не знайдено",
+    "pageNotFoundDescription": "Ресурс, який ви шукаєте, можливо, був переміщений, видалений або не існує.",
+    "errorCode": "Код помилки",
+    "accessDenied": "Доступ заборонено",
+    "accessDeniedDescription": "Ваш обліковий запис не має необхідних дозволів для перегляду цього ресурсу. Якщо ви вважаєте, що повинні мати доступ, зверніться до адміністратора.",
     "fieldStatus": "Значення поля",
     "language": "Мова",
     "scopeFilter": "Канал",
@@ -412,7 +422,7 @@
     "Summary": "Підсумок",
     "Insights": "Інсайти",
     "Activities": "Діяльність",
-    "enableAutomaticClosing": "Увімкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
+    "enableAutomaticClosing": "Увімкніть автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "disableAutomaticClosing": "вимкнути автоматичне відкриття та закриття цієї панелі при наведенні миші.",
     "accessManagement": "Керування доступом",
     "sidebarUnpin": "Автоматичне розкриття панелі неактивне",
@@ -478,7 +488,7 @@
     "inheritedFromParent": "Успадковано від батьків",
     "Action Forbidden": "Дія заборонена",
     "Duplicate and Select": "Дублюйте та виділяйте",
-    "actionFollow": "Натисніть, щоб продовжити",
+    "actionFollow": "Натисніть, щоб приєднатися",
     "actionUnfollow": "Ви стежите за нами, натисніть, щоб скасувати підписку",
     "collapseAll": "Згорнути все",
     "relatedAssociates": "Відсталі асоціації",
@@ -495,7 +505,7 @@
     "actionBookmark": "Натисніть, щоб додати в закладки",
     "actionUnbookmark": "Додано до закладок, натисніть, щоб видалити закладку",
     "actionOpenFilter": "Відкрити фільтр",
-    "expandAll": "Розгорнути всі",
+    "expandAll": "Розгорнути все",
     "Associated": "Асоційований",
     "Associating": "Асоціювання",
     "matchedRecords": "Співставлені записи",
@@ -511,7 +521,10 @@
     "view": "Переглянути",
     "Items": "Предмети",
     "hideAll": "Сховати все",
-    "Relations": "Стосунки"
+    "Relations": "Стосунки",
+    "Saved Filters": "Збережені фільтри",
+    "replaceItem": "Замінити елемент",
+    "removeItem": "Видалити елемент"
   },
   "insightsPanels": {
     "summary": "Підсумок",

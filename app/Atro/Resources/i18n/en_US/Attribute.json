@@ -40,7 +40,8 @@
     "conditionalVisible": "Visible",
     "conditionalReadOnly": "Read-only",
     "conditionalProtected": "Protected",
-    "conditionalDisableOptions": "Disabled Options"
+    "conditionalDisableOptions": "Disabled Options",
+    "modifiedExtendedDisabled": "No recording as modification"
   },
   "labels": {
     "Classification": "Classification",

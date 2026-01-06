@@ -8,7 +8,7 @@
     "payload": "Параметры",
     "scheduledJob": "Задание планировщика",
     "message": "Сообщение",
-    "startedAt": "Начало",
+    "startedAt": "Начато в",
     "endedAt": "Закончилось на"
   },
   "labels": {

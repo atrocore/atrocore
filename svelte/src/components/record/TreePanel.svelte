@@ -36,9 +36,9 @@
 
     export function setShowItems(value: string[]) {
         showItems = value;
-        if(value){
-            setActiveItem(treeItems.filter(v =>v.name === '_items')[0])
-        }else if(!value && activeItem.name === '_items') {
+        if (value) {
+            setActiveItem(treeItems.filter(v => v.name === '_items')[0])
+        } else if (!value && activeItem.name === '_items') {
             setActiveItem(treeItems[0]);
         }
     }
@@ -147,24 +147,35 @@
             return;
         }
 
-        const isClosed = window.$(node.element).find('.load-items').hasClass('ph-plus-square');
-
-        if (isClosed && !node.getData().length) {
+        if (!node.subTreeData) {
             Notifier.notify('Loading...')
             const resp = await Utils.getRequest(generateSubTreeUrl(node))
-            const data = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
-            $tree.tree('loadData', data, node);
+            node.subTreeData = filterResponse(await resp.json()).map(item => ({...item, scope: scope}))
         }
 
-        if (isClosed) {
-            $tree.tree('openNode', node, true, () => {
-                window.$(node.element).find('.load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
-            });
+        if (!node.subTreeLoaded) {
+            if (node.has_children) {
+                $tree.tree('loadData', [...node.subTreeData, ...node.getData()], node);
+            } else if (node.getData().length === 0) {
+                $tree.tree('loadData', node.subTreeData, node);
+            }
+            node.subTreeLoaded = true;
+            if (!node.is_open) {
+                $tree.tree('openNode', node, true, () => {
+                    window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
+                });
+            } else {
+                window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-plus-square').addClass('ph-minus-square');
+            }
         } else {
-            $tree.tree('closeNode', node, true)
-            window.$(node.element).find('.load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
+            node.subTreeLoaded = false;
+            if (!node.has_children) {
+                $tree.tree('closeNode', node, true)
+            } else {
+                window.$(node.element).find('> .jqtree-element .load-items').removeClass('ph-minus-square').addClass('ph-plus-square');
+                $tree.tree('loadData', getDataWithoutSubTree(node), node);
+            }
         }
-
     }
 
     function buildTree(data = null): void {
@@ -243,7 +254,7 @@
                     }
                 }
 
-                if (['_self', '_bookmark'].includes(activeItem.name) && model && model.get('id') === node.id) {
+                if (model && model.get('id') === node.id && (['_self', '_bookmark'].includes(activeItem.name) || node.scope === model.name)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -280,11 +291,14 @@
                         const $el = window.$(`<span class="load-items"></span>`)
                         $li.find('.jqtree-element').prepend($el);
                     }
-                    if (!node.disabled && !node.has_children && node.scope !== scope) {
+                    if (!node.disabled && node.scope !== scope) {
                         const $el = $li.find('.jqtree-element .load-items');
-                        $el.addClass('ph').addClass('ph-plus-square');
+                        $el.addClass('ph').addClass(node.subTreeLoaded ? 'ph-minus-square' : 'ph-plus-square');
                         $el.on('click', () => toggleSubTree($tree, node));
                         $li.addClass('sub-tree-container');
+                        if (node.has_children) {
+                            $li.addClass('has-children');
+                        }
                     }
                 }
 
@@ -425,7 +439,9 @@
             const $element = window.$(e.node.element);
             const $el = $element.find('> .jqtree-element .load-items');
             if ($el.length > 0) {
-                $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+                if (!e.node.has_children) {
+                    $el.removeClass('ph-plus-square').addClass('ph-minus-square');
+                }
             }
         });
 
@@ -433,15 +449,23 @@
             if (!e.node?.element) {
                 return;
             }
-
-            const $element = window.$(e.node.element);
+            const node = e.node
+            const $element = window.$(node.element);
             const $el = $element.find('> .jqtree-element .load-items');
             if ($el.length > 0) {
                 $el.removeClass('ph-minus-square').addClass('ph-plus-square');
+                if (node.subTreeData && node.subTreeLoaded && node.has_children) {
+                    node.subTreeLoaded = false;
+                    $tree.tree('loadData', getDataWithoutSubTree(node), node);
+                }
             }
         });
 
         $tree.tree(treeData);
+    }
+
+    function getDataWithoutSubTree(node) {
+        return node.getData().filter(item => !node.subTreeData.find(i => i.id === item.id))
     }
 
     function appendUnsetButton($el): void {
@@ -885,8 +909,8 @@
 
 
         tick().then(() => {
-            if(scope === 'Selection' && treeItem.name === '_items') {
-                if(callbacks?.onActiveItems) {
+            if (scope === 'Selection' && treeItem.name === '_items') {
+                if (callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
                 }
                 return;
@@ -944,8 +968,7 @@
         return layoutData;
     }
 
-    function setSortBy(field: string): void
-    {
+    function setSortBy(field: string): void {
         sortBy = field;
         Storage.set('treeItemSorting', scope, {sortBy, sortAsc});
         rebuildTree();
@@ -1036,7 +1059,7 @@
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
-                    }else if (item.name === '_items') {
+                    } else if (item.name === '_items') {
                         label = Language.get('Global', 'labels', 'Items')
                     } else {
                         if (type == 'link') {
@@ -1141,7 +1164,7 @@
         }
 
         loadLayout(() => {
-            if(hasItems) {
+            if (hasItems) {
                 treeItems = [...treeItems, {
                     name: '_items',
                     label: Language.get('Global', 'labels', 'Items')
@@ -1166,9 +1189,9 @@
                     searchInputElement.value = searchValue;
                 }
 
-                if(scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
+                if (scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
-                }else if (!isCollapsed) {
+                } else if (!isCollapsed) {
                     buildTree();
                 }
 
@@ -1178,7 +1201,7 @@
             })
         });
 
-        if(callbacks?.afterMounted) {
+        if (callbacks?.afterMounted) {
             callbacks.afterMounted();
         }
     });
@@ -1224,7 +1247,8 @@
                 <div class="tree-items-container">
                     {#each treeItems as treeItem}
                         <a href="javascript:" on:click={()=>setActiveItem(treeItem)}
-                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems} data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
+                           class="tree-item" class:hidden={treeItem.name === '_items' && !showItems}
+                           data-name="{treeItem.name}" class:active={treeItem.name===activeItem.name}>
                             {treeItem.label}
                         </a>
                     {/each}
@@ -1233,7 +1257,8 @@
             </div>
             {#if activeItem}
                 <div class="sidebar-header">
-                    <h5>{#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
+                    <h5>
+                        {#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
                 </div>
 
                 {#if scope === 'Selection' && activeItem.name === '_items'}
@@ -1264,10 +1289,13 @@
                                                 on:click={onSortAscChange}>
                                             <i class={'ph '+(sortAsc ? 'ph-sort-descending':'ph-sort-ascending')}></i>
                                         </button>
-                                        <button type="button" class="sort-by-button" data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
+                                        <button type="button" class="sort-by-button"
+                                                data-toggle="dropdown">{Language.translate(sortBy, 'fields', treeScope)}</button>
                                         <ul class="dropdown-menu">
                                             {#each sortFields.filter(field => field.name !== sortBy) as field }
-                                                <li><a href="#" on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a></li>
+                                                <li><a href="#"
+                                                       on:click|preventDefault={() => setSortBy(field.name)}>{field.label}</a>
+                                                </li>
                                             {/each}
                                         </ul>
                                     </div>
@@ -1293,7 +1321,8 @@
                         </div>
                     </div>
 
-                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;" bind:this={treeElement}>
+                    <div class={"panel-group category-tree tree-"+ activeItem?.name} style="margin-left: -6px;"
+                         bind:this={treeElement}>
                     </div>
 
                     {#if showEmptyPlaceholder}

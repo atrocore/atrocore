@@ -236,11 +236,19 @@
               },
               "fileContents": {
                 "type": "string"
+              },
+              "piece": {
+                "type": "string",
+                "description": "Chunk data"
+              },
+              "piecesCount": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Total number of chunks"
               }
             },
             "required": [
-              "reupload",
-              "fileContents"
+              "reupload"
             ]
           }
         }

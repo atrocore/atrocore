@@ -244,7 +244,7 @@
                     </div>
                 </div>
 
-                {#if filterNames !== ""}
+                {#if filterNames !== "" || advancedFilterChecked}
                     <button
                             type="button"
                             disabled={!showUnsetAll}

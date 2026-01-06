@@ -273,6 +273,10 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     $('.button-container a').removeClass('disabled');
                 });
 
+                this.listenTo(view, 'layout-refreshed', () => {
+                    this.setupRecord();
+                })
+
                 view.render();
 
                 this.listenTo(this, 'merge', (dialog) => {

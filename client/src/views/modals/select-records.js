@@ -297,27 +297,10 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 options.allowSelectAllResult = this.options.allowSelectAllResult;
             }
 
-            this.createView('list', viewName, options, function (view) {
+            this.createView('list', viewName, options, view => {
                 if (callback) {
                     callback(view);
                 }
-                this.listenTo(view, 'after:render', () => {
-                    if (!this.dialog) {
-                        return;
-                    }
-
-                    if (window['SvelteFilterSearchBar' + this.dialog.id]) {
-                        try {
-                            window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
-                        } catch (e) {
-                        }
-                    }
-
-                    const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
-                    if (container) {
-                        window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
-                    }
-                });
 
                 this.listenTo(view, 'select', function (model) {
                     this.trigger('select', model);
@@ -374,6 +357,24 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                     }.bind(this));
                 }
             });
+        },
+
+        renderFilterPanel(view) {
+            if (!this.dialog) {
+                return;
+            }
+
+            if (window['SvelteFilterSearchBar' + this.dialog.id]) {
+                try {
+                    window['SvelteFilterSearchBar' + this.dialog.id].$destroy();
+                } catch (e) {
+                }
+            }
+
+            const container = document.querySelector('#' + this.dialog.id + ' .modal-dialog .list-buttons-container');
+            if (container) {
+                window['SvelteFilterSearchBar' + this.dialog.id] = view.renderActionsContainer(container);
+            }
         },
 
         destroySveltePanels() {
@@ -471,6 +472,7 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
                 listView.searchManager = this.searchManager;
                 listView.uniqueKey = this.dialog.id;
 
+                this.listenToOnce(listView, 'after:render', view => this.renderFilterPanel(view));
                 listView.reRender();
             }
 
@@ -773,6 +775,11 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager', 'mo
             }
 
             this.trigger('after:toggleViewType', viewType);
+
+            const list = this.getView('list');
+            if (list) {
+                this.renderFilterPanel(list);
+            }
         },
 
         create: function () {

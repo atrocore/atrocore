@@ -73,11 +73,14 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                         if (!model.defs['fields'][name]) {
                             return;
                         }
+                        if ((model.get('attributesDefs') || {})[name]) {
+                            return;
+                        }
                         if (model.defs['fields'][name].attributeId) {
                             if (!attrs['__attributes']) {
                                 attrs['__attributes'] = [model.defs['fields'][name].attributeId];
                             } else {
-                                attrs['__attributes'].push([model.defs['fields'][name].attributeId]);
+                                attrs['__attributes'].push(model.defs['fields'][name].attributeId);
                             }
                         }
                     })
@@ -137,10 +140,14 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             return columns;
         },
 
+        getModels() {
+            return this.models;
+        },
+
         afterRender() {
             let count = 0;
             this.models.forEach(m => {
-                if (this.getUser().isAdmin()) {
+                if (this.getAcl().check('LayoutProfile', 'read')) {
                     this.createView(m.id + 'layoutConfiguratorSelection', "views/record/layout-configurator", {
                         scope: m.name,
                         viewType: 'selection',
@@ -152,7 +159,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                         view.on("refresh", () => this.getParentView().refreshContent());
                     });
 
-                    this._helper.layoutManager.get(this.model.name, 'selectionRelations', null,  (data) => {
+                    this._helper.layoutManager.get(this.model.name, 'selectionRelations', null, (data) => {
                         this.createView(m.id + 'layoutConfiguratorSelectionRelation', "views/record/layout-configurator", {
                             scope: m.name,
                             viewType: 'selectionRelations',

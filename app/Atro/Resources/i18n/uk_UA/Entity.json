@@ -98,6 +98,7 @@
     "entityHasDirectlyLinkedAttributes": "Існують вже безпосередньо пов'язані атрибути. Будь ласка, видаліть їх з усіх записів сутності.",
     "entityTypeIsNotSuitableForAssociates": "Цей тип сутності не може містити параметр \"має пов'язані записи\". Тільки типи \"Base\" та \"Ієрархія\" можуть мати цей параметр.",
     "derivativeWithSuchRoleExists": "Похідна сутність з такою роллю вже існує.",
-    "derivativeFromDerivativeNotSupporting": "Похідна сутність не може бути створена з іншої похідної сутності."
+    "derivativeFromDerivativeNotSupporting": "Похідна сутність не може бути створена з іншої похідної сутності.",
+    "cannotRemoveDerivativeDirectly": "Похідна сутність не може бути видалена напряму."
   }
 }

@@ -27,10 +27,10 @@
                                         <th  style="position: relative; padding-right: 65px; padding-left: 25px!important;" data-id="{{id}}">
                                             {{{name}}}
                                             <div class="pull-right inline-actions hidden " style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
-                                                <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 8px">
+                                                <a href="javascript:" class="swap-entity" title="{{translate 'replaceItem'}}" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 8px">
                                                     <i class="ph ph-swap"></i>
                                                 </a>
-                                                <a href="javascript:" class="pull-right remove-entity" style="padding-right: 8px" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
+                                                <a href="javascript:" class="pull-right remove-entity" style="padding-right: 8px" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" title="{{translate 'removeItem'}}" >
                                                     <i class="ph ph-trash-simple"></i>
                                                 </a>
                                             </div>

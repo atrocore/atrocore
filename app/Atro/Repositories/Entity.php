@@ -153,15 +153,7 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        $stagingEntityId = null;
-        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
-                $role = $scopeDefs['role'] ?? 'staging';
-                if ($role === 'staging') {
-                    $stagingEntityId = $scopeName;
-                }
-            }
-        }
+        $stagingEntityId = $this->getStagingEntityId($code);
 
         return array_merge($row, [
             'id'                    => $code,
@@ -543,11 +535,23 @@ class Entity extends ReferenceData
             throw new Forbidden();
         }
 
+        if (!empty($entity->get('primaryEntityId'))) {
+            throw new BadRequest($this->getLanguage()->translate('cannotRemoveDerivativeDirectly', 'exceptions', 'Entity'));
+        }
+
         parent::beforeRemove($entity, $options);
     }
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        if (!empty($entity->get('hasStaging')) && !empty($stagingEntityId = $this->getStagingEntityId($entity->get('code')))) {
+            $stagingEntity = $this->get($stagingEntityId);
+
+            if (!empty($stagingEntity)) {
+                $this->deleteEntity($stagingEntity);
+            }
+        }
+
         // delete relationships
         $saveMetadata = false;
         foreach ($entity->get('fields') ?? [] as $field) {
@@ -586,6 +590,22 @@ class Entity extends ReferenceData
                 || $label->get('code') === "Global.scopeNamesPlural.{$entity->get('code')}"
             ) {
                 $this->getEntityManager()->removeEntity($label);
+            }
+        }
+
+        if (!empty($entity->get('matchDuplicates'))) {
+            $code = Matching::createCodeForDuplicate($entity->id);
+            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
+            if (!empty($matching)) {
+                $this->getEntityManager()->removeEntity($matching);
+            }
+        }
+
+        if (!empty($entity->get('matchMasterRecords'))) {
+            $code = Matching::createCodeForMasterRecord($entity->id);
+            $matching = $this->getEntityManager()->getRepository('Matching')->get($code);
+            if (!empty($matching)) {
+                $this->getEntityManager()->removeEntity($matching);
             }
         }
 
@@ -743,6 +763,20 @@ class Entity extends ReferenceData
             }
         }
         $entity->set('nonDuplicatableFields', $fields);
+    }
+
+    protected function getStagingEntityId(string $code): ?string
+    {
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
+                $role = $scopeDefs['role'] ?? 'staging';
+                if ($role === 'staging') {
+                    return $scopeName;
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function init()
