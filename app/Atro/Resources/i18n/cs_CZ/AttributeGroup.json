@@ -12,6 +12,6 @@
   },
   "exceptions": {
     "attributeGroupSsLinkedWithAttributes": "Skupina atributů je stále propojena s některými atributy. Nejprve prosím odpojte atributy.",
-    "entityIsUsed": "Skupinu atributů nelze odstranit, protože se používá v několika atributech."
+    "entityIsUsed": "Skupinu atributů nelze odstranit, protože ji používá jeden nebo více atributů."
   }
 }
