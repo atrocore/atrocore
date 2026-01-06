@@ -2408,6 +2408,14 @@ class Metadata extends AbstractListener
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null
             ]);
 
+            // add status field
+            $data['entityDefs'][$scope]['fields']['derivativeStatus'] = [
+                'type'             => 'extensibleEnum',
+                'required'         => false,
+                "dropdown"         => true,
+                "extensibleEnumId" => "derivative_status"
+            ];
+
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
                 'type'     => 'link',

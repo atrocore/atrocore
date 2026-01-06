@@ -683,6 +683,7 @@
     "createdCountFilterActionExecution": "Created by Action Execution",
     "updatedCountFilterActionExecution": "Updated by Action Execution",
     "primaryRecord": "Primary Record",
+    "derivativeStatus": "Derivative Status",
     "derivedRecords": "Derived Records",
     "goldenRecord": "Golden Record",
     "sourceRecords": "Source Records",

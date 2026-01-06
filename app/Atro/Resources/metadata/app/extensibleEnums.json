@@ -38,5 +38,10 @@
     "id": "product_group_item_type",
     "name": "Product Group Item Type",
     "multilingual": false
+  },
+  {
+    "id": "derivative_status",
+    "name": "Derivative Status",
+    "multilingual": false
   }
 ]

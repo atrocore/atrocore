@@ -156,8 +156,9 @@ class LayoutManager
 
         if (!empty($derivativeScope)) {
             if ($viewType === 'detail') {
-                array_unshift($layout[0]['rows'], [false, ['name' => 'primaryRecord']]);
+                array_unshift($layout[0]['rows'], [['name' => 'derivativeStatus'], ['name' => 'primaryRecord']]);
             } elseif ($viewType === 'list') {
+                $layout[] = ['name' => 'derivativeStatus'];
                 $layout[] = ['name' => 'primaryRecord'];
             }
         }
