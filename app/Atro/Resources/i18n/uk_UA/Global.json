@@ -786,7 +786,8 @@
     "entity": "Сутність",
     "followers": "Передплатники",
     "createdCountFilterActionExecution": "Створено командою Action Execution",
-    "updatedCountFilterActionExecution": "Оновлено за даними Виконання заходів"
+    "updatedCountFilterActionExecution": "Оновлено за даними Виконання заходів",
+    "derivativeStatus": "Статус похідного інструменту"
   },
   "tooltips": {
     "groupEnd": "Виберіть, щоб використовувати цей пункт для позначення кінця згрупованих елементів навігації. Всі елементи після цього пункту будуть негруповані."
