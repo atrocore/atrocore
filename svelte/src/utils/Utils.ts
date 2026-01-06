@@ -109,6 +109,14 @@ export const Utils = {
         return color;
     },
 
+    getSystemIconUrl(name: string): string | null {
+        const systemIcons: Record<string, any> = Metadata.get(['app', 'systemIcons']) || {};
+        if (name in systemIcons && systemIcons[name].path) {
+            return systemIcons[name].path;
+        }
+        return null;
+    },
+
     getTabIcon(scope: string): string | null {
         const iconClass: string | null = Metadata.get(['clientDefs', scope, 'iconClass']) || null;
         if (iconClass) {
