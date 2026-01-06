@@ -104,6 +104,8 @@ class OpenApiGenerator
                 continue 1;
             }
 
+            $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
+
             $result['tags'][] = ['name' => $scopeName];
 
             // prepare schema data
@@ -303,7 +305,7 @@ class OpenApiGenerator
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
-                if (!in_array($scopeName, ['Matching', 'MasterDataEntity'])) {
+                if (empty($clientDefs['createDisabled'])) {
                     $result['paths']["/{$scopeName}"]['post'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Create a record of the $scopeName",
