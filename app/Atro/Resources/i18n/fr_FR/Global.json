@@ -107,7 +107,8 @@
     "derivedRecords": "Enregistrements dérivés",
     "createdCountFilterActionExecution": "Créé par l'exécution d'une action",
     "updatedCountFilterActionExecution": "Mise à jour par l'exécution de l'action",
-    "field": "Champ"
+    "field": "Champ",
+    "derivativeStatus": "Statut du dérivé"
   },
   "scopeNames": {
     "Classification": "Classification",
