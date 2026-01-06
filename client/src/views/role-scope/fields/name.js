@@ -28,6 +28,14 @@ Espo.define('views/role-scope/fields/name', 'views/fields/enum', Dep => {
             this.params.options = Object.keys(this.translatedOptions);
 
             Dep.prototype.setup.call(this);
+
+            this.listenTo(this.model, `change:${this.name}`, () => {
+                if (this.model.get(this.name)) {
+                    this.model.set('aclActionList', this.getMetadata().get(`scopes.${this.model.get(this.name)}.aclActionList`));
+                } else {
+                    this.model.set('aclActionList', null);
+                }
+            });
         },
 
     });
