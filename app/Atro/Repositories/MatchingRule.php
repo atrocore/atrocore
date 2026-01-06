@@ -74,11 +74,17 @@ class MatchingRule extends Base
         $this->addDependency('language');
     }
 
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array              $options
+     *
+     * @return void
+     */
     protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
 
-        $matching = $entity->get('matching');
+        $matching = $this->getMatching($entity);
         if (!empty($matching)) {
             $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
         }

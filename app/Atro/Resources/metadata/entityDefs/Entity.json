@@ -633,6 +633,10 @@
               ]
             },
             {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
               "type": "isEmpty",
               "attribute": "primaryEntityId"
             }
@@ -674,6 +678,7 @@
     "primaryEntity": {
       "type": "link",
       "view": "views/entity/fields/primary-entity",
+      "protected": true,
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -686,25 +691,8 @@
               ]
             },
             {
-              "type": "or",
-              "value": [
-                {
-                  "type": "isEmpty",
-                  "attribute": "id"
-                },
-                {
-                  "type": "isNotEmpty",
-                  "attribute": "primaryEntityId"
-                }
-              ]
-            }
-          ]
-        },
-        "protected": {
-          "conditionGroup": [
-            {
               "type": "isNotEmpty",
-              "attribute": "id"
+              "attribute": "primaryEntityId"
             }
           ]
         }
