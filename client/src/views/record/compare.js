@@ -137,6 +137,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         applyMerge(doneCallback) {
+            debugger
             let relationshipsPanels = this.getView('relationshipsPanels');
             if (!this.merging) {
                 this.notify('Loading...')
@@ -178,9 +179,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
                 if (this.model.defs['fields'][name].attributeId) {
                     if (!attributes['__attributes']) {
-                        attributes['__attributes'] = [model.defs['fields'][name].attributeId];
+                        attributes['__attributes'] = [this.model.defs['fields'][name].attributeId];
                     } else {
-                        attributes['__attributes'].push(model.defs['fields'][name].attributeId);
+                        attributes['__attributes'].push(this.model.defs['fields'][name].attributeId);
                     }
                 }
             });
