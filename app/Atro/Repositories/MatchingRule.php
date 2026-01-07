@@ -93,11 +93,6 @@ class MatchingRule extends Base
     {
         parent::afterSave($entity, $options);
 
-        $matching = $this->getMatching($entity);
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-        }
-
         $this->recalculateWeightForSets();
     }
 
@@ -129,11 +124,6 @@ class MatchingRule extends Base
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
-
-        $matching = $this->getMatching($entity);
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-        }
 
         $this->recalculateWeightForSets();
     }
