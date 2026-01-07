@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Lasci questo campo vuoto per consentire un numero illimitato di record abbinati. Se il numero di record abbinati supera questo valore, la corrispondenza sarà disattivata."
+  },
+  "exceptions": {
+    "noRules": "L'attivazione è bloccata. Non sono state definite regole di abbinamento per questo abbinamento."
   }
 }
