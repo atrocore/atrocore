@@ -79,7 +79,7 @@ class Job extends Base
 
     /**
      * @param JobEntity $entity
-     * @param array  $options
+     * @param array     $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -155,12 +155,12 @@ class Job extends Base
             ->where('payload LIKE :payload')
             ->andWhere('status = :pending')
             ->andWhere('deleted = :false')
-            ->andWhere('type = :type')
+            ->andWhere('type in (:types)')
             ->setParameter('payload', '%"id":"' . $matchingId . '"%')
             ->setParameter('canceled', 'Canceled')
             ->setParameter('pending', 'Pending')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('type', 'FindMatchesForRecord')
+            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
             ->executeQuery();
     }
 

@@ -41,36 +41,18 @@ class Matching extends Base
         return 'Matching' . $parts[0] . ucfirst(strtolower($parts[1]));
     }
 
-    public function activate(string $id, bool $skipMatchingUpdate = false): void
+    public function activate(string $id): void
     {
-        if (!$skipMatchingUpdate) {
-            $matching = $this->get($id);
-            $matching->set('isActive', true);
-            $this->getEntityManager()->saveEntity($matching);
-        }
-
-        $matchings = $this->getConfig()->get('matchings', []);
-        $matchings[$id] = true;
-
-        $this->getConfig()->set('matchings', $matchings);
-        $this->getConfig()->save();
+        $matching = $this->get($id);
+        $matching->set('isActive', true);
+        $this->getEntityManager()->saveEntity($matching);
     }
 
-    public function deactivate(string $id, bool $skipMatchingUpdate = false): void
+    public function deactivate(string $id): void
     {
-        if (!$skipMatchingUpdate) {
-            $matching = $this->get($id);
-            $matching->set('isActive', false);
-            $this->getEntityManager()->saveEntity($matching);
-        }
-
-        $matchings = $this->getConfig()->get('matchings', []);
-        $matchings[$id] = false;
-
-        $this->getConfig()->set('matchings', $matchings);
-        $this->getConfig()->save();
-
-        $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($id);
+        $matching = $this->get($id);
+        $matching->set('isActive', false);
+        $this->getEntityManager()->saveEntity($matching);
     }
 
     protected function beforeSave(OrmEntity $entity, array $options = []): void
@@ -122,11 +104,15 @@ class Matching extends Base
             $this->rebuild();
         }
 
-        if ($entity->isAttributeChanged('isActive') && !$entity->isNew()) {
-            if (!empty($entity->get('isActive'))) {
-                $this->activate($entity->id, true);
-            } else {
-                $this->deactivate($entity->id, true);
+        if ($entity->isAttributeChanged('isActive')) {
+            $matchings = $this->getConfig()->get('matchings', []);
+            $matchings[$entity->id] = !empty($entity->get('isActive'));
+
+            $this->getConfig()->set('matchings', $matchings);
+            $this->getConfig()->save();
+
+            if (!$entity->isNew() && empty($entity->get('isActive'))) {
+                $this->getEntityManager()->getRepository('Job')->cancelMatchingJobs($entity->id);
             }
         }
 

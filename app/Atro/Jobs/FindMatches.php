@@ -58,6 +58,10 @@ class FindMatches extends AbstractJob implements JobInterface
                 }
 
                 foreach ($collection as $k => $entity) {
+                    if (empty($this->getConfig()->get("matchings.{$matching->id}"))) {
+                        break 2;
+                    }
+
                     $jobEntity = $this->getEntityManager()->getEntity('Job');
                     $jobEntity->set([
                         'name'     => "Find matches for {$entity->getEntityName()}: {$entity->get('name')}",
