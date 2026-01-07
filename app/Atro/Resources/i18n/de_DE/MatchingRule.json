@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "Der Code darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten."
+    "notValidCode": "Der Code darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
+    "notValidMatchingActivation": "Die Übereinstimmungsregel kann nur für eine inaktive Übereinstimmung geändert werden."
   }
 }

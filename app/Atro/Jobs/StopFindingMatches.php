@@ -27,7 +27,7 @@ class StopFindingMatches extends AbstractJob implements JobInterface
             return;
         }
 
-        if (empty($this->getConfig()->get("matchings.{$matchingData['code']}"))) {
+        if (empty($this->getConfig()->get("matchings.{$matchingData['id']}"))) {
             return;
         }
 

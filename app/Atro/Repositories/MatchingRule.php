@@ -33,6 +33,7 @@ class MatchingRule extends Base
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         $this->validateCode($entity);
+        $this->validateIsMatchingActive($entity);
 
         parent::beforeSave($entity, $options);
     }
@@ -58,6 +59,14 @@ class MatchingRule extends Base
     {
         if (!preg_match('/^[A-Za-z0-9_-]*$/', $entity->get('code'))) {
             throw new BadRequest($this->getInjection('language')->translate('notValidCode', 'exceptions', 'MatchingRule'));
+        }
+    }
+
+    public function validateIsMatchingActive(MatchingRuleEntity $entity): void
+    {
+        $matching = $this->getMatching($entity);
+        if (!empty($matching) && !empty($matching->get('isActive'))) {
+            throw new BadRequest($this->getInjection('language')->translate('notValidMatchingActivation', 'exceptions', 'MatchingRule'));
         }
     }
 
@@ -92,8 +101,16 @@ class MatchingRule extends Base
         $this->recalculateWeightForSets();
     }
 
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array              $options
+     *
+     * @return void
+     */
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
+        $this->validateIsMatchingActive($entity);
+
         parent::beforeRemove($entity, $options);
 
         if ($entity->get('type') === 'set') {

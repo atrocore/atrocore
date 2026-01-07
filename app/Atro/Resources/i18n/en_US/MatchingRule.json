@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "Code must contain only letters, numbers, underscores and dashes."
+    "notValidCode": "Code must contain only letters, numbers, underscores and dashes.",
+    "notValidMatchingActivation": "The Matching Rule can only be changed for an inactive Matching."
   }
 }
