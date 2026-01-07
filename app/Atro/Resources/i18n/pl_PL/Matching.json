@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Proszę pozostawić to pole puste, aby zezwolić na nieograniczoną liczbę dopasowanych rekordów. Jeśli liczba dopasowanych rekordów przekroczy tę wartość, dopasowywanie zostanie wyłączone."
+  },
+  "exceptions": {
+    "noRules": "Aktywacja jest zablokowana. Nie zdefiniowano żadnych reguł dopasowania dla tego dopasowania."
   }
 }
