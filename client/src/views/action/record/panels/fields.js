@@ -164,10 +164,10 @@ Espo.define('views/action/record/panels/fields', 'view',
         afterRender() {
             Dep.prototype.afterRender.call(this);
 
-            if (!['create', 'update', 'suggestValue'].includes(this.model.get('type')) || this.model.get('updateType') !== 'basic') {
+            if (!['create', 'update', 'createOrUpdate', 'suggestValue'].includes(this.model.get('type')) || this.model.get('updateType') !== 'basic') {
                 this.$el.parent().hide();
             } else {
-                if (this.mode === 'detail') {
+                if (this.mode === 'detail' || !this.model.get(this.getEntityNameField())) {
                     this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
                 } else {
                     this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');

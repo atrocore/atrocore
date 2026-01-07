@@ -162,6 +162,46 @@
             ...(filterPerGroups[Language.translate('Fields')] ?? []),
         ]
 
+        $queryBuilder.on('afterCreateRuleInput.queryBuilder', function (e, rule) {
+            if (rule.data?.disabled) {
+                rule.$el.find('.rule-toggle').removeClass('active');
+                rule.$el.find('.rule-toggle i').removeClass('ph-toggle-right').addClass('ph-toggle-left');
+            }
+        });
+
+        $queryBuilder.on('afterCreateRuleGroup.queryBuilder', function (e, group) {
+            if (group.data?.disabled) {
+                group.$el.find('.rule-toggle').removeClass('active');
+                group.$el.find('.rule-toggle i').removeClass('ph-toggle-right').addClass('ph-toggle-left');
+            }
+        });
+
+        $queryBuilder.on('click', '.rule-toggle', function (e) {
+            const $el = window.$(e.currentTarget)
+            let disabled
+
+            if ($el.hasClass('active')) {
+                $el.removeClass('active').find('i').removeClass('ph-toggle-right').addClass('ph-toggle-left')
+                disabled = true;
+            } else {
+                $el.addClass('active').find('i').removeClass('ph-toggle-left').addClass('ph-toggle-right')
+                disabled = false;
+            }
+
+            let rule = window.$(queryBuilderElement).queryBuilder('getModel', document.getElementById($el.data('id')));
+            if (rule) {
+                if (!rule.data) {
+                    rule.data = {}
+                }
+                if (disabled) {
+                    rule.data.disabled = disabled
+                } else {
+                    delete rule.data.disabled;
+                }
+                queryBuilderRulesChanged = true;
+            }
+        })
+
         $queryBuilder.queryBuilder({
             uniqueKey: uniqueKey,
             allow_empty: true,
@@ -228,7 +268,7 @@
                             ` : ''}
                             ${level > 1 ? `
                                 <div class="btn-group" style="margin-left: auto">
-                                    <span class="rule-toggle active"><i class="ph-fill ph-toggle-right"></i></span>
+                                    <span class="rule-toggle active" data-id="${group_id}"><i class="ph-fill ph-toggle-right"></i></span>
                                     <button type="button" class="btn btn-danger outline rule-delete" data-delete="group">
                                         <i class="${icons.remove_group}"></i>
                                     </button>
@@ -262,7 +302,7 @@
                     <div id="${rule_id}" class="rule-container">
                       <div class="rule-header">
                         <div class="btn-group float-end rule-actions">
-                          <span class="rule-toggle active"><i class="ph-fill ph-toggle-right"></i></span>
+                          <span class="rule-toggle active" data-id="${rule_id}"><i class="ph-fill ph-toggle-right"></i></span>
                           <button type="button" class="btn btn-danger outline rule-delete" data-delete="rule">
                             <i class="${icons.remove_rule}"></i>
                           </button>

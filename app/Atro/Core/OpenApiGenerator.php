@@ -104,6 +104,9 @@ class OpenApiGenerator
                 continue 1;
             }
 
+            $clientDefs = $this->getMetadata()->get(['clientDefs', $scopeName]);
+            $entityDefs = $this->getMetadata()->get(['entityDefs', $scopeName]);
+
             $result['tags'][] = ['name' => $scopeName];
 
             // prepare schema data
@@ -303,7 +306,7 @@ class OpenApiGenerator
             }
 
             if (!empty($scopeData['type']) && $scopeData['type'] !== 'Archive' && $scopeName !== 'MatchedRecord') {
-                if (!in_array($scopeName, ['Matching', 'MasterDataEntity'])) {
+                if (empty($clientDefs['createDisabled'])) {
                     $result['paths']["/{$scopeName}"]['post'] = [
                         'tags'        => [$scopeName],
                         "summary"     => "Create a record of the $scopeName",
@@ -1243,10 +1246,8 @@ class OpenApiGenerator
             return;
         }
 
-        if (empty($fieldData['openApiEnabled'])) {
-            if (!empty($fieldData['noLoad']) || (!empty($fieldData['notStorable']) && empty($fieldData['dataField']))) {
-                return;
-            }
+        if (empty($fieldData['openApiEnabled']) && !empty($fieldData['noLoad'])) {
+            return;
         }
 
         if($fieldData['type'] === 'script') {

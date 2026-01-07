@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\EventManager\Event;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Conflict;
 use Atro\Core\Exceptions\Forbidden;
@@ -153,17 +154,9 @@ class Entity extends ReferenceData
             $row[$boolField] = !empty($row[$boolField]);
         }
 
-        $stagingEntityId = null;
-        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
-            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
-                $role = $scopeDefs['role'] ?? 'staging';
-                if ($role === 'staging') {
-                    $stagingEntityId = $scopeName;
-                }
-            }
-        }
+        $stagingEntityId = $this->getStagingEntityId($code);
 
-        return array_merge($row, [
+        $res = array_merge($row, [
             'id'                    => $code,
             'code'                  => $code,
             'name'                  => $this->getLanguage()->translate($code, 'scopeNames'),
@@ -179,6 +172,9 @@ class Entity extends ReferenceData
             'stagingEntityId'       => $stagingEntityId,
             'stagingEntityName'     => empty($stagingEntityId) ? null : $this->getLanguage()->translate($stagingEntityId, 'scopeNames'),
         ]);
+
+
+        return $this->getEventManager()->dispatch('EntityEntity', 'afterPrepareItem', new Event(['result' => $res]))->getArgument('result');
     }
 
     protected function getAllItems(array $params = []): array
@@ -332,7 +328,7 @@ class Entity extends ReferenceData
         foreach (['clientDefs', 'entityDefs', 'scopes'] as $type) {
             $entityType = $entity->get('type');
             $filePath = CORE_PATH . "/Atro/Core/Templates/Metadata/{$entityType}/$type.json";
-            if (!file_exists($filePath)){
+            if (!file_exists($filePath)) {
                 continue;
             }
             $contents = file_get_contents($filePath);
@@ -381,7 +377,7 @@ class Entity extends ReferenceData
         return true;
     }
 
-    protected function  updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
+    protected function updateScope(OrmEntity $entity, array $loadedData, bool $isCustom): void
     {
         $saveMetadata = $isCustom;
         $saveLanguage = $isCustom;
@@ -544,6 +540,14 @@ class Entity extends ReferenceData
 
     public function deleteEntity(OrmEntity $entity): bool
     {
+        if (!empty($entity->get('hasStaging')) && !empty($stagingEntityId = $this->getStagingEntityId($entity->get('code')))) {
+            $stagingEntity = $this->get($stagingEntityId);
+
+            if (!empty($stagingEntity)) {
+                $this->deleteEntity($stagingEntity);
+            }
+        }
+
         // delete relationships
         $saveMetadata = false;
         foreach ($entity->get('fields') ?? [] as $field) {
@@ -755,6 +759,20 @@ class Entity extends ReferenceData
             }
         }
         $entity->set('nonDuplicatableFields', $fields);
+    }
+
+    protected function getStagingEntityId(string $code): ?string
+    {
+        foreach ($this->getMetadata()->get('scopes', []) as $scopeName => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $code) {
+                $role = $scopeDefs['role'] ?? 'staging';
+                if ($role === 'staging') {
+                    return $scopeName;
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function init()

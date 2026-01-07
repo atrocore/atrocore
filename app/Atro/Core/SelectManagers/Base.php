@@ -234,7 +234,12 @@ class Base
 
     public function mutateWhereQuery(array &$where, &$result = null): void
     {
-        foreach ($where as &$item) {
+        foreach ($where as $key => &$item) {
+            if (!empty($item['data']['disabled'])) {
+                unset($where[$key]);
+                continue;
+            }
+
             if (isset($item['rules'])) {
                 $this->mutateWhereQuery($item['rules'], $result);
                 $item = ['type' => $this->qbConditionToType((string)$item['condition']), 'value' => $item['rules']];
@@ -1360,14 +1365,14 @@ class Base
                     $values = [];
                     foreach ($item['value'] as $value) {
                         $values[] = [
-                            'type' => 'contains',
+                            'type'      => 'contains',
                             'attribute' => 'routes',
-                            'value' => $value
+                            'value'     => $value
                         ];
                     }
 
                     $item = [
-                        'type' => 'or',
+                        'type'  => 'or',
                         'value' => $values
                     ];
                     break;
@@ -1375,26 +1380,26 @@ class Base
                     $values = [];
                     foreach ($item['value'] as $value) {
                         $values[] = [
-                            'type' => 'notContains',
+                            'type'      => 'notContains',
                             'attribute' => 'routes',
-                            'value' => $value
+                            'value'     => $value
                         ];
                     }
 
                     $item = [
-                        'type' => 'and',
+                        'type'  => 'and',
                         'value' => $values
                     ];
                     break;
                 case 'isNull':
                     $item = [
-                        'type' => 'arrayIsEmpty',
+                        'type'      => 'arrayIsEmpty',
                         'attribute' => 'routes'
                     ];
                     break;
                 case 'isNotNull':
                     $item = [
-                        'type' => 'arrayIsNotEmpty',
+                        'type'      => 'arrayIsNotEmpty',
                         'attribute' => 'routes'
                     ];
                     break;

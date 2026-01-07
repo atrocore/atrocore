@@ -22,7 +22,7 @@ import UpdatePanel from "./components/panels/UpdatePanel.svelte";
 import LayoutComponent from "./components/admin/layouts/LayoutComponent.svelte";
 import RebuildDatabaseModal from "./components/admin/modals/RebuildDatabaseModal.svelte";
 import ApiRequestComponent from "./components/admin/api-request/ApiRequestComponent.svelte";
-// import Script from "./components/fields/Script.svelte";
+import Script from "./components/fields/Script.svelte";
 import Navigation from "./components/layout-profile/navigation/Navigation.svelte";
 import Favorites from "./components/layout-profile/navigation/Favorites.svelte";
 import TreePanel from "./components/record/TreePanel.svelte";
@@ -55,7 +55,7 @@ window.tippy = tippy;
 window.Dropdown = Dropdown;
 
 export {
-    // Script,
+    Script,
     UpdatePanel,
     JobManagerIcon,
     LayoutComponent,

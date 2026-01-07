@@ -50,6 +50,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
             this.versions = this.options.versions ?? [];
             this.currentVersion = this.versions[0]?.name
 
+            this.derivativeComparison = this.options.derivativeComparison ?? false;
+
             this.collection = this.options.collection ?? this.collection;
             this.models = this.options.models || this.models;
             this.selectionModel = this.options.selectionModel || this.selectionModel;
@@ -60,8 +62,11 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareInstance']) ?? 'views/record/compare-instance'
                 this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with') + ' ' + this.instances[0].name);
             } else if (this.versionComparison) {
-                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'views/record/compare-version'
+                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'versioning:views/record/compare-version'
                 this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with previous versions'));
+            } else if (this.derivativeComparison) {
+                this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compareVersion']) ?? 'versioning:views/record/compare-derivative'
+                this.header = this.options.header ?? (this.getLanguage().translate('Record Compare with change request'));
             } else {
                 this.recordView = this.options.recordView ?? this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'compare']) ?? this.recordView ?? 'view/record/compare'
                 this.header = this.options.header ?? (this.options.merging ? this.getLanguage().translate('Merge Records') : this.getLanguage().translate('Record Comparison'));
@@ -86,7 +91,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 });
             }
 
-            if (!this.versionComparison && this.getAcl().check('Selection', 'create') && this.getAcl().check('Selection', 'read')) {
+            if (!this.versionComparison && !this.options.disableSelection && this.getAcl().check('Selection', 'create') && this.getAcl().check('Selection', 'read')) {
                 this.buttonList.push({
                     name: "createSelection",
                     label: this.translate('createSelection', 'labels', 'Selection'),
@@ -117,6 +122,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 })
             }
 
+            (this.options.additionalButtons || []).forEach(button => this.buttonList.push(button))
+
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel',
@@ -137,7 +144,8 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                 models: this.options.models,
                 selectionModel: this.options.selectionModel,
                 scope: this.scope,
-                merging: this.options.merging
+                merging: this.options.merging,
+                mergeCallback: this.options.mergeCallback,
             };
 
             if (this.instanceComparison) {
@@ -242,6 +250,9 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                     setTimeout(() => this.notify(false), 2000);
                 } else {
                     options.model = this.getModels()[0];
+                    if (this.derivativeComparison) {
+                        options.derivativeComparison = true;
+                    }
                     this.createModalView(options);
                     this.wait(false);
 
@@ -270,7 +281,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
 
                 this.listenTo(this, 'merge', (dialog) => {
                     view.trigger('merge', dialog);
-                    if (!this.versionComparison){
+                    if (!this.versionComparison && !this.options.disableSelection) {
                         this.ajaxPostRequest('selection/action/createSelectionWithRecords', {
                             scope: this.scope,
                             entityIds: this.getModels().map(m => m.id)

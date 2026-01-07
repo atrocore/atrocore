@@ -72,6 +72,26 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
 
+            this.getModels().forEach(model => {
+                this.listenTo(model, 'before:save', (attrs) => {
+                    $.each(attrs, (name, value) => {
+                        if (!model.defs['fields'][name]) {
+                            return;
+                        }
+                        if ((model.get('attributesDefs') || {})[name]) {
+                            return;
+                        }
+                        if (model.defs['fields'][name].attributeId) {
+                            if (!attrs['__attributes']) {
+                                attrs['__attributes'] = [model.defs['fields'][name].attributeId];
+                            } else {
+                                attrs['__attributes'].push(model.defs['fields'][name].attributeId);
+                            }
+                        }
+                    });
+                });
+            });
+
             this.setupFieldPanels();
             this.wait(true);
             this.prepareFieldsData(() => {
@@ -87,7 +107,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.listenTo(this, 'merge', (dialog) => {
-                this.applyMerge(() => dialog.close());
+                this.applyMerge(() => {
+                    dialog.close()
+                    if (this.options.mergeCallback) {
+                        this.options.mergeCallback();
+                    }
+                });
             });
 
             this.listenTo(this, 'open-filter', () => {
@@ -101,10 +126,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
-                relationshipsPanels.changeViewMode('detail');
                 this.renderFieldsPanels();
-                relationshipsPanels.merging = false;
+                if (relationshipsPanels) {
+                    relationshipsPanels.changeViewMode('detail');
+                    relationshipsPanels.merging = false;
+                }
                 this.$el.find('div.compare-records').attr('data-mode', 'compare')
+
             }
         },
 
@@ -117,8 +145,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
                 })
-                relationshipsPanels.merging = true;
-                relationshipsPanels.changeViewMode('edit');
+
+                if (relationshipsPanels) {
+                    relationshipsPanels.merging = true;
+                    relationshipsPanels.changeViewMode('edit');
+                }
+
                 this.$el.find('div.compare-records').attr('data-mode', 'merge')
                 return;
             }
@@ -140,6 +172,18 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 attributes = {...attributes, ...fieldsPanels.fetch()};
             }
 
+            $.each(attributes, (name, value) => {
+                if (!this.model.defs['fields'][name]) {
+                    return;
+                }
+                if (this.model.defs['fields'][name].attributeId) {
+                    if (!attributes['__attributes']) {
+                        attributes['__attributes'] = [model.defs['fields'][name].attributeId];
+                    } else {
+                        attributes['__attributes'].push(model.defs['fields'][name].attributeId);
+                    }
+                }
+            });
 
             let buttons = this.getParentView().$el.find('.modal-footer button');
 
@@ -428,6 +472,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     models: this.getModels(),
                     distantModels: this.getDistantModels(),
                     instanceComparison: this.instanceComparison,
+                    derivativeComparison: this.options.derivativeComparison,
                     columns: this.buildComparisonTableHeaderColumn(),
                     versionModel: this.options.versionModel,
                     merging: this.merging,

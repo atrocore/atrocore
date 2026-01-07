@@ -34,10 +34,10 @@
                 {{/if}}
                 {{#unless isFirst}}
                     <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
-                        <a href="javascript:" class="swap-entity" title="Replace entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
+                        <a href="javascript:" class="swap-entity" title="{{translate 'replaceItem' scope='Global' categories='labels'}}" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
                             <i class="ph ph-swap"></i>
                         </a>
-                        <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="Remove entity" >
+                        <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="{{translate 'removeItem' scope='Global' categories='labels'}}" >
                             <i class="ph ph-trash-simple"></i>
                         </a>
                     </div>

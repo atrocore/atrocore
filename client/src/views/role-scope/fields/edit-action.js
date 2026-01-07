@@ -23,7 +23,7 @@ Espo.define('views/role-scope/fields/edit-action', 'views/fields/enum', Dep => {
         },
 
         prepareOptionsList() {
-            this.params.options = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionLevelListMap.edit`) || this.getMetadata().get(`entityDefs.RoleScope.fields.editAction.options`);
+            this.originalOptionList = this.params.options = this.getMetadata().get(`scopes.${this.model.get('name')}.aclActionLevelListMap.edit`) || this.getMetadata().get(`entityDefs.RoleScope.fields.editAction.options`);
         },
 
         afterRender() {

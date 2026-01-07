@@ -35,10 +35,6 @@ Espo.define('views/fields/hierarchy-routes', 'views/fields/link', Dep => {
 
             return data;
         },
-
-        chooseMultipleOnSearch: function () {
-            return false;
-        },
     });
 });
 
