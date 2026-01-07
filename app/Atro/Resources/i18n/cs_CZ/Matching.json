@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Nechte toto pole prázdné, abyste mohli zadat neomezený počet odpovídajících záznamů. Pokud počet porovnávaných záznamů překročí tuto hodnotu, porovnávání bude deaktivováno."
+  },
+  "exceptions": {
+    "noRules": "Aktivace je blokována. Pro toto přiřazení nebyla definována žádná pravidla."
   }
 }
