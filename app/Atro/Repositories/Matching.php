@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\MatchingManager;
 use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Util;
@@ -66,6 +67,16 @@ class Matching extends Base
             $entity->set('foreignName', $entity->get('name'));
         }
 
+        if (!$entity->isNew() && $entity->isAttributeChanged('isActive') && !empty($entity->get('isActive'))) {
+            $rule = $this->getEntityManager()->getRepository('MatchingRule')
+                ->where(['matchingId' => $entity->id])
+                ->findOne();
+
+            if (empty($rule)) {
+                throw new BadRequest($this->getInjection('language')->translate('noRules', 'exceptions', 'Matching'));
+            }
+        }
+
         parent::beforeSave($entity, $options);
     }
 
@@ -85,7 +96,7 @@ class Matching extends Base
 
     /**
      * @param MatchingEntity $entity
-     * @param array     $options
+     * @param array          $options
      *
      * @return void
      */
@@ -143,7 +154,7 @@ class Matching extends Base
 
     /**
      * @param MatchingEntity $entity
-     * @param array     $options
+     * @param array          $options
      *
      * @return void
      */
@@ -290,6 +301,7 @@ class Matching extends Base
         parent::init();
 
         $this->addDependency('matchingManager');
+        $this->addDependency('language');
     }
 
     protected function getMatchingManager(): MatchingManager

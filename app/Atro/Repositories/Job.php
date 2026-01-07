@@ -160,7 +160,7 @@ class Job extends Base
             ->setParameter('canceled', 'Canceled')
             ->setParameter('pending', 'Pending')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches', 'FindMatchingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
             ->executeQuery();
     }
 

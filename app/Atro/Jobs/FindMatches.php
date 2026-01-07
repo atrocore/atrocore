@@ -37,63 +37,17 @@ class FindMatches extends AbstractJob implements JobInterface
                 continue;
             }
 
-            if (empty($matching->get('matchingRules')[0])) {
-                continue;
-            }
-
-            $fieldName = \Atro\Repositories\Matching::prepareFieldName($matching->id);
-
-            $offset = 0;
-            $limit = 5000;
-
-            $checkJobInterval = ($this->getConfig()->get('maxConcurrentWorkers') ?? 6) * 2;
-
-            while (true) {
-                $collection = $this->getEntityManager()->getRepository($matching->get('entity'))
-                    ->where([$fieldName => false])
-                    ->limit($offset, $limit)
-                    ->find();
-                if (empty($collection[0])) {
-                    break;
-                }
-
-                foreach ($collection as $k => $entity) {
-                    if (empty($this->getConfig()->get("matchings.{$matching->id}"))) {
-                        break 2;
-                    }
-
-                    $jobEntity = $this->getEntityManager()->getEntity('Job');
-                    $jobEntity->set([
-                        'name'     => "Find matches for {$entity->getEntityName()}: {$entity->get('name')}",
-                        'type'     => 'FindMatchesForRecord',
-                        'status'   => 'Pending',
-                        'priority' => 20,
-                        'payload'  => [
-                            'matching'   => $matching->toPayload(),
-                            'entityName' => $entity->getEntityName(),
-                            'entityId'   => $entity->id
-                        ]
-                    ]);
-                    $this->getEntityManager()->saveEntity($jobEntity);
-
-                    if (!empty($matching->get('matchedRecordsMax')) && $k % $checkJobInterval === 0) {
-                        $jobEntity = $this->getEntityManager()->getEntity('Job');
-                        $jobEntity->set([
-                            'name'     => "Check whether the searching of the matches for '{$entity->getEntityName()}' needs to stop",
-                            'type'     => 'StopFindingMatches',
-                            'status'   => 'Pending',
-                            'priority' => 20,
-                            'payload'  => [
-                                'matching'   => $matching->toPayload(),
-                                'entityName' => $entity->getEntityName()
-                            ]
-                        ]);
-                        $this->getEntityManager()->saveEntity($jobEntity);
-                    }
-                }
-
-                $offset += $limit;
-            }
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'     => "Find matches for Matching {$matching->id}",
+                'type'     => 'FindMatchingMatches',
+                'status'   => 'Pending',
+                'priority' => 20,
+                'payload'  => [
+                    'matching' => $matching->toPayload()
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
         }
     }
 }
