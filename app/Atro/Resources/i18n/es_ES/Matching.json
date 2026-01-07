@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Deje este campo vacío para permitir un número ilimitado de registros coincidentes. Si el número de registros coincidentes supera este valor, se desactivará la coincidencia."
+  },
+  "exceptions": {
+    "noRules": "La activación está bloqueada. No se han definido reglas de concordancia para esta concordancia."
   }
 }
