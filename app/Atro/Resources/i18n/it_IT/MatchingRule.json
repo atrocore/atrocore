@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi."
+    "notValidCode": "Il codice deve contenere solo lettere, numeri, trattini e trattini bassi.",
+    "notValidMatchingActivation": "La regola di abbinamento può essere modificata solo per un abbinamento inattivo."
   }
 }
