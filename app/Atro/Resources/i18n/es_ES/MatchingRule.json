@@ -19,6 +19,7 @@
     }
   },
   "exceptions": {
-    "notValidCode": "El código debe contener sólo letras, números, guiones bajos y guiones."
+    "notValidCode": "El código debe contener sólo letras, números, guiones bajos y guiones.",
+    "notValidMatchingActivation": "La regla de coincidencia sólo puede modificarse para una coincidencia inactiva."
   }
 }
