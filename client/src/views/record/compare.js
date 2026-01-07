@@ -137,7 +137,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         applyMerge(doneCallback) {
-            debugger
             let relationshipsPanels = this.getView('relationshipsPanels');
             if (!this.merging) {
                 this.notify('Loading...')
