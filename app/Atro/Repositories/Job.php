@@ -149,6 +149,21 @@ class Job extends Base
 
     public function cancelMatchingJobs(string $matchingId): void
     {
+        $jobs = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'type'   => 'FindMatchingMatches',
+                'status' => ['Pending', 'Running']
+            ])
+            ->find();
+
+        foreach ($jobs as $job) {
+            $jobMatchingId = $job->getPayload()['matching']['id'] ?? null;
+            if ($jobMatchingId === $matchingId) {
+                $job->set('status', 'Canceled');
+                $this->getEntityManager()->saveEntity($job);
+            }
+        }
+
         $this->getConnection()->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier('job'))
             ->set('status', ':canceled')
@@ -160,7 +175,7 @@ class Job extends Base
             ->setParameter('canceled', 'Canceled')
             ->setParameter('pending', 'Pending')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches', 'FindMatchingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
             ->executeQuery();
     }
 
