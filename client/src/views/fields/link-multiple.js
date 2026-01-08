@@ -104,6 +104,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.model.set(this.nameHashName, names);
                 this.model.set(this.idsName, ids);
 
+                this.readOnly = false;
+                this.reRender();
+
                 this.notify('Done', 'success');
             }).error(() => {
                 this.notify('Error occurred', 'error');
@@ -1044,7 +1047,13 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 ?? this.foreignScope
                 ?? this.getMetadata().get(['entityDefs', scope, 'links', this.name, 'entity'])
                 ?? this.getMetadata().get(['entityDefs', scope, 'fields', this.name, 'entity']);
-        }
+        },
+
+        listInlineEditModeEnabled() {
+            let res = Dep.prototype.listInlineEditModeEnabled.call(this);
+
+            return res && this.model.get(this.idsName) !== null && this.model.get(this.idsName) !== undefined;
+        },
     });
 });
 
