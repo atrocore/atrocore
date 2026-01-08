@@ -216,14 +216,14 @@ class Language extends AbstractListener
             if (!empty($scopeDefs['type']) && !empty($scopeDefs['primaryEntityId'])) {
                 foreach ($data as $locale => $rows) {
                     if (!empty($rows[$scopeDefs['primaryEntityId']])) {
-                        $data[$locale][$scope] = $rows[$scopeDefs['primaryEntityId']];
+                        $data[$locale][$scope] = Util::merge($rows[$scopeDefs['primaryEntityId']], $rows[$scope] ?? []);
                     }
                 }
             }
             if (!empty($scopeDefs['type']) && !empty($scopeDefs['derivativeForRelation'])) {
                 foreach ($data as $locale => $rows) {
                     if (!empty($rows[$scopeDefs['derivativeForRelation']])) {
-                        $data[$locale][$scope] = $rows[$scopeDefs['derivativeForRelation']];
+                        $data[$locale][$scope] = Util::merge($rows[$scopeDefs['derivativeForRelation']], $rows[$scope] ?? []);
                     }
                 }
             }
