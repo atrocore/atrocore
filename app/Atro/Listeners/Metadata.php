@@ -1436,7 +1436,8 @@ class Metadata extends AbstractListener
                     "foreign"                     => lcfirst($scope),
                     "layoutRelationshipsDisabled" => true,
                     "entity"                      => "{$scope}AttributeValue",
-                    "disableMassRelation"         => true
+                    "disableMassRelation"         => true,
+                    "notMergeable"                => true
                 ];
 
                 $metadata["entityDefs"][$entityName] = [
@@ -2292,6 +2293,11 @@ class Metadata extends AbstractListener
                     $fieldDefs['required'] = false;
                 }
 
+                // disable notNull
+                if (!empty($fieldDefs['notNull'])) {
+                    $fieldDefs['notNull'] = false;
+                }
+
                 // disable require via conditional properties
                 if (!empty($fieldDefs['conditionalProperties']['required'])) {
                     unset($fieldDefs['conditionalProperties']['required']);
@@ -2304,17 +2310,21 @@ class Metadata extends AbstractListener
 
                 if ($fieldDefs['type'] === 'link') {
                     $linkDefs = $data['entityDefs'][$primaryEntity]['links'][$fieldName] ?? null;
-                    if (!empty($linkDefs['foreign'])) {
-                        $foreign = lcfirst($scope) . 'sDerivatives';
 
-                        $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
-                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
-                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
-                        $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+                    if (!empty($linkDefs)) {
+                        if (!empty($linkDefs['foreign'])) {
+                            $foreign = lcfirst($scope) . 'sDerivatives';
 
-                        $linkDefs['foreign'] = $foreign;
+                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+
+                            $linkDefs['foreign'] = $foreign;
+                        }
+
+                        $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                     }
-                    $data['entityDefs'][$scope]['links'][$fieldName] = $linkDefs;
                 }
 
                 if ($fieldDefs['type'] === 'linkMultiple') {
@@ -2349,6 +2359,16 @@ class Metadata extends AbstractListener
                             } elseif (str_starts_with($linkDefs['relationName'], lcfirst($primaryEntity))) {
                                 $relationName = str_replace(lcfirst($primaryEntity), lcfirst($scope), $linkDefs['relationName']);
                             }
+
+                            $relationDefs = $data['entityDefs'][ucfirst($linkDefs['relationName'])] ?? null;
+                            if (!empty($relationDefs)) {
+                                $data['entityDefs'][ucfirst($relationName)] = Util::merge($data['entityDefs'][ucfirst($relationName)] ?? [], $relationDefs);
+                            }
+
+                            $data['scopes'][ucfirst($relationName)] = array_merge($data['scopes'][ucfirst($relationName)] ?? [], [
+                                'derivativeScope'       => $scope,
+                                'derivativeForRelation' => ucfirst($linkDefs['relationName'])
+                            ]);
 
                             if (!empty($linkDefs['foreign'])) {
                                 $foreign = lcfirst($scope) . 'sDerivatives';
@@ -2408,6 +2428,14 @@ class Metadata extends AbstractListener
                 'iconClass' => $data['clientDefs'][$scope]['iconClass'] ?? null
             ]);
 
+            // add status field
+            $data['entityDefs'][$scope]['fields']['derivativeStatus'] = [
+                'type'             => 'extensibleEnum',
+                'required'         => false,
+                "dropdown"         => true,
+                "extensibleEnumId" => "derivative_status"
+            ];
+
             // add link to the primary entity
             $data['entityDefs'][$scope]['fields']['primaryRecord'] = [
                 'type'     => 'link',
@@ -2424,9 +2452,10 @@ class Metadata extends AbstractListener
                 'noLoad' => true
             ];
             $data['entityDefs'][$primaryEntity]['links']['derivedRecords'] = [
-                'type'    => 'hasMany',
-                'foreign' => 'primaryRecord',
-                'entity'  => $scope
+                'type'         => 'hasMany',
+                'foreign'      => 'primaryRecord',
+                'entity'       => $scope,
+                'notMergeable' => true
             ];
         }
     }

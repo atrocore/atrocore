@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Leave this field empty to allow an unlimited number of matched records. If the number of matched records exceeds this value, matching will be deactivated."
+  },
+  "exceptions": {
+    "noRules": "Activation is blocked. No matching rules have been defined for this matching."
   }
 }

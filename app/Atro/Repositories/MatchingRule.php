@@ -33,6 +33,7 @@ class MatchingRule extends Base
     protected function beforeSave(OrmEntity $entity, array $options = [])
     {
         $this->validateCode($entity);
+        $this->validateIsMatchingActive($entity);
 
         parent::beforeSave($entity, $options);
     }
@@ -61,6 +62,14 @@ class MatchingRule extends Base
         }
     }
 
+    public function validateIsMatchingActive(MatchingRuleEntity $entity): void
+    {
+        $matching = $this->getMatching($entity);
+        if (!empty($matching) && !empty($matching->get('isActive'))) {
+            throw new BadRequest($this->getInjection('language')->translate('notValidMatchingActivation', 'exceptions', 'MatchingRule'));
+        }
+    }
+
     public function createMatchingType(MatchingRuleEntity $rule): AbstractMatchingRule
     {
         return $this->getInjection('matchingManager')->createMatchingType($rule);
@@ -74,20 +83,29 @@ class MatchingRule extends Base
         $this->addDependency('language');
     }
 
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array              $options
+     *
+     * @return void
+     */
     protected function afterSave(OrmEntity $entity, array $options = []): void
     {
         parent::afterSave($entity, $options);
 
-        $matching = $entity->get('matching');
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-        }
-
         $this->recalculateWeightForSets();
     }
 
+    /**
+     * @param MatchingRuleEntity $entity
+     * @param array              $options
+     *
+     * @return void
+     */
     protected function beforeRemove(OrmEntity $entity, array $options = [])
     {
+        $this->validateIsMatchingActive($entity);
+
         parent::beforeRemove($entity, $options);
 
         if ($entity->get('type') === 'set') {
@@ -106,11 +124,6 @@ class MatchingRule extends Base
     protected function afterRemove(OrmEntity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
-
-        $matching = $this->getMatching($entity);
-        if (!empty($matching)) {
-            $this->getMatchingRepository()->unmarkAllMatchingSearched($matching);
-        }
 
         $this->recalculateWeightForSets();
     }

@@ -111,6 +111,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                 this.prepareRelationshipPanels((panelList) => {
                     panelList = this.getPanelWithFields().concat(panelList);
                     this.trigger('detailPanelsLoaded', {list: panelList});
+                    this.getParentView().setupLayoutEditorButton();
                 });
             });
 

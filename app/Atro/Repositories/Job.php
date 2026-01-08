@@ -79,7 +79,7 @@ class Job extends Base
 
     /**
      * @param JobEntity $entity
-     * @param array  $options
+     * @param array     $options
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -149,18 +149,33 @@ class Job extends Base
 
     public function cancelMatchingJobs(string $matchingId): void
     {
+        $jobs = $this->getEntityManager()->getRepository('Job')
+            ->where([
+                'type'   => 'FindMatchesForMatching',
+                'status' => ['Pending', 'Running']
+            ])
+            ->find();
+
+        foreach ($jobs as $job) {
+            $jobMatchingId = $job->getPayload()['matching']['id'] ?? null;
+            if ($jobMatchingId === $matchingId) {
+                $job->set('status', 'Canceled');
+                $this->getEntityManager()->saveEntity($job);
+            }
+        }
+
         $this->getConnection()->createQueryBuilder()
             ->update($this->getConnection()->quoteIdentifier('job'))
             ->set('status', ':canceled')
             ->where('payload LIKE :payload')
             ->andWhere('status = :pending')
             ->andWhere('deleted = :false')
-            ->andWhere('type = :type')
+            ->andWhere('type in (:types)')
             ->setParameter('payload', '%"id":"' . $matchingId . '"%')
             ->setParameter('canceled', 'Canceled')
             ->setParameter('pending', 'Pending')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('type', 'FindMatchesForRecord')
+            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
             ->executeQuery();
     }
 

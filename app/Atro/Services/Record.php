@@ -492,7 +492,9 @@ class Record extends RecordService
                         $linkedList = $this->getEntityManager()->getRepository($foreignScope)->findByIds($linkedIds);
                     }
                 } else {
-                    $linkedList = $repository->findRelated($source, $link);
+                    if ($source->getEntityType() === $this->getEntityType()) {
+                        $linkedList = $repository->findRelated($source, $link);
+                    }
                 }
                 foreach ($linkedList as $linked) {
                     try {
@@ -611,5 +613,52 @@ class Record extends RecordService
         return $this
             ->dispatchEvent('afterGetRequiredFields', new Event(['entity' => $entity, 'data' => $data, 'result' => $res]))
             ->getArgument('result');
+    }
+
+    public function createFromPrimaryRecord(string $id, \stdClass $input): Entity
+    {
+        $primaryEntityId = $this->getMetadata()->get(['scopes', $this->getentityType(), 'primaryEntityId']);
+        if (empty($primaryEntityId)) {
+            throw new BadRequest("{$this->getEntityType()} is not of type 'Derivative'");
+        }
+
+        $primaryEntity = $this->getEntityManager()->getEntity($primaryEntityId, $id);
+        if (empty($primaryEntity)) {
+            throw new NotFound("{$this->getEntityType()} with id $id not found");
+        }
+
+        $input->primaryRecordId = $primaryEntity->get('id');
+
+        foreach ($primaryEntity->getValueMap() as $field => $value) {
+            if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
+                continue;
+            }
+
+            if (isset($input->$field)) {
+                continue;
+            }
+
+            $input->$field = $value;
+        }
+
+        $entity = $this->createEntity($input);
+
+
+        // create many-to-many relations
+        foreach ($this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']) as $link => $linkDef) {
+            if (!empty($linkDef['relationName'])) {
+                $data = $primaryEntity->get($link) ?? [];
+                foreach ($data as $item) {
+                    try {
+                        $this->getEntityManager()->getRepository($entity->getEntityType())->relate($entity, $link, $item, null);
+                    } catch (\Throwable $e) {
+                        $GLOBALS['log']->error($e->getMessage());
+                    }
+                }
+            }
+        }
+
+
+        return $entity;
     }
 }

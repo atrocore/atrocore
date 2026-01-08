@@ -68,6 +68,8 @@
         treeScope = activeItem ? getLinkScope(activeItem.name) : null;
         if (treeScope) {
             treeIcon = Utils.getTabIcon(treeScope);
+        } else if (activeItem?.name === '_admin') {
+            treeIcon = Utils.getSystemIconUrl('gear');
         } else {
             treeIcon = null;
         }
@@ -131,7 +133,7 @@
     }
 
     function canUseDataRequest() {
-        if (!['_self', '_bookmark', '_lastViewed'].includes(activeItem.name) || applyAdvancedFilter) {
+        if (!['_self', '_bookmark'].includes(activeItem.name) || applyAdvancedFilter) {
             return true
         }
         return false
@@ -217,7 +219,7 @@
 
         let treeData = {
             dataUrl: generateUrl,
-            dataFilter: (response) => filterResponse(response),
+            dataFilter: response => filterResponse(response),
             selectable: true,
             saveState: false,
             autoOpen: false,
@@ -889,7 +891,7 @@
     //endregion Tree methods
 
     function getLinkScope(link): string | null {
-        if (link === '_self' ) {
+        if (link === '_self') {
             return scope
         }
         if (link === '_bookmark') {
@@ -950,7 +952,7 @@
     }
 
     function applySearch() {
-        searchValue =  searchInputElement.value
+        searchValue = searchInputElement.value
         if (searchValue && activeItem.name === '_admin') {
             Storage.set('treeSearchValue', '_admin', searchValue)
         } else if (searchValue) {
@@ -1270,7 +1272,7 @@
 
                 {#if scope === 'Selection' && activeItem.name === '_items'}
                     <div class="selection-items" bind:this={selectionItemElement}></div>
-                {:else }
+                {:else}
                     <div class="panel-group category-search" style="margin-bottom: 20px" class:hidden ={['_lastViewed'].includes(activeItem.name)}>
                         <div class="field" data-name="category-search">
                             <input type="text" bind:this={searchInputElement}
@@ -1288,7 +1290,7 @@
                             </div>
                         </div>
                         <div class="search-wrapper">
-                            {#if showApplySortOrder && !['_admin'].includes(activeItem.name) }
+                            {#if showApplySortOrder && activeItem.name !== '_admin' }
                                 <div class="sort-container">
                                     <div class="button-group">
                                         <button type="button" class="sort-dir-button"
@@ -1310,18 +1312,18 @@
                             {/if}
                             {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && !['_lastViewed', '_admin'].includes(activeItem.name) }
                                 <div class="main-filter-container">
-                             <span class="icons-wrapper">
-                                <span class="toggle" class:active={applyAdvancedFilter}
-                                      on:click|stopPropagation|preventDefault={handleFilterToggle}
-                                >
-                                    {#if applyAdvancedFilter}
-                                        <i class="ph-fill ph-toggle-right"></i>
-                                    {:else}
-                                        <i class="ph-fill ph-toggle-left"></i>
-                                    {/if}
-                                </span>
-                                 {Language.translate('applyMainSearchAndFilter')}
-                            </span>
+                                     <span class="icons-wrapper">
+                                        <span class="toggle" class:active={applyAdvancedFilter}
+                                              on:click|stopPropagation|preventDefault={handleFilterToggle}
+                                        >
+                                            {#if applyAdvancedFilter}
+                                                <i class="ph-fill ph-toggle-right"></i>
+                                            {:else}
+                                                <i class="ph-fill ph-toggle-left"></i>
+                                            {/if}
+                                        </span>
+                                         {Language.translate('applyMainSearchAndFilter')}
+                                    </span>
                                 </div>
                             {/if}
 
@@ -1429,34 +1431,21 @@
         box-shadow: none;
     }
 
-    :global(ul.jqtree-tree .jqtree-toggler .ph) {
-        font-size: 16px;
-    }
-
     :global(ul.jqtree-tree .jqtree-element:not(.btn)) {
-        line-height: 1.36;
+        line-height: 16px;
         white-space: nowrap;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
     }
 
-    :global(ul.jqtree-tree .jqtree-element:not(.btn) .load-items) {
-        display: inline-block;
-        width: 16px;
-        margin-right: .5em;
-        order: 2;
-        color: var(--primary-font-color);
-        position: relative;
-    }
-
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-toggler) {
         order: 1;
+        flex-shrink: 0;
     }
 
     :global(ul.jqtree-tree .jqtree-element:not(.btn) .jqtree-title) {
         order: 3;
-        flex: 1;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;

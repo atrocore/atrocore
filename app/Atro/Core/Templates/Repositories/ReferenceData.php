@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Core\Templates\Repositories;
 
 use Atro\Core\EventManager\Event;
+use Atro\Core\EventManager\Manager;
 use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Utils\Util;
@@ -582,7 +583,7 @@ class ReferenceData extends Repository implements Injectable
         );
 
         // dispatch an event
-        $this->getInjection('eventManager')->dispatch('Entity', $action, $event);
+        $this->getEventManager()->dispatch('Entity', $action, $event);
     }
 
     protected function getConfig(): Config
@@ -593,6 +594,11 @@ class ReferenceData extends Repository implements Injectable
     protected function getMetadata(): Metadata
     {
         return $this->getInjection('metadata');
+    }
+
+    protected function getEventManager(): Manager
+    {
+        return $this->getInjection('eventManager');
     }
 
     protected function getLanguage(): Language

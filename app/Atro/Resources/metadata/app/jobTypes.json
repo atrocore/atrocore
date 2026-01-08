@@ -77,6 +77,11 @@
     "unique": true,
     "handler": "\\Atro\\Jobs\\FindMatches"
   },
+  "FindMatchesForMatching": {
+    "scheduledJob": false,
+    "unique": false,
+    "handler": "\\Atro\\Jobs\\FindMatchesForMatching"
+  },
   "FindMatchesForRecord": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\FindMatchesForRecord"

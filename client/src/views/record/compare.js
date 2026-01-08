@@ -107,7 +107,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.listenTo(this, 'merge', (dialog) => {
-                this.applyMerge(() => dialog.close());
+                this.applyMerge(() => {
+                    dialog.close()
+                    if (this.options.mergeCallback) {
+                        this.options.mergeCallback();
+                    }
+                });
             });
 
             this.listenTo(this, 'open-filter', () => {
@@ -173,9 +178,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 }
                 if (this.model.defs['fields'][name].attributeId) {
                     if (!attributes['__attributes']) {
-                        attributes['__attributes'] = [model.defs['fields'][name].attributeId];
+                        attributes['__attributes'] = [this.model.defs['fields'][name].attributeId];
                     } else {
-                        attributes['__attributes'].push(model.defs['fields'][name].attributeId);
+                        attributes['__attributes'].push(this.model.defs['fields'][name].attributeId);
                     }
                 }
             });
@@ -467,6 +472,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     models: this.getModels(),
                     distantModels: this.getDistantModels(),
                     instanceComparison: this.instanceComparison,
+                    derivativeComparison: this.options.derivativeComparison,
                     columns: this.buildComparisonTableHeaderColumn(),
                     versionModel: this.options.versionModel,
                     merging: this.merging,

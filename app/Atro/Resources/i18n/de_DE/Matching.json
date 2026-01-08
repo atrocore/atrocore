@@ -18,5 +18,8 @@
   },
   "tooltips": {
     "matchedRecordsMax": "Lassen Sie dieses Feld leer, um eine unbegrenzte Anzahl übereinstimmender Datensätze zuzulassen. Wenn die Anzahl der übereinstimmenden Datensätze diesen Wert überschreitet, wird die Übereinstimmung deaktiviert."
+  },
+  "exceptions": {
+    "noRules": "Die Aktivierung ist blockiert. Für diese Übereinstimmung wurden keine passenden Regeln definiert."
   }
 }
