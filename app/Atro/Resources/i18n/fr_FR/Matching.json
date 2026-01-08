@@ -17,7 +17,7 @@
     "configureMatching": "Configurer l'appariement"
   },
   "tooltips": {
-    "matchedRecordsMax": "Laissez ce champ vide pour autoriser un nombre illimité d'enregistrements correspondants. Si le nombre d'enregistrements correspondants dépasse cette valeur, l'appariement sera désactivé."
+    "matchedRecordsMax": "Si le nombre d'enregistrements correspondant à un enregistrement dépasse cette valeur, l'appariement sera désactivé. Laissez ce champ vide pour autoriser un nombre illimité d'enregistrements correspondants. "
   },
   "exceptions": {
     "noRules": "L'activation est bloquée. Aucune règle de correspondance n'a été définie pour cette correspondance."
