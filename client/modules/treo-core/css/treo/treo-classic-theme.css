@@ -15060,7 +15060,8 @@ ul.jqtree-tree .jqtree-folder.sub-tree-container:not(.has-children):has(> .jqtre
 }
 
 ul.jqtree-tree .sub-tree-container:not(.has-children) > .jqtree_common > .jqtree-folder > .jqtree_common:before,
-ul.jqtree-tree .sub-tree-container.has-children:has(.sub-tree-container) > .jqtree_common > .jqtree-folder:not(.sub-tree-container) > .jqtree_common:before {
+ul.jqtree-tree .sub-tree-container.has-children:has(.sub-tree-container) > .jqtree_common > .jqtree-folder:not(.sub-tree-container) > .jqtree_common:before,
+ul.jqtree-tree .sub-tree-container.jqtree-folder > .jqtree_common[role="group"] > :not(.jqtree-folder)[role="presentation"]:before {
     content: none;
 }
 
