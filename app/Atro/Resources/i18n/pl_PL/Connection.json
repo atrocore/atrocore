@@ -16,7 +16,7 @@
     "vendorOauthScopes": "Zakresy dostawcy OAuth",
     "oauthConsumerKey": "Klucz konsumenta OAuth",
     "oauthConsumerSecret": "Sekret konsumenta OAuth",
-    "requestTokenUrl": "URL żądania tokena",
+    "requestTokenUrl": "Adres URL tokenu żądania",
     "accessTokenUrl": "URL uzyskania tokena dostępu",
     "oauthVerifier": "Weryfikator OAuth",
     "oauthToken": "Token dostępu",
