@@ -454,6 +454,7 @@ class Metadata extends AbstractListener
                         'importDisabled'           => true,
                         'textFilterDisabled'       => true,
                         'emHidden'                 => true,
+                        'openApiDisabled'          => true
                     ];
                 }
             } elseif ($action['type'] == 'delete') {
@@ -1054,11 +1055,11 @@ class Metadata extends AbstractListener
             'notStorable'         => true,
             'readOnly'            => true,
             'ignoreViewForSearch' => true,
-            "massUpdateDisabled"  => true,
-            "filterDisabled"      => true,
-            "exportDisabled"      => true,
-            "importDisabled"      => true,
-            "emHidden"            => true
+            'massUpdateDisabled'  => true,
+            'filterDisabled'      => true,
+            'exportDisabled'      => true,
+            'importDisabled'      => true,
+            'emHidden'            => true
         ];
 
         $defaultEntityDefs['fields']['modified'] = [
@@ -1067,11 +1068,11 @@ class Metadata extends AbstractListener
             'notStorable'         => true,
             'readOnly'            => true,
             'ignoreViewForSearch' => true,
-            "massUpdateDisabled"  => true,
-            "filterDisabled"      => true,
-            "exportDisabled"      => true,
-            "importDisabled"      => true,
-            "emHidden"            => true
+            'massUpdateDisabled'  => true,
+            'filterDisabled'      => true,
+            'exportDisabled'      => true,
+            'importDisabled'      => true,
+            'emHidden'            => true
         ];
 
         foreach ($res as $entityName => $entityDefs) {
@@ -1697,11 +1698,12 @@ class Metadata extends AbstractListener
                 'notStorable'         => true,
                 'readOnly'            => true,
                 'ignoreViewForSearch' => true,
-                "massUpdateDisabled"  => true,
-                "filterDisabled"      => true,
-                "exportDisabled"      => true,
-                "importDisabled"      => true,
-                "emHidden"            => true
+                'massUpdateDisabled'  => true,
+                'filterDisabled'      => true,
+                'exportDisabled'      => true,
+                'importDisabled'      => true,
+                'emHidden'            => true,
+                'openApiDisabled'     => true
             ];
 
             $data['entityDefs'][$scope]['fields']['modified'] = [
@@ -1710,11 +1712,12 @@ class Metadata extends AbstractListener
                 'notStorable'         => true,
                 'readOnly'            => true,
                 'ignoreViewForSearch' => true,
-                "massUpdateDisabled"  => true,
-                "filterDisabled"      => true,
-                "exportDisabled"      => true,
-                "importDisabled"      => true,
-                "emHidden"            => true
+                'massUpdateDisabled'  => true,
+                'filterDisabled'      => true,
+                'exportDisabled'      => true,
+                'importDisabled'      => true,
+                'emHidden'            => true,
+                'openApiDisabled'     => true
             ];
 
             foreach ($data['entityDefs'][$scope]['fields'] as $field => $fieldDefs) {
