@@ -11,8 +11,8 @@
     "asAssignee": "Jako cesjonariusz",
     "asTeamMember": "Jako członek zespołu",
     "asNotificationProfile": "Jako użytkownik profilu powiadomień",
-    "emailActive": "Powiadomienia e-mail",
-    "systemActive": "Powiadomienia systemowe",
+    "emailActive": "Powiadomienie e-mail",
+    "systemActive": "Powiadomienie systemowe",
     "emailTemplateId": "Szablon e-maila",
     "systemTemplateId": "Szablon systemu"
   },
