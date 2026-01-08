@@ -31,7 +31,7 @@ class Action extends Base
         }
 
         if (
-            $entity->isAttributeChanged('searchEntity')
+            $entity->isAttributeChanged('searchEntity') && $entity->get('searchEntity')
             && in_array($entity->get('type'), ['create', 'createOrUpdate'])
             && $entity->get('updateType') !== 'script'
         ) {
