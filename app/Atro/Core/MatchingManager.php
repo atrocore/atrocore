@@ -141,6 +141,8 @@ class MatchingManager
         // Find possible matches
         $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
 
+        $matchedRecordsRows = [];
+
         // Find actual matches
         foreach ($possibleMatches as $row) {
             $maxMatchingScore = 0;
