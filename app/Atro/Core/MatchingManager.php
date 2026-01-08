@@ -51,7 +51,7 @@ class MatchingManager
         $exists = $this->getEntityManager()->getRepository('Job')
             ->where([
                 'name'   => "Find matches for Matching {$matching->id} immediately",
-                'type'   => 'FindMatchingMatches',
+                'type'   => 'FindMatchesForMatching',
                 'status' => [
                     'Pending',
                     'Running',
@@ -66,7 +66,7 @@ class MatchingManager
         $jobEntity = $this->getEntityManager()->getEntity('Job');
         $jobEntity->set([
             'name'     => "Find matches for Matching {$matching->id} immediately",
-            'type'     => 'FindMatchingMatches',
+            'type'     => 'FindMatchesForMatching',
             'status'   => 'Pending',
             'priority' => 200,
             'payload'  => [

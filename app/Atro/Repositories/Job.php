@@ -151,7 +151,7 @@ class Job extends Base
     {
         $jobs = $this->getEntityManager()->getRepository('Job')
             ->where([
-                'type'   => 'FindMatchingMatches',
+                'type'   => 'FindMatchesForMatching',
                 'status' => ['Pending', 'Running']
             ])
             ->find();

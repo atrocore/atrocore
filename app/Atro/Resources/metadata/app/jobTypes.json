@@ -77,10 +77,10 @@
     "unique": true,
     "handler": "\\Atro\\Jobs\\FindMatches"
   },
-  "FindMatchingMatches": {
+  "FindMatchesForMatching": {
     "scheduledJob": false,
     "unique": false,
-    "handler": "\\Atro\\Jobs\\FindMatchingMatches"
+    "handler": "\\Atro\\Jobs\\FindMatchesForMatching"
   },
   "FindMatchesForRecord": {
     "scheduledJob": false,
