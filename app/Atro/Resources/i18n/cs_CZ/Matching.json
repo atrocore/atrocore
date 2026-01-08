@@ -17,7 +17,7 @@
     "configureMatching": "Konfigurace přiřazování"
   },
   "tooltips": {
-    "matchedRecordsMax": "Nechte toto pole prázdné, abyste mohli zadat neomezený počet odpovídajících záznamů. Pokud počet porovnávaných záznamů překročí tuto hodnotu, porovnávání bude deaktivováno."
+    "matchedRecordsMax": "Pokud počet odpovídajících záznamů pro některý záznam překročí tuto hodnotu, bude přiřazování deaktivováno. Chcete-li povolit neomezený počet přiřazených záznamů, ponechte toto pole prázdné. "
   },
   "exceptions": {
     "noRules": "Aktivace je blokována. Pro toto přiřazení nebyla definována žádná pravidla."
