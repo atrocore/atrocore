@@ -16,7 +16,7 @@
     "vendorOauthScopes": "Rozsahy Oauth prodejce",
     "oauthConsumerKey": "Spotřebitelský klíč Oauth",
     "oauthConsumerSecret": "Tajemství spotřebitele Oauth",
-    "requestTokenUrl": "Požadavek na token url",
+    "requestTokenUrl": "Adresa URL tokenu požadavku",
     "accessTokenUrl": "Přístupový token Url",
     "oauthVerifier": "Oauth Verifier",
     "oauthToken": "Přístupový token",
