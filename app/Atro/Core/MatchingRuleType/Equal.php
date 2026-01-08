@@ -74,7 +74,7 @@ class Equal extends AbstractMatchingRule
     {
         $field = $this->rule->get('field');
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
-        if ($fieldType === 'link') {
+        if (in_array($fieldType, ['link', 'file'])) {
             $field .= 'Id';
         }
 
