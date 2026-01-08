@@ -48,7 +48,7 @@ class Equal extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('field'));
+        $columnName = Util::toUnderScore($this->getFieldName($stageEntity));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
         $value = $stageEntity->get($this->rule->get('field'));
@@ -61,13 +61,23 @@ class Equal extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = $stageEntity->get($this->rule->get('field'));
-        $masterValue = $masterEntityData[$this->rule->get('field')];
+        $fieldName = $this->getFieldName($stageEntity);
 
-        if ($stageValue === $masterValue) {
+        if ($stageEntity->get($fieldName) === $masterEntityData[$fieldName]) {
             return $this->rule->get('weight') ?? 0;
         }
 
         return 0;
+    }
+
+    protected function getFieldName(Entity $stageEntity): string
+    {
+        $field = $this->rule->get('field');
+        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
+        if ($fieldType === 'link') {
+            $field .= 'Id';
+        }
+
+        return $field;
     }
 }
