@@ -84,7 +84,9 @@
     "SelectionRecord": "Auswahl-Datensatz",
     "ActionExecution": "Aktions-Ausführung",
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Cluster": "Cluster",
+    "ClusterItem": "Cluster Artikel"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Stammdaten-Entitäten",
@@ -156,7 +158,9 @@
     "SelectionRecord": "Auswahldatensätze",
     "ActionExecution": "Aktions-Ausführungen",
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
-    "Layout": "Layouts"
+    "Layout": "Layouts",
+    "Cluster": "Cluster",
+    "ClusterItem": "Cluster-Artikel"
   },
   "descriptions": {
     "previewTemplate": "Verwalten von HTML/CSS-Vorlagen für die automatische Datenvorschau"
