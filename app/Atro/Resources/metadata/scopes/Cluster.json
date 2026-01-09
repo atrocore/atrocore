@@ -1,0 +1,17 @@
+{
+  "entity": true,
+  "object": true,
+  "acl": true,
+  "tab": true,
+  "type": "Base",
+  "hasOwner": true,
+  "hasAssignedUser": true,
+  "hasTeam": true,
+  "duplicatableRelations": [
+    "clusterItems"
+  ],
+  "modifiedExtendedRelations": [
+    "clusterItems"
+  ],
+  "selectionDisabled": true
+}

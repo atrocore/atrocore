@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "code": {
+      "type": "varchar",
+      "trim": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "clusterItems": {
+      "type": "linkMultiple",
+      "auditableEnabled": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
+    }
+  },
+  "links": {
+    "clusterItems": {
+      "type": "hasMany",
+      "relationName": "ClusterItemLinker",
+      "entity": "ClusterItem",
+      "foreign": "clusters"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    }
+  }
+}

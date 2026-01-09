@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "entityName": {
+      "type": "varchar",
+      "required": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "required": true
+    },
+    "clusters": {
+      "type": "linkMultiple"
+    }
+  },
+  "links": {
+    "clusters": {
+      "type": "hasMany",
+      "relationName": "ClusterItemLinker",
+      "entity": "Cluster",
+      "foreign": "clusterItems"
+    }
+  }
+}
