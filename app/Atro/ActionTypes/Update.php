@@ -39,7 +39,7 @@ class Update extends AbstractAction
             $whereJson = $this->getTwig()->renderTemplate($whereJson, $templateData);
             $where = @json_decode($whereJson, true);
 
-            $searchEntityType = $action->get('searchEntity');
+            $searchEntityType = $action->get('searchEntity') ?? $action->get('targetEntity');
 
             /** @var \Atro\Core\SelectManagers\Base $selectManager */
             $selectManager = $this->container->get('selectManagerFactory')->create($searchEntityType);
