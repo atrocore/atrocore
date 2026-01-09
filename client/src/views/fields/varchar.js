@@ -86,10 +86,13 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
         },
 
         applyDefaultValue() {
-            let defaultValue = this.model.defaults[this.name]
-            if (defaultValue == null) {
+            let defaultValue
+            if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script') {
+                defaultValue = this.model.defaults[this.name]
+            } else {
                 defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default'])
             }
+
             if (!this.model.get(this.name) && defaultValue) {
                 this.model.set(this.name, defaultValue)
             }
@@ -110,9 +113,9 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
             this.setScriptDefaultValue();
 
-            if(this.mode === 'listLink' && this.model.id) {
+            if (this.mode === 'listLink' && this.model.id) {
                 this.events[`click a[data-id="${this.model.id}"]`] = function (e) {
-                    if(this.model.get('deleted')) {
+                    if (this.model.get('deleted')) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.notify(this.translate('notPossibleToOpenDetailView', 'messages'), 'error');
@@ -208,9 +211,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
             if (this.mode === 'edit') {
                 this.updateTextCounter();
 
-                const defaultValue = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'default']);
-                if (defaultValue && typeof defaultValue === 'string' && defaultValue.includes('{{')
-                    && defaultValue.includes('}}') && this.model.defaults[this.name] == null) {
+                if (this.model.get(this.name) !== null && this.inlineEditModeIsOn) {
+                    return
+                }
+
+                if (this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'defaultValueType']) === 'script'
+                    && this.model.defaults[this.name] == null) {
                     // fetch default value from server
                     this.model.defaults = $.ajax({
                         url: this.model.name + '/action/Seed?silent=true',
@@ -237,12 +243,12 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
                 let isNullValue = this.$el.find('input.main-element').attr('placeholder') === 'Null'
 
-                if(!this.notNull && value === "" && isNullValue){
+                if (!this.notNull && value === "" && isNullValue) {
                     data[this.name] = null;
-                } else if(this.notNull && value === ""){
+                } else if (this.notNull && value === "") {
                     data[this.name] = "";
-                }else{
-                    data[this.name] = value ;
+                } else {
+                    data[this.name] = value;
                 }
 
             }
@@ -363,10 +369,10 @@ Espo.define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 valueGetter: this.filterValueGetter.bind(this),
                 validation: {
                     callback: function (value, rule) {
-                       if(value === null || typeof value !== 'string') {
-                           return 'bad string';
-                       }
-                       return true;
+                        if (value === null || typeof value !== 'string') {
+                            return 'bad string';
+                        }
+                        return true;
                     }.bind(this),
                 }
             };
