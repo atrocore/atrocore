@@ -1,6 +1,6 @@
 {
   "fields": {
-    "code": {
+    "name": {
       "type": "varchar",
       "trim": true,
       "unique": true
