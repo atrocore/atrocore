@@ -4,10 +4,7 @@
     "link": true
   },
   {
-    "name": "entityName"
-  },
-  {
-    "name": "entityId"
+    "name": "record"
   },
   {
     "name": "cluster"

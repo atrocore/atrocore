@@ -48,6 +48,8 @@ class V2Dot2Dot1 extends Base
             $this->exec("CREATE TABLE cluster_item (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', entity_name VARCHAR(255) DEFAULT NULL, entity_id VARCHAR(255) DEFAULT NULL, cluster_id VARCHAR(36) DEFAULT NULL, INDEX IDX_CLUSTER_ITEM_CLUSTER_ID (cluster_id, deleted), INDEX IDX_CLUSTER_ITEM_ENTITY_NAME (entity_name, deleted), INDEX IDX_CLUSTER_ITEM_ENTITY_ID (entity_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
             $this->exec("CREATE TABLE user_followed_cluster (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', created_at DATETIME DEFAULT NULL, modified_at DATETIME DEFAULT NULL, created_by_id VARCHAR(36) DEFAULT NULL, modified_by_id VARCHAR(36) DEFAULT NULL, cluster_id VARCHAR(36) DEFAULT NULL, user_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_USER_FOLLOWED_CLUSTER_UNIQUE_RELATION (deleted, cluster_id, user_id), INDEX IDX_USER_FOLLOWED_CLUSTER_CREATED_BY_ID (created_by_id, deleted), INDEX IDX_USER_FOLLOWED_CLUSTER_MODIFIED_BY_ID (modified_by_id, deleted), INDEX IDX_USER_FOLLOWED_CLUSTER_CLUSTER_ID (cluster_id, deleted), INDEX IDX_USER_FOLLOWED_CLUSTER_USER_ID (user_id, deleted), INDEX IDX_USER_FOLLOWED_CLUSTER_CREATED_AT (created_at, deleted), INDEX IDX_USER_FOLLOWED_CLUSTER_MODIFIED_AT (modified_at, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB");
         }
+
+        $this->exec("CREATE UNIQUE INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item (deleted, entity_name, entity_id, cluster_id)");
     }
 
     protected function exec(string $sql): void

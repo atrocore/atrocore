@@ -5,17 +5,19 @@
     "rows": [
       [
         {
-          "name": "entityId"
+          "name": "entityName"
         },
         {
-          "name": "entityName"
+          "name": "entityId"
         }
       ],
       [
         {
           "name": "cluster"
         },
-        false
+        {
+          "name": "record"
+        }
       ]
     ]
   }
