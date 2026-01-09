@@ -84,7 +84,9 @@
     "SelectionRecord": "Запись о выборе",
     "ActionExecution": "Выполнение действий",
     "ActionExecutionLog": "Журнал выполнения действий",
-    "Layout": "Макет"
+    "Layout": "Макет",
+    "Cluster": "Кластер",
+    "ClusterItem": "Кластерный элемент"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сущности основных данных",
@@ -156,7 +158,9 @@
     "SelectionRecord": "Записи о выборе",
     "ActionExecutionLog": "Журналы выполнения действий",
     "ActionExecution": "Выполнение действий",
-    "Layout": "Лейауты"
+    "Layout": "Лейауты",
+    "Cluster": "Кластеры",
+    "ClusterItem": "Предметы кластера"
   },
   "labels": {
     "matchings": "Соответствия",
