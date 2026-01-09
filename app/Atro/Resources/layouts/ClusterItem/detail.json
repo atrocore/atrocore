@@ -1,0 +1,22 @@
+[
+  {
+    "style": "default",
+    "label": "Details",
+    "rows": [
+      [
+        {
+          "name": "entityId"
+        },
+        {
+          "name": "entityName"
+        }
+      ],
+      [
+        {
+          "name": "cluster"
+        },
+        false
+      ]
+    ]
+  }
+]

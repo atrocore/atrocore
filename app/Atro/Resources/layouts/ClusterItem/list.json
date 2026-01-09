@@ -1,0 +1,15 @@
+[
+  {
+    "name": "id",
+    "link": true
+  },
+  {
+    "name": "entityName"
+  },
+  {
+    "name": "entityId"
+  },
+  {
+    "name": "cluster"
+  }
+]

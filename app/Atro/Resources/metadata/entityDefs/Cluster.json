@@ -33,7 +33,7 @@
     "clusterItems": {
       "type": "hasMany",
       "entity": "ClusterItem",
-      "foreign": "clusters"
+      "foreign": "cluster"
     },
     "createdBy": {
       "type": "belongsTo",
