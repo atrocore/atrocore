@@ -84,7 +84,9 @@
     "SelectionRecord": "Запис вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнал виконання дій",
-    "Layout": "Лейаут"
+    "Layout": "Лейаут",
+    "Cluster": "Кластер",
+    "ClusterItem": "Елемент кластера"
   },
   "scopeNamesPlural": {
     "MasterDataEntity": "Сутності основних даних",
@@ -156,7 +158,9 @@
     "SelectionRecord": "Записи вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнали виконання дій",
-    "Layout": "Лейаути"
+    "Layout": "Лейаути",
+    "Cluster": "Кластери",
+    "ClusterItem": "Кластерні елементи"
   },
   "descriptions": {
     "previewTemplate": "Керуйте HTML/CSS шаблонами для автоматичного попереднього перегляду даних"
