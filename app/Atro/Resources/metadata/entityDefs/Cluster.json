@@ -1,7 +1,8 @@
 {
   "fields": {
-    "name": {
+    "code": {
       "type": "varchar",
+      "required": true,
       "trim": true,
       "unique": true
     },
