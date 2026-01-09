@@ -84,7 +84,9 @@
     "MasterDataEntity": "Podmiot danych podstawowych",
     "ActionExecution": "Wykonanie akcji",
     "ActionExecutionLog": "Dziennik wykonania akcji",
-    "Layout": "Układ"
+    "Layout": "Układ",
+    "Cluster": "Klaster",
+    "ClusterItem": "Pozycja klastra"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Szablony wiadomości",
@@ -156,7 +158,9 @@
     "MasterDataEntity": "Podmioty danych podstawowych",
     "ActionExecution": "Wykonywanie akcji",
     "ActionExecutionLog": "Dzienniki wykonania akcji",
-    "Layout": "Układy"
+    "Layout": "Układy",
+    "Cluster": "Klastry",
+    "ClusterItem": "Elementy klastra"
   },
   "labels": {
     "selectAll": "Wybierz wszystko",
