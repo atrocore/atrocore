@@ -84,7 +84,9 @@
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzione dell'azione",
     "ActionExecutionLog": "Registro di esecuzione dell'azione",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Cluster": "Cluster",
+    "ClusterItem": "Articolo del cluster"
   },
   "labels": {
     "inherited": "Ereditato",
@@ -930,7 +932,9 @@
     "MasterDataEntity": "Entità di dati master",
     "ActionExecution": "Esecuzioni di azioni",
     "ActionExecutionLog": "Registri di esecuzione delle azioni",
-    "Layout": "Layout"
+    "Layout": "Layout",
+    "Cluster": "Cluster",
+    "ClusterItem": "Articoli del cluster"
   },
   "descriptions": {
     "previewTemplate": "Gestisce i modelli HTML/CSS per l'anteprima automatica dei dati."
