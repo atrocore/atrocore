@@ -8,16 +8,29 @@
       "type": "varchar",
       "required": true
     },
-    "clusters": {
+    "cluster": {
       "type": "linkMultiple"
     }
   },
   "links": {
-    "clusters": {
-      "type": "hasMany",
-      "relationName": "ClusterItemLinker",
-      "entity": "Cluster",
-      "foreign": "clusterItems"
+    "cluster": {
+      "type": "belongsTo",
+      "foreign": "clusterItems",
+      "entity": "Cluster"
+    }
+  },
+  "indexes": {
+    "entityName": {
+      "columns": [
+        "entityName",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
     }
   }
 }

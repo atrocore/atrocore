@@ -32,7 +32,6 @@
   "links": {
     "clusterItems": {
       "type": "hasMany",
-      "relationName": "ClusterItemLinker",
       "entity": "ClusterItem",
       "foreign": "clusters"
     },
