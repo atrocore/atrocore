@@ -195,7 +195,9 @@
     "MasterDataEntity": "Entité de reférence",
     "ActionExecution": "Exécution de l'action",
     "ActionExecutionLog": "Journal d'exécution de l'action",
-    "Layout": "Disposition"
+    "Layout": "Disposition",
+    "Cluster": "Groupement d'entreprises",
+    "ClusterItem": "Poste de la grappe"
   },
   "labels": {
     "selectAll": "Sélectionner tout",
@@ -743,7 +745,9 @@
     "MasterDataEntity": "Entités de reference",
     "ActionExecution": "Exécutions de l'action",
     "ActionExecutionLog": "Journaux d'exécution de l'action",
-    "Layout": "Dispositions"
+    "Layout": "Dispositions",
+    "Cluster": "Groupes d'entreprises",
+    "ClusterItem": "Éléments de la grappe"
   },
   "descriptions": {
     "previewTemplate": "Gérer les modèles HTML/CSS pour la prévisualisation automatique des données"
