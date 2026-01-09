@@ -84,7 +84,9 @@
     "MasterDataEntity": "Entidad de datos maestros",
     "ActionExecution": "Ejecución de la acción",
     "ActionExecutionLog": "Registro de ejecución de acciones",
-    "Layout": "Diseño"
+    "Layout": "Diseño",
+    "ClusterItem": "Cluster Item",
+    "Cluster": "Cluster"
   },
   "scopeNamesPlural": {
     "EmailTemplate": "Plantillas de correo electrónico",
@@ -156,7 +158,9 @@
     "MasterDataEntity": "Entidades de datos maestros",
     "ActionExecution": "Ejecución de acciones",
     "ActionExecutionLog": "Registros de ejecución de acciones",
-    "Layout": "Diseño"
+    "Layout": "Diseño",
+    "Cluster": "Agrupaciones",
+    "ClusterItem": "Partidas agrupadas"
   },
   "labels": {
     "selectAll": "Seleccionar todo",
