@@ -3,6 +3,6 @@
     "entityName": "Entitäts-Name",
     "entityId": "Entitäts-ID",
     "record": "Datensatz",
-    "cluster": ""
+    "cluster": "Cluster"
   }
 }
