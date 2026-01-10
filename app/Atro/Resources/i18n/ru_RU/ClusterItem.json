@@ -1,8 +1,8 @@
 {
   "fields": {
-    "entityName": "",
-    "entityId": "",
-    "record": "",
-    "cluster": ""
+    "entityName": "Название организации",
+    "entityId": "ID субъекта",
+    "record": "Запись",
+    "cluster": "Кластер"
   }
 }
