@@ -1,8 +1,8 @@
 {
   "fields": {
-    "entityName": "",
-    "entityId": "",
+    "entityName": "Назва суб'єкта Назва суб'єкта",
+    "entityId": "Ідентифікатор сутності",
     "record": "",
-    "cluster": ""
+    "cluster": "Кластер"
   }
 }
