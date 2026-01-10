@@ -1,8 +1,8 @@
 {
   "fields": {
-    "entityName": "",
-    "entityId": "",
-    "record": "",
+    "entityName": "Entitäts-Name",
+    "entityId": "Entitäts-ID",
+    "record": "Datensatz",
     "cluster": ""
   }
 }
