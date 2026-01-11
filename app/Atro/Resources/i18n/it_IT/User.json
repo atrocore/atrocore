@@ -74,7 +74,7 @@
     "userCantBeEmpty": "Il nome utente non può essere lasciato vuoto.",
     "wrongUsernamePasword": "Nome utente/password sbagliati",
     "emailAddressCantBeEmpty": "L'indirizzo e-mail non può essere vuoto",
-    "userNameEmailAddressNotFound": "Nome utente/indirizzo e-mail non trovati",
+    "userNameEmailAddressNotFound": "Nome utente/indirizzo e-mail non trovato",
     "forbidden": "Vietato, riprovare più tardi",
     "uniqueLinkHasBeenSent": "L'URL unico è stato inviato all'indirizzo e-mail specificato.",
     "passwordChangedByRequest": "La password è stata modificata.",
