@@ -35,7 +35,7 @@
     "receiveNotifications": "Отримувати сповіщення",
     "followEntityOnAssignment": "Автоматичне відстеження за призначенням",
     "style": "Стиль інтерфейсу користувача",
-    "notificationProfile": "Профіль сповіщення",
+    "notificationProfile": "Профіль сповіщень",
     "layoutProfile": "Лейаут профіль",
     "locale": "Локаль"
   },
@@ -51,7 +51,7 @@
     "External Accounts": "Зовнішні облікові записи",
     "Email Accounts": "Облікові записи ел. пошти",
     "Preferences": "Уподобання",
-    "Notifications": "Повідомлення"
+    "Notifications": "Сповіщення"
   },
   "tooltips": {
     "defaultTeam": "Усі записи, створені цим користувачем, за промовчанням будуть відноситися до цієї групи.",
