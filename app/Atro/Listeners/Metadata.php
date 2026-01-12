@@ -1059,7 +1059,8 @@ class Metadata extends AbstractListener
             'filterDisabled'      => true,
             'exportDisabled'      => true,
             'importDisabled'      => true,
-            'emHidden'            => true
+            'emHidden'            => true,
+            'openApiDisabled'     => true
         ];
 
         $defaultEntityDefs['fields']['modified'] = [
@@ -1072,7 +1073,8 @@ class Metadata extends AbstractListener
             'filterDisabled'      => true,
             'exportDisabled'      => true,
             'importDisabled'      => true,
-            'emHidden'            => true
+            'emHidden'            => true,
+            'openApiDisabled'     => true
         ];
 
         foreach ($res as $entityName => $entityDefs) {
@@ -1224,7 +1226,8 @@ class Metadata extends AbstractListener
                     "emHidden"                  => true,
                     "layoutLeftSidebarDisabled" => true,
                     "exportDisabled"            => false,
-                    "importDisabled"            => false
+                    "importDisabled"            => false,
+                    "openApiDisabled"           => true
                 ];
 
                 $data['entityDefs'][$scope]['fields']['parents'] = array_merge(
