@@ -64,9 +64,8 @@
   "links": {
     "selectionRecords": {
       "type": "hasMany",
-      "relationName": "SelectionSelectionRecord",
       "entity": "SelectionRecord",
-      "foreign": "selections"
+      "foreign": "selection"
     },
     "createdBy": {
       "type": "belongsTo",

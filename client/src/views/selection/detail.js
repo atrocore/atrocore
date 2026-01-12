@@ -412,7 +412,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 }
             });
 
-            if (this.comparisonAcrossEntities()) {
+            if (this.comparisonAcrossEntities() && this.selectionViewMode !== 'standard') {
                 this.loadLayoutData(() => {
                     o.layoutData = this.layoutData;
                     createView();
@@ -486,7 +486,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         this.ajaxPostRequest('SelectionRecord', {
                             entityType: foreignScope,
                             entityId: model.id,
-                            selectionsIds: [this.model.id]
+                            selectionId: this.model.id
                         }).then(() => {
                             this.model.trigger('after:relate', 'selections');
                             if (this.toggleSelected(model.id)) {
@@ -516,7 +516,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     fullFormDisabled: true,
                     relate: {
                         model: this.model,
-                        link: 'selections',
+                        link: 'selection',
                         panelName: 'selectionRecords'
                     },
                     layoutRelatedScope: "Selection.selectionRecords",

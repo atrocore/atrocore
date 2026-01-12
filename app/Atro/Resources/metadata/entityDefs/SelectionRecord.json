@@ -30,16 +30,38 @@
       "type": "jsonArray",
       "notStorable": true
     },
-    "selections": {
-      "type": "linkMultiple"
+    "selection": {
+      "type": "link",
+      "required": true
     }
   },
   "links": {
-    "selections": {
-      "type": "hasMany",
-      "relationName": "SelectionSelectionRecord",
+    "selection": {
+      "type": "belongsTo",
       "entity": "Selection",
       "foreign": "selectionRecords"
     }
+  },
+  "indexes": {
+    "entityName": {
+      "columns": [
+        "entityType",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "entity_type",
+      "entity_id",
+      "selection_id"
+    ]
   }
 }
