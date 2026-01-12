@@ -56,7 +56,7 @@ class V2Dot2Dot2 extends Base
                         ->setParameter('selectionId', $record['selection_id'])
                         ->executeStatement();
                 }catch(\Exception $e) {
-                    var_dump($e->getMessage());
+
                 }
             }
 
