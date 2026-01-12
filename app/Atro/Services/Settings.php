@@ -48,7 +48,7 @@ class Settings extends AbstractService
             ->find()->toArray();
 
         $data['matchingRules'] = $this->getEntityManager()->getRepository('MatchingRule')
-            ->select(['id', 'name', 'type', 'matchingRuleSetId'])
+            ->select(['id', 'name', 'type', 'matchingRuleSetId', 'matchingId'])
             ->find()->toArray();
 
         return $data;
