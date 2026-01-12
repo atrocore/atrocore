@@ -54,6 +54,10 @@
       "type": "link",
       "protected": true
     },
+    "matchedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true

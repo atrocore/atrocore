@@ -32,7 +32,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
         $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['id']);
 
         $count = $this->getEntityManager()->getRepository($matchingData['entity'])
-            ->where([$fieldName => false])
+            ->where([$fieldName => null])
             ->count();
 
         if ($count === 0) {
@@ -47,7 +47,7 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
 
         while (true) {
             $collection = $this->getEntityManager()->getRepository($matchingData['entity'])
-                ->where([$fieldName => false])
+                ->where([$fieldName => null])
                 ->limit($offset, $limit)
                 ->find();
             if (empty($collection[0])) {

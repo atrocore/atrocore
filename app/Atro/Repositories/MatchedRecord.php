@@ -63,37 +63,12 @@ class MatchedRecord extends Base
         }
     }
 
-    public function checkMatchedRecordsMax(string $matchingId, int $matchedRecordsMax): bool
-    {
-        $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY master_entity_id HAVING COUNT(DISTINCT source_entity_id) >= :max) AS exists";
-
-        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
-
-        $stmt->bindValue(':matchingId', $matchingId);
-        $stmt->bindValue(':false', false, \PDO::PARAM_BOOL);
-        $stmt->bindValue(':max', $matchedRecordsMax, \PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        return $stmt->fetchColumn();
-    }
-
-    public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
-    {
-        $this
-            ->where([
-                'type'           => $matching->get('type'),
-                'sourceEntity'   => $entity->getEntityName(),
-                'sourceEntityId' => $entity->id,
-            ])
-            ->removeCollection();
-    }
-
     public function createMatchedRecord(
         MatchingEntity $matching,
         string $sourceId,
         string $masterId,
         int $score,
+        string $matchedAt,
         bool $skipBidirectional = false
     ): void {
         // create new record
@@ -106,6 +81,7 @@ class MatchedRecord extends Base
             'masterEntityId' => $masterId,
             'score'          => $score,
             'matchingId'     => $matching->id,
+            'matchedAt'      => $matchedAt
         ]);
 
         if (!empty($exists = $this->where(['hash' => $this->createUniqHash($matchedRecord)])->findOne())) {
@@ -120,7 +96,7 @@ class MatchedRecord extends Base
         }
 
         if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
-            $this->createMatchedRecord($matching, $masterId, $sourceId, $score, true);
+            $this->createMatchedRecord($matching, $masterId, $sourceId, $score, $matchedAt, true);
         }
     }
 }
