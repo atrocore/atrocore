@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/bookmark/panel', ['view', 'views/record/list'], function (Dep, List) {
+Espo.define('views/bookmark/panel', 'view', function (Dep) {
     return Dep.extend({
         template: 'bookmark/panel',
 

@@ -1,11 +1,41 @@
 <div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <span class="panel-heading-title">{{translate 'LastViewed' category='scopeNames' scope="Global"}}</span>
-        <a href="javascript:" class="close" data-action="close"><span aria-hidden="true">×</span></a>
-    </div>
-    <div class="panel-body" style="max-height: 519px">
-        <div class="list-container">
-            {{translate 'Loading...'}}
+    <div class="panel-heading">
+        <div class="pull-right">
+            <a href="javascript:" class="close" data-action="close"><span aria-hidden="true">×</span></a>
         </div>
+        <span class="panel-heading-title">{{translate 'LastViewed' category='scopeNames' scope="Global"}}</span>
+    </div>
+    <div class="panel-body">
+        {{#if loadingGroups}}
+        <div>{{translate 'Loading...'}}</div>
+        {{else}}
+        {{#if groups.length}}
+
+        <div class="group-container">
+            {{#each groups}}
+            <div class="group" data-name="{{key}}">
+                <div class="entity">
+                    <div class="group-name">
+                        {{#if icon}}
+                        <img class="icon" src="{{icon}}">
+                        {{/if}}
+                        <span>{{translate key category='scopeNamesPlural' scope='Global'}}</span>
+                    </div>
+                    <div class="action"></div>
+                </div>
+                <div class="list-container"><div>{{translate 'Loading...'}}</div></div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="list-container">{{translate 'No Data'}}</div>
+        {{/if}}
+        {{/if}}
+    </div>
+    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+        <a type="button" href="javascript:" class="btn btn-default btn-block" data-action="showMore">
+            <span class="more-label">Show more</span>
+        </a>
+        <img class="preloader" style="display:none;height:12px;margin-top: 5px" src="client/img/atro-loader.svg">
     </div>
 </div>
