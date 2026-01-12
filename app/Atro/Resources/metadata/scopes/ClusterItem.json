@@ -1,0 +1,12 @@
+{
+  "entity": true,
+  "object": true,
+  "acl": false,
+  "tab": false,
+  "type": "Base",
+  "hasOwner": false,
+  "hasAssignedUser": false,
+  "hasTeam": false,
+  "streamDisabled": true,
+  "selectionDisabled": true
+}

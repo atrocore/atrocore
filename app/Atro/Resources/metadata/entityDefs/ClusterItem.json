@@ -1,0 +1,64 @@
+{
+  "fields": {
+    "entityName": {
+      "type": "varchar",
+      "view": "views/fields/entity-type",
+      "required": true
+    },
+    "entityId": {
+      "type": "varchar",
+      "required": true
+    },
+    "record": {
+      "type": "link",
+      "notStorable": true,
+      "view": "views/cluster-item/fields/record",
+      "filterDisabled": true,
+      "massUpdateDisabled": true,
+      "protected": true,
+      "openApiDisabled": true,
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
+    "cluster": {
+      "type": "link"
+    }
+  },
+  "links": {
+    "cluster": {
+      "type": "belongsTo",
+      "foreign": "clusterItems",
+      "entity": "Cluster"
+    }
+  },
+  "indexes": {
+    "entityName": {
+      "columns": [
+        "entityName",
+        "deleted"
+      ]
+    },
+    "entityId": {
+      "columns": [
+        "entityId",
+        "deleted"
+      ]
+    }
+  },
+  "uniqueIndexes": {
+    "unique": [
+      "deleted",
+      "entity_name",
+      "entity_id",
+      "cluster_id"
+    ]
+  }
+}

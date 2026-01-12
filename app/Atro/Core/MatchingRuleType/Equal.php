@@ -48,10 +48,24 @@ class Equal extends AbstractMatchingRule
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
 
-        $columnName = Util::toUnderScore($this->rule->get('field'));
+        $fieldName = $this->rule->get('field');
+
+        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$fieldName}.type");
+
+        if (in_array($fieldType, ['link', 'file'])) {
+            $fieldName .= 'Id';
+        }
+
+        $columnName = Util::toUnderScore($fieldName);
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
 
-        $value = $stageEntity->get($this->rule->get('field'));
+        $value = $stageEntity->get($fieldName);
+
+        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+            if ($value !== null) {
+                $value = json_encode($value);
+            }
+        }
 
         $sqlPart = "{$alias}.{$escapedColumnName} = :{$this->rule->get('id')}";
         $qb->setParameter($this->rule->get('id'), $value, Mapper::getParameterType($value));
@@ -61,10 +75,15 @@ class Equal extends AbstractMatchingRule
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = $stageEntity->get($this->rule->get('field'));
-        $masterValue = $masterEntityData[$this->rule->get('field')];
+        $fieldName = $this->rule->get('field');
 
-        if ($stageValue === $masterValue) {
+        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$fieldName}.type");
+
+        if (in_array($fieldType, ['link', 'file'])) {
+            $fieldName .= 'Id';
+        }
+
+        if ($stageEntity->get($fieldName) === $masterEntityData[$fieldName]) {
             return $this->rule->get('weight') ?? 0;
         }
 

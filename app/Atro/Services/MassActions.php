@@ -101,16 +101,26 @@ class MassActions extends HasContainer
                 $whereClause = [];
                 if (count($uniqueFields) > 0) {
                     foreach ($uniqueFields as $key => $field) {
-                        if (!empty($node->payload->{$key})) {
-                            $whereClause[] = [$key => $node->payload->{$key}];
+                        $value = $node->payload->{$key};
+                        if ($value === null && $this->getMetadata()->get(['entityDefs', $node->entity, 'fields', $key, 'notNull'])) {
+                            $value = '';
+                        }
+
+                        if ($value !== null) {
+                            $whereClause[] = [$key => $value];
                         }
                     }
                 } else if (count($uniqueIndexes) > 0) {
                     foreach ($uniqueIndexes as $indexes) {
-                        if (array_reduce($indexes, fn($carry, $index) => $carry && isset($node->payload->{$index}), true)) {
+                        if (array_reduce($indexes, fn($carry, $index) => $carry && property_exists($node->payload, $index), true)) {
                             $where = [];
                             foreach ($indexes as $index) {
-                                $where[$index] = $node->payload->{$index};
+                                $value = $node->payload->{$index};
+                                if ($value === null && $this->getMetadata()->get(['entityDefs', $node->entity, 'fields', $index, 'notNull'])) {
+                                    $value = '';
+                                }
+
+                                $where[$index] = $value;
                             }
 
                             if (!empty($where)) {

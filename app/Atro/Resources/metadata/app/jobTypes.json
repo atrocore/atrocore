@@ -82,13 +82,13 @@
     "unique": false,
     "handler": "\\Atro\\Jobs\\FindMatchesForMatching"
   },
+  "FindMatchesForRecords": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\FindMatchesForRecords"
+  },
   "FindMatchesForRecord": {
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\FindMatchesForRecord"
-  },
-  "StopFindingMatches": {
-    "scheduledJob": false,
-    "handler": "\\Atro\\Jobs\\StopFindingMatches"
   },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,

@@ -1,5 +1,7 @@
 {
   "scopeNames": {
+    "Cluster": "Cluster",
+    "ClusterItem": "Cluster Item",
     "MasterDataEntity": "Master Data Entity",
     "MatchedRecord": "Matched Record",
     "Matching": "Matching",
@@ -87,6 +89,8 @@
     "Layout": "Layout"
   },
   "scopeNamesPlural": {
+    "Cluster": "Clusters",
+    "ClusterItem": "Cluster Items",
     "MasterDataEntity": "Master Data Entities",
     "MatchedRecord": "Matched Records",
     "Matching": "Matchings",

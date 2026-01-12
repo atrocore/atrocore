@@ -48,10 +48,10 @@ Espo.define('views/action/fields/update-fields', 'views/fields/base',
         },
 
         fetch() {
-            let data = {};
+            let data = {fieldData: {}};
             let view = this.getView('valueField');
             if (view) {
-                _.extend(data, view.fetchData());
+                _.extend(data.fieldData, view.fetchData());
             }
 
             return data;

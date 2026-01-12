@@ -19,7 +19,6 @@
     },
     "sourceEntity": {
       "type": "varchar",
-      "view": "views/matching/fields/entity-type",
       "protected": true
     },
     "sourceEntityId": {
@@ -36,7 +35,6 @@
     },
     "masterEntity": {
       "type": "varchar",
-      "view": "views/matching/fields/entity-type",
       "protected": true
     },
     "masterEntityId": {

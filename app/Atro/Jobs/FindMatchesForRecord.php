@@ -17,7 +17,7 @@ namespace Atro\Jobs;
 use Atro\Entities\Job;
 use Atro\Repositories\Matching;
 
-class FindMatchesForRecord extends AbstractJob implements JobInterface
+class FindMatchesForRecord extends FindMatchesForRecords
 {
     public function run(Job $job): void
     {
@@ -42,17 +42,6 @@ class FindMatchesForRecord extends AbstractJob implements JobInterface
             return;
         }
 
-        $matchingRules = $this->getEntityManager()->createCollection('MatchingRule', []);
-        foreach ($matchingData['rules'] ?? [] as $ruleData) {
-            $matchingRule = $this->getEntityManager()->getEntity('MatchingRule');
-            $matchingRule->set($ruleData);
-            $matchingRules->append($matchingRule);
-        }
-
-        $matching = $this->getEntityManager()->getEntity('Matching');
-        $matching->set($matchingData);
-        $matching->set('matchingRules', $matchingRules);
-
-        $this->getContainer()->get('matchingManager')->findMatches($matching, $entity);
+        $this->getMatchingManager()->findMatches($this->createMatchingEntity($matchingData), $entity);
     }
 }

@@ -149,18 +149,27 @@ class Job extends Base
 
     public function cancelMatchingJobs(string $matchingId): void
     {
-        $jobs = $this->getEntityManager()->getRepository('Job')
-            ->where([
-                'type'   => 'FindMatchesForMatching',
-                'status' => ['Pending', 'Running']
-            ])
-            ->find();
+        foreach (['FindMatchesForMatching', 'FindMatchesForRecords'] as $type) {
+            while (true) {
+                $jobs = $this->getEntityManager()->getRepository('Job')
+                    ->where([
+                        'type'   => $type,
+                        'status' => ['Pending', 'Running']
+                    ])
+                    ->limit(0, 5000)
+                    ->find();
 
-        foreach ($jobs as $job) {
-            $jobMatchingId = $job->getPayload()['matching']['id'] ?? null;
-            if ($jobMatchingId === $matchingId) {
-                $job->set('status', 'Canceled');
-                $this->getEntityManager()->saveEntity($job);
+                if (empty($jobs[0])) {
+                    break;
+                }
+
+                foreach ($jobs as $job) {
+                    $jobMatchingId = $job->getPayload()['matching']['id'] ?? null;
+                    if ($jobMatchingId === $matchingId) {
+                        $job->set('status', 'Canceled');
+                        $this->getEntityManager()->saveEntity($job);
+                    }
+                }
             }
         }
 
@@ -170,12 +179,12 @@ class Job extends Base
             ->where('payload LIKE :payload')
             ->andWhere('status = :pending')
             ->andWhere('deleted = :false')
-            ->andWhere('type in (:types)')
+            ->andWhere('type = :type')
             ->setParameter('payload', '%"id":"' . $matchingId . '"%')
             ->setParameter('canceled', 'Canceled')
             ->setParameter('pending', 'Pending')
             ->setParameter('false', false, ParameterType::BOOLEAN)
-            ->setParameter('types', ['FindMatchesForRecord', 'StopFindingMatches'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->setParameter('type', 'FindMatchesForRecord')
             ->executeQuery();
     }
 

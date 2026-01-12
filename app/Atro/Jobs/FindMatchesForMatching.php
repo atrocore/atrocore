@@ -31,10 +31,19 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
 
         $fieldName = \Atro\Repositories\Matching::prepareFieldName($matchingData['id']);
 
-        $offset = 0;
-        $limit = 5000;
+        $count = $this->getEntityManager()->getRepository($matchingData['entity'])
+            ->where([$fieldName => false])
+            ->count();
 
-        $checkJobInterval = ($this->getConfig()->get('maxConcurrentWorkers') ?? 6) * 2;
+        if ($count === 0) {
+            return;
+        }
+
+        $offset = 0;
+        $limit = $count > 20000 ? 2000 : 100;
+
+        $chunkNumber = 1;
+        $allChunks = $count < $limit ? 1 : ceil($count / $limit);
 
         while (true) {
             $collection = $this->getEntityManager()->getRepository($matchingData['entity'])
@@ -49,38 +58,22 @@ class FindMatchesForMatching extends AbstractJob implements JobInterface
                 break;
             }
 
-            foreach ($collection as $k => $entity) {
-                $jobEntity = $this->getEntityManager()->getEntity('Job');
-                $jobEntity->set([
-                    'name'     => "Find matches for {$entity->getEntityName()}: {$entity->get('name')}",
-                    'type'     => 'FindMatchesForRecord',
-                    'status'   => 'Pending',
-                    'priority' => 20,
-                    'payload'  => [
-                        'matching'   => $matchingData,
-                        'entityName' => $entity->getEntityName(),
-                        'entityId'   => $entity->id
-                    ]
-                ]);
-                $this->getEntityManager()->saveEntity($jobEntity);
-
-                if (!empty($matchingData['matchedRecordsMax']) && $k % $checkJobInterval === 0) {
-                    $jobEntity = $this->getEntityManager()->getEntity('Job');
-                    $jobEntity->set([
-                        'name'     => "Check whether the searching of the matches for '{$entity->getEntityName()}' needs to stop",
-                        'type'     => 'StopFindingMatches',
-                        'status'   => 'Pending',
-                        'priority' => 20,
-                        'payload'  => [
-                            'matching'   => $matchingData,
-                            'entityName' => $entity->getEntityName()
-                        ]
-                    ]);
-                    $this->getEntityManager()->saveEntity($jobEntity);
-                }
-            }
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'     => "Find matches for {$collection[0]->getEntityName()} ($chunkNumber-$allChunks)",
+                'type'     => 'FindMatchesForRecords',
+                'status'   => 'Pending',
+                'priority' => 20,
+                'payload'  => [
+                    'matching'    => $matchingData,
+                    'entityName'  => $collection[0]->getEntityName(),
+                    'entitiesIds' => array_column($collection->toArray(), 'id'),
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
 
             $offset += $limit;
+            $chunkNumber++;
         }
     }
 }

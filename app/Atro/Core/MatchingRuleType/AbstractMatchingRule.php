@@ -14,6 +14,7 @@ namespace Atro\Core\MatchingRuleType;
 
 use Atro\Core\Container;
 use Atro\Core\Utils\Config;
+use Atro\Core\Utils\Metadata;
 use Atro\Entities\MatchingRule as MatchingRuleEntity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -57,5 +58,10 @@ abstract class AbstractMatchingRule
     protected function getEntityManager(): EntityManager
     {
         return $this->container->get('entityManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->container->get('metadata');
     }
 }

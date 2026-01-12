@@ -17,7 +17,7 @@
     "configureMatching": "Configure Matching"
   },
   "tooltips": {
-    "matchedRecordsMax": "Leave this field empty to allow an unlimited number of matched records. If the number of matched records exceeds this value, matching will be deactivated."
+    "matchedRecordsMax": "If the number of matched records for any record exceeds this value, matching will be deactivated. Leave this field empty to allow an unlimited number of matched records. "
   },
   "exceptions": {
     "noRules": "Activation is blocked. No matching rules have been defined for this matching."
