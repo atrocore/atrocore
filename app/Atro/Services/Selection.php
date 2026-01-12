@@ -66,48 +66,4 @@ class Selection extends Base
 
         parent::prepareEntityForOutput($entity);
     }
-
-    public function getTreeItems(string $link, string $scope, array $params): array
-    {
-        $repository = $this->getEntityManager()->getRepository($scope);
-        $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
-
-        if (!empty($params['distinct'])) {
-            $selectParams['distinct'] = true;
-        }
-
-        $fields = ['id', 'name'];
-        $localizedNameField = $this->getLocalizedNameField($scope);
-
-        if (!empty($localizedNameField)) {
-            $fields[] = $localizedNameField;
-        }
-
-        if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
-            $fields[] = $selectParams['orderBy'];
-        }
-
-        $selectParams['select'] = $fields;
-        $collection = $repository->find($selectParams);
-        $total = $repository->count($selectParams);
-        $offset = $params['offset'];
-        $result = [];
-
-        foreach ($collection as $key => $item) {
-            $value = $this->getLocalizedNameValue($item, $scope);
-            $result[] = [
-                'id'             => $item->get('id'),
-                'name'           => !empty($value) ? $value : $item->get('id'),
-                'offset'         => $offset + $key,
-                'total'          => $total,
-                'disabled'       => false,
-                'load_on_demand' => false
-            ];
-        }
-
-        return [
-            'list'  => $result,
-            'total' => $total
-        ];
-    }
 }

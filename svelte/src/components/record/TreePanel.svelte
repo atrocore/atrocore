@@ -80,7 +80,7 @@
             sortFields = []
         } else {
             const sortScope = treeScope === 'Bookmark' ? scope : treeScope
-            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']);
+            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']) ?? {};
             sortFields = Object.keys(fieldDefs).filter(function (item) {
                 return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
             }).sort(function (v1, v2) {
@@ -256,7 +256,7 @@
                     }
                 }
 
-                if (model && model.get('id') === node.id && (['_self', '_bookmark'].includes(activeItem.name) || node.scope === model.name)) {
+                if (model && model.get('id') === node.id && (['_self', '_bookmark', '_lastViewed'].includes(activeItem.name) || node.scope === model.name)) {
                     $tree.tree('addToSelection', node);
                     $li.addClass('jqtree-selected');
                 }
@@ -358,7 +358,7 @@
                 }
             }
             if (mode === 'detail') {
-                if (model && ['_self', '_bookmark'].includes(activeItem.name)) {
+                if (model && ['_self', '_bookmark', '_lastViewed'].includes(activeItem.name)) {
                     selectTreeNode(model.get('id'), (model.get('routesNames')?.[0]?.map(item => item.id) || []).reverse())
                 } else if (Storage.get('selectedNodeId', scope)) {
                     selectTreeNode(Storage.get('selectedNodeId', scope), parseRoute(Storage.get('selectedNodeRoute', scope)))
@@ -471,7 +471,7 @@
     }
 
     function appendUnsetButton($el): void {
-        if (['_admin', '_self', '_bookmark'].includes(activeItem.name)) {
+        if (['_admin', '_self', '_bookmark', '_lastViewed'].includes(activeItem.name)) {
             return
         }
 
@@ -567,7 +567,7 @@
     }
 
     function generateUrl(node) {
-        if (isNodeInSubTree(node)) {
+        if (isNodeInSubTree(node) && !['_bookmark', '_lastViewed'].includes(activeItem.name)) {
             return generateSubTreeUrl(node)
         }
 
@@ -897,6 +897,11 @@
         if (link === '_bookmark') {
             return 'Bookmark'
         }
+
+        if(link === '_lastViewed') {
+            return 'LastViewed';
+        }
+
         return Metadata.get(['entityDefs', scope, 'links', link, 'entity']) ||
             Metadata.get(['entityDefs', scope, 'fields', link, 'entity'])
     }
@@ -1059,6 +1064,8 @@
                         label = Language.get('Global', 'scopeNamesPlural', scope)
                     } else if (item.name === '_bookmark') {
                         label = Language.get('Global', 'scopeNamesPlural', 'Bookmark')
+                    } else if (item.name === '_lastViewed') {
+                        label = Language.get('Global', 'scopeNamesPlural', 'LastViewed')
                     } else if (item.name === '_admin') {
                         label = Language.get('Global', 'labels', 'Administration')
                     } else if (item.name === '_items') {
@@ -1266,7 +1273,7 @@
                 {#if scope === 'Selection' && activeItem.name === '_items'}
                     <div class="selection-items" bind:this={selectionItemElement}></div>
                 {:else}
-                    <div class="panel-group category-search" style="margin-bottom: 20px">
+                    <div class="panel-group category-search" style="margin-bottom: 20px" class:hidden ={['_lastViewed'].includes(activeItem.name)}>
                         <div class="field" data-name="category-search">
                             <input type="text" bind:this={searchInputElement}
                                    on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"
@@ -1303,7 +1310,7 @@
                                     </div>
                                 </div>
                             {/if}
-                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && activeItem.name !== '_admin' }
+                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && !['_lastViewed', '_admin'].includes(activeItem.name) }
                                 <div class="main-filter-container">
                                      <span class="icons-wrapper">
                                         <span class="toggle" class:active={applyAdvancedFilter}
