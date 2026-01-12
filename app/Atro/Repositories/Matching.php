@@ -213,8 +213,9 @@ class Matching extends Base
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
             ->set($column, ':null')
-            ->where("$column = :true")
-            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->where("$column IS NOT NULL")
+            ->andWhere("deleted=:false")
+            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->setParameter('null', null, ParameterType::NULL)
             ->executeQuery();
 

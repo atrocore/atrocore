@@ -24,12 +24,6 @@ class V2Dot2Dot3 extends Base
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->exec("ALTER TABLE matched_record ADD matched_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-        } else {
-            $this->exec("ALTER TABLE matched_record ADD matched_at DATETIME DEFAULT NULL");
-        }
-
         foreach ($this->getConfig()->get('matchings') ?? [] as $id => $active) {
             $matchingData = $this->getConnection()->createQueryBuilder()
                 ->select('*')

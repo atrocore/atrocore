@@ -7,8 +7,7 @@
     "masterEntity": "Master Entity",
     "masterEntityId": "Master Entity ID",
     "score": "Score",
-    "hash": "Unique Hash",
-    "matchedAt": "Matched At"
+    "hash": "Unique Hash"
   },
   "options": {
     "type": {

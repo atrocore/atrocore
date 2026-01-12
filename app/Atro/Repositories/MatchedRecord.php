@@ -12,33 +12,18 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
-    public function createUniqHash(Entity $matchedRecord): string
-    {
-        $hashParts = [
-            $matchedRecord->get('matchingId'),
-            $matchedRecord->get('sourceEntity'),
-            $matchedRecord->get('sourceEntityId'),
-            $matchedRecord->get('masterEntity'),
-            $matchedRecord->get('masterEntityId'),
-        ];
-
-        return md5(implode('_', $hashParts));
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        parent::beforeSave($entity, $options);
-
-        if ($entity->isNew()) {
-            $entity->set('hash', $this->createUniqHash($entity));
-        }
+        throw new Error('MatchedRecord cannot be saved directly.');
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
@@ -71,29 +56,34 @@ class MatchedRecord extends Base
         string $matchedAt,
         bool $skipBidirectional = false
     ): void {
-        // create new record
-        $matchedRecord = $this->get();
-        $matchedRecord->set([
-            'type'           => $matching->get('type'),
-            'sourceEntity'   => $matching->get('entity'),
-            'sourceEntityId' => $sourceId,
-            'masterEntity'   => $matching->get('masterEntity'),
-            'masterEntityId' => $masterId,
-            'score'          => $score,
-            'matchingId'     => $matching->id,
-            'matchedAt'      => $matchedAt
-        ]);
-
-        if (!empty($exists = $this->where(['hash' => $this->createUniqHash($matchedRecord)])->findOne())) {
-            // update if exists
-            $matchedRecord = $exists;
-            $matchedRecord->set('score', $score);
+        $sql
+            = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
+        if (Converter::isPgSQL($this->getConnection())) {
+            $sql .= " ON CONFLICT (deleted, hash) DO UPDATE SET score = EXCLUDED.score, modified_at = EXCLUDED.modified_at, modified_by_id = EXCLUDED.modified_by_id RETURNING xmax";
+        } else {
+            $sql .= " ON DUPLICATE KEY UPDATE score = VALUES(score), modified_at = VALUES(modified_at), modified_by_id = VALUES(modified_by_id)";
         }
 
-        try {
-            $this->getEntityManager()->saveEntity($matchedRecord);
-        } catch (UniqueConstraintViolationException $e) {
-        }
+        $userId = $this->getEntityManager()->getUser()->id;
+        $hash = md5(implode('_', [$matching->id, $matching->get('entity'), $sourceId, $matching->get('masterEntity'), $masterId]));
+
+        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':id', Util::generateId());
+        $stmt->bindValue(':type', $matching->get('type'));
+        $stmt->bindValue(':sourceEntity', $matching->get('entity'));
+        $stmt->bindValue(':sourceEntityId', $sourceId);
+        $stmt->bindValue(':masterEntity', $matching->get('masterEntity'));
+        $stmt->bindValue(':masterEntityId', $masterId);
+        $stmt->bindValue(':score', $score);
+        $stmt->bindValue(':matchingId', $matching->id);
+        $stmt->bindValue(':hash', $hash);
+        $stmt->bindValue(':createdAt', $matchedAt);
+        $stmt->bindValue(':modifiedAt', $matchedAt);
+        $stmt->bindValue(':createdById', $userId);
+        $stmt->bindValue(':modifiedById', $userId);
+
+        $stmt->execute();
 
         if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
             $this->createMatchedRecord($matching, $masterId, $sourceId, $score, $matchedAt, true);
