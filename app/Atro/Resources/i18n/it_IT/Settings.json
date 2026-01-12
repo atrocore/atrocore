@@ -32,7 +32,7 @@
     "authTokenPreventConcurrent": "Solo un token di autenticazione per utente",
     "tabIconsDisabled": "Disabilita le icone del menu di navigazione",
     "favoritesIconsDisabled": "Disabilita le icone per i Preferiti",
-    "emailAddressIsOptedOutByDefault": "Contrassegnare i nuovi indirizzi e-mail come opted-out",
+    "emailAddressIsOptedOutByDefault": "Contrassegni i nuovi indirizzi e-mail come opted-out",
     "passwordRegexPattern": "Schema Regex della password",
     "passwordExpireDays": "Periodo di scadenza della password (in giorni)",
     "sendOutNotifications": "Inviare notifiche",
