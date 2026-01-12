@@ -31,7 +31,8 @@
       "notStorable": true
     },
     "selection": {
-      "type": "link"
+      "type": "link",
+      "required": true
     }
   },
   "links": {

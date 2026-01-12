@@ -65,7 +65,7 @@
     "selectionRecords": {
       "type": "hasMany",
       "entity": "SelectionRecord",
-      "foreign": "selections"
+      "foreign": "selection"
     },
     "createdBy": {
       "type": "belongsTo",
