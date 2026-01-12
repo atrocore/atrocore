@@ -30,6 +30,7 @@ class Layout extends AbstractListener
             if (empty($event->getArgument('params')['isCustom'])) {
                 $scope = $event->getArgument('params')['scope'];
 
+                $result = [];
                 if ($scope === 'Settings' && $this->getUser()->isAdmin()) {
                     $result[] = ['name' => '_admin'];
                     $event->setArgument('result', $result);
@@ -59,6 +60,12 @@ class Layout extends AbstractListener
                 if (empty($this->getMetadata()->get(['scopes', $scope, 'bookmarkDisabled']))) {
                     $result = $event->getArgument('result');
                     $result[] = ['name' => '_bookmark'];
+                    $event->setArgument('result', $result);
+                }
+
+                if(empty($this->getMetadata()->get(['scopes', $scope, 'hideLastViewed']))) {
+                    $result = $event->getArgument('result');
+                    $result[] = ['name' => '_lastViewed'];
                     $event->setArgument('result', $result);
                 }
             }

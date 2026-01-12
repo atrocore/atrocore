@@ -1238,7 +1238,9 @@
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "example": ["example-id"]
+                  "example": [
+                    "example-id"
+                  ]
                 }
               }
             }
@@ -1251,40 +1253,66 @@
     }
   },
   {
-    "route": "/ExtensibleEnum/action/getExtensibleEnumsOptions",
+    "route": "/LastViewed/action/Tree",
     "method": "get",
     "params": {
-      "controller": "ExtensibleEnum",
-      "action": "getExtensibleEnumsOptions"
+      "controller": "LastViewed",
+      "action": "tree"
     },
-    "operationId": "getExtensibleEnumsOptions",
-    "tags": [
-      "ExtensibleEnum"
-    ],
-    "summary": "Get extensible enums options for multiple lists",
-    "description": "Get extensible enums options for multiple lists",
+    "operationId": "tree",
+    "summary": "Get last viewed data for a scope for tree panels",
+    "description": "Get last viewed data for a scope for tree panels",
     "security": [
       {
         "Authorization-Token": []
       }
     ],
-    "queryParams": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
+    "requestParameters": [
+      {
+        "name": "scope",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "Product"
+        }
+      }
+    ],
+    "response": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "list": {
+          "type": "array",
+          "items": {
             "type": "object",
             "properties": {
-              "extensibleEnumsIds": {
-                "type": "array"
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "disabled": {
+                "type": "boolean",
+                "example": false
+              },
+              "load_on_demand": {
+                "type": "boolean",
+                "example": false
+              },
+              "total": {
+                "type": "integer"
               }
             }
           }
         }
       }
-    },
-    "response": {
-      "type": "object"
     }
   },
   {
@@ -1358,6 +1386,43 @@
         "name": "a name",
         "description": "a description"
       }
+    }
+  },
+  {
+    "route": "/ExtensibleEnum/action/getExtensibleEnumsOptions",
+    "method": "get",
+    "params": {
+      "controller": "ExtensibleEnum",
+      "action": "getExtensibleEnumsOptions"
+    },
+    "operationId": "getExtensibleEnumsOptions",
+    "tags": [
+      "ExtensibleEnum"
+    ],
+    "summary": "Get extensible enums options for multiple lists",
+    "description": "Get extensible enums options for multiple lists",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "queryParams": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "extensibleEnumsIds": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "object"
     }
   }
 ]
