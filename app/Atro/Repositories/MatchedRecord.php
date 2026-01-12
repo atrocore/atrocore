@@ -87,16 +87,6 @@ class MatchedRecord extends Base
                 'sourceEntityId' => $entity->id,
             ])
             ->removeCollection();
-
-        if ($matching->get('type') === 'duplicate') {
-            $this
-                ->where([
-                    'type'           => $matching->get('type'),
-                    'masterEntity'   => $entity->getEntityName(),
-                    'masterEntityId' => $entity->id,
-                ])
-                ->removeCollection();
-        }
     }
 
     public function createMatchedRecord(
