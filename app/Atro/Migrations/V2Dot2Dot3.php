@@ -13,7 +13,6 @@ namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
 use Atro\Core\Utils\Util;
-use Doctrine\DBAL\ParameterType;
 
 class V2Dot2Dot3 extends Base
 {
@@ -50,6 +49,9 @@ class V2Dot2Dot3 extends Base
         }
 
         $this->exec("TRUNCATE matched_record");
+
+        $this->exec("ALTER TABLE cluster_item ADD matched_record_id VARCHAR(36) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_CLUSTER_ITEM_MATCHED_RECORD_ID ON cluster_item (matched_record_id, deleted)");
     }
 
     protected function exec(string $sql): void

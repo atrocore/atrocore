@@ -30,6 +30,9 @@
     },
     "cluster": {
       "type": "link"
+    },
+    "matchedRecord": {
+      "type": "link"
     }
   },
   "links": {
@@ -37,6 +40,10 @@
       "type": "belongsTo",
       "foreign": "clusterItems",
       "entity": "Cluster"
+    },
+    "matchedRecord": {
+      "type": "belongsTo",
+      "entity": "MatchedRecord"
     }
   },
   "indexes": {
