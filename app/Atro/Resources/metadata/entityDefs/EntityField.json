@@ -187,7 +187,12 @@
                 {
                   "type": "in",
                   "attribute": "type",
-                  "value": ["varchar", "text", "wysiwyg", "markdown"]
+                  "value": [
+                    "varchar",
+                    "text",
+                    "wysiwyg",
+                    "markdown"
+                  ]
                 },
                 {
                   "type": "and",
@@ -228,7 +233,9 @@
             {
               "type": "notIn",
               "attribute": "type",
-              "value": ["linkMultiple"]
+              "value": [
+                "linkMultiple"
+              ]
             }
           ]
         }
@@ -312,7 +319,10 @@
             {
               "type": "notIn",
               "attribute": "type",
-              "value": ["rangeInt", "rangeFloat"]
+              "value": [
+                "rangeInt",
+                "rangeFloat"
+              ]
             }
           ]
         }
@@ -355,7 +365,10 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": ["rangeInt", "rangeFloat"]
+              "value": [
+                "rangeInt",
+                "rangeFloat"
+              ]
             }
           ]
         }
@@ -379,7 +392,10 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": ["rangeInt", "rangeFloat"]
+              "value": [
+                "rangeInt",
+                "rangeFloat"
+              ]
             }
           ]
         }
@@ -406,7 +422,13 @@
             {
               "type": "in",
               "attribute": "type",
-              "value": ["rangeInt", "rangeFloat","int","float","varchar"]
+              "value": [
+                "rangeInt",
+                "rangeFloat",
+                "int",
+                "float",
+                "varchar"
+              ]
             },
             {
               "type": "isNotEmpty",
@@ -463,7 +485,7 @@
     "options": {
       "type": "array",
       "view": "views/entity-field/fields/options",
-      "conditionalProperties":  {
+      "conditionalProperties": {
         "required": {
           "conditionGroup": [
             {
@@ -728,7 +750,20 @@
       "type": "bool"
     },
     "isNonComparable": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "notIn",
+              "value": [
+                "autoincrement"
+              ]
+            }
+          ]
+        }
+      }
     },
     "isUninheritableField": {
       "view": "views/admin/field-manager/fields/is-uninherited-field",
@@ -753,8 +788,11 @@
           "conditionGroup": [
             {
               "attribute": "type",
-              "type": "notEquals",
-              "value": "linkMultiple"
+              "type": "notIn",
+              "value": [
+                "linkMultiple",
+                "autoincrement"
+              ]
             }
           ]
         }
@@ -768,8 +806,11 @@
           "conditionGroup": [
             {
               "attribute": "type",
-              "type": "equals",
-              "value": "linkMultiple"
+              "type": "notIn",
+              "value": [
+                "linkMultiple",
+                "autoincrement"
+              ]
             }
           ]
         }
@@ -783,8 +824,11 @@
           "conditionGroup": [
             {
               "attribute": "type",
-              "type": "notEquals",
-              "value": "linkMultiple"
+              "type": "notIn",
+              "value": [
+                "linkMultiple",
+                "autoincrement"
+              ]
             }
           ]
         }
@@ -825,7 +869,10 @@
             {
               "type": "notIn",
               "attribute": "type",
-              "value": ["linkMultiple"]
+              "value": [
+                "linkMultiple",
+                "autoincrement"
+              ]
             }
           ]
         }
@@ -844,6 +891,13 @@
             {
               "type": "isEmpty",
               "attribute": "conditionalProtected"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "autoincrement"
+              ]
             }
           ]
         }
@@ -858,6 +912,13 @@
             {
               "type": "isNotEmpty",
               "attribute": "id"
+            },
+            {
+              "type": "notIn",
+              "attribute": "type",
+              "value": [
+                "autoincrement"
+              ]
             }
           ]
         }

@@ -1,13 +1,15 @@
 {
-   "params":[
-   ],
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "type":"int",
-      "autoincrement":true,
-      "unique":true
-   },
-   "textFilter": true,
-   "readOnly": true
+  "params": [
+  ],
+  "filter": true,
+  "fieldDefs": {
+    "type": "int",
+    "autoincrement": true,
+    "unique": true,
+    "protected": true
+  },
+  "textFilter": true,
+  "auditable": false,
+  "qbFilterType": "integer",
+  "group": "numeric"
 }
