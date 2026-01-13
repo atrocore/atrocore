@@ -1,6 +1,7 @@
 {
   "fields": {
     "clusterItems": "Elementy klastra",
-    "number": "Numer"
+    "number": "Numer",
+    "masterEntity": "Podmiot główny"
   }
 }
