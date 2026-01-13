@@ -54,6 +54,10 @@
       "type": "link",
       "protected": true
     },
+    "clusterItem": {
+      "type": "link",
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -78,6 +82,11 @@
       "type": "belongsTo",
       "foreign": "matchedRecords",
       "entity": "Matching"
+    },
+    "clusterItem": {
+      "type": "belongsTo",
+      "foreign": "matchedRecords",
+      "entity": "ClusterItem"
     },
     "createdBy": {
       "type": "belongsTo",

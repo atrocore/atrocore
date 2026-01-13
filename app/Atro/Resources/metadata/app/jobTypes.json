@@ -90,6 +90,11 @@
     "scheduledJob": false,
     "handler": "\\Atro\\Jobs\\FindMatchesForRecord"
   },
+  "CreateClusters": {
+    "scheduledJob": true,
+    "unique": true,
+    "handler": "\\Atro\\Jobs\\CreateClusters"
+  },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,
     "unique": true,
