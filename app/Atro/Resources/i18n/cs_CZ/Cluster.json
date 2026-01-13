@@ -1,5 +1,6 @@
 {
   "fields": {
-    "clusterItems": "Položky klastru"
+    "clusterItems": "Položky klastru",
+    "number": "Číslo"
   }
 }
