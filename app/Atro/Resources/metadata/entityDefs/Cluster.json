@@ -1,11 +1,5 @@
 {
   "fields": {
-    "code": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "unique": true
-    },
     "description": {
       "type": "text"
     },
