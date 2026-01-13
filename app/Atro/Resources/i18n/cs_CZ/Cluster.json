@@ -1,6 +1,7 @@
 {
   "fields": {
     "clusterItems": "Položky klastru",
-    "number": "Číslo"
+    "number": "Číslo",
+    "masterEntity": "Hlavní subjekt"
   }
 }
