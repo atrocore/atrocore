@@ -1,5 +1,6 @@
 {
   "fields": {
+    "masterEntity": "Master Entity",
     "clusterItems": "Cluster Items"
   }
 }

@@ -9,6 +9,21 @@
     "description": {
       "type": "text"
     },
+    "masterEntity": {
+      "type": "varchar",
+      "required": true,
+      "view": "views/cluster/fields/master-entity",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
+    },
     "clusterItems": {
       "type": "linkMultiple",
       "auditableEnabled": true
