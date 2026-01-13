@@ -1,5 +1,6 @@
 {
   "fields": {
-    "clusterItems": "Partidas agrupadas"
+    "clusterItems": "Partidas agrupadas",
+    "number": "Número"
   }
 }
