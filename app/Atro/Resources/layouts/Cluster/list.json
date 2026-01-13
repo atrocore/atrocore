@@ -1,6 +1,9 @@
 [
   {
-    "name": "code",
+    "name": "number",
     "link": true
+  },
+  {
+    "name": "masterEntity"
   }
 ]

@@ -5,9 +5,11 @@
     "rows": [
       [
         {
-          "name": "code"
+          "name": "number"
         },
-        false
+        {
+          "name": "masterEntity"
+        }
       ],
       [
         {

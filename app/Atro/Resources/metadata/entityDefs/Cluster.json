@@ -1,13 +1,25 @@
 {
   "fields": {
-    "code": {
-      "type": "varchar",
-      "required": true,
-      "trim": true,
-      "unique": true
-    },
     "description": {
       "type": "text"
+    },
+    "number": {
+      "type": "autoincrement"
+    },
+    "masterEntity": {
+      "type": "varchar",
+      "required": true,
+      "view": "views/cluster/fields/master-entity",
+      "conditionalProperties": {
+        "protected": {
+          "conditionGroup": [
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            }
+          ]
+        }
+      }
     },
     "clusterItems": {
       "type": "linkMultiple",

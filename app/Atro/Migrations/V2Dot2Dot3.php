@@ -12,46 +12,29 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Atro\Core\Utils\Util;
 
 class V2Dot2Dot3 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-01-13 17:00:00');
+        return new \DateTime('2026-01-13 13:00:00');
     }
 
     public function up(): void
     {
-        foreach ($this->getConfig()->get('matchings') ?? [] as $id => $active) {
-            $matchingData = $this->getConnection()->createQueryBuilder()
-                ->select('*')
-                ->from('matching')
-                ->where('id = :id')
-                ->setParameter('id', $id)
-                ->fetchAssociative();
-            if (!empty($matchingData['type'])) {
-                if ($matchingData['type'] === 'masterRecord') {
-                    $columnName = Util::toUnderScore("matching{$matchingData['entity']}" . ucfirst(strtolower("S2M")));
-                } else {
-                    $columnName = Util::toUnderScore("matching{$matchingData['entity']}" . ucfirst(strtolower("D2D")));
-                }
-                $tableName = Util::toUnderScore(lcfirst($matchingData['entity']));
+        $this->exec("ALTER TABLE cluster ADD master_entity VARCHAR(255) DEFAULT NULL");
 
-                $this->exec("ALTER TABLE $tableName DROP COLUMN $columnName");
+        $this->exec("DROP INDEX uniq_e5c5699477153098eb3b4e33");
+        $this->exec("ALTER TABLE cluster DROP code");
 
-                if ($this->isPgSQL()) {
-                    $this->exec("ALTER TABLE $tableName ADD $columnName TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL");
-                } else {
-                    $this->exec("ALTER TABLE $tableName ADD $columnName DATETIME DEFAULT NULL");
-                }
-            }
+        if ($this->isPgSQL()) {
+            $this->exec("CREATE SEQUENCE cluster_number_seq INCREMENT BY 1 MINVALUE 1 START 1");
+            $this->exec("ALTER TABLE cluster ADD number INT DEFAULT nextval('cluster_number_seq') NOT NULL");
+        } else {
+            $this->exec("ALTER TABLE cluster ADD number INT NOT NULL");
+            $this->exec("CREATE UNIQUE INDEX UNIQ_E5C5699496901F54 ON cluster (number)");
+            $this->exec("ALTER TABLE cluster CHANGE number number INT AUTO_INCREMENT NOT NULL");
         }
-
-        $this->exec("TRUNCATE matched_record");
-
-        $this->exec("ALTER TABLE matched_record ADD cluster_item_id VARCHAR(36) DEFAULT NULL");
-        $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CLUSTER_ITEM_ID ON matched_record (cluster_item_id, deleted)");
     }
 
     protected function exec(string $sql): void
