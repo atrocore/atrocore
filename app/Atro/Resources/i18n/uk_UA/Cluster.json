@@ -1,5 +1,7 @@
 {
   "fields": {
-    "clusterItems": "Кластерні елементи"
+    "clusterItems": "Кластерні елементи",
+    "number": "Номер",
+    "masterEntity": "Мастер"
   }
 }
