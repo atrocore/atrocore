@@ -8,8 +8,14 @@
           "name": "masterEntity"
         },
         {
-          "name": "code"
+          "name": "number"
         }
+      ],
+      [
+        {
+          "name": "code"
+        },
+        false
       ],
       [
         {

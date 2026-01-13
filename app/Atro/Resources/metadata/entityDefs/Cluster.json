@@ -9,6 +9,9 @@
     "description": {
       "type": "text"
     },
+    "number": {
+      "type": "autoincrement"
+    },
     "masterEntity": {
       "type": "varchar",
       "required": true,
