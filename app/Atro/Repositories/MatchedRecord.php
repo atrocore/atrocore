@@ -26,6 +26,11 @@ class MatchedRecord extends Base
         throw new Error('MatchedRecord cannot be saved directly.');
     }
 
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        throw new Error('MatchedRecord cannot be removed directly.');
+    }
+
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
         $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");
@@ -88,5 +93,15 @@ class MatchedRecord extends Base
         if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
             $this->createMatchedRecord($matching, $masterId, $sourceId, $score, $matchedAt, true);
         }
+    }
+
+    public function removeOldMatches(MatchingEntity $matching, string $matchedAt): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('matched_record')
+            ->where('matching_id=:matchingId AND modified_at<:matchedAt')
+            ->setParameter('matchingId', $matching->id)
+            ->setParameter('matchedAt', $matchedAt)
+            ->executeQuery();
     }
 }

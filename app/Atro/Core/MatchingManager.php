@@ -170,11 +170,13 @@ class MatchingManager
         }
 
         $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id, $matchedAt);
-        foreach ($possibleMatches as $row) {
+        foreach ($matchedRecordsRows as $row) {
             if ($matching->get('type') === 'duplicate') {
                 $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id'], $matchedAt);
             }
         }
+
+        $this->getMatchedRecordRepository()->removeOldMatches($matching, $matchedAt);
     }
 
     protected function getEntityManager(): EntityManager
