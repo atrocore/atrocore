@@ -1,91 +1,43 @@
-<div class="list">
-    <table class="table full-table table-fixed table-striped table-scrolled table-bordered">
-        <colgroup>
-            {{#each columns}}
-            {{#if isFirst }}
-            <col style="width: 250px;">
-            {{else}}
-            {{#if ../merging}}
-            <col style="width: 30px">
+{{#each fieldList}}
+    <tr class="panel-title">
+        <td colspan="{{#if ../merging}}{{mergeRowLength}}{{else}}{{rowLength}}{{/if}}">
+            <span class="panel-title-text">{{translate ../panelTitle}}</span>
+            {{#if ../hasLayoutEditor}}
+                <span class="layout-editor-container"></span>
             {{/if}}
-            <col class="col-min-width">
-            {{/if}}
-            {{/each}}
-        </colgroup>
-        <thead>
+        </td>
+    </tr>
+    {{#if isInGroup }}
         <tr>
-            {{#each columns}}
-            {{#unless isFirst }}
-            {{#if ../merging }}
-                <th >
-                   <div class="center-child">
-                       {{#unless ../hideCheckAll}}
-                       <input type="radio" disabled="disabled" name="check-all" value="{{id}}" data-id="{{id}}">
-                       {{/unless}}
+            <td colspan="{{rowLength}}"><a href="#AttributeGroup/view/{{id}}" target="_blank" class="attribute-group">{{name}}</a></td>
+        </tr>
+   {{/if}}
+    {{#each fieldListInGroup }}
+        <tr class="list-row {{#if different}}danger{{/if}}" data-field="{{field}}">
+            <td class="cell">
+               <div class="field-name">
+                   {{#if attributeId}}
+                   <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute" title="{{translate label scope=../../scope category='fields'}}">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
+                   {{else}}
+                   <span title="{{translate label scope=../../scope category='fields'}}">{{translate label scope=../../scope category='fields'}}{{#if required }} <sup><i class="ph ph-asterisk"></i></sup>{{/if}}</span>
+                   {{/if}}
+               </div>
+            </td>
+            {{#each fieldValueRows}}
+                {{#if ../../../merging}}
+                <td class="merge-radio">
+                   <div class="center-child" >
+                       <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
                    </div>
-                </th>
-            {{/if}}
-            {{/unless}}
-            <th class="text-center  {{#unless isFirst}} inline-actions {{/unless}}" style="position: relative; {{#unless isFirst}} padding: 0 25px {{/unless}}" title="{{label}}">
-                {{{name}}}
-                {{#if _error}}
-                <br>
-                <span class="danger"> ({{_error}})</span>
+                </td>
                 {{/if}}
-                {{#unless isFirst}}
-                    <div class="pull-right inline-actions hidden" style="position: absolute; display: flex; justify-content: end; top: 10px; right: 2px;">
-                        <a href="javascript:" class="swap-entity" title="{{translate 'replaceItem' scope='Global' categories='labels'}}" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}" style="padding: 0 5px">
-                            <i class="ph ph-swap"></i>
-                        </a>
-                        <a href="javascript:" class="pull-right remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}"  title="{{translate 'removeItem' scope='Global' categories='labels'}}" >
-                            <i class="ph ph-trash-simple"></i>
-                        </a>
-                    </div>
-                {{/unless}}
-            </th>
+            <td class="cell {{#if shouldNotCenter}}no-center{{/if}}"  data-name="{{../field}}">
+                <div class="{{class}} field">{{{var key ../../../this}}}</div>
+            </td>
             {{/each}}
         </tr>
-
-        </thead>
-        <tbody>
-        {{#each fieldList}}
-            {{#if isInGroup }}
-                <tr>
-                    <td colspan="{{rowLength}}"> <a href="#AttributeGroup/view/{{id}}" target="_blank" class="attribute-group">{{name}}</a></td>
-                </tr>
-           {{/if}}
-            {{#each fieldListInGroup }}
-                <tr class="list-row {{#if  different}}danger{{/if}}" data-field="{{field}}">
-                    <td class="cell " title="{{translate label scope=../../scope category='fields'}}">
-                       <div class="field-name">
-                           {{#if attributeId}}
-                           <a href="#Attribute/view/{{attributeId}}" target="_blank" class="attribute">  {{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}} </a>
-                           {{else}}
-                           <span>{{translate label scope=../../scope category='fields'}}{{#if required }}*{{/if}}</span>
-                           {{/if}}
-                       </div>
-                    </td>
-                    {{#each fieldValueRows}}
-                        {{#if ../../../merging}}
-                        <td class="merge-radio">
-                           <div class="center-child" >
-                               <input type="radio" name="{{../field}}" value="{{id}}" disabled="disabled" data-id="{{id}}" data-key="{{key}}" class="field-radio">
-                           </div>
-                        </td>
-                        {{/if}}
-                    <td class="cell {{#if shouldNotCenter}}no-center{{/if}}"  data-name="{{../field}}">
-                        <div class="{{class}} field">{{{var key ../../../this}}}</div>
-                    </td>
-                    {{/each}}
-                </tr>
-            {{/each}}
-        {{/each}}
-        </tbody>
-    </table>
-    <div class="panel-scroll hidden" style="display: block;">
-        <div></div>
-    </div>
-</div>
+    {{/each}}
+{{/each}}
 <style>
     .hidden-cell {
         display: none !important;

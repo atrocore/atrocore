@@ -331,7 +331,7 @@
     .activities :global(.panel-title),
     .insights :global(.panel-title) {
         text-transform: none;
-        font-size: 12px;
+        font-size: 10px !important;
         color: #999;
     }
 

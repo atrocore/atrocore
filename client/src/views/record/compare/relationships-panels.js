@@ -52,7 +52,7 @@ Espo.define('views/record/compare/relationships-panels', 'view', function (Dep) 
                     delete data['defs'];
 
                     let o = {
-                        el: this.options.el + ` [data-panel="${panelData.name}"] `,
+                        el: `tbody[id="panel-${panelData.name}"]`,
                         relationship: data,
                         model: this.model,
                         scope: this.scope,

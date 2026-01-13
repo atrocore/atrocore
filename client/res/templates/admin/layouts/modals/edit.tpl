@@ -1,6 +1,6 @@
 <div id="layout-buttons"></div>
 <div class="panel panel-default edit-container" data-name="panel-0">
-    <div class="panel-heading"><h4 class="panel-title">{{translate 'layoutSelection' category='labels' scope='LayoutManager'}}</h4></div>
+    <div class="panel-heading"><h4 class="panel-title"><span class="panel-title-text">{{translate 'layoutSelection' category='labels' scope='LayoutManager'}}</span></h4></div>
     <div class="panel-body panel-body-form">
         <div class="row">
             <div class="cell col-sm-6 form-group" data-name="layoutProfile">
@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="panel panel-default edit-container layout-customization" data-name="panel-1">
-    <div class="panel-heading"><h4 class="panel-title">{{translate 'layoutCustomization' category='labels' scope='LayoutManager'}}</h4></div>
+    <div class="panel-heading"><h4 class="panel-title"><span class="panel-title-text">{{translate 'layoutCustomization' category='labels' scope='LayoutManager'}}</span></h4></div>
     <div class="panel-body panel-body-form">
         <div id="layout-content"></div>
     </div>
