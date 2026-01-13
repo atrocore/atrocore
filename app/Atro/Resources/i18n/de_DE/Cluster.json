@@ -1,5 +1,7 @@
 {
   "fields": {
-    "clusterItems": "Cluster-Artikel"
+    "clusterItems": "Cluster-Artikel",
+    "number": "Nummer",
+    "masterEntity": "Stammdaten-Entität"
   }
 }
