@@ -327,7 +327,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.listenToOnce(view, 'after:save', function (model) {
                         this.clearView('quickCreate');
-                        this.addLink(model.id, model.get('name'));
+                        this.addLink(model.id, model.getTitle());
                     }.bind(this));
                 });
             });

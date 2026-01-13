@@ -57,8 +57,8 @@ Espo.define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
             this.header = '';
             this.header += this.getLanguage().translate(this.scope, 'scopeNames');
-            if (this.model.get('name')) {
-                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
+            if (this.model.getTitle()) {
+                this.header += ' &raquo; ' + Handlebars.Utils.escapeExpression(this.model.getTitle());
             }
             this.header = iconHtml + this.header;
 

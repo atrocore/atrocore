@@ -241,8 +241,8 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             if (this.mode === 'detail') {
-                if (model.get('name')) {
-                    this.header = Handlebars.Utils.escapeExpression(model.get('name'));
+                if (model.getTitle()) {
+                    this.header = Handlebars.Utils.escapeExpression(model.getTitle());
                 } else {
                     this.header = this.getLanguage().translate(scope, 'scopeNames');
                 }

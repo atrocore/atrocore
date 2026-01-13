@@ -388,6 +388,10 @@ Espo.define('view', [], function () {
                 return model.get(localizedFieldName) || model.get(fieldName);
             }
 
+            if (fieldName === 'name' && !model.hasField('name') && model.hasField('code')) {
+                return model.get('code')
+            }
+
             return model.get(fieldName);
         },
 

@@ -169,7 +169,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = {...attributes, ...fieldsPanels.fetch()};
+                attributes = { ...attributes, ...fieldsPanels.fetch() };
             }
 
             $.each(attributes, (name, value) => {
@@ -667,7 +667,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             });
         },
 
@@ -680,13 +680,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.getModels().forEach((model) => {
-                let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type'])
+                let hasNameOrCode = model.hasField('name') || model.hasField('code')
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    label: model.get('name') ?? model.get('id'),
-                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                    label: model.getTitle() ?? model.get('id'),
+                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank"> ${hasNameOrCode ? (model.getTitle() ?? 'None') : model.get('id')} </a>`,
                 });
             });
 
@@ -1084,7 +1084,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({async: false})
+                    model.fetch({ async: false })
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {

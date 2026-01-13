@@ -291,7 +291,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             return this.selectionRecordModels.map(model => {
                 return {
                     id: model.id,
-                    name: model.get('name'),
+                    name: model.getTitle(),
                     entityType: model.name
                 }
             });

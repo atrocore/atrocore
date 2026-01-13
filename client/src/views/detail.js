@@ -823,7 +823,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 }
             }
 
-            return this.model.get('name') || this.model.id
+            return this.model.getTitle() || this.model.id
         },
 
         isHierarchical() {
@@ -831,7 +831,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.model.get('name') ?? this.model.id);
+            this.setPageTitle(this.model.getTitle() ?? this.model.id);
         },
 
         updateRelationshipPanel: function (name) {

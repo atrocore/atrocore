@@ -1046,7 +1046,7 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             }
 
             this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.model.get('name')),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.model.getTitle()),
                 confirmText: this.translate('Remove')
             }, () => action(), this);
         },

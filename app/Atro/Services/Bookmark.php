@@ -140,10 +140,15 @@ class Bookmark extends Base
 
             $selectParams = $this->getSelectManager($scope)->getSelectParams($params, true, true);
 
-            $fields = ['id', 'name'];
-            $localizedNameField = $this->getLocalizedNameField($scope);
-            if (!empty($localizedNameField)) {
-                $fields[] = $localizedNameField;
+            $fields = ['id'];
+            if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name']))) {
+                $fields[] = 'name';
+                $localizedNameField = $this->getLocalizedNameField($scope);
+                if (!empty($localizedNameField)) {
+                    $fields[] = $localizedNameField;
+                }
+            } else if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'code']))) {
+                $fields[] = 'code';
             }
 
             if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {

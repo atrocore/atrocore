@@ -767,12 +767,16 @@ class QueryConverter
         if (empty($foreignEntity)) {
             return $fieldPath;
         }
+        $container = $this->entityFactory->getEntityManager()->getContainer();
 
-        $localizedField = Language::getLocalizedFieldName($this->entityFactory->getEntityManager()->getContainer(), $foreignEntity, $field);
+        $localizedField = Language::getLocalizedFieldName($container, $foreignEntity, $field);
 
         if ($localizedField !== $field) {
             $localizedFieldPath = $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb($localizedField);
             $fieldPath = "COALESCE(NULLIF(TRIM($localizedFieldPath), ''), $fieldPath)";
+        } else if ($localizedField === 'name' && empty($container->get('metadata')->get(['entityDefs', $foreignEntity, 'fields', 'name'])) &&
+            !empty($container->get('metadata')->get(['entityDefs', $foreignEntity, 'fields', 'code']))) {
+            return $this->getRelationAlias($entity, $relationName) . '.' . $this->toDb('code');
         }
 
         return $fieldPath;

@@ -281,7 +281,13 @@ class Record extends RecordService
             }
         }
 
-        return is_array($record) ? $record['name'] : $record->get('name');
+        if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'name']))) {
+            return is_array($record) ? $record['name'] : $record->get('name');
+        } else if (!empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', 'code']))) {
+            return is_array($record) ? $record['code'] : $record->get('code');
+        }
+
+        return null;
     }
 
     public function getParamsForTree(string $link, string $scope, array $params): array
@@ -387,11 +393,17 @@ class Record extends RecordService
             $selectParams['distinct'] = true;
         }
 
-        $fields = ['id', 'name'];
-        $localizedNameField = $this->getLocalizedNameField($scope);
-        if (!empty($localizedNameField)) {
-            $fields[] = $localizedNameField;
+        $fields = ['id'];
+        if (!empty($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', 'name']))) {
+            $fields[] = 'name';
+            $localizedNameField = $this->getLocalizedNameField($this->entityName);
+            if (!empty($localizedNameField)) {
+                $fields[] = $localizedNameField;
+            }
+        } else if (!empty($this->getMetadata()->get(['entityDefs', $this->entityName, 'fields', 'code']))) {
+            $fields[] = 'code';
         }
+
 
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
@@ -403,7 +415,7 @@ class Record extends RecordService
         $result = [];
 
         foreach ($collection as $key => $item) {
-            $value = $this->getLocalizedNameValue($item, $scope);
+            $value = $this->getLocalizedNameValue($item, $this->entityName);
             $result[] = [
                 'id'             => $item->get('id'),
                 'name'           => !empty($value) ? $value : $item->get('id'),

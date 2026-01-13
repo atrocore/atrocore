@@ -264,7 +264,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
-                this.searchData.nameValue = model.get('name');
+                this.searchData.nameValue = model.getTitle();
             }
             this.trigger('change');
         },
@@ -435,7 +435,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
 
                             response.list.forEach(function (item) {
-                                const value = item[localizedName] || item['name']
+                                const value = item[localizedName] || item['name'] || item['code'];
                                 list.push({
                                     id: item.id,
                                     name: value || '',
@@ -540,8 +540,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             collection.fetch({ data: $.param({ silent: true, where: whereCondition }) }).then(res => {
                                 for (const idItem of this.searchData.oneOfIdList) {
                                     const model = collection.get(idItem);
-                                    if (model && model.has('name')) {
-                                        this.replaceNameOneOf(idItem, model.get('name'))
+                                    if (model && (model.hasField('name') || model.hasField('code'))) {
+                                        this.replaceNameOneOf(idItem, model.getTitle())
                                     }
                                 }
                             });
