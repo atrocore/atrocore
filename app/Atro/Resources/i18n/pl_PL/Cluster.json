@@ -1,5 +1,6 @@
 {
   "fields": {
-    "clusterItems": "Elementy klastra"
+    "clusterItems": "Elementy klastra",
+    "number": "Numer"
   }
 }
