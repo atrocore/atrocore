@@ -1,6 +1,7 @@
 {
   "fields": {
     "clusterItems": "Partidas agrupadas",
-    "number": "Número"
+    "number": "Número",
+    "masterEntity": "Entidad principal"
   }
 }
