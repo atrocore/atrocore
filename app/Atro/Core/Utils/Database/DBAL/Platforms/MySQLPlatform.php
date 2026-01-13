@@ -31,9 +31,7 @@ use function strtoupper;
 use function trim;
 
 /**
- * The MySQLPlatform provides the behavior, features and SQL dialect of the
- * MySQL database platform. This platform represents a MySQL 5.0 or greater platform that
- * uses the InnoDB storage engine.
+ * A copy of the file 'Doctrine/DBAL/Platforms/MySQLPlatform.php'. This is needed to solve bugs in autoincrement fields.
  */
 class MySQLPlatform extends AbstractPlatform
 {
