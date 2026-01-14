@@ -15,7 +15,7 @@
     "type": {
       "ComposerAutoUpdate": "Автооновлення модулів",
       "ClearEntities": "Очистити видалені дані",
-      "UpdateCurrencyExchangeViaECB": "Оновіть обмін валют через ЄЦБ",
+      "UpdateCurrencyExchangeViaECB": "Оновлення курсу валют через ЄЦБ",
       "CheckUpdates": "Перевірте оновлення системи",
       "ScanStorage": "Сканувати сховище",
       "FindMatches": "Знайти збіги",
