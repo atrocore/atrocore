@@ -1061,12 +1061,6 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             view.selectBoolFilterList = this.selectBoolFilterList;
             view.boolFilterData = {};
 
-            if (view.selectBoolFilterList?.length) {
-                let boolList = this.getMetadata().get(['entityDefs', this.foreignScope, 'boolFilterList']) || [];
-                let hiddenList = this.getMetadata().get(['entityDefs', this.foreignScope, 'hiddenBoolFilterList']) || [];
-                view.selectBoolFilterList = view.selectBoolFilterList.filter((val) => boolList.includes(val) && hiddenList.includes(val))
-            }
-
             for (const key in this.boolFilterData) {
                 if (typeof this.boolFilterData[key] === 'function') {
                     view.boolFilterData[key] = this.boolFilterData[key].bind(this);
