@@ -29,7 +29,7 @@
         <i class="ph ph-caret-{{#if expanded}}down{{else}}right{{/if}}"></i>
     </span>
     {{#unless notRefreshable}}
-    <span style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
+    <span class="panel-title-text" style="cursor: pointer;" class="action" title="{{translate 'clickToRefresh' category='messages'}}" data-action="refresh" data-panel="{{name}}">
         {{/unless}}
         {{#if titleHtml}}
             {{{titleHtml}}}

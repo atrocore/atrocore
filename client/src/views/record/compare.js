@@ -382,6 +382,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                             name: field.attributeGroup?.name,
                             isInGroup: id !== 'no-group',
                             rowLength: this.getModels().length + 1,
+                            mergeRowLength: this.getModels().length * 2 + 1,
                             fieldListInGroup: [],
                             sortOrder: field.attributeGroup?.sortOrder ?? -1,
                         };
@@ -399,6 +400,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.notify('Loading...');
 
                 this.createView(panel.name, this.fieldsPanelsView, {
+                    panelTitle: panel.title,
                     scope: this.scope,
                     model: this.model,
                     fieldList: fieldListByGroup,
@@ -409,7 +411,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     defaultModelId: this.getDefaultModelId(),
                     merging: this.merging,
                     hideCheckAll: index !== 0,
-                    el: `${this.options.el} [data-name="${panel.name}"] .list-container`
+                    hasLayoutEditor: !!panel.hasLayoutEditor,
+                    el: `${this.options.el} tbody[data-name="${panel.name}"]`
                 }, view => {
                     this.listenTo(view, 'data:change', fieldDefs => {
                         this.prepareFieldsData();
@@ -434,7 +437,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                             viewType: 'selection',
                             layoutData: this.layoutData,
                             alignRight: true,
-                            el: this.options.el + ` .panel-heading .layout-editor-container`,
+                            el: this.options.el + ` .panel-title .layout-editor-container`,
                         }, (view) => {
                             view.render()
                             view.on("refresh", () => this.trigger('layout-refreshed'));
@@ -461,6 +464,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
+                panelList.forEach(panel => {
+                    this.$el.find('table').append(`<tbody class="panel-${panel.name}" id="panel-${panel.name}" data-name="${panel.name}"></tbody>`)
+                })
+
                 this.renderedPanels = this.renderedPanels.filter(panel => panel !== 'relationshipsPanels');
 
                 this.notify('Loading...');
@@ -476,7 +483,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     columns: this.buildComparisonTableHeaderColumn(),
                     versionModel: this.options.versionModel,
                     merging: this.merging,
-                    el: `${this.options.el} #${this.getId()} .compare-panel[data-name="relationshipsPanels"]`,
                     selectedFilters: this.selectedFilters
                 }, view => {
 
@@ -681,12 +687,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             this.getModels().forEach((model) => {
                 let hasNameOrCode = model.hasField('name') || model.hasField('code')
+                const name = hasNameOrCode ? (model.getTitle() ?? 'None') : model.get('id')
+
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
                     label: model.getTitle() ?? model.get('id'),
-                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank"> ${hasNameOrCode ? (model.getTitle() ?? 'None') : model.get('id')} </a>`,
+                    name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });
             });
 
@@ -865,11 +873,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 let anchorContainer = this.getParentView().$el.find('.anchor-nav-container');
                 if (!anchorContainer.length) {
                     let id = Math.floor(Math.random() * 10000);
-                    anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;"></div>`)
-                    this.getParentView().$el.find('.modal-footer').append(anchorContainer)
+                    anchorContainer = $(`<div class="anchor-nav-container" style="display: flex;width: 100%;padding-top: 10px;position:sticky;left: 0;z-index: 100;"></div>`)
+                    this.getParentView().$el.find('.modal-body').prepend(anchorContainer)
                 }
-
-                this.getParentView().$el.find('.modal-footer').css('paddingBottom', '0')
 
                 setTimeout(() => {
                     this.anchorNavigation = new Svelte.AnchorNavigation({
@@ -881,13 +887,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                                 this.createLayoutConfigurator();
                             },
                             scrollCallback: (name) => {
-                                let panel = this.$el.find(`.panel[data-name="${name}"]`);
+                                let panel = this.$el.find(`tbody[data-name="${name}"]`);
                                 if (panel.size() > 0) {
                                     panel = panel.get(0);
                                     let content = this.getParentView().$el.find('.modal-body').get(0);
                                     const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
                                     content.scrollTo({
-                                        top: window.screen.width < 768 ? panelOffset : panelOffset,
+                                        top: panelOffset - 42,
                                         behavior: "smooth"
                                     });
                                 }

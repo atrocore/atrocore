@@ -95,9 +95,11 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 tableRows: this.tableRows,
                 columnCountCurrent: this.columns,
                 columnLength: this.columns.length,
+                mergingColumnLength: this.merging ? this.columns.length + 1 : this.columns.length,
                 showBorders: this.linkedEntities.length > 1,
                 hasToManyRecords: this.hasToManyRecords,
                 hasManyRecordsMessage: this.translate('thereAreTooManyRecord'),
+                merging: this.merging,
             }
         },
 
@@ -174,8 +176,8 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         }
 
                         let isRequired = !!fieldModel.getFieldParam(field, 'required');
-                        if (isRequired && el.label[el.label.length - 1] !== '*') {
-                            el.label += '*';
+                        if (isRequired) {
+                            el.isRequired = true;
                         }
 
                         this.createView(viewKey, viewName, {

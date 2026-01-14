@@ -10,6 +10,6 @@ Loading...
     {{/each}}
 </div>
 {{else}}
-<div class="list-container">{{translate 'No Data'}}</div>
+<div class="list-container"><div class="no-data-container">{{translate 'No Data'}}</div></div>
 {{/if}}
 {{/if}}

@@ -142,8 +142,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     name: 'merge',
                     action: 'showSelectionView',
                     style: this.selectionViewMode === 'merge' ? 'primary' : null,
-                    html: '<i class="ph ph-arrows-merge "></i> ' + this.translate('Merge'),
+                    html: '<i class="ph ph-arrows-merge"></i>',
+                    tooltip: this.translate('Merge'),
                     disabled: true,
+                    className: 'selection-view-switcher'
                 }, true, false, true);
             }
 
@@ -151,16 +153,20 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 name: 'compare',
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'compare' ? 'primary' : null,
-                html: '<i class="ph ph-arrows-left-right"></i> ' + this.translate('Compare'),
-                disabled: true
+                html: '<i class="ph ph-arrows-left-right"></i>',
+                tooltip: this.translate('Compare'),
+                disabled: true,
+                className: 'selection-view-switcher'
             }, true, false, true);
 
             this.addMenuItem('buttons', {
                 name: 'standard',
                 action: 'showSelectionView',
                 style: this.selectionViewMode === 'standard' ? 'primary' : null,
-                html: '<i class="ph ph-list"></i> ' + this.translate('Standard'),
-                disabled: true
+                html: '<i class="ph ph-list"></i>',
+                tooltip: this.translate('Standard'),
+                disabled: true,
+                className: 'selection-view-switcher'
             }, true, false, true);
         },
 
@@ -198,6 +204,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             headerButtons: this.getMenu()
                         }, data.name === 'merge' ? this.getMergeButtons(false) : this.getCompareButtons())
                     }));
+                    record.reRender();
                     return;
                 }
             }
@@ -314,6 +321,47 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             if (this.comparisonAcrossEntities()) {
                 $(`.action[data-name="merge"]`).addClass('disabled').attr('disabled', true);
             }
+
+            const header = $('.page-header');
+            if (this.selectionViewMode === 'standard') {
+                header.removeClass('selection-header');
+            } else {
+                header.addClass('selection-header');
+            }
+        },
+
+        scrollToPanel(name) {
+            let panel = $('#main').find(`.panel[data-name="${name}"], tbody[data-name="${name}"]`);
+            if (panel.size() > 0) {
+                const header = document.querySelector('.page-header');
+                const content = document.querySelector("main") || document.querySelector('#main');
+                panel = panel.get(0);
+
+                if (!content || !panel) return;
+
+                const panelOffset = panel.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top;
+                const stickyOffset = this.selectionViewMode === 'standard' ? header.offsetHeight : 50;
+                content.scrollTo({
+                    top: window.screen.width < 768 ? panelOffset : panelOffset - stickyOffset,
+                    behavior: "smooth"
+                });
+            }
+        },
+
+        getVisiblePanels() {
+            return (this.panelsList ?? []).filter(panel => {
+                if (panel.name === 'panel-0') {
+                    return true;
+                }
+
+                if (this.isPanelClosed(panel)) {
+                    return true;
+                }
+
+                const panelElement = document.querySelector(`.panel[data-name="${panel.name}"], tbody[data-name="${panel.name}"]`);
+
+                return panelElement && panelElement.style.display !== 'none' && !$(panelElement).hasClass('hidden');
+            });
         },
 
         setupRecord: function () {
@@ -548,6 +596,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             this.treeAllowed = false
             Dep.prototype.afterRender.call(this);
             this.renderLeftPanel();
+
+            const header = $('.page-header');
+            if (this.selectionViewMode === 'standard') {
+                header.removeClass('selection-header');
+            } else {
+                header.addClass('selection-header');
+            }
         },
 
         setupLayoutEditorButton() {
