@@ -24,6 +24,10 @@
         if (className) {
             computedClassNames += ` ${className}`;
         }
+
+        if (params.className) {
+            computedClassNames += ` ${params.className}`;
+        }
     }
 
     function runAction(e: Event) {

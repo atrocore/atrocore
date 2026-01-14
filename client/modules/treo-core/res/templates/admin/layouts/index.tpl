@@ -1,6 +1,6 @@
 <div class="content-wrapper">
     <aside class="tree-panel-anchor"></aside>
-    <main>
+    <main style="padding: 0 20px;">
         <div class="page-header">
             <div id="layout-header"></div>
             <div id="layout-header-buttons" style="display: flex">

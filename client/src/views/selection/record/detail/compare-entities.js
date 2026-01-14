@@ -45,17 +45,6 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             });
 
             this.listenToOnce(this, 'after:render', () => {
-                this.$el.find('th').each(function (e) {
-
-                    $(this).on('mouseenter', function (e) {
-                        e.stopPropagation();
-                        $(this).find('div.inline-actions').removeClass('hidden')
-                    }.bind(this)).on('mouseleave', function (e) {
-                        e.stopPropagation();
-                        $(this).find('div.inline-actions').addClass('hidden')
-                    }.bind(this));
-                });
-
                 this.$el.find('.bottom-layout-bottoms').each(function (e) {
                     $(this).on('mouseenter', function (e) {
                         e.stopPropagation();

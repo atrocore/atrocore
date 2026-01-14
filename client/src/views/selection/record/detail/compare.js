@@ -114,23 +114,6 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     this.getParentView().setupLayoutEditorButton();
                 });
             });
-
-
-            this.listenTo(this, 'after:fields-panel-rendered', () => {
-                if (!this.getView('fieldsOverviews')) {
-                    return;
-                }
-                this.getView('fieldsOverviews').$el.find('th.inline-actions').each(function (e) {
-                    $(this).on('mouseenter', function (e) {
-                        e.stopPropagation();
-                        $(this).find('div.inline-actions').removeClass('hidden')
-                    }.bind(this)).on('mouseleave', function (e) {
-                        e.stopPropagation();
-                        $(this).find('div.inline-actions').addClass('hidden')
-                    }.bind(this));
-                });
-            });
-
         },
 
         executeAction: function (action, data = null, e = null) {

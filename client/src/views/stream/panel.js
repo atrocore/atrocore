@@ -278,7 +278,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             }.bind(this), 500);
 
             if (!this.getStoredFilter().length) {
-                this.$el.find('.list-container').html('<span >No Data</span>')
+                this.$el.find('.list-container').html('<span class="no-data-container">No Data</span>')
             }
 
             this.createView('attachments', 'views/fields/link-multiple', {

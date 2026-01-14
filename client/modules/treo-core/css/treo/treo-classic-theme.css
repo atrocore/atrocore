@@ -143,6 +143,10 @@ sub {
     bottom: -0.25em
 }
 
+sub > .ph, sup > .ph {
+    font-size: inherit;
+}
+
 img {
     border: 0
 }
@@ -9862,8 +9866,18 @@ body > #header .navbar-brand span.home-icon {
     }
 }
 
-main .bottom > .panel > .panel-body {
+.bottom > .panel > .panel-body {
     overflow-x: auto;
+}
+
+.bottom > .panel:not(.panel-stream) > .panel-body {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bottom > .panel.panel-stream .list-container {
+    margin-left: -20px;
+    margin-right: -20px;
 }
 
 .panel-body {
@@ -9991,6 +10005,7 @@ label {
     position: sticky;
     left: 0;
     z-index: 11;
+    padding: 0 20px;
 }
 
 .page-header {
@@ -10368,6 +10383,10 @@ table.table > thead th > div > a {
     }
 }
 
+.list-container > .no-data-container {
+    padding: 0 20px 10px;
+}
+
 .list-container > .list > .table:not(.fixed-header-table) {
     min-width: 100%;
 }
@@ -10433,7 +10452,7 @@ table.table > thead th > div > a {
     height: 1px;
 }
 
-.list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(:empty) {
+.list-container > .list > .table thead th:not([data-name="r-checkbox"]):not([width]) > div:not(.inline-actions):not(:empty) {
     min-width: 100px;
     width: inherit;
     display: flex;
@@ -11012,17 +11031,6 @@ select[multiple].input-sm {
     margin-bottom: 0
 }
 
-.panel-body > div > .list-expanded {
-    margin-left: -14px;
-    margin-right: -14px
-}
-
-.panel-body > .list-container > .list,
-.modal-body > .list-container > .list {
-    margin-left: -20px;
-    margin-right: -20px;
-}
-
 .panel-body > div > .list > table td:first-child,
 .panel-body > div > .list > table th:first-child,
 .panel-body > div > .group > .list-container > .list > table td:first-child,
@@ -11243,7 +11251,7 @@ table.no-margin {
 .list > table td[data-name="r-checkbox"],
 .list > table th[data-name="r-checkbox"] {
     position: sticky;
-    left: -10px;
+    left: 0;
     z-index: 9;
 }
 
@@ -11275,7 +11283,7 @@ table.no-margin {
 .list > table td.cell[data-name="buttons"] {
     overflow: visible;
     padding: 3px 5px;
-    right: -10px;
+    right: 0;
 }
 
 .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
@@ -11287,19 +11295,6 @@ table.no-margin {
 
 .panel-body .list > table tr:not(.ui-sortable-helper) td.cell[data-name="buttons"] {
     padding-right: 10px;
-}
-
-@media (min-width: 768px) {
-    .list > table td.cell[data-name="buttons"] {
-        padding-right: 12px;
-        padding-left: 12px;
-        right: -20px;
-    }
-
-    .list > table td[data-name="r-checkbox"],
-    .list > table th[data-name="r-checkbox"] {
-        left: -20px;
-    }
 }
 
 table.less-padding td.cell[data-name="buttons"] > .btn-group {
@@ -13295,7 +13290,6 @@ a:hover, a:focus {
 }
 
 .panel-title {
-    text-transform: uppercase;
     font-size: 14px;
 }
 
@@ -13317,6 +13311,16 @@ a:hover, a:focus {
     align-items: center;
     height: 100%;
     line-height: 1;
+    font-size: 12px;
+}
+
+.panel-title .panel-title-text {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #e8eced;
+    text-transform: none;
+    letter-spacing: 0.03em;
+    color: #333;
 }
 
 .record .middle > .panel {
@@ -13482,8 +13486,8 @@ input#sn-checkbox-open-in-new-window {
 }
 
 .panel-default > .panel-heading:not(.note-toolbar) > .btn-group > .list-total > span {
-    border-radius: 4px;
-    background-color: #f0f0f0;
+    border-radius: 0;
+    background-color: #e8eced;
     padding: 3px 6px;
 }
 
@@ -13550,7 +13554,6 @@ input#sn-checkbox-open-in-new-window {
     border-top: 1px solid #f5f5f5;
 }
 
-.modal-body .list > table thead,
 .panel-body .list > table thead {
     background-color: transparent;
     border-top: 0;
@@ -13601,6 +13604,7 @@ input#sn-checkbox-open-in-new-window {
     display: flex;
     flex-direction: column;
     flex: 1;
+    padding: 0 20px;
 }
 
 .list-container > .list, .panel, .dashlet-container, #main > .calendar-container .calendar, #main > .calendar-container .timeline, .well, .list-group-panel {
@@ -13627,7 +13631,6 @@ body > .content {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding: 0 20px;
 }
 
 table.table > thead th > a {
@@ -13809,8 +13812,6 @@ ul.dropdown-menu > li.checkbox {
 
 .page-header.detail-page-header {
     margin: 0;
-    width: calc(100% + 40px);
-    transform: translateX(-20px);
     position: sticky;
     top: 0;
     left: 0;
@@ -13819,6 +13820,14 @@ ul.dropdown-menu > li.checkbox {
     background-color: #fff;
     padding: 10px 20px 0;
     border-bottom: 1px solid #dedede;
+}
+
+.page-header.detail-page-header.selection-header {
+    top: auto;
+}
+
+#main > .content-wrapper > main[data-mode=detail]:has(.page-header.detail-page-header.selection-header) {
+    overflow-x: auto;
 }
 
 .page-header.detail-page-header > .row {
@@ -14052,11 +14061,6 @@ button.category:focus {
     overflow-y: auto;
 }
 
-#main > .content-wrapper > main[data-mode=detail],
-#main > .content-wrapper > main[data-mode=edit] {
-    overflow-x: clip;
-}
-
 @media screen and (min-width: 768px) and (max-width: 1199px) {
     #main .search-container {
         margin-bottom: 9px;
@@ -14145,10 +14149,6 @@ button.category:focus {
     #header .menu.not-collapsed:hover {
         box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .3);
         background-color: var(--nav-menu-background);
-    }
-
-    .record .list-container {
-        padding-left: 0
     }
 
     #header .navbar-brand img {
@@ -14284,8 +14284,6 @@ button.category:focus {
 
     #main .edit > .row,
     #main .detail > .row {
-        margin-left: -20px;
-        margin-right: -20px;
         margin-top: -1px;
         background-color: #fafafa;
         display: flex;
@@ -14307,7 +14305,6 @@ button.category:focus {
         display: flex;
         flex-direction: column;
         flex: 1;
-        margin: 0 -20px;
     }
 
     #main main > .record > .detail > .overview > .bottom,
@@ -14406,7 +14403,7 @@ button.category:focus {
         padding: 0 10px;
     }
 
-    #main main {
+    .page-header-container {
         padding: 0 10px;
     }
 
@@ -14416,6 +14413,15 @@ button.category:focus {
 
     body > .container.content:not(#content) {
         min-height: calc(100vh - 28px);
+    }
+
+    #main main > .list-container {
+        padding: 0 10px;
+    }
+
+    .bottom > .panel.panel-stream .list-container {
+        margin-left: -10px;
+        margin-right: -10px;
     }
 
     .modal-content .overview {
@@ -14431,17 +14437,14 @@ button.category:focus {
     .edit .panel-default > .panel-heading {
         padding-left: 10px;
         padding-right: 10px;
-        margin: 0 -10px;
     }
 
     #main main > .page-header {
-        width: calc(100% + 20px);
-        transform: translateX(-10px);
         padding: 10px 10px 0;
     }
 
     .page-header.detail-page-header {
-        position: static;
+        top: auto;
     }
 
     .detail .overview,
@@ -14492,21 +14495,9 @@ button.category:focus {
         white-space: nowrap;
     }
 
-    .panel-body > .list-container > .list,
-    .modal-body > .list-container > .list {
-        margin-left: -10px;
-        margin-right: -10px;
-    }
-
     #header .navbar-right > li.progress-badge-container {
         display: inline-block;
         float: right
-    }
-
-    .record .middle .panel-body,
-    .record .bottom .panel-body {
-        margin-left: -10px;
-        margin-right: -10px;
     }
 
     .list-container > .list > .table:not(.fixed-header-table) {
@@ -16219,7 +16210,8 @@ select {
     align-items: center;
 }
 
-.cell:not(.hidden-cell) .inline-actions {
+.cell:not(.hidden-cell) .inline-actions,
+th .inline-actions {
     gap: 8px;
 }
 
@@ -18819,13 +18811,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     text-align: center;
 }
 
+.fields-compare-panel {
+    background-color: #fff;
+}
+
 .compare-records .fields-compare-panel {
     display: inline-block;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .compare-records .compare-panel, .compare-entities .compare-panel  {
     background-color: white;
-    width: 100%;
+    min-width: 100%;
     padding: 0;
 }
 
@@ -18837,16 +18835,23 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     white-space: normal;
 }
 
-.compare-records .compare-panel table tbody tr.danger {
-    border-left: 3px solid red;
-}
-
 .compare-records .compare-panel table col.col-min-width {
     min-width: 250px;
 }
 
-.compare-records .compare-panel table tbody tr.danger td:first-child {
-    border-left: 3px solid red;
+.compare-records .compare-panel table > tbody > tr.danger {
+    background-color: #fff0f0;
+}
+
+.compare-records .compare-panel table tbody tr.danger td:first-child:before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    left: -1px;
+    top: 0;
+    display: block;
+    width: 4px;
+    background-color: red;
 }
 
 .compare-records .compare-panel table tbody tr.danger > td {
@@ -18857,26 +18862,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     color: red;
 }
 
-.compare-records .compare-panel .panel-body  {
+.compare-records .compare-panel .panel-body {
     padding: 0 0 0 0 !important;
 }
 
-.compare-entities  {
-    padding: 40px 0 0 0 !important;
-}
-
-.compare-records .compare-panel .panel-body > div:last-child > .list:last-child {
-    margin-bottom: 0;
-}
-
-.compare-records .compare-panel .panel-body div.list, .compare-entities .compare-panel .panel-body div.list {
-    overflow-x: auto;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.compare-records .compare-panel .panel-body div.list-container {
-    padding: 0;
+.compare-entities .list > table thead {
+    background-color: #fafafa;
 }
 
 .compare-records .compare-panel .table {
@@ -18887,18 +18878,23 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-width: 250px !important;
 }
 
-.compare-records .compare-panel tr td:first-child  div.field-name span{
+.compare-records .compare-panel tr td:first-child div.field-name span {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.compare-records .compare-panel tr td {
-    min-width: 150px;
+.compare-records .compare-panel tr.panel-title > td {
+    border-left-color: transparent;
+    border-right-color: transparent;
 }
 
-.compare-records .compare-panel tr td.merge-radio {
-    min-width: 50px;
+.compare-records .compare-panel tr td:first-child div.field-name span sup {
+    color: #333;
+}
+
+.compare-records .compare-panel tr td {
+    min-width: 150px;
 }
 
 .compare-records .compare-panel .attachment-preview a {
@@ -18906,8 +18902,8 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     justify-content: center;
 }
 
-.compare-records [data-name="relationshipsPanels"] .bottom-border-black tr.strong-border td {
-    border-top: 3px solid rgba(0, 0, 0, 0.3);
+.compare-records table tbody tr.strong-border td {
+    border-top: 2px dotted rgba(0, 0, 0, 0.3);
 }
 
 .compare-records [data-name="relationshipsPanels"] table {
@@ -18932,30 +18928,38 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
+.compare-panel table > tbody > tr > td {
+    border-color: transparent;
+}
+
+.compare-panel table > tbody > tr > td:not(:first-child) {
+    border-left-color: #e8eced;
+}
+
+.compare-panel table > tbody > tr:last-of-type > td {
+    border-bottom-color: #e8eced;
+}
+
 .compare-records .compare-panel table td.cell .field, .compare-records .compare-panel table td div.field-name {
     display: flex !important;
     align-items: center;
     text-align: center;
-
 }
 
-.compare-records .compare-panel table td.cell[data-mode="edit"] .field:not(:has( input[type="checkbox"])):has(input),
 .compare-records[data-mode="merge"] .compare-panel table td.cell .field:not(:has( input[type="checkbox"])):has(input) {
     justify-content: flex-end;
 }
 
 .fields-compare-panel  table tr td,
 .fields-compare-panel .list-container > .list > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
-    height: 47px;
-    padding-bottom: 3px;
-    padding-top: 15px;
+    height: 45px;
 }
 
 .fields-compare-panel  .list-container > .list > table tr td.cell:not(:first-child) input[type="checkbox"] {
     margin: 0;
 }
 
-.compare-records[data-mode="merge"] .fields-compare-panel  table tr td {
+.compare-records[data-mode="merge"] .fields-compare-panel table tr td {
     height: 42px;
 }
 
@@ -18973,13 +18977,26 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 
 .compare-records .compare-panel .list-container > .list > table tr td.cell div.inline-actions {
     position: absolute;
-    left: 0;
-    top: 0;
+    right: 2px;
+    top: 2px;
     z-index: 1000;
 }
 
-.compare-records .compare-panel table td.cell .inline-actions .ph {
+.compare-records .compare-panel .list-container > .list > table tr td.cell[data-mode=edit] div.inline-actions {
+    display: none !important;
+}
+
+.compare-panel table th {
+    position: relative;
+}
+
+.compare-records .compare-panel table td.cell .inline-actions .ph,
+.compare-panel table th .inline-actions > a > .ph {
     font-size: 14px;
+}
+
+.compare-panel table th .inline-actions li .ph {
+    margin-inline-end: .3em;
 }
 
 .compare-records .compare-panel table td.cell:first-child {
@@ -18997,25 +19014,89 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     font-weight: bold;
 }
 
-.compare-records th.inline-actions > a {
-    padding-right: 20px;
+.compare-records tr.panel-title td {
+    background-color: #fff;
 }
 
-.compare-records th.inline-actions > a,  .compare-records td .field > a, .compare-entities th > a {
-    text-overflow: ellipsis;
+.compare-records table thead {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.compare-records table tr th,
+.compare-entities table tr th {
+    border-right-color: transparent;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.compare-records table tr th:first-child,
+.compare-entities table tr th:first-child {
+    border-left-color: transparent;
+}
+
+.compare-records table tr th,
+.compare-records table tr td:first-child {
+    height: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.compare-records table tr th,
+.compare-entities table tr th {
     white-space: nowrap;
     overflow: hidden;
-    display: inline-block;
     max-width: 100%;
+    text-overflow: ellipsis;
 }
-
 
 .compare-records table tr th,
 .compare-entities table tr th,
 .compare-records table tr th a,
 .compare-entities table tr th a {
     color: black;
+}
+
+.compare-records table tr th:first-child,
+.compare-records table tr th > a,
+.compare-entities table tr th > a {
     font-weight: 500;
+}
+
+.compare-records table tr .merge-radio {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 50px;
+    min-width: 0 !important;
+}
+
+.compare-records .panel-title .panel-title-text {
+    margin-left: -10px;
+    margin-top: 15px;
+    background-color: #888;
+    color: #fff;
+    font-size: 12px;
+}
+
+.compare-records .panel-title .layout-editor-container {
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+.compare-records .panel-title:hover .layout-editor-container {
+    opacity: 1;
+}
+
+.compare-entities table tr.list-row.danger {
+    background-color: #fff0f0;
+}
+
+.compare-entities .fields-compare-panel,
+.compare-entities .compare-panel,
+.compare-entities .compare-panel > .panel > .panel-body {
+    padding: 0;
 }
 
 .compare-records .overlay, .compare-entities .overlay {
@@ -19073,11 +19154,21 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     }
 }
 
+.compare-entities,
+.compare-records {
+    padding: 0 8px;
+}
+
 .compare-entities {
     height: calc(100vh - 250px);
 }
+
 .compare-entities .panel-body > div > .list > table td:first-child {
     padding-left: 5px !important;
+}
+
+.compare-entities .panel-body > div > .list > table td > .record-content > .detail {
+    margin: -8px -5px;
 }
 
 .compare-entities .list > table tbody tr:not(.active-dropdown):hover {
@@ -19177,7 +19268,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     position: relative;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-readonly]):not([data-mode=edit]):not([data-no-load]) > div:not(.inline-actions):not(.btn-group):hover,
+.compare-records .compare-panel table tr td.cell:not(:first-child):not([data-mode=edit]):hover,
+.compare-records .compare-panel table tr td.cell:not([data-readonly]):not([data-mode=edit]) > .field:hover,
+.compare-records .compare-panel table tr th:not(:first-child):hover,
+.compare-entities .compare-panel table tr th:hover,
+.compare-panel table tr th:has(.inline-actions.open) {
     background-color: var(--field-inline-edit-color);
 }
 
@@ -19208,7 +19304,9 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     min-height: 29px;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions {
+.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions,
+.compare-records .compare-panel table tr td.cell div.inline-actions,
+.compare-panel table th div.inline-actions {
     position: absolute;
     top: 3px;
     right: 3px;
@@ -19217,7 +19315,19 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: transparent;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions > a {
+.compare-panel table th div.inline-actions,
+.compare-panel table th div.inline-actions {
+    display: none;
+}
+
+.compare-panel table th:hover div.inline-actions,
+.compare-panel table th div.inline-actions.open {
+    display: flex;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell div.inline-actions > a,
+.compare-records .compare-panel table tr td.cell div.inline-actions > a,
+.compare-panel table th div.inline-actions > a {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px;
     padding: 1px 3px;
@@ -19244,17 +19354,23 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     background-color: var(--field-inline-edit-color);
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] {
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit],
+.compare-records .compare-panel table tr td.cell[data-mode=edit] {
     padding: 5px;
-    border-color: #06c;
     background-color: #fff;
+}
+
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit],
+.compare-records:not([data-mode=merge]) .compare-panel table tr td.cell[data-mode=edit] {
+    border-color: #06c;
 }
 
 .list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit]:first-child {
     padding-left: 15px !important;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
+.list-container > .list[data-editable=true] > table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input),
+.compare-records .compare-panel table tr td.cell[data-mode=edit] :where(textarea, .input-group:not(.unit-group), input:not([type=radio]):not([type=checkbox]), .selectize-input) {
     border-bottom: 0;
 }
 
@@ -19285,21 +19401,12 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     margin-bottom: 15px;
 }
 
-.compare-entities .bottom .panel-heading {
-    border-top: 0;
-    border-bottom: 3px solid var(--primary-border-color);
-}
-
-.compare-entities .bottom .panel-heading .panel-title {
-    font-weight: 500;
-}
-
 .record .compare-entities .bottom .middle {
     margin-bottom: 0;
 }
 
 .compare-entities .bottom .records > .row {
-    margin: 0 -8px;
+    margin: 0;
     padding-top: 20px;
 }
 
@@ -19308,7 +19415,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 }
 
 .compare-entities .bottom .records > .row.not-first {
-    border-top: 2px solid var(--primary-border-color);
+    border-top: 2px dotted var(--primary-border-color);
 }
 
 .compare-entities .list-row .record-content > div.detail {
@@ -19326,21 +19433,26 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
 .compare-entities .bottom-layout-bottoms {
     position: absolute;
     bottom: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.55);
 }
 
 .compare-entities .bottom-layout-bottoms .layout-editor-container .btn-link {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    color: #888;
-    font-size: 18px;
+    color: #666;
+    font-size: 16px;
     background-color: transparent;
+}
+
+.compare-entities .bottom-layout-bottoms .layout-editor-container i {
+    font-size: 16px;
 }
 
 body > .error-container {
@@ -19401,4 +19513,22 @@ body > .error-container .error-links {
 body > .error-container .error-links a {
     font-size: 12px;
     color: #888;
+}
+
+.header-buttons .selection-view-switcher + .selection-view-switcher {
+    margin-left: -11px;
+}
+
+.header-buttons .selection-view-switcher:not(:last-of-type):not(:first-of-type) {
+    border-radius: 0;
+}
+
+.header-buttons .selection-view-switcher:first-of-type {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.header-buttons .selection-view-switcher:last-of-type {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
