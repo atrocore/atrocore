@@ -557,11 +557,11 @@
     "Contact Us": "Contactez nous",
     "pageNotFoundDescription": "La ressource que vous recherchez a peut-être été déplacée, supprimée ou n'existe pas.",
     "errorCode": "Code d'erreur",
-    "replaceItem": "Remplacer l'élément",
+    "replaceItem": "Remplacer",
     "Open Dashboard": "Ouvrir le tableau de bord",
     "pageNotFound": "Page non trouvée",
     "accessDeniedDescription": "Votre compte ne dispose pas des autorisations nécessaires pour consulter cette ressource. Si vous pensez que vous devriez y avoir accès, veuillez contacter votre administrateur.",
-    "removeItem": "Supprimer l'élément",
+    "removeItem": "Supprimer",
     "accessDenied": "Accès refusé",
     "isLinked": "Est lié"
   },
