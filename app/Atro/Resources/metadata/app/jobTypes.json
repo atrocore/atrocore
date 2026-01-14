@@ -95,6 +95,10 @@
     "unique": true,
     "handler": "\\Atro\\Jobs\\CreateClusters"
   },
+  "CreateClustersForMasterEntity": {
+    "scheduledJob": false,
+    "handler": "\\Atro\\Jobs\\CreateClustersForMasterEntity"
+  },
   "CalculateScriptFieldsForEntities": {
     "scheduledJob": true,
     "unique": true,

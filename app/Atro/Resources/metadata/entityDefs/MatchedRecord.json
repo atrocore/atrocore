@@ -54,8 +54,13 @@
       "type": "link",
       "protected": true
     },
-    "clusterItem": {
+    "cluster": {
       "type": "link",
+      "protected": true
+    },
+    "clusterItems": {
+      "type": "linkMultiple",
+      "noLoad": true,
       "protected": true
     },
     "createdAt": {
@@ -83,9 +88,14 @@
       "foreign": "matchedRecords",
       "entity": "Matching"
     },
-    "clusterItem": {
+    "cluster": {
       "type": "belongsTo",
       "foreign": "matchedRecords",
+      "entity": "Cluster"
+    },
+    "clusterItems": {
+      "type": "hasMany",
+      "foreign": "matchedRecord",
       "entity": "ClusterItem"
     },
     "createdBy": {

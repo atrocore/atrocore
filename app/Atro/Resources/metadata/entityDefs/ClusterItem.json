@@ -31,9 +31,8 @@
     "cluster": {
       "type": "link"
     },
-    "matchedRecords": {
-      "type": "linkMultiple",
-      "noLoad": true,
+    "matchedRecord": {
+      "type": "link",
       "protected": true
     }
   },
@@ -43,9 +42,9 @@
       "foreign": "clusterItems",
       "entity": "Cluster"
     },
-    "matchedRecords": {
-      "type": "hasMany",
-      "foreign": "clusterItem",
+    "matchedRecord": {
+      "type": "belongsTo",
+      "foreign": "clusterItems",
       "entity": "MatchedRecord"
     }
   },

@@ -32,8 +32,23 @@ class CreateClusters extends AbstractJob implements JobInterface
             return;
         }
 
-        echo '<pre>';
-        print_r('123');
-        die();
+        $masterEntities = [];
+        foreach ($this->getEntityManager()->getRepository('Matching')->find() as $matching) {
+            $masterEntities[$this->getMetadata()->get("scopes.{$matching->get('masterEntity')}.primaryEntityId") ?? $matching->get('masterEntity')] = true;
+        }
+
+        foreach ($masterEntities as $masterEntity => $v) {
+            $jobEntity = $this->getEntityManager()->getEntity('Job');
+            $jobEntity->set([
+                'name'     => "Create Clusters for {$masterEntity}",
+                'type'     => 'CreateClustersForMasterEntity',
+                'status'   => 'Pending',
+                'priority' => 20, // @todo maybe priority has to be less then for finding matched record?
+                'payload'  => [
+                    'masterEntity' => $masterEntity
+                ]
+            ]);
+            $this->getEntityManager()->saveEntity($jobEntity);
+        }
     }
 }

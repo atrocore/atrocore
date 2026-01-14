@@ -25,6 +25,11 @@
       "type": "linkMultiple",
       "auditableEnabled": true
     },
+    "matchedRecords": {
+      "type": "linkMultiple",
+      "noLoad": true,
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -47,6 +52,11 @@
       "type": "hasMany",
       "entity": "ClusterItem",
       "foreign": "cluster"
+    },
+    "matchedRecords": {
+      "type": "hasMany",
+      "foreign": "cluster",
+      "entity": "MatchedRecord"
     },
     "createdBy": {
       "type": "belongsTo",

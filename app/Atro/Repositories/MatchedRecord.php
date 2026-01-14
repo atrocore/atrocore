@@ -17,6 +17,8 @@ use Atro\Core\Templates\Repositories\Base;
 use Atro\Core\Utils\Database\DBAL\Schema\Converter;
 use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
@@ -29,6 +31,30 @@ class MatchedRecord extends Base
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         throw new Error('MatchedRecord cannot be removed directly.');
+    }
+
+    public function getForMasterEntity(string $masterEntity, int $limit = PHP_INT_MAX): array
+    {
+        $entitiesNames = [$masterEntity];
+        foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity) {
+                $entitiesNames[] = $scope;
+            }
+        }
+
+        return $this->getConnection()->createQueryBuilder()
+            ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci.cluster_id as master_cluster_id')
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
+            ->leftJoin('mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false')
+            ->where('mr.master_entity IN (:entitiesNames) OR mr.source_entity IN (:entitiesNames)')
+            ->andWhere('mr.deleted = :false')
+            ->andWhere('mr.cluster_id IS NULL')
+            ->setFirstResult(0)
+            ->setMaxResults($limit)
+            ->setParameter('entitiesNames', $entitiesNames, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void

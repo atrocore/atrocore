@@ -50,8 +50,11 @@ class V2Dot2Dot4 extends Base
 
         $this->exec("TRUNCATE matched_record");
 
-        $this->exec("ALTER TABLE matched_record ADD cluster_item_id VARCHAR(36) DEFAULT NULL");
-        $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CLUSTER_ITEM_ID ON matched_record (cluster_item_id, deleted)");
+        $this->exec("ALTER TABLE cluster_item ADD matched_record_id VARCHAR(36) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_CLUSTER_ITEM_MATCHED_RECORD_ID ON cluster_item (matched_record_id, deleted)");
+
+        $this->exec("ALTER TABLE matched_record ADD cluster_id VARCHAR(36) DEFAULT NULL");
+        $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CLUSTER_ID ON matched_record (cluster_id, deleted)");
     }
 
     protected function exec(string $sql): void
