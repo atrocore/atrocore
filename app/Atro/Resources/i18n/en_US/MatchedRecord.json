@@ -8,7 +8,7 @@
     "masterEntityId": "Master Entity ID",
     "score": "Score",
     "hash": "Unique Hash",
-    "cluster": "Cluster",
+    "hasCluster": "Has Cluster",
     "clusterItems": "Cluster Items"
   },
   "options": {

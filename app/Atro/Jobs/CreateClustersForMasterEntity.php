@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Atro\Jobs;
 
 use Atro\Entities\Job;
+use Atro\Repositories\ClusterItem;
 use Atro\Repositories\MatchedRecord;
 use Espo\ORM\Entity;
 
@@ -27,9 +28,14 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
             return;
         }
 
-        while (!empty($items = $this->getMatchedRecordRepository()->getForMasterEntity($masterEntity, 5))) {
-            $clustersIds = [];
+        /** @var MatchedRecord $matchedRecordRepo */
+        $matchedRecordRepo = $this->getEntityManager()->getRepository('MatchedRecord');
 
+        /** @var ClusterItem $clusterItemRepo */
+        $clusterItemRepo = $this->getEntityManager()->getRepository('ClusterItem');
+
+        while (!empty($items = $matchedRecordRepo->getForMasterEntity($masterEntity, 20000))) {
+            $clustersIds = [];
             foreach ($items as $item) {
                 if (!empty($item['source_cluster_id'])) {
                     $clustersIds[$item['source_entity']][$item['source_entity_id']] = $item['source_cluster_id'];
@@ -41,50 +47,42 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 $sourceClusterId = $clustersIds[$item['source_entity']][$item['source_entity_id']] ?? null;
                 $masterClusterId = $clustersIds[$item['master_entity']][$item['master_entity_id']] ?? null;
 
-                if (!empty($sourceClusterId) && !empty($masterClusterId)) {
-                    // move cluster items to one cluster
-                    echo '<pre>';
-                    print_r('123');
-                    die();
+                $clusterId = $masterClusterId ?? $sourceClusterId ?? $this->createCluster($masterEntity)->id;
+
+                $matchedRecordRepo->markHasCluster($item['id']);
+
+                if (!empty($sourceClusterId) && !empty($masterClusterId) && $sourceClusterId !== $masterClusterId) {
+                    $clusterItemRepo->moveToCluster($sourceClusterId, $masterClusterId);
+                    // @todo remove source cluster ?
+                    continue;
                 }
 
-                $clusterId = $masterClusterId ?? $sourceClusterId ?? $this->createCluster($masterEntity)->id;
+                if (empty($sourceClusterId)) {
+                    $clustersIds[$item['source_entity']][$item['source_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id']);
+                }
+
+                if (empty($masterClusterId)) {
+                    $clustersIds[$item['master_entity']][$item['master_entity_id']] = $clusterId;
+                    $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id']);
+                }
             }
         }
 
         echo '<pre>';
         print_r('123');
         die();
+    }
 
-        // $m1 -> $m2;                                                  // $m1, $m2, $s1, $s2, $s3
+    protected function createClusterItem(string $clusterId, string $entityName, string $entityId, string $matchedRecordId): void
+    {
+        $clusterItem = $this->getEntityManager()->getRepository('ClusterItem')->get();
+        $clusterItem->set('clusterId', $clusterId);
+        $clusterItem->set('entityName', $entityName);
+        $clusterItem->set('entityId', $entityId);
+        $clusterItem->set('matchedRecordId', $matchedRecordId);
 
-        // $s1 -> $m1
-
-        // $s3 -> $s2
-
-        // $s2 -> $s1
-
-        // $s2 -> $m1
-
-
-        // 1. $m1, $m2       | CLUSTER_ID: 10
-        // 2. $m1, $m2, $s1  | CLUSTER_ID: 10
-
-        // 3. $s3, $s2       | CLUSTER_ID: 22
-
-        // 4. $m1, $m2, $s1, $s2, $s3 | CLUSTER_ID: 10 (CLUSTER_ID: 22 -> removed)
-
-
-//        while (true) {
-////            $matchedRecords = $this->getEntityManager()->getRepository('MatchedRecord')
-////                ->where(['clusterItemId' => null])
-////                ->limit(0, 5000)
-////                ->find();
-//
-//
-//        }
-
-
+        $this->getEntityManager()->saveEntity($clusterItem);
     }
 
     protected function createCluster(string $masterEntity): Entity
@@ -95,10 +93,5 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
         $this->getEntityManager()->saveEntity($cluster);
 
         return $cluster;
-    }
-
-    protected function getMatchedRecordRepository(): MatchedRecord
-    {
-        return $this->getEntityManager()->getRepository('MatchedRecord');
     }
 }

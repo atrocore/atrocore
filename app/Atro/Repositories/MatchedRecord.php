@@ -33,6 +33,17 @@ class MatchedRecord extends Base
         throw new Error('MatchedRecord cannot be removed directly.');
     }
 
+    public function markHasCluster(string $id): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('has_cluster', ':true')
+            ->where('id=:id')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery();
+    }
+
     public function getForMasterEntity(string $masterEntity, int $limit = PHP_INT_MAX): array
     {
         $entitiesNames = [$masterEntity];
@@ -49,7 +60,7 @@ class MatchedRecord extends Base
             ->leftJoin('mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false')
             ->where('mr.master_entity IN (:entitiesNames) OR mr.source_entity IN (:entitiesNames)')
             ->andWhere('mr.deleted = :false')
-            ->andWhere('mr.cluster_id IS NULL')
+            ->andWhere('mr.has_cluster = :false')
             ->setFirstResult(0)
             ->setMaxResults($limit)
             ->setParameter('entitiesNames', $entitiesNames, Connection::PARAM_STR_ARRAY)

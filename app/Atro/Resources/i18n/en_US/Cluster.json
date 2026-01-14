@@ -2,7 +2,6 @@
   "fields": {
     "number": "Number",
     "masterEntity": "Master Entity",
-    "clusterItems": "Cluster Items",
-    "matchedRecords": "Matched Records"
+    "clusterItems": "Cluster Items"
   }
 }

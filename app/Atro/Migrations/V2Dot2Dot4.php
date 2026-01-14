@@ -53,8 +53,12 @@ class V2Dot2Dot4 extends Base
         $this->exec("ALTER TABLE cluster_item ADD matched_record_id VARCHAR(36) DEFAULT NULL");
         $this->exec("CREATE INDEX IDX_CLUSTER_ITEM_MATCHED_RECORD_ID ON cluster_item (matched_record_id, deleted)");
 
-        $this->exec("ALTER TABLE matched_record ADD cluster_id VARCHAR(36) DEFAULT NULL");
-        $this->exec("CREATE INDEX IDX_MATCHED_RECORD_CLUSTER_ID ON matched_record (cluster_id, deleted)");
+        if ($this->isPgSQL()) {
+            $this->exec("ALTER TABLE matched_record ADD has_cluster BOOLEAN DEFAULT 'false' NOT NULL");
+        } else {
+            $this->exec("ALTER TABLE matched_record ADD has_cluster TINYINT(1) DEFAULT '0' NOT NULL");
+        }
+        $this->exec("CREATE INDEX IDX_MATCHED_RECORD_HAS_CLUSTER ON matched_record (has_cluster)");
     }
 
     protected function exec(string $sql): void

@@ -54,8 +54,8 @@
       "type": "link",
       "protected": true
     },
-    "cluster": {
-      "type": "link",
+    "hasCluster": {
+      "type": "bool",
       "protected": true
     },
     "clusterItems": {
@@ -88,11 +88,6 @@
       "foreign": "matchedRecords",
       "entity": "Matching"
     },
-    "cluster": {
-      "type": "belongsTo",
-      "foreign": "matchedRecords",
-      "entity": "Cluster"
-    },
     "clusterItems": {
       "type": "hasMany",
       "foreign": "matchedRecord",
@@ -124,6 +119,11 @@
         "type",
         "masterEntity",
         "masterEntityId"
+      ]
+    },
+    "hasCluster": {
+      "columns": [
+        "hasCluster"
       ]
     }
   }
