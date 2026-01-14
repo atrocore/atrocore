@@ -10,7 +10,7 @@
 
 export default interface ActionParams {
     id?: string;
-    name?: string;
+    name: string;
     action: string;
     data?: Record<string, any>;
     display?: string;
@@ -24,4 +24,5 @@ export default interface ActionParams {
     hidden?: boolean;
     disabled?: boolean;
     active?: boolean;
+    className?: string;
 }

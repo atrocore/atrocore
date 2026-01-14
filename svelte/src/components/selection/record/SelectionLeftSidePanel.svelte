@@ -22,7 +22,6 @@
 
     $: selectedIdSet = new Set(selectedIds);
 
-    // 2. Create a reactive object that maps entityType -> boolean
     $: hasSelectedByType = calculateSelectedStatus(records, selectedIdSet);
 
     function calculateSelectedStatus(recs: Record<any, any>[], ids: Set<string>) {
@@ -42,7 +41,7 @@
         selectedIds = ids;
     }
 
-    export  function setSelectionViewMode(value: string[]) {
+    export function setSelectionViewMode(value: string) {
         selectionViewMode = value;
     }
 
@@ -80,7 +79,7 @@
             <div class="title">
                 <span class="title">{entityType}</span>
                 {#if selectionViewMode !== 'standard'}
-                    <button class="small filter-button"  on:click={() => handledSelectAllButton(entityType)}>{ hasSelectedByType[entityType] ? Language.translate('hideAll') : Language.translate('selectAll')}</button>
+                    <button class="small filter-button" on:click={() => handledSelectAllButton(entityType)}>{ hasSelectedByType[entityType] ? Language.translate('hideAll') : Language.translate('selectAll')}</button>
                 {/if}
             </div>
 
@@ -88,7 +87,7 @@
                 {#each data[entityType] as record }
                     <li title="{record.name}">
                         <a href="#{record.entityType}/view/{record.id}" target="_blank" on:click={(e) => { onItemClicked(e, record.id) }}
-                           class:active="{selectionViewMode !== 'standard' && selectedIds.includes(record.id)}">{record.name}</a>
+                           class:active="{selectionViewMode !== 'standard' && selectedIds.includes(record.id)}"><i class="ph" class:ph-eye={selectedIds.includes(record.id)} class:ph-eye-slash={!selectedIds.includes(record.id)}></i>{record.name}</a>
                     </li>
                 {/each}
             </ul>
@@ -126,8 +125,12 @@
         display: inline-block;
         max-width: 100%;
         text-decoration: none;
-        color: var(--primary-font-color);
+        color: #777;
         line-height: normal;
+    }
+
+    div ul li a > i {
+        margin-inline-end: .5em;
     }
 
     div ul li a:hover, div ul li a:focus {
@@ -135,6 +138,6 @@
     }
 
     div ul li a.active {
-        color: var(--link-color);
+        color: var(--primary-font-color);
     }
 </style>

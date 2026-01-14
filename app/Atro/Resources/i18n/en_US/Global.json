@@ -527,8 +527,8 @@
     "hideAll": "Hide all",
     "Relations": "Relations",
     "Saved Filters": "Saved Filters",
-    "replaceItem": "Replace Item",
-    "removeItem": "Remove Item",
+    "replaceItem": "Replace",
+    "removeItem": "Remove",
     "isLinked": "Is Linked"
   },
   "insightsPanels": {

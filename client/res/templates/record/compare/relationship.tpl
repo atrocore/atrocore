@@ -1,52 +1,29 @@
-<div class="list custom-compare-relationship">
-    <table class="table full-table table-striped  table-fixed table-scrolled table-bordered {{#if showBorders}} bottom-border-black {{/if}}">
-        <colgroup>
-            {{#each columns}}
-            {{#if isFirst }}
-            <col style="width: 250px;">
-            {{else}}
-            <col class="col-min-width">
-            {{/if}}
-            {{/each}}
-        </colgroup>
-        <thead>
-            <tr>
-            {{#each columns}}
-            <th colspan="{{itemColumnCount}}" class="text-center {{#unless isFirst}} inline-actions {{/unless}}">
-                {{{name}}}
-                {{#if _error}}
-                <br>
-                <span class="danger"> ({{_error}})</span>
-                {{/if}}
-            </th>
-            {{/each}}
-        </tr>
-        </thead>
-        <tbody>
-        {{#if hasToManyRecords }}
-           <tr><td colspan="{{columnLength}}"> {{hasManyRecordsMessage}}</td></tr>
-        {{else}}
-        {{#unless tableRows }}
-        <tr> <td  colspan="{{columnLength}}"> No Data</td></tr>
-        {{/unless}}
-        {{#each tableRows}}
-        <tr class="list-row  {{#unless @first}}{{class}} {{/unless}}" >
-            <td class="cell l-200" data-field="name" title="{{title}}">
-                {{{label }}}
-            </td>
-            {{#each entityValueKeys}}
-            <td class="cell text-center" style="min-width: {{../../minWidth}}px">
-                <div class="field" data-field="{{key}}" >
-                    {{#if key}}
-                    {{{var key ../../this }}}
-                    {{/if}}
-                </div>
-            </td>
-            {{/each}}
-        </tr>
-        {{/each}}
+<tr class="panel-title"><td colspan="{{mergingColumnLength}}"><span class="panel-title-text">{{translate name category='fields' scope=scope}}</span></td></tr>
+{{#if hasToManyRecords }}
+   <tr><td colspan="{{mergingColumnLength}}"> {{hasManyRecordsMessage}}</td></tr>
+{{else}}
+{{#unless tableRows }}
+<tr><td colspan="{{mergingColumnLength}}">No Data</td></tr>
+{{/unless}}
+{{#each tableRows}}
+<tr class="list-row {{#unless @first}}{{class}}{{/unless}}">
+    <td class="cell l-200" data-field="name">
+        <div class="field-name" title="{{title}}">
+            {{{label}}}{{#if isRequired}}<sup><i class="ph ph-asterisk"></i></sup>{{/if}}
+        </div>
+    </td>
+    {{#each entityValueKeys}}
+        {{#if ../../merging}}
+            <td></td>
         {{/if}}
-        </tbody>
-    </table>
-    <div class="panel-scroll hidden" style="display: block;"><div></div></div>
-</div>
+    <td class="cell text-center">
+        <div class="field" data-field="{{key}}" >
+            {{#if key}}
+            {{{var key ../../this }}}
+            {{/if}}
+        </div>
+    </td>
+    {{/each}}
+</tr>
+{{/each}}
+{{/if}}

@@ -106,7 +106,7 @@ for (let [id, data] of Object.entries(Metadata.get(['app', 'adminPanel']) || {})
 
 <style>
     .admin-page {
-        padding-bottom: 20px;
+        padding: 0 20px 20px;
     }
 
     .admin-page .page-header {
