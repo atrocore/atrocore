@@ -430,7 +430,7 @@
     "addGroup": "Začátek / konec skupiny",
     "Summary": "Souhrn",
     "Activities": "Aktivity",
-    "enableAutomaticClosing": "Povolit automatické otevírání a zavírání tohoto panelu při najetí myší.",
+    "enableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
     "disableAutomaticClosing": "Zakázat automatické otevírání a zavírání tohoto panelu při přejetí myší.",
     "actionFollow": "Klikněte pro sledování",
     "actionUnfollow": "Sledujete, Kliknutím zrušíte sledování",
@@ -515,7 +515,7 @@
     "hideAll": "Skrýt vše",
     "Relations": "Vztahy",
     "view": "Zobrazit",
-    "Saved Filters": "Uložené filtry",
+    "Saved Filters": "Uložený filtr",
     "Support": "Podpora",
     "Contact Us": "Kontaktujte nás",
     "Open Dashboard": "Otevřít přístrojový panel",
@@ -1269,7 +1269,7 @@
     "delete_group": "Odstranit"
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sám sebe",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "twig": {
