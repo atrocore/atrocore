@@ -60,7 +60,7 @@ abstract class AbstractAction implements TypeInterface
             if (!empty($input->uiRecord)) {
                 $sourceEntity = $this->getEntityManager()->getRepository($action->get('sourceEntity'))->get();
                 $sourceEntity->set($input->uiRecord);
-            }else{
+            } else {
                 $sourceEntity = $this->getSourceEntity($action, $input);
             }
             if (empty($sourceEntity)) {
@@ -137,6 +137,10 @@ abstract class AbstractAction implements TypeInterface
             }
             $this->getEntityManager()->saveEntity($execution);
 
+            if (!empty($e) && empty($res)) {
+                throw $e;
+            }
+
             return $res;
         }
 
@@ -159,9 +163,9 @@ abstract class AbstractAction implements TypeInterface
         return $sourceEntity;
     }
 
-    protected  function getWhere(Entity $action): ?array
+    protected function getWhere(Entity $action): ?array
     {
-         return !empty($action->get('data')->where) ? $action->get('data')->where : null;
+        return !empty($action->get('data')->where) ? $action->get('data')->where : null;
     }
 
     public function getServiceFactory(): ServiceFactory
