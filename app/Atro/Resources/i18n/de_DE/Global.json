@@ -527,8 +527,8 @@
     "hideAll": "Alles ausblenden",
     "Relations": "Beziehungen",
     "Saved Filters": "Gespeicherte Filter",
-    "replaceItem": "Element austauschen",
-    "removeItem": "Element entfernen",
+    "replaceItem": "Ersetzen",
+    "removeItem": "Entfernen",
     "isLinked": "Ist verknüpft"
   },
   "insightsPanels": {
