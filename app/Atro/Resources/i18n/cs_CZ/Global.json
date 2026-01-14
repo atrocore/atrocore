@@ -525,7 +525,7 @@
     "accessDeniedDescription": "Váš účet nemá potřebná oprávnění k zobrazení tohoto zdroje. Pokud se domníváte, že byste měli mít přístup, obraťte se na svého správce.",
     "accessDenied": "Přístup odepřen",
     "replaceItem": "Vyměňte stránky",
-    "removeItem": "Odebrat položku",
+    "removeItem": "Smazat",
     "isLinked": "Je propojen"
   },
   "fields": {
@@ -836,7 +836,7 @@
     "updateFromToThis": "{user} v tomto {entityType} aktualizováno",
     "changed": "byl změněn",
     "ownThis": "{user} nastaví {owner} jako vlastníka pro tento {entityType}",
-    "ownYou": "{uživatel} vás nastavil jako vlastníka pro {entityType} {entity}",
+    "ownYou": "{user} nastavil(a) {owner} jako vlastníka pro {entityType} {entity}",
     "ownThisVoid": "{user} zruší nastavení vlastníka pro tento {entityType}.",
     "ownVoid": "{user} zruší nastavení vlastníka pro {entityType} {entity}.",
     "ownThisSelf": "{user} se nastavil jako vlastník pro tento {entityType}.",
@@ -846,7 +846,7 @@
     "statusThis": "{uživatel} aktualizoval {pole}",
     "createRelated": "{uživatel} vytvořil {relatedEntityType} {relatedEntity} související s {entityType} {entita}",
     "relate": "{user} propojený s {relatedEntityType} {relatedEntity} s {entityType} {entity}",
-    "relateThis": "{user} propojený s {relatedEntityType} {relatedEntity} s tímto {entityType}",
+    "relateThis": "{user} odpojeno {relatedEntityType} {relatedEntity} z tohoto {entityType}.",
     "emailReceivedInitialThis": "Přijatý e-mail, tento {entityType} vytvořen",
     "emailReceivedFrom": "E-mail přijatý od {od}, týkající se {entityType} {entita}",
     "updateOneInThis": "{user} aktualizoval {relatedEntityType} {relatedEntity} v tomto {entityType}.",
@@ -1308,7 +1308,7 @@
     }
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{uživatel} poslal na {cíl} a sama",
+    "postTargetSelfAndOthers": "{user} odoslal(a) príspevok do {target} a zároveň sebe",
     "composerUpdateThis": "{uživatel}"
   },
   "listViewModes": {
