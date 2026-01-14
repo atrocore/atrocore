@@ -44,6 +44,17 @@ class MatchedRecord extends Base
             ->executeQuery();
     }
 
+    public function markHasNoCluster(string $id): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('has_cluster', ':false')
+            ->where('id=:id')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery();
+    }
+
     public function getForMasterEntity(string $masterEntity, int $limit = PHP_INT_MAX): array
     {
         $entitiesNames = [$masterEntity];

@@ -13,6 +13,7 @@
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Espo\ORM\Entity;
 
 class ClusterItem extends Base
 {
@@ -25,5 +26,14 @@ class ClusterItem extends Base
             ->setParameter('clusterIdFrom', $clusterIdFrom)
             ->setParameter('clusterIdTo', $clusterIdTo)
             ->executeQuery();
+    }
+
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
+
+        if (!empty($entity->get('matchedRecordId'))) {
+            $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
+        }
     }
 }
