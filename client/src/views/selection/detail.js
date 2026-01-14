@@ -139,7 +139,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         isActiveMerge() {
-            return !this.model.get('type') || this.model.get('type') === 'single';
+            return this.availableModes.includes('merge') && (!this.model.get('type') || this.model.get('type') === 'single');
         },
 
         setupCustomButtons() {
