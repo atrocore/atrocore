@@ -68,10 +68,6 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 }
             }
         }
-
-        echo '<pre>';
-        print_r('123');
-        die();
     }
 
     protected function createClusterItem(string $clusterId, string $entityName, string $entityId, string $matchedRecordId): void
