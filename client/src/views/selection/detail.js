@@ -63,7 +63,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     }
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
-                    this.wait(false)
                 });
             } else {
                 Dep.prototype.setup.call(this);
@@ -461,13 +460,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
 
             if (this.comparisonAcrossEntities() && this.selectionViewMode !== 'standard') {
+                this.wait(true);
                 this.loadLayoutData(() => {
                     o.layoutData = this.layoutData;
                     createView();
-                })
+                    this.wait(false)
+                });
+                return;
             } else {
                 createView();
             }
+
+            this.wait(false);
         },
 
         enableButtons() {
