@@ -73,7 +73,8 @@ Espo.define('model-factory', [], function () {
                     name: name,
                     defs: this.metadata.get('entityDefs.' + name) || {},
                     dateTime: this.dateTime,
-                    _user: this.user
+                    _user: this.user,
+                    nameField: this.metadata.get('scopes.' + name + '.nameField') || 'name'
                 });
                 callback(this.seeds[name]);
             }.bind(this));

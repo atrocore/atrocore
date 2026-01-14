@@ -179,7 +179,7 @@ Espo.define('model', [], function () {
             var setRelate = function (options) {
                 var link = options.link;
                 var model = options.model;
-                const nameValueCallback = options.nameValueCallback || ((model) => model.getTitle())
+                const nameValueCallback = options.nameValueCallback || ((model) => model.get(model.nameField))
 
                 if (!link || !model) {
                     throw new Error('Bad related options');
@@ -319,18 +319,7 @@ Espo.define('model', [], function () {
                 })
 
             return this.lastDynamicActionXhr
-        },
-
-        getTitle() {
-            if (this.hasField('name')) {
-                return this.get('name')
-            } else if (this.hasField('code')) {
-                return this.get('code')
-            }
-
-            return ''
         }
-
     });
 
     return Model;

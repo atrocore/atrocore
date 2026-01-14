@@ -815,15 +815,16 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
                 return this.model.get('nameLabel')
             }
 
-            if (this.getMetadata().get(`entityDefs.${this.scope}.fields.name.isMultilang`) === true) {
-                const [field, userLocaleCode] = this.getLocalizedFieldData(this.scope, 'name')
+            const name = this.model.nameField
+            if (this.getMetadata().get(`entityDefs.${this.scope}.fields.${name}.isMultilang`) === true) {
+                const [field, userLocaleCode] = this.getLocalizedFieldData(this.scope, name)
 
                 if (userLocaleCode) {
                     return this.model.get(field) || this.translate('None', 'labels', 'Global')
                 }
             }
 
-            return this.model.getTitle() || this.model.id
+            return this.model.get(name) || this.model.id
         },
 
         isHierarchical() {
@@ -831,7 +832,7 @@ Espo.define('views/detail', ['views/main', 'lib!JsTree'], function (Dep) {
         },
 
         updatePageTitle: function () {
-            this.setPageTitle(this.model.getTitle() ?? this.model.id);
+            this.setPageTitle(this.getModelTitle(this.model) ?? this.model.id);
         },
 
         updateRelationshipPanel: function (name) {

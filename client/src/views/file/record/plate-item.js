@@ -32,7 +32,7 @@ Espo.define('views/file/record/plate-item', 'view',
                 thumbnailPath: this.model.get('mediumThumbnailUrl'),
                 hasIcon: !(this.getMetadata().get('app.file.image.hasPreviewExtensions') || []).includes(this.model.get('extension')),
                 extension: this.model.get('extension'),
-                name: this.model.getTitle(),
+                name: this.getModelTitle(this.model),
                 type: this.model.get('typeName'),
                 scope: this.model.name,
             };

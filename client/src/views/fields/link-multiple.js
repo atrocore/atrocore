@@ -84,10 +84,14 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
             },
         }, Dep.prototype.events),
 
+        getForeignName() {
+            return this.getMetadata().get(['entityDefs', this.model.name, 'links', this.name, 'foreignName']) ?? this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'foreignName']) ?? 'name'
+        },
+
         actionLoadData() {
             this.notify('Please wait...');
 
-            let foreignName = this.getMetadata().get(['entityDefs', this.scope, 'links', this.name, 'foreignName']) ?? 'name'
+            let foreignName = this.getForeignName()
 
             this.ajaxGetRequest(`${this.model.name}/${this.model.get('id')}/${this.name}`, {
                 select: `id, ${foreignName}`
@@ -211,7 +215,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 this.ids = Espo.Utils.clone(this.searchParams.value) || [];
             }
             this.nameHash._localeId = this.getUser().get('localeId')
-            this.model.set(this.nameHashName, this.nameHash, {silent: true});
+            this.model.set(this.nameHashName, this.nameHash, { silent: true });
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
@@ -273,7 +277,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                         }
                         models.forEach(function (model) {
                             if (typeof model.get !== "undefined") {
-                                let foreignName = self.getMetadata().get(['entityDefs', self.model.urlRoot, 'fields', self.name, 'foreignName']) ?? 'name';
+                                let foreignName = self.getForeignName();
                                 selected[model.id] = self.getLocalizedFieldValue(model, foreignName);
                             } else if (model.name) {
                                 selected[model.id] = model.name;
@@ -327,7 +331,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
 
                     this.listenToOnce(view, 'after:save', function (model) {
                         this.clearView('quickCreate');
-                        this.addLink(model.id, model.getTitle());
+                        this.addLink(model.id, this.getModelTitle(model));
                     }.bind(this));
                 });
             });
@@ -391,7 +395,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
         },
 
         getAutocompleteUrl: function (q) {
-            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
+            const [name] = this.getLocalizedFieldData(this.foreignScope, this.getNameField(this.foreignScope))
             var url = this.foreignScope + '?collectionOnly=true&asc=true&sortBy=' + name + '&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 boolList = this.getSelectBoolFilterList();
             where = [];
@@ -504,9 +508,10 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                                 }
 
                                 const list = [];
-                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name')
+                                const name = this.getNameField(this.foreignScope)
+                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name)
                                 res.list.forEach(function (item) {
-                                    const value = item[localizedName] || item.name;
+                                    const value = item[localizedName] || item[name];
                                     list.push({
                                         id: item.id,
                                         name: value ?? '',
@@ -536,9 +541,9 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                 }
             }
 
-            if(!this.model.has(this.idsName)) {
+            if (!this.model.has(this.idsName)) {
                 this.getCellElement().attr('data-no-load', true);
-            }else{
+            } else {
                 this.getCellElement().removeAttr('data-no-load')
             }
         },
@@ -911,7 +916,7 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                             }, { async: false })
 
                             nameHash = { '_localeId': this.getUser().get('localeId') }
-                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']) ?? 'name';
+                            const foreignName = this.getForeignName();
                             const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
                             resp.responseJSON.list.forEach(record => {
                                 nameHash[record.id] = record[localizedForeignName] || record[foreignName]
@@ -961,8 +966,8 @@ Espo.define('views/fields/link-multiple', ['views/fields/base', 'views/fields/co
                     'is_null',
                     'is_not_null'
                 ];
-            }else{
-                if(this.getForeignScope() === 'User') {
+            } else {
+                if (this.getForeignScope() === 'User') {
                     operators = operators.concat(['is_team_member', 'include_me', 'exclude_me'])
                 }
                 operators = operators.concat(['is_not_linked', 'is_linked']);

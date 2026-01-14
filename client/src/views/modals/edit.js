@@ -98,7 +98,7 @@ Espo.define('views/modals/edit', 'views/modals/detail', function (Dep) {
                     this.model = model;
                     model.relationModel = relationModel
                     if (this.options.relate) {
-                        this.options.relate.nameValueCallback = (model) => this.getLocalizedFieldValue(model, 'name')
+                        this.options.relate.nameValueCallback = (model) => this.getLocalizedFieldValue(model, model.nameField)
                         model.setRelate(this.options.relate);
                         model._relateData = this.options.relate;
                     }

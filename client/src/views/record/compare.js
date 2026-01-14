@@ -686,14 +686,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.getModels().forEach((model) => {
-                let hasNameOrCode = model.hasField('name') || model.hasField('code')
-                const name = hasNameOrCode ? (model.getTitle() ?? 'None') : model.get('id')
+                let hasName = model.hasField(model.nameField)
+                const name = hasName ? (this.getModelTitle(model) ?? 'None') : model.get('id')
 
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    label: model.getTitle() ?? model.get('id'),
+                    label: this.getModelTitle(model) ?? model.get('id'),
                     name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });
             });

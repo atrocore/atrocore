@@ -256,7 +256,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            let foreignName = this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            let foreignName = this.model.getLinkParam(this.name, 'foreignName') || this.model.getFieldParam(this.name, 'foreignName') || 'name';
             const nameValue = this.getLocalizedFieldValue(model, foreignName);
 
             this.$elementName.attr('value', nameValue);
@@ -264,7 +264,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
             this.$elementId.val(model.get('id'));
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
-                this.searchData.nameValue = model.getTitle();
+                this.searchData.nameValue = this.getModelTitle(model);
             }
             this.trigger('change');
         },
@@ -333,7 +333,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function (q) {
-            const [name] = this.getLocalizedFieldData(this.foreignScope, 'name')
+            const [name] = this.getLocalizedFieldData(this.foreignScope, this.getNameField(this.foreignScope))
             let url = this.foreignScope + '?collectionOnly=true&sortBy=' + name + '&maxSize=' + this.AUTOCOMPLETE_RESULT_MAX_COUNT,
                 where = [];
 
@@ -432,10 +432,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
-                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                            const name = this.getNameField(this.foreignScope)
+                            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name);
 
                             response.list.forEach(function (item) {
-                                const value = item[localizedName] || item['name'] || item['code'];
+                                const value = item[localizedName] || item[name];
                                 list.push({
                                     id: item.id,
                                     name: value || '',
@@ -479,10 +480,11 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
-                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
+                                const name = this.getNameField(this.foreignScope)
+                                const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name);
 
                                 response.list.forEach(function (item) {
-                                    const value = item[localizedName] || item['name'];
+                                    const value = item[localizedName] || item[name];
                                     list.push({
                                         id: item.id,
                                         name: value ?? '',
@@ -540,8 +542,8 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             collection.fetch({ data: $.param({ silent: true, where: whereCondition }) }).then(res => {
                                 for (const idItem of this.searchData.oneOfIdList) {
                                     const model = collection.get(idItem);
-                                    if (model && (model.hasField('name') || model.hasField('code'))) {
-                                        this.replaceNameOneOf(idItem, model.getTitle())
+                                    if (model && this.getModelTitle(model)) {
+                                        this.replaceNameOneOf(idItem, this.getModelTitle(model))
                                     }
                                 }
                             });
@@ -887,7 +889,7 @@ Espo.define('views/fields/link', 'views/fields/base', function (Dep) {
                             }, { async: false })
 
                             nameHash = { '_localeId': this.getUser().get('localeId') }
-                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'fields', this.name, 'foreignName']) ?? 'name';
+                            const foreignName = this.getMetadata().get(['entityDefs', this.model.urlRoot, 'links', this.name, 'foreignName']) ?? 'name';
                             const localizedForeignName = this.getLocalizedFieldData(this.foreignScope, foreignName)[0]
                             resp.responseJSON.list.forEach(record => {
                                 nameHash[record.id] = record[localizedForeignName] || record[foreignName]
