@@ -841,9 +841,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let scope = null;
             for (const model of this.getModels()) {
                 if (scope === null) {
-                    scope = this.model.name;
+                    scope = model.name;
                 }
-                if (scope !== this.model.name) {
+                if (scope !== model.name) {
                     return true;
                 }
             }

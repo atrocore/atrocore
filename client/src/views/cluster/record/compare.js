@@ -14,6 +14,10 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         itemScope: 'ClusterItem',
 
-        hasStaging: true
+        hasStaging: true,
+
+        isComparisonAcrossScopes() {
+            return false;
+        },
     })
 })

@@ -253,16 +253,31 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         let modelRelationColumnId = this.getModelRelationColumnId();
                         let relationshipRelationColumnId = this.getRelationshipRelationColumnId();
 
+                        let where = [
+                            {
+                                type: 'or',
+                                value: [
+                                    {
+                                        type: 'linkedWith',
+                                        attribute: this.relationship.foreign,
+                                        value: this.models.filter(m => m.name !== this.getStagingEntity()).map(m => m.id)
+                                    }
+                                ]
+                            }
+                        ]
+
+                        if (this.hasStaging()) {
+                            where[0].value.push({
+                                type: 'linkedWith',
+                                attribute: this.getMetadata().get(['entityDefs', this.getStagingEntity(), 'links', this.relationship.link, 'foreign']),
+                                value: this.models.filter(m => m.name === this.getStagingEntity()).map(m => m.id)
+                            })
+                        }
+
                         let data = {
                             select: selectFields.join(','),
                             attributes: attributesIds.join(','),
-                            where: [
-                                {
-                                    type: 'linkedWith',
-                                    attribute: this.relationship.foreign,
-                                    value: this.models.map(m => m.id)
-                                }
-                            ]
+                            where: where
                         };
 
                         data.totalOnly = true;
@@ -278,7 +293,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
                             data.totalOnly = false;
                             data.collectionOnly = true;
-                            Promise.all([
+                            const promises = [
                                 this.ajaxGetRequest(this.relationship.scope, data),
 
                                 this.ajaxGetRequest(this.relationName, {
@@ -287,12 +302,35 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                                         {
                                             type: 'in',
                                             attribute: modelRelationColumnId,
-                                            value: this.models.map(m => m.id)
+                                            value: this.models.filter(m => m.name !== this.getStagingEntity()).map(m => m.id)
                                         }
                                     ]
-                                })]
+                                })];
+
+                            if (this.hasStaging()) {
+                                let stagingRelation = this.getMetadata().get(['entityDefs', this.getStagingEntity(), 'links', this.relationship.link, 'relationName'])
+                                stagingRelation = stagingRelation.charAt(0).toUpperCase() + stagingRelation.slice(1);
+                                promises.push(this.ajaxGetRequest(stagingRelation, {
+                                    maxSize: 500 * this.models.length,
+                                    where: [
+                                        {
+                                            type: 'in',
+                                            attribute: this.getModelRelationColumnId(true),
+                                            value: this.models.filter(m => m.name === this.getStagingEntity()).map(m => m.id)
+                                        }
+                                    ]
+                                }));
+                            }
+
+                            Promise.all(
+                                promises
                             ).then(results => {
                                 let relationList = results[1].list;
+                                let stagingRelationList = [];
+                                if (this.hasStaging()) {
+                                    stagingRelationList = results[2].list;
+                                }
+
                                 let uniqueList = {};
                                 results[0].list.forEach(v => uniqueList[v.id] = v);
                                 this.linkedEntities = Object.values(uniqueList).map(attr => {
@@ -311,6 +349,15 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                                                 m.set(this.isLinkedColumns, true);
                                             }
                                         });
+
+                                        if(this.hasStaging()) {
+                                            stagingRelationList.forEach(relationItem => {
+                                                if (item.id === relationItem[this.getRelationshipRelationColumnId(true)] && model.id === relationItem[this.getModelRelationColumnId(true)]) {
+                                                    m.set(relationItem);
+                                                    m.set(this.isLinkedColumns, true);
+                                                }
+                                            });
+                                        }
 
                                         this.relationModels[item.id].push(m);
                                     })
@@ -409,10 +456,13 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
         updateBaseUrl() {
         },
 
-        getModelRelationColumnId() {
-            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+        getModelRelationColumnId(staging = false) {
 
-            if (this.model.defs.links[this.relationship.name].isAssociateRelation) {
+            let model = staging ? this.models.filter(m => m.name === this.getStagingEntity())[0] : this.models.filter(m => m.name !== this.getStagingEntity())[0];
+            let scope = staging ? this.getStagingEntity() : this.scope;
+            let midKeys = model.defs.links[this.relationship.name].midKeys;
+
+            if (model.defs.links[this.relationship.name].isAssociateRelation) {
                 return midKeys[0]
             }
 
@@ -420,13 +470,15 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 return midKeys[1];
             }
 
-            return this.scope.charAt(0).toLowerCase() + this.scope.slice(1) + 'Id';
+            return scope.charAt(0).toLowerCase() + scope.slice(1) + 'Id';
         },
 
-        getRelationshipRelationColumnId() {
-            let midKeys = this.model.defs.links[this.relationship.name].midKeys;
+        getRelationshipRelationColumnId(staging = false) {
+            let model = staging ? this.models.filter(m => m.name === this.getStagingEntity())[0] : this.models.filter(m => m.name !== this.getStagingEntity())[0];
 
-            if (this.model.defs.links[this.relationship.name].isAssociateRelation) {
+            let midKeys = model.defs.links[this.relationship.name].midKeys;
+
+            if (model.defs.links[this.relationship.name].isAssociateRelation) {
                 return midKeys[1]
             }
 
@@ -558,6 +610,18 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                     }
                 });
             });
+        },
+        hasStaging() {
+            return !!this.getStagingEntity();
+        },
+
+        getStagingEntity() {
+            for (const model of this.models) {
+                if (this.scope === this.getMetadata().get(['scopes', this.model.name, 'primaryEntityId'])) {
+                    return this.model.name;
+                }
+            }
+            return false;
         }
     });
 })
