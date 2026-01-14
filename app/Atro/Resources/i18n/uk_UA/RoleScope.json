@@ -7,13 +7,13 @@
     "readAction": "Читання",
     "editAction": "Редагувати",
     "deleteAction": "Видалити",
-    "streamAction": "Діяльність",
+    "streamAction": "Активність",
     "fields": "Поля",
     "accessData": "Дані доступу",
     "createAttributeValueAction": "Створити значення атрибута",
     "deleteAttributeValueAction": "Видалити значення атрибута",
     "attributes": "Атрибути",
-    "attributePanels": "Панелі атрибутів"
+    "attributePanels": "Панель атрибутів"
   },
   "labels": {
     "all": "Усі",
