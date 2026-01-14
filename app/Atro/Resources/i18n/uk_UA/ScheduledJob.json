@@ -2,7 +2,7 @@
   "fields": {
     "name": "Назва",
     "scheduling": "Планування",
-    "jobs": "Задачі"
+    "jobs": "Завдання"
   },
   "labels": {
     "executeNow": "Виконати зараз"
