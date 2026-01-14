@@ -463,7 +463,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.loadLayoutData(() => {
                     o.layoutData = this.layoutData;
                     createView();
-                    this.wait(false)
+                    this.wait(false);
                 });
             } else {
                 createView();
