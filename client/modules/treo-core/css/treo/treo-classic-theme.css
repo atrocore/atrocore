@@ -19264,7 +19264,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     border-collapse: separate;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-name=r-checkbox]):not([data-name=buttons]):not([data-readonly])  {
     position: relative;
 }
 
