@@ -20,7 +20,8 @@
       "ScanStorage": "Speicher scannen",
       "FindMatches": "Treffer finden",
       "CalculateScriptFieldsForEntities": "Skriptfelder berechnen",
-      "SendReports": "Anonyme Fehlerberichte senden"
+      "SendReports": "Anonyme Fehlerberichte senden",
+      "CreateClusters": "Cluster erstellen"
     }
   },
   "tooltips": {
