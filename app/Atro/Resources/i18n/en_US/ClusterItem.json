@@ -3,6 +3,7 @@
     "entityName": "Entity Name",
     "entityId": "Entity ID",
     "record": "Record",
-    "cluster": "Cluster"
+    "cluster": "Cluster",
+    "matchedRecord": "Matched Record"
   }
 }
