@@ -53,7 +53,6 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
 
                 if (!empty($sourceClusterId) && !empty($masterClusterId) && $sourceClusterId !== $masterClusterId) {
                     $clusterItemRepo->moveToCluster($sourceClusterId, $masterClusterId);
-                    // @todo remove source cluster ?
                     continue;
                 }
 

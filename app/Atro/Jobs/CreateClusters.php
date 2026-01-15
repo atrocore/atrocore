@@ -43,7 +43,7 @@ class CreateClusters extends AbstractJob implements JobInterface
                 'name'     => "Create Clusters for {$masterEntity}",
                 'type'     => 'CreateClustersForMasterEntity',
                 'status'   => 'Pending',
-                'priority' => 20, // @todo maybe priority has to be less then for finding matched record?
+                'priority' => 20,
                 'payload'  => [
                     'masterEntity' => $masterEntity
                 ]
