@@ -54,6 +54,15 @@
       "type": "link",
       "protected": true
     },
+    "hasCluster": {
+      "type": "bool",
+      "protected": true
+    },
+    "clusterItems": {
+      "type": "linkMultiple",
+      "noLoad": true,
+      "protected": true
+    },
     "createdAt": {
       "type": "datetime",
       "readOnly": true
@@ -78,6 +87,11 @@
       "type": "belongsTo",
       "foreign": "matchedRecords",
       "entity": "Matching"
+    },
+    "clusterItems": {
+      "type": "hasMany",
+      "foreign": "matchedRecord",
+      "entity": "ClusterItem"
     },
     "createdBy": {
       "type": "belongsTo",
@@ -105,6 +119,11 @@
         "type",
         "masterEntity",
         "masterEntityId"
+      ]
+    },
+    "hasCluster": {
+      "columns": [
+        "hasCluster"
       ]
     }
   }

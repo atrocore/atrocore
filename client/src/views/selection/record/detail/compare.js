@@ -22,6 +22,8 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         hidePanelNavigation: true,
 
+        itemScope: 'SelectionRecord',
+
         events: _.extend({
             'click div.inline-actions a.swap-entity': function (e) {
                 this.afterSwapButtonClick(e)
@@ -56,7 +58,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                         return;
                     }
                     this.notify('Loading...');
-                    this.ajaxPatchRequest(`SelectionRecord/${selectionRecordId}`, {
+                    this.ajaxPatchRequest(`${this.itemScope}/${selectionRecordId}`, {
                         entityId: model.id
                     }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
                 });

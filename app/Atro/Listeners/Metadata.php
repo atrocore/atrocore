@@ -2495,7 +2495,7 @@ class Metadata extends AbstractListener
         foreach ($data['scopes'] ?? [] as $sourceEntity => $defs) {
             if (!empty($defs['matchDuplicates'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForDuplicate($sourceEntity))] = [
-                    'type'                 => 'bool',
+                    'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,
                     "massUpdateDisabled"   => true,
@@ -2508,7 +2508,7 @@ class Metadata extends AbstractListener
 
             if (!empty($defs['matchMasterRecords'])) {
                 $data['entityDefs'][$sourceEntity]['fields'][MatchingRepository::prepareFieldName(MatchingRepository::createCodeForMasterRecord($sourceEntity))] = [
-                    'type'                 => 'bool',
+                    'type'                 => 'datetime',
                     "layoutListDisabled"   => true,
                     "layoutDetailDisabled" => true,
                     "massUpdateDisabled"   => true,

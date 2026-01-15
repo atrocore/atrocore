@@ -68,6 +68,12 @@ class Layout extends AbstractListener
                     $result[] = ['name' => '_lastViewed'];
                     $event->setArgument('result', $result);
                 }
+
+                if(in_array($scope, ['Selection', 'Cluster'])) {
+                    $result = $event->getArgument('result');
+                    $result[] = ['name' => '_items'];
+                    $event->setArgument('result', $result);
+                }
             }
         }
 

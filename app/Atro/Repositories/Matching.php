@@ -39,7 +39,7 @@ class Matching extends Base
     {
         $parts = explode('-', $code);
 
-        return 'Matching' . $parts[0] . ucfirst(strtolower($parts[1]));
+        return 'matching' . $parts[0] . ucfirst(strtolower($parts[1]));
     }
 
     public function activate(string $id): void
@@ -176,16 +176,16 @@ class Matching extends Base
         }
     }
 
-    public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId): void
+    public function markMatchingSearched(MatchingEntity $matching, string $entityName, string $entityId, string $matchedAt): void
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entityName))))
-            ->set(Util::toUnderScore(self::prepareFieldName($matching->id)), ':true')
+            ->set(Util::toUnderScore(self::prepareFieldName($matching->id)), ':matchedAt')
             ->where('id = :id')
             ->setParameter('id', $entityId)
-            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('matchedAt', $matchedAt)
             ->executeQuery();
     }
 
@@ -212,10 +212,11 @@ class Matching extends Base
         $column = Util::toUnderScore(self::prepareFieldName($matching->id));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($matching->get('entity')))))
-            ->set($column, ':false')
-            ->where("$column = :true")
-            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->set($column, ':null')
+            ->where("$column IS NOT NULL")
+            ->andWhere("deleted=:false")
             ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('null', null, ParameterType::NULL)
             ->executeQuery();
 
         // it needs for immediate start of finding matched records
@@ -229,10 +230,10 @@ class Matching extends Base
         $column = Util::toUnderScore(self::prepareFieldName($matching->id));
         $conn->createQueryBuilder()
             ->update($conn->quoteIdentifier(Util::toUnderScore(lcfirst($entity->getEntityName()))))
-            ->set($column, ':false')
+            ->set($column, ':null')
             ->where('id = :id')
             ->setParameter('id', $entity->id)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('null', null, ParameterType::NULL)
             ->executeQuery();
 
         $jobEntity = $this->getEntityManager()->getEntity('Job');

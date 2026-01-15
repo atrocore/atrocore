@@ -35,7 +35,10 @@ class FindMatchesForRecords extends AbstractJob implements JobInterface
         }
 
         $collection = $this->getEntityManager()->getRepository($entityName)
-            ->where(['id' => $entitiesIds])
+            ->where([
+                'id'                                            => $entitiesIds,
+                Matching::prepareFieldName($matchingData['id']) => null
+            ])
             ->find();
 
         if (empty($collection[0])) {
@@ -44,10 +47,6 @@ class FindMatchesForRecords extends AbstractJob implements JobInterface
 
         $matching = $this->createMatchingEntity($matchingData);
         foreach ($collection as $entity) {
-            if (!empty($entity->get(Matching::prepareFieldName($matchingData['id'])))) {
-                continue;
-            }
-
             $this->getMatchingManager()->findMatches($matching, $entity);
         }
     }

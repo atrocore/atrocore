@@ -919,7 +919,7 @@
 
 
         tick().then(() => {
-            if (scope === 'Selection' && treeItem.name === '_items') {
+            if (treeItem.name === '_items') {
                 if (callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
                 }
@@ -1090,7 +1090,12 @@
                     };
                 });
 
+                if(!hasItems) {
+                    treeItems = treeItems.filter(item => item.name !== '_item');
+                }
+
                 let treeItem = Storage.get('treeItem', scope);
+
                 // admin should always be the selected one
                 if (isAdminPage) {
                     treeItem = '_admin';
@@ -1182,13 +1187,6 @@
         }
 
         loadLayout(() => {
-            if (hasItems) {
-                treeItems = [...treeItems, {
-                    name: '_items',
-                    label: Language.get('Global', 'labels', 'Items')
-                }];
-            }
-
             if (treeItems.length === 0) {
                 isCollapsed = true
                 if (!UserData.get()?.user?.isAdmin) {
@@ -1207,7 +1205,7 @@
                     searchInputElement.value = searchValue;
                 }
 
-                if (scope === 'Selection' && activeItem.name === '_items' && callbacks?.onActiveItems) {
+                if (activeItem.name === '_items' && callbacks?.onActiveItems) {
                     callbacks?.onActiveItems(selectionItemElement);
                 } else if (!isCollapsed) {
                     buildTree();
@@ -1279,7 +1277,7 @@
                         {#if treeIcon}<img src={treeIcon} alt="" class="tree-scope-icon">{/if}{activeItem.label}</h5>
                 </div>
 
-                {#if scope === 'Selection' && activeItem.name === '_items'}
+                {#if activeItem.name === '_items'}
                     <div class="selection-items" bind:this={selectionItemElement}></div>
                 {:else}
                     <div class="panel-group category-search" style="margin-bottom: 20px"
@@ -1320,7 +1318,7 @@
                                     </div>
                                 </div>
                             {/if}
-                            {#if showApplyQuery && !(scope === 'Selection' && activeItem.name === '_items') && !['_lastViewed', '_admin'].includes(activeItem.name) }
+                            {#if showApplyQuery && !(activeItem.name === '_items') && !['_lastViewed', '_admin'].includes(activeItem.name) }
                                 <div class="main-filter-container">
                                      <span class="icons-wrapper">
                                         <span class="toggle" class:active={applyAdvancedFilter}
