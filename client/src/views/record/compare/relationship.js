@@ -125,6 +125,11 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         if (parts.length !== 2 || parts[0] !== this.relationship.relationName) {
                             return;
                         }
+
+                        if(!this.getMetadata().get(['entityDefs', this.relationship.relationName, 'fields', parts['1']])) {
+                            return;
+                        }
+
                         data.push({
                             field: parts[1],
                             realField: item.name,
@@ -137,6 +142,9 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
 
                     } else {
+                        if(!this.getMetadata().get(['entityDefs', this.relationship.scope, 'fields', item.name])) {
+                            return;
+                        }
                         data.push({
                             field: item.name,
                             realField: item.name,
