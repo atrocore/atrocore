@@ -20,7 +20,8 @@
       "ScanStorage": "Сканувати сховище",
       "FindMatches": "Знайти збіги",
       "CalculateScriptFieldsForEntities": "Обчислення полів скрипта",
-      "SendReports": "Надсилати анонімні повідомлення про помилки"
+      "SendReports": "Надсилати анонімні повідомлення про помилки",
+      "CreateClusters": "Створення кластерів"
     }
   },
   "tooltips": {
