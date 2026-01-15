@@ -7,7 +7,9 @@
     "masterEntity": "Мастер",
     "masterEntityId": "Ідентифікатор мастер сутності",
     "score": "Оцінка",
-    "hash": "Унікальний хеш"
+    "hash": "Унікальний хеш",
+    "hasCluster": "Чи має Кластер",
+    "clusterItems": "Кластерні елементи"
   },
   "options": {
     "type": {
