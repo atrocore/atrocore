@@ -42,6 +42,10 @@
       "readOnly": true
     }
   },
+  "collection": {
+    "sortBy": "number",
+    "asc": false
+  },
   "links": {
     "clusterItems": {
       "type": "hasMany",
