@@ -3,6 +3,7 @@
     "entityName": "Nazwa podmiotu",
     "entityId": "Identyfikator podmiotu",
     "record": "Rekord",
-    "cluster": "Klaster"
+    "cluster": "Klaster",
+    "matchedRecord": "Dopasowany rekord"
   }
 }
