@@ -957,6 +957,11 @@ class Metadata extends AbstractListener
                             'entity' => $scope
                         ];
 
+                        if (!empty($data['scopes'][$scope]['nameField'])) {
+                            $res[$entityName]['fields'][$left]['foreignName'] = $data['scopes'][$scope]['nameField'];
+                            $res[$entityName]['links'][$left]['foreignName'] = $data['scopes'][$scope]['nameField'];
+                        }
+
                         if (!empty($additionalFields)) {
                             $relFieldName = $left . ucfirst(Util::pluralize($right));
                             if (empty($data['entityDefs'][$scope]['fields'][$relFieldName])
@@ -989,6 +994,11 @@ class Metadata extends AbstractListener
                         'type'   => 'belongsTo',
                         'entity' => $relationParams['entity']
                     ];
+
+                    if (!empty($data['scopes'][$relationParams['entity']]['nameField'])) {
+                        $res[$entityName]['fields'][$right]['foreignName'] = $data['scopes'][$relationParams['entity']]['nameField'];
+                        $res[$entityName]['links'][$right]['foreignName'] = $data['scopes'][$relationParams['entity']]['nameField'];
+                    }
 
                     if (!empty($additionalFields)) {
                         $relFieldName = $right . ucfirst(Util::pluralize($left));
@@ -1284,6 +1294,15 @@ class Metadata extends AbstractListener
             foreach ($scopeData['fields'] as $fieldName => $fieldData) {
                 if (!empty($fieldData['foreignName'])) {
                     $data['entityDefs'][$scope]['links'][$fieldName]['foreignName'] = $fieldData['foreignName'];
+                }
+            }
+
+            foreach ($scopeData['links'] ?? [] as $linkName => $linkData) {
+                if (empty($linkData['foreignName']) && !empty($linkData['entity'])) {
+                    $nameField = $data['scopes'][$linkData['entity']]['nameField'] ?? null;
+                    if (!empty($nameField) && !empty($data['entityDefs'][$linkData['entity']]['fields'][$nameField])) {
+                        $data['entityDefs'][$scope]['links'][$linkName]['foreignName'] = $nameField;
+                    }
                 }
             }
         }

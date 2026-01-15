@@ -382,6 +382,10 @@ Espo.define('view', [], function () {
             return [fieldName, null]
         },
 
+        getNameField($scope) {
+            return this.getMetadata().get(`scopes.${$scope}.nameField`) ?? 'name'
+        },
+
         getLocalizedFieldValue(model, fieldName) {
             let [localizedFieldName] = this.getLocalizedFieldData(model.name, fieldName);
             if (localizedFieldName !== fieldName) {
@@ -389,6 +393,10 @@ Espo.define('view', [], function () {
             }
 
             return model.get(fieldName);
+        },
+
+        getModelTitle(){
+          return this.getLocalizedFieldValue(this.model, this.model.nameField)
         },
 
         onModelReady(callback) {

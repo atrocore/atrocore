@@ -102,7 +102,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
                 });
             } else {
                 items.push({
-                    label: this.model.get('name') || this.model.id,
+                    label: this.getModelTitle(this.model) || this.model.id,
                     url: `#${this.scope}/view/${this.model.id}`,
                 });
             }
@@ -134,7 +134,7 @@ Espo.define('views/edit', 'views/main', function (Dep) {
             if (this.model.isNew()) {
                 title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
             } else {
-                var name = this.model.get('name');
+                var name = this.getModelTitle(this.model);
                 if (name) {
                     title = name;
                 } else {

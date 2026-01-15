@@ -52,7 +52,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
             this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
-            this.foreignName = this.foreignName || this.params.foreignName || this.model.getFieldParam(this.name, 'foreignName') || 'name';
+            this.foreignName = this.foreignName || this.params.foreignName || this.model.getLinkParam(this.name, 'foreignName') || this.model.getFieldParam(this.name, 'foreignName') || 'name';
             this.originalName = this.name;
             this.name = this.idName;
 
@@ -76,7 +76,8 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.params.options = [];
             this.translatedOptions = {};
             this.params.optionColors = {};
-            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, 'name');
+            const name = this.getNameField(this.foreignScope)
+            const [localizedName] = this.getLocalizedFieldData(this.foreignScope, name);
 
             this.params.linkOptions = this.getLinkOptions(this.foreignScope, {
                 maxSize: 300,
@@ -86,7 +87,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
             this.params.linkOptions.forEach(option => {
                 if (option.id) {
                     this.params.options.push(option.id);
-                    this.translatedOptions[option.id] = option[localizedName] || option.name || option.id;
+                    this.translatedOptions[option.id] = option[localizedName] || option[name] || option.id;
                     this.params.optionColors[option.id] = option.color || null;
                 }
             })
@@ -103,7 +104,7 @@ Espo.define('views/fields/link-dropdown', 'views/fields/colored-enum', function 
         getWhereFilter() {
             return [];
         },
-        fetch: function(){
+        fetch: function () {
             let data = Dep.prototype.fetch.call(this);
             data[this.name + 'Name'] = this.translatedOptions[data[this.name]]
             return data;

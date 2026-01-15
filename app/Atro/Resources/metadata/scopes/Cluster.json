@@ -13,5 +13,6 @@
   "modifiedExtendedRelations": [
     "clusterItems"
   ],
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "nameField": "number"
 }

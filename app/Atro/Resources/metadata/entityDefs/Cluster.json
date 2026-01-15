@@ -43,7 +43,8 @@
     }
   },
   "collection": {
-    "sortBy": "number"
+    "sortBy": "number",
+    "asc": false
   },
   "links": {
     "clusterItems": {
