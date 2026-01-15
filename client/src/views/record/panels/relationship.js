@@ -221,7 +221,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             action: 'showKanban',
                             data: {
                                 modelId: this.model.get('id'),
-                                modelName: this.model.get('name')
+                                modelName: this.getModelTitle(this.model)
                             }
                         });
                     }
@@ -231,7 +231,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                         action: this.defs.showFullListAction || 'showFullList',
                         data: {
                             modelId: this.model.get('id'),
-                            modelName: this.model.get('name')
+                            modelName: this.getModelTitle(this.model)
                         }
                     });
                 }
@@ -534,7 +534,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             operator: 'in',
                             data: {
                                 nameHash: {
-                                    [this.model.id]: this.model.get('name')
+                                    [this.model.id]: this.getModelTitle(this.model)
                                 }
                             }
 
@@ -555,7 +555,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                             operator: 'linked_with',
                             data: {
                                 nameHash: {
-                                    [this.model.id]: this.model.get('name')
+                                    [this.model.id]: this.getModelTitle(this.model)
                                 }
                             }
                         }
@@ -751,8 +751,8 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     if (this.model.get('id')) {
                         attributes.parentId = this.model.get('id');
                     }
-                    if (this.model.get('name')) {
-                        attributes.parentName = this.model.get('name');
+                    if (this.getModelTitle(this.model)) {
+                        attributes.parentName = this.getModelTitle(this.model);
                     }
                 }
             }
@@ -898,7 +898,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             let parts = message.split('.');
 
             this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.getModelTitle(model)),
                 confirmText: this.translate('Remove')
             }, () => {
                 this.notify('removing');

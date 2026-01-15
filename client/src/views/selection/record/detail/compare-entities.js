@@ -116,13 +116,13 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
             let columns = [];
 
             this.models.forEach((model) => {
-                let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type'])
+                let hasName = model.hasField(model.nameField)
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    label: model.get('name') ?? model.get('id'),
-                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank" title="${model.get('name')}"> ${hasName ? (model.get('name') ?? 'None') : model.get('id')} </a>`,
+                    label: this.getModelTitle(model) ?? model.get('id'),
+                    name: `<a href="#/${model.name}/view/${model.id}"  target="_blank" title="${this.getModelTitle(model)}"> ${hasName ? (this.getModelTitle(model) ?? 'None') : model.get('id')} </a>`,
                 });
             });
 

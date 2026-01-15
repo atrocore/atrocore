@@ -177,7 +177,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = {...attributes, ...fieldsPanels.fetch()};
+                attributes = { ...attributes, ...fieldsPanels.fetch() };
             }
 
             $.each(attributes, (name, value) => {
@@ -682,7 +682,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({main: true});
+                model.fetch({ main: true });
             });
         },
 
@@ -695,14 +695,15 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             });
 
             this.getModels().forEach((model) => {
-                let hasName = !!this.getMetadata().get(['entityDefs', model.name, 'fields', 'name', 'type']);
-                const name = hasName ? (model.get('name') ?? 'None') : model.get('id');
+                let hasName = model.hasField(model.nameField)
+                const name = hasName ? (this.getModelTitle(model) ?? 'None') : model.get('id')
+
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
                     selectionRecordId: model.get('_selectionRecordId'),
-                    label: model.get('name') ?? model.get('id'),
-                    name: `<a href="#/${model.name}/view/${model.id}" title="${name}" target="_blank">${name}</a>`,
+                    label: this.getModelTitle(model) ?? model.get('id'),
+                    name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });
             });
 
@@ -1098,7 +1099,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({async: false})
+                    model.fetch({ async: false })
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {

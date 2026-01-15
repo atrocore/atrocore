@@ -75,21 +75,7 @@
         }
     }
     $: isSelectionEnabled = activeItem && (((!['_self', '_bookmark'].includes(activeItem.name)) && mode === 'list') || (activeItem.name === '_admin'))
-    $: {
-        if (!treeScope) {
-            sortFields = []
-        } else {
-            const sortScope = treeScope === 'Bookmark' ? scope : treeScope
-            const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']) ?? {};
-            sortFields = Object.keys(fieldDefs).filter(function (item) {
-                return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
-            }).sort(function (v1, v2) {
-                return Language.translate(v1, 'fields', sortScope).localeCompare(Language.translate(v2, 'fields', sortScope));
-            }).map(item => {
-                return {name: item, label: Language.translate(item, 'fields', sortScope)}
-            })
-        }
-    }
+    $: sortFields = getSortFields();
 
     export function handleCollectionSearch(searchedCollection) {
         if (collection && searchedCollection.name === scope) {
@@ -112,6 +98,23 @@
         if (tree) {
             tree.tree('destroy');
         }
+    }
+
+    function getSortFields() {
+        if (!treeScope) {
+            return []
+        }
+
+        const sortScope = treeScope === 'Bookmark' ? scope : treeScope
+        const fieldDefs = Metadata.get(['entityDefs', sortScope, 'fields']) ?? {};
+        return Object.keys(fieldDefs).filter(function (item) {
+            return ['varchar', 'text', 'int', 'float', 'date', 'datetime'].includes(fieldDefs[item].type) && !fieldDefs[item].notStorable;
+        }).sort(function (v1, v2) {
+            return Language.translate(v1, 'fields', sortScope).localeCompare(Language.translate(v2, 'fields', sortScope));
+        }).map(item => {
+            return {name: item, label: Language.translate(item, 'fields', sortScope)}
+        })
+
     }
 
     function getWhereData(): [] {
@@ -898,7 +901,7 @@
             return 'Bookmark'
         }
 
-        if(link === '_lastViewed') {
+        if (link === '_lastViewed') {
             return 'LastViewed';
         }
 
@@ -1133,11 +1136,17 @@
         if (Metadata.get(['scopes', treeScope, 'type']) === 'Hierarchy' && activeItem.name !== '_bookmark') {
             sortBy = 'sortOrder'
         } else {
-            sortBy = Metadata.get(['entityDefs', treeScope, 'collection', 'sortBy']) || 'name'
+            sortBy = Metadata.get(['entityDefs', treeScope, 'collection', 'sortBy']);
+            for (let field in ['name', 'code']) {
+                if (!!Metadata.get(['entityDefs', treeScope, 'fields', field])) {
+                    sortBy = field
+                    break
+                }
+            }
         }
 
-        if (!Metadata.get(['entityDefs', treeScope, 'fields', sortBy])) {
-            sortBy = sortFields[0]?.name
+        if (!sortBy || !Metadata.get(['entityDefs', treeScope, 'fields', sortBy])) {
+            sortBy = getSortFields()[0]?.name
         }
 
         sortAsc = !!Metadata.get(['entityDefs', treeScope, 'collection', 'asc'])
@@ -1271,7 +1280,8 @@
                 {#if activeItem.name === '_items'}
                     <div class="selection-items" bind:this={selectionItemElement}></div>
                 {:else}
-                    <div class="panel-group category-search" style="margin-bottom: 20px" class:hidden ={['_lastViewed'].includes(activeItem.name)}>
+                    <div class="panel-group category-search" style="margin-bottom: 20px"
+                         class:hidden={['_lastViewed'].includes(activeItem.name)}>
                         <div class="field" data-name="category-search">
                             <input type="text" bind:this={searchInputElement}
                                    on:keydown={(e) => e.key === 'Enter' && applySearch()} tabindex="1"

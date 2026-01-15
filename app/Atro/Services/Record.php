@@ -259,11 +259,21 @@ class Record extends RecordService
         }
     }
 
+    public function getNameField(string $scope): string
+    {
+        $nameField = $this->getMetadata()->get(['scopes', $scope, 'nameField']);
+        if (empty($nameField) || empty($this->getMetadata()->get(['entityDefs', $scope, 'fields', $nameField]))) {
+            $nameField = 'name';
+        }
+        return $nameField;
+    }
+
     public function getLocalizedNameField(string $scope): ?string
     {
-        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $scope, 'name');
+        $nameField = $this->getNameField($scope);
+        $name = Language::getLocalizedFieldName($this->getEntityManager()->getContainer(), $scope, $nameField);
 
-        if ($name !== 'name') {
+        if ($name !== $nameField) {
             return $name;
         }
 
@@ -272,16 +282,17 @@ class Record extends RecordService
 
     public function getLocalizedNameValue($record, string $scope): ?string
     {
+        $nameField = $this->getNameField($scope);
         $localizedName = $this->getLocalizedNameField($scope);
 
         if (!empty($localizedName)) {
             $value = is_array($record) ? $record[$localizedName] : $record->get($localizedName);
             if (!empty($value)) {
-                return $value;
+                return (string)$value;
             }
         }
 
-        return is_array($record) ? $record['name'] : $record->get('name');
+        return (string)(is_array($record) ? $record[$nameField] : $record->get($nameField));
     }
 
     public function getParamsForTree(string $link, string $scope, array $params): array
@@ -387,11 +398,12 @@ class Record extends RecordService
             $selectParams['distinct'] = true;
         }
 
-        $fields = ['id', 'name'];
-        $localizedNameField = $this->getLocalizedNameField($scope);
+        $fields = ['id', $this->getNameField($this->entityName)];
+        $localizedNameField = $this->getLocalizedNameField($this->entityName);
         if (!empty($localizedNameField)) {
             $fields[] = $localizedNameField;
         }
+
 
         if (!empty($selectParams['orderBy']) && !in_array($selectParams['orderBy'], $fields)) {
             $fields[] = $selectParams['orderBy'];
@@ -403,7 +415,7 @@ class Record extends RecordService
         $result = [];
 
         foreach ($collection as $key => $item) {
-            $value = $this->getLocalizedNameValue($item, $scope);
+            $value = $this->getLocalizedNameValue($item, $this->entityName);
             $result[] = [
                 'id'             => $item->get('id'),
                 'name'           => !empty($value) ? $value : $item->get('id'),

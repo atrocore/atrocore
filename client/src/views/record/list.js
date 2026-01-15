@@ -2953,7 +2953,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.getModelTitle(model)),
                 confirmText: this.translate('Remove')
             }, function () {
                 action();
@@ -2981,7 +2981,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             let parts = message.split('.');
 
             this.confirm({
-                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', model.get('name')),
+                message: (this.translate(parts.pop(), parts.pop(), parts.pop())).replace('{{name}}', this.getModelTitle(model)),
                 confirmText: this.translate('Restore')
             }, function () {
                 this.collection.trigger('model-removing', id);
