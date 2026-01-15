@@ -24,7 +24,8 @@
       "ScanStorage": "Skenování úložiště",
       "FindMatches": "Vyhledávání shod",
       "CalculateScriptFieldsForEntities": "Výpočet polí skriptu",
-      "SendReports": "Odesílání anonymních chybových hlášení"
+      "SendReports": "Odesílání anonymních chybových hlášení",
+      "CreateClusters": "Vytváření klastrů"
     }
   },
   "tooltips": {
