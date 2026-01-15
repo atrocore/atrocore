@@ -65,10 +65,14 @@ class MatchedRecord extends Base
         }
 
         return $this->getConnection()->createQueryBuilder()
-            ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
+            ->select(
+                'mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id'
+            )
             ->from('matched_record', 'mr')
             ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false AND ci.cluster_id IS NOT NULL')
-            ->leftJoin('mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false AND ci1.cluster_id IS NOT NULL')
+            ->leftJoin(
+                'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false AND ci1.cluster_id IS NOT NULL'
+            )
             ->where('mr.master_entity IN (:entitiesNames) OR mr.source_entity IN (:entitiesNames)')
             ->andWhere('mr.deleted = :false')
             ->andWhere('mr.has_cluster = :false')
@@ -153,5 +157,8 @@ class MatchedRecord extends Base
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
             ->executeQuery();
+
+        // delete cluster items
+        $this->getPDO()->exec("DELETE FROM cluster_item WHERE id IN (SELECT ci.id FROM cluster_item ci LEFT JOIN matched_record mr ON ci.matched_record_id = mr.id WHERE mr.id IS NULL AND ci.matched_record_id IS NOT NULL)");
     }
 }
