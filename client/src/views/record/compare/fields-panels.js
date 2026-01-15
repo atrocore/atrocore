@@ -90,6 +90,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             inheritanceActionDisabled: true,
                             revisionHistoryActionDisabled: true,
                             qualityInlineActionDisabled: true,
+                            inlineEditDisabled: fieldData.inlineEditDisabled || false,
                             fieldActionsDisabled: true,
                             disabled: this.merging || !this.getAcl().check(model.name, 'edit'),
                             disableToggle: true

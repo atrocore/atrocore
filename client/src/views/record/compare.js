@@ -46,6 +46,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         layoutData: null,
 
+        inlineEditDisabled: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -71,6 +73,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
+
+            if (typeof this.options.inlineEditDisabled === 'boolean') {
+                this.inlineEditDisabled = this.options.inlineEditDisabled;
+            }
 
             this.getModels().forEach(model => {
                 this.listenTo(model, 'before:save', (attrs) => {
@@ -334,7 +340,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         attributePanelId: fieldDef['attributePanelId'],
                         attributeGroup: fieldDef.attributeGroup,
                         sortOrder: fieldDef.sortOrder,
-                        sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
+                        sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0,
+                        inlineEditDisabled: this.inlineEditDisabled
                     });
                 }
 
