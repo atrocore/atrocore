@@ -17,7 +17,8 @@
       "ScanStorage": "Сканирование хранилища",
       "CalculateScriptFieldsForEntities": "Вычислите поля сценария",
       "FindMatches": "Найдите соответствия",
-      "SendReports": "Отправлять анонимные отчеты об ошибках"
+      "SendReports": "Отправлять анонимные отчеты об ошибках",
+      "CreateClusters": "Создавайте кластеры"
     }
   },
   "tooltips": {
