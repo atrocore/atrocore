@@ -17,8 +17,16 @@ Espo.define('views/cluster-item/fields/record', 'views/fields/link', Dep => {
 
             Dep.prototype.setup.call(this);
 
+            this.listenTo(this.model, 'change:recordId', () => {
+                this.model.set('entityId', this.model.get('recordId'));
+            })
+
             this.listenTo(this.model, 'change:entityName', () => {
-                this.options.foreignScope = this.model.get('entityName');
+                this.foreignScope = this.model.get('entityName');
+                this.reRenderByConditionalProperties();
+                if(!this.readOnly) {
+                    this.setMode('edit');
+                }
                 this.reRender();
             })
         },

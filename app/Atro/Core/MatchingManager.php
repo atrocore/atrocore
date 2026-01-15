@@ -135,9 +135,6 @@ class MatchingManager
             return;
         }
 
-        // Clear old matches for entity
-        $this->getMatchedRecordRepository()->deleteMatchedRecordsForEntity($matching, $entity);
-
         // Find possible matches
         $possibleMatches = $this->getMatchingRepository()->findPossibleMatchesForEntity($matching, $entity);
 
@@ -164,18 +161,22 @@ class MatchingManager
             return;
         }
 
+        $matchedAt = date('Y-m-d H:i:s');
+
         foreach ($matchedRecordsRows as $row) {
             $this
                 ->getMatchedRecordRepository()
-                ->createMatchedRecord($matching, $entity->id, $row['id'], $row['percentageScore']);
+                ->createMatchedRecord($matching, $entity->id, $row['id'], $row['percentageScore'], $matchedAt);
         }
 
-        $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id);
-        foreach ($possibleMatches as $row) {
+        $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $entity->id, $matchedAt);
+        foreach ($matchedRecordsRows as $row) {
             if ($matching->get('type') === 'duplicate') {
-                $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id']);
+                $this->getMatchingRepository()->markMatchingSearched($matching, $entity->getEntityName(), $row['id'], $matchedAt);
             }
         }
+
+        $this->getMatchedRecordRepository()->removeOldMatches($matching, $matchedAt);
     }
 
     protected function getEntityManager(): EntityManager

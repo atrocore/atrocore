@@ -1,5 +1,5 @@
 {{#if loadingGroups}}
-Loading...
+    <div class="no-data-container">Loading...</div>
 {{else}}
 {{#if groups.length}}
 <div class="group-container">

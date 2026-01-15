@@ -133,7 +133,6 @@ Espo.define('layout-manager', [], function () {
                     }
                 }.bind(this),
                 error: function(event, xhr, options) {
-                    debugger
                     if (typeof errorCallback === 'function') {
                         errorCallback();
                     }

@@ -12,33 +12,77 @@
 
 namespace Atro\Repositories;
 
+use Atro\Core\Exceptions\Error;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Database\DBAL\Schema\Converter;
+use Atro\Core\Utils\Util;
 use Atro\Entities\Matching as MatchingEntity;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class MatchedRecord extends Base
 {
-    public function createUniqHash(Entity $matchedRecord): string
-    {
-        $hashParts = [
-            $matchedRecord->get('matchingId'),
-            $matchedRecord->get('sourceEntity'),
-            $matchedRecord->get('sourceEntityId'),
-            $matchedRecord->get('masterEntity'),
-            $matchedRecord->get('masterEntityId'),
-        ];
-
-        return md5(implode('_', $hashParts));
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        parent::beforeSave($entity, $options);
+        throw new Error('MatchedRecord cannot be saved directly.');
+    }
 
-        if ($entity->isNew()) {
-            $entity->set('hash', $this->createUniqHash($entity));
+    protected function beforeRemove(Entity $entity, array $options = [])
+    {
+        throw new Error('MatchedRecord cannot be removed directly.');
+    }
+
+    public function markHasCluster(string $id): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('has_cluster', ':true')
+            ->where('id=:id')
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery();
+    }
+
+    public function markHasNoCluster(string $id): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('has_cluster', ':false')
+            ->where('id=:id')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('id', $id)
+            ->executeQuery();
+    }
+
+    public function getForMasterEntity(string $masterEntity, int $limit = PHP_INT_MAX): array
+    {
+        $entitiesNames = [$masterEntity];
+        foreach ($this->getMetadata()->get("scopes") ?? [] as $scope => $scopeDefs) {
+            if (!empty($scopeDefs['primaryEntityId']) && $scopeDefs['primaryEntityId'] === $masterEntity) {
+                $entitiesNames[] = $scope;
+            }
         }
+
+        return $this->getConnection()->createQueryBuilder()
+            ->select(
+                'mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id'
+            )
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false AND ci.cluster_id IS NOT NULL')
+            ->leftJoin(
+                'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false AND ci1.cluster_id IS NOT NULL'
+            )
+            ->where('mr.master_entity IN (:entitiesNames) OR mr.source_entity IN (:entitiesNames)')
+            ->andWhere('mr.deleted = :false')
+            ->andWhere('mr.has_cluster = :false')
+            ->setFirstResult(0)
+            ->setMaxResults($limit)
+            ->addOrderBy('mr.source_entity', 'ASC')
+            ->addOrderBy('mr.source_entity_id', 'ASC')
+            ->setParameter('entitiesNames', $entitiesNames, Connection::PARAM_STR_ARRAY)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchAllAssociative();
     }
 
     public function afterRemoveRecord(string $entityName, string $entityId): void
@@ -63,64 +107,58 @@ class MatchedRecord extends Base
         }
     }
 
-    public function checkMatchedRecordsMax(string $matchingId, int $matchedRecordsMax): bool
-    {
-        $sql = "SELECT EXISTS (SELECT 1 FROM matched_record WHERE matching_id = :matchingId AND deleted = :false GROUP BY master_entity_id HAVING COUNT(DISTINCT source_entity_id) >= :max) AS exists";
-
-        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
-
-        $stmt->bindValue(':matchingId', $matchingId);
-        $stmt->bindValue(':false', false, \PDO::PARAM_BOOL);
-        $stmt->bindValue(':max', $matchedRecordsMax, \PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        return $stmt->fetchColumn();
-    }
-
-    public function deleteMatchedRecordsForEntity(MatchingEntity $matching, Entity $entity): void
-    {
-        $this
-            ->where([
-                'type'           => $matching->get('type'),
-                'sourceEntity'   => $entity->getEntityName(),
-                'sourceEntityId' => $entity->id,
-            ])
-            ->removeCollection();
-    }
-
     public function createMatchedRecord(
         MatchingEntity $matching,
         string $sourceId,
         string $masterId,
         int $score,
+        string $matchedAt,
         bool $skipBidirectional = false
     ): void {
-        // create new record
-        $matchedRecord = $this->get();
-        $matchedRecord->set([
-            'type'           => $matching->get('type'),
-            'sourceEntity'   => $matching->get('entity'),
-            'sourceEntityId' => $sourceId,
-            'masterEntity'   => $matching->get('masterEntity'),
-            'masterEntityId' => $masterId,
-            'score'          => $score,
-            'matchingId'     => $matching->id,
-        ]);
-
-        if (!empty($exists = $this->where(['hash' => $this->createUniqHash($matchedRecord)])->findOne())) {
-            // update if exists
-            $matchedRecord = $exists;
-            $matchedRecord->set('score', $score);
+        $sql
+            = "INSERT INTO matched_record (id, type, source_entity, source_entity_id, master_entity, master_entity_id, score, matching_id, hash, created_at, modified_at, created_by_id, modified_by_id) VALUES (:id, :type, :sourceEntity, :sourceEntityId, :masterEntity, :masterEntityId, :score, :matchingId, :hash, :createdAt, :modifiedAt, :createdById, :modifiedById)";
+        if (Converter::isPgSQL($this->getConnection())) {
+            $sql .= " ON CONFLICT (deleted, hash) DO UPDATE SET score = EXCLUDED.score, modified_at = EXCLUDED.modified_at, modified_by_id = EXCLUDED.modified_by_id RETURNING xmax";
+        } else {
+            $sql .= " ON DUPLICATE KEY UPDATE score = VALUES(score), modified_at = VALUES(modified_at), modified_by_id = VALUES(modified_by_id)";
         }
 
-        try {
-            $this->getEntityManager()->saveEntity($matchedRecord);
-        } catch (UniqueConstraintViolationException $e) {
-        }
+        $userId = $this->getEntityManager()->getUser()->id;
+        $hash = md5(implode('_', [$matching->id, $matching->get('entity'), $sourceId, $matching->get('masterEntity'), $masterId]));
+
+        $stmt = $this->getEntityManager()->getPDO()->prepare($sql);
+
+        $stmt->bindValue(':id', Util::generateId());
+        $stmt->bindValue(':type', $matching->get('type'));
+        $stmt->bindValue(':sourceEntity', $matching->get('entity'));
+        $stmt->bindValue(':sourceEntityId', $sourceId);
+        $stmt->bindValue(':masterEntity', $matching->get('masterEntity'));
+        $stmt->bindValue(':masterEntityId', $masterId);
+        $stmt->bindValue(':score', $score);
+        $stmt->bindValue(':matchingId', $matching->id);
+        $stmt->bindValue(':hash', $hash);
+        $stmt->bindValue(':createdAt', $matchedAt);
+        $stmt->bindValue(':modifiedAt', $matchedAt);
+        $stmt->bindValue(':createdById', $userId);
+        $stmt->bindValue(':modifiedById', $userId);
+
+        $stmt->execute();
 
         if (!$skipBidirectional && $matching->get('type') === 'duplicate') {
-            $this->createMatchedRecord($matching, $masterId, $sourceId, $score, true);
+            $this->createMatchedRecord($matching, $masterId, $sourceId, $score, $matchedAt, true);
         }
+    }
+
+    public function removeOldMatches(MatchingEntity $matching, string $matchedAt): void
+    {
+        $this->getConnection()->createQueryBuilder()
+            ->delete('matched_record')
+            ->where('matching_id=:matchingId AND modified_at<:matchedAt')
+            ->setParameter('matchingId', $matching->id)
+            ->setParameter('matchedAt', $matchedAt)
+            ->executeQuery();
+
+        // delete cluster items
+        $this->getPDO()->exec("DELETE FROM cluster_item WHERE id IN (SELECT ci.id FROM cluster_item ci LEFT JOIN matched_record mr ON ci.matched_record_id = mr.id WHERE mr.id IS NULL AND ci.matched_record_id IS NOT NULL)");
     }
 }

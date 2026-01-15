@@ -46,6 +46,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         layoutData: null,
 
+        inlineEditDisabled: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -71,6 +73,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
+
+            if (typeof this.options.inlineEditDisabled === 'boolean') {
+                this.inlineEditDisabled = this.options.inlineEditDisabled;
+            }
 
             this.getModels().forEach(model => {
                 this.listenTo(model, 'before:save', (attrs) => {
@@ -126,6 +132,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
+                this.reRender();
                 this.renderFieldsPanels();
                 if (relationshipsPanels) {
                     relationshipsPanels.changeViewMode('detail');
@@ -141,6 +148,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (!this.merging) {
                 this.notify('Loading...')
                 this.merging = true;
+                this.reRender();
                 this.renderFieldsPanels();
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)
@@ -332,7 +340,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         attributePanelId: fieldDef['attributePanelId'],
                         attributeGroup: fieldDef.attributeGroup,
                         sortOrder: fieldDef.sortOrder,
-                        sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0
+                        sortOrderInAttributeGroup: fieldDef.sortOrderInAttributeGroup ?? 0,
+                        inlineEditDisabled: this.inlineEditDisabled
                     });
                 }
 
@@ -346,7 +355,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     callback();
                 }
             } else {
-                this.getHelper().layoutManager.get(this.model.name, 'selection', null, null, data => {
+                this.getHelper().layoutManager.get(this.scope, 'selection', null, null, data => {
                     this.layoutData = data;
                     let fields = []
                     for (const fieldData of this.layoutData.layout) {
@@ -433,7 +442,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered', panel.name);
                         this.createView('layoutConfiguratorSelection', "views/record/layout-configurator", {
-                            scope: this.model.name,
+                            scope: this.scope,
                             viewType: 'selection',
                             layoutData: this.layoutData,
                             alignRight: true,
@@ -512,7 +521,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         continue;
                     }
 
-                    let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
+                    let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
                     let relationScope = relationDefs['entity'];
 
                     if (!this.getAcl().check(relationScope, 'read')) {
@@ -530,7 +539,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         }
                     }
 
-                    let title = this.translate(link, 'fields', this.model.name);
+                    let title = this.translate(link, 'fields', this.scope);
 
                     let panelData = {
                         label: title,
@@ -559,7 +568,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     callback(list);
                 }
             } else {
-                this.getHelper().layoutManager.get(this.model.name, 'selectionRelations', null, null, data => {
+                this.getHelper().layoutManager.get(this.scope, 'selectionRelations', null, null, data => {
                     this.relationLayoutData = data;
                     let links = data.layout.map(row => row.name);
                     let list = processLinks(links);
@@ -576,7 +585,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 fieldPanels: this.fieldPanels,
                 columns: column,
                 columnLength: column.length,
-                scope: this.model.name,
+                scope: this.scope,
                 id: this.getId(),
                 merging: this.merging,
                 hideButtonPanel: this.hideButtonPanel,
@@ -787,7 +796,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         isComparableLink(link) {
-            let relationDefs = this.getMetadata().get(['entityDefs', this.model.name, 'links', link]) ?? {};
+            let relationDefs = this.getMetadata().get(['entityDefs', this.scope, 'links', link]) ?? {};
 
             if (relationDefs['isAssociateRelation']) {
                 return true;
@@ -841,9 +850,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let scope = null;
             for (const model of this.getModels()) {
                 if (scope === null) {
-                    scope = this.model.name;
+                    scope = model.name;
                 }
-                if (scope !== this.model.name) {
+                if (scope !== model.name) {
                     return true;
                 }
             }
@@ -905,7 +914,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         createLayoutConfigurator(selector = null) {
             this.createView('layoutConfigurator', "views/record/layout-configurator", {
-                scope: this.model.name,
+                scope: this.scope,
                 viewType: 'selectionRelations',
                 layoutData: this.layoutData || {},
                 el: selector || '.anchor-nav-container .panel-navigation .layout-editor-container',
@@ -991,7 +1000,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 currentValues[filter.name] = this.selectedFilters[filter.name];
             });
             this.createView('compareOverviewFilter', this.overviewFilterView, {
-                scope: this.model.name,
+                scope: this.scope,
                 model: this.model,
                 overviewFilters: overviewFilterList,
                 currentValues: currentValues
@@ -1011,7 +1020,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     if (filterChanged) {
                         this.model.trigger('overview-filters-changed', this.selectedFilters);
-                        this.getStorage().set('compareFilters', this.model.name, this.selectedFilters)
+                        this.getStorage().set('compareFilters', this.scope, this.selectedFilters)
                         this.reRenderFieldsPanels();
                         this.notify(false)
                     }
