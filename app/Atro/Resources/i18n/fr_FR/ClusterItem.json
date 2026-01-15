@@ -3,6 +3,7 @@
     "entityName": "Nom de l'entité",
     "entityId": "ID de l'entité",
     "record": "Enregistrement",
-    "cluster": "Groupement d'entreprises"
+    "cluster": "Groupement d'entreprises",
+    "matchedRecord": "Enregistrement apparié"
   }
 }
