@@ -3,6 +3,7 @@
     "entityName": "Название организации",
     "entityId": "ID субъекта",
     "record": "Запись",
-    "cluster": "Кластер"
+    "cluster": "Кластер",
+    "matchedRecord": "Сопоставленная запись"
   }
 }
