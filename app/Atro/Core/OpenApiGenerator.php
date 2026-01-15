@@ -93,11 +93,20 @@ class OpenApiGenerator
                         'properties' => [
                             'attributeId'      => ['type' => 'string'],
                             'attributeValueId' => ['type' => 'string'],
-                            'value'            => [
-                                'description' => 'Can be any type',
-                                'nullable' => true,
-                                'example' => null
-                            ],
+                            'value'            => ['nullable' => true, 'example' => null],
+                            'valueName'        => ['type' => 'string', 'nullable' => true],
+                            'valueUnitId'      => ['type' => 'string', 'nullable' => true],
+                            'valueUnitName'    => ['type' => 'string', 'nullable' => true],
+                            'valueId'          => ['type' => 'string', 'nullable' => true],
+                            'valueIds'         => ['type' => 'array', 'nullable' => true, 'items' => ['type' => 'string']],
+                            'valueNames'       => ['type' => 'object', 'nullable' => true],
+                            'valueOptionsData' => ['type' => 'object', 'nullable' => true],
+                            'valueOptionData'  => ['type' => 'object', 'nullable' => true],
+                            'valuePathsData'   => ['type' => 'object', 'nullable' => true],
+                            'valueUnitData'    => ['type' => 'object', 'nullable' => true],
+                            'valueAllUnits'    => ['type' => 'object', 'nullable' => true],
+                            'valueFrom'        => ['nullable' => true, 'example' => 1],
+                            'valueTo'          => ['nullable' => true, 'example' => 2],
                         ]
                     ],
                 ];

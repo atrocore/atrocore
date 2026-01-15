@@ -1250,11 +1250,12 @@ class Metadata extends AbstractListener
     }
 
     private function addScopesToRelationShip(
-        array &$metadata,
+        array  &$metadata,
         string $scope,
         string $relationEntityName,
         string $relation
-    ) {
+    )
+    {
         if (empty($metadata['clientDefs'][$scope]['relationshipPanels'])) {
             $metadata['clientDefs'][$scope]['relationshipPanels'] = [
                 $relation => []
@@ -2321,10 +2322,14 @@ class Metadata extends AbstractListener
                         if (!empty($linkDefs['foreign'])) {
                             $foreign = lcfirst($scope) . 'sDerivatives';
 
-                            $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
-                            $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+                            if (!empty($data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']])) {
+                                $data['entityDefs'][$linkDefs['entity']]['fields'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['fields'][$linkDefs['foreign']];
+                            }
+                            if (!empty($data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']])) {
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign] = $data['entityDefs'][$linkDefs['entity']]['links'][$linkDefs['foreign']];
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['entity'] = $scope;
+                                $data['entityDefs'][$linkDefs['entity']]['links'][$foreign]['derivativePrepared'] = true;
+                            }
 
                             $linkDefs['foreign'] = $foreign;
                         }
