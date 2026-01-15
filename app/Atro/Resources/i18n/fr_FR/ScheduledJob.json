@@ -24,7 +24,8 @@
       "ClearEntities": "Nettoyage des données supprimées",
       "FindMatches": "Recherce de correspondances",
       "CalculateScriptFieldsForEntities": "Calcule des champs scripts",
-      "SendReports": "Envoie des rapports d'erreur anonymes"
+      "SendReports": "Envoie des rapports d'erreur anonymes",
+      "CreateClusters": "Créer des clusters"
     }
   },
   "tooltips": {
