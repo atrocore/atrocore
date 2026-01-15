@@ -7,7 +7,9 @@
     "source": "Zdroj:",
     "sourceEntity": "Zdrojová entita",
     "sourceEntityId": "ID zdrojového subjektu",
-    "hash": "Jedinečný kód Hash"
+    "hash": "Jedinečný kód Hash",
+    "hasCluster": "Má cluster",
+    "clusterItems": "Položky klastru"
   },
   "options": {
     "type": {
