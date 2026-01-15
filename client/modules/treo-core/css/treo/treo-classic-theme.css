@@ -13327,6 +13327,10 @@ a:hover, a:focus {
     color: #333;
 }
 
+.panel-title .panel-title-text:empty {
+    opacity: 0;
+}
+
 .record .middle > .panel {
     border-top-width: 0
 }
