@@ -126,6 +126,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (this.merging) {
                 let relationshipsPanels = this.getView('relationshipsPanels');
                 this.merging = false;
+                this.reRender();
                 this.renderFieldsPanels();
                 if (relationshipsPanels) {
                     relationshipsPanels.changeViewMode('detail');
@@ -141,6 +142,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             if (!this.merging) {
                 this.notify('Loading...')
                 this.merging = true;
+                this.reRender();
                 this.renderFieldsPanels();
                 this.listenTo(this, 'after:fields-panel-rendered', () => {
                     this.handleRadioButtonsDisableState(false)

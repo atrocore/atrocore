@@ -4679,7 +4679,11 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     top: 0;
     z-index: 1;
     background-color: #fff;
-    margin: -10px -20px 10px;
+}
+
+.navbar .panel-default > .panel-body {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .navbar .panel-default .panel-body > .list-container {
@@ -6473,7 +6477,7 @@ button.close {
     padding-bottom: 20px;
 }
 
-.modal-body > div:not(.record-container):not(.edit-container) {
+.modal-body > div:not(.record-container):not(.edit-container):not(.list-container) {
     padding: 0 20px;
 }
 
@@ -13155,7 +13159,7 @@ table.table {
 .modal-footer {
     padding-top: 10px;
     padding-bottom: 10px;
-    z-index: 1;
+    z-index: 100;
 }
 
 @media (min-width: 768px) {
@@ -13321,6 +13325,10 @@ a:hover, a:focus {
     text-transform: none;
     letter-spacing: 0.03em;
     color: #333;
+}
+
+.panel-title .panel-title-text:empty {
+    opacity: 0;
 }
 
 .record .middle > .panel {
@@ -15669,12 +15677,8 @@ td[data-name="draggableIcon"] {
     margin-right: 5px;
 }
 
-.bookmark-panel-container .panel-body {
-    padding: 10px 20px;
-}
-
 .bookmark-panel-container .panel-body .group-container {
-    margin: -10px -20px;
+    margin: -10px 0;
 }
 
 .bookmark-panel-container .group .list-group-item {
@@ -15711,14 +15715,6 @@ td[data-name="draggableIcon"] {
 
 .bookmark-panel-container .group .group-name .icon {
     margin-right: 5px;
-}
-
-.bookmark-panel-container .panel-body {
-    padding: 10px 20px;
-}
-
-.bookmark-panel-container .panel-body .group-container {
-    margin: -10px -20px;
 }
 
 .bookmark-panel-container .group .list-group-item {
