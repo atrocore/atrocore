@@ -7,7 +7,9 @@
     "source": "Source",
     "sourceEntityId": "ID de l'entité source",
     "hash": "Hash unique",
-    "sourceEntity": "Entité source"
+    "sourceEntity": "Entité source",
+    "hasCluster": "A la grappe",
+    "clusterItems": "Éléments de la grappe"
   },
   "options": {
     "type": {
