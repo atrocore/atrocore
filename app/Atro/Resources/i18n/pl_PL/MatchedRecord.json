@@ -7,7 +7,9 @@
     "source": "Źródło",
     "sourceEntityId": "Identyfikator podmiotu źródłowego",
     "hash": "Unikalny skrót",
-    "sourceEntity": "Źródłowa Jednostka"
+    "sourceEntity": "Źródłowa Jednostka",
+    "hasCluster": "Ma klaster",
+    "clusterItems": "Elementy klastra"
   },
   "options": {
     "type": {
