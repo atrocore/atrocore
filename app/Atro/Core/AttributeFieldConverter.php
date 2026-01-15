@@ -370,7 +370,7 @@ class AttributeFieldConverter
         $entity->hasAllEntityAttributes = true;
     }
 
-    public function prepareInputForAttributesValuesArray(IEntity $entity, \stdClass $input)
+    public function prepareInputForAttributesValuesArray(IEntity $entity, \stdClass $input): void
     {
         if (!isset($input->attributesValues)) {
             return;
