@@ -63,7 +63,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                     }
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
-                    this.wait(false)
                 });
             } else {
                 Dep.prototype.setup.call(this);
@@ -416,9 +415,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.loadLayoutData(() => {
                     o.layoutData = this.layoutData;
                     createView();
+                    this.wait(false);
                 })
             } else {
                 createView();
+                this.wait(false);
             }
         },
 
