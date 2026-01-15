@@ -2,7 +2,7 @@
   "fields": {
     "entityName": {
       "type": "varchar",
-      "view": "views/fields/entity-type",
+      "view": "views/cluster-item/fields/entity-type",
       "required": true
     },
     "entityId": {
@@ -18,15 +18,19 @@
       "protected": true,
       "openApiDisabled": true,
       "conditionalProperties": {
-        "visible": {
+        "readOnly": {
           "conditionGroup": [
             {
-              "type": "isNotEmpty",
-              "attribute": "id"
+              "type": "isEmpty",
+              "attribute": "entityName"
             }
           ]
         }
       }
+    },
+    "entity": {
+      "type": "jsonArray",
+      "notStorable": true
     },
     "cluster": {
       "type": "link"

@@ -1,3 +1,22 @@
 {
-  "controller": "controllers/record"
+  "controller": "controllers/record",
+  "views": {
+    "detail": "views/cluster/detail"
+  },
+  "recordViews": {
+    "detail": "views/cluster/record/detail"
+  },
+  "relationshipPanels": {
+    "clusterItems": {
+      "checkboxes": false,
+      "rowActionsView": "views/record/row-actions/relationship-remove-only",
+      "view": "views/cluster/record/panels/cluster-items",
+      "hideShowFullList": true,
+      "select": false,
+      "unlink": false,
+      "canClose": false,
+      "sortBy": "createdAt",
+      "asc": false
+    }
+  }
 }

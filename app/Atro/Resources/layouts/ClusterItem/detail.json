@@ -7,17 +7,13 @@
         {
           "name": "entityName"
         },
-        {
-          "name": "entityId"
-        }
+        false
       ],
       [
         {
-          "name": "cluster"
-        },
-        {
           "name": "record"
-        }
+        },
+        false
       ]
     ]
   }
