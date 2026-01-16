@@ -396,10 +396,10 @@ Espo.define('view', [], function () {
         },
 
         getModelTitle(model = null){
-            if(!model) {
+            if (!model) {
                 model = this.model;
             }
-          return this.getLocalizedFieldValue(model, model.nameField)
+            return this.getLocalizedFieldValue(model, model.nameField)
         },
 
         onModelReady(callback) {
