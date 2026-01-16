@@ -524,7 +524,9 @@
     "Relations": "Beziehungen",
     "Saved Filters": "Gespeicherte Filter",
     "replaceItem": "Artikel austauschen",
-    "removeItem": "Artikel entfernen"
+    "removeItem": "Artikel entfernen",
+    "openStagingEntity": "Staging-Entität öffnen",
+    "openPrimaryEntity": "Master-Entität öffnen"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",

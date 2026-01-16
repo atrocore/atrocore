@@ -1,6 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import {Metadata} from "../../../utils/Metadata";
+    import {Language} from "../../../utils/Language";
 
     import EntityCallbacks from "./interfaces/EntityCallbacks";
     import EntityActionButtons from "./interfaces/EntityActionsButtons";
@@ -24,6 +25,8 @@
     let dynamicActions: ActionParams[] = [];
     let dynamicDropdownActions: ActionParams[] = [];
     let hasFavoriteButton: boolean = false;
+    let primaryEntityId: string | null = null;
+    let stagingEntityId: string | null = null;
 
     $: {
         actions = [...entityActions.buttons ?? [], ...dynamicActions];
@@ -65,7 +68,21 @@
         dynamicDropdownActions = Array.from(dropdown.values());
     }
 
+    function getStagingEntity(code: string): string | null {
+        const scopes: Record<string, any> = Metadata.get(['scopes']);
+        for (const [key, defs] of Object.entries(scopes)) {
+            if (defs.primaryEntityId === code && defs.role === 'staging') {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
     onMount(() => {
+        primaryEntityId = Metadata.get(['scopes', scope, 'primaryEntityId']);
+        stagingEntityId = primaryEntityId ? null : getStagingEntity(scope);
+
         hasFavoriteButton = Metadata.get(['scopes', scope, 'tab']);
         loadDynamicActions();
     });
@@ -77,7 +94,13 @@
     </div>
     <div class="right-group">
         <div class="entity-buttons">
-            <TourButton {scope} mode="list" style={'primary outline'} />
+            <TourButton {scope} mode="list" />
+            {#if stagingEntityId}
+                <a role="button" title={Language.translate('openStagingEntity')} href="#{stagingEntityId}"><i class="ph ph-signpost"></i></a>
+            {/if}
+            {#if primaryEntityId}
+                <a role="button" title={Language.translate('openPrimaryEntity')} href="#{primaryEntityId}"><i class="ph ph-crown"></i></a>
+            {/if}
             {#if hasFavoriteButton}
                 <FavoriteEntityButton
                         active={isFavoriteEntity}
@@ -106,8 +129,6 @@
     }
 
     .buttons-container :global(.entity-actions button) {
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
         border-radius: 3px;
     }
 
