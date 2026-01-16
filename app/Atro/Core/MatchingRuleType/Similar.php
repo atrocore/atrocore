@@ -58,7 +58,7 @@ class Similar extends AbstractMatchingRule
     {
         $field = $this->rule->get('field');
 
-        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}");
+        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
         if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
             $stageValue = $stageEntity->get($field) ?? [];
