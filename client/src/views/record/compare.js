@@ -608,6 +608,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         areEquals(current, others, field, fieldDef) {
+            current = current.clone();
+            others = others.map(o => o.clone());
             let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
@@ -621,10 +623,16 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 result = true;
                 for (const other of others) {
-                    result = result && current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
-                        && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
+                    result = result && current.get(fieldId)?.sort()?.toString() === other.get(fieldId)?.sort()?.toString();
                 }
                 return result
+            }
+
+            if(['multiEnum', 'extensibleMultiEnum'].includes(fieldDef['type'])) {
+                current.get(field)?.sort();
+                others.forEach(o => {
+                    o?.get(field)?.sort()
+                });
             }
 
             if (['rangeFloat', 'rangeInt'].includes(fieldDef['type'])) {
