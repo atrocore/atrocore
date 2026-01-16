@@ -641,7 +641,7 @@ class Record extends RecordService
 
         $input->primaryRecordId = $primaryEntity->get('id');
 
-        foreach ($primaryEntity->getValueMap() as $field => $value) {
+        foreach ($primaryEntity->toArray() as $field => $value) {
             if (in_array($field, ['id', 'createdAt', 'modifiedAt', 'createdBy', 'modifiedBy'])) {
                 continue;
             }

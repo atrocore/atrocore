@@ -44,11 +44,13 @@ class FileType extends AbstractFieldType
 
         $entity->fields[$name . 'Name'] = [
             'type'        => 'varchar',
+            'attributeId' => $row['id'],
             'notStorable' => true
         ];
 
         $entity->fields[$name . 'PathsData'] = [
             'type'        => 'jsonObject',
+            'attributeId' => $row['id'],
             'notStorable' => true
         ];
 

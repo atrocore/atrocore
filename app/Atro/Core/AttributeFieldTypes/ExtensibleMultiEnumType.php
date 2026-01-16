@@ -36,11 +36,13 @@ class ExtensibleMultiEnumType extends AbstractFieldType
 
         $entity->fields[$name . 'Names'] = [
             'type'        => 'jsonObject',
+            'attributeId' => $row['id'],
             'notStorable' => true
         ];
 
         $entity->fields[$name . 'OptionsData'] = [
             'type'        => 'jsonArray',
+            'attributeId' => $row['id'],
             'notStorable' => true
         ];
 

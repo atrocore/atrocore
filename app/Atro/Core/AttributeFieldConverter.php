@@ -299,6 +299,15 @@ class AttributeFieldConverter
                 }
             }
 
+            if (!empty($entity->_originalInput->attributesValues)) {
+                foreach ($entity->_originalInput->attributesValues as $attributeValue) {
+                    if (!empty($attributeValue->attributeId) && !in_array($attributeValue->attributeId, $attributesIds)) {
+                        $attributesIds[] = $attributeValue->attributeId;
+                    }
+                }
+            }
+
+
             $preparedAttributesIds = [];
             foreach ($attributesIds as $attributeId) {
                 if (!in_array($attributeId, array_column($res, 'id'))) {
@@ -359,6 +368,41 @@ class AttributeFieldConverter
         }
 
         $entity->hasAllEntityAttributes = true;
+    }
+
+    public function prepareInputForAttributesValuesArray(IEntity $entity, \stdClass $input): void
+    {
+        if (!isset($input->attributesValues)) {
+            return;
+        }
+
+        // flat attribute values from array
+        foreach ($input->attributesValues ?? [] as $attributeValue) {
+            if (!empty($attributeValue->attributeId)) {
+                $attributeField = null;
+                foreach ($entity->entityDefs['fields'] as $field => $defs) {
+                    if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeValue->attributeId) {
+                        $attributeField = $field;
+                        break;
+                    }
+                }
+
+                if (empty($attributeField)) {
+                    continue;
+                }
+
+                foreach ($entity->fields ?? [] as $name => $defs) {
+                    if (!empty($defs['attributeId']) && $defs['attributeId'] === $attributeValue->attributeId) {
+                        $property = str_replace($attributeField, 'value', $name);
+                        if (property_exists($attributeValue, $property)) {
+                            $input->$name = $attributeValue->$property;;
+                        }
+                    }
+                }
+            }
+        }
+
+        unset($input->attributesValues);
     }
 
     public function getAttributesRowsByIds(array $attributesIds): array
