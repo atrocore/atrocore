@@ -44,7 +44,7 @@ Espo.define('views/matching-rule/fields/entity-field', 'views/fields/enum', Dep 
             this.translatedOptions = {};
             this.originalOptionList = this.params.options = [];
 
-            if (!['equal', 'like', 'contains'].includes(this.model.get('type'))) {
+            if (!['equal', 'similar', 'contains'].includes(this.model.get('type'))) {
                 return;
             }
 

@@ -16,7 +16,7 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Contains extends AbstractMatchingRule
+class Similar extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {
@@ -47,8 +47,8 @@ class Contains extends AbstractMatchingRule
             $sqlPart = "{$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
             $qb->setParameter($this->rule->get('id'), '%"' . reset($value) . '"%');
         } else {
-            $sqlPart = "{$alias}.{$escapedColumnName} IS NOT NULL AND {$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
-            $qb->setParameter($this->rule->get('id'), "%" . $stageEntity->get($this->rule->get('field')) . "%");
+            $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
+            $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($value))));
         }
 
         return $sqlPart;
@@ -60,14 +60,10 @@ class Contains extends AbstractMatchingRule
 
         $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}.type");
 
-        $stageValue = $stageEntity->get($field);
-        $masterValue = $masterEntityData[$field];
-
-        if (empty($stageValue) && empty($masterValue)) {
-            return 0;
-        }
-
         if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+            $stageValue = $stageEntity->get($field) ?? [];
+            $masterValue = $masterEntityData[$field] ?? [];
+
             if (is_string($masterValue)) {
                 $masterValue = json_decode($masterValue, true) ?? [];
             }
@@ -76,13 +72,15 @@ class Contains extends AbstractMatchingRule
                 return 0;
             }
 
-            if (empty(array_diff($stageValue, $masterValue))) {
-                return $this->rule->get('weight') ?? 0;
-            }
+            sort($stageValue);
+            sort($masterValue);
         } else {
-            if (str_contains($masterValue, $stageValue)) {
-                return $this->rule->get('weight') ?? 0;
-            }
+            $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
+            $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
+        }
+
+        if ($stageValue === $masterValue) {
+            return $this->rule->get('weight') ?? 0;
         }
 
         return 0;
