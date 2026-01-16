@@ -16,7 +16,7 @@ use Atro\Core\Utils\Util;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Espo\ORM\Entity;
 
-class Like extends AbstractMatchingRule
+class Similar extends AbstractMatchingRule
 {
     public static function getSupportedFieldTypes(): array
     {

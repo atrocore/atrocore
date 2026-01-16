@@ -9,7 +9,7 @@
   "options": {
     "type": {
       "equal": "Equal",
-      "like": "Stejně jako",
+      "similar": "Podobný",
       "contains": "Obsahuje",
       "set": "Sada"
     },

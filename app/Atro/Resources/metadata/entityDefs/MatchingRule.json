@@ -70,7 +70,7 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like",
+                "similar",
                 "contains"
               ]
             }
@@ -83,7 +83,7 @@
       "required": true,
       "options": [
         "equal",
-        "like",
+        "similar",
         "contains",
         "set"
       ],
@@ -109,7 +109,7 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like",
+                "similar",
                 "contains"
               ]
             }
@@ -122,7 +122,7 @@
               "attribute": "type",
               "value": [
                 "equal",
-                "like",
+                "similar",
                 "contains"
               ]
             }

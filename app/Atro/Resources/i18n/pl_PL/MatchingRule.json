@@ -9,7 +9,7 @@
   "options": {
     "type": {
       "equal": "Równość",
-      "like": "Na przykład",
+      "similar": "Podobny",
       "contains": "Zawiera",
       "set": "Zestaw"
     },
