@@ -42,7 +42,7 @@ class Similar extends AbstractMatchingRule
         $value = $stageEntity->get($field);
 
         if (empty($value)) {
-            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '[]')";
+            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '' OR {$alias}.{$escapedColumnName} = '[]')";
         } elseif (is_array($value)) {
             $sqlPart = "{$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
             $qb->setParameter($this->rule->get('id'), '%"' . reset($value) . '"%');
