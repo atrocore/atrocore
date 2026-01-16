@@ -26,27 +26,58 @@ class Similar extends AbstractMatchingRule
             "text",
             "url",
             "varchar",
-            "wysiwyg"
+            "wysiwyg",
+            "array",
+            "extensibleMultiEnum",
+            "multiEnum"
         ];
     }
 
     public function prepareMatchingSqlPart(QueryBuilder $qb, Entity $stageEntity): string
     {
         $alias = $qb->getQueryPart('from')[0]['alias'];
-
+        $field = $this->rule->get('field');
         $columnName = Util::toUnderScore($this->rule->get('field'));
         $escapedColumnName = $this->getConnection()->quoteIdentifier($columnName);
+        $value = $stageEntity->get($field);
 
-        $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
-        $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('field'))))));
+        if (empty($value)) {
+            $sqlPart = "({$alias}.{$escapedColumnName} IS NULL OR {$alias}.{$escapedColumnName} = '[]')";
+        } elseif (is_array($value)) {
+            $sqlPart = "{$alias}.{$escapedColumnName} LIKE :{$this->rule->get('id')}";
+            $qb->setParameter($this->rule->get('id'), '%"' . reset($value) . '"%');
+        } else {
+            $sqlPart = "REPLACE(LOWER(TRIM({$alias}.{$escapedColumnName})), ' ', '') = :{$this->rule->get('id')}";
+            $qb->setParameter($this->rule->get('id'), str_replace(' ', '', strtolower(trim($value))));
+        }
 
         return $sqlPart;
     }
 
     public function match(Entity $stageEntity, array $masterEntityData): int
     {
-        $stageValue = str_replace(' ', '', strtolower(trim($stageEntity->get($this->rule->get('field')))));
-        $masterValue = str_replace(' ', '', strtolower(trim($masterEntityData[$this->rule->get('field')])));
+        $field = $this->rule->get('field');
+
+        $fieldType = $this->getMetadata()->get("entityDefs.{$stageEntity->getEntityName()}.fields.{$field}");
+
+        if (in_array($fieldType, ['array', 'extensibleMultiEnum', 'multiEnum'])) {
+            $stageValue = $stageEntity->get($field) ?? [];
+            $masterValue = $masterEntityData[$field] ?? [];
+
+            if (is_string($masterValue)) {
+                $masterValue = json_decode($masterValue, true) ?? [];
+            }
+
+            if (!is_array($stageValue) || !is_array($masterValue)) {
+                return 0;
+            }
+
+            sort($stageValue);
+            sort($masterValue);
+        } else {
+            $stageValue = str_replace(' ', '', strtolower(trim((string)$stageEntity->get($field))));
+            $masterValue = str_replace(' ', '', strtolower(trim((string)$masterEntityData[$field])));
+        }
 
         if ($stageValue === $masterValue) {
             return $this->rule->get('weight') ?? 0;
