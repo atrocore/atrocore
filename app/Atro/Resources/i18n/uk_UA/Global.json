@@ -524,7 +524,9 @@
     "Relations": "Стосунки",
     "Saved Filters": "Збережені фільтри",
     "replaceItem": "Замінити елемент",
-    "removeItem": "Видалити елемент"
+    "removeItem": "Видалити елемент",
+    "openStagingEntity": "Відкрити мастер сутність",
+    "openPrimaryEntity": "Відкрити стейджинг сутність"
   },
   "insightsPanels": {
     "summary": "Підсумок",

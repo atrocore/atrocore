@@ -529,7 +529,9 @@
     "Saved Filters": "Saved Filters",
     "replaceItem": "Replace",
     "removeItem": "Remove",
-    "isLinked": "Is Linked"
+    "isLinked": "Is Linked",
+    "openStagingEntity": "Open Staging Entity",
+    "openPrimaryEntity": "Open Master Entity"
   },
   "insightsPanels": {
     "summary": "Summary",
