@@ -75,6 +75,7 @@ Espo.define('views/record/compare/fields-panels', 'view', function (Dep) {
                             modelForView = model.clone();
                             modelForView.defs = model.defs;
                         }
+
                         this.createView(row.key, viewName, {
                             el: this.options.el + ` [data-field="${field}"]  .${row.class}`,
                             model: modelForView,

@@ -298,7 +298,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     const type = fieldDef['type'];
 
-                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
+                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field))) {
                         continue;
                     }
 
@@ -613,7 +613,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
-                const fieldName = field + 'Names'
 
                 if (
                     (current.get(fieldId) && current.get(fieldId).length === 0)
@@ -628,7 +627,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return result
             }
 
-            if(['multiEnum', 'extensibleMultiEnum'].includes(fieldDef['type'])) {
+            if (fieldDef['type'] === 'jsonArray' || this.getMetadata().get(['fields', fieldDef['type'], 'fieldDefs', 'type']) === 'jsonArray') {
                 current.get(field)?.sort();
                 others.forEach(o => o.get(field)?.sort());
             }
@@ -736,18 +735,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return false;
             }
             return type && !['composite'].includes(type);
-        },
-
-        isFieldEnabled(model, name) {
-            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
-
-            for (let param of disabledParameters) {
-                if (model.getFieldParam(name, param)) {
-                    return false
-                }
-            }
-
-            return true;
         },
 
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
