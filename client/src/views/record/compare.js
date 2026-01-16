@@ -630,9 +630,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             if(['multiEnum', 'extensibleMultiEnum'].includes(fieldDef['type'])) {
                 current.get(field)?.sort();
-                others.forEach(o => {
-                    o?.get(field)?.sort()
-                });
+                others.forEach(o => o.get(field)?.sort());
             }
 
             if (['rangeFloat', 'rangeInt'].includes(fieldDef['type'])) {
