@@ -276,7 +276,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.ajaxGetRequest(this.getItemsUrl(selectionId))
                     .then(result => {
                         let entityByScope = {};
-
                         let order = 0;
                         for (const entityData of result.list) {
                             let scope = entityData.entityType ?? entityData.entityName;
@@ -309,7 +308,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 models.sort((a, b) => a._order - b._order);
                                 let orderedModels = [];
                                 if(this.hasStaging()) {
-                                    // we will order by entity, master first then staging
+                                    // we order by entity, master first then staging
                                     for (const entityType of this.getEntityTypes()) {
                                         models.forEach(m => {
                                             if(m.name === entityType) {
