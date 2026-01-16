@@ -24,12 +24,15 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
         getEntityTypes() {
            let entities = [this.model.get('masterEntity')];
-           _.each(this.getMetadata().get(['scopes']), (scopeDefs, scope) => {
-               if(scopeDefs.primaryEntityId === this.model.get('masterEntity')) {
-                   entities.push(scope);
-               }
-           })
+            let stagingEntity = this.getStagingEntity(this.model.get('masterEntity'));
+            if(stagingEntity) {
+                entities.push(stagingEntity);
+            }
             return entities;
+        },
+
+        hasStaging() {
+            return !!this.getStagingEntity(this.model.get('masterEntity'));
         },
 
         shouldOpenSelectDialog() {
@@ -50,6 +53,30 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
             }
 
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
+        },
+
+        getCompareButtons() {
+            let buttons = {
+                additionalButtons: [],
+                buttons: [],
+                dropdownButtons: [
+                    {
+                        label: this.translate('Remove'),
+                        name: 'delete'
+                    }
+                ],
+                hasLayoutEditor: true
+            }
+
+            if (this.getAcl().check('Cluster', 'edit')) {
+                buttons.additionalButtons.push({
+                    action: 'addItem',
+                    name: 'addItem',
+                    label: this.translate('addItem')
+                })
+            }
+
+            return buttons;
         },
     })
 });

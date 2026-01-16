@@ -24,6 +24,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         itemScope: 'SelectionRecord',
 
+        hasReplaceRecord: true,
+
+        hasRemoveRecord: true,
+
         events: _.extend({
             'click div.inline-actions a.swap-entity': function (e) {
                 this.afterSwapButtonClick(e)
