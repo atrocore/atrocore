@@ -1,4 +1,5 @@
 {
+  "iconClass": "copy",
   "controller": "controllers/record",
   "views": {
     "detail": "views/cluster/detail"

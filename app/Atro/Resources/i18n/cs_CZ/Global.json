@@ -524,6 +524,7 @@
     "removeItem": "Odebrat položku"
   },
   "fields": {
+    "number": "Číslo",
     "width": "Šířka",
     "height": "Výška",
     "status": "Stav",

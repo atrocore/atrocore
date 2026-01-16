@@ -9,5 +9,6 @@
   "importable": true,
   "notifications": true,
   "hideFieldTypeFilters": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "nameField": "number"
 }

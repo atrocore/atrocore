@@ -680,6 +680,7 @@
     "deletePermanently": "Видалити назавжди"
   },
   "fields": {
+    "number": "Номер",
     "field": "Поле",
     "primaryRecord": "Первинний запис",
     "derivedRecords": "Похідні записи",

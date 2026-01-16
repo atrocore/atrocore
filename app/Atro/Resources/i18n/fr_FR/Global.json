@@ -1,5 +1,6 @@
 {
   "fields": {
+    "number": "Numéro",
     "classifications": "Classifications",
     "status": "Statut",
     "conditionsType": "Type de conditions",

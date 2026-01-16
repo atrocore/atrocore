@@ -1,4 +1,5 @@
 {
+  "iconClass": "copy-simple",
   "controller": "controllers/record",
   "relationshipPanels": {
     "selectionRecords": {

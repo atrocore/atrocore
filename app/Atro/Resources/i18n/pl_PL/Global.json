@@ -671,6 +671,7 @@
     "select": "Wybierz"
   },
   "fields": {
+    "number": "Numer",
     "status": "Status",
     "conditionsType": "Typ warunków",
     "conditions": "Warunki",

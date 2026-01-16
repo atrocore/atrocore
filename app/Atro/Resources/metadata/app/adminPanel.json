@@ -112,6 +112,12 @@
         "docsUrl": "https://help.atrocore.com/atrocore/administration/lists"
       },
       {
+        "url": "#Cluster",
+        "label": "clusters",
+        "description": "clusters",
+        "icon": "ph ph-copy"
+      },
+      {
         "url": "#Matching",
         "label": "matchings",
         "description": "matchings",

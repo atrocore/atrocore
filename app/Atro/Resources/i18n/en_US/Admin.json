@@ -79,7 +79,8 @@
     "apiRequest": "API request",
     "style": "Styles",
     "incomingWebhook": "Incoming Webhooks",
-    "matchings": "Matchings"
+    "matchings": "Matchings",
+    "clusters": "Clusters"
   },
   "layouts": {
     "relationships": "Relations",
@@ -175,6 +176,7 @@
   },
   "descriptions": {
     "matchings": "Matchings helps identify similar records across entities by using user-defined rules.",
+    "clusters": "Use clusters to group similar records within master data management and match them with each other.",
     "incomingWebhook": "Incoming Webhooks let you trigger predefined Actions via external HTTP requests, with optional security like hash verification and IP whitelisting.",
     "Storage": "Manage physical locations for all uploaded files (Local File System, Microsoft Sharepoint, Amazon S3, etc.)",
     "listOfSupportedFilesTypes": "Manage file types for additional file validation (e.g. images, documents, videos, etc.) and classification.",

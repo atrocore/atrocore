@@ -724,6 +724,7 @@
     "select": "Wählen"
   },
   "fields": {
+    "number": "Nummer",
     "field": "Feld",
     "primaryRecord": "Primärer Datensatz",
     "derivedRecords": "Abgeleitete Datensätze",

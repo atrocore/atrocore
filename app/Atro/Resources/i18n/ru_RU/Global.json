@@ -671,6 +671,7 @@
     "cancel": "Отменить"
   },
   "fields": {
+    "number": "Номер",
     "field": "Поле",
     "primaryRecord": "Первичная запись",
     "derivedRecords": "Производные записи",

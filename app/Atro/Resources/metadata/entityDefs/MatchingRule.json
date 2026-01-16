@@ -1,12 +1,7 @@
 {
   "fields": {
-    "code": {
-      "type": "varchar",
-      "unique": true,
-      "required": true,
-      "trim": true,
-      "defaultValueType": "script",
-      "default": "{% set number=recordsCount('MatchingRule') %}{% if number is empty%}{% set number = 1 %}{% else %}{% set number=number+1 %}{% endif %}rule-{{ number }}"
+    "number": {
+      "type": "autoincrement"
     },
     "createdAt": {
       "type": "datetime",

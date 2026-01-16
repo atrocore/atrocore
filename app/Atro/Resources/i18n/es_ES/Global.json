@@ -671,6 +671,7 @@
     "cancel": "Cancelar"
   },
   "fields": {
+    "number": "Número",
     "name": "Nombre",
     "firstName": "Nombre",
     "lastName": "Apellidos",
