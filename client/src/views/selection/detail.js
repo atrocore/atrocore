@@ -276,6 +276,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.ajaxGetRequest(this.getItemsUrl(selectionId))
                     .then(result => {
                         let entityByScope = {};
+
                         let order = 0;
                         for (const entityData of result.list) {
                             let scope = entityData.entityType ?? entityData.entityName;
@@ -306,7 +307,18 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         Promise.all(promises)
                             .then(() => {
                                 models.sort((a, b) => a._order - b._order);
-                                initialResolve(models);
+                                let orderedModels = [];
+                                if(this.hasStaging()) {
+                                    // we will order by entity, master first then staging
+                                    for (const entityType of this.getEntityTypes()) {
+                                        models.forEach(m => {
+                                            if(m.name === entityType) {
+                                                orderedModels.push(m);
+                                            }
+                                        })
+                                    }
+                                }
+                                initialResolve(orderedModels);
                             });
                     });
             });
@@ -805,7 +817,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 hasLayoutEditor: true
             }
 
-            if (this.getAcl().check('Selection', 'edit')) {
+            if (this.getAcl().check(this.scope, 'edit')) {
                 buttons.additionalButtons.push({
                     action: 'addItem',
                     name: 'addItem',
@@ -847,6 +859,20 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             }
 
             return [];
+        },
+
+        hasStaging() {
+            return false;
+        },
+
+        getStagingEntity(masterEntity) {
+            let result = null;
+            _.each(this.getMetadata().get(['scopes']), (scopeDefs, scope) => {
+                if(scopeDefs.primaryEntityId === masterEntity) {
+                    result =  scope;
+                }
+            })
+            return result;
         },
 
         actionMerge() {

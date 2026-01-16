@@ -619,6 +619,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 });
             });
         },
+
         hasStaging() {
             return !!this.getStagingEntity();
         },

@@ -14,7 +14,9 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         itemScope: 'ClusterItem',
 
-        hasStaging: true,
+        hasReplaceRecord: false,
+
+        hasRemoveRecord: true,
 
         isComparisonAcrossScopes() {
             return false;

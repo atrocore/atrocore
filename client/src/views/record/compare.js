@@ -48,6 +48,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
+        hasReplaceRecord: false,
+
+        hasRemoveRecord: false,
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -590,7 +594,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 merging: this.merging,
                 hideButtonPanel: this.hideButtonPanel,
                 showOverlay: this.showOverlay,
-                overlayLogo: this.getFavicon()
+                overlayLogo: this.getFavicon(),
+                hasRemoveRecord: this.hasRemoveRecord,
+                hasReplaceRecord: this.hasReplaceRecord,
+                hasRecordAction: this.hasRemoveRecord || this.hasReplaceRecord
             };
         },
 
@@ -625,6 +632,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     && this.areEquals(current, others, field + 'To', this.model.defs.fields[field + 'To']);
 
                 if (fieldDef['measureId']) {
+                    if(current.get(field + 'Unit') === "") {
+                        current.set(field + 'Unit', null)
+                    }
+                    others.forEach(o => {
+                        if(o.get(field + 'Unit') === "") {
+                            o.set(field + 'Unit', null)
+                        }
+                    });
                     result = result && this.areEquals(current, others, field + 'Unit', this.model.defs.fields[field + 'Unit']);
                 }
 
