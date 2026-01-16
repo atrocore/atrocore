@@ -16881,6 +16881,10 @@ div.list-kanban > div > table .item .panel .form-group {
     border-radius: 3px;
 }
 
+.query-builder .form-control.selectize-control {
+    min-width: auto;
+}
+
 .query-builder-container .checkboxes-filter > ul {
     padding-left: 20px;
     margin-bottom: 20px;
