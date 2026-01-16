@@ -62,6 +62,7 @@ class ClusterItem extends Base
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
                             $this->getService($entityType)->prepareEntityForOutput($entity);
+                            $this->getService($entityType)->loadAdditionalFields($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {
