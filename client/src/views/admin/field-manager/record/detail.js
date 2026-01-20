@@ -18,7 +18,7 @@ Espo.define('views/admin/field-manager/record/detail', 'views/record/detail', De
                 !this.getMetadata().get(`scopes.${this.model.get('entityId')}.isCustom`)
                 && !this.model.get('isCustom')
             ) {
-                this.buttonList.shift({
+                this.buttonList.push({
                     name: "resetToDefault",
                     label: this.translate("resetToDefault", "labels", "EntityField"),
                     action: "resetToDefault"
