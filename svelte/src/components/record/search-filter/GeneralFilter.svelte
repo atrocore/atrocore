@@ -5,7 +5,7 @@
     import { Metadata } from '$lib/core/metadata';
     import {Notifier} from '../../../utils/Notifier'
     import {getGeneralFilterStore} from './stores/GeneralFilter'
-    import {Acl} from "../../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
     import FilterGroup from "./FilterGroup.svelte";
     import {Storage} from "../../../utils/Storage";
 

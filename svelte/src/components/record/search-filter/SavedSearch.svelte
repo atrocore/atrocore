@@ -2,7 +2,7 @@
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
-    import {Acl} from "../../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
     import Preloader from "../../icons/loading/Preloader.svelte";
     import {getSavedSearchStore} from "./stores/SavedSearch";
     import SavedSearch from "./interfaces/SavedSearch"

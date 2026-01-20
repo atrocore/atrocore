@@ -13,7 +13,7 @@ import { Metadata } from '$lib/core/metadata';
 import {ModelFactory} from "./utils/ModelFactory";
 import { Config } from '$lib/core/config';
 import {Storage} from "./utils/Storage";
-import {Acl} from "./utils/Acl";
+import { Acl } from "$lib/core/acl";
 import {CollectionFactory} from "./utils/CollectionFactory";
 import Dropdown from "./utils/Dropdown"
 

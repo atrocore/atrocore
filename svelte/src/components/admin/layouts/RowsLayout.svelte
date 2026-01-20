@@ -9,7 +9,6 @@
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";
     import { Metadata } from '$lib/core/metadata';
-    import {Acl} from "../../../utils/Acl";
     import {UserData} from "../../../utils/UserData";
 
     let layoutElement: HTMLElement

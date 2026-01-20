@@ -3,7 +3,7 @@
     import { Metadata } from '$lib/core/metadata';
     import {Storage} from "../../../utils/Storage";
     import Rule from "./interfaces/Rule";
-    import {Acl} from "../../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
     import {UserData} from "../../../utils/UserData";

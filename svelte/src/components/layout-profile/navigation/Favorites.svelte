@@ -7,7 +7,7 @@
     import type Item from "./interfaces/Item";
     import {Language} from "../../../utils/Language";
     import { Metadata } from '$lib/core/metadata';
-    import {Acl} from "../../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
 
 
     export let params: Params;

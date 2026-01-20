@@ -7,7 +7,7 @@
     import ContentFilter from "./ContentFilter.svelte";
     import {Storage} from "../../utils/Storage";
     import {Notifier} from "../../utils/Notifier";
-    import {Acl} from "../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
 
     const dispatch = createEventDispatcher();
 
