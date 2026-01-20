@@ -12,6 +12,7 @@
 namespace Atro\Services;
 
 use Atro\Core\Templates\Repositories\ReferenceData;
+use Atro\Core\Utils\Metadata;
 use Atro\ORM\DB\RDB\Mapper;
 use Atro\Repositories\UserProfile;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -58,7 +59,7 @@ class LastViewed extends AbstractService
 
     public function getLastEntities(int $maxSize = 3, ?string $entityName = null, ?string $entityId = null, ?string $tabId = null): array
     {
-        $scopes = $this->getInjection('metadata')->get('scopes');
+        $scopes = $this->getMetadata()->get('scopes');
 
         $targetTypeList = array_filter(array_keys($scopes),
             fn($item) => !empty($scopes[$item]['entity']));
@@ -120,13 +121,14 @@ class LastViewed extends AbstractService
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
 
+                $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
                 } else {
-                    $foreignEntity = $repository->select(['id', 'name'])->where(['id' => $entity->get('targetId')])->findOne();
+                    $foreignEntity = $repository->select(['id', $nameField])->where(['id' => $entity->get('targetId')])->findOne();
                 }
                 if (!empty($foreignEntity)) {
-                    $entity->set('targetName', $foreignEntity->get('name'));
+                    $entity->set('targetName', $foreignEntity->get($nameField));
                 }
             }
 
@@ -163,7 +165,7 @@ class LastViewed extends AbstractService
         if (!empty($params['targetTypeList'])) {
             $targetTypeList = $params['targetTypeList'];
         } else {
-            $scopes = $this->getInjection('metadata')->get('scopes');
+            $scopes = $this->getMetadata()->get('scopes');
 
             $targetTypeList = array_filter(array_keys($scopes), function ($item) use ($scopes) {
                 return !empty($scopes[$item]['object']) && empty($scopes[$item]['hideLastViewed']);
@@ -196,13 +198,14 @@ class LastViewed extends AbstractService
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
 
+                $nameField = $this->getMetadata()->get(['scopes', $entity->get('controllerName'), 'nameField']) ?? 'name';
                 if ($repository instanceof ReferenceData || $repository instanceof UserProfile) {
                     $foreignEntity = $repository->get($entity->get('targetId'));
                 } else {
-                    $foreignEntity = $repository->select(['id', 'name'])->where(['id' => $entity->get('targetId')])->findOne();
+                    $foreignEntity = $repository->select(['id', $nameField])->where(['id' => $entity->get('targetId')])->findOne();
                 }
                 if (!empty($foreignEntity)) {
-                    $entity->set('targetName', $foreignEntity->get('name'));
+                    $entity->set('targetName', $foreignEntity->get($nameField));
                 }else if(!empty($params['skipDeleted'])) {
                     $collection->offsetUnset($i);
                     continue;
@@ -216,5 +219,10 @@ class LastViewed extends AbstractService
             'total'      => $count,
             'collection' => $collection
         );
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getInjection('metadata');
     }
 }
