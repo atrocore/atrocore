@@ -121,7 +121,7 @@
     "resetToDefault": "¿Está seguro de que desea restablecer la configuración por defecto?"
   },
   "labels": {
-    "resetToDefault": "Aplicar a valores por defecto",
+    "resetToDefault": "Restablecer a (por defecto)",
     "relationManagement": "Gestión de relaciones",
     "conditionalProperties": "Propiedades condicionales"
   },
