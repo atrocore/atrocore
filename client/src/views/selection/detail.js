@@ -318,8 +318,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             }
                                         })
                                     }
+                                    initialResolve(orderedModels);
+                                    return;
                                 }
-                                initialResolve(orderedModels);
+                                initialResolve(models);
                             });
                     });
             });
