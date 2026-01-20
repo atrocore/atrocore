@@ -72,16 +72,17 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         setup: function () {
-            if(this.selectionViewMode === 'merge' && !this.canMerge()) {
-                this.selectionViewMode = "compare";
-                this.updateUrl();
-            }
+
             if (!this.selectionRecordModels?.length && ['merge', 'compare'].includes(this.selectionViewMode)) {
                 this.wait(true)
                 this.reloadModels(() => {
                     if (this.selectionRecordModels.length === 0) {
                         this.selectionViewMode = 'standard';
                     }
+                    if(this.selectionViewMode === 'merge' && !this.canMerge()) {
+                        this.selectionViewMode = "compare";
+                    }
+                    this.updateUrl();
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
                 });
@@ -322,7 +323,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                 models.sort((a, b) => a._order - b._order);
 
                                 let orderedModels = [];
-                                if(this.hasStaging()) {
                                     // we order by entity, master first then staging
                                     for (const entityType of this.getEntityTypes()) {
                                         models.forEach(m => {
@@ -332,9 +332,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                         })
                                     }
                                     initialResolve(orderedModels);
-                                    return;
-                                }
-                                initialResolve(models);
                             });
                     });
             });
@@ -917,7 +914,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         hasStaging() {
-            return this.getStagingEntities(this.model.get(this.entityTypeField)).length >= 0;
+            if(!this.selectionRecordModels) {
+                return false;
+            }
+            let entities =  this.getStagingEntities(this.model.get(this.entityTypeField));
+            for(let model of this.selectionRecordModels) {
+                if(entities.includes(model.name)) {
+                    return true;
+                }
+            }
+            return false;
         },
 
         getStagingEntities(masterEntity) {
