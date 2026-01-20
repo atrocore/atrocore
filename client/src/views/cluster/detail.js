@@ -22,17 +22,15 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
 
         itemScope: 'ClusterItem',
 
+        entityField: 'masterEntity',
+
         getEntityTypes() {
-           let entities = [this.model.get('masterEntity')];
+            let entities = [this.model.get('masterEntity')];
             let stagingEntity = this.getStagingEntity(this.model.get('masterEntity'));
-            if(stagingEntity) {
+            if (stagingEntity) {
                 entities.push(stagingEntity);
             }
             return entities;
-        },
-
-        hasStaging() {
-            return !!this.getStagingEntity(this.model.get('masterEntity'));
         },
 
         shouldOpenSelectDialog() {

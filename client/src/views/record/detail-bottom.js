@@ -431,7 +431,7 @@ Espo.define('views/record/detail-bottom', ['view'], function (Dep) {
                 if (!(name in links) && !bottomPanelOptions) {
                     return;
                 }
-
+debugger
                 let defs = this.getMetadata().get('clientDefs.' + scope + '.relationshipPanels.' + name) || {};
                 if (bottomPanelOptions) {
                     defs = bottomPanelOptions;

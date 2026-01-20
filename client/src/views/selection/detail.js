@@ -44,6 +44,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         itemScope: 'SelectionRecord',
 
+        entityField: 'entity',
+
         init: function () {
             Dep.prototype.init.call(this);
             if (this.options.params.selectionViewMode && this.availableModes.includes(this.options.params.selectionViewMode)) {
@@ -556,10 +558,16 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         shouldOpenSelectDialog() {
-            return this.model.get('type') === 'single' && this.getEntityTypes().length > 0;
+            return this.model.get('type') === 'single';
         },
 
         actionAddItem() {
+            if(this.model.get('type') === 'single' && !this.model.get('entity')) {
+                this.notify(this.translate('entityIsRequired', 'messages', 'Selection'), 'error');
+                return;
+            }
+            debugger
+
             if (this.shouldOpenSelectDialog()) {
                 let foreignScope = this.getEntityTypes()[0];
                 let viewName = this.getMetadata().get('clientDefs.' + foreignScope + '.modalViews.select') || 'views/modals/select-records';
@@ -618,12 +626,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                         if (model) {
                             if (this.toggleSelected(model.get('entityId'))) {
                                 window.leftSidePanel?.setSelectedIds(this.selectedIds);
-                            }
-                            if (!this.model.get('entityTypes')) {
-                                this.model.set('entityTypes', []);
-                            }
-                            if (!this.model.get('entityTypes').includes(model.get('entityType'))) {
-                                this.model.get('entityTypes').push(model.get('entityType'))
                             }
                         }
                         this.model.trigger('after:relate', this.link);
@@ -843,6 +845,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getEntityTypes() {
+            if(this.model.get('type') === 'single') {
+                let entities = [this.model.get(this.entityField)];
+                let stagingEntity = this.getStagingEntity(this.model.get(this.entityField));
+                if (stagingEntity) {
+                    entities.push(stagingEntity);
+                }
+                return entities;
+            }
+
             if (this.selectionRecordModels && this.selectionRecordModels.length) {
                 let entityTypes = [];
                 this.selectionRecordModels.forEach(m => {
@@ -853,15 +864,11 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 return entityTypes;
             }
 
-            if (this.model.get('entityTypes')) {
-                return this.model.get('entityTypes');
-            }
-
             return [];
         },
 
         hasStaging() {
-            return false;
+            return !!this.getStagingEntity(this.model.get(this.entityField));
         },
 
         getStagingEntity(masterEntity) {

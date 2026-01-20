@@ -1,8 +1,48 @@
 {
   "fields": {
-    "name": {
-      "type": "varchar",
-      "trim": true
+    "number": {
+      "type": "autoincrement"
+    },
+    "entity": {
+      "type": "enum",
+      "view": "views/fields/entity-type",
+      "conditionalProperties": {
+        "visible": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            }
+          ]
+        },
+        "required": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            }
+          ]
+        },
+        "protected": {
+          "conditionGroup": [
+            {
+              "attribute": "type",
+              "type": "equals",
+              "value": "single"
+            },
+            {
+              "type": "isNotEmpty",
+              "attribute": "id"
+            },
+            {
+              "attribute": "entity",
+              "type": "isNotEmpty"
+            }
+          ]
+        }
+      }
     },
     "description": {
       "type": "text"
@@ -26,7 +66,7 @@
             {
               "type": "greaterThan",
               "attribute": "entityTypesCount",
-              "value": 1
+              "value": 0
             }
           ]
         }
