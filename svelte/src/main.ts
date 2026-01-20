@@ -11,7 +11,7 @@ import {Notifier} from './utils/Notifier';
 import {LayoutManager} from "./utils/LayoutManager";
 import { Metadata } from '$lib/core/metadata';
 import {ModelFactory} from "./utils/ModelFactory";
-import {Config} from "./utils/Config";
+import { Config } from '$lib/core/config';
 import {Storage} from "./utils/Storage";
 import {Acl} from "./utils/Acl";
 import {CollectionFactory} from "./utils/CollectionFactory";

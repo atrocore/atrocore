@@ -11,7 +11,7 @@
     import GeneralFilter from "./GeneralFilter.svelte";
     import {getSavedSearchStore} from "./stores/SavedSearch";
     import {getGeneralFilterStore} from './stores/GeneralFilter'
-    import {Config} from "../../../utils/Config";
+    import { Config } from '$lib/core/config';
     import FilterGroup from "./FilterGroup.svelte";
     import {get} from "svelte/store";
 

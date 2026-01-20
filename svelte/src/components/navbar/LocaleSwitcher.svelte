@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Config} from "../../utils/Config";
+    import { Config } from '$lib/core/config';
     import {Utils} from "../../utils/Utils";
     import {UserData} from "../../utils/UserData";
     import {LayoutManager} from "../../utils/LayoutManager";
