@@ -56,7 +56,7 @@
     "isDuplicatableRelation": "Дублируемый",
     "isUninheritableRelation": "Не унаследованное",
     "isUninheritableField": "Не унаследованное",
-    "auditableEnabled": "Зафиксируйте изменение в качестве рекордного действия",
+    "auditableEnabled": "Зафиксируйте изменение как действие записи",
     "auditableDisabled": "Не создавайте никаких записей",
     "modifiedExtendedDisabled": "Нет записи как модификация",
     "modifiedExtendedEnabled": "Запишите изменение как модификацию",
