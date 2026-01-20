@@ -96,6 +96,10 @@ class EntityField extends ReferenceData
             $this->prepareFileTypesField($entity);
             $this->prepareDefaultField($entity);
         }
+
+        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+            $entity->set('customizable', false);
+        }
     }
 
     protected function prepareFileTypesField(Entity $entity): void
