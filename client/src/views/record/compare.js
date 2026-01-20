@@ -298,7 +298,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     const type = fieldDef['type'];
 
-                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field)) || !this.isFieldEnabled(this.model, field)) {
+                    if ((!fieldDef['ignoreTypeForMerge'] && !this.isValidType(type, field))) {
                         continue;
                     }
 
@@ -608,10 +608,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
         },
 
         areEquals(current, others, field, fieldDef) {
+            current = current.clone();
+            others = others.map(o => o.clone());
             let result = false;
             if (fieldDef['type'] === 'linkMultiple') {
                 const fieldId = field + 'Ids';
-                const fieldName = field + 'Names'
 
                 if (
                     (current.get(fieldId) && current.get(fieldId).length === 0)
@@ -621,10 +622,14 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                 result = true;
                 for (const other of others) {
-                    result = result && current.get(fieldId)?.toString() === other.get(fieldId)?.toString()
-                        && current.get(fieldName)?.toString() === other.get(fieldName)?.toString();
+                    result = result && current.get(fieldId)?.sort()?.toString() === other.get(fieldId)?.sort()?.toString();
                 }
                 return result
+            }
+
+            if (fieldDef['type'] === 'jsonArray' || this.getMetadata().get(['fields', fieldDef['type'], 'fieldDefs', 'type']) === 'jsonArray') {
+                current.get(field)?.sort();
+                others.forEach(o => o.get(field)?.sort());
             }
 
             if (['rangeFloat', 'rangeInt'].includes(fieldDef['type'])) {
@@ -730,18 +735,6 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return false;
             }
             return type && !['composite'].includes(type);
-        },
-
-        isFieldEnabled(model, name) {
-            const disabledParameters = ['disabled', 'layoutDetailDisabled'];
-
-            for (let param of disabledParameters) {
-                if (model.getFieldParam(name, param)) {
-                    return false
-                }
-            }
-
-            return true;
         },
 
         isAllowFieldUsingFilter(field, fieldDef, equalValueForModels) {
