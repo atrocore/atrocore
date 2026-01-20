@@ -20,10 +20,13 @@ Espo.define('views/selection/record/detail', 'views/record/detail', function (De
 
            this.onModelReady(() => {
                if( this.getAcl().check(this.scope, 'edit')) {
-                   let dropdownItems = [];
+                   let dropdownItems = null;
                    if(this.shouldShowDropdownItem()) {
                        let stagingEntities = this.getStagingEntities(this.model.get(this.entityTypeField))
                        stagingEntities.forEach((e,key) => {
+                           if(!dropdownItems) {
+                               dropdownItems = [];
+                           }
                            dropdownItems.push({
                                action: 'addStagingItem',
                                name: 'addStagingItem'+key,
