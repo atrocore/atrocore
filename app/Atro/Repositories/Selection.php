@@ -38,9 +38,8 @@ class Selection extends Base
             ->from('selection_record', 'sr')
             ->select('distinct sr.entity_type')
             ->join('sr', 'selection', 's', 'sr.selection_id = s.id')
-            ->where('s.id = :selectionId and sr.deleted = :false')
+            ->where('s.id = :selectionId')
             ->setParameter('selectionId', $selectionId)
-            ->setParameter('false', false, ParameterType::BOOLEAN)
             ->fetchAllAssociative();
 
         return array_column($result, 'entity_type');
