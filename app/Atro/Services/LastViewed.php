@@ -116,7 +116,7 @@ class LastViewed extends AbstractService
         $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
         $entities = $repository->find($sp);
 
-        foreach ($entities as $key => $entity) {
+        foreach ($entities as $entity) {
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
 
