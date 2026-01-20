@@ -17,5 +17,6 @@
     "no",
     "all"
   ],
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "nameField": "number"
 }

@@ -26,13 +26,16 @@ use Espo\ORM\IEntity;
 
 class Selection extends Base
 {
-    protected $mandatorySelectAttributeList = ['name', 'entityTypes', 'type'];
+    protected $mandatorySelectAttributeList = ['number', 'entity', 'entityTypes', 'type'];
 
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
         $selection = $this->getEntityManager()->getEntity('Selection');
         $selection->set('type', 'single');
-        $selection->set('entityTypes', [$scope]);
+        $selection->set('entity', $scope);
+        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+            $selection->set('entity', $masterEntity);
+        }
         $this->getEntityManager()->saveEntity($selection);
 
         foreach ($entityIds as $entityId) {

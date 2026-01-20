@@ -4114,6 +4114,17 @@ tbody.collapse.in {
     border-top-left-radius: 3px;
 }
 
+.btn-group > .additional-button:not(.additional-button ~ .additional-button) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.btn-group .dropdown-toggle {
+    border-left: transparent;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
 .btn-group.open .dropdown-toggle.btn-link {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

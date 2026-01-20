@@ -83,7 +83,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             this.notify(this.translate('Removing...'));
 
             $.ajax({
-                url: `SelectionRecord/${selectionRecordId}`,
+                url: `${this.itemScope}/${selectionRecordId}`,
                 type: 'DELETE',
                 contentType: 'application/json',
                 success: () => {
@@ -137,6 +137,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             return this.getParentView().getCompareButtons();
         },
 
+        isComparisonAcrossScopes() {
+            return  this.selectionModel.get('type') !== 'single' && this.selectionModel.get('entityTypes').length > 1;
+        },
+
         canLoadActivities() {
             return true;
         },
@@ -156,6 +160,4 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             return option;
         }
     });
-
-
 });

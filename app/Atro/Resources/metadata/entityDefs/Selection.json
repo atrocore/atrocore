@@ -5,7 +5,7 @@
     },
     "entity": {
       "type": "enum",
-      "view": "views/fields/entity-type",
+      "view": "views/selection/fields/entity",
       "conditionalProperties": {
         "visible": {
           "conditionGroup": [
@@ -58,11 +58,6 @@
       "conditionalProperties": {
         "readOnly": {
           "conditionGroup": [
-            {
-              "type": "equals",
-              "attribute": "type",
-              "value": "multiple"
-            },
             {
               "type": "greaterThan",
               "attribute": "entityTypesCount",

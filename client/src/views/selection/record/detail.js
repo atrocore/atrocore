@@ -12,15 +12,49 @@
 Espo.define('views/selection/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
+
+        entityTypeField: 'entity',
+
         setup: function() {
             Dep.prototype.setup.call(this);
-            if( this.getAcl().check('Selection', 'edit')) {
-                this.additionalButtons.push({
-                    action: 'addItem',
-                    name: 'addItem',
-                    label: this.translate('addItem')
-                });
-            }
+
+           this.onModelReady(() => {
+               if( this.getAcl().check(this.scope, 'edit')) {
+                   let dropdownItems = [];
+                   if(this.shouldShowDropdownItem()) {
+                       let stagingEntities = this.getStagingEntities(this.model.get(this.entityTypeField))
+                       stagingEntities.forEach((e,key) => {
+                           dropdownItems.push({
+                               action: 'addStagingItem',
+                               name: 'addStagingItem'+key,
+                               label: this.translate('Add') + ' ' + e,
+                               id: e
+                           });
+                       });
+                   }
+
+                   this.additionalButtons.push({
+                       action: 'addItem',
+                       name: 'addItem',
+                       label: this.translate('addItem'),
+                       dropdownItems: dropdownItems
+                   });
+               }
+           })
+        },
+
+        shouldShowDropdownItem() {
+           return this.model.get('type') === 'single'
+        },
+
+        getStagingEntities(masterEntity) {
+            let result = [];
+            _.each(this.getMetadata().get(['scopes']), (scopeDefs, scope) => {
+                if(scopeDefs.primaryEntityId === masterEntity) {
+                    result.push(scope);
+                }
+            })
+            return result;
         }
     });
 });

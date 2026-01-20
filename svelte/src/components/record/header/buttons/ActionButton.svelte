@@ -28,6 +28,7 @@
         if (params.className) {
             computedClassNames += ` ${params.className}`;
         }
+
     }
 
     function runAction(e: Event) {
@@ -42,8 +43,30 @@
 </script>
 
 {#if !params.hidden}
-    <button class={computedClassNames} data-name={params.name} data-action={params.action || params.name}
-            data-id={params.id} type="button" on:click={runAction} title={params.tooltip} disabled={params.disabled}>
-        {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
-    </button>
+    {#if params.dropdownItems}
+        <div class="btn-group">
+            <button class={computedClassNames} data-toggle={params.dropdown ? 'dropdown' : null}
+                    data-name={params.name} data-action={params.action || params.name}
+                    data-id={params.id} type="button" on:click={runAction} title={params.tooltip} disabled={params.disabled} >
+                {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
+            </button>
+            <button  class={computedClassNames + ' dropdown-toggle'} data-toggle="dropdown">
+                <i class="ph ph-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-left filter-list">
+                {#each  params.dropdownItems as subItemParams }
+                    <li data-name={subItemParams.name} >
+                        <a href="javascript:" data-name={subItemParams.name}  data-id={subItemParams.id} data-action={subItemParams.action}>{Language.translate(subItemParams.label)}</a>
+                    </li>
+                {/each}
+            </ul>
+        </div>
+
+    {:else}
+        <button class={computedClassNames} data-toggle={params.dropdown ? 'dropdown' : null}
+                data-name={params.name} data-action={params.action || params.name}
+                data-id={params.id} type="button" on:click={runAction} title={params.tooltip} disabled={params.disabled} >
+            {#if params.html}{@html params.html}{:else}{Language.translate(params.label)}{/if}
+        </button>
+    {/if}
 {/if}
