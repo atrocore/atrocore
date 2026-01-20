@@ -1,7 +1,7 @@
 <script lang="ts">
     import ActionButton from "./ActionButton.svelte";
     import ActionParams from "../interfaces/ActionParams";
-    import {Metadata} from "../../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {UserData} from "../../../../utils/UserData";
     import {driver, Driver, DriveStep} from "driver.js";
     import {onMount} from "svelte";

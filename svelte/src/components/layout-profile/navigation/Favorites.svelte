@@ -6,7 +6,7 @@
     import type KeyValue from "./interfaces/KeyValue";
     import type Item from "./interfaces/Item";
     import {Language} from "../../../utils/Language";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Acl} from "../../../utils/Acl";
 
 

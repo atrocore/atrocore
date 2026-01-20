@@ -1,6 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher, onDestroy, onMount, tick} from "svelte";
-    import {Metadata} from "../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Config} from "../../utils/Config";
     import {Utils} from "../../utils/Utils";
     import {Language} from "../../utils/Language";

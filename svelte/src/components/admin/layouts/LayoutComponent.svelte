@@ -3,7 +3,7 @@
     import RelationShipsLayout from "./RelationShipsLayout.svelte";
     import Params from "./interfaces/Params"
     import GridLayout from "./GridLayout.svelte";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import InsightsLayout from "./InsightsLayout.svelte";
 
     export let params: Params;

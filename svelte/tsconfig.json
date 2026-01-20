@@ -2,7 +2,10 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
-    "lib": ["DOM", "ES2018"],
+    "lib": [
+      "DOM",
+      "ES2018"
+    ],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -10,8 +13,20 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["svelte"]
+    "types": [
+      "svelte"
+    ],
+    "paths": {
+      "$lib/*": [
+        "src/lib/*"
+      ]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "__sapper__"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "__sapper__"
+  ]
 }

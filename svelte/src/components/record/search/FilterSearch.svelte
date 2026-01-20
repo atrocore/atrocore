@@ -8,7 +8,7 @@
     import {getGeneralFilterStore} from "../search-filter/stores/GeneralFilter"
     import {getSavedSearchStore} from "../search-filter/stores/SavedSearch"
     import Rule from "../search-filter/interfaces/Rule";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import Dropdown from "../../../utils/Dropdown";
 
 

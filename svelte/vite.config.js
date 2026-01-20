@@ -33,6 +33,7 @@ export default defineConfig(({ command, mode }) => {
         },
         resolve: {
             alias: {
+                $lib: resolve(__dirname, 'src/lib'),
                 $assets: resolve('./src/assets')
             }
         }

@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import {Language} from "../../utils/Language";
     import {Notifier} from "../../utils/Notifier";
-    import {Metadata} from "../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Storage} from "../../utils/Storage";
     import Dropdown from "../../utils/Dropdown";
 

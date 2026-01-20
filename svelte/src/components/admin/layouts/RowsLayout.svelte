@@ -8,7 +8,7 @@
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Acl} from "../../../utils/Acl";
     import {UserData} from "../../../utils/UserData";
 

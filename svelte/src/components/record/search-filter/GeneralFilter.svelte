@@ -2,7 +2,7 @@
     import {onMount} from 'svelte'
     import {get} from 'svelte/store'
     import {Language} from '../../../utils/Language'
-    import {Metadata} from '../../../utils/Metadata'
+    import { Metadata } from '$lib/core/metadata';
     import {Notifier} from '../../../utils/Notifier'
     import {getGeneralFilterStore} from './stores/GeneralFilter'
     import {Acl} from "../../../utils/Acl";

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher, onMount} from "svelte";
-    import {Metadata} from "../../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
 
     interface ViewTypeButton {
         name: string;

@@ -9,7 +9,7 @@ import {Language} from './utils/Language';
 import {UserData} from './utils/UserData';
 import {Notifier} from './utils/Notifier';
 import {LayoutManager} from "./utils/LayoutManager";
-import {Metadata} from "./utils/Metadata";
+import { Metadata } from '$lib/core/metadata';
 import {ModelFactory} from "./utils/ModelFactory";
 import {Config} from "./utils/Config";
 import {Storage} from "./utils/Storage";

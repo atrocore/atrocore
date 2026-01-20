@@ -1,6 +1,6 @@
 <script lang="ts">
     import {onMount, tick} from "svelte";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Storage} from "../../../utils/Storage";
     import Rule from "./interfaces/Rule";
     import {Acl} from "../../../utils/Acl";

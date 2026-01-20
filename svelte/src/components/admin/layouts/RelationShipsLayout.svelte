@@ -3,7 +3,7 @@
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
     import {Language} from "../../../utils/Language";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {ModelFactory} from "../../../utils/ModelFactory";
     import Group from "./interfaces/Group";
