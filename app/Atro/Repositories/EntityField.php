@@ -234,7 +234,7 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.customizable") === false) {
+        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false) {
             throw new Forbidden();
         }
 
