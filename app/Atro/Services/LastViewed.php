@@ -31,6 +31,7 @@ class LastViewed extends AbstractService
         $params = [
             'maxSize'        => $this->getConfig()->get('recordsPerPageSmall', 20),
             'offset'         => $offset ?? 0,
+            'skipDeleted'    => true,
             'targetTypeList' => [$scope]
         ];
 
@@ -115,7 +116,7 @@ class LastViewed extends AbstractService
         $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
         $entities = $repository->find($sp);
 
-        foreach ($entities as $entity) {
+        foreach ($entities as $key => $entity) {
             if ($this->getEntityManager()->hasRepository($entity->get('controllerName'))) {
                 $repository = $this->getEntityManager()->getRepository($entity->get('controllerName'));
 
@@ -202,6 +203,9 @@ class LastViewed extends AbstractService
                 }
                 if (!empty($foreignEntity)) {
                     $entity->set('targetName', $foreignEntity->get('name'));
+                }else if(!empty($params['skipDeleted'])) {
+                    $collection->offsetUnset($i);
+                    continue;
                 }
             }
 
