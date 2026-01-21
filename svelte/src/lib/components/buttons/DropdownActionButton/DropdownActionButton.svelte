@@ -39,6 +39,7 @@
                                 data-name={subItem.name}
                                 data-id={subItem.id}
                                 data-action={subItem.action}
+                                on:click={handleClick}
                         >
                             {Language.translate(subItem.label ?? subItem.name ?? '')}
                         </a>
