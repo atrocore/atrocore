@@ -30,7 +30,7 @@ class LastViewed extends AbstractService
     public function getLastVisitItemsTreeData($scope, $offset = 0): array
     {
         $params = [
-            'maxSize'        => $this->getConfig()->get('recordsPerPageSmall', 20),
+            'maxSize'        => $this->getConfig()->get('leftPanelLastViewedCount', 30),
             'offset'         => $offset ?? 0,
             'skipDeleted'    => true,
             'targetTypeList' => [$scope]
