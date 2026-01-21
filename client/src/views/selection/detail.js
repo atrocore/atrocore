@@ -524,10 +524,12 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         canMerge() {
-            if (!this.selectionItemModels || this.selectionItemModels.length === 0) {
+            if (this.selectionViewMode === 'standard'
+                && (!this.collection || this.collection.models.length <= 1)
+                || (this.selectionViewMode !== 'standard' && this.selectionItemModels.length <= 1)
+            ) {
                 return false;
             }
-
             return !(this.comparisonAcrossEntities() || this.hasStaging());
         },
 
@@ -926,9 +928,9 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         hasStaging() {
             let entities = this.getStagingEntities(this.model.get(this.entityTypeField));
             let scopes = [];
-            if(this.selectionViewMode === 'standard' && this.selectionItemCollection) {
-                scopes  = this.selectionItemCollection.model.map(m => m.name)
-            }else {
+            if (this.selectionViewMode === 'standard' && this.collection) {
+                scopes = this.collection.models.map(m => m.name)
+            } else if (this.selectionViewMode !== 'standard') {
                 scopes = this.selectionItemModels.map(m => m.name)
             }
             for (let scope of scopes) {
