@@ -524,6 +524,10 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         canMerge() {
+            if (!this.selectionItemModels || this.selectionItemModels.length === 0) {
+                return false;
+            }
+
             return !(this.comparisonAcrossEntities() || this.hasStaging());
         },
 
@@ -920,9 +924,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         hasStaging() {
-            if (!this.selectionItemModels) {
-                return false;
-            }
             let entities = this.getStagingEntities(this.model.get(this.entityTypeField));
             for (let model of this.selectionItemModels) {
                 if (entities.includes(model.name)) {
