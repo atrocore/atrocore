@@ -1093,7 +1093,6 @@
                 if(!hasItems) {
                     treeItems = treeItems.filter(item => item.name !== '_items');
                 }
-
                 let treeItem = Storage.get('treeItem', scope);
 
                 // admin should always be the selected one

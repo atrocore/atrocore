@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection-record/record/list', 'views/record/list', function (Dep) {
+Espo.define('views/selection-item/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
         events: _.extend({

@@ -18,7 +18,7 @@ use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class SelectionRecord extends Base
+class SelectionItem extends Base
 {
     protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityType'];
 

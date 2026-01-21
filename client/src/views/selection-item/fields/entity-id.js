@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection-record/fields/entity-id', 'views/fields/link',
+Espo.define('views/selection-item/fields/entity-id', 'views/fields/link',
     Dep => {
         return Dep.extend({
 

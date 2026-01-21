@@ -39,7 +39,7 @@ class Selection extends Base
         $this->getEntityManager()->saveEntity($selection);
 
         foreach ($entityIds as $entityId) {
-            $record = $this->getEntityManager()->getEntity('SelectionRecord');
+            $record = $this->getEntityManager()->getEntity('SelectionItem');
             $record->set('entityId', $entityId);
             $record->set('entityType', $scope);
             $record->set('selectionId', $selection->get('id'));

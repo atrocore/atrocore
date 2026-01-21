@@ -47,7 +47,7 @@
     "description": {
       "type": "text"
     },
-    "selectionRecords": {
+    "selectionItems": {
       "type": "linkMultiple",
       "auditableEnabled": true
     },
@@ -97,9 +97,9 @@
     }
   },
   "links": {
-    "selectionRecords": {
+    "selectionItems": {
       "type": "hasMany",
-      "entity": "SelectionRecord",
+      "entity": "SelectionItem",
       "foreign": "selection"
     },
     "createdBy": {

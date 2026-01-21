@@ -15,7 +15,7 @@ use Espo\Core\Acl\Base;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
-class SelectionRecord extends Base
+class SelectionItem extends Base
 {
     public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = array())
     {

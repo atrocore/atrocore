@@ -35,7 +35,7 @@ class Selection extends Base
     public function getEntities(string $selectionId): array
     {
         $result = $this->getConnection()->createQueryBuilder()
-            ->from('selection_record', 'sr')
+            ->from('selection_item', 'sr')
             ->select('distinct sr.entity_type')
             ->join('sr', 'selection', 's', 'sr.selection_id = s.id')
             ->where('s.id = :selectionId')

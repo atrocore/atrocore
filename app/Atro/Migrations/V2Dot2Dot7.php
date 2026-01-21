@@ -23,17 +23,30 @@ class V2Dot2Dot7 extends Base
 
     public function up(): void
     {
+        $this->exec("ALTER TABLE selection DROP name");
+        $this->exec("ALTER TABLE selection ADD entity VARCHAR(255) DEFAULT NULL");
+
+        $this->exec("ALTER TABLE selection_record rename TO selection_item");
+
         if ($this->isPgSQL()) {
             $this->exec("CREATE SEQUENCE selection_number_seq INCREMENT BY 1 MINVALUE 1 START 1");
             $this->exec("ALTER TABLE selection ADD number INT DEFAULT nextval('selection_number_seq') NOT NULL");
-            $this->exec("ALTER TABLE selection DROP name");
-            $this->exec("ALTER TABLE selection ADD entity VARCHAR(255) DEFAULT NULL");
+
+            $this->exec("ALTER INDEX idx_selection_record_unique RENAME TO IDX_SELECTION_ITEM_UNIQUE");
+            $this->exec("ALTER INDEX idx_selection_record_selection_id RENAME TO IDX_SELECTION_ITEM_SELECTION_ID");
+            $this->exec("ALTER INDEX idx_selection_record_entity_name RENAME TO IDX_SELECTION_ITEM_ENTITY_NAME");
+            $this->exec("ALTER INDEX idx_selection_record_entity_id RENAME TO IDX_SELECTION_ITEM_ENTITY_ID");
         } else {
             $this->exec("ALTER TABLE selection ADD number INT AUTO_INCREMENT NOT NULL");
             $this->exec("CREATE UNIQUE INDEX UNIQ_96A50CD796901F54 ON selection (number)");
-            $this->exec("ALTER TABLE selection DROP name");
-            $this->exec("ALTER TABLE selection ADD entity VARCHAR(255) DEFAULT NULL");
+            $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_unique TO IDX_SELECTION_ITEM_UNIQUE");
+            $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_selection_id TO IDX_SELECTION_ITEM_SELECTION_ID");
+            $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_entity_name TO IDX_SELECTION_ITEM_ENTITY_NAME");
+            $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_entity_id TO IDX_SELECTION_ITEM_ENTITY_ID");
         }
+
+
+
 
         $limit = 10000;
         $offset = 0;
@@ -59,7 +72,7 @@ class V2Dot2Dot7 extends Base
             foreach ($selectionIds as $selectionId) {
                 $result = $this->getConnection()->createQueryBuilder()
                     ->select('distinct sr.entity_type')
-                    ->from('selection_record', 'sr')
+                    ->from('selection_item', 'sr')
                     ->join('sr', 'selection', 's', 'sr.selection_id = s.id')
                     ->where('s.id = :selectionId and sr.deleted = :false')
                     ->setParameter('selectionId', $selectionId)

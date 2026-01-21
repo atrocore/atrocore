@@ -8,10 +8,10 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection-record/fields/name', 'views/fields/varchar',
+Espo.define('views/selection-item/fields/name', 'views/fields/varchar',
     Dep => {
         return Dep.extend({
-            listLinkTemplate: 'selection-record/fields/list-link',
+            listLinkTemplate: 'selection-item/fields/list-link',
 
             data: function () {
                 let data = Dep.prototype.data.call(this);

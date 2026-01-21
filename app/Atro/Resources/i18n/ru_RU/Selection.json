@@ -2,7 +2,7 @@
   "fields": {
     "name": "Название",
     "description": "Описание",
-    "selectionRecords": "Записи о выборе"
+    "selectionItems": "Записи о выборе"
   },
   "options": {
     "type": {

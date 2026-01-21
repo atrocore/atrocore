@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/panels/selection-records', 'views/record/panels/relationship', Dep => {
+Espo.define('views/selection/record/panels/selection-items', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
 
