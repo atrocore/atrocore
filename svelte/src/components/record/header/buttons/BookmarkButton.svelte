@@ -1,6 +1,6 @@
 <script lang="ts">
     import ActionParams from "../interfaces/ActionParams";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import {Notifier} from "../../../../utils/Notifier";
     import {Language} from "../../../../utils/Language";
     import {UserData} from "../../../../utils/UserData";

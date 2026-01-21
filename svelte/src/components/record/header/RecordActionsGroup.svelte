@@ -6,7 +6,7 @@
 
     import {onMount} from "svelte";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import ActionButton from "./buttons/ActionButton.svelte";
+    import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
     import BookmarkButton from "./buttons/BookmarkButton.svelte";
@@ -170,7 +170,7 @@
                  {executeAction} {loadingActions} hasMoreButton={true} className="record-actions">
         {#if mode === 'detail'}
             {#each additionalActions as action}
-                <ActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
+                <DropdownActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
             {/each}
 
             {#if loadingActions}
@@ -189,7 +189,7 @@
             {/if}
         {:else if mode === 'edit'}
             {#each additionalEditActions as action}
-                <ActionButton params={action} on:execute={executeAction} className="additional-button"/>
+                <DropdownActionButton params={action} on:execute={executeAction} className="additional-button"/>
             {/each}
         {/if}
     </ActionGroup>
@@ -215,7 +215,7 @@
                             <NavigationButtons hasNext={recordButtons.hasNext} hasPrevious={recordButtons.hasPrevious}
                                                onExecute={executeAction}/>
                         {:else}
-                            <ActionButton params={button} on:execute={executeAction}/>
+                            <DropdownActionButton params={button} on:execute={executeAction}/>
                         {/if}
                     {/each}
                 </div>

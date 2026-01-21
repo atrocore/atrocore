@@ -1,7 +1,7 @@
 <script lang="ts">
     import ActionParams from "../interfaces/ActionParams";
     import {Language} from "../../../../utils/Language";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
 
     export let hasPrevious: boolean = false;
     export let hasNext: boolean = false;

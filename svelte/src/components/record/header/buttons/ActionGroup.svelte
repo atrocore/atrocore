@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionButton from "./ActionButton.svelte";
+    import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
     import Preloader from "../../../icons/loading/Preloader.svelte";
     import ActionDropdownItem from "./ActionDropdownItem.svelte";
     import {Language} from "../../../../utils/Language";
@@ -26,7 +26,7 @@
 
 <div class="button-group {className}">
     {#each actions as action}
-        <ActionButton params={action} on:execute={executeAction} />
+        <DropdownActionButton params={action} on:execute={executeAction} />
     {/each}
 
     {#if hasMoreButton && (dropdownActions.length > 0 || dynamicActionsDropdown.length > 0)}

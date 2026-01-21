@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import ActionParams from "../interfaces/ActionParams";
     import {UserData} from "../../../../utils/UserData";
     import {Language} from "../../../../utils/Language";

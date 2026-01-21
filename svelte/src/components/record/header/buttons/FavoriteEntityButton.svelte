@@ -1,6 +1,6 @@
 <script lang="ts">
     import ActionParams from "../interfaces/ActionParams";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
 
     export let scope: string;
     export let onFavoriteAdd: (scope: string) => void;
