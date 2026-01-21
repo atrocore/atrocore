@@ -1091,7 +1091,7 @@
                 });
 
                 if(!hasItems) {
-                    treeItems = treeItems.filter(item => item.name !== '_item');
+                    treeItems = treeItems.filter(item => item.name !== '_items');
                 }
 
                 let treeItem = Storage.get('treeItem', scope);
