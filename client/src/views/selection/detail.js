@@ -311,7 +311,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             promises.push(new Promise((resolve) => {
                                 this.getModelFactory().create(scope, model => {
                                     for (const data of entityByScope[scope]) {
-                                        let currentModel = Espo.utils.clone(model);
+                                        let currentModel = model.clone();
                                         currentModel.set(data);
                                         currentModel._order = data._order;
                                         models.push(currentModel);
