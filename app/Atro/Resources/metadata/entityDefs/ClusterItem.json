@@ -70,8 +70,7 @@
     "unique": [
       "deleted",
       "entity_name",
-      "entity_id",
-      "cluster_id"
+      "entity_id"
     ]
   }
 }
