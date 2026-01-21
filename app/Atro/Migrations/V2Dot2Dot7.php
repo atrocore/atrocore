@@ -78,7 +78,6 @@ class V2Dot2Dot7 extends Base
             }
 
             $offset += $limit;
-
         }
     }
 
