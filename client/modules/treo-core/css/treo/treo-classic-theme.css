@@ -15743,6 +15743,9 @@ td[data-name="draggableIcon"] {
 .bookmark-panel-container .group .list-group-item .expanded-row {
     white-space: normal;
 }
+.bookmark-panel-container {
+    width: 500px !important;
+}
 
 .queue-panel-container,
 .last-viewed-panel-container {

@@ -100,6 +100,14 @@ class SelectionItem extends Base
         }
     }
 
+
+    public function findEntities($params)
+    {
+        $result =  parent::findEntities($params);
+        $result['total'] = $result['collection']->count();
+        return $result;
+    }
+
     protected function getService(string $name): Record
     {
         if(!empty($this->services[$name])) {

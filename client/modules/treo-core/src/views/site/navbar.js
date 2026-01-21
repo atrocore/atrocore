@@ -56,7 +56,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
-                hasLogo: !this.getConfig().get('disableToolbarLogo')
+                hasLogo: !this.getConfig().get('disableToolbarLogo'),
+                showCurrentSelection: true,
             }, Dep.prototype.data.call(this));
         },
 
@@ -147,6 +148,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.setupTabDefsList();
 
             this.setupBookmark();
+
+            this.setupCurrentSelection();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -423,10 +426,14 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.createView('bookmarkBadge', 'views/bookmark/badge', {
                 el: this.options.el + ' .bookmark-badge-container'
             });
+        },
+
+        setupCurrentSelection: function () {
+            this.createView('currentSelectionBadge', 'views/selection/navigation/badge', {
+                el: this.options.el + ' .current-selection-badge-container'
+            });
         }
-
     });
-
 });
 
 
