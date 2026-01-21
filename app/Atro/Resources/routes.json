@@ -1424,5 +1424,43 @@
     "response": {
       "type": "object"
     }
+  },
+  {
+    "route": "/SelectionItem/action/createOnCurrentSelection",
+    "method": "post",
+    "params": {
+      "controller": "SelectionItem",
+      "action": "createOnCurrentSelection"
+    },
+    "summary": "Create a selection item for the current selection of the user",
+    "description": "Create a selection item for the current selection of the user",
+    "security": [
+      {
+        "Authorization-Token": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "entityType": {
+                "type": "string",
+                "example": "Product"
+              },
+              "entityId": {
+                "type": "string",
+                "example": "example-id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
   }
 ]

@@ -24,13 +24,28 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                 this.fetchCollectionGroups(() => {
                     this.reRender()
                 }, this.collection.length)
-
+            },
+            'click button[data-action="openView"]': function(e) {
+                let mode = $(e.currentTarget).data('view-mode');
+                console.log('#Selection/view/' + this.getUser().get('currentSelectionId') + '/selectionViewMode=' + mode)
+                window.location.replace('#Selection/view/' + this.getUser().get('currentSelectionId') + '/selectionViewMode=' + mode);
             }
         },
 
         setup() {
             this.groups = [];
             this.collection = null;
+
+            this.loadingGroups = true;
+            this.getUser().fetch().then(() => {
+                if(this.getUser().get('currentSelectionId')) {
+                    this.loadData();
+                }else{
+                    this.loadingGroups = false;
+                    this.reRender();
+                }
+            });
+
             this.createView('currentSelectionField', 'views/fields/link', {
                 el: this.options.el + '.current-selection .field',
                 foreignScope: 'Selection',
@@ -44,6 +59,9 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                     view.model.save();
                     this.groups = [];
                     if(this.getUser().get('currentSelectionId')) {
+                        if(!this.collection) {
+                            return;
+                        }
                         this.loadingGroups = true
                         this.collection.reset();
                         this.reRender();
@@ -56,22 +74,25 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                     }
                 })
             })
-
-            if(this.getUser().get('currentSelectionId')) {
-              this.loadData();
-            }
         },
 
         loadData() {
             this.getCollectionFactory().create('SelectionItem', collection => {
                 this.collection = collection;
                 this.loadingGroups = true
-                this.once('after:render', () => {
+                if(this.isRendered()) {
                     this.fetchCollectionGroups(() => {
                         this.loadingGroups = false
                         this.reRender()
                     })
-                })
+                }else{
+                    this.once('after:render', () => {
+                        this.fetchCollectionGroups(() => {
+                            this.loadingGroups = false
+                            this.reRender()
+                        })
+                    })
+                }
             });
         },
 
@@ -79,7 +100,9 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
             return {
                 groups: this.groups,
                 loadingGroups: this.loadingGroups,
-                showMoreActive: this.canLoadMore()
+                showMoreActive: this.canLoadMore(),
+                isComparable: true,
+                isMergeable: true
             };
         },
 
@@ -110,6 +133,7 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                     }
 
                     result[item.entityType].collection.push({
+                        id: item.id,
                         entityId: item.entityId,
                         entityName: item.name,
                         entityType: item.entityType
@@ -198,6 +222,20 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
             });
         },
 
+        afterSelectionItemRemoved(selectionItemId) {
+            this.groups.forEach((group,key) => {
+                let el = group.collection.find(s => s.id === selectionItemId);
+                if(el) {
+                    this.groups[key].collection = group.collection.filter(s => s.id !== selectionItemId);
+                    this.groups[key].rowList = group.rowList.filter(id => id !== el.entityId);
+                }
+            });
+
+            this.groups = this.groups.filter(g => g.collection.length > 0);
+
+            this.reRender();
+        },
+
         initGroupCollection(group, groupCollection, callback) {
             groupCollection.url = group.key;
             groupCollection.maxSize = group.collection.length;
@@ -211,6 +249,7 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                         id: item.entityId,
                         name: item.entityName,
                     });
+                    model._selectionItemId = item.id;
                     groupCollection.add(model);
                 });
 

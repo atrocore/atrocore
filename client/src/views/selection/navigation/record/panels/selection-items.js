@@ -17,12 +17,29 @@ Espo.define('views/selection/navigation/record/panels/selection-items', 'views/r
 
         massActionsDisabled: true,
 
+        rowActionsView: 'views/selection/navigation/record/row-actions/selection-item',
+
         showCount: false,
 
         showMore: false,
 
         buttonsDisabled: true,
 
-        checkboxes: false
+        checkboxes: false,
+
+        actionRemove(data) {
+            if(data.selectionItemId) {
+                this.notify(this.translate('removing'))
+                $.ajax({
+                    url: `SelectionItem/${data.selectionItemId}`,
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    success: () => {
+                       this.getParentView().afterSelectionItemRemoved(data.selectionItemId);
+                       this.notify(this.translate('Success'), 'success')
+                    }
+                });
+            }
+        }
     });
 });

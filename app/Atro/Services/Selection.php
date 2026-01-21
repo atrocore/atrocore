@@ -30,13 +30,7 @@ class Selection extends Base
 
     public function createSelectionWithRecords(string $scope, array $entityIds)
     {
-        $selection = $this->getEntityManager()->getEntity('Selection');
-        $selection->set('type', 'single');
-        $selection->set('entity', $scope);
-        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
-            $selection->set('entity', $masterEntity);
-        }
-        $this->getEntityManager()->saveEntity($selection);
+        $selection = $this->createSelection($scope);
 
         foreach ($entityIds as $entityId) {
             $record = $this->getEntityManager()->getEntity('SelectionItem');
@@ -68,5 +62,17 @@ class Selection extends Base
         }
 
         parent::prepareEntityForOutput($entity);
+    }
+
+    protected function createSelection(string $scope): Entity
+    {
+        $selection = $this->getEntityManager()->getEntity('Selection');
+        $selection->set('type', 'single');
+        $selection->set('entity', $scope);
+        if(!empty($masterEntity = $this->getMetadata()->get(['scopes', $scope, 'primaryEntityId']))) {
+            $selection->set('entity', $masterEntity);
+        }
+        $this->getEntityManager()->saveEntity($selection);
+        return $selection;
     }
 }

@@ -6,6 +6,15 @@
         <span class="panel-heading-title">{{translate 'currentSelection'}}</span>
     </div>
     <div class="panel-body">
+       <div style="padding: 10px 20px">
+           <button class="action" data-action="openView" data-view-mode="standard"><i class="ph ph-list"></i> {{translate 'Standard'}}</button>
+           {{#if isComparable}}
+           <button class="action primary" data-action="openView" data-view-mode="compare"><i class="ph ph-arrows-left-right"></i> {{translate 'Compare'}}</button>
+           {{/if}}
+           {{# if isMergeable}}
+           <button class="action" data-action="openView" data-view-mode="merge"><i class="ph ph-arrows-merge"></i> {{translate 'Merge'}}</button>
+           {{/if}}
+       </div>
         <div class="current-selection cell" style="padding:10px 20px 20px 20px ;">
            <div class="field">
                {{{currentSelectionField}}}
