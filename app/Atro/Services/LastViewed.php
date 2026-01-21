@@ -39,17 +39,18 @@ class LastViewed extends AbstractService
         $data = $this->get($params);
 
         $result = [];
-        foreach ($data['collection'] as $key => $item) {
-
+        $i = 0;
+        foreach ($data['collection'] as $item) {
             $result[] = [
                 'id'             => $item->get('targetId'),
                 'name'           => $item->get('targetName') ?? $item->get('targetId'),
-                'offset'         => $offset + $key,
+                'offset'         => $offset + $i,
                 'total'          => $data['total'],
                 'disabled'       => false,
                 'load_on_demand' => false,
                 'scope'          => $scope
             ];
+            $i++;
         }
         return [
             'total' => $data['total'],
