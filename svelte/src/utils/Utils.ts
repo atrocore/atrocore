@@ -2,7 +2,7 @@ import RequestParams from "./interfaces/RequestParams";
 
 import {UserData} from "./UserData";
 import {Storage} from "./Storage";
-import {Metadata} from "./Metadata";
+import { Metadata } from '$lib/core/metadata';
 
 export const Utils = {
     upperCaseFirst(value: string): string {

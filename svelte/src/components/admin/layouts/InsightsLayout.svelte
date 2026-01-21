@@ -4,7 +4,7 @@
     import Params from "./interfaces/Params"
     import LayoutItem from "./interfaces/LayoutItem"
     import {Language} from "../../../utils/Language";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {LayoutManager} from "../../../utils/LayoutManager";
     import Group from "./interfaces/Group";
     import {UserData} from "../../../utils/UserData";

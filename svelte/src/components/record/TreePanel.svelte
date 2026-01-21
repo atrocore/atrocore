@@ -3,8 +3,8 @@
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
     import {Language} from "../../utils/Language";
-    import {Metadata} from "../../utils/Metadata";
-    import {Config} from "../../utils/Config.js";
+    import { Metadata } from '$lib/core/metadata';
+    import { Config } from '$lib/core/config';
     import {Notifier} from "../../utils/Notifier";
     import {UserData} from "../../utils/UserData";
     import Preloader from "../icons/loading/Preloader.svelte";

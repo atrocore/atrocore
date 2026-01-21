@@ -8,8 +8,7 @@
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";
-    import {Metadata} from "../../../utils/Metadata";
-    import {Acl} from "../../../utils/Acl";
+    import { Metadata } from '$lib/core/metadata';
     import {UserData} from "../../../utils/UserData";
 
     let layoutElement: HTMLElement

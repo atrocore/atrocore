@@ -6,11 +6,9 @@
     import BaseLayout from "./BaseLayout.svelte";
     import {Language} from "../../../utils/Language";
     import {LayoutManager} from "../../../utils/LayoutManager";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import Group from "./interfaces/Group";
     import {Utils} from "../../../utils/Utils.js";
-    import Field from "./interfaces/Field";
-    import {Acl} from "../../../utils/Acl";
     import {UserData} from "../../../utils/UserData";
 
     export let params: Params;

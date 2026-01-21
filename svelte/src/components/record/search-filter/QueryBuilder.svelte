@@ -1,9 +1,9 @@
 <script lang="ts">
     import {onMount, tick} from "svelte";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
     import {Storage} from "../../../utils/Storage";
     import Rule from "./interfaces/Rule";
-    import {Acl} from "../../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
     import {Language} from "../../../utils/Language";
     import {Notifier} from "../../../utils/Notifier";
     import {UserData} from "../../../utils/UserData";
@@ -11,7 +11,7 @@
     import GeneralFilter from "./GeneralFilter.svelte";
     import {getSavedSearchStore} from "./stores/SavedSearch";
     import {getGeneralFilterStore} from './stores/GeneralFilter'
-    import {Config} from "../../../utils/Config";
+    import { Config } from '$lib/core/config';
     import FilterGroup from "./FilterGroup.svelte";
     import {get} from "svelte/store";
 

@@ -1,13 +1,13 @@
 <script lang="ts">
     import {createEventDispatcher, onDestroy, onMount, tick} from "svelte";
-    import {Metadata} from "../../utils/Metadata";
-    import {Config} from "../../utils/Config";
+    import { Metadata } from '$lib/core/metadata';
+    import { Config } from '$lib/core/config';
     import {Utils} from "../../utils/Utils";
     import {Language} from "../../utils/Language";
     import ContentFilter from "./ContentFilter.svelte";
     import {Storage} from "../../utils/Storage";
     import {Notifier} from "../../utils/Notifier";
-    import {Acl} from "../../utils/Acl";
+    import { Acl } from "$lib/core/acl";
 
     const dispatch = createEventDispatcher();
 

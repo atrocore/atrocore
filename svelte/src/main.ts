@@ -9,13 +9,13 @@ import {Language} from './utils/Language';
 import {UserData} from './utils/UserData';
 import {Notifier} from './utils/Notifier';
 import {LayoutManager} from "./utils/LayoutManager";
-import {Metadata} from "./utils/Metadata";
+import { Metadata } from '$lib/core/metadata';
 import {ModelFactory} from "./utils/ModelFactory";
-import {Config} from "./utils/Config";
-import {Storage} from "./utils/Storage.ts";
-import {Acl} from "./utils/Acl.ts";
-import {CollectionFactory} from "./utils/CollectionFactory.ts";
-import Dropdown from "./utils/Dropdown.ts"
+import { Config } from '$lib/core/config';
+import {Storage} from "./utils/Storage";
+import { Acl } from "$lib/core/acl";
+import {CollectionFactory} from "./utils/CollectionFactory";
+import Dropdown from "./utils/Dropdown"
 
 import JobManagerIcon from './components/icons/JobManagerIcon.svelte';
 import UpdatePanel from "./components/panels/UpdatePanel.svelte";
@@ -40,6 +40,23 @@ import AnchorNavigation from "./components/record/header/navigation/AnchorNaviga
 import DashboardHeader from "./components/record/header/DashboardHeader.svelte";
 import {default as Administration} from "./components/admin/Index.svelte";
 import SelectionLeftSidePanel from "./components/selection/record/SelectionLeftSidePanel.svelte";
+
+declare global {
+    interface Window {
+        SvelteLanguage: typeof Language;
+        SvelteUserData: typeof UserData;
+        SvelteNotifier: typeof Notifier;
+        SvelteLayoutManager: typeof LayoutManager;
+        SvelteMetadata: typeof Metadata;
+        SvelteModelFactory: typeof ModelFactory;
+        SvelteConfig: typeof Config;
+        SvelteStorage: typeof Storage;
+        SvelteAcl: typeof Acl;
+        SvelteCollectionFactory: typeof CollectionFactory;
+        tippy: typeof tippy;
+        Dropdown: typeof Dropdown;
+    }
+}
 
 window.SvelteLanguage = Language;
 window.SvelteUserData = UserData;

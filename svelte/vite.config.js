@@ -22,7 +22,7 @@ export default defineConfig(({ command, mode }) => {
                 }
             },
             lib: {
-                entry: './src/main.js',
+                entry: './src/main.ts',
                 name: 'Svelte',
                 formats: ['umd'],
                 fileName: (format) => 'atro.min.js',
@@ -33,6 +33,7 @@ export default defineConfig(({ command, mode }) => {
         },
         resolve: {
             alias: {
+                $lib: resolve(__dirname, 'src/lib'),
                 $assets: resolve('./src/assets')
             }
         }

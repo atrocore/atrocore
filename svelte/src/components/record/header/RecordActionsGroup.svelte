@@ -2,7 +2,7 @@
     import RecordActionButtons from "./interfaces/RecordActionsButtons";
     import Permissions from "./interfaces/Permissions";
     import {UserData} from "../../../utils/UserData";
-    import {Metadata} from "../../../utils/Metadata";
+    import { Metadata } from '$lib/core/metadata';
 
     import {onMount} from "svelte";
     import Preloader from "../../icons/loading/Preloader.svelte";
