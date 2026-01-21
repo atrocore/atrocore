@@ -925,8 +925,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         hasStaging() {
             let entities = this.getStagingEntities(this.model.get(this.entityTypeField));
-            for (let model of this.selectionItemModels) {
-                if (entities.includes(model.name)) {
+            let scopes = [];
+            if(this.selectionViewMode === 'standard' && this.selectionItemCollection) {
+                scopes  = this.selectionItemCollection.model.map(m => m.name)
+            }else {
+                scopes = this.selectionItemModels.map(m => m.name)
+            }
+            for (let scope of scopes) {
+                if (entities.includes(scope)) {
                     return true;
                 }
             }
