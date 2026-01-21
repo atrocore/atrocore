@@ -526,7 +526,8 @@
     "replaceItem": "Artikel austauschen",
     "removeItem": "Artikel entfernen",
     "openStagingEntity": "Staging-Entität öffnen",
-    "openPrimaryEntity": "Master-Entität öffnen"
+    "openPrimaryEntity": "Master-Entität öffnen",
+    "currentSelection": "Aktuelle Auswahl"
   },
   "insightsPanels": {
     "summary": "Zusammenfassung",

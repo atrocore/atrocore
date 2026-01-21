@@ -7,7 +7,9 @@
     </div>
     <div class="panel-body">
        <div style="padding: 10px 20px">
+           {{# if selectionItemId}}
            <button class="action" data-action="openView" data-view-mode="standard"><i class="ph ph-list"></i> {{translate 'Standard'}}</button>
+           {{/if}}
            {{#if isComparable}}
            <button class="action primary" data-action="openView" data-view-mode="compare"><i class="ph ph-arrows-left-right"></i> {{translate 'Compare'}}</button>
            {{/if}}

@@ -178,6 +178,16 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
+            if(this.getAcl().check('Selection', 'create')) {
+                list.push({
+                    action: 'select',
+                    label: 'Select',
+                    data: {
+                        id: this.model.id
+                    }
+                })
+            }
+
             if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
                 let instances = this.getMetadata().get(['app', 'comparableInstances']);
                 if(instances.length) {

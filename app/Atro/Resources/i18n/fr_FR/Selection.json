@@ -6,8 +6,8 @@
   },
   "options": {
     "type": {
-      "single": "Entité unique",
-      "multiple": "Entités multiples"
+      "single": "Uniforme",
+      "multiple": "Mixte"
     }
   },
   "messages": {

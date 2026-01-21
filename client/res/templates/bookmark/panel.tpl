@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         {{#if loadingGroups}}
-        <div>{{translate 'Loading...'}}</div>
+        <div style="padding: 10px 20px;">{{translate 'Loading...'}}</div>
         {{else}}
         {{#if groups.length}}
 

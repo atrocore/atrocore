@@ -25,10 +25,10 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                     this.reRender()
                 }, this.collection.length)
             },
-            'click button[data-action="openView"]': function(e) {
+            'click button[data-action="openView"]': function (e) {
                 let mode = $(e.currentTarget).data('view-mode');
-                console.log('#Selection/view/' + this.getUser().get('currentSelectionId') + '/selectionViewMode=' + mode)
-                window.location.replace('#Selection/view/' + this.getUser().get('currentSelectionId') + '/selectionViewMode=' + mode);
+                this.getRouter().navigate('#Selection/view/' + this.getUser().get('currentSelectionId') + '/selectionViewMode=' + mode, {trigger: true});
+                this.trigger('close');
             }
         },
 
@@ -38,9 +38,9 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
 
             this.loadingGroups = true;
             this.getUser().fetch().then(() => {
-                if(this.getUser().get('currentSelectionId')) {
+                if (this.getUser().get('currentSelectionId')) {
                     this.loadData();
-                }else{
+                } else {
                     this.loadingGroups = false;
                     this.reRender();
                 }
@@ -58,8 +58,8 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                 this.listenTo(view.model, 'change:currentSelectionId', () => {
                     view.model.save();
                     this.groups = [];
-                    if(this.getUser().get('currentSelectionId')) {
-                        if(!this.collection) {
+                    if (this.getUser().get('currentSelectionId')) {
+                        if (!this.collection) {
                             return;
                         }
                         this.loadingGroups = true
@@ -69,7 +69,7 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                             this.loadingGroups = false
                             this.reRender()
                         })
-                    }else{
+                    } else {
                         this.reRender()
                     }
                 })
@@ -80,12 +80,12 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
             this.getCollectionFactory().create('SelectionItem', collection => {
                 this.collection = collection;
                 this.loadingGroups = true
-                if(this.isRendered()) {
+                if (this.isRendered()) {
                     this.fetchCollectionGroups(() => {
                         this.loadingGroups = false
                         this.reRender()
                     })
-                }else{
+                } else {
                     this.once('after:render', () => {
                         this.fetchCollectionGroups(() => {
                             this.loadingGroups = false
@@ -100,14 +100,15 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
             return {
                 groups: this.groups,
                 loadingGroups: this.loadingGroups,
+                selectionItemId: this.getUser().get('currentSelectionId'),
                 showMoreActive: this.canLoadMore(),
-                isComparable: true,
-                isMergeable: true
+                isComparable: this.isComparable(),
+                isMergeable: this.isMergeable()
             };
         },
 
         canLoadMore() {
-            return this.collection &&  this.collection.length && (this.collection.length < this.collection.total);
+            return this.collection && this.collection.length && (this.collection.length < this.collection.total);
         },
 
         fetchCollectionGroups(callback, offset = 0) {
@@ -156,7 +157,7 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
                         }
                     })
                 } else {
-                    this.groups =  Object.values(result);
+                    this.groups = Object.values(result);
                 }
 
                 if (!this.getConfig().get('tabIconsDisabled')) {
@@ -223,9 +224,9 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
         },
 
         afterSelectionItemRemoved(selectionItemId) {
-            this.groups.forEach((group,key) => {
+            this.groups.forEach((group, key) => {
                 let el = group.collection.find(s => s.id === selectionItemId);
-                if(el) {
+                if (el) {
                     this.groups[key].collection = group.collection.filter(s => s.id !== selectionItemId);
                     this.groups[key].rowList = group.rowList.filter(id => id !== el.entityId);
                 }
@@ -263,5 +264,36 @@ Espo.define('views/selection/navigation/panel', 'view', function (Dep) {
             });
             callback();
         },
+
+        isComparable() {
+            if (!this.getUser().get('currentSelectionId')) {
+                return false;
+            }
+
+            return this.groups && this.groups.length && (this.groups.length > 1 || this.groups[0].collection.length > 1);
+        },
+
+        isMergeable() {
+            if (!this.isComparable()) {
+                return false;
+            }
+
+            let scope = null;
+
+            for (const group of this.groups) {
+                if(!scope) {
+                    scope = group.key;
+                }
+                if(scope === group.key) {
+                    continue;
+                }
+
+                if(scope !== group.key) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     });
 });
