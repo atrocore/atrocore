@@ -3,7 +3,7 @@
     import { Metadata } from '$lib/core/metadata';
     import { Config } from '$lib/core/config';
     import {Utils} from "../../utils/Utils";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
     import ContentFilter from "./ContentFilter.svelte";
     import {Storage} from "../../utils/Storage";
     import {Notifier} from "../../utils/Notifier";

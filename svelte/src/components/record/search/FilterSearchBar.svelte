@@ -1,7 +1,7 @@
 <script lang="ts">
     import FilterSearch from "./FilterSearch.svelte";
     import SearchBar from "./SearchBar.svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Notifier} from "../../../utils/Notifier";
 
     export let showFilter: boolean = false;

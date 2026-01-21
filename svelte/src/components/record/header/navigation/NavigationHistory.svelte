@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
     import {onMount} from "svelte";
     import Preloader from "../../../icons/loading/Preloader.svelte";
     import {UserData} from "../../../../utils/UserData";

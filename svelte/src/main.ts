@@ -5,7 +5,7 @@ import 'tippy.js/dist/border.css';
 
 import tippy from 'tippy.js';
 
-import {Language} from './utils/Language';
+import {Language} from '$lib/core/language';
 import {UserData} from './utils/UserData';
 import {Notifier} from './utils/Notifier';
 import {LayoutManager} from "./utils/LayoutManager";

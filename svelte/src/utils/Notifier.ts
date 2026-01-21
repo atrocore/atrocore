@@ -1,5 +1,5 @@
 import {writable} from 'svelte/store';
-import {Language} from './Language'
+import { Language } from "$lib/core/language"
 
 interface NotifierInterface {
     notify(message: string | boolean, type: string | null, timeout: number): void

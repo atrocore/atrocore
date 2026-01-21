@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import { Metadata } from '$lib/core/metadata';
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     import EntityCallbacks from "./interfaces/EntityCallbacks";
     import EntityActionButtons from "./interfaces/EntityActionsButtons";

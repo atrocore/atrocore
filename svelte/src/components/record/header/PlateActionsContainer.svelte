@@ -2,7 +2,7 @@
     import ListActionsContainer from "./ListActionsContainer.svelte";
     import Counter from "./interfaces/Counter";
     import MassAction from "./interfaces/MassAction";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {onMount} from "svelte";
     import Dropdown from "../../../utils/Dropdown";
 

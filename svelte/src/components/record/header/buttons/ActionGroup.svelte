@@ -2,7 +2,7 @@
     import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
     import Preloader from "../../../icons/loading/Preloader.svelte";
     import ActionDropdownItem from "./ActionDropdownItem.svelte";
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
     import ActionParams from "../interfaces/ActionParams";
 
     export let actions: ActionParams[] = [];

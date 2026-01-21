@@ -1,7 +1,7 @@
 <script lang="ts">
     import {fade} from 'svelte/transition';
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let className: string = '';
     export let isCollapsed: boolean = false;

@@ -3,7 +3,7 @@
     import {Utils} from "../../utils/Utils";
     import {UserData} from "../../utils/UserData";
     import {LayoutManager} from "../../utils/LayoutManager";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Storage} from "../../utils/Storage";
 
     export let checkConfirmLeaveOut: Function;

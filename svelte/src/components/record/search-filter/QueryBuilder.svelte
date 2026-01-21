@@ -4,7 +4,7 @@
     import {Storage} from "../../../utils/Storage";
     import Rule from "./interfaces/Rule";
     import { Acl } from "$lib/core/acl";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Notifier} from "../../../utils/Notifier";
     import {UserData} from "../../../utils/UserData";
     import SavedSearch from "./SavedSearch.svelte";

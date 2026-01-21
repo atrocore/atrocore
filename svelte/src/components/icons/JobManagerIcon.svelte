@@ -1,6 +1,6 @@
 <script lang="ts">
     import QueuePanelContainer from "../panels/QueuePanelContainer.svelte";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let renderTable = (): void => {
         // should render table

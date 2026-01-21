@@ -1,13 +1,25 @@
 <script lang="ts">
+    import {createEventDispatcher} from "svelte";
     import ActionButton from "../ActionButton/ActionButton.svelte";
-    import { Language } from "../../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import type { ActionParams } from "../ActionButton/types/button-style";
     import { getToggleClasses } from "./utils/dropdown-utils";
 
     export let params: ActionParams;
     export let className: string = '';
 
+    const dispatch = createEventDispatcher();
+
     $: toggleClasses = getToggleClasses(params, className);
+
+    const handleClick = (e: MouseEvent) => {
+        const el = e.currentTarget as HTMLElement;
+        dispatch('execute', {
+            data: el.dataset,
+            action: el.dataset.action,
+            event: e
+        });
+    };
 </script>
 
 {#if !params.hidden}

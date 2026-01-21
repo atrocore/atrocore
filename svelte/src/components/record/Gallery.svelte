@@ -7,7 +7,7 @@
     import ActionParams from "./header/interfaces/ActionParams";
     import Preloader from "../icons/loading/Preloader.svelte";
 
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     import 'swiper/css';
     import 'swiper/css/navigation';

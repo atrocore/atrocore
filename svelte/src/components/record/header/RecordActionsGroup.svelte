@@ -15,7 +15,7 @@
     import NavigationButtons from "./buttons/NavigationButtons.svelte";
     import ContentFilter from "../ContentFilter.svelte";
     import TourButton from "./buttons/TourButton.svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;

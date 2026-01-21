@@ -2,7 +2,7 @@
     import {onMount, tick, afterUpdate} from 'svelte';
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
     import { Metadata } from '$lib/core/metadata';
     import { Config } from '$lib/core/config';
     import {Notifier} from "../../utils/Notifier";

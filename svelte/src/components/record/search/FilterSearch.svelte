@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import {get} from "svelte/store";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Notifier} from "../../../utils/Notifier";
     import SavedSearch from "../search-filter/SavedSearch.svelte"
     import GeneralFilter from "../search-filter/GeneralFilter.svelte";

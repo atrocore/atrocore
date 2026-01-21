@@ -1,6 +1,6 @@
 <script lang="ts">
     import SpinnerIcon from "../../icons/loading/SpinnerIcon.svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {onMount} from "svelte";
     import {Utils} from "../../../utils/Utils";
 

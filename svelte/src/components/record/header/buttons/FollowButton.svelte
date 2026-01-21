@@ -2,7 +2,7 @@
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import ActionParams from "../interfaces/ActionParams";
     import {UserData} from "../../../../utils/UserData";
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
 
     export let entity: string;
     export let id: string;

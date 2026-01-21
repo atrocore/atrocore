@@ -2,7 +2,7 @@
     import ActionParams from "../interfaces/ActionParams";
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import {Notifier} from "../../../../utils/Notifier";
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
     import {UserData} from "../../../../utils/UserData";
 
     export let entity: string;

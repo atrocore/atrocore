@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { Language } from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
     import type { ActionParams } from "./types/button-style";
     import { getComputedClasses } from "./utils/action-button";
 

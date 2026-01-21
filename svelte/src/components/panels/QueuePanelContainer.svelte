@@ -5,7 +5,7 @@
 
     import {onMount, onDestroy} from 'svelte';
 
-    import {Language} from '../../utils/Language';
+    import { Language } from "$lib/core/language"
     import {UserData} from '../../utils/UserData';
     import {Notifier} from '../../utils/Notifier';
 

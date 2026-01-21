@@ -1,7 +1,7 @@
 <script lang="ts">
 import BaseHeader from "../record/header/BaseHeader.svelte";
 import BreadcrumbsItem from "../record/header/interfaces/BreadcrumbsItem";
-import {Language} from "../../utils/Language";
+import { Language } from "$lib/core/language"
 import TreePanel from "../record/TreePanel.svelte";
 import { Metadata } from '$lib/core/metadata';
 import Collapser from "../base/Collapser.svelte";
