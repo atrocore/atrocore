@@ -76,12 +76,15 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             if (!this.selectionItemModels?.length && ['merge', 'compare'].includes(this.selectionViewMode)) {
                 this.wait(true)
                 this.reloadModels(() => {
-                    if (this.selectionItemModels.length <=1) {
-                        this.selectionViewMode = 'standard';
-                    }
+
                     if (this.selectionViewMode === 'merge' && !this.canMerge()) {
                         this.selectionViewMode = "compare";
                     }
+
+                    if (this.selectionItemModels.length <= 1) {
+                        this.selectionViewMode = 'standard';
+                    }
+
                     this.updateUrl();
                     Dep.prototype.setup.call(this);
                     this.setupCustomButtons();
@@ -308,7 +311,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                             promises.push(new Promise((resolve) => {
                                 this.getModelFactory().create(scope, model => {
                                     for (const data of entityByScope[scope]) {
-                                        let currentModel = Espo.utils.cloneDeep(model);
+                                        let currentModel = Espo.utils.clone(model);
                                         currentModel.set(data);
                                         currentModel._order = data._order;
                                         models.push(currentModel);
