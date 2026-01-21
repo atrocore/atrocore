@@ -52,29 +52,29 @@ class V2Dot2Dot7 extends Base
                 'id'
             );
 
-            if(empty($selectionIds)) {
+            if (empty($selectionIds)) {
                 break;
             }
 
             foreach ($selectionIds as $selectionId) {
-               $result = $this->getConnection()->createQueryBuilder()
-                    ->from('selection_record', 'sr')
+                $result = $this->getConnection()->createQueryBuilder()
                     ->select('distinct sr.entity_type')
+                    ->from('selection_record', 'sr')
                     ->join('sr', 'selection', 's', 'sr.selection_id = s.id')
                     ->where('s.id = :selectionId and sr.deleted = :false')
                     ->setParameter('selectionId', $selectionId)
                     ->setParameter('false', false, ParameterType::BOOLEAN)
                     ->fetchOne();
 
-               if(!empty($result)) {
-                   $this->getConnection()->createQueryBuilder()
-                       ->update('selection')
-                       ->set('entity', ':entity')
-                       ->where('id = :id')
-                       ->setParameter('id', $selectionId)
-                       ->setParameter('entity', $result)
-                       ->executeStatement();
-               }
+                if (!empty($result)) {
+                    $this->getConnection()->createQueryBuilder()
+                        ->update('selection')
+                        ->set('entity', ':entity')
+                        ->where('id = :id')
+                        ->setParameter('id', $selectionId)
+                        ->setParameter('entity', $result)
+                        ->executeStatement();
+                }
             }
 
             $offset += $limit;
