@@ -298,7 +298,8 @@
     },
     "customizable": {
       "type": "bool",
-      "readOnly": true
+      "readOnly": true,
+      "default": true
     },
     "isCustom": {
       "type": "bool",
