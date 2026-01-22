@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/row-actions/selection-items', 'views/record/row-actions/default', function (Dep) {
+Espo.define('views/selection/record/row-actions/selection-items', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
