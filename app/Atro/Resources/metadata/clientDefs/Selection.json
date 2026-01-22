@@ -4,7 +4,7 @@
   "relationshipPanels": {
     "selectionItems": {
       "checkboxes": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
+      "rowActionsView": "views/selection/record/row-actions/selection-items",
       "view": "views/selection/record/panels/selection-items",
       "hideShowFullList": true,
       "select": false,
