@@ -1,6 +1,6 @@
 <script lang="ts">
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
-    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
     import {UserData} from "../../../../utils/UserData";
     import { Language } from "$lib/core/language";
 
