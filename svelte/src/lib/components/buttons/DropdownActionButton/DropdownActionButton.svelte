@@ -3,7 +3,7 @@
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import { Language } from "$lib/core/language"
     import DropdownActionParams from "./types/params";
-    import { getToggleClasses } from "./utils/dropdown-utils";
+    import { getToggleClasses } from "./utils/dropdown-button";
 
     export let params: DropdownActionParams;
     export let className: string = '';
