@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
+import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
 
 export type DropdownActionParams = ActionButtonParams & {
     dropdownItems: ActionButtonParams[];

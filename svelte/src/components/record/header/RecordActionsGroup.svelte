@@ -8,8 +8,8 @@
     import Preloader from "../../icons/loading/Preloader.svelte";
     import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
-    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
-    import DropdownActionParams from "$lib/components/buttons/DropdownActionButton/types/params";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
+    import DropdownActionParams from "$lib/components/buttons/DropdownActionButton/types/dropdown-action-params";
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
     import BookmarkButton from "./buttons/BookmarkButton.svelte";

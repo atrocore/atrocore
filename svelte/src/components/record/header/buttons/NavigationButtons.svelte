@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
     import { Language } from "$lib/core/language";
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
 
