@@ -1,6 +1,6 @@
 <script lang="ts">
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
-    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
     import { Metadata } from '$lib/core/metadata';
     import {UserData} from "../../../../utils/UserData";
     import {driver, Driver, DriveStep} from "driver.js";
