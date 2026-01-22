@@ -542,8 +542,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }, this);
         },
 
-        getFullFormUrl: function () {},
-
         actionFullForm: function () {
             var url;
             var router = this.getRouter();
