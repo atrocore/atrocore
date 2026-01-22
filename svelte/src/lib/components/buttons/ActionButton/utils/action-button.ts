@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-import type ActionButtonParams from '../types/params'
+import type ActionButtonParams from '../types/action-button-params'
 
 export const getComputedClasses = (params: ActionButtonParams, extraClassName: string = ''): string => {
     const classes = ['action'];
