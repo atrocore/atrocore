@@ -1,18 +1,22 @@
 <script lang="ts">
     import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import Preloader from "../../../icons/loading/Preloader.svelte";
     import ActionDropdownItem from "./ActionDropdownItem.svelte";
-    import { Language } from "$lib/core/language";
+    import {Language} from "$lib/core/language";
     import ActionParams from "../interfaces/ActionParams";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
+    import DropdownActionParams from "$lib/components/buttons/DropdownActionButton/types/params";
 
-    export let actions: ActionParams[] = [];
+    export let actions: (ActionButtonParams | DropdownActionParams)[] = [];
     export let dropdownActions: ActionParams[] = [];
     export let dynamicActionsDropdown: ActionParams[] = [];
     export let loadingActions: boolean = false;
     export let hasMoreButton: boolean = false;
     export let dropdownPosition: string = 'left';
     export let className: string = '';
-    export let executeAction: (e: CustomEvent<any>) => void = () => {};
+    export let executeAction: (e: CustomEvent<any>) => void = () => {
+    };
 
     let dropdownClass: string;
     $: {
@@ -26,15 +30,19 @@
 
 <div class="button-group {className}">
     {#each actions as action}
-        <DropdownActionButton params={action} on:execute={executeAction} />
+        {#if 'dropdownItems' in action && action.dropdownItems?.length}
+            <DropdownActionButton params={action} on:execute={executeAction}/>
+        {:else}
+            <ActionButton params={action} on:execute={executeAction} />
+        {/if}
     {/each}
 
     {#if hasMoreButton && (dropdownActions.length > 0 || dynamicActionsDropdown.length > 0)}
-        <button type="button" class="dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true" >
+        <button type="button" class="dropdown-toggle more-button" data-toggle="dropdown" aria-haspopup="true">
             {Language.translate('More')} <i class="ph ph-caret-down"></i>
         </button>
     {:else if dropdownActions.length > 0 || dynamicActionsDropdown.length > 0}
-        <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" >
+        <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
             <span class="caret"></span>
         </button>
     {/if}
@@ -43,7 +51,7 @@
         <ul class={dropdownClass}>
             {#each dropdownActions as item}
                 <li>
-                    <ActionDropdownItem params={item} on:execute={executeAction} />
+                    <ActionDropdownItem params={item} on:execute={executeAction}/>
                 </li>
             {/each}
 
@@ -52,12 +60,14 @@
             {/if}
 
             {#if loadingActions}
-                <li class="preloader"><a href="javascript:"><Preloader heightPx={12}/></a></li>
+                <li class="preloader"><a href="javascript:">
+                    <Preloader heightPx={12}/>
+                </a></li>
             {/if}
 
             {#each dynamicActionsDropdown as item}
                 <li class="dynamic-action">
-                    <ActionDropdownItem params={item} on:execute={executeAction} />
+                    <ActionDropdownItem params={item} on:execute={executeAction}/>
                 </li>
             {/each}
         </ul>

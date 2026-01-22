@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionParams from "../interfaces/ActionParams";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/params";
     import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
 
     export let scope: string;
@@ -7,7 +7,7 @@
     export let onFavoriteRemove: (scope: string) => void;
     export let active: boolean = false;
 
-    let params: ActionParams;
+    let params: ActionButtonParams;
     let style: string = '';
     let iconStyle: string;
 
@@ -18,7 +18,7 @@
             action: "favorite",
             html: `<i class="${iconStyle} ph-star"></i>`,
             style: style
-        } as ActionParams;
+        } as ActionButtonParams;
     }
 
     function execute(event: CustomEvent): void {

@@ -1,12 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { Language } from "$lib/core/language";
-    import type { ActionParams } from "./types/button-style";
+    import ActionButtonParams from "./types/params";
     import { getComputedClasses } from "./utils/action-button";
 
     const dispatch = createEventDispatcher();
 
-    export let params: ActionParams;
+    export let params: ActionButtonParams;
     export let className: string = '';
 
     $: computedClassNames = getComputedClasses(params, className);
@@ -36,7 +36,7 @@
         {#if params.html}
             {@html params.html}
         {:else}
-            {Language.translate(params.label)}
+            {Language.translate(params.label ?? params.name ?? '')}
         {/if}
     </button>
 {/if}
