@@ -4,14 +4,21 @@
   "relationshipPanels": {
     "selectionItems": {
       "checkboxes": false,
-      "rowActionsView": "views/record/row-actions/relationship-remove-only",
       "view": "views/selection/record/panels/selection-items",
       "hideShowFullList": true,
       "select": false,
       "unlink": false,
       "canClose": false,
       "sortBy": "createdAt",
-      "asc": false
+      "asc": false,
+      "actions": {
+        "unlinkRelated": {
+          "url": "SelectionItem/{{id}}"
+        },
+        "removeRelated": {
+          "url": "{{entityName}}/{{entityId}}"
+        }
+      }
     }
   },
   "views": {
