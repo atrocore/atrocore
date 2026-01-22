@@ -1,14 +1,14 @@
 <script lang="ts">
-    import ActionParams from "../interfaces/ActionParams";
-    import {Language} from "../../../../utils/Language";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
+    import { Language } from "$lib/core/language";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
 
     export let hasPrevious: boolean = false;
     export let hasNext: boolean = false;
     export let onExecute: (e: CustomEvent<any>) => void;
 
     let navigating: boolean = false;
-    let paramsList: ActionParams[];
+    let paramsList: ActionButtonParams[];
 
     $: {
         paramsList = [

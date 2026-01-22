@@ -4,7 +4,7 @@
     import Params from "./interfaces/Params"
     import {Notifier} from "../../../utils/Notifier";
     import BaseLayout from "./BaseLayout.svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {LayoutManager} from "../../../utils/LayoutManager";
     import { Metadata } from '$lib/core/metadata';
     import Group from "./interfaces/Group";

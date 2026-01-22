@@ -3,7 +3,7 @@
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
     import LayoutItem from "./interfaces/LayoutItem"
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import { Metadata } from '$lib/core/metadata';
     import {LayoutManager} from "../../../utils/LayoutManager";
     import Group from "./interfaces/Group";
@@ -226,10 +226,15 @@
             return false
         }
 
-        const disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`, 'layoutListDisabled'];
+        let disabledParameters = ['disabled', `layout${Utils.upperCaseFirst(params.type)}Disabled`, 'layoutListDisabled'];
         if (params.reelType) {
             disabledParameters.push(`layout${Utils.upperCaseFirst(params.reelType)}Disabled`)
         }
+
+        if(params.reelType === 'selection') {
+            disabledParameters = ['disabled', 'layoutDetailDisabled'];
+        }
+
         for (let param of disabledParameters) {
             if (Metadata.get(['entityDefs', scope, 'fields', name, param])) {
                 return false

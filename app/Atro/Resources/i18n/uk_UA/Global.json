@@ -81,7 +81,7 @@
     "RoleScopeAttributePanel": "Панель атрибутів",
     "RoleScopeField": "Поле",
     "Selection": "Вибірка",
-    "SelectionRecord": "Запис вибірки",
+    "SelectionItem": "Елемент виборки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнал виконання дій",
     "Layout": "Лейаут"
@@ -153,7 +153,7 @@
     "RoleScopeAttribute": "Атрибути",
     "Entity": "Управління сутностями",
     "Selection": "Вибірки",
-    "SelectionRecord": "Записи вибірки",
+    "SelectionItem": "Елементи вибірки",
     "ActionExecution": "Виконання дій Виконання дій",
     "ActionExecutionLog": "Журнали виконання дій",
     "Layout": "Лейаути"

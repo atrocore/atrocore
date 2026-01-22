@@ -62,7 +62,7 @@
     import {onMount} from 'svelte';
     import Text from './Text.svelte';
     import { Metadata } from '$lib/core/metadata';
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let mode = 'detail';
     export let name = '';

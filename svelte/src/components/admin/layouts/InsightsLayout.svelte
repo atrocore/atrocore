@@ -3,7 +3,7 @@
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
     import LayoutItem from "./interfaces/LayoutItem"
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import { Metadata } from '$lib/core/metadata';
     import {LayoutManager} from "../../../utils/LayoutManager";
     import Group from "./interfaces/Group";

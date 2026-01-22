@@ -6,7 +6,7 @@
     import EntityActionsGroup from "./EntityActionsGroup.svelte";
     import EntityActionButtons from "./interfaces/EntityActionsButtons";
     import EntityCallbacks from "./interfaces/EntityCallbacks";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let params: Params;
     export let entityActions: EntityActionButtons;

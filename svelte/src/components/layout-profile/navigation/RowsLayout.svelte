@@ -6,7 +6,7 @@
     import type Params from "./interfaces/Params";
     import type KeyValue from "./interfaces/KeyValue";
     import type Item from "./interfaces/Item";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Notifier} from "../../../utils/Notifier";
 
     let layoutElement: HTMLElement

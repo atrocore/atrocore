@@ -1,6 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher, onDestroy, onMount} from "svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {Notifier} from "../../../utils/Notifier";
     import { Acl } from "$lib/core/acl";
     import Preloader from "../../icons/loading/Preloader.svelte";

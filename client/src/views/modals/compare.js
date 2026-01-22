@@ -110,7 +110,7 @@ Espo.define('views/modals/compare', 'views/modal', function (Modal) {
                                     model: selectionModel,
                                     selectionViewMode: this.getView('modalRecord').merging ? 'merge' : 'compare',
                                     models: this.getModels().map(model => {
-                                        model._selectionRecordId = result.id
+                                        model._selectionItemId = result.id
                                         return model;
                                     })
                                 });

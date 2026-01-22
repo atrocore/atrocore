@@ -53,14 +53,14 @@
                                                 <ul class="dropdown-menu">
                                                     {{#if ../hasReplaceRecord }}
                                                     <li>
-                                                        <a href="javascript:" class="swap-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}">
+                                                        <a href="javascript:" class="swap-entity" data-entity-type="{{entityType}}" data-selection-item-id="{{selectionItemId}}" data-id="{{id}}">
                                                             <i class="ph ph-swap"></i> <span>{{translate 'replaceItem' scope='Global' categories='labels'}}</span>
                                                         </a>
                                                     </li>
                                                     {{/if}}
                                                     {{#if ../hasRemoveRecord }}
                                                     <li>
-                                                        <a href="javascript:" class="remove-entity" data-entity-type="{{entityType}}" data-selection-record-id="{{selectionRecordId}}" data-id="{{id}}">
+                                                        <a href="javascript:" class="remove-entity" data-entity-type="{{entityType}}" data-selection-item-id="{{selectionItemId}}" data-id="{{id}}">
                                                             <i class="ph ph-trash-simple"></i> <span>{{translate 'removeItem' scope='Global' categories='labels'}}</span>
                                                         </a>
                                                     </li>

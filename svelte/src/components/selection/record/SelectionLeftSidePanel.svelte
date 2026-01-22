@@ -4,7 +4,7 @@
     import {Storage} from "../../../utils/Storage";
     import BaseSidebar from "../../record/BaseSidebar.svelte";
     import {GroupedItems, Item} from "./interfaces/Item";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let scope: string;
     export let records: Item[];

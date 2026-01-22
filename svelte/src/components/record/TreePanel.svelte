@@ -2,7 +2,7 @@
     import {onMount, tick, afterUpdate} from 'svelte';
     import {Storage} from "../../utils/Storage";
     import {LayoutManager} from "../../utils/LayoutManager";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
     import { Metadata } from '$lib/core/metadata';
     import { Config } from '$lib/core/config';
     import {Notifier} from "../../utils/Notifier";
@@ -1091,9 +1091,8 @@
                 });
 
                 if(!hasItems) {
-                    treeItems = treeItems.filter(item => item.name !== '_item');
+                    treeItems = treeItems.filter(item => item.name !== '_items');
                 }
-
                 let treeItem = Storage.get('treeItem', scope);
 
                 // admin should always be the selected one

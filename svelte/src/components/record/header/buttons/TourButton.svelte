@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ActionButton from "./ActionButton.svelte";
-    import ActionParams from "../interfaces/ActionParams";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
     import { Metadata } from '$lib/core/metadata';
     import {UserData} from "../../../../utils/UserData";
     import {driver, Driver, DriveStep} from "driver.js";
@@ -11,11 +11,11 @@
     export let style: string | null = null;
 
     let steps: DriveStep[] = [];
-    let params: ActionParams = {
+    let params: ActionButtonParams = {
         name: "tour",
         action: "showTour",
         html: `<i class="ph ph-question-mark"></i>`
-    } as ActionParams;
+    } as ActionButtonParams;
 
     if (style) {
         params.style = style;

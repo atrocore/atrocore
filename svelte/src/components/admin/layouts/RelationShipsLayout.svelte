@@ -2,7 +2,7 @@
     import RowsLayout from './RowsLayout.svelte';
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import { Metadata } from '$lib/core/metadata';
     import {LayoutManager} from "../../../utils/LayoutManager";
     import {ModelFactory} from "../../../utils/ModelFactory";

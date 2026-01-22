@@ -18,7 +18,7 @@ use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
-class SelectionRecord extends Base
+class SelectionItem extends Base
 {
     protected $mandatorySelectAttributeList = ['name', 'entityId', 'entityType'];
 
@@ -52,7 +52,6 @@ class SelectionRecord extends Base
                         if ($this->getMetadata()->get(['scopes', $entityType, 'hasAttribute'])) {
                             $this->getInjection(AttributeFieldConverter::class)->putAttributesToEntity($entity);
                             $this->getService($entityType)->prepareEntityForOutput($entity);
-                            $this->getService($entityType)->loadAdditionalFields($entity);
                         }
 
                         if ($record->get('entityId') === $entity->get('id')) {

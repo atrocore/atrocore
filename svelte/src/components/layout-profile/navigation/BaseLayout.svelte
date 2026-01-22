@@ -2,7 +2,7 @@
 <script lang="ts">
     import type Button from '../../admin/layouts/interfaces/Button';
     import type Params from "./interfaces/Params";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let params: Params;
     export let fetch: any

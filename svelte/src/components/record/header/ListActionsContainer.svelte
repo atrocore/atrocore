@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Language} from "../../../utils/Language.js";
+    import { Language } from "$lib/core/language";
     import Preloader from "../../icons/loading/Preloader.svelte";
     import FilterSearch from "../search/FilterSearch.svelte";
     import SearchBar from "../search/SearchBar.svelte";

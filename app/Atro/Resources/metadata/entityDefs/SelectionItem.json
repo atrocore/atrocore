@@ -2,17 +2,17 @@
   "fields": {
     "name": {
       "type": "varchar",
-      "view": "views/selection-record/fields/name"
+      "view": "views/selection-item/fields/name"
     },
     "entityType": {
       "type": "enum",
-      "view": "views/selection-record/fields/entity-type",
+      "view": "views/selection-item/fields/entity-type",
       "trim": true,
       "required": true
     },
     "entityId": {
       "type": "varchar",
-      "view": "views/selection-record/fields/entity-id",
+      "view": "views/selection-item/fields/entity-id",
       "trim": true,
       "required": true,
       "conditionalProperties": {
@@ -39,7 +39,7 @@
     "selection": {
       "type": "belongsTo",
       "entity": "Selection",
-      "foreign": "selectionRecords"
+      "foreign": "selectionItems"
     }
   },
   "indexes": {

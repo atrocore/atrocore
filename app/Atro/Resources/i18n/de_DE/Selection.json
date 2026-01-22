@@ -2,12 +2,12 @@
   "fields": {
     "name": "Name",
     "description": "Beschreibung",
-    "selectionRecords": "Auswahldatensätze"
+    "selectionItems": "Auswahlelemente"
   },
   "options": {
     "type": {
-      "single": "Einzelne Entität",
-      "multiple": "Mehrere Entitäten"
+      "single": "Einheitlich",
+      "multiple": "Gemischt"
 
     }
   },
@@ -15,7 +15,8 @@
     "createSelection": "Auswahl erstellen"
   },
   "messages": {
-    "cannotSetToSingle": "Sie können 'Einzelne Entität' nicht auswählen, da Ihre Datensätze mehrere Entitäten enthalten.",
-    "youNeedAtLeastTwoItem": "Sie benötigen mindestens zwei Artikel zum Vergleich."
+    "cannotSetToSingle": "Sie können 'Einheitlich' nicht auswählen.",
+    "youNeedAtLeastTwoItem": "Sie benötigen mindestens zwei Artikel zum Vergleich.",
+    "entityIsRequired": "Das Feld 'Entität' ist erforderlich."
   }
 }

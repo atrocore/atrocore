@@ -25,4 +25,6 @@ export default interface ActionParams {
     disabled?: boolean;
     active?: boolean;
     className?: string;
+    dropdown: boolean,
+    dropdownItems: ActionParams[]
 }

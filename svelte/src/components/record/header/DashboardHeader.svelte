@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import BaseHeader from "./BaseHeader.svelte";
     import BreadcrumbsItem from "./interfaces/BreadcrumbsItem";
 

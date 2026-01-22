@@ -5,7 +5,7 @@
     import type Params from './interfaces/Params'
     import {Notifier} from "../../../utils/Notifier";
     import {LayoutManager} from "../../../utils/LayoutManager";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import {UserData} from "../../../utils/UserData";
 
     const dispatch = createEventDispatcher();

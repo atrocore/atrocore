@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ActionParams from "../interfaces/ActionParams";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
     import {Notifier} from "../../../../utils/Notifier";
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
     import {UserData} from "../../../../utils/UserData";
 
     export let entity: string;
@@ -12,7 +12,7 @@
 
     let style: string;
     let iconStyle: string;
-    let params: ActionParams;
+    let params: ActionButtonParams;
 
     $: {
         style = bookmarkId ? 'primary outline' : '';
@@ -24,7 +24,7 @@
             style: style,
             disabled: loading,
             tooltip: Language.translate(bookmarkId ? 'actionUnbookmark' : 'actionBookmark'),
-        } as ActionParams;
+        } as ActionButtonParams;
     }
 
     async function addBookmark(): Promise<void> {

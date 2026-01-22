@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ActionButton from "./ActionButton.svelte";
-    import ActionParams from "../interfaces/ActionParams";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
     import {UserData} from "../../../../utils/UserData";
-    import {Language} from "../../../../utils/Language";
+    import { Language } from "$lib/core/language";
 
     export let entity: string;
     export let id: string;
@@ -14,7 +14,7 @@
     let isFollowed: boolean;
     let style: string;
     let iconStyle: string;
-    let params: ActionParams;
+    let params: ActionButtonParams;
 
     $: {
         const userId = UserData.get()?.user.id ?? null;
@@ -28,7 +28,7 @@
             style: style,
             disabled: loading,
             tooltip: Language.translate(isFollowed ? 'actionUnfollow' : 'actionFollow'),
-        } as ActionParams;
+        } as ActionButtonParams;
     }
 
     async function unfollowRecord(): Promise<void> {

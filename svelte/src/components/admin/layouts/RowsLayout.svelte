@@ -4,7 +4,7 @@
     import Field from "./interfaces/Field"
     import Params from "./interfaces/Params"
     import LayoutItem from "./interfaces/LayoutItem"
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
     import Sortable from 'sortablejs'
     import {Notifier} from "../../../utils/Notifier";
     import Group from "./interfaces/Group";

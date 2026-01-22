@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Storage} from "../../utils/Storage";
     import {onDestroy, onMount} from "svelte";
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
     import Item from './interfaces/Item'
     import BaseSidebar from "./BaseSidebar.svelte";
     import QueryBuilder from "./search-filter/QueryBuilder.svelte";

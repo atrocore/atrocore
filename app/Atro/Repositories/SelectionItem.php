@@ -17,18 +17,16 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 
-class SelectionRecord extends Base
+class SelectionItem extends Base
 {
     protected function beforeSave(Entity $entity, array $options = [])
     {
 
         if($this->getMetadata()->get(['scopes', $entity->get('entityType'), 'selectionDisabled'])) {
-            throw new BadRequest(str_replace('%s', $entity->get('entityType'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionRecord')));
+            throw new BadRequest(str_replace('%s', $entity->get('entityType'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionItem')));
         }
 
         $select = ['id'];

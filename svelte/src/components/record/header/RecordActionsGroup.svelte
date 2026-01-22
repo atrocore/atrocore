@@ -6,7 +6,10 @@
 
     import {onMount} from "svelte";
     import Preloader from "../../icons/loading/Preloader.svelte";
-    import ActionButton from "./buttons/ActionButton.svelte";
+    import DropdownActionButton from "$lib/components/buttons/DropdownActionButton/DropdownActionButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton/ActionButton.svelte";
+    import ActionButtonParams from "$lib/components/buttons/ActionButton/types/action-button-params";
+    import DropdownActionParams from "$lib/components/buttons/DropdownActionButton/types/dropdown-action-params";
     import ActionGroup from "./buttons/ActionGroup.svelte";
     import ActionParams from "./interfaces/ActionParams";
     import BookmarkButton from "./buttons/BookmarkButton.svelte";
@@ -15,7 +18,7 @@
     import NavigationButtons from "./buttons/NavigationButtons.svelte";
     import ContentFilter from "../ContentFilter.svelte";
     import TourButton from "./buttons/TourButton.svelte";
-    import {Language} from "../../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     export let mode: string = 'detail';
     export let recordButtons: RecordActionButtons;
@@ -26,8 +29,8 @@
 
     let recordActions: ActionParams[] = [];
     let dropdownActions: ActionParams[] = [];
-    let additionalActions: ActionParams[] = [];
-    let dynamicActions: ActionParams[] = [];
+    let additionalActions: (ActionButtonParams | DropdownActionParams)[] = [];
+    let dynamicActions: (ActionButtonParams | DropdownActionParams)[] = [];
     let dynamicEditActions: ActionParams[] = [];
     let dynamicActionsDropdown: ActionParams[] = [];
     let additionalEditActions: ActionParams[] = [];
@@ -52,14 +55,14 @@
         }
     }
 
-    function onFollowersUpdated(event: CustomEvent) {
+    function onFollowersUpdated(event: Event) {
         if (recordButtons) {
-            recordButtons.followers = event.detail;
+            recordButtons.followers = (event as CustomEvent).detail;
         }
     }
 
-    function onOverviewFiltersChanged(e: CustomEvent) {
-        const data = e.detail;
+    function onOverviewFiltersChanged(e: Event) {
+        const data =(e as CustomEvent).detail;
 
         if (!data || !recordButtons) {
             return;
@@ -68,11 +71,12 @@
         recordButtons.isOverviewFilterActive = data.isOverviewFilterActive;
     }
 
-    function onButtonsUpdate(event: CustomEvent) {
+    function onButtonsUpdate(event: Event) {
+        let detail = (event as CustomEvent).detail;
         if (recordButtons) {
-            recordButtons = Object.assign(recordButtons, event.detail || {});
+            recordButtons = Object.assign(recordButtons, detail || {});
         } else {
-            recordButtons = event.detail || {} as RecordActionButtons;
+            recordButtons = detail || {} as RecordActionButtons;
         }
     }
 
@@ -112,7 +116,7 @@
         }
     }
 
-    function reloadDynamicActions(event: CustomEvent): void {
+    function reloadDynamicActions(event: Event | null = null): void {
 
         prepareNavigationIconScope();
 
@@ -170,7 +174,11 @@
                  {executeAction} {loadingActions} hasMoreButton={true} className="record-actions">
         {#if mode === 'detail'}
             {#each additionalActions as action}
-                <ActionButton params={action} on:execute={executeAction} className="additional-button dynamic-action"/>
+                {#if 'dropdownItems' in action && action.dropdownItems?.length }
+                    <DropdownActionButton params={action} on:execute={executeAction}  className="additional-button dynamic-action" />
+                {:else}
+                    <ActionButton params={action} on:execute={executeAction}  className="additional-button dynamic-action"/>
+                {/if}
             {/each}
 
             {#if loadingActions}
@@ -189,7 +197,11 @@
             {/if}
         {:else if mode === 'edit'}
             {#each additionalEditActions as action}
-                <ActionButton params={action} on:execute={executeAction} className="additional-button"/>
+                {#if 'dropdownItems' in action && action.dropdownItems?.length}
+                    <DropdownActionButton params={action} on:execute={executeAction} className="additional-button"/>
+                {:else}
+                    <ActionButton params={action} on:execute={executeAction} className="additional-button" />
+                {/if}
             {/each}
         {/if}
     </ActionGroup>
@@ -215,7 +227,11 @@
                             <NavigationButtons hasNext={recordButtons.hasNext} hasPrevious={recordButtons.hasPrevious}
                                                onExecute={executeAction}/>
                         {:else}
-                            <ActionButton params={button} on:execute={executeAction}/>
+                            {#if 'dropdownItems' in button && button.dropdownItems?.length}
+                                <DropdownActionButton params={button} on:execute={executeAction}/>
+                            {:else}
+                                <ActionButton params={button} on:execute={executeAction} />
+                            {/if}
                         {/if}
                     {/each}
                 </div>

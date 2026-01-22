@@ -2,19 +2,20 @@
   "fields": {
     "name": "Name",
     "description": "Description",
-    "selectionRecords": "Selection Records"
+    "selectionItems": "Selection Items"
   },
   "options": {
     "type": {
-      "single": "Single Entity",
-      "multiple": "Multiple Entities"
+      "single": "Uniform",
+      "multiple": "Mixed"
     }
   },
   "labels": {
     "createSelection": "Create Selection"
   },
   "messages": {
-    "cannotSetToSingle": "You cannot set 'Single Entity', because you have many entities in your records.",
-    "youNeedAtLeastTwoItem": "You need at least two items for comparison."
+    "cannotSetToSingle": "You cannot set 'Uniform'",
+    "youNeedAtLeastTwoItem": "You need at least two items for comparison.",
+    "entityIsRequired": "Field 'Entity' is required."
   }
 }

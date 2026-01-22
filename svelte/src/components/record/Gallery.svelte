@@ -3,11 +3,11 @@
     import Swiper from 'swiper';
     import {FreeMode, Mousewheel, Navigation, Scrollbar, Thumbs, Zoom} from 'swiper/modules';
 
-    import ActionButton from "./header/buttons/ActionButton.svelte";
+    import ActionButton from '$lib/components/buttons/ActionButton/ActionButton.svelte';;
     import ActionParams from "./header/interfaces/ActionParams";
     import Preloader from "../icons/loading/Preloader.svelte";
 
-    import {Language} from "../../utils/Language";
+    import { Language } from "$lib/core/language"
 
     import 'swiper/css';
     import 'swiper/css/navigation';
