@@ -78,7 +78,7 @@ Espo.define('ui', [], function () {
         this.contents = '';
         if (this.header) {
             this.contents += '<header class="modal-header">' +
-                             ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></a>' : '') +
+                             ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true"><i class="ph ph-x"></i></span></a>' : '') +
                              '<h4 class="modal-title">' + this.header + '</h4>' +
                              '</header>';
         }

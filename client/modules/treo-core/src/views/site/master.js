@@ -53,7 +53,7 @@ Espo.define('treo-core:views/site/master', ['class-replace!treo-core:views/site/
                 const width = window.outerWidth;
                 const height = window.outerHeight;
 
-                this.openWindow('/', screenX, screenY, width, height);
+                this.openWindow(window.location.href, screenX, screenY, width, height);
             },
             'click #title-bar [data-action=reload]': function () {
                 window.location.reload();

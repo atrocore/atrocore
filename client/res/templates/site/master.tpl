@@ -3,7 +3,7 @@
         <div class="icons-container">
             <img src="{{faviconUrl}}">
             <a href="#" data-action="openWindow" title="{{ translate 'openWindow' }}">
-                <i class="ph ph-plus-square"></i>
+                <i class="ph ph-arrow-square-out"></i>
             </a>
         </div>
         <div class="title"></div>
