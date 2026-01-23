@@ -53,9 +53,9 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
                 this.notify(false);
                 this.listenToOnce(view, 'select', function (model) {
                     this.clearView('selectRecords');
-                    this.ajaxPostRequest('CluseterItem', {
+                    this.ajaxPostRequest('ClusterItem', {
                         entityName: foreignScope,
-                        recordId: model.id,
+                        entityId: model.id,
                         clusterId: this.model.id
                     }).then(() => {
                         this.model.trigger('after:relate', this.link);
