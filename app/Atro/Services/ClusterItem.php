@@ -41,7 +41,6 @@ class ClusterItem extends Base
 
         $this->getEntityManager()->saveEntity($rci);
 
-        // move item to a new cluster
         $rejectedClusterIds = array_column($entity->get('rejectedClusters')->toArray(), 'id');
 
         /* @var $matchedRecordRepo \Atro\Repositories\MatchedRecord */

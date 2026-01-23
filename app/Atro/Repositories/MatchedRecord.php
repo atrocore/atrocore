@@ -95,7 +95,7 @@ class MatchedRecord extends Base
                 'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false'
             )
             ->where('(mr.source_entity=:entityName AND mr.source_entity_id=:entityId) or (mr.master_entity=:entityName AND mr.master_entity_id=:entityId)')
-            ->andWhere('(ci.cluster_id is null or ci.cluster_id not in (:clusterIds)) and (ci1.cluster_id is null or ci1.cluster_id not in (:clusterIds)) and mr.deleted = :false')
+            ->andWhere('(ci.cluster_id is not null or ci1.cluster_id is not null) and (ci.cluster_id is null or ci.cluster_id not in (:clusterIds)) and (ci1.cluster_id is null or ci1.cluster_id not in (:clusterIds)) and mr.deleted = :false')
             ->setParameter('entityName', $entityName)
             ->setParameter('entityId', $entityId)
             ->setParameter('false', false, ParameterType::BOOLEAN)
