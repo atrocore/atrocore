@@ -126,6 +126,7 @@
     "conditionalProperties": "Propriétés conditionnelles"
   },
   "exceptions": {
-    "nullValuesExist": "Certains enregistrements ont des valeurs nulles"
+    "nullValuesExist": "Certains enregistrements ont des valeurs nulles",
+    "cannotAddRequiredFieldWithExistingRecords": "Vous ne pouvez pas ajouter un champ obligatoire avec des enregistrements existants sans valeur par défaut"
   }
 }
