@@ -14,6 +14,7 @@ namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
 use Atro\Core\Templates\Services\Base;
+use Espo\Core\Utils\DataUtil;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
@@ -25,11 +26,13 @@ class ClusterItem extends Base
     {
         parent::prepareEntityForOutput($entity);
 
-        if(empty($record->_preparedInCollection)) {
+        if (empty($entity->_preparedInCollection)) {
             $entity->set('recordId', $entity->get('entityId'));
             $record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId'));
             if (!empty($record)) {
                 $entity->set('recordName', $record->get('name'));
+
+                $entity->setMetaPermission('delete', $this->getUser()->isAdmin() ?? $this->getAcl()->check($record, 'delete'));
             }
         }
     }
@@ -70,6 +73,8 @@ class ClusterItem extends Base
                             $record->set('recordName', $entity->get('name') ?? $entity->get('id'));
                             $record->set('entity', $entity->toArray());
                             $record->_preparedInCollection = true;
+
+                            $record->setMetaPermission('delete', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
                         }
                     }
                 }
@@ -97,6 +102,8 @@ class ClusterItem extends Base
                             $record->set('recordId', $entity->get('id'));
                             $record->set('recordName', $entity->get('name') ?? $entity->get('id'));
                             $record->_preparedInCollection = true;
+
+                            $record->setMetaPermission('delete', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'delete'));
                         }
                     }
                 }

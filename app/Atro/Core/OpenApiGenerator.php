@@ -77,10 +77,45 @@ class OpenApiGenerator
                 'properties' => [
                     'id'      => ['type' => 'string'],
                     'deleted' => ['type' => 'boolean'],
+                    '_meta'   => [
+                        'type'       => 'object',
+                        'required'   => ['permissions'],
+                        'properties' => [
+                            'permissions' => [
+                                'type'       => 'object',
+                                'required'   => ['edit', 'delete', 'stream'],
+                                'properties' => [
+                                    'edit'   => [
+                                        'type'    => 'boolean',
+                                        'example' => true,
+                                    ],
+                                    'delete' => [
+                                        'type'    => 'boolean',
+                                        'example' => true,
+                                    ],
+                                    'stream' => [
+                                        'type'    => 'boolean',
+                                        'example' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'example'    => [
+                            'permissions' => [
+                                'edit'   => true,
+                                'delete' => true,
+                                'stream' => false,
+                            ],
+                        ],
+                    ],
                 ],
             ];
 
             foreach ($data['fields'] as $fieldName => $fieldData) {
+                if ($fieldName === '_meta') {
+                    continue;
+                }
+
                 $this->getFieldSchema($result, $entityName, $fieldName, $fieldData);
             }
 

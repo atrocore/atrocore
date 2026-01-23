@@ -35,6 +35,9 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
     return Dep.extend({
 
         getActionList: function () {
+            const parentModelName = this.options?.parentModelName || null;
+            const relationName = this.options?.relationName || null;
+
             let list = [];
 
             list.push({
@@ -91,14 +94,24 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
             }
 
             if (this.options.acl.unlink) {
-                list.push({
-                    action: 'unlinkRelated',
-                    label: 'Unlink',
-                    data: {
-                        id: this.model.id,
-                        cid: this.model.cid
+                let checkModel = true;
+                if (parentModelName && relationName) {
+                    let aclAction = this.getMetadata().get(`clientDefs.${parentModelName}.relationshipPanels.${relationName}.actions.unlinkRelated.aclAction`);
+                    if (aclAction) {
+                        checkModel = this.getAcl().checkModel(this.model, aclAction);
                     }
-                });
+                }
+
+                if (checkModel) {
+                    list.push({
+                        action: 'unlinkRelated',
+                        label: 'Unlink',
+                        data: {
+                            id: this.model.id,
+                            cid: this.model.cid
+                        }
+                    });
+                }
             }
 
             if (this.options.acl.delete) {

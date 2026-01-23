@@ -279,6 +279,19 @@ class Metadata
                 continue;
             }
 
+            $data->entityDefs->$entityType->fields->_meta = Util::arrayToObject([
+                'type'                 => 'jsonObject',
+                'notStorable'          => true,
+                'protected'            => true,
+                'layoutListDisabled'   => true,
+                'layoutDetailDisabled' => true,
+                'massUpdateDisabled'   => true,
+                'filterDisabled'       => true,
+                'importDisabled'       => true,
+                'exportDisabled'       => true,
+                'emHidden'             => true,
+            ]);
+
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->helper->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
                 if (!$additionalFields) {
