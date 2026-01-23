@@ -12,6 +12,11 @@ Espo.define('views/cluster/record/detail', 'views/selection/record/detail', func
 
     return Dep.extend({
 
+        entityTypeField: 'masterEntity',
+
+        shouldShowDropdownItem() {
+            return true;
+        },
     })
 });
 

@@ -721,7 +721,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 return columns.push({
                     id: model.id,
                     entityType: model.name,
-                    selectionRecordId: model.get('_selectionRecordId'),
+                    selectionItemId: model.get('_selectionItemId'),
                     label: this.getModelTitle(model) ?? model.get('id'),
                     name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });

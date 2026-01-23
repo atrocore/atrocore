@@ -33,7 +33,8 @@
       "notStorable": true
     },
     "cluster": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "matchedRecord": {
       "type": "link",
@@ -70,8 +71,7 @@
     "unique": [
       "deleted",
       "entity_name",
-      "entity_id",
-      "cluster_id"
+      "entity_id"
     ]
   }
 }

@@ -81,7 +81,7 @@
     "RoleScope": "Geltungsbereich",
     "RoleScopeField": "Feld",
     "Selection": "Auswahl",
-    "SelectionRecord": "Auswahl-Datensatz",
+    "SelectionItem": "Auswahlelement",
     "ActionExecution": "Aktions-Ausführung",
     "ActionExecutionLog": "Aktions-Ausführungsprotokoll",
     "Layout": "Layout"
@@ -153,7 +153,7 @@
     "Job": "Aufträge",
     "LayoutProfile": "Layoutprofile",
     "Selection": "Auswahlen",
-    "SelectionRecord": "Auswahldatensätze",
+    "SelectionItem": "Auswahlelemente",
     "ActionExecution": "Aktions-Ausführungen",
     "ActionExecutionLog": "Protokolle der Aktionsausführung",
     "Layout": "Layouts"

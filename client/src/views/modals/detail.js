@@ -111,18 +111,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
                 });
             }
 
-            if (!this.fullFormDisabled) {
-                this.buttonList.push({
-                    name: 'fullForm',
-                    label: 'Full Form'
-                });
-            }
-
-            this.buttonList.push({
-                name: 'close',
-                label: 'Close'
-            });
-
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel'
@@ -280,7 +268,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         controlActionButtons: function () {
             const hiddenButtons = []
             if (this.mode === 'edit') {
-                hiddenButtons.push('edit', 'close', 'remove', 'next', 'previous');
+                hiddenButtons.push('edit', 'remove', 'next', 'previous');
             } else {
                 hiddenButtons.push('save', 'cancel');
                 if (!this.getAcl().check(this.model, 'edit', true)) {
@@ -327,6 +315,14 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
+            this.$el.find('.modal-header .full-form').remove();
+
+            if (!this.fullFormDisabled) {
+                const fullFormButton = $('<a class="full-form" href="javascript:" data-action="fullForm"><i class="ph ph-frame-corners"></i></a>');
+                fullFormButton.on('click', this.actionFullForm.bind(this));
+                this.$el.find('.modal-header').prepend(fullFormButton)
+            }
 
             setTimeout(function () {
                 this.$el.children(0).scrollTop(0);

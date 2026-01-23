@@ -234,9 +234,9 @@ class EntityField extends ReferenceData
             throw new Forbidden();
         }
 
-        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false) {
-            throw new Forbidden();
-        }
+//        if ($this->getMetadata()->get("entityDefs.{$entity->get('entityId')}.fields.{$entity->get('code')}.customizable") === false) {
+//            throw new Forbidden();
+//        }
 
         if ($this->getMetadata()->get("scopes.{$entity->get('entityId')}.primaryEntityId")) {
             throw new Forbidden();
@@ -317,9 +317,13 @@ class EntityField extends ReferenceData
 
                 if ($entity->isNew()) {
                     if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
-
-                    }else{
+                        $hasDefault = !empty($entity->get('defaultFrom')) || !empty($entity->get('defaultTo'));
+                    } else {
                         $hasDefault = !empty($entity->get('default'));
+                    }
+
+                    if (!empty($entity->get('measureId'))) {
+                        $hasDefault = $hasDefault && !empty($entity->get('defaultUnit'));
                     }
 
                     if (!$hasDefault) {
