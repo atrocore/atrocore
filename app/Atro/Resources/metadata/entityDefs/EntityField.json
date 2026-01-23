@@ -389,29 +389,7 @@
     "default": {
       "type": "varchar",
       "view": "views/admin/field-manager/fields/value-container",
-      "tooltip": true,
-      "conditionalProperties": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "required"
-            },
-            {
-              "type": "notIn",
-              "attribute": "type",
-              "value": [
-                "rangeInt",
-                "rangeFloat"
-              ]
-            }
-          ]
-        }
-      }
+      "tooltip": true
     },
     "defaultValueType": {
       "type": "enum",
@@ -435,56 +413,12 @@
     "defaultFrom": {
       "type": "float",
       "notStorable": true,
-      "readOnly": true,
-      "conditionalProperties": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "required"
-            },
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "rangeInt",
-                "rangeFloat"
-              ]
-            }
-          ]
-        }
-      }
+      "readOnly": true
     },
     "defaultTo": {
       "type": "float",
       "notStorable": true,
-      "readOnly": true,
-      "conditionalProperties": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "required"
-            },
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "rangeInt",
-                "rangeFloat"
-              ]
-            }
-          ]
-        }
-      }
+      "readOnly": true
     },
     "pattern": {
       "type": "varchar",
@@ -502,36 +436,7 @@
     },
     "defaultUnit": {
       "type": "varchar",
-      "view": "views/admin/field-manager/fields/default-unit",
-      "conditionalProperties": {
-        "required": {
-          "conditionGroup": [
-            {
-              "type": "isEmpty",
-              "attribute": "id"
-            },
-            {
-              "type": "isTrue",
-              "attribute": "required"
-            },
-            {
-              "type": "in",
-              "attribute": "type",
-              "value": [
-                "rangeInt",
-                "rangeFloat",
-                "int",
-                "float",
-                "varchar"
-              ]
-            },
-            {
-              "type": "isNotEmpty",
-              "attribute": "measureId"
-            }
-          ]
-        }
-      }
+      "view": "views/admin/field-manager/fields/default-unit"
     },
     "tooltip": {
       "type": "bool"

@@ -305,7 +305,7 @@ class EntityField extends ReferenceData
             }
         }
 
-        if (!$entity->isNew() && !empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
+        if (!empty($entity->get('required') && $entity->isAttributeChanged('required'))) {
             $entityName = $entity->get('entityId');
             $type = $this->getMetadata()->get("scopes.{$entityName}.type");
             $fieldType = $entity->get('type');
@@ -315,41 +315,62 @@ class EntityField extends ReferenceData
                 $tableName = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($entityName));
                 $fieldName = $entity->get('code');
 
-                $conditions = [];
+                if ($entity->isNew()) {
+                    if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
 
-                if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
-                    $fromColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
-                    $toColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
+                    }else{
+                        $hasDefault = !empty($entity->get('default'));
+                    }
 
-                    $conditions[] = '(' . $fromColumn . ' IS NULL AND ' . $toColumn . ' IS NULL)';
+                    if (!$hasDefault) {
+                        $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                            ->select('id')
+                            ->from($tableName)
+                            ->where('deleted = :false')
+                            ->setParameter('false', false, ParameterType::BOOLEAN)
+                            ->fetchOne();
+
+                        if (!empty($res)) {
+                            throw new BadRequest($this->getLanguage()->translate('cannotAddRequiredFieldWithExistingRecords', 'exceptions', 'EntityField'));
+                        }
+                    }
                 } else {
-                    if (in_array($fieldType, ['file', 'link'])) {
-                        $fieldName .= 'Id';
-                    }
-                    $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
-                    if (in_array($fieldType, ['int', 'float', 'bool', 'date', 'datetime'])) {
-                        $conditions[] = $column . ' IS NULL';
+                    $conditions = [];
+
+                    if (in_array($fieldType, ['rangeInt', 'rangeFloat'])) {
+                        $fromColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'From'));
+                        $toColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'To'));
+
+                        $conditions[] = '(' . $fromColumn . ' IS NULL AND ' . $toColumn . ' IS NULL)';
                     } else {
-                        $conditions[] = '(' . $column . ' IS NULL OR ' . $column . ' = :empty)';
+                        if (in_array($fieldType, ['file', 'link'])) {
+                            $fieldName .= 'Id';
+                        }
+                        $column = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName));
+                        if (in_array($fieldType, ['int', 'float', 'bool', 'date', 'datetime'])) {
+                            $conditions[] = $column . ' IS NULL';
+                        } else {
+                            $conditions[] = '(' . $column . ' IS NULL OR ' . $column . ' = :empty)';
+                        }
                     }
-                }
 
-                if (!empty($entity->get('measureId')) && in_array($fieldType, ['int', 'float', 'varchar', 'rangeInt', 'rangeFloat'])) {
-                    $unitColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
-                    $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
-                }
+                    if (!empty($entity->get('measureId')) && in_array($fieldType, ['int', 'float', 'varchar', 'rangeInt', 'rangeFloat'])) {
+                        $unitColumn = $connection->quoteIdentifier($this->getEntityManager()->getMapper()->toDb($fieldName . 'UnitId'));
+                        $conditions[] = '(' . $unitColumn . ' IS NULL OR ' . $unitColumn . ' = :empty)';
+                    }
 
-                $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
-                    ->select('id')
-                    ->from($tableName)
-                    ->where('deleted = :false')
-                    ->andWhere(implode(' OR ', $conditions))
-                    ->setParameter('false', false, ParameterType::BOOLEAN)
-                    ->setParameter('empty', '')
-                    ->fetchOne();
+                    $res = $this->getEntityManager()->getConnection()->createQueryBuilder()
+                        ->select('id')
+                        ->from($tableName)
+                        ->where('deleted = :false')
+                        ->andWhere(implode(' OR ', $conditions))
+                        ->setParameter('false', false, ParameterType::BOOLEAN)
+                        ->setParameter('empty', '')
+                        ->fetchOne();
 
-                if (!empty($res)) {
-                    throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));
+                    if (!empty($res)) {
+                        throw new BadRequest($this->getLanguage()->translate('nullValuesExist', 'exceptions', 'EntityField'));
+                    }
                 }
             }
         }
