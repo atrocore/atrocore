@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "name": "Ім'я",
+    "entityId": "Запис",
+    "entityType": "Сутність"
+  },
+  "messages": {
+    "selectionDisabledForEntity": "Вибір вимкнено для сутності '%s'."
+  }
+}

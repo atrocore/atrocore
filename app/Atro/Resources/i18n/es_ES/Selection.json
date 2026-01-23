@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "description": "Descripción",
-    "selectionRecords": "Registros de selección"
+    "selectionItems": "Registros de selección"
   },
   "options": {
     "type": {

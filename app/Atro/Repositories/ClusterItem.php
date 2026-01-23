@@ -13,6 +13,7 @@
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Util;
 use Atro\ORM\DB\RDB\Mapper;
 use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
@@ -64,6 +65,33 @@ class ClusterItem extends Base
 
         if (!empty($entity->get('matchedRecordId'))) {
             $this->getEntityManager()->getRepository('MatchedRecord')->markHasNoCluster($entity->get('matchedRecordId'));
+        }
+    }
+
+    public function hasDeletedRecordsToClear(): bool
+    {
+        return true;
+    }
+
+    public function clearDeletedRecords(): void
+    {
+        parent::clearDeletedRecords();
+
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('entity_name')
+            ->distinct()
+            ->from('cluster_item')
+            ->fetchAllAssociative();
+
+        foreach ($records as $record) {
+            $entityName = $record['entity_name'];
+            $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('cluster_item', 'ci')
+                ->where("ci.entity_name=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id)")
+                ->setParameter('entityName', $entityName)
+                ->executeQuery();
         }
     }
 }

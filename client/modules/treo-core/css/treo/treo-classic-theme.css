@@ -4114,6 +4114,17 @@ tbody.collapse.in {
     border-top-left-radius: 3px;
 }
 
+.btn-group > .additional-button:not(.additional-button ~ .additional-button) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.btn-group .dropdown-toggle {
+    border-left: transparent;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
 .btn-group.open .dropdown-toggle.btn-link {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -6453,10 +6464,6 @@ button.close {
 .modal-header {
     padding: 10px;
     border-bottom: 1px solid #e5e5e5
-}
-
-.modal-header .close {
-    margin-top: -2px
 }
 
 .modal-title {
@@ -9936,18 +9943,16 @@ blockquote {
     border-top-right-radius: inherit;
 }
 
-.modal-header .close {
-    font-size: 31px;
-    font-weight: normal;
-    margin-top: -4px;
-    max-height: 24px
+.modal .close[data-action="close-modal"] i,
+.modal-header .close i,
+.modal-header .full-form i {
+    font-size: 22px;
 }
 
-.modal-header .close > span {
-    position: relative;
-    max-height: 24px;
-    height: 24px;
-    display: inline-block
+.modal-header .full-form {
+    position: absolute;
+    top: 12px;
+    right: 55px;
 }
 
 .modal-footer {
@@ -13395,6 +13400,7 @@ input#sn-checkbox-open-in-new-window {
 .modal-header .close:hover, .modal-header .close:focus,
 .modal-header .close > span {
     color: var(--nav-font-color);
+    display: inline-block;
 }
 
 #notification {
@@ -15326,10 +15332,10 @@ td[data-name="draggableIcon"] {
 
 .full-page-modal .close {
     position: absolute;
-    right: 15px;
-    top: 8px;
+    right: 20px;
+    top: 12px;
     z-index: 2;
-    font-size: 31px;
+    opacity: 1;
 }
 
 .full-page-modal .title-container {
@@ -16796,10 +16802,6 @@ div.list-kanban > div > table .item .panel .form-group {
     box-sizing: border-box;
 }
 
-.query-builder {
-    font-family: sans-serif;
-}
-
 .query-builder .hide {
     display: none;
 }
@@ -16933,7 +16935,6 @@ div.list-kanban > div > table .item .panel .form-group {
 }
 
 .feedbackContainer a span {
-    font-size: 25px;
     color: white;
 }
 

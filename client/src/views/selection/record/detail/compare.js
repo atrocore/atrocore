@@ -22,7 +22,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         hidePanelNavigation: true,
 
-        itemScope: 'SelectionRecord',
+        itemScope: 'SelectionItem',
 
         hasReplaceRecord: true,
 
@@ -38,10 +38,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         afterSwapButtonClick(e) {
             let id = $(e.currentTarget).data('id');
-            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
+            let selectionItemId = $(e.currentTarget).data('selection-item-id');
             let entityType = $(e.currentTarget).data('entity-type');
 
-            if (!id || !entityType || !selectionRecordId) {
+            if (!id || !entityType || !selectionItemId) {
                 return;
             }
 
@@ -61,7 +61,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                         return;
                     }
                     this.notify('Loading...');
-                    this.ajaxPatchRequest(`${this.itemScope}/${selectionRecordId}`, {
+                    this.ajaxPatchRequest(`${this.itemScope}/${selectionItemId}`, {
                         entityId: model.id
                     }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
                 });
@@ -69,8 +69,8 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
         },
 
         afterRemoveButtonClicked(e) {
-            let selectionRecordId = $(e.currentTarget).data('selection-record-id');
-            if (!selectionRecordId) {
+            let selectionItemId = $(e.currentTarget).data('selection-item-id');
+            if (!selectionItemId) {
                 return;
             }
 
@@ -82,11 +82,11 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             this.notify(this.translate('Removing...'));
 
             $.ajax({
-                url: `SelectionRecord/${selectionRecordId}`,
+                url: `${this.itemScope}/${selectionItemId}`,
                 type: 'DELETE',
                 contentType: 'application/json',
                 success: () => {
-                    this.getParentView().afterRemoveSelectedRecords([selectionRecordId])
+                    this.getParentView().afterRemoveSelectedRecords([selectionItemId])
                 }
             });
         },
@@ -103,8 +103,8 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this, 'selection-record:loaded', models => {
-                this.selectionModel.trigger('selection-record:loaded', models);
+            this.listenTo(this, 'selection-item:loaded', models => {
+                this.selectionModel.trigger('selection-item:loaded', models);
             })
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
@@ -136,6 +136,10 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             return this.getParentView().getCompareButtons();
         },
 
+        isComparisonAcrossScopes() {
+            return  this.selectionModel.get('type') !== 'single' && this.selectionModel.get('entityTypes').length > 1;
+        },
+
         canLoadActivities() {
             return true;
         },
@@ -155,6 +159,4 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             return option;
         }
     });
-
-
 });

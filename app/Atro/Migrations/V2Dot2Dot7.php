@@ -12,30 +12,30 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
+use Doctrine\DBAL\ParameterType;
 
 class V2Dot2Dot7 extends Base
 {
     public function getMigrationDateTime(): ?\DateTime
     {
-        return new \DateTime('2026-01-22 10:00:00');
+        return new \DateTime('2026-01-21 14:00:00');
     }
 
     public function up(): void
     {
-        if ($this->isPgSQL()) {
-            $this->exec("DROP INDEX IDX_CLUSTER_ITEM_UNIQUE");
-            $this->exec("CREATE UNIQUE INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item (deleted, entity_name, entity_id)");
+        $this->exec("TRUNCATE TABLE cluster");
+        $this->exec("TRUNCATE TABLE cluster_item");
 
-            $this->exec("CREATE TABLE rejected_cluster_item (id VARCHAR(36) NOT NULL, deleted BOOLEAN DEFAULT 'false', cluster_item_id VARCHAR(36) DEFAULT NULL, cluster_id VARCHAR(36) DEFAULT NULL, PRIMARY KEY(id));");
-            $this->exec("CREATE UNIQUE INDEX IDX_REJECTED_CLUSTER_ITEM_UNIQUE_RELATION ON rejected_cluster_item (deleted, cluster_item_id, cluster_id);");
-            $this->exec("CREATE INDEX IDX_REJECTED_CLUSTER_ITEM_CLUSTER_ITEM_ID ON rejected_cluster_item (cluster_item_id, deleted);");
-            $this->exec("CREATE INDEX IDX_REJECTED_CLUSTER_ITEM_CLUSTER_ID ON rejected_cluster_item (cluster_id, deleted)");
-        } else {
-            $this->exec("DROP INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item");
-            $this->exec("CREATE UNIQUE INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item (deleted, entity_name, entity_id);");
+        $this->exec("DROP INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item");
+        $this->exec("CREATE UNIQUE INDEX IDX_CLUSTER_ITEM_UNIQUE ON cluster_item (deleted, entity_name, entity_id)");
 
-            $this->exec("CREATE TABLE rejected_cluster_item (id VARCHAR(36) NOT NULL, deleted TINYINT(1) DEFAULT '0', cluster_item_id VARCHAR(36) DEFAULT NULL, cluster_id VARCHAR(36) DEFAULT NULL, UNIQUE INDEX IDX_REJECTED_CLUSTER_ITEM_UNIQUE_RELATION (deleted, cluster_item_id, cluster_id), INDEX IDX_REJECTED_CLUSTER_ITEM_CLUSTER_ITEM_ID (cluster_item_id, deleted), INDEX IDX_REJECTED_CLUSTER_ITEM_CLUSTER_ID (cluster_id, deleted), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;");
-        }
+        $this->getConnection()->createQueryBuilder()
+            ->update('matched_record')
+            ->set('has_cluster', ':false')
+            ->where('has_cluster = :true')
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('true', true, ParameterType::BOOLEAN)
+            ->executeQuery();
     }
 
     protected function exec(string $sql): void

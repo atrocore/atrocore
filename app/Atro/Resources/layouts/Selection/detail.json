@@ -5,12 +5,19 @@
     "rows": [
       [
         {
-          "name": "name"
+          "name": "number"
         },
+        false
+      ],
+      [
         {
           "name": "type"
+        },
+        {
+          "name": "entity"
         }
       ],
+
       [
         {
           "name": "description",

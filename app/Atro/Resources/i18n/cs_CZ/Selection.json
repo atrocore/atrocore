@@ -2,7 +2,7 @@
   "fields": {
     "name": "Jméno",
     "description": "Popis",
-    "selectionRecords": "Výběrové záznamy"
+    "selectionItems": "Výběrové záznamy"
   },
   "options": {
     "type": {

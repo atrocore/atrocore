@@ -169,13 +169,18 @@ class MatchedRecord extends Base
         }
     }
 
-    public function removeOldMatches(MatchingEntity $matching, string $matchedAt): void
+    public function removeOldMatches(MatchingEntity $matching, string $matchedAt, string $sourceEntityName, string $sourceEntityId): void
     {
         $this->getConnection()->createQueryBuilder()
             ->delete('matched_record')
-            ->where('matching_id=:matchingId AND modified_at<:matchedAt')
+            ->where('matching_id=:matchingId')
+            ->andWhere('modified_at<:matchedAt')
+            ->andWhere('source_entity=:sourceEntity')
+            ->andWhere('source_entity_id=:sourceEntityId')
             ->setParameter('matchingId', $matching->id)
             ->setParameter('matchedAt', $matchedAt)
+            ->setParameter('sourceEntity', $sourceEntityName)
+            ->setParameter('sourceEntityId', $sourceEntityId)
             ->executeQuery();
 
         // delete cluster items
