@@ -44,28 +44,25 @@ class ClusterItem extends Base
         $rejectedClusterIds = array_column($entity->get('rejectedClusters')->toArray(), 'id');
 
         /* @var $matchedRecordRepo \Atro\Repositories\MatchedRecord */
-        $matchedRecordRepo =  $this->getEntityManager()->getRepository('MatchedRecord');
-
-        $entity->set('clusterId', null);
-        $this->getRepository()->save($entity);
+        $matchedRecordRepo = $this->getEntityManager()->getRepository('MatchedRecord');
 
         $items = $matchedRecordRepo
-            ->getForEntityRecord($entity->get('entityName'), $entity->get('entityId'), $rejectedClusterIds);
+            ->getForEntityRecord($entity->get('entityName'), $entity->get('entityId'), $entity->get('id'), $rejectedClusterIds);
 
         $newClusterId = null;
         foreach ($items as $item) {
-            if ($item['source_entity']=== $entity->get('entityName') && $item['source_entity_id'] === $entity->get('entityId')) {
+            if ($item['source_entity'] === $entity->get('entityName') && $item['source_entity_id'] === $entity->get('entityId')) {
                 $newClusterId = $item['master_cluster_id'];
-            }else if ($item['master_entity']=== $entity->get('entityName') && $item['master_entity_id'] === $entity->get('entityId')) {
+            } else if ($item['master_entity'] === $entity->get('entityName') && $item['master_entity_id'] === $entity->get('entityId')) {
                 $newClusterId = $item['source_cluster_id'];
             }
 
-            if (!empty($newClusterId)){
+            if (!empty($newClusterId)) {
                 break;
             }
         }
 
-        if (empty($newClusterId)){
+        if (empty($newClusterId)) {
             $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
             $newCluster->set('masterEntity', $cluster->get('masterEntity'));;
 
