@@ -25,6 +25,7 @@ Espo.define('views/selection-item/fields/entity-id', 'views/fields/link',
             setup: function () {
                 this.name = 'entity'
                 this.foreignScope = this.model.get('entityType')
+                this.model.set('entityName', this.model.get('name'));
 
                 Dep.prototype.setup.call(this);
 
