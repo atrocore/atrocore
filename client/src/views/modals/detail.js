@@ -112,11 +112,6 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
             }
 
             this.buttonList.push({
-                name: 'close',
-                label: 'Close'
-            });
-
-            this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel'
             });
@@ -273,7 +268,7 @@ Espo.define('views/modals/detail', 'views/modal', function (Dep) {
         controlActionButtons: function () {
             const hiddenButtons = []
             if (this.mode === 'edit') {
-                hiddenButtons.push('edit', 'close', 'remove', 'next', 'previous');
+                hiddenButtons.push('edit', 'remove', 'next', 'previous');
             } else {
                 hiddenButtons.push('save', 'cancel');
                 if (!this.getAcl().check(this.model, 'edit', true)) {
