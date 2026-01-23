@@ -53,7 +53,7 @@
                                                 <ul class="dropdown-menu">
                                                     {{#each ../recordActions}}
                                                         <li>
-                                                            <a href="javascript:" class="record-action" data-action="{{name}}" data-entity-type="{{../entityType}}" data-selection-record-id="{{../selectionRecordId}}" data-id="{{../id}}">
+                                                            <a href="javascript:" class="record-action" data-action="{{name}}" data-entity-type="{{../entityType}}" data-selection-item-id="{{../selectionItemId}}" data-id="{{../id}}">
                                                                 {{#if iconClass }}<i class="{{iconClass}}"></i>{{/if}} <span>{{label}}</span>
                                                             </a>
                                                         </li>

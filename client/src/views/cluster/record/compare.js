@@ -32,7 +32,7 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
         },
 
         actionRejectItem(e) {
-            const id = $(e.currentTarget).data('selection-record-id');
+            const id = $(e.currentTarget).data('selection-item-id');
 
             this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
                 .then(response => {

@@ -44,49 +44,37 @@ class ClusterItem extends Base
         // move item to a new cluster
         $rejectedClusterIds = array_column($entity->get('rejectedClusters')->toArray(), 'id');
 
+        /* @var $matchedRecordRepo \Atro\Repositories\MatchedRecord */
+        $matchedRecordRepo =  $this->getEntityManager()->getRepository('MatchedRecord');
 
-        $items = $this->getEntityManager()->getRepository('MatchedRecord')
+        $entity->set('clusterId', null);
+        $this->getRepository()->save($entity);
+
+        $items = $matchedRecordRepo
             ->getForEntityRecord($entity->get('entityName'), $entity->get('entityId'), $rejectedClusterIds);
 
-        $clustersIds = [];
+        $newClusterId = null;
         foreach ($items as $item) {
-            if (!empty($item['source_cluster_id'])) {
-                $clustersIds[$item['source_entity']][$item['source_entity_id']] = $item['source_cluster_id'];
-            }
-            if (!empty($item['master_cluster_id'])) {
-                $clustersIds[$item['master_entity']][$item['master_entity_id']] = $item['master_cluster_id'];
-            }
-
-            $sourceClusterId = $clustersIds[$item['source_entity']][$item['source_entity_id']] ?? null;
-            $masterClusterId = $clustersIds[$item['master_entity']][$item['master_entity_id']] ?? null;
-
-            $clusterId = $masterClusterId ?? $sourceClusterId ?? $this->createCluster($masterEntity)->id;
-
-            $matchedRecordRepo->markHasCluster($item['id']);
-
-            if (!empty($sourceClusterId) && !empty($masterClusterId) && $sourceClusterId !== $masterClusterId) {
-                $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
-                continue;
+            if ($item['source_entity']=== $entity->get('entityName') && $item['source_entity_id'] === $entity->get('entityId')) {
+                $newClusterId = $item['master_cluster_id'];
+            }else if ($item['master_entity']=== $entity->get('entityName') && $item['master_entity_id'] === $entity->get('entityId')) {
+                $newClusterId = $item['source_cluster_id'];
             }
 
-            if (empty($sourceClusterId)) {
-                $clustersIds[$item['source_entity']][$item['source_entity_id']] = $clusterId;
-                $this->createClusterItem($clusterId, $item['source_entity'], $item['source_entity_id'], $item['id']);
-            }
-
-            if (empty($masterClusterId)) {
-                $clustersIds[$item['master_entity']][$item['master_entity_id']] = $clusterId;
-                $this->createClusterItem($clusterId, $item['master_entity'], $item['master_entity_id'], $item['id']);
+            if (!empty($newClusterId)){
+                break;
             }
         }
 
+        if (empty($newClusterId)){
+            $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
+            $newCluster->set('masterEntity', $cluster->get('masterEntity'));;
 
-        $newCluster = $this->getEntityManager()->getRepository('Cluster')->get();
-        $newCluster->set('masterEntity', $cluster->get('masterEntity'));;
+            $this->getEntityManager()->saveEntity($newCluster);
+            $newClusterId = $newCluster->get('id');
+        }
 
-        $this->getEntityManager()->saveEntity($newCluster);
-
-        $this->getRepository()->moveToCluster($entity->get('id'), $newCluster->get('id'));
+        $this->getRepository()->moveToCluster($entity->get('id'), $newClusterId);
         return true;
     }
 
