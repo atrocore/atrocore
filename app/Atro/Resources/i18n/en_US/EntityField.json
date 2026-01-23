@@ -126,6 +126,7 @@
     "conditionalProperties": "Conditional Properties"
   },
   "exceptions": {
-    "nullValuesExist": "Some records have null values"
+    "nullValuesExist": "Some records have null values",
+    "cannotAddRequiredFieldWithExistingRecords": "You cannot add required field with existing records without default value"
   }
 }
