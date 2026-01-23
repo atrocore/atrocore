@@ -13,17 +13,47 @@
 namespace Atro\Repositories;
 
 use Atro\Core\Templates\Repositories\Base;
+use Atro\ORM\DB\RDB\Mapper;
+use Doctrine\DBAL\ParameterType;
 use Espo\ORM\Entity;
 
 class ClusterItem extends Base
 {
-    public function moveToCluster(string $clusterIdFrom, string $clusterIdTo): void
+    public function moveAllToCluster(string $clusterIdFrom, string $clusterIdTo): void
+    {
+        // check if 'From' cluster has no rejected items that are in 'To' cluster
+        $res = $this->getConnection()->createQueryBuilder()
+            ->select('id')
+            ->from('rejected_cluster_item', 'rci')
+            ->join('rci', 'cluster_item', 'ci', 'ci.id=rejected_cluster_item.cluster_item_id')
+            ->where('rci.cluster_id=:clusterIdFrom and ci.cluster_id= :clusterIdTo and rci.deleted = :false and ci.deleted = :false')
+            ->andWhere('')
+            ->setParameter('clusterIdFrom', $clusterIdFrom)
+            ->setParameter('clusterIdTo', $clusterIdTo)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->fetchOne();
+
+        if (!empty($res)){
+            return;
+        }
+
+        $this->getConnection()->createQueryBuilder()
+            ->update('cluster_item')
+            ->set('cluster_id', ':clusterIdTo')
+            ->where('cluster_id=:clusterIdFrom and id not in (select cluster_item_id from rejected_cluster_item where cluster_id=:clusterIdTo) and deleted=:false')
+            ->setParameter('clusterIdFrom', $clusterIdFrom)
+            ->setParameter('clusterIdTo', $clusterIdTo)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->executeQuery();
+    }
+
+    public function moveToCluster(string $clusterItemId, string $clusterIdTo): void
     {
         $this->getConnection()->createQueryBuilder()
             ->update('cluster_item')
             ->set('cluster_id', ':clusterIdTo')
-            ->where('cluster_id=:clusterIdFrom')
-            ->setParameter('clusterIdFrom', $clusterIdFrom)
+            ->where('id=:clusterItemId')
+            ->setParameter('clusterItemId', $clusterItemId)
             ->setParameter('clusterIdTo', $clusterIdTo)
             ->executeQuery();
     }

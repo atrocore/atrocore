@@ -28,14 +28,13 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
 
         hasRemoveRecord: true,
 
-        events: _.extend({
-            'click div.inline-actions a.swap-entity': function (e) {
-                this.afterSwapButtonClick(e)
-            },
-            'click div.inline-actions a.remove-entity': function (e) {
-                this.afterRemoveButtonClicked(e);
-            }
-        }, Dep.prototype.events),
+        actionRemoveItem: function (e) {
+            this.afterRemoveButtonClicked(e)
+        },
+
+        actionReplaceItem: function (e) {
+            this.afterSwapButtonClick(e)
+        },
 
         afterSwapButtonClick(e) {
             let id = $(e.currentTarget).data('id');

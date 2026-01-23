@@ -85,6 +85,26 @@ class MatchedRecord extends Base
             ->fetchAllAssociative();
     }
 
+    public function getForEntityRecord(string $entityName, string $entityId, array $rejectedClusterIds): array
+    {
+        return $this->getConnection()->createQueryBuilder()
+            ->select('mr.id, mr.type, mr.source_entity, mr.source_entity_id, ci.cluster_id as source_cluster_id, mr.master_entity, mr.master_entity_id, ci1.cluster_id as master_cluster_id')
+            ->from('matched_record', 'mr')
+            ->leftJoin('mr', 'cluster_item', 'ci', 'ci.entity_name = mr.source_entity AND ci.entity_id = mr.source_entity_id AND ci.deleted=:false')
+            ->leftJoin(
+                'mr', 'cluster_item', 'ci1', 'ci1.entity_name = mr.master_entity AND ci1.entity_id = mr.master_entity_id AND ci1.deleted=:false'
+            )
+            ->where('(mr.source_entity=:entityName AND mr.source_entity_id=:entityId) or (mr.master_entity=:entityName AND mr.master_entity_id=:entityId)')
+            ->andWhere('ci.cluster_id not in (:clusterIds) and ci1.cluster_id not in (:clusterIds) and mr.deleted = :false')
+            ->setParameter('entityName', $entityName)
+            ->setParameter('entityId', $entityId)
+            ->setParameter('false', false, ParameterType::BOOLEAN)
+            ->setParameter('clusterIds', $rejectedClusterIds, Connection::PARAM_STR_ARRAY)
+            ->addOrderBy('mr.source_entity', 'ASC')
+            ->addOrderBy('mr.source_entity_id', 'ASC')
+            ->fetchAllAssociative();
+    }
+
     public function afterRemoveRecord(string $entityName, string $entityId): void
     {
         $toRemove = $this->getMetadata()->get("scopes.$entityName.matchDuplicates") || $this->getMetadata()->get("scopes.$entityName.matchMasterRecords");

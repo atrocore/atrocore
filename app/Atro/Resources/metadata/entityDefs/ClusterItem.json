@@ -46,6 +46,12 @@
       "foreign": "clusterItems",
       "entity": "Cluster"
     },
+    "rejectedClusters": {
+      "type": "hasMany",
+      "relationName": "RejectedClusterItem",
+      "entity": "Cluster",
+      "foreign": "rejectedClusterItems"
+    },
     "matchedRecord": {
       "type": "belongsTo",
       "foreign": "clusterItems",
@@ -70,8 +76,7 @@
     "unique": [
       "deleted",
       "entity_name",
-      "entity_id",
-      "cluster_id"
+      "entity_id"
     ]
   }
 }

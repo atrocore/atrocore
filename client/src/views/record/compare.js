@@ -52,6 +52,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         hasRemoveRecord: false,
 
+        recordActions: [],
+
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
@@ -62,6 +64,17 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             'click a[data-action="openOverviewFilter"]': function () {
                 this.openOverviewFilter();
+            },
+
+            'click a.record-action': function (e) {
+                const $el = $(e.currentTarget);
+                const name = $el.data('action');
+                if (name) {
+                    const functionName = 'action' + Espo.Utils.upperCaseFirst(name);
+                    if (typeof this[functionName] === 'function') {
+                        this[functionName](e)
+                    }
+                }
             }
         },
 
@@ -77,9 +90,26 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
+            this.recordActions = Espo.utils.cloneDeep(this.recordActions || [])
 
             if (typeof this.options.inlineEditDisabled === 'boolean') {
                 this.inlineEditDisabled = this.options.inlineEditDisabled;
+            }
+
+            if (this.hasReplaceRecord) {
+                this.recordActions.push({
+                    name: 'replaceItem',
+                    iconClass: 'ph ph-swap',
+                    label: this.translate('replaceItem'),
+                });
+            }
+
+            if (this.hasRemoveRecord) {
+                this.recordActions.push({
+                    name: 'removeItem',
+                    iconClass: 'ph ph-trash-simple',
+                    label: this.translate('removeItem'),
+                })
             }
 
             this.getModels().forEach(model => {
@@ -595,9 +625,8 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 hideButtonPanel: this.hideButtonPanel,
                 showOverlay: this.showOverlay,
                 overlayLogo: this.getFavicon(),
-                hasRemoveRecord: this.hasRemoveRecord,
-                hasReplaceRecord: this.hasReplaceRecord,
-                hasRecordAction: this.hasRemoveRecord || this.hasReplaceRecord
+                recordActions: this.recordActions,
+                hasRecordAction: this.recordActions.length > 0,
             };
         },
 
@@ -637,11 +666,11 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     && this.areEquals(current, others, field + 'To', this.model.defs.fields[field + 'To']);
 
                 if (fieldDef['measureId']) {
-                    if(current.get(field + 'Unit') === "") {
+                    if (current.get(field + 'Unit') === "") {
                         current.set(field + 'Unit', null)
                     }
                     others.forEach(o => {
-                        if(o.get(field + 'Unit') === "") {
+                        if (o.get(field + 'Unit') === "") {
                             o.set(field + 'Unit', null)
                         }
                     });
