@@ -179,6 +179,14 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -187,7 +195,12 @@
                 {
                   "type": "in",
                   "attribute": "type",
-                  "value": ["varchar", "text", "wysiwyg", "markdown"]
+                  "value": [
+                    "varchar",
+                    "text",
+                    "wysiwyg",
+                    "markdown"
+                  ]
                 },
                 {
                   "type": "and",
@@ -223,12 +236,22 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
               "type": "notIn",
               "attribute": "type",
-              "value": ["linkMultiple"]
+              "value": [
+                "linkMultiple"
+              ]
             }
           ]
         }
@@ -241,6 +264,14 @@
       "type": "bool",
       "tooltip": true,
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -253,24 +284,65 @@
     },
     "protected": {
       "type": "bool",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "customizable": {
       "type": "bool",
-      "readOnly": true
+      "readOnly": true,
+      "default": true
     },
     "isCustom": {
       "type": "bool",
       "readOnly": true
     },
     "unique": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "index": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "measure": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "trim": {
       "type": "bool",
@@ -278,10 +350,30 @@
     },
     "maxLength": {
       "type": "int",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "countBytesInsteadOfCharacters": {
-      "type": "bool"
+      "type": "bool",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "entityData": {
       "type": "jsonObject",
@@ -330,7 +422,17 @@
     },
     "pattern": {
       "type": "varchar",
-      "tooltip": true
+      "tooltip": true,
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "defaultUnit": {
       "type": "varchar",
@@ -383,7 +485,15 @@
     "options": {
       "type": "array",
       "view": "views/entity-field/fields/options",
-      "conditionalProperties":  {
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "required": {
           "conditionGroup": [
             {
@@ -423,7 +533,17 @@
       "view": "views/admin/field-manager/fields/extensible-enum-options"
     },
     "fileType": {
-      "type": "link"
+      "type": "link",
+      "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        }
+      }
     },
     "previewSize": {
       "type": "enum",
@@ -736,6 +856,14 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -745,7 +873,9 @@
             {
               "type": "notIn",
               "attribute": "type",
-              "value": ["linkMultiple"]
+              "value": [
+                "linkMultiple"
+              ]
             }
           ]
         }
@@ -755,6 +885,14 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -773,6 +911,14 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -787,6 +933,14 @@
       "type": "jsonObject",
       "view": "views/admin/field-manager/fields/conditions-container",
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {
@@ -801,6 +955,14 @@
       "type": "jsonObject",
       "view": "views/entity-field/fields/conditional-disable-options",
       "conditionalProperties": {
+        "readOnly": {
+          "conditionGroup": [
+            {
+              "type": "isFalse",
+              "attribute": "customizable"
+            }
+          ]
+        },
         "visible": {
           "conditionGroup": [
             {

@@ -176,7 +176,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 && canSelect
                 && this.getAcl().check(this.scope, 'create')
                 && !~['User', 'Team'].indexOf()
-                && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.model.get('customizable') === false)
+                && !(this.scope === 'EntityField' && this.model.name === 'Entity' && this.getMetadata().get(`scopes.${this.model.id}.customizable`) === false)
             ) {
                 this.buttonList.push({
                     title: 'Create',
