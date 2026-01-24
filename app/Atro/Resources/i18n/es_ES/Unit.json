@@ -11,7 +11,7 @@
   },
   "exceptions": {
     "defaultIsRequired": "La medida debe tener una unidad por defecto.",
-    "unitIsUsed": "La unidad \"%s\" es utilizada por el campo \"%s\" en la entidad \"%s\" para el registro \"%s\".",
+    "unitIsUsed": "La Opción de Lista '%s' es utilizada por el campo '%s' en la Entidad '%s' para el Registro '%s'.",
     "unitIsUsedOnClassificationAttribute": "La unidad '%s' es utilizada por el Atributo '%s' en la Clasificación '%s'.",
     "unitIsUsedOnEntityAttribute": "La unidad '%s' es utilizada por el atributo '%s' en el %s '%s'."
   }
