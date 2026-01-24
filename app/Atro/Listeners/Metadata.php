@@ -129,18 +129,6 @@ class Metadata extends AbstractListener
             $data['entityDefs']['Action']['fields']['type']['options'] = array_keys($data['action']['types']);
         }
 
-        unset($data['entityDefs']['RejectedClusterItem']['fields']['createdAt']);
-        unset($data['entityDefs']['RejectedClusterItem']['fields']['modifiedAt']);
-        unset($data['entityDefs']['RejectedClusterItem']['fields']['createdBy']);
-        unset($data['entityDefs']['RejectedClusterItem']['fields']['modifiedBy']);
-        unset($data['entityDefs']['RejectedClusterItem']['links']['createdBy']);
-        unset($data['entityDefs']['RejectedClusterItem']['links']['modifiedBy']);
-
-        unset($data['entityDefs']['RejectedClusterItem']['indexes']['createdAt']);
-        unset($data['entityDefs']['RejectedClusterItem']['indexes']['modifiedAt']);
-        unset($data['entityDefs']['RejectedClusterItem']['indexes']['createdBy']);
-        unset($data['entityDefs']['RejectedClusterItem']['indexes']['modifiedBy']);
-
         $event->setArgument('data', $data);
     }
 
