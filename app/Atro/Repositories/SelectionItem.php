@@ -17,6 +17,7 @@ use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\Error;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Repositories\Base;
+use Atro\Core\Utils\Util;
 use Espo\ORM\Entity;
 
 
@@ -25,7 +26,7 @@ class SelectionItem extends Base
     protected function beforeSave(Entity $entity, array $options = [])
     {
 
-        if($this->getMetadata()->get(['scopes', $entity->get('entityType'), 'selectionDisabled'])) {
+        if ($this->getMetadata()->get(['scopes', $entity->get('entityType'), 'selectionDisabled'])) {
             throw new BadRequest(str_replace('%s', $entity->get('entityType'), $this->getLanguage()->translate('selectionDisabledForEntity', 'messages', 'SelectionItem')));
         }
 
@@ -55,6 +56,33 @@ class SelectionItem extends Base
             return parent::save($entity, $options);
         } catch (NotUnique $e) {
             throw new NotUnique("Selection record already exists");
+        }
+    }
+
+    public function hasDeletedRecordsToClear(): bool
+    {
+        return true;
+    }
+
+    public function clearDeletedRecords(): void
+    {
+        parent::clearDeletedRecords();
+
+        $records = $this->getConnection()->createQueryBuilder()
+            ->select('entity_type')
+            ->distinct()
+            ->from('selection_item')
+            ->fetchAllAssociative();
+
+        foreach ($records as $record) {
+            $entityName = $record['entity_type'];
+            $tableName = $this->getConnection()->quoteIdentifier(Util::toUnderScore(lcfirst($entityName)));
+
+            $this->getConnection()->createQueryBuilder()
+                ->delete('selection_item', 'ci')
+                ->where("ci.entity_type=:entityName AND NOT EXISTS (SELECT 1 FROM $tableName e WHERE e.id=ci.entity_id)")
+                ->setParameter('entityName', $entityName)
+                ->executeQuery();
         }
     }
 }

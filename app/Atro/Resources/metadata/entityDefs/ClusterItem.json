@@ -33,7 +33,8 @@
       "notStorable": true
     },
     "cluster": {
-      "type": "link"
+      "type": "link",
+      "required": true
     },
     "matchedRecord": {
       "type": "link",

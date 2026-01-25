@@ -861,6 +861,11 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     }
                 }
 
+                let customUrl = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.actions.unlinkRelated.url`);
+                if (customUrl) {
+                    url = customUrl.replace('{{id}}', id);
+                }
+
                 $.ajax({
                     url: url,
                     type: 'DELETE',
@@ -883,7 +888,9 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
         },
 
         actionRemoveRelated: function (data, evt) {
-            const model = this.getModel(data, evt)
+            const model = this.getModel(data, evt);
+
+            let link = this.collection.url.split('/').pop();
 
             let message = 'Global.messages.removeRecordConfirmation';
             if (this.isHierarchical()) {
@@ -902,16 +909,34 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 confirmText: this.translate('Remove')
             }, () => {
                 this.notify('removing');
-                model.destroy({
+
+                let url = `${model.name}/${model.id}`;
+
+                let customUrl = this.getMetadata().get(`clientDefs.${this.model.name}.relationshipPanels.${link}.actions.removeRelated.url`);
+                if (customUrl) {
+                    $.each(model.attributes || {}, (key, value) => {
+                        customUrl = customUrl.replace(`{{${key}}}`, value);
+                    });
+                    url = customUrl;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: JSON.stringify({
+                        id: model.id
+                    }),
+                    contentType: 'application/json',
                     success: () => {
                         this.notify('Removed', 'success');
                         this.collection.fetch();
-                        this.model.trigger('after:unrelate', this.link, this.defs);
+                        if (this.mode !== 'edit') {
+                            this.model.trigger('after:unrelate', this.link, this.defs);
+                        }
                     },
-
                     error: () => {
-                        this.collection.push(model);
-                    }
+                        this.notify('Error occurred', 'error');
+                    },
                 });
             });
         },
