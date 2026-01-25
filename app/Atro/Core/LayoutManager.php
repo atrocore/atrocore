@@ -805,8 +805,26 @@ class LayoutManager
 
         // check if entityDefs exists
         if (!empty($entityDefs)) {
+            $disabledParams = ["layout" . ucfirst($name) . "Disabled"];
+            if ($name === 'summary') {
+                $disabledParams[] = "layoutDetailDisabled";
+            }
+
             // get fields for entity
-            $fields = array_keys(array_filter($entityDefs['fields'], fn($defs) => empty($defs['multilangField'])));
+            $fields = array_keys(array_filter($entityDefs['fields'], function ($defs) use ($disabledParams) {
+                if (!empty($defs['multilangField'])) {
+                    return false;
+                }
+
+                foreach ($disabledParams as $param) {
+                    if (!empty($defs[$param])) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }));
+
             if (!empty($relatedScope) && in_array($name, ['list', 'detail'])) {
                 $linkData = $this->getMetadata()->get(['entityDefs', $relatedScope, 'links', $relatedLink]) ?? [];
                 if (!empty($linkData['entity']) && $linkData['entity'] === $scope && !empty($linkData['relationName'])) {
@@ -827,6 +845,7 @@ class LayoutManager
                 case 'massUpdate':
                     $data = array_values(array_intersect($data, $fields));
                     break;
+                case 'summary':
                 case 'detail':
                     for ($key = 0; $key < count($data[0]['rows']); $key++) {
                         foreach ($data[0]['rows'][$key] as $fieldKey => $fieldData) {
