@@ -383,6 +383,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         renderFieldsPanels() {
             this.renderedPanels = this.renderedPanels.filter(panel => !this.fieldPanels.map(f => f.name).includes(panel));
+            let count = 0;
             this.fieldPanels.forEach((panel, index) => {
                 let fieldList = this.fieldsArr.filter(panel.filter);
                 fieldList.sort((a, b) => a.sortOrder < b.sortOrder ? -1 : 1);
@@ -443,6 +444,10 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     });
 
                     view.render(() => {
+                        count++;
+                        if(count === this.fieldPanels.length) {
+                            this.trigger('all-fields-panel-rendered')
+                        }
                         this.handlePanelRendering(panel.name);
                         this.trigger('after:fields-panel-rendered', panel.name);
                         this.createView('layoutConfiguratorSelection', "views/record/layout-configurator", {
