@@ -269,7 +269,7 @@ class PostUpdate
      */
     private static function updateModulesList(): void
     {
-        if (self::isInstalled() && !self::isChanged()) {
+        if (self::isInstalled() && !self::isChanged() && file_exists('data/modules.json')) {
             return;
         }
 
