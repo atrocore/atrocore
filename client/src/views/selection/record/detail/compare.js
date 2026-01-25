@@ -113,9 +113,8 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                 this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', this.selectionModel.name);
                 this.listenToOnce(this, 'all-fields-panel-rendered', () => {
                     this.notify(false)
-                })
+                });
                 this.reRenderFieldsPanels();
-
             })
 
             this.listenToOnce(this, 'all-panels-rendered', () => {
