@@ -101,14 +101,6 @@ class SelectionItem extends Base
         }
     }
 
-
-    public function findEntities($params)
-    {
-        $result =  parent::findEntities($params);
-        $result['total'] = $result['collection']->count();
-        return $result;
-    }
-
     public function createOnCurrentItem(string $entityType, string $entityId): bool
     {
         $currentSelection = $this->getUser()->get('currentSelection');

@@ -429,8 +429,43 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
         },
 
         setupCurrentSelection: function () {
-            this.createView('currentSelectionBadge', 'views/selection/navigation/badge', {
-                el: this.options.el + ' .current-selection-badge-container'
+            this.listenToOnce(this, 'after:render', () => {
+                this.initCurrentSelectionBadge();
+            });
+        },
+
+        initCurrentSelectionBadge: function () {
+            const container = this.$el.find('.current-selection-badge-container').get(0);
+            if (!container) {
+                return;
+            }
+
+            this.currentSelectionBadge = new Svelte.CurrentSelectionBadge({
+                target: container,
+                props: {
+                    userModel: this.getUser(),
+                    renderLinkField: (fieldContainer) => {
+                        fieldContainer.id = 'current-selection-link-field';
+                        this.createView('currentSelectionField', 'views/fields/link', {
+                            el: '#current-selection-link-field',
+                            foreignScope: 'Selection',
+                            defs: {
+                                name: 'currentSelection'
+                            },
+                            mode: 'edit',
+                            model: this.getUser()
+                        }, (view) => {
+                            view.render();
+                            this.listenTo(view.model, 'change:currentSelectionId', () => {
+                                view.model.save();
+                                this.currentSelectionBadge.handleSelectionChange();
+                            });
+                        });
+                    },
+                    onSelectionChange: () => {
+                        // Handle selection change if needed
+                    }
+                }
             });
         }
     });
