@@ -526,7 +526,8 @@
     "replaceItem": "Замінити елемент",
     "removeItem": "Видалити елемент",
     "openStagingEntity": "Відкрити мастер сутність",
-    "openPrimaryEntity": "Відкрити стейджинг сутність"
+    "openPrimaryEntity": "Відкрити стейджинг сутність",
+    "currentSelection": "Поточний вибір"
   },
   "insightsPanels": {
     "summary": "Підсумок",

@@ -2712,6 +2712,19 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             return htmlIcons;
         },
 
+        actionSelect: function (data) {
+            if (!data.id || !this.collection) {
+                this.notify('Wrong input data', 'error');
+            }
+
+            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+                entityType: this.collection.name,
+                entityId: data.id
+            }).then( _ => {
+                this.notify(this.translate('Success'), 'success')
+            })
+        },
+
         actionQuickView: function (data) {
             data = data || {};
             var id = data.id;

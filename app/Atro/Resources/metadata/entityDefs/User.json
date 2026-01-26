@@ -297,6 +297,12 @@
       "filterDisabled": true,
       "exportDisabled": true,
       "importDisabled": true
+    },
+    "currentSelection": {
+      "type": "link",
+      "layoutListDisabled": true,
+      "layoutDetailDisabled": true,
+      "massUpdateDisabled": true
     }
   },
   "links": {
@@ -339,6 +345,10 @@
     "layoutProfile": {
       "type": "belongsTo",
       "entity": "LayoutProfile"
+    },
+    "currentSelection": {
+      "type": "belongsTo",
+      "entity": "Selection"
     }
   },
   "collection": {

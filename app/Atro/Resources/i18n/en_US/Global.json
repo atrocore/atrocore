@@ -532,7 +532,8 @@
     "rejectItem": "Reject",
     "isLinked": "Is Linked",
     "openStagingEntity": "Open Staging Entity",
-    "openPrimaryEntity": "Open Master Entity"
+    "openPrimaryEntity": "Open Master Entity",
+    "currentSelection": "Current Selection"
   },
   "insightsPanels": {
     "summary": "Summary",

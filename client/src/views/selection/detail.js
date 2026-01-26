@@ -526,7 +526,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         canMerge() {
             if (this.selectionViewMode === 'standard'
                 && (!this.collection || this.collection.models.length <= 1)
-                || (this.selectionViewMode !== 'standard' && this.selectionItemModels.length <= 1)
+                || (this.selectionViewMode !== 'standard' && (!this.selectionItemModels || this.selectionItemModels.length <= 1))
             ) {
                 return false;
             }

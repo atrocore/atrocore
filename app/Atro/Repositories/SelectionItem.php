@@ -55,7 +55,7 @@ class SelectionItem extends Base
         try {
             return parent::save($entity, $options);
         } catch (NotUnique $e) {
-            throw new BadRequest("Selection record already exists");
+            throw new NotUnique("Selection record already exists");
         }
     }
 
