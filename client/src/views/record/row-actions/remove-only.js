@@ -35,7 +35,7 @@ Espo.define('views/record/row-actions/remove-only', 'views/record/row-actions/de
     return Dep.extend({
 
         getActionList: function () {
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 return [
                     {
                         action: 'quickRemove',

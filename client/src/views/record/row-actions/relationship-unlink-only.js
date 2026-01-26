@@ -36,7 +36,7 @@ Espo.define('views/record/row-actions/relationship-unlink-only', 'views/record/r
 
         getActionList: function () {
             let list = [];
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.unlink) {
                 list.push({
                     action: 'unlinkRelated',
                     label: 'Unlink',

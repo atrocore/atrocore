@@ -139,7 +139,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             const scope = this.options.scope;
             const filters = this.getStorage().get('listQueryBuilder', scope);
             if (filters && filters?.bool?.onlyDeleted === true) {
-                if (this.options.acl.delete) {
+                if (this.model.get('_meta')?.permissions?.delete) {
                     return [
                         {
                             action: 'quickRestore',
@@ -167,7 +167,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
 
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
@@ -193,7 +193,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             }
 
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',
