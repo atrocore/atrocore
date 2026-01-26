@@ -1503,7 +1503,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             if (this.resizable) {
-                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not(.table-spacer):not(:last-child)').each((i, el) => {
+                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
                     const $th = $(el);
                     const name = $th.data('name');
                     let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
