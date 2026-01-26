@@ -74,6 +74,29 @@ class ClusterItem extends Base
         return true;
     }
 
+    public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
+    {
+        if ($entityFrom->getEntityName() !== 'Cluster' || $link !== 'clusterItems') {
+            parent::putAclMetaForLink($entityFrom, $link, $entity);
+            return;
+        }
+
+        $this->putAclMeta($entity);
+
+        if ($this->getUser()->isAdmin()) {
+            $entity->setMetaPermission('unlink', true);
+            $entity->setMetaPermission('delete', true);
+            return;
+        }
+
+        $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
+        $entity->setMetaPermission('delete', false);
+
+        if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
+            $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
+        }
+    }
+
     public function prepareEntityForOutput(Entity $entity)
     {
         parent::prepareEntityForOutput($entity);

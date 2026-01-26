@@ -36,7 +36,7 @@ Espo.define('views/record/row-actions/edit-and-remove', 'views/record/row-action
 
         getActionList: function () {
             var list = [];
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
@@ -46,7 +46,7 @@ Espo.define('views/record/row-actions/edit-and-remove', 'views/record/row-action
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
             }
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',

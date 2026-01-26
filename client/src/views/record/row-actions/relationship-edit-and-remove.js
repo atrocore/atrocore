@@ -36,7 +36,7 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
 
         getActionList: function () {
             var list = [];
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 if (this.model.name === 'File') {
                     list.push({
                         action: 'reupload',
@@ -66,7 +66,7 @@ Espo.define('views/record/row-actions/relationship-edit-and-remove', 'views/reco
                     });
                 }
             }
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',

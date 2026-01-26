@@ -1,4 +1,5 @@
 {
+  "controller": "controllers/record",
   "recordViews": {
     "list": "views/selection-item/record/list"
   },

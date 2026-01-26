@@ -44,7 +44,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
 
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 list.push({
                     action: 'quickEdit',
                     label: 'Edit',
@@ -55,7 +55,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 });
             }
 
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',

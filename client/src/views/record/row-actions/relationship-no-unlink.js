@@ -44,7 +44,7 @@ Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 if (this.model.name === 'File') {
                     list.push({
                         action: 'reupload',
@@ -75,7 +75,7 @@ Espo.define('views/record/row-actions/relationship-no-unlink', 'views/record/row
                     });
                 }
             }
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Remove',

@@ -35,6 +35,9 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
     return Dep.extend({
 
         getActionList: function () {
+            const parentModelName = this.options?.parentModelName || null;
+            const relationName = this.options?.relationName || null;
+
             let list = [];
 
             list.push({
@@ -58,7 +61,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 });
             }
 
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 if (this.model.name === 'File') {
                     list.push({
                         action: 'reupload',
@@ -90,7 +93,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 }
             }
 
-            if (this.options.acl.unlink) {
+            if (this.model.get('_meta')?.permissions?.unlink) {
                 list.push({
                     action: 'unlinkRelated',
                     label: 'Unlink',
@@ -101,7 +104,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 });
             }
 
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Delete',

@@ -38,6 +38,6 @@ Espo.define('views/selection-item/record/list', 'views/record/list', function (D
                     this.getRouter().dispatch(scope, 'view', options);
                 })
             },
-        })
+        }, Dep.prototype.events)
     });
 });

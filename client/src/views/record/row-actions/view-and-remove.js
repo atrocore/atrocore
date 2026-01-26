@@ -43,7 +43,7 @@ Espo.define('views/record/row-actions/view-and-remove', 'views/record/row-action
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 actionList.push({
                     action: 'quickRemove',
                     label: 'Remove',
