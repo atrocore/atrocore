@@ -12,8 +12,7 @@
       "checkboxes": false,
       "actions": {
         "unlinkRelated": {
-          "url": "ClusterItem/{{id}}",
-          "aclAction": "delete"
+          "url": "ClusterItem/{{id}}"
         },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}"

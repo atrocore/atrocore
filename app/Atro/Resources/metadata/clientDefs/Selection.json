@@ -13,8 +13,7 @@
       "asc": false,
       "actions": {
         "unlinkRelated": {
-          "url": "SelectionItem/{{id}}",
-          "aclAction": "delete"
+          "url": "SelectionItem/{{id}}"
         },
         "removeRelated": {
           "url": "{{entityName}}/{{entityId}}"

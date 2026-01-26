@@ -61,7 +61,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 });
             }
 
-            if (this.options.acl.edit) {
+            if (this.model.get('_meta')?.permissions?.edit) {
                 if (this.model.name === 'File') {
                     list.push({
                         action: 'reupload',
@@ -93,28 +93,18 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                 }
             }
 
-            if (this.options.acl.unlink) {
-                let checkModel = true;
-                if (parentModelName && relationName) {
-                    let aclAction = this.getMetadata().get(`clientDefs.${parentModelName}.relationshipPanels.${relationName}.actions.unlinkRelated.aclAction`);
-                    if (aclAction) {
-                        checkModel = this.getAcl().checkModel(this.model, aclAction);
+            if (this.model.get('_meta')?.permissions?.unlink) {
+                list.push({
+                    action: 'unlinkRelated',
+                    label: 'Unlink',
+                    data: {
+                        id: this.model.id,
+                        cid: this.model.cid
                     }
-                }
-
-                if (checkModel) {
-                    list.push({
-                        action: 'unlinkRelated',
-                        label: 'Unlink',
-                        data: {
-                            id: this.model.id,
-                            cid: this.model.cid
-                        }
-                    });
-                }
+                });
             }
 
-            if (this.options.acl.delete) {
+            if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'removeRelated',
                     label: 'Delete',

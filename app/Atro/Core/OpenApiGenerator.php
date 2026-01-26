@@ -83,7 +83,7 @@ class OpenApiGenerator
                         'properties' => [
                             'permissions' => [
                                 'type'       => 'object',
-                                'required'   => ['edit', 'delete', 'stream'],
+                                'required'   => ['edit', 'delete'],
                                 'properties' => [
                                     'edit'   => [
                                         'type'    => 'boolean',
@@ -92,6 +92,10 @@ class OpenApiGenerator
                                     'delete' => [
                                         'type'    => 'boolean',
                                         'example' => true,
+                                    ],
+                                    'unlink' => [
+                                        'type'    => 'boolean',
+                                        'example' => false,
                                     ],
                                     'stream' => [
                                         'type'    => 'boolean',
@@ -103,8 +107,7 @@ class OpenApiGenerator
                         'example'    => [
                             'permissions' => [
                                 'edit'   => true,
-                                'delete' => true,
-                                'stream' => false,
+                                'delete' => true
                             ],
                         ],
                     ],
