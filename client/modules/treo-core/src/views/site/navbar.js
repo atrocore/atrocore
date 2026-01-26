@@ -430,17 +430,17 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
 
         setupCurrentSelection: function () {
             this.listenToOnce(this, 'after:render', () => {
-                this.initCurrentSelectionBadge();
+                this.initCurrentSelectionButton();
             });
         },
 
-        initCurrentSelectionBadge: function () {
+        initCurrentSelectionButton: function () {
             const container = this.$el.find('.current-selection-badge-container').get(0);
             if (!container) {
                 return;
             }
 
-            this.currentSelectionBadge = new Svelte.CurrentSelectionBadge({
+            this.currentSelectionButton = new Svelte.CurrentSelectionButton({
                 target: container,
                 props: {
                     userModel: this.getUser(),
@@ -458,7 +458,7 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                             view.render();
                             this.listenTo(view.model, 'change:currentSelectionId', () => {
                                 view.model.save();
-                                this.currentSelectionBadge.handleSelectionChange();
+                                this.currentSelectionButton.handleSelectionChange();
                             });
                         });
                     },
