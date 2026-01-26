@@ -178,7 +178,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
-            if (!this.getMetadata().get(['scopes', 'Selection', 'selectionDisabled']) && this.getAcl().check('Selection', 'create')) {
+            if (!this.getMetadata().get(['scopes', this.model.name, 'selectionDisabled']) && this.getAcl().check('Selection', 'create')) {
                 list.push({
                     action: 'select',
                     label: 'Select',
