@@ -161,7 +161,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                     let linkedColumnViewKey = null;
                     data.forEach((el, key) => {
                         if (!el.field) {
-                            el.entityValueKeys.push({key: null});
+                            el.entityValueKeys.push({ key: null });
                             return;
                         }
 
@@ -171,7 +171,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                         let viewName = fieldModel.getFieldParam(field, 'view') || this.getFieldManager().getViewName(fieldModel.getFieldType(field))
                         let viewKey = linkedEntity.id + (el.realField || el.field) + index + 'Current';
                         let mode = 'detail';
-                        el.entityValueKeys.push({key: viewKey});
+                        el.entityValueKeys.push({ key: viewKey });
 
                         if (el.field === this.isLinkedColumns) {
                             linkedColumnViewKey = viewKey;
@@ -246,14 +246,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
         prepareModels(callback) {
             let stagingEntities = this.getStagingEntities();
-            this.getSelectAttributeList(selectFields => {
-                let attributesIds = [];
-                (this.listLayout || []).forEach(item => {
-                    if (item.attributeId && !attributesIds.includes(item.attributeId)) {
-                        attributesIds.push(item.attributeId);
-                    }
-                });
-
+            this.getSelectData(data => {
                 this.getModelFactory().create(this.relationship.scope, (foreignModel) => {
                     this.getModelFactory().create(this.relationName, (relationModel) => {
                         relationModel.defs.fields[this.isLinkedColumns] = {
@@ -286,11 +279,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
 
                         }
 
-                        let data = {
-                            select: selectFields.join(','),
-                            attributes: attributesIds.join(','),
-                            where: where
-                        };
+                        data.where = where
 
                         data.totalOnly = true;
                         this.ajaxGetRequest(this.relationship.scope, data).success((res) => {
@@ -388,6 +377,22 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
             })
         },
 
+        getSelectData(callback) {
+            this.getSelectAttributeList(selectFields => {
+                let attributesIds = [];
+                (this.listLayout || []).forEach(item => {
+                    if (item.attributeId && !attributesIds.includes(item.attributeId)) {
+                        attributesIds.push(item.attributeId);
+                    }
+                });
+
+                callback({
+                    select: selectFields.join(','),
+                    attributes: attributesIds.join(',')
+                });
+            })
+        },
+
         getSelectAttributeList(callback) {
             this._helper.layoutManager.get(this.relationship.scope, 'list', this.scope + '.' + this.relationship.name, null, function (data) {
                 this.layoutData = data
@@ -411,7 +416,7 @@ Espo.define('views/record/compare/relationship', ['view', 'views/record/list'], 
                 listLayout.forEach((item, k) => {
                     let parts = item.name.split('__');
                     if (parts.length === 2) {
-                        toRemove.push({number: k, relEntity: parts[0]});
+                        toRemove.push({ number: k, relEntity: parts[0] });
                     }
                 });
 
