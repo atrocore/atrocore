@@ -100,7 +100,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             if (!this.selectedFilters) {
                 this.selectedFilters = {}
             }
-            this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
+            this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', this.selectionModel.name);
 
             Dep.prototype.setup.call(this);
 
@@ -109,7 +109,11 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
             })
 
             this.listenTo(this.selectionModel, 'overview-filters-changed', () => {
-                this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', 'Selection');
+
+                this.selectedFilters['fieldFilter'] = this.getStorage().get('fieldFilter', this.selectionModel.name);
+                this.listenToOnce(this, 'all-fields-panel-rendered', () => {
+                    this.notify(false)
+                });
                 this.reRenderFieldsPanels();
             })
 
