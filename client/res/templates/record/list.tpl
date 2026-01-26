@@ -1,6 +1,6 @@
 {{#unless showNoData}}
 <div class="list" {{#if listInlineEditModeEnabled}} data-editable="true"{{/if}}>
-    <table class="table full-table">
+    <table class="table full-table"{{#if resizable}} data-resizable="true"{{/if}}>
         {{#if header}}
         <thead>
             <tr>
@@ -12,7 +12,7 @@
                 </th>
                 {{/if}}
                 {{#each headerDefs}}
-                <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}>
+                <th {{#if width}} width="{{width}}"{{/if}}{{#if align}} style="text-align: {{align}};"{{/if}}{{#if this.resizeSpacer}} class="table-spacer"{{/if}}{{#if this.name}} data-name="{{this.name}}"{{/if}}>
                     <div>
                         {{#if this.sortable}}
                             <a href="javascript:" class="sort" data-name="{{this.name}}">{{#if this.hasCustomLabel}}{{this.customLabel}}{{else}}{{this.label}}{{/if}}</a>

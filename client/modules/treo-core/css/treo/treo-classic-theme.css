@@ -2828,7 +2828,7 @@ th {
     vertical-align: top;
 }
 
-.table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]) {
+.table > tbody > tr:not(.ui-sortable-helper) > td.cell:not([width]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name="draggableIcon"]) {
     max-width: 22em;
     min-width: 12em;
 }
@@ -10400,7 +10400,8 @@ table.table > thead th > div > a {
 }
 
 .bottom .list-container > .list > .table:not(.fixed-header-table),
-#main .list-container > .list > .table:not(.fixed-header-table) {
+#main .list-container > .list > .table:not(.fixed-header-table),
+.list-container > .list > .table[data-resizable=true] {
     width: auto;
 }
 
@@ -10469,7 +10470,32 @@ table.table > thead th > div > a {
 }
 
 table.table > thead th {
-    color: var(--label-color)
+    color: var(--label-color);
+    position: relative;
+}
+
+table.table[data-resizable=true] > thead th.table-spacer,
+table.table[data-resizable=true] > tbody td[data-name=table-spacer] {
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+table.table[data-resizable=true] > thead th.table-spacer > div,
+table.table[data-resizable=true] > tbody td[data-name=table-spacer] > div {
+    display: none !important;
+}
+
+table.table[data-resizable=true] > thead th .resizer {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 65%;
+    cursor: col-resize;
+    user-select: none;
+    background-color: rgba(0,0,0,0.1);
 }
 
 .cell label, .filter label {
@@ -15738,6 +15764,9 @@ td[data-name="draggableIcon"] {
 .bookmark-panel-container .group .list-group-item .expanded-row {
     white-space: normal;
 }
+.bookmark-panel-container {
+    width: 500px !important;
+}
 
 .queue-panel-container,
 .last-viewed-panel-container {
@@ -19350,7 +19379,7 @@ a[data-attr-tooltip=true][data-tippy=true]:hover {
     line-height: initial !important;
 }
 
-.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):not([data-readonly=true]):not([data-visible=false]):not([data-readonly]):not([data-name=r-checkbox]):not([data-name=buttons]):hover {
+.list-container > .list[data-editable=true] > table tr td.cell:not([data-mode=edit]):not([data-readonly=true]):not([data-visible=false]):not([data-readonly]):not([data-name=r-checkbox]):not([data-name=buttons]):not([data-name=table-spacer]):not([data-name="draggableIcon"]):hover {
     background-color: var(--field-inline-edit-color);
 }
 

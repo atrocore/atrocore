@@ -280,6 +280,16 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             });
         },
 
+        actionSelect: function (data) {
+
+            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+                entityType: this.model.name,
+                entityId: this.model.id
+            }).then( _ => {
+                this.notify(this.translate('Success'), 'success')
+            })
+        },
+
         showReloadPageMessage() {
             Espo.Ui.notify(this.translate('pleaseReloadPage'), 'info', 1000 * 10, true);
         },
@@ -527,8 +537,8 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
             if (this.duplicateAction) {
                 if (this.getAcl().check(this.entityType, 'create')) {
                     this.dropdownItemList.push({
-                        'label': 'Duplicate',
-                        'name': 'duplicate'
+                        label: 'Duplicate',
+                        name: 'duplicate'
                     });
                 }
             }
@@ -537,6 +547,13 @@ Espo.define('views/record/detail', ['views/record/base', 'view-record-helper'], 
                 this.dropdownItemList.push({
                     label: 'addAttribute',
                     name: 'addAttribute'
+                });
+            }
+
+            if(this.getAcl().check('Selection', 'create')) {
+                this.dropdownItemList.push({
+                    label: 'Select',
+                    name: 'select'
                 });
             }
 

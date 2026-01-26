@@ -93,6 +93,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
         listInlineEditModeEnabled: false,
 
+        resizable: true,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -379,7 +381,8 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 totalLoading: this.collection.total == null,
                 countLabel: this.getShowMoreLabel(),
                 showNoData: !this.collection.length && !fixedHeaderRow,
-                listInlineEditModeEnabled: this.listInlineEditModeEnabled
+                listInlineEditModeEnabled: this.listInlineEditModeEnabled,
+                resizable: this.resizable,
             };
         },
 
@@ -1029,6 +1032,10 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
             }
 
+            if (typeof this.options.resizable === 'boolean') {
+                this.resizable = this.options.resizable;
+            }
+
             if (this.getMetadata().get(['scopes', this.scope, 'type']) === 'Archive') {
                 this.rowActionsView = 'views/record/row-actions/view-only';
                 this.massActionList = ['export'];
@@ -1494,11 +1501,91 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 this.checkAllResultMassActionList = this.checkAllResultMassActionListBackup
                 this.reRender()
             }
+
+            if (this.resizable) {
+                this.$el.find('table[data-resizable=true] th:not([data-name="r-checkbox"]):not([data-name="draggableIcon"]):not(.table-spacer):not(:last-child)').each((i, el) => {
+                    const $th = $(el);
+                    const name = $th.data('name');
+                    let widthData = this.getStorage().get('list-column-width', this.getColumnWidthKey());
+                    if (!widthData || typeof widthData !== 'object') {
+                        widthData = {};
+                    }
+
+                    if (name && widthData[name]) {
+                        $th.width(widthData[name]);
+                    } else {
+                        $th.width($th.outerWidth() - 40);
+                    }
+
+                    $th.attr('width', null);
+
+                    if ($th.find('.resizer').length) {
+                        return;
+                    }
+
+                    const $resizer = $('<div class="resizer"></div>');
+                    $th.append($resizer);
+
+                    let startX;
+                    let startWidth;
+
+                    $resizer.on('mousedown', e => {
+                        if (e.which !== 1) {
+                            return;
+                        }
+
+                        startX = e.pageX;
+                        startWidth = $th.outerWidth();
+
+                        $(document).on('mousemove.tableResize', function (e) {
+                            const delta = e.pageX - startX;
+                            const newWidth = Math.min(800, Math.max(50, startWidth + delta));
+
+                            $th.width(newWidth - 40);
+                        });
+
+                        $(document).on('mouseup.tableResize', () => {
+                            $(document).off('.tableResize');
+
+                            const width = $th.width() - 20;
+                            if (!name) {
+                                return;
+                            }
+
+                            const key = this.getColumnWidthKey();
+                            let widthData = this.getStorage().get('list-column-width', key);
+                            if (!widthData || typeof widthData !== 'object') {
+                                widthData = {};
+                            }
+
+                            widthData[name] = width;
+
+                            this.getStorage().set(`list-column-width`, key, widthData);
+                        });
+
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+            }
+        },
+
+        getColumnWidthKey: function () {
+            let key = this.scope;
+            if (this.relationName) {
+                key += `.${this.relationName}`;
+            }
+            if (this.layoutData?.selectedProfileId) {
+                key = `${this.layoutData.selectedProfileId}.${key}`;
+            }
+
+            return key;
         },
 
         isHierarchical() {
             return this.getMetadata().get(`scopes.${this.scope}.type`) === 'Hierarchy';
         },
+
         loadMore(btn) {
             if (btn.length && !btn.hasClass('disabled')) {
                 btn.click();
@@ -2120,7 +2207,15 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 }
                 defs.push(item);
             }
-            ;
+
+            if (this.resizable) {
+                defs.push({
+                    name: 'table-spacer',
+                    resizeSpacer: true,
+                    width: 0
+                });
+            }
+
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
                     width: this.rowActionsColumnWidth,
@@ -2224,6 +2319,13 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
 
             if (!hasLink && layout[this.checkboxes ? 1 : 0]) {
                 layout[this.checkboxes ? 1 : 0].options.statusIconsCallback = this.getStatusIcons;
+            }
+
+            if (this.resizable) {
+                layout.push({
+                    columnName: 'table-spacer',
+                    name: 'table-spacer'
+                });
             }
 
             if (this.rowActionsView && !this.rowActionsDisabled) {
@@ -2610,6 +2712,19 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }
 
             return htmlIcons;
+        },
+
+        actionSelect: function (data) {
+            if (!data.id || !this.collection) {
+                this.notify('Wrong input data', 'error');
+            }
+
+            this.ajaxPostRequest('SelectionItem/action/createOnCurrentSelection', {
+                entityType: this.collection.name,
+                entityId: data.id
+            }).then( _ => {
+                this.notify(this.translate('Success'), 'success')
+            })
         },
 
         actionQuickView: function (data) {

@@ -130,12 +130,12 @@ Espo.define('collection', [], function () {
             this.fetch();
         },
 
-        parse: function (response) {
+        parse: function (response, options) {
             if (response.total != null) {
                 this.total = response.total;
             }
 
-            if (this.total == null) {
+            if (!options?.more) {
                 if (response.list.length < this.maxSize) {
                     this.total = response.list.length
                 } else {

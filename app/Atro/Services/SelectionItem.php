@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
@@ -121,6 +122,50 @@ class SelectionItem extends Base
         foreach ($entities as $key => $entity) {
             $collection->offsetSet($key, $entity);
         }
+    }
+
+    public function createOnCurrentItem(string $entityType, string $entityId): bool
+    {
+        $currentSelection = $this->getUser()->get('currentSelection');
+
+        $masterEntity = $this->getMetadata()->get(['scopes', $entityType, 'primaryEntityId']);
+
+        if(empty($currentSelection)) {
+            $currentSelection = $this->getEntityManager()->getEntity('Selection');
+            $currentSelection->set('type', 'single');
+            $currentSelection->set('entity', $entityType);
+            if(!empty($masterEntity)) {
+                $currentSelection->set('entity', $masterEntity);
+            }
+            $this->getEntityManager()->saveEntity($currentSelection);
+
+            $this->getUser()->set('currentSelectionId', $currentSelection->get('id'));
+
+            $this->getEntityManager()->saveEntity($this->getUser());
+        }
+
+        $relevantEntities = [$entityType];
+
+        if(!empty($masterEntity)) {
+            $relevantEntities[] = $masterEntity;
+        }
+
+        if($currentSelection->get('type') === 'single' && !in_array($currentSelection->get('entity'), $relevantEntities)) {
+            $currentSelection->set('type', 'multiple');
+            $currentSelection->set('entity', null);
+            $this->getEntityManager()->saveEntity($currentSelection);
+        }
+
+        $record = $this->getEntityManager()->getEntity('SelectionItem');
+        $record->set('entityId', $entityId);
+        $record->set('entityType', $entityType);
+        $record->set('selectionId', $currentSelection->get('id'));
+        try{
+            $this->getEntityManager()->saveEntity($record);
+        }catch (NotUnique $e) {
+        }
+
+        return true;
     }
 
     protected function getService(string $name): Record

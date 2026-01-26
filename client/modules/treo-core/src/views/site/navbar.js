@@ -56,7 +56,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
                 isMoreFields: this.isMoreFields,
                 lastViewed: !this.getConfig().get('actionHistoryDisabled'),
                 hasLocaleSwitcher: this.hasLocaleSwitcher(),
-                hasLogo: !this.getConfig().get('disableToolbarLogo')
+                hasLogo: !this.getConfig().get('disableToolbarLogo'),
+                showCurrentSelection: true,
             }, Dep.prototype.data.call(this));
         },
 
@@ -147,6 +148,8 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.setupTabDefsList();
 
             this.setupBookmark();
+
+            this.setupCurrentSelection();
 
             this.once('remove', function () {
                 $(window).off('resize.navbar');
@@ -423,10 +426,49 @@ Espo.define('treo-core:views/site/navbar', 'class-replace!treo-core:views/site/n
             this.createView('bookmarkBadge', 'views/bookmark/badge', {
                 el: this.options.el + ' .bookmark-badge-container'
             });
+        },
+
+        setupCurrentSelection: function () {
+            this.listenToOnce(this, 'after:render', () => {
+                this.initCurrentSelectionButton();
+            });
+        },
+
+        initCurrentSelectionButton: function () {
+            const container = this.$el.find('.current-selection-badge-container').get(0);
+            if (!container) {
+                return;
+            }
+
+            this.currentSelectionButton = new Svelte.CurrentSelectionButton({
+                target: container,
+                props: {
+                    userModel: this.getUser(),
+                    renderLinkField: (fieldContainer) => {
+                        fieldContainer.id = 'current-selection-link-field';
+                        this.createView('currentSelectionField', 'views/fields/link', {
+                            el: '#current-selection-link-field',
+                            foreignScope: 'Selection',
+                            defs: {
+                                name: 'currentSelection'
+                            },
+                            mode: 'edit',
+                            model: this.getUser()
+                        }, (view) => {
+                            view.render();
+                            this.listenTo(view.model, 'change:currentSelectionId', () => {
+                                view.model.save();
+                                this.currentSelectionButton.handleSelectionChange();
+                            });
+                        });
+                    },
+                    onSelectionChange: () => {
+                        // Handle selection change if needed
+                    }
+                }
+            });
         }
-
     });
-
 });
 
 

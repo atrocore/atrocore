@@ -21,5 +21,27 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
         isComparisonAcrossScopes() {
             return false;
         },
+
+        setup() {
+            Dep.prototype.setup.call(this);
+            this.recordActions.unshift({
+                name: 'rejectItem',
+                iconClass: 'ph ph-x',
+                label: this.translate('rejectItem'),
+            })
+        },
+
+        actionRejectItem(e) {
+            const id = $(e.currentTarget).data('selection-item-id');
+
+            this.ajaxPostRequest(`ClusterItem/action/reject`, {id: id})
+                .then(response => {
+                    this.notify('Item rejected', 'success');
+                    this.notify(this.translate('Loading...'));
+
+                    const view = this.getParentView();
+                    view.reloadModels(() => view.refreshContent());
+                })
+        }
     })
 })

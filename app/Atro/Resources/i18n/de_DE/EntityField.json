@@ -126,6 +126,7 @@
     "conditionalProperties": "Bedingte Eigenschaften"
   },
   "exceptions": {
-    "nullValuesExist": "Einige Datensätze haben Nullwerte"
+    "nullValuesExist": "Einige Datensätze haben Nullwerte",
+    "cannotAddRequiredFieldWithExistingRecords": "Sie können kein erforderliches Feld mit vorhandenen Datensätzen ohne Standardwert hinzufügen"
   }
 }

@@ -178,9 +178,19 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 });
             }
 
+            if (!this.getMetadata().get(['scopes', this.model.name, 'selectionDisabled']) && this.getAcl().check('Selection', 'create')) {
+                list.push({
+                    action: 'select',
+                    label: 'Select',
+                    data: {
+                        id: this.model.id
+                    }
+                })
+            }
+
             if (this.getMetadata().get(['clientDefs', this.model.name, 'showCompareAction'])) {
                 let instances = this.getMetadata().get(['app', 'comparableInstances']);
-                if(instances.length) {
+                if (instances.length) {
                     list.push({
                         action: 'quickCompare',
                         label: this.translate('Compare with ' + instances[0].name),

@@ -43,20 +43,20 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
                     }, this);
                 }, this);
             },
+        },
 
-            'click [data-name="save"]': function () {
-                this.close();
-                if(this.options.avoidSaving)  {
-                    this.model.set(this.fetch())
-                }else{
-                    this.notify('Loading...');
-                    this.model.save(this.fetch(), {
-                        patch: true
-                    }).then(() => {
-                        this.notify('Done', 'success');
-                    });
-                }
-            },
+        actionSave(){
+            this.close();
+            if(this.options.avoidSaving)  {
+                this.model.set(this.fetch())
+            }else{
+                this.notify('Loading...');
+                this.model.save(this.fetch(), {
+                    patch: true
+                }).then(() => {
+                    this.notify('Done', 'success');
+                });
+            }
         },
 
         data: function () {
@@ -102,6 +102,10 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
                     label: "Cancel",
                 }
             ]
+        },
+
+        setElementInAdvance(el){
+            // disabled it for reRender to work correctly, we already set the element in modal render callback
         },
 
         selectTab: function (tab) {
@@ -179,11 +183,7 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
 
                 this.listenToOnce(view, 'after:save', function (data) {
                     view.close();
-                    var dashboardLayout = [];
-
-                    dashboardLayout = dashboardLayout.filter(function (item, i) {
-                        return dashboardLayout.indexOf(item) == i;
-                    });
+                    let dashboardLayout = [];
 
                     (data.dashboardTabList).forEach(function (name) {
                         var layout = [];
@@ -279,8 +279,8 @@ Espo.define('views/layout-profile/modals/dashboard-layout', ['views/layout-profi
         },
 
         afterRender: function () {
-            if (this.currentTabLayout && this.$el.find('.modal-body .grid-stack').length) {
-                var $gridstack = this.$gridstack = this.$el.find('.modal-body .grid-stack');
+            if (this.currentTabLayout && this.$el.find('.grid-stack').length) {
+                var $gridstack = this.$gridstack = this.$el.find('.grid-stack');
                 $gridstack.gridstack({
                     minWidth: 4,
                     cellHeight: 60,
