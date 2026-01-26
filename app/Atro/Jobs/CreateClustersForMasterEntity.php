@@ -52,7 +52,7 @@ class CreateClustersForMasterEntity extends AbstractJob implements JobInterface
                 $matchedRecordRepo->markHasCluster($item['id']);
 
                 if (!empty($sourceClusterId) && !empty($masterClusterId) && $sourceClusterId !== $masterClusterId) {
-                    $clusterItemRepo->moveToCluster($sourceClusterId, $masterClusterId);
+                    $clusterItemRepo->moveAllToCluster($sourceClusterId, $masterClusterId);
                     continue;
                 }
 

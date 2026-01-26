@@ -52,6 +52,12 @@
       "entity": "ClusterItem",
       "foreign": "cluster"
     },
+    "rejectedClusterItems": {
+      "type": "hasMany",
+      "relationName": "RejectedClusterItem",
+      "entity": "ClusterItem",
+      "foreign": "rejectedClusters"
+    },
     "createdBy": {
       "type": "belongsTo",
       "entity": "User"
