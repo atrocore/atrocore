@@ -16,7 +16,7 @@
           "url": "SelectionItem/{{id}}"
         },
         "removeRelated": {
-          "url": "{{entityName}}/{{entityId}}"
+          "url": "{{entityType}}/{{entityId}}"
         }
       }
     }
