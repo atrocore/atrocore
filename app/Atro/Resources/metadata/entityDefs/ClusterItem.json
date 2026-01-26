@@ -34,11 +34,28 @@
     },
     "cluster": {
       "type": "link",
-      "required": true
+      "required": true,
+      "notNull": true
     },
     "matchedRecord": {
       "type": "link",
       "protected": true
+    },
+    "createdAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "modifiedAt": {
+      "type": "datetime",
+      "readOnly": true
+    },
+    "createdBy": {
+      "type": "link",
+      "readOnly": true
+    },
+    "modifiedBy": {
+      "type": "link",
+      "readOnly": true
     }
   },
   "links": {
@@ -47,10 +64,24 @@
       "foreign": "clusterItems",
       "entity": "Cluster"
     },
+    "rejectedClusters": {
+      "type": "hasMany",
+      "relationName": "RejectedClusterItem",
+      "entity": "Cluster",
+      "foreign": "rejectedClusterItems"
+    },
     "matchedRecord": {
       "type": "belongsTo",
       "foreign": "clusterItems",
       "entity": "MatchedRecord"
+    },
+    "createdBy": {
+      "type": "belongsTo",
+      "entity": "User"
+    },
+    "modifiedBy": {
+      "type": "belongsTo",
+      "entity": "User"
     }
   },
   "indexes": {
@@ -63,6 +94,18 @@
     "entityId": {
       "columns": [
         "entityId",
+        "deleted"
+      ]
+    },
+    "createdAt": {
+      "columns": [
+        "createdAt",
+        "deleted"
+      ]
+    },
+    "modifiedAt": {
+      "columns": [
+        "modifiedAt",
         "deleted"
       ]
     }

@@ -11,7 +11,6 @@
 Espo.define('views/cluster/record/panels/cluster-items', 'views/record/panels/relationship', Dep => {
 
     return Dep.extend({
-
         setup() {
             Dep.prototype.setup.call(this);
             if(this.getAcl().check('Cluster','edit')) {

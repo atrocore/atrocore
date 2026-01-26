@@ -529,6 +529,7 @@
     "Saved Filters": "Saved Filters",
     "replaceItem": "Replace",
     "removeItem": "Remove",
+    "rejectItem": "Reject",
     "isLinked": "Is Linked",
     "openStagingEntity": "Open Staging Entity",
     "openPrimaryEntity": "Open Master Entity",
