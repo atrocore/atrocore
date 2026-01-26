@@ -38,7 +38,6 @@ class V2Dot2Dot8 extends Base
             $this->exec("ALTER INDEX idx_selection_record_entity_id RENAME TO IDX_SELECTION_ITEM_ENTITY_ID");
         } else {
             $this->exec("ALTER TABLE selection ADD number INT AUTO_INCREMENT NOT NULL, ADD UNIQUE INDEX UNIQ_96A50CD796901F54 (number)");
-            $this->exec("CREATE UNIQUE INDEX UNIQ_96A50CD796901F54 ON selection (number)");
             $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_unique TO IDX_SELECTION_ITEM_UNIQUE");
             $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_selection_id TO IDX_SELECTION_ITEM_SELECTION_ID");
             $this->exec("ALTER TABLE selection_item RENAME INDEX idx_selection_record_entity_name TO IDX_SELECTION_ITEM_ENTITY_NAME");
