@@ -12,12 +12,10 @@
       "checkboxes": false,
       "actions": {
         "unlinkRelated": {
-          "url": "ClusterItem/{{id}}",
-          "iconClass": ""
+          "url": "ClusterItem/{{id}}"
         },
         "removeRelated": {
-          "url": "{{entityName}}/{{entityId}}",
-          "iconClass": ""
+          "url": "{{entityName}}/{{entityId}}"
         }
       },
       "customActions": [
