@@ -37,46 +37,6 @@ Espo.define('views/selection/record/detail/compare', [
 
         relationName: 'selectionItems',
 
-        actionRemoveItem: function (e) {
-            this.afterRemoveButtonClicked(e)
-        },
-
-        actionReplaceItem: function (e) {
-            this.afterSwapButtonClick(e)
-        },
-
-        afterSwapButtonClick(e) {
-            let id = $(e.currentTarget).data('id');
-            let selectionItemId = $(e.currentTarget).data('selection-item-id');
-            let entityType = $(e.currentTarget).data('entity-type');
-
-            if (!id || !entityType || !selectionItemId) {
-                return;
-            }
-
-            const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
-            this.notify('Loading...');
-            this.createView('select', viewName, {
-                scope: entityType,
-                createButton: false,
-                multiple: false
-            }, (dialog) => {
-                dialog.render(() => {
-                    this.notify(false);
-                });
-                dialog.once('select', model => {
-                    if (model.id === id) {
-                        this.notify(this.translate('notModified', 'messages'));
-                        return;
-                    }
-                    this.notify('Loading...');
-                    this.ajaxPatchRequest(`${this.itemScope}/${selectionItemId}`, {
-                        entityId: model.id
-                    }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
-                });
-            });
-        },
-
         setup() {
             this.models = [];
             this.selectionModel = this.options.model;

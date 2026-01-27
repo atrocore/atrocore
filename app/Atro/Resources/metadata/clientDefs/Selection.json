@@ -23,10 +23,10 @@
         {
           "name": "replaceItem",
           "url": "SelectionItem/action/replaceItem",
-          "confirm": false,
+          "confirm": true,
           "refresh": true,
           "modalSelectEntity": "{{entityType}}",
-          "modalSelectMultiple": true,
+          "modalSelectMultiple": false,
           "iconClass": "ph ph-swap"
         }
       ]

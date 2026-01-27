@@ -264,16 +264,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         reloadModels(callback) {
             this.loadSelectionItemModels(this.model.id).then(models => {
                 this.selectionItemModels = models;
-                //we clean to remove dead id
-                this.selectedIds = this.selectedIds.filter(id => models.map(m => m.id).includes(id));
-                if (this.selectedIds.length === 0) {
-                    for (const model of this.selectionItemModels) {
-                        if (this.selectedIds.length >= this.maxForComparison) {
-                            break;
-                        }
 
-                        this.selectedIds.push(model.id);
+                for (const model of this.selectionItemModels) {
+                    if (this.selectedIds.length >= this.maxForComparison) {
+                        break;
                     }
+
+                    this.selectedIds.push(model.id);
                 }
 
                 if (window.leftSidePanel) {
@@ -288,7 +285,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getItemsUrl(selectionId) {
-            return `selection/${selectionId}/selectionItems?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`;
+            return `selection/${selectionId}/selectionItems?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
         },
 
         loadSelectionItemModels(selectionId) {
@@ -321,7 +318,7 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                                             let currentModel = model.clone();
                                             let item = itemModel.clone();
                                             item.set(data._item);
-                                            delete  data._item;
+                                            delete data._item;
                                             currentModel.set(data);
                                             currentModel.item = item;
                                             currentModel._order = data._order;

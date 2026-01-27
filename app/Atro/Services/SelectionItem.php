@@ -25,6 +25,14 @@ class SelectionItem extends Base
 
     protected  array $services = [];
 
+    public function replaceItem(string $id, \stdClass $selectedItem): bool
+    {
+        $item = $this->getRepository()->get($id);
+        $item->set('entityId', $selectedItem->entityId);
+        $this->getEntityManager()->saveEntity($item);
+        return true;
+    }
+
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
         if ($entityFrom->getEntityName() !== 'Selection' || $link !== 'selectionItems') {
