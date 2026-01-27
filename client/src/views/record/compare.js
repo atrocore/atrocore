@@ -264,7 +264,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.fieldPanels = [{
                 name: 'fieldsOverviews',
                 title: this.translate('Fields'),
-                hasLayoutEditor: true,
+                hasLayoutEditor: this.hasLayoutEditor(),
                 filter: (field) => !field.attributeId
             }];
 
@@ -914,7 +914,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         target: anchorContainer.get(0),
                         props: {
                             items: panelList,
-                            hasLayoutEditor: true,
+                            hasLayoutEditor: this.hasLayoutEditor(),
                             afterOnMount: () => {
                                 this.createLayoutConfigurator();
                             },
@@ -1186,6 +1186,12 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         isPanelsLoading() {
             return this.renderedPanels.length < this.fieldPanels.length + 1;
+        },
+
+        hasLayoutEditor() {
+            const scopeDefs = this.getMetadata().get(['scopes', this.scope]);
+
+            return !(scopeDefs?.primaryEntityId && scopeDefs?.role === 'staging');
         }
     });
 });
