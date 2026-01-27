@@ -2209,12 +2209,16 @@ class Metadata extends AbstractListener
                 $data['entityDefs'][$scope] = Util::merge($data['entityDefs'][$scope] ?? [], $additionalScopeDefs);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatedItems"] ?? [], [
-                    "view" => "views/record/panels/associated-records"
+                    "view"   => "views/record/panels/associated-records",
+                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"    => true
                 ]);
 
                 $data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] = array_merge($data['clientDefs'][$scope]['relationshipPanels']["associatingItems"] ?? [], [
                     "view"   => "views/record/panels/related-records",
                     "create" => false,
+                    "sortBy" => Util::toUnderScore(lcfirst($relationName)) . '_mm.sorting',
+                    "asc"    => true
                 ]);
             }
         }

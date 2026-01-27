@@ -41,8 +41,8 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-            if('listInlineEditModeEnabled' in this.options)  {
-                this.listInlineEditModeEnabled =  this.options.listInlineEditModeEnabled;
+            if ('listInlineEditModeEnabled' in this.options) {
+                this.listInlineEditModeEnabled = this.options.listInlineEditModeEnabled;
             }
 
             if (!this.getConfig().get('scopeColorsDisabled')) {
@@ -141,19 +141,6 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             this.layoutName = layoutName;
             this.listLayout = listLayout;
 
-            var sortBy = this.defs.sortBy || null;
-            var asc = this.defs.asc || null;
-
-            if (this.defs.orderBy) {
-                sortBy = this.defs.orderBy;
-                asc = true;
-                if (this.defs.orderDirection) {
-                    if (this.defs.orderDirection && (this.defs.orderDirection === true || this.defs.orderDirection.toLowerCase() === 'DESC')) {
-                        asc = false;
-                    }
-                }
-            }
-
             this.wait(true);
             this.getCollectionFactory().create(this.scope, collection => {
                 this.collection = collection;
@@ -240,6 +227,12 @@ Espo.define('views/record/panels/records-in-groups', ['views/record/panels/relat
             let count = 0;
             this.groups.forEach(group => {
                 this.getCollectionFactory().create(this.scope, groupCollection => {
+                    if (this.defs.sortBy) {
+                        groupCollection.sortBy = this.defs.sortBy;
+                    }
+                    if (this.defs.asc) {
+                        groupCollection.asc = this.defs.asc;
+                    }
                     this.initGroupCollection(group, groupCollection, () => {
                         let viewName = this.defs.recordListView || 'views/record/list-in-groups';
                         let options = {
