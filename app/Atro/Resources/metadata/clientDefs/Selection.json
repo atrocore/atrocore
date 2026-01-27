@@ -23,7 +23,7 @@
         {
           "name": "replaceItem",
           "url": "SelectionItem/action/replaceItem",
-          "confirm": true,
+          "confirm": false,
           "refresh": true,
           "modalSelectEntity": "{{entityType}}",
           "modalSelectMultiple": false,
