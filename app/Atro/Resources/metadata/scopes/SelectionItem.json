@@ -8,5 +8,6 @@
   "hasAssignedUser": false,
   "hasTeam": false,
   "streamDisabled": true,
-  "selectionDisabled": true
+  "selectionDisabled": true,
+  "bookmarkDisabled": true
 }

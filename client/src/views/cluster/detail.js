@@ -39,7 +39,7 @@ Espo.define('views/cluster/detail', 'views/selection/detail', function (Dep, Mod
         },
 
         getItemsUrl(clusterId) {
-            return `cluster/${clusterId}/clusterItems?select=entityName,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`;
+            return `cluster/${clusterId}/clusterItems?select=entityName,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
         },
 
         selectRecord(foreignScope) {

@@ -158,6 +158,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     ];
                 }
             }
+
             var list = [{
                 action: 'quickView',
                 label: 'View',
@@ -233,7 +234,8 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 actionList: this.getActionList(),
                 scope: this.model.name,
                 hasInheritedIcon: this.model.has('isInherited'),
-                isInherited: this.model.get('isInherited')
+                isInherited: this.model.get('isInherited'),
+                showIcons: !!this.options?.showIcons
             };
         }
     });

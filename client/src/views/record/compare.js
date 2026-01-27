@@ -48,11 +48,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
         inlineEditDisabled: false,
 
-        hasReplaceRecord: false,
-
-        hasRemoveRecord: false,
-
-        recordActions: [],
+        recordActionView: false,
 
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
@@ -66,13 +62,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.openOverviewFilter();
             },
 
-            'click a.record-action': function (e) {
+            'click a.action': function (e) {
                 const $el = $(e.currentTarget);
                 const name = $el.data('action');
                 if (name) {
                     const functionName = 'action' + Espo.Utils.upperCaseFirst(name);
                     if (typeof this[functionName] === 'function') {
-                        this[functionName](e)
+                        this[functionName]($(e.currentTarget).data(), e)
                     }
                 }
             }
@@ -90,26 +86,9 @@ Espo.define('views/record/compare', 'view', function (Dep) {
             this.models = this.options.models || this.models;
             this.model = this.getModels().length ? this.getModels()[0] : null;
             this.scope = this.name = this.options.scope || this.model?.name;
-            this.recordActions = Espo.utils.cloneDeep(this.recordActions || [])
 
             if (typeof this.options.inlineEditDisabled === 'boolean') {
                 this.inlineEditDisabled = this.options.inlineEditDisabled;
-            }
-
-            if (this.hasReplaceRecord) {
-                this.recordActions.push({
-                    name: 'replaceItem',
-                    iconClass: 'ph ph-swap',
-                    label: this.translate('replaceItem'),
-                });
-            }
-
-            if (this.hasRemoveRecord) {
-                this.recordActions.push({
-                    name: 'removeItem',
-                    iconClass: 'ph ph-trash-simple',
-                    label: this.translate('removeItem'),
-                })
             }
 
             this.getModels().forEach(model => {
@@ -211,7 +190,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     return;
                 }
 
-                attributes = { ...attributes, ...fieldsPanels.fetch() };
+                attributes = {...attributes, ...fieldsPanels.fetch()};
             }
 
             $.each(attributes, (name, value) => {
@@ -475,7 +454,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
                     view.render(() => {
                         count++;
-                        if(count === this.fieldPanels.length) {
+                        if (count === this.fieldPanels.length) {
                             this.trigger('all-fields-panel-rendered')
                         }
                         this.handlePanelRendering(panel.name);
@@ -630,8 +609,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 hideButtonPanel: this.hideButtonPanel,
                 showOverlay: this.showOverlay,
                 overlayLogo: this.getFavicon(),
-                recordActions: this.recordActions,
-                hasRecordAction: this.recordActions.length > 0,
+                hasRecordAction: !!this.recordActionView
             };
         },
 
@@ -736,7 +714,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                         this.notify(false)
                     })
                 }, this);
-                model.fetch({ main: true });
+                model.fetch({main: true});
             });
         },
 
@@ -756,6 +734,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                     id: model.id,
                     entityType: model.name,
                     selectionItemId: model.get('_selectionItemId'),
+                    action: model.id + 'Action',
                     label: this.getModelTitle(model) ?? model.get('id'),
                     name: `<a href="#/${model.name}/view/${model.id}"  title="${name}" target="_blank"> ${name} </a>`,
                 });
@@ -1141,7 +1120,7 @@ Espo.define('views/record/compare', 'view', function (Dep) {
 
             models.forEach(model => {
                 if (!this.disableModelFetch) {
-                    model.fetch({ async: false })
+                    model.fetch({async: false})
                 }
                 $.each(model.defs.fields, (name, defs) => {
                     if (defs.attributeId) {

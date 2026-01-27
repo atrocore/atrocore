@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Atro\Services;
 
 use Atro\Core\AttributeFieldConverter;
+use Atro\Core\Exceptions\BadRequest;
 use Atro\Core\Exceptions\NotUnique;
 use Atro\Core\Templates\Services\Base;
 use Espo\ORM\Entity;
@@ -25,6 +26,17 @@ class SelectionItem extends Base
 
     protected  array $services = [];
 
+    public function replaceItem(string $id, \stdClass $selectedItem): bool
+    {
+        $item = $this->getRepository()->get($id);
+        if($item->get('entityType') !== $selectedItem->entityType) {
+            throw new BadRequest('entityType mismatch');
+        }
+        $item->set('entityId', $selectedItem->entityId);
+        $this->getEntityManager()->saveEntity($item);
+        return true;
+    }
+
     public function putAclMetaForLink(Entity $entityFrom, string $link, Entity $entity): void
     {
         if ($entityFrom->getEntityName() !== 'Selection' || $link !== 'selectionItems') {
@@ -33,6 +45,10 @@ class SelectionItem extends Base
         }
 
         $this->putAclMeta($entity);
+
+        $entity->setMetaPermission('quickView', false);
+        $entity->setMetaPermission('edit', false);
+        $entity->setMetaPermission('replaceItem', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
 
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('unlink', true);

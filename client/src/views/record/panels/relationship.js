@@ -345,6 +345,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.fetch();
                 }, this);
 
+                this.listenTo(this, 'refresh', () => {
+                    collection.fetch();
+                });
+
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {
@@ -939,6 +943,104 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     },
                 });
             });
+        },
+
+        actionCustomAction(data) {
+            data = data || {};
+            let id = data.id;
+            let name = data.name;
+            let parentScope = data['parentScope'];
+            let relationName = data['relationName'];
+
+            if (!id || !name || !parentScope) return;
+
+            let model = null;
+
+            if (this.collection) {
+                model = this.collection.get(id);
+            }
+
+            if (!model) {
+                return;
+            }
+
+            let actionDefs = (this.getMetadata()
+                .get(['clientDefs', parentScope, 'relationshipPanels', relationName, 'customActions']) || [])
+                .find(a => a.name === name);
+
+            if (!actionDefs || !actionDefs.url) {
+                return;
+            }
+
+            let runAction = () => {
+                if (actionDefs.modalSelectEntity) {
+                    let entityType = actionDefs.modalSelectEntity;
+                    let selectedRecords = [];
+
+                    $.each(model.attributes || {}, (key, value) => {
+                        entityType = entityType.replace(`{{${key}}}`, value);
+                    });
+
+                    const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                    this.notify('Loading...');
+                    this.createView('select', viewName, {
+                        scope: entityType,
+                        createButton: false,
+                        multiple: !!actionDefs.modalSelectMultiple
+                    }, (dialog) => {
+                        dialog.render(() => {
+                            this.notify(false);
+                        });
+
+                        dialog.once('select', model => {
+                            if (!Array.isArray(model)) {
+                                model = [model];
+                            }
+                            model.forEach(m => {
+                                selectedRecords.push({
+                                    entityType: m.name,
+                                    entityId: m.id
+                                })
+                            });
+
+                            this.notify(this.translate('Loading...'));
+
+                            this.ajaxPostRequest(actionDefs.url, {
+                                action: name,
+                                scope: model.name,
+                                id: id,
+                                selectedRecords: selectedRecords
+                            })
+                                .then(response => {
+                                    this.notify(this.translate('Done'), 'success');
+                                    if (actionDefs.refresh) {
+                                        this.trigger('refresh');
+                                    }
+                                });
+                        });
+                    });
+                } else {
+                    this.notify(this.translate('Loading...'));
+                    this.ajaxPostRequest(actionDefs.url, {action: name, scope: model.name, id: id})
+                        .then(response => {
+                            this.notify(this.translate('Done'), 'success');
+                            if (actionDefs.refresh) {
+                                this.trigger('refresh');
+                            }
+                        });
+                }
+            }
+
+            if (actionDefs.confirm) {
+                this.confirm({
+                    message: this.translate(actionDefs.name, 'customActionConfirms', parentScope),
+                    confirmText: this.translate('Apply')
+                }, function () {
+                    runAction();
+                }, this);
+            } else {
+                runAction();
+            }
         },
 
         actionInheritAll: function (data) {

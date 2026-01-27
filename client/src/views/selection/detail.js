@@ -105,10 +105,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 setTimeout(() => this.enableButtons(), 300);
             });
 
-            this.listenTo(this.model, 'after:unrelate', () => {
-                this.refreshContent();
-
-                this.notify(this.notify(this.translate('Done'), 'success'));
+            this.listenTo(this.model, 'after:unrelate refresh', () => {
+                if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                    this.reloadModels(() => this.refreshContent());
+                    this.notify(this.notify(this.translate('Done'), 'success'));
+                } else {
+                    this.refreshContent();
+                    this.notify(this.notify(this.translate('Done'), 'success'));
+                }
             });
 
             this.listenTo(this.model, 'after:relate', () => {
@@ -260,16 +264,13 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         reloadModels(callback) {
             this.loadSelectionItemModels(this.model.id).then(models => {
                 this.selectionItemModels = models;
-                //we clean to remove dead id
-                this.selectedIds = this.selectedIds.filter(id => models.map(m => m.id).includes(id));
-                if (this.selectedIds.length === 0) {
-                    for (const model of this.selectionItemModels) {
-                        if (this.selectedIds.length >= this.maxForComparison) {
-                            break;
-                        }
 
-                        this.selectedIds.push(model.id);
+                for (const model of this.selectionItemModels) {
+                    if (this.selectedIds.length >= this.maxForComparison) {
+                        break;
                     }
+
+                    this.selectedIds.push(model.id);
                 }
 
                 if (window.leftSidePanel) {
@@ -284,59 +285,67 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
         },
 
         getItemsUrl(selectionId) {
-            return `selection/${selectionId}/selectionItems?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=createdAt&asc=false&offset=0&maxSize=20`;
+            return `selection/${selectionId}/selectionItems?select=name,entityType,entityId,entity&collectionOnly=true&sortBy=id&asc=false&offset=0&maxSize=20`;
         },
 
         loadSelectionItemModels(selectionId) {
             let models = [];
             return new Promise((initialResolve, reject) => {
-                this.ajaxGetRequest(this.getItemsUrl(selectionId))
-                    .then(result => {
-                        let entityByScope = {};
-                        let order = 0;
-                        for (const entityData of result.list) {
-                            let scope = entityData.entityType ?? entityData.entityName;
-                            if (!entityByScope[scope]) {
-                                entityByScope[scope] = [];
-                            }
-                            entityData.entity._order = order;
-                            entityData.entity._selectionItemId = entityData.id;
-
-                            entityByScope[scope].push(entityData.entity);
-                            order++
-                        }
-                        let promises = [];
-
-                        for (const scope in entityByScope) {
-                            promises.push(new Promise((resolve) => {
-                                this.getModelFactory().create(scope, model => {
-                                    for (const data of entityByScope[scope]) {
-                                        let currentModel = model.clone();
-                                        currentModel.set(data);
-                                        currentModel._order = data._order;
-                                        models.push(currentModel);
-                                    }
-                                    resolve();
-                                })
-                            }));
-                        }
-
-                        Promise.all(promises)
-                            .then(() => {
-                                models.sort((a, b) => a._order - b._order);
-
-                                let orderedModels = [];
-                                // we order by entity, master first then staging
-                                for (const entityType of this.getEntityTypes()) {
-                                    models.forEach(m => {
-                                        if (m.name === entityType) {
-                                            orderedModels.push(m);
-                                        }
-                                    })
+                this.getModelFactory().create(this.itemScope, (itemModel) => {
+                    this.ajaxGetRequest(this.getItemsUrl(selectionId))
+                        .then(result => {
+                            let entityByScope = {};
+                            let order = 0;
+                            for (const entityData of result.list) {
+                                let scope = entityData.entityType ?? entityData.entityName;
+                                if (!entityByScope[scope]) {
+                                    entityByScope[scope] = [];
                                 }
-                                initialResolve(orderedModels);
-                            });
-                    });
+                                entityData.entity._order = order;
+                                entityData.entity._selectionItemId = entityData.id;
+                                let itemData = Espo.utils.clone(entityData);
+                                delete itemData.entity;
+                                entityData.entity._item = itemData;
+                                entityByScope[scope].push(entityData.entity);
+                                order++
+                            }
+                            let promises = [];
+
+                            for (const scope in entityByScope) {
+                                promises.push(new Promise((resolve) => {
+                                    this.getModelFactory().create(scope, model => {
+                                        for (const data of entityByScope[scope]) {
+                                            let currentModel = model.clone();
+                                            let item = itemModel.clone();
+                                            item.set(data._item);
+                                            delete data._item;
+                                            currentModel.set(data);
+                                            currentModel.item = item;
+                                            currentModel._order = data._order;
+                                            models.push(currentModel);
+                                        }
+                                        resolve();
+                                    })
+                                }));
+                            }
+
+                            Promise.all(promises)
+                                .then(() => {
+                                    models.sort((a, b) => a._order - b._order);
+
+                                    let orderedModels = [];
+                                    // we order by entity, master first then staging
+                                    for (const entityType of this.getEntityTypes()) {
+                                        models.forEach(m => {
+                                            if (m.name === entityType) {
+                                                orderedModels.push(m);
+                                            }
+                                        })
+                                    }
+                                    initialResolve(orderedModels);
+                                });
+                        });
+                });
             });
         },
 
@@ -355,6 +364,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         refreshContent() {
             this.reloadStyle(this.selectionViewMode);
+
+            window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
             this.setupRecord();
         },
@@ -788,27 +799,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
             });
         },
 
-        afterRemoveSelectedRecords(selectedRecordIds) {
-            this.selectionItemModels = this.selectionItemModels.filter(m => !selectedRecordIds.includes(m.get('_selectionItemId')))
-
-            if (this.selectionItemModels.length === 0) {
-                this.actionShowSelectionView({name: 'standard'});
-                return;
-            }
-
-            window.leftSidePanel?.setRecords(this.getRecordForPanels());
-
-            if (this.selectionItemModels.length === 2) {
-                this.selectedIds = this.selectionItemModels.map(m => m.id);
-            } else {
-                this.selectedIds = this.selectedIds.filter(id => this.selectionItemModels.find(v => v.id === id))
-            }
-
-            window.leftSidePanel?.setSelectedIds(this.selectedIds);
-
-            this.model.trigger('after:unrelate')
-        },
-
         toggleSelected(itemId) {
             if (this.selectedIds.includes(itemId)) {
                 if (this.selectedIds.length === 2) {
@@ -827,15 +817,6 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 this.selectedIds.push(itemId);
             }
             return true;
-        },
-
-        afterChangedSelectedRecords(changedIds) {
-            this.notify(this.translate('Loading...'));
-            this.selectedIds = this.selectedIds.concat(changedIds);
-            this.reloadModels(() => {
-                this.refreshContent();
-            });
-            this.notify(this.notify(this.translate('Done'), 'success'));
         },
 
         getCompareButtons() {

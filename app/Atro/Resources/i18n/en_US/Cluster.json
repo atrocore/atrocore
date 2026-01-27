@@ -4,5 +4,8 @@
     "masterEntity": "Master Entity",
     "clusterItems": "Cluster Items",
     "rejectedClusterItems": "Rejected Cluster Items"
+  },
+  "customActions": {
+    "reject": "Reject"
   }
 }

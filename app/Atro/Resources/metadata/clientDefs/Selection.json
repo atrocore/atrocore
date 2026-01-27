@@ -4,8 +4,8 @@
   "relationshipPanels": {
     "selectionItems": {
       "checkboxes": false,
-      "view": "views/selection/record/panels/selection-items",
       "hideShowFullList": true,
+      "create": false,
       "select": false,
       "unlink": false,
       "canClose": false,
@@ -18,7 +18,18 @@
         "removeRelated": {
           "url": "{{entityType}}/{{entityId}}"
         }
-      }
+      },
+      "customActions": [
+        {
+          "name": "replaceItem",
+          "url": "SelectionItem/action/replaceItem",
+          "confirm": false,
+          "refresh": true,
+          "modalSelectEntity": "{{entityType}}",
+          "modalSelectMultiple": false,
+          "iconClass": "ph ph-swap"
+        }
+      ]
     }
   },
   "views": {

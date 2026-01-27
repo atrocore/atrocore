@@ -40,15 +40,22 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
             let list = [];
 
-            list.push({
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id,
-                    cid: this.model.cid
-                },
-                link: '#' + this.model.name + '/view/' + this.model.id
-            });
+            let quickView = true;
+
+            if (this.model.get('_meta')?.permissions?.quickView === false) {
+                quickView = false;
+            }
+
+            if (quickView) {
+                list.push({
+                    action: 'quickView',
+                    label: 'View',
+                    data: {
+                        id: this.model.id
+                    },
+                    link: '#' + this.model.name + '/view/' + this.model.id
+                })
+            }
 
             // if entity can be open in tab
             if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
@@ -96,6 +103,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
             if (this.model.get('_meta')?.permissions?.unlink) {
                 list.push({
                     action: 'unlinkRelated',
+                    iconClass: "ph ph-link-break",
                     label: 'Unlink',
                     data: {
                         id: this.model.id,
@@ -107,6 +115,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
             if (this.model.get('_meta')?.permissions?.delete) {
                 list.push({
                     action: 'removeRelated',
+                    iconClass: 'ph ph-trash-simple',
                     label: 'Delete',
                     data: {
                         id: this.model.id,
@@ -114,6 +123,27 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     }
                 });
             }
+
+            (this.getMetadata().get(['clientDefs', parentModelName, 'relationshipPanels', relationName, 'customActions']) || [])
+                .forEach(action => {
+                    if(!action.name) {
+                        return;
+                    }
+                    if(this.model.get('_meta')?.permissions?.[action.name]) {
+                        list.push({
+                            action: 'customAction',
+                            iconClass: action.iconClass,
+                            label: this.translate(action.name, 'customActions', parentModelName),
+                            data: {
+                                'name': action.name,
+                                'id': this.model.id,
+                                'cid': this.model.cid,
+                                'parent-scope': parentModelName,
+                                'relation-name': relationName
+                            }
+                        })
+                    }
+                });
 
             list.push({
                 divider: true

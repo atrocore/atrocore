@@ -19,6 +19,16 @@ use Atro\Core\Templates\Controllers\Base;
 
 class SelectionItem extends Base
 {
+
+    public function actionReplaceItem($params, $data, $request)
+    {
+        if (!$request->isPost() || empty($data->id) || empty($data->selectedRecords)) {
+            throw new BadRequest();
+        }
+
+        return $this->getRecordService()->replaceItem($data->id, $data->selectedRecords[0]);
+    }
+
     public function actionCreateOnCurrentSelection($params, $data, $request)
     {
         if (!$request->isPost() || empty($data->entityType) || empty($data->entityId)) {

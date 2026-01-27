@@ -17,5 +17,8 @@
     "cannotSetToSingle": "You cannot set 'Uniform'",
     "youNeedAtLeastTwoItem": "You need at least two items for comparison.",
     "entityIsRequired": "Field 'Entity' is required."
+  },
+  "customActions": {
+    "replaceItem": "Replace Item"
   }
 }

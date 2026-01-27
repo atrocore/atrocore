@@ -14,21 +14,10 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         itemScope: 'ClusterItem',
 
-        hasReplaceRecord: false,
-
-        hasRemoveRecord: true,
+        relationName: 'clusterItems',
 
         isComparisonAcrossScopes() {
             return false;
-        },
-
-        setup() {
-            Dep.prototype.setup.call(this);
-            this.recordActions.unshift({
-                name: 'rejectItem',
-                iconClass: 'ph ph-x',
-                label: this.translate('rejectItem'),
-            })
         },
 
         actionRejectItem(e) {
