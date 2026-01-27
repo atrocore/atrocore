@@ -97,6 +97,10 @@ class OpenApiGenerator
                                         'type'    => 'boolean',
                                         'example' => false,
                                     ],
+                                    'quickView' => [
+                                        'type'    => 'boolean',
+                                        'example' => false,
+                                    ],
                                     'stream' => [
                                         'type'    => 'boolean',
                                         'example' => false,
