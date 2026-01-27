@@ -18,6 +18,8 @@ Espo.define('views/cluster/record/compare', 'views/selection/record/detail/compa
 
         hasRemoveRecord: true,
 
+        relationName: 'clusterItems',
+
         isComparisonAcrossScopes() {
             return false;
         },

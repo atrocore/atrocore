@@ -25,9 +25,9 @@
           "url": "SelectionItem/action/replaceItem",
           "confirm": false,
           "refresh": true,
-          "modelSelection": true,
-          "modalSelectionEntity": "{{entityType}}",
-          "iconClass": "ph ph-x"
+          "modalSelectEntity": "{{entityType}}",
+          "modalSelectMultiple": true,
+          "iconClass": "ph ph-swap"
         }
       ]
     }

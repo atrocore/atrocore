@@ -35,7 +35,7 @@ Espo.define('views/selection/record/detail/compare', [
 
         recordActionView: 'views/record/row-actions/relationship',
 
-        relationName: 'clusterItems',
+        relationName: 'selectionItems',
 
         actionRemoveItem: function (e) {
             this.afterRemoveButtonClicked(e)
@@ -74,29 +74,6 @@ Espo.define('views/selection/record/detail/compare', [
                         entityId: model.id
                     }).then(() => this.getParentView().afterChangedSelectedRecords([model.id]));
                 });
-            });
-        },
-
-        afterRemoveButtonClicked(e) {
-            let selectionItemId = $(e.currentTarget).data('selection-item-id');
-            if (!selectionItemId) {
-                return;
-            }
-
-            if (this.getModels().length <= 2) {
-                this.notify(this.translate('youNeedAtLeastTwoItem', 'messages', 'Selection'), 'error');
-                return;
-            }
-
-            this.notify(this.translate('Removing...'));
-
-            $.ajax({
-                url: `${this.itemScope}/${selectionItemId}`,
-                type: 'DELETE',
-                contentType: 'application/json',
-                success: () => {
-                    this.getParentView().afterRemoveSelectedRecords([selectionItemId])
-                }
             });
         },
 
@@ -140,7 +117,7 @@ Espo.define('views/selection/record/detail/compare', [
                     scope: this.itemScope,
                     showIcons: true,
                     parentModelName: this.selectionModel.name,
-                    relationName: 'clusterItems'
+                    relationName: this.relationName
                 })
             });
 

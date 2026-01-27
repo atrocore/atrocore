@@ -2758,6 +2758,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                 return;
             }
 
+
             let runAction  = ()  => {
                 this.notify(this.translate('Loading...'));
                 this.ajaxPostRequest(actionDefs.url, {action: name, scope: model.name,  id: id})
@@ -2769,16 +2770,48 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     });
             }
 
-            if(actionDefs.confirm) {
-                this.confirm({
-                    message: this.translate(actionDefs.name, 'customActionConfirms', parentScope),
-                    confirmText: this.translate('Apply')
-                }, function () {
-                    runAction();
-                }, this);
-            }else{
-                runAction();
+            if(actionDefs.modalSelectEntity) {
+                let entityType = actionDefs.modalSelectEntity;
+                $.each(model.attributes || {}, (key, value) => {
+                    entityType = entityType.replace(`{{${key}}}`, value);
+                });
+
+                const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) || 'views/modals/select-records';
+                this.notify('Loading...');
+                this.createView('select', viewName, {
+                    scope: entityType,
+                    createButton: false,
+                    multiple: !!actionDefs.modalSelectMultiple
+                }, (dialog) => {
+                    dialog.render(() => {
+                        this.notify(false);
+                    });
+                    dialog.once('select', model => {
+                        if(!Array.isArray(model)) {
+                            model = [model];
+                        }
+                        if (model.id === id) {
+                            this.notify(this.translate('notModified', 'messages'));
+                            return;
+                        }
+
+                    });
+                });
             }
+
+
+
+
+            // if(actionDefs.confirm) {
+            //     this.confirm({
+            //         message: this.translate(actionDefs.name, 'customActionConfirms', parentScope),
+            //         confirmText: this.translate('Apply')
+            //     }, function () {
+            //         runAction();
+            //     }, this);
+            // }else{
+            //     runAction();
+            // }
         },
 
         actionQuickView: function (data) {
