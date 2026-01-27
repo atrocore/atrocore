@@ -1277,10 +1277,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     this.refreshLayout()
                 })
             }
-
-            this.listenTo(this, 'refresh', () => {
-                this.collection.fetch();
-            });
         },
 
         afterSave: function () {

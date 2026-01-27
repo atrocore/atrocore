@@ -345,6 +345,10 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                     collection.fetch();
                 }, this);
 
+                this.listenTo(this, 'refresh', () => {
+                    collection.fetch();
+                });
+
                 var viewName = this.defs.recordListView || this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') || 'Record.List';
 
                 this.once('after:render', function () {
@@ -946,6 +950,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             let id = data.id;
             let name = data.name;
             let parentScope = data['parentScope'];
+            let relationName = data['relationName'];
 
             if (!id || !name || !parentScope) return;
 
@@ -960,7 +965,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             }
 
             let actionDefs = (this.getMetadata()
-                .get(['clientDefs', parentScope, 'relationshipPanels', this.relationName, 'customActions']) || [])
+                .get(['clientDefs', parentScope, 'relationshipPanels', relationName, 'customActions']) || [])
                 .find(a => a.name === name);
 
             if (!actionDefs || !actionDefs.url) {

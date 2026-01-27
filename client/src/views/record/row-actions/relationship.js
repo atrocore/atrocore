@@ -135,10 +135,11 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                             iconClass: action.iconClass,
                             label: this.translate(action.name, 'customActions', parentModelName),
                             data: {
-                                'parent-scope': parentModelName,
                                 'name': action.name,
                                 'id': this.model.id,
-                                'cid': this.model.cid
+                                'cid': this.model.cid,
+                                'parent-scope': parentModelName,
+                                'relation-name': relationName
                             }
                         })
                     }
