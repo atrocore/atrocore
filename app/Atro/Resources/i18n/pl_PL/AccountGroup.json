@@ -1,7 +1,7 @@
 {
   "fields": {
     "accounts": "Accounts",
-    "code": "Code",
+    "code": "Kod",
     "discount": "Rabat, %",
     "discountPercentage": "Rabat, %"
   }
