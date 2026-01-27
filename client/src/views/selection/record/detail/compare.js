@@ -8,7 +8,12 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'views/record/detail'], function (Dep, Detail) {
+Espo.define('views/selection/record/detail/compare', [
+    'views/record/compare',
+    'views/record/detail',
+    'views/record/panels/relationship',
+    'views/record/list'
+], function (Dep, Detail, Relationship, List) {
 
     return Dep.extend({
 
@@ -60,7 +65,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     this.notify(false);
                 });
                 dialog.once('select', model => {
-                    if(model.id === id) {
+                    if (model.id === id) {
                         this.notify(this.translate('notModified', 'messages'));
                         return;
                     }
@@ -78,7 +83,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                 return;
             }
 
-            if(this.getModels().length <= 2) {
+            if (this.getModels().length <= 2) {
                 this.notify(this.translate('youNeedAtLeastTwoItem', 'messages', 'Selection'), 'error');
                 return;
             }
@@ -137,14 +142,58 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
                     parentModelName: this.selectionModel.name,
                     relationName: 'clusterItems'
                 })
+            });
+
+            this.listenTo(this, 'refresh', () => {
+                let view = this.getParentView();
+                if (view) {
+                    view.reloadModels(() => view.refreshContent());
+                }
             })
         },
 
-        executeAction: function (action, data = null, e = null) {
-            var method = 'action' + Espo.Utils.upperCaseFirst(action);
-            if (typeof this[method] == 'function') {
-                this[method].call(this, data, e);
+        getModel(data, evt) {
+            let model = this.getModels().find(m => m.item.id === data.id);
+            if (!model) {
+                return;
             }
+            return model.item;
+        },
+
+        prepareAndExecuteAction(data, callback) {
+            let model = this.getModels().find(m => m.item.id === data.id);
+            if (!model) {
+                return;
+            }
+            let itemModel = model.item;
+            let self = Espo.utils.clone(this);
+            self.model = this.selectionModel;
+            self.link = this.relationName;
+            this.getCollectionFactory().create(this.itemScope, (collection) => {
+                self.collection = collection;
+                self.collection.add(itemModel);
+                self.collection.url = this.selectionModel.name + '/' + this.selectionModel.id + '/' + this.relationName;
+                callback(self);
+            });
+        },
+
+        actionUnlinkRelated(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                Relationship.prototype.actionUnlinkRelated.call(self, data);
+            });
+        },
+
+        actionRemoveRelated(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                self.isHierarchical = () => false;
+                Relationship.prototype.actionRemoveRelated.call(self, data);
+            });
+        },
+
+        actionCustomAction(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                List.prototype.actionCustomAction.call(self, data);
+            })
         },
 
         getModels() {
@@ -156,7 +205,7 @@ Espo.define('views/selection/record/detail/compare', ['views/record/compare', 'v
         },
 
         isComparisonAcrossScopes() {
-            return  this.selectionModel.get('type') !== 'single' && this.selectionModel.get('entityTypes').length > 1;
+            return this.selectionModel.get('type') !== 'single' && this.selectionModel.get('entityTypes').length > 1;
         },
 
         canLoadActivities() {

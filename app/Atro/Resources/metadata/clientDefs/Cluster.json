@@ -22,7 +22,7 @@
         {
           "name": "reject",
           "url": "ClusterItem/action/reject",
-          "confirm": true,
+          "confirm": false,
           "refresh": true,
           "iconClass": "ph ph-x"
         }

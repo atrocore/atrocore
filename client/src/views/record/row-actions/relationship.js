@@ -132,6 +132,7 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
                     if(this.model.get('_meta')?.permissions?.[action.name]) {
                         list.push({
                             action: 'customAction',
+                            iconClass: action.iconClass,
                             label: this.translate(action.name, 'customActions', parentModelName),
                             data: {
                                 'parent-scope': parentModelName,

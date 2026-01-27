@@ -105,10 +105,14 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
                 setTimeout(() => this.enableButtons(), 300);
             });
 
-            this.listenTo(this.model, 'after:unrelate', () => {
-                this.refreshContent();
-
-                this.notify(this.notify(this.translate('Done'), 'success'));
+            this.listenTo(this.model, 'after:unrelate refresh', () => {
+                if (['compare', 'merge'].includes(this.selectionViewMode)) {
+                    this.reloadModels(() => this.refreshContent());
+                    this.notify(this.notify(this.translate('Done'), 'success'));
+                } else {
+                    this.refreshContent();
+                    this.notify(this.notify(this.translate('Done'), 'success'));
+                }
             });
 
             this.listenTo(this.model, 'after:relate', () => {
@@ -364,6 +368,8 @@ Espo.define('views/selection/detail', ['views/detail', 'model', 'views/record/li
 
         refreshContent() {
             this.reloadStyle(this.selectionViewMode);
+
+            window.leftSidePanel?.setRecords(this.getRecordForPanels());
 
             this.setupRecord();
         },

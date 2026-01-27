@@ -66,13 +66,13 @@ Espo.define('views/record/compare', 'view', function (Dep) {
                 this.openOverviewFilter();
             },
 
-            'click a.record-action': function (e) {
+            'click a.action': function (e) {
                 const $el = $(e.currentTarget);
                 const name = $el.data('action');
                 if (name) {
                     const functionName = 'action' + Espo.Utils.upperCaseFirst(name);
                     if (typeof this[functionName] === 'function') {
-                        this[functionName](e)
+                        this[functionName]($(e.currentTarget).data(), e)
                     }
                 }
             }

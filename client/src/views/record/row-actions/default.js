@@ -244,7 +244,7 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 scope: this.model.name,
                 hasInheritedIcon: this.model.has('isInherited'),
                 isInherited: this.model.get('isInherited'),
-                showActionIcon: !!this.options?.showActionIcon
+                showIcons: !!this.options?.showIcons
             };
         }
     });

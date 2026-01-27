@@ -2764,7 +2764,7 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
                     .then(response => {
                         this.notify(this.translate('Done'), 'success');
                         if(actionDefs.refresh) {
-                            this.trigger('refresh')
+                            this.trigger('refresh');
                         }
                     });
             }
@@ -2779,10 +2779,6 @@ Espo.define('views/record/list', ['view', 'conditions-checker'], function (Dep, 
             }else{
                 runAction();
             }
-
-
-
-
         },
 
         actionQuickView: function (data) {
