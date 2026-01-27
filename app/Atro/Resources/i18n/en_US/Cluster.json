@@ -7,8 +7,5 @@
   },
   "customActions": {
     "reject": "Reject"
-  },
-  "customActionConfirms": {
-    "reject": "Are you sure"
   }
 }
