@@ -11,9 +11,8 @@
 Espo.define('views/selection/record/detail/compare', [
     'views/record/compare',
     'views/record/detail',
-    'views/record/panels/relationship',
-    'views/record/list'
-], function (Dep, Detail, Relationship, List) {
+    'views/record/panels/relationship'
+], function (Dep, Detail, Relationship) {
 
     return Dep.extend({
 
@@ -129,8 +128,8 @@ Espo.define('views/selection/record/detail/compare', [
 
         actionCustomAction(data) {
             this.prepareAndExecuteAction(data, (self) => {
-                List.prototype.actionCustomAction.call(self, data);
-            })
+                Relationship.prototype.actionCustomAction.call(self, data);
+            });
         },
 
         getModels() {
