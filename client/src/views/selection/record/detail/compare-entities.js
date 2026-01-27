@@ -8,7 +8,7 @@
  * @license    GPLv3 (https://www.gnu.org/licenses/)
  */
 
-Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/record/detail', 'views/selection/record/detail/compare'], function (Dep, Detail, Compare) {
+Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/record/detail',   'views/record/panels/relationship'], function (Dep, Detail, Relationship) {
 
     return Dep.extend({
 
@@ -20,12 +20,22 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
         showOverlay: true,
 
+        relationName: 'selectionItems',
+
+        itemScope: 'SelectionItem',
+
+        recordActionView: 'views/record/row-actions/relationship',
+
         events: {
-            'click a.swap-entity': function (e) {
-                Compare.prototype.afterSwapButtonClick.call(this, e)
-            },
-            'click  a.remove-entity': function (e) {
-                Compare.prototype.afterRemoveButtonClicked.call(this, e);
+            'click a.action': function (e) {
+                const $el = $(e.currentTarget);
+                const name = $el.data('action');
+                if (name) {
+                    const functionName = 'action' + Espo.Utils.upperCaseFirst(name);
+                    if (typeof this[functionName] === 'function') {
+                        this[functionName]($(e.currentTarget).data(), e)
+                    }
+                }
             }
         },
 
@@ -74,7 +84,69 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                         }
                     })
                 })
+            });
+
+            this.getModels().forEach(model => {
+                this.createView(model.id + 'Action', this.recordActionView, {
+                    el: this.options.el + ` [data-id="${model.id}"] .inline-actions`,
+                    model: model.item,
+                    scope: this.itemScope,
+                    showIcons: true,
+                    parentModelName: this.selectionModel.name,
+                    relationName: this.relationName
+                })
+            });
+
+            this.listenTo(this, 'refresh', () => {
+                let view = this.getParentView();
+                if (view) {
+                    this.notify('Loading..')
+                    view.refresh();
+                }
             })
+        },
+
+        prepareAndExecuteAction(data, callback) {
+            let model = this.getModels().find(m => m.item.id === data.id);
+            if (!model) {
+                return;
+            }
+            let itemModel = model.item;
+            let self = Espo.utils.clone(this);
+            self.model = this.selectionModel;
+            self.link = this.relationName;
+            self.getModel = () => {
+                let model = this.getModels().find(m => m.item.id === data.id);
+                if (!model) {
+                    return;
+                }
+                return model.item;
+            }
+            this.getCollectionFactory().create(this.itemScope, (collection) => {
+                self.collection = collection;
+                self.collection.add(itemModel);
+                self.collection.url = this.selectionModel.name + '/' + this.selectionModel.id + '/' + this.relationName;
+                callback(self);
+            });
+        },
+
+        actionUnlinkRelated(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                Relationship.prototype.actionUnlinkRelated.call(self, data);
+            });
+        },
+
+        actionRemoveRelated(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                self.isHierarchical = () => false;
+                Relationship.prototype.actionRemoveRelated.call(self, data);
+            });
+        },
+
+        actionUniversalAction(data) {
+            this.prepareAndExecuteAction(data, (self) => {
+                Relationship.prototype.actionUniversalAction.call(self, data);
+            });
         },
 
         data() {
@@ -121,6 +193,7 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
                     id: model.id,
                     entityType: model.name,
                     selectionItemId: model.get('_selectionItemId'),
+                    action: model.id + 'Action',
                     label: this.getModelTitle(model) ?? model.get('id'),
                     name: `<a href="#/${model.name}/view/${model.id}"  target="_blank" title="${this.getModelTitle(model)}"> ${hasName ? (this.getModelTitle(model) ?? 'None') : model.get('id')} </a>`,
                 });
@@ -162,8 +235,8 @@ Espo.define('views/selection/record/detail/compare-entities', ['view', 'views/re
 
                         });
                     })
-
                 }
+
                 this.createView(m.id, this.detailComparisonView, {
                     el: this.options.el + ` td[data-id="${m.id}"] .record-content`,
                     scope: m.name,
