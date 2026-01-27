@@ -11,6 +11,19 @@
     "clusterItems": {
       "checkboxes": false,
       "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "reject": {
+          "url": "ClusterItem/action/reject",
+          "confirm": false,
+          "refresh": true,
+          "iconClass": "ph ph-x",
+          "sortOrder": 10
+        },
         "unlinkRelated": {
           "url": "ClusterItem/{{id}}"
         },
@@ -18,15 +31,6 @@
           "url": "{{entityName}}/{{entityId}}"
         }
       },
-      "customActions": [
-        {
-          "name": "reject",
-          "url": "ClusterItem/action/reject",
-          "confirm": false,
-          "refresh": true,
-          "iconClass": "ph ph-x"
-        }
-      ],
       "hideShowFullList": true,
       "create": false,
       "select": false,

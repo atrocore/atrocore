@@ -945,7 +945,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
             });
         },
 
-        actionCustomAction(data) {
+        actionUniversalAction(data) {
             data = data || {};
             let id = data.id;
             let name = data.name;
@@ -964,9 +964,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
                 return;
             }
 
-            let actionDefs = (this.getMetadata()
-                .get(['clientDefs', parentScope, 'relationshipPanels', relationName, 'customActions']) || [])
-                .find(a => a.name === name);
+            let actionDefs = this.getMetadata().get(['clientDefs', parentScope, 'relationshipPanels', relationName, 'actions', name]) || {};
 
             if (!actionDefs || !actionDefs.url) {
                 return;
@@ -1033,7 +1031,7 @@ Espo.define('views/record/panels/relationship', ['views/record/panels/bottom', '
 
             if (actionDefs.confirm) {
                 this.confirm({
-                    message: this.translate(actionDefs.name, 'customActionConfirms', parentScope),
+                    message: this.translate(actionDefs.name, 'actionConfirms', parentScope),
                     confirmText: this.translate('Apply')
                 }, function () {
                     runAction();

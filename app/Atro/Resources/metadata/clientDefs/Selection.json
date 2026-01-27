@@ -12,24 +12,28 @@
       "sortBy": "createdAt",
       "asc": false,
       "actions": {
+        "quickView": {
+          "disabled": true
+        },
+        "quickEdit": {
+          "disabled": true
+        },
+        "replaceItem": {
+          "url": "SelectionItem/action/replaceItem",
+          "confirm": false,
+          "refresh": true,
+          "modalSelectEntity": "{{entityType}}",
+          "modalSelectMultiple": false,
+          "iconClass": "ph ph-swap",
+          "sortOrder": 10
+        },
         "unlinkRelated": {
           "url": "SelectionItem/{{id}}"
         },
         "removeRelated": {
           "url": "{{entityType}}/{{entityId}}"
         }
-      },
-      "customActions": [
-        {
-          "name": "replaceItem",
-          "url": "SelectionItem/action/replaceItem",
-          "confirm": false,
-          "refresh": true,
-          "modalSelectEntity": "{{entityType}}",
-          "modalSelectMultiple": false,
-          "iconClass": "ph ph-swap"
-        }
-      ]
+      }
     }
   },
   "views": {

@@ -5,7 +5,7 @@
     "clusterItems": "Cluster Items",
     "rejectedClusterItems": "Rejected Cluster Items"
   },
-  "customActions": {
+  "actions": {
     "reject": "Reject"
   }
 }
