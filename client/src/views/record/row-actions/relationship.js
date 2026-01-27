@@ -67,16 +67,14 @@ Espo.define('views/record/row-actions/relationship', 'views/record/row-actions/d
 
             sortedActionKeys.forEach(actionName => {
                 if (actionName === 'quickView') {
-                    if (!(this.model.get('_meta')?.permissions?.quickView === false)) {
-                        list.push({
-                            action: 'quickView',
-                            label: 'View',
-                            data: {
-                                id: this.model.id
-                            },
-                            link: '#' + this.model.name + '/view/' + this.model.id
-                        })
-                    }
+                    list.push({
+                        action: 'quickView',
+                        label: 'View',
+                        data: {
+                            id: this.model.id
+                        },
+                        link: '#' + this.model.name + '/view/' + this.model.id
+                    })
                 } else if (actionName === 'openInTab') {
                     if (this.model.get('hasOpen') && this.model.get('downloadUrl')) {
                         list.push({
