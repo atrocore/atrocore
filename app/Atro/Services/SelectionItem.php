@@ -34,6 +34,10 @@ class SelectionItem extends Base
 
         $this->putAclMeta($entity);
 
+        $entity->setMetaPermission('quickView', false);
+        $entity->setMetaPermission('edit', false);
+        $entity->setMetaPermission('replaceItem', $this->getUser()->isAdmin() ?? $this->getAcl()->check($entity, 'edit'));
+
         if ($this->getUser()->isAdmin()) {
             $entity->setMetaPermission('unlink', true);
             $entity->setMetaPermission('delete', true);

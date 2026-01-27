@@ -5,6 +5,7 @@
     "selectionItems": {
       "checkboxes": false,
       "hideShowFullList": true,
+      "create": false,
       "select": false,
       "unlink": false,
       "canClose": false,
@@ -17,7 +18,18 @@
         "removeRelated": {
           "url": "{{entityType}}/{{entityId}}"
         }
-      }
+      },
+      "customActions": [
+        {
+          "name": "replaceItem",
+          "url": "SelectionItem/action/replaceItem",
+          "confirm": false,
+          "refresh": true,
+          "modelSelection": true,
+          "modalSelectionEntity": "{{entityType}}",
+          "iconClass": "ph ph-x"
+        }
+      ]
     }
   },
   "views": {
