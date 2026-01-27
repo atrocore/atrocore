@@ -16,9 +16,9 @@ namespace Atro\Core;
 use Atro\Core\EventManager\Manager as EventManager;
 use Atro\Core\Factories\FactoryInterface as Factory;
 use Atro\Core\ModuleManager\Manager as ModuleManager;
+use Atro\Entities\User;
 use Doctrine\DBAL\Connection;
 use Espo\Core\Interfaces\Injectable;
-use Atro\Entities\User;
 use Espo\ORM\EntityManager;
 
 class Container
@@ -71,7 +71,6 @@ class Container
             'dateTime'                 => \Espo\Core\Factories\DateTime::class,
             'entityManager'            => \Espo\Core\Factories\EntityManager::class,
             EntityManager::class       => \Espo\Core\Factories\EntityManager::class,
-            'filePathBuilder'          => \Espo\Core\Factories\FilePathBuilder::class,
             'injectableFactory'        => \Espo\Core\Factories\InjectableFactory::class,
             'number'                   => \Espo\Core\Factories\Number::class,
             'ormMetadata'              => \Espo\Core\Factories\OrmMetadata::class,

@@ -12,7 +12,6 @@
 namespace Atro\Migrations;
 
 use Atro\Core\Migration\Base;
-use Doctrine\DBAL\ParameterType;
 
 class V2Dot2Dot10 extends Base
 {
@@ -23,13 +22,16 @@ class V2Dot2Dot10 extends Base
 
     public function up(): void
     {
-
         if ($this->isPgSQL()) {
             $this->exec("ALTER TABLE \"user\" ADD current_selection_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_USER_CURRENT_SELECTION_ID ON \"user\" (current_selection_id, deleted)");
         } else {
             $this->exec("ALTER TABLE user ADD current_selection_id VARCHAR(36) DEFAULT NULL");
             $this->exec("CREATE INDEX IDX_USER_CURRENT_SELECTION_ID ON user (current_selection_id, deleted)");
+        }
+
+        if (file_exists('data/.file-random-path')) {
+            unlink('data/.file-random-path');
         }
     }
 

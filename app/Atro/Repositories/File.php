@@ -22,12 +22,12 @@ use Atro\Core\FileStorage\LocalFileStorageInterface;
 use Atro\Core\FileStorage\LocalStorage;
 use Atro\Core\FileValidator;
 use Atro\Core\Utils\FileManager;
+use Atro\Core\Utils\FolderPathGenerator;
 use Atro\Core\Utils\PDFLib;
 use Atro\Entities\File as FileEntity;
 use Atro\Core\Templates\Repositories\Base;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\ParameterType;
-use Espo\Core\FilePathBuilder;
 use Espo\ORM\Entity;
 use Imagick;
 
@@ -102,8 +102,7 @@ class File extends Base
             if (!empty($file->get('path'))) {
                 $file->set('thumbnailsPath', $file->get('path'));
             } else {
-                $thumbnailsDirPath = trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/');
-                $file->set('thumbnailsPath', $this->getPathBuilder()->createPath($thumbnailsDirPath . DIRECTORY_SEPARATOR));
+                $file->set('thumbnailsPath', FolderPathGenerator::generate(trim($this->getConfig()->get('thumbnailsPath', 'upload/thumbnails'), '/'), true));
             }
         }
     }
@@ -630,11 +629,6 @@ class File extends Base
     public function getStorage(FileEntity $file): FileStorageInterface
     {
         return $this->getEntityManager()->getRepository('Storage')->getFileStorage($file->get('storageId'));
-    }
-
-    protected function getPathBuilder(): FilePathBuilder
-    {
-        return $this->getInjection('container')->get('filePathBuilder');
     }
 
     protected function getFileValidator(): FileValidator
