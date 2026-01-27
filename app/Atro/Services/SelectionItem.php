@@ -30,7 +30,7 @@ class SelectionItem extends Base
     {
         $item = $this->getRepository()->get($id);
         if($item->get('entityType') !== $selectedItem->entityType) {
-            throw new BadRequest('EntityType mismatch');
+            throw new BadRequest('entityType mismatch');
         }
         $item->set('entityId', $selectedItem->entityId);
         $this->getEntityManager()->saveEntity($item);

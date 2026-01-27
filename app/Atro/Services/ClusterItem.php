@@ -96,7 +96,6 @@ class ClusterItem extends Base
         $entity->setMetaPermission('unlink', $this->getAcl()->check($entity, 'delete'));
         $entity->setMetaPermission('delete', false);
 
-
         if (!empty($record = $this->getEntityManager()->getEntity($entity->get('entityName'), $entity->get('recordId')))) {
             $entity->setMetaPermission('delete', $this->getAcl()->check($record, 'delete'));
         }

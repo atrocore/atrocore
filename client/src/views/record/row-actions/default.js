@@ -159,23 +159,14 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 }
             }
 
-            var list = [];
-            let quickView = true;
-
-            if (this.model.get('_meta')?.permissions?.quickView === false) {
-                quickView = false;
-            }
-
-            if (quickView) {
-                list.push({
-                    action: 'quickView',
-                    label: 'View',
-                    data: {
-                        id: this.model.id
-                    },
-                    link: '#' + this.model.name + '/view/' + this.model.id
-                })
-            }
+            var list = [{
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id
+                },
+                link: '#' + this.model.name + '/view/' + this.model.id
+            }];
 
             if (this.model.get('_meta')?.permissions?.edit) {
                 list.push({
