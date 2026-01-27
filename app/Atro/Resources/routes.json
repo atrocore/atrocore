@@ -1493,5 +1493,36 @@
     "response": {
       "type": "boolean"
     }
+  },
+  {
+    "route": "/SelectionItem/action/replaceItem",
+    "method": "post",
+    "description": "Replace the entity of the item by another entity of the same scope",
+    "operationId": "replaceItem",
+    "tags": [
+      "SelectionItem"
+    ],
+    "params": {
+      "controller": "SelectionItem",
+      "action": "replaceItem"
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "response": {
+      "type": "boolean"
+    }
   }
 ]
